@@ -24,7 +24,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Command
@@ -63,7 +63,7 @@ class KeepAliveWorker @AssistedInject constructor(
     private val profileFunction: ProfileFunction,
     private val rxBus: RxBus,
     private val commandQueue: CommandQueue,
-    private val maintenance: Maintenance,
+    private val periodicMaintenance: PeriodicMaintenance,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
     private val dstHelper: DstHelper,
@@ -153,28 +153,19 @@ class KeepAliveWorker @AssistedInject constructor(
         lastRun = dateUtil.now()
 
         dstHelper.dstCheck()
-        localAlertUtils.shortenSnoozeInterval()
-        localAlertUtils.checkStaleBGAlert()
+        // The platform-neutral half - missed-reading alarm, snooze shortening, log and database
+        // trimming - lives in PeriodicMaintenance so iOS and desktop run the same code instead of
+        // nothing. What stays here is what genuinely needs this worker: the pump and APS checks, and
+        // the WorkManager telemetry below.
+        periodicMaintenance.runOnce()
         checkPump()
         checkAPS()
-        maintenance.deleteLogs(30)
         workerDbStatus()
         workerActiveStatus()
-        databaseCleanup()
 
         return Result.success()
     }
 
-    // Perform history data cleanup every day
-    // Keep 6 months
-    private suspend fun databaseCleanup() {
-        val lastRun = preferences.get(LongNonKey.LastCleanupRun)
-        if (lastRun < dateUtil.now() - T.days(1).msecs()) {
-            val result = persistenceLayer.cleanupDatabase(6 * 31, deleteTrackedChanges = false)
-            aapsLogger.debug(LTag.CORE, "Cleanup result: $result")
-            preferences.put(LongNonKey.LastCleanupRun, dateUtil.now())
-        }
-    }
 
     // When Worker DB grows too much, work operations become slow
     // Library is cleaning DB every 7 days which may not be sufficient for NSClient full sync

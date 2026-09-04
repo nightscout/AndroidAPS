@@ -132,6 +132,9 @@ private fun startPlugins(graph: DesktopAppGraph) {
     val plugins = graph.contributedPlugins.entries.sortedBy { it.key }.map { it.value }
     graph.pluginStore.plugins = plugins
     graph.configBuilder.initialize()
+    // The periodic housekeeping Android gets from KeepAliveWorker. The work is shared; only the
+    // trigger is not, because there is no WorkManager here.
+    graph.periodicMaintenance.start(graph.appScope)
     graph.logger.debug(LTag.CORE, "Registered ${plugins.size} plugins and verified selections")
 }
 

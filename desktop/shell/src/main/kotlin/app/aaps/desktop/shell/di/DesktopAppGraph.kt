@@ -40,7 +40,9 @@ import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.search.BuiltInSearchables
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.shared.clientbindings.ClientGraphBindings
+import kotlinx.coroutines.CoroutineScope
 import app.aaps.database.AppRepository
 import app.aaps.database.di.JvmAppDatabaseBuilder
 import dev.zacsweers.metro.AppScope
@@ -112,6 +114,9 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val pluginPermissions: PluginPermissions
     val textResolver: TextResolver
     val configBuilder: ConfigBuilder
+    // The periodic housekeeping shared with Android, and the scope the shell drives it on.
+    val periodicMaintenance: PeriodicMaintenance
+    val appScope: CoroutineScope
 
     /** Collected by the composition root, which rebuilds when it moves. */
     val uiRestart: UiRestart

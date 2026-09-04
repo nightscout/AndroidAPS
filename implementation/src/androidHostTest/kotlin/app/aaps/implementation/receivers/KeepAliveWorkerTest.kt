@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.dst.DstHelper
 import app.aaps.core.interfaces.maintenance.Maintenance
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.Command
@@ -96,7 +97,9 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
             profileFunction = profileFunction,
             rxBus = mockedRxBus,
             commandQueue = commandQueue,
-            maintenance = maintenance,
+            // The real shared component, not a mock: the assertions below were written against the
+            // work this worker used to do inline, and they all still have to pass now it is shared.
+            periodicMaintenance = PeriodicMaintenance(aapsLogger, localAlertUtils, persistenceLayer, maintenance, preferences, dateUtil),
             rh = rh,
             preferences = preferences,
             dstHelper = dstHelper,

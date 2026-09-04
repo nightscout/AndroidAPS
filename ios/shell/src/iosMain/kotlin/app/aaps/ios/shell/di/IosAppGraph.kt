@@ -36,7 +36,9 @@ import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.receivers.IosReceiverStatusStore
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.shared.clientbindings.ClientGraphBindings
+import kotlinx.coroutines.CoroutineScope
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
@@ -138,6 +140,9 @@ interface IosAppGraph : MetroViewModelMultibindings {
      */
     val contributedPlugins: Map<Int, PluginBase>
     val automationRuntime: AutomationRuntime
+    // The periodic housekeeping shared with Android, and the scope the shell drives it on.
+    val periodicMaintenance: PeriodicMaintenance
+    val appScope: CoroutineScope
     val swDefinition: SWDefinition
     val builtInSearchables: BuiltInSearchables
 
