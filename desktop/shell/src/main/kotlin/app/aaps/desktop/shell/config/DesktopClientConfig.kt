@@ -3,6 +3,7 @@ package app.aaps.desktop.shell.config
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,6 +43,7 @@ class DesktopClientConfig(
     override val FLAVOR: String = "aapsclient"
     override val BUILD_TYPE: String = "debug"
     override val PLATFORM: String = GeneratedBuildInfo.PLATFORM
+    override val platform: AppPlatform = AppPlatform.Desktop
     override val VERSION: String = VERSION_NAME
     override val BUILD_VERSION: String = GeneratedBuildInfo.BUILD
     override val DEBUG: Boolean = true

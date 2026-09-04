@@ -130,7 +130,8 @@ class PreferencesImpl @Inject constructor(
     private val longFlows = FlowCache<Long>()
 
     private fun isHidden(key: PreferenceKey): Boolean =
-        if (apsMode && key.showInApsMode == false) true
+        if (config.platform !in key.platforms) true
+        else if (apsMode && key.showInApsMode == false) true
         else if (nsclientMode && key.showInNsClientMode == false) true
         else if (pumpControlMode && key.showInPumpControlMode == false) true
         else false

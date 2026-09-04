@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.wizard.QuickWizard
@@ -165,11 +166,14 @@ internal class MainViewModelTest {
      * that are not pages, for a thing those systems do not do.
      */
     @Test
-    fun `the battery help button is offered only where the maker can kill the app`() {
-        whenever(config.oemBackgroundKilling).thenReturn(true)
+    fun `the battery help button is offered only on Android`() {
+        whenever(config.platform).thenReturn(AppPlatform.Android)
         assertThat(sut.showBatteryHelp).isTrue()
 
-        whenever(config.oemBackgroundKilling).thenReturn(false)
+        whenever(config.platform).thenReturn(AppPlatform.Ios)
+        assertThat(sut.showBatteryHelp).isFalse()
+
+        whenever(config.platform).thenReturn(AppPlatform.Desktop)
         assertThat(sut.showBatteryHelp).isFalse()
     }
 }

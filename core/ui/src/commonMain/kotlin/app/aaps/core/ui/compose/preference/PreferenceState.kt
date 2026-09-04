@@ -126,6 +126,13 @@ fun calculatePreferenceVisibility(
         visible = false
     }
 
+    // Check the platform. A row whose key does not name this one cannot be honoured here, so it is
+    // not drawn rather than drawn and wired to nothing - see PreferenceKey.platforms.
+    if (config.platform !in preferenceKey.platforms) {
+        visible = false
+        enabled = false
+    }
+
     // Check APS mode
     if (preferences.apsMode && !preferenceKey.showInApsMode) {
         visible = false

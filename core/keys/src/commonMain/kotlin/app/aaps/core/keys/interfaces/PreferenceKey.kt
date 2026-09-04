@@ -51,6 +51,29 @@ interface PreferenceKey : NonPreferenceKey, PreferenceItem {
     val defaultedBySM: Boolean
 
     /**
+     * Which platforms this preference is shown on. Everywhere unless it says otherwise.
+     *
+     * The same flag serves the settings screen, the search index and the hidden-value check, so a
+     * key that names its platforms disappears from all three at once and cannot be left half gated.
+     *
+     * Use it when a platform has **no way to honour the setting** - `AlertUrgentAsAndroidNotification`
+     * describes Android's notification policy and there is nothing for it to mean on iOS, where the
+     * user controls that in Settings. A row that is drawn and wired to nothing is worse than an
+     * absent one: it reads as a promise.
+     *
+     * Do **not** use it for a key that is synced. A `Bidirectional` key shown on a client is
+     * configuring the *master*, so the platform doing the displaying is not the platform that has to
+     * honour it, and restricting it would hide a control that works. `PreferencePlatformRulesTest`
+     * enforces that.
+     *
+     * Do **not** use it for "not built yet" either. This says a platform *cannot* do a thing, not
+     * that nobody has got round to it - otherwise the flag quietly becomes a list of unfinished work
+     * that no one is reminded of.
+     */
+    val platforms: Set<AppPlatform>
+        get() = AppPlatform.ALL
+
+    /**
      * Show only when APS mode is active (ie not PumpControl and NsClient)
      */
     val showInApsMode: Boolean

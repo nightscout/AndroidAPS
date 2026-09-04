@@ -54,6 +54,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -618,8 +619,12 @@ class MainViewModel @Inject constructor(
      * like `dontkillmyapp.com/apple` and `dontkillmyapp.com/windows-11` - dead links, for a problem
      * those systems do not have. This was Android-only before the dialog moved to shared code, and
      * the move dropped the gate rather than deciding to remove it.
+     *
+     * A preference would say this with `platforms = AppPlatform.ANDROID_ONLY` in its own definition.
+     * A button in a dialog has no such definition to carry a flag, so it asks [Config.platform] -
+     * the same fact, read the same way.
      */
-    val showBatteryHelp: Boolean get() = config.oemBackgroundKilling
+    val showBatteryHelp: Boolean get() = config.platform == AppPlatform.Android
 
     fun buildAboutDialogData(appName: String): AboutDialogData {
         var message = "Build: ${config.BUILD_VERSION}\n"

@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.configuration
 
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -72,18 +73,17 @@ interface Config {
     val PLATFORM: String get() = ""
 
     /**
-     * Whether the device maker's own battery saving can kill this app while it runs in the background.
+     * The same fact as [PLATFORM], as something code can branch on.
      *
-     * True on Android and nowhere else. This is the problem dontkillmyapp.com exists for, and the
-     * About dialog offers a link to that site's page for the maker of the current device. Off Android
-     * the link is meaningless: it built `dontkillmyapp.com/apple` and `dontkillmyapp.com/windows-11`,
-     * neither of which is a page, for a problem those systems do not have. The button is now not
-     * drawn there at all.
+     * [PLATFORM] is a string shown to the user in the About dialog, and a display string should not
+     * become load bearing - it was briefly used as an "is this Android" test, which was already
+     * wrong because `ConfigImpl` sets it to "Android" rather than leaving it empty.
      *
-     * A capability rather than a test on [PLATFORM], which is a string shown to the user and should
-     * not become load bearing.
+     * This is what decides whether a platform-specific piece of UI is drawn, and what
+     * [app.aaps.core.keys.interfaces.PreferenceKey.platforms] is matched against. Deliberately
+     * without a default: a new shell has to say what it is rather than inherit someone else's answer.
      */
-    val oemBackgroundKilling: Boolean get() = false
+    val platform: AppPlatform
     val APPLICATION_ID: String
     val DEBUG: Boolean
     val currentDeviceModelString: String

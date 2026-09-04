@@ -7,6 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
@@ -149,6 +150,8 @@ private object PreviewConfig : Config {
     override val AAPSCLIENT3: Boolean = false
     override val PUMPCONTROL: Boolean = false
     override val PUMPDRIVERS: Boolean = true
+    // A preview draws every row, so it claims the platform that restricts the fewest of them.
+    override val platform: AppPlatform = AppPlatform.Android
     override val FLAVOR: String = "full"
     override val VERSION_NAME: String = "preview"
     override val HEAD: String = ""
