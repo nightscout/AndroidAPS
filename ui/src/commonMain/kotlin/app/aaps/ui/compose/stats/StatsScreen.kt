@@ -237,8 +237,8 @@ fun StatsScreen(
                 }
             }
 
-            // Activity Section
-            AapsCard(
+            // Activity Section - Android only, see StatsViewModel.showActivityStats
+            if (viewModel.showActivityStats) AapsCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
