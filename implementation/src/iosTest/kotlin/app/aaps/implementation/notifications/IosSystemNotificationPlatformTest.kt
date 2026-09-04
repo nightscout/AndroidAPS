@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.implementation.alerts.IosReminderScheduler
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -82,6 +83,42 @@ class IosSystemNotificationPlatformTest {
     fun `a malformed identifier is not a key`() {
         assertNull(platform.instanceKeyOf("aaps-"))
         assertNull(platform.instanceKeyOf("aaps-abc"))
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // What "mute all alarms" is allowed to remove
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * The reminder prefix is read from the scheduler itself rather than written out here, so renaming
+     * it cannot quietly re-open the hole this test exists for.
+     */
+    @Test
+    fun `mute all leaves a scheduled automation reminder alone`() {
+        val reminder = "${IosReminderScheduler.IDENTIFIER_PREFIX}3"
+
+        // The trap: the reminder id starts with this class's own "aaps-" prefix, so anything cruder
+        // than the key parse - a prefix match, or the removeAll* pair this used to call - deletes a
+        // reminder the user is still waiting on, and it never rings.
+        assertEquals(listOf("aaps-42"), platform.ownIdentifiers(listOf("aaps-42", reminder)))
+    }
+
+    /** `IosLoopNotifier.NOTIFICATION_ID`, spelled out because it lives in another module. */
+    @Test
+    fun `mute all leaves the loop notification alone`() {
+        assertEquals(emptyList<String>(), platform.ownIdentifiers(listOf("aaps-loop")))
+    }
+
+    @Test
+    fun `mute all removes the alarms this class posted`() {
+        val ours = listOf(platform.identifier(1), platform.identifier(10_001))
+
+        assertEquals(ours, platform.ownIdentifiers(ours))
+    }
+
+    @Test
+    fun `mute all leaves another app's notification alone`() {
+        assertEquals(emptyList<String>(), platform.ownIdentifiers(listOf("other-app-42", "42")))
     }
 
     // ---------------------------------------------------------------------------------------------

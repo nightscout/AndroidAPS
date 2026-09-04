@@ -664,8 +664,11 @@ notification registry through `setAudibleAlarm`, and `OWNER_FULLSCREEN`, used by
 
 - `AndroidSystemNotificationPlatform.cancelAll()` calls `alarmNotificationManager().cancelAlarm()`,
   which stops the **`OWNER_FULLSCREEN`** audio and cancels the notification.
-- `IosSystemNotificationPlatform.cancelAll()` only removes pending and delivered notifications.
-  Nothing on the iOS side stops `OWNER_FULLSCREEN`, because nothing starts it.
+- `IosSystemNotificationPlatform.cancelAll()` removes only the delivered notifications it posted
+  itself, matched by the instance-key parse. Nothing on the iOS side stops `OWNER_FULLSCREEN`,
+  because nothing starts it. (It used to call `removeAllPendingNotificationRequests()` as well,
+  which deleted the scheduled automation reminders - they share the `aaps-` prefix. Whatever
+  `runAlarm` ends up doing, it must not widen this back out.)
 
 So an iOS `runAlarm` that plays with `OWNER_FULLSCREEN` would produce a **ramping alarm that
 `stopAlarm` cannot silence**. In a medical app that is the worse of the two failure directions, and

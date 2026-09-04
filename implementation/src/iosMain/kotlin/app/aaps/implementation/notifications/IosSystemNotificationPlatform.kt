@@ -11,15 +11,14 @@ import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionBadge
 import platform.UserNotifications.UNAuthorizationOptionSound
+import platform.UserNotifications.UNNotification
 import platform.UserNotifications.UNNotificationCategory
 import platform.UserNotifications.UNNotificationCategoryOptionCustomDismissAction
 import platform.UserNotifications.UNNotificationDismissActionIdentifier
-import platform.UserNotifications.UNNotificationResponse
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelActive
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
 import platform.UserNotifications.UNNotificationRequest
-import platform.UserNotifications.UNNotificationSound
 import platform.UserNotifications.UNUserNotificationCenter
 
 /**
@@ -95,10 +94,38 @@ class IosSystemNotificationPlatform(
         center.removeDeliveredNotificationsWithIdentifiers(ids)
     }
 
+    /**
+     * Only the alarms this class posted, and only the delivered ones.
+     *
+     * This was `removeAllPendingNotificationRequests()` plus `removeAllDeliveredNotifications()`,
+     * and both halves were wrong. This class never creates a pending request at all - every [show]
+     * posts with `trigger = null`, so it is delivered straight away - but
+     * `IosReminderScheduler` does, and its scheduled reminders are named `aaps-reminder-N`, which
+     * sits inside this class's own `aaps-` prefix. Muting alarms therefore deleted every automation
+     * reminder the user was still waiting on, and none of them ever rang. The delivered half swept
+     * up the loop's `aaps-loop` notification for the same reason.
+     *
+     * Android draws exactly this line and says why in `AndroidSystemNotificationPlatform.cancelAll`:
+     * "mute all alarms" means take *my* alarms out of the tray, not empty the tray. [instanceKeyOf]
+     * is what decides ownership here, so a `aaps-reminder-3` or an `aaps-loop` is left alone because
+     * neither tail parses to a key.
+     */
     override fun cancelAll() {
-        center.removeAllPendingNotificationRequests()
-        center.removeAllDeliveredNotifications()
+        center.getDeliveredNotificationsWithCompletionHandler { delivered ->
+            val posted = delivered.orEmpty().mapNotNull { (it as? UNNotification)?.request?.identifier }
+            val ids = ownIdentifiers(posted)
+            if (ids.isNotEmpty()) center.removeDeliveredNotificationsWithIdentifiers(ids)
+        }
     }
+
+    /**
+     * The identifiers [cancelAll] is allowed to remove.
+     *
+     * Split out so it can be checked without a notification centre, which a test binary has no
+     * bundle for. The whole safety of [cancelAll] is in this one filter.
+     */
+    internal fun ownIdentifiers(identifiers: List<String>): List<String> =
+        identifiers.filter { instanceKeyOf(it) != null }
 
     /**
      * Hands the ramping alarm to [AlarmSoundPlayer], or silences it.
