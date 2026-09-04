@@ -626,6 +626,18 @@ class MainViewModel @Inject constructor(
      */
     val showBatteryHelp: Boolean get() = config.platform == AppPlatform.Android
 
+    /**
+     * Whether the drawer offers "Exit".
+     *
+     * Not on iOS, where `IosAppExit` refuses on purpose - Apple's guidance is that an app must not
+     * terminate itself, and one that does is recorded as a crash. The row was drawn there anyway, so
+     * tapping it ran `exitApp`, which writes an `EXIT_AAPS` user entry and sends `EventAppExit`
+     * before the platform declines. Nothing on iOS listens for that event, so the app was not left
+     * half stopped - but the audit log gained a record of an exit that never happened, and the user
+     * got no answer. Android and desktop both really can close.
+     */
+    val showExit: Boolean get() = config.platform != AppPlatform.Ios
+
     fun buildAboutDialogData(appName: String): AboutDialogData {
         var message = "Build: ${config.BUILD_VERSION}\n"
         message += "Flavor: ${config.FLAVOR}${config.BUILD_TYPE}\n"

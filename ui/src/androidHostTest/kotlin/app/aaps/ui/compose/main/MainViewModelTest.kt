@@ -165,6 +165,24 @@ internal class MainViewModelTest {
      * button that opened `dontkillmyapp.com/apple` and `dontkillmyapp.com/windows-11` - addresses
      * that are not pages, for a thing those systems do not do.
      */
+    /**
+     * The Exit row, which iOS must not offer.
+     *
+     * `IosAppExit` refuses on purpose - Apple records a self-terminating app as a crash - so the row
+     * ran `exitApp`, wrote an `EXIT_AAPS` user entry, and then nothing happened.
+     */
+    @Test
+    fun `the exit row is offered everywhere except iOS`() {
+        whenever(config.platform).thenReturn(AppPlatform.Android)
+        assertThat(sut.showExit).isTrue()
+
+        whenever(config.platform).thenReturn(AppPlatform.Desktop)
+        assertThat(sut.showExit).isTrue()
+
+        whenever(config.platform).thenReturn(AppPlatform.Ios)
+        assertThat(sut.showExit).isFalse()
+    }
+
     @Test
     fun `the battery help button is offered only on Android`() {
         whenever(config.platform).thenReturn(AppPlatform.Android)

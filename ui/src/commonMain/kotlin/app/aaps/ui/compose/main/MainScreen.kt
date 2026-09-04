@@ -182,7 +182,8 @@ fun MainScreen(
                     onDrawerClosed()
                     onNavigate(request)
                 },
-                isTreatmentsEnabled = uiState.isProfileLoaded
+                isTreatmentsEnabled = uiState.isProfileLoaded,
+                showExit = mainViewModel.showExit
             )
         },
         gesturesEnabled = true,
