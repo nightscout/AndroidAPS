@@ -144,6 +144,68 @@ Two warnings from having done several of these:
 - `Dispatchers.IO` reports itself as `internal` rather than missing. Use `aapsIoDispatcher` from
   `:core:interfaces`.
 
+## For the iOS side: move the database out of Documents, with a migration that fails closed
+
+The last open item from the platform parity audit. Everything else from that audit is fixed and
+pushed; this one is yours because only the Apple side can test it, and because the decision it needs
+is about iOS storage policy rather than about shared code.
+
+**Where it is now.** `AppDatabaseBuilder.ios.kt`, `documentsPath()`: `aaps-ios.db` and its `-wal` /
+`-shm` siblings are created in `NSDocumentDirectory`. That directory was not chosen as a policy - the
+KDoc above the function says it was settled while fixing a CI failure, where the directory did not
+exist on a clean runner.
+
+**What actually makes this urgent is not the backup.** The audit filed it as a privacy problem,
+because Documents is included in the iCloud/device backup and nothing calls
+`NSURLIsExcludedFromBackupKey`. On reflection that is the wrong way round: a backup is how an iOS user
+keeps their treatment history when they replace a phone, which is better than Android manages today.
+Do **not** exclude it from backup to "fix" this - that trades a real benefit for a theoretical gain
+the user can already get with Advanced Data Protection.
+
+The hazard is the directory itself, and it works like this:
+
+- `Room.databaseBuilder(name = path)` performs **no existence check**. Point it somewhere with no
+  file and it does not fail - it creates a new, empty, schema-correct database. To the user that is
+  indistinguishable from a fresh install, with the whole treatment history gone and no error anywhere.
+- Documents is one build setting away from being user-visible. `UIFileSharingEnabled` and
+  `LSSupportsOpeningDocumentsInPlace` appear nowhere today (checked `Info.plist` and the pbxproj), so
+  the files are currently safe from the Files app.
+- But `IosPrefsFileInfo` is meant to write preference exports into that same directory, and an export
+  nobody can reach is useless. So whoever finishes that feature will find `UIFileSharingEnabled`, set
+  it, and be right to - at which point a user tidying up their Files app can delete `aaps-ios.db` and
+  get a silent empty database on the next launch.
+
+**What to do.** Move to `NSApplicationSupportDirectory`, which is app-private and still backed up, and
+migrate the three files once. The existing helper already creates the directory when it is missing, so
+that part costs nothing.
+
+**The migration has to fail closed, and this is the whole risk of the change.** If the `.db` did not
+arrive at the new path and a file still exists at the old one, keep using the old path for that launch
+and log loudly. Failing open lands exactly on the silent-empty-database case above. Move rather than
+copy, so it cannot run twice or leave two histories that then diverge. Take `-wal` and `-shm` with it -
+a database file separated from its write-ahead log is not the database.
+
+Do not use `NSCachesDirectory`. iOS evicts it under storage pressure, and combined with the missing
+existence check the app would come back empty on its own.
+
+**One question the Windows side cannot answer, and it decides how carefully this needs reviewing:**
+has any iOS build reached a tester with real data? `git tag -l "ios-testflight-*"` is empty, but the
+release workflow also fires on `workflow_dispatch`, which leaves no tag behind - so the repo does not
+know. Write the migration either way; if the answer is yes, it wants a second pair of eyes.
+
+### While you are in the notification code: the other half of the actions gap
+
+Not a blocker, and smaller. `IosSystemNotificationPlatform.show()` still ignores
+`AapsNotification.actions`, so an alarm's snooze buttons never reach the iOS banner - the user has to
+open the app to answer. The dangerous half is already fixed: a swipe can no longer be taken as an
+answer (see `clearedByDismissal`), because it used to silence an urgent Nightscout alarm, throw away
+the card holding the snooze buttons and never acknowledge Nightscout.
+
+Attaching them properly is a `UNNotificationCategory` per resolved label set, registered before
+posting and routed back by instance key. `IosLoopNotifier` already does exactly this for its "ignore
+for N minutes" buttons and is the worked example. Android cannot be copied here - it suppresses such
+notifications from the tray instead, because its actions are `PendingIntent`s.
+
 ## Ready for iOS: the Nightscout client
 
 Written by the Windows session, for the macOS one - the other direction from the rest of this file.
@@ -598,9 +660,20 @@ answered "24 hour" and a Traditional Chinese user with the "24-Hour Time" switch
 been given a 24 hour picker on the profile activation screen.
 
 It now reads the hour field instead, which the Unicode standard fixes rather than the locale: `h`
-and `K` count to twelve, `H` and `k` count to twenty four. The parser is `usesTwelveHourClock` in
-`core/ui/src/iosMain/.../ClockPattern.kt`, kept apart from the composable so it can be tested, and
-it skips quoted literals so the `'h'` in a pattern like `HH'h'mm` is not mistaken for a field.
+and `K` count to twelve, `H` and `k` count to twenty four. The parser is `usesTwelveHourClock`, kept
+apart from the composable so it can be tested, and it skips quoted literals so the `'h'` in a pattern
+like `HH'h'mm` is not mistaken for a field.
+
+**Since this was written, the Windows side found the same bug a second time and moved the parser.**
+`DateFormatPlatform` asks the same question for `DateUtil`, and `IosDateFormatPlatform` still used the
+AM/PM reading - so iOS gave two different answers at once, printing `HH:mm` next to a twelve hour
+picker on a `zh-Hant` phone. The JVM had a third copy of the parse, written out again. There is now one
+implementation, in `core/interfaces/src/commonMain/.../utils/ClockPattern.kt`, used by the theme on
+both iOS and desktop and by `DateFormatPlatform` on iOS and the JVM. `:core:interfaces` is the lowest
+module `:core:ui` and `:shared:impl` already share, so this needed no new dependency. The tests moved
+with it, and the live `zh_TW` case now covers the `j` template that `IosDateFormatPlatform` asks for as
+well as the short-time pattern the theme uses - they are different formatter calls, which is how the
+two answers were allowed to disagree.
 
 Found by running the real formatter over 40 locales and comparing the two readings, not by
 inspection - `zh_TW` was the only disagreement, and nothing but running it would have shown that.
