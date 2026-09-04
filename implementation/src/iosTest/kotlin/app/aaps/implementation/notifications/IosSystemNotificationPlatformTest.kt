@@ -2,9 +2,13 @@ package app.aaps.implementation.notifications
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.implementation.alerts.IosReminderScheduler
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -89,6 +93,70 @@ class IosSystemNotificationPlatformTest {
     fun `a malformed identifier is not a key`() {
         assertNull(platform.instanceKeyOf("aaps-"))
         assertNull(platform.instanceKeyOf("aaps-abc"))
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // A swipe must not answer an alarm
+    // ---------------------------------------------------------------------------------------------
+
+    private fun notification(instanceKey: Int, withActions: Boolean) = AapsNotification(
+        id = NotificationId.NS_ALARM,
+        instanceKey = instanceKey,
+        text = "test",
+        level = NotificationLevel.URGENT,
+        sound = AlarmSound.ALARM,
+        actions = if (withActions) listOf(NotificationAction(TextRef.Literal("Snooze")) {}) else emptyList()
+    )
+
+    /**
+     * The reason this guard exists.
+     *
+     * Every notification posted here is swipeable - the category must carry `customDismissAction` or
+     * dismissals are never reported at all - and the registry turns a reported dismissal into
+     * `dismiss(handle)`, which drops the notification so `refreshAlarmSound` stops the sound. On an
+     * urgent Nightscout alarm that meant the swipe silenced it, threw away the card with the snooze
+     * buttons, and never acknowledged Nightscout. Android forbids the gesture outright with
+     * `setOngoing(true)`; iOS has no such flag, so it is refused here instead.
+     */
+    @Test
+    fun `a swipe does not answer a notification carrying actions`() {
+        platform.rememberIfUnanswered(notification(7, withActions = true))
+
+        assertFalse(platform.clearedByDismissal(7))
+    }
+
+    /** Nothing to lose when there is no action to lose, so the swipe means what it looks like. */
+    @Test
+    fun `a swipe clears a notification with no actions`() {
+        platform.rememberIfUnanswered(notification(7, withActions = false))
+
+        assertTrue(platform.clearedByDismissal(7))
+    }
+
+    /** An unknown key was never posted by this class, or was already dealt with. */
+    @Test
+    fun `a swipe clears a notification this class is not holding`() {
+        assertTrue(platform.clearedByDismissal(99))
+    }
+
+    /** Answering it in the app cancels it, and then the guard has to let go. */
+    @Test
+    fun `once cancelled the guard releases the key`() {
+        platform.rememberIfUnanswered(notification(7, withActions = true))
+        platform.forget(7)
+
+        assertTrue(platform.clearedByDismissal(7))
+    }
+
+    /** "Mute all alarms" is a deliberate answer, unlike a swipe. */
+    @Test
+    fun `mute all releases every held key`() {
+        platform.rememberIfUnanswered(notification(7, withActions = true))
+        platform.rememberIfUnanswered(notification(8, withActions = true))
+        platform.forgetAll()
+
+        assertTrue(platform.clearedByDismissal(7))
+        assertTrue(platform.clearedByDismissal(8))
     }
 
     // ---------------------------------------------------------------------------------------------

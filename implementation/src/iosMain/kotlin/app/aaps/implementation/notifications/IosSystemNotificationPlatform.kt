@@ -50,6 +50,15 @@ class IosSystemNotificationPlatform(
     private var soundingKey: Int? = null
 
     /**
+     * Instance keys whose notification carries actions and has not been answered yet.
+     *
+     * These are the ones a swipe must not clear. See [onDismissed] for what went wrong without it.
+     * Entries leave only through [cancel] or [cancelAll] - that is, when the notification is
+     * genuinely finished with, rather than when the user brushed it off the screen.
+     */
+    private val unanswered = mutableSetOf<Int>()
+
+    /**
      * Resolved on first use, not in the constructor.
      *
      * `currentNotificationCenter()` needs an app bundle and throws
@@ -79,6 +88,7 @@ class IosSystemNotificationPlatform(
      */
     override fun show(notification: AapsNotification, title: String) {
         ensureAuthorization()
+        rememberIfUnanswered(notification)
         val breakThroughFocus = breaksThroughFocus(notification.level)
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
@@ -123,7 +133,28 @@ class IosSystemNotificationPlatform(
     internal fun breaksThroughFocus(level: NotificationLevel): Boolean =
         level == NotificationLevel.URGENT && overrideDoNotDisturb()
 
+    /**
+     * Notes, before posting, that this notification must survive a swipe.
+     *
+     * Split from [show] only so it can be exercised: [show] reaches `UNUserNotificationCenter`,
+     * which needs an app bundle a test binary does not have.
+     */
+    internal fun rememberIfUnanswered(notification: AapsNotification) {
+        if (notification.actions.isNotEmpty()) unanswered += notification.instanceKey
+    }
+
+    /** The counterpart: this notification is finished with, however that came about. */
+    internal fun forget(instanceKey: Int) {
+        unanswered -= instanceKey
+    }
+
+    /** Same, for the "mute all alarms" path. */
+    internal fun forgetAll() {
+        unanswered.clear()
+    }
+
     override fun cancel(instanceKey: Int) {
+        forget(instanceKey)
         val ids = listOf(identifier(instanceKey))
         center.removePendingNotificationRequestsWithIdentifiers(ids)
         center.removeDeliveredNotificationsWithIdentifiers(ids)
@@ -146,6 +177,8 @@ class IosSystemNotificationPlatform(
      * neither tail parses to a key.
      */
     override fun cancelAll() {
+        // "Mute all alarms" is an answer, given deliberately, so these are finished with.
+        forgetAll()
         center.getDeliveredNotificationsWithCompletionHandler { delivered ->
             val posted = delivered.orEmpty().mapNotNull { (it as? UNNotification)?.request?.identifier }
             val ids = ownIdentifiers(posted)
@@ -197,10 +230,32 @@ class IosSystemNotificationPlatform(
             if (actionId != UNNotificationDismissActionIdentifier) return@register false
             // A tap is deliberately not a dismissal: the notification goes away, but the user asked
             // to *see* the thing, so it stays in the in-app list.
-            instanceKeyOf(notificationId)?.let(callback)
+            val instanceKey = instanceKeyOf(notificationId) ?: return@register true
+            if (clearedByDismissal(instanceKey)) callback(instanceKey)
+            else aapsLogger.debug(LTag.NOTIFICATION, "Swipe ignored for $instanceKey: it still carries an unanswered action")
             true
         }
     }
+
+    /**
+     * Whether swiping this notification away is allowed to count as answering it.
+     *
+     * No, when it carries actions nobody has used yet - and that case is why this exists.
+     *
+     * Every notification posted here is swipeable, because the category has to carry
+     * `customDismissAction` for dismissals to be reported at all. The registry turns a reported
+     * dismissal into `dismiss(handle)`, which drops the notification, and `refreshAlarmSound` then
+     * finds no audible alarm and **stops the sound**. So on an urgent Nightscout alarm the swipe -
+     * the first gesture anyone reaches for - silenced it, threw away the card holding the three
+     * snooze buttons, never acknowledged Nightscout and never recorded a snooze, so the same alarm
+     * returned on the next push.
+     *
+     * Android forbids exactly this rather than handling it: `AlarmNotificationManager` posts with
+     * `setOngoing(true)`, and says why - "so the user can't swipe to dismiss". iOS has no ongoing
+     * flag, so the guard has to be here instead. The banner does go from the tray, which iOS will
+     * not undo; what does not happen is the alarm being treated as answered.
+     */
+    internal fun clearedByDismissal(instanceKey: Int): Boolean = instanceKey !in unanswered
 
     private fun dismissibleCategory(): UNNotificationCategory =
         UNNotificationCategory.categoryWithIdentifier(
