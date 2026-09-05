@@ -64,8 +64,10 @@ class PrefsFormatCodec(
      * Renders [prefs] as the text of an export file.
      *
      * Encrypts when a password is given and the metadata does not say encryption is off. If
-     * encryption is asked for and cannot be done, the file is written unencrypted and says so in its
-     * own `algorithm` field rather than pretending - the same fallback the Android writer has.
+     * encryption is asked for and cannot be done, this throws and no file is written: AAPS stopped
+     * producing unencrypted backups long ago, and quietly writing one because the cipher failed
+     * would hand over the settings unprotected at the worst possible moment. Callers report a failed
+     * export instead.
      */
     fun encode(prefs: Prefs, masterPassword: String?): String {
         val encStatus = prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status ?: PrefsStatusImpl.OK
@@ -89,15 +91,16 @@ class PrefsFormatCodec(
         if (encrypted) {
             val rawContent = content.toString()
             val salt = crypto.randomBytes(SALT_BYTES)
-            val attempt = encryptContent(plainPassword(masterPassword!!), salt, rawContent)
-            if (attempt != null) {
-                encodedContent = attempt
-                security["algorithm"] = "v1"
-                security["salt"] = salt.toHex()
-                security["content_hash"] = crypto.sha256(rawContent)
-            } else {
-                encrypted = false
-            }
+            // No "encryption failed, write it in the clear" branch. There used to be one, inherited
+            // from the Android writer, and it had already stopped being reachable: the crypto now
+            // throws where the old `CryptoUtil.encrypt` returned null. Removed rather than repaired -
+            // writing an unencrypted backup because encryption failed is not a fallback, it is
+            // handing over the settings unprotected at the one moment something is already wrong.
+            // AAPS stopped producing unencrypted backups long ago; a failure here fails the export.
+            encodedContent = encryptContent(plainPassword(masterPassword!!), salt, rawContent)
+            security["algorithm"] = "v1"
+            security["salt"] = salt.toHex()
+            security["content_hash"] = crypto.sha256(rawContent)
         }
         if (!encrypted) security["algorithm"] = "none"
 
@@ -272,7 +275,7 @@ class PrefsFormatCodec(
         if (secureEncrypt.isValidDataString(candidate)) secureEncrypt.decrypt(candidate).ifEmpty { candidate } else candidate
 
     /** `[1 byte iv length][iv][ciphertext and tag]`, base64. The layout every existing file uses. */
-    private fun encryptContent(passphrase: String, salt: ByteArray, raw: String): String? {
+    private fun encryptContent(passphrase: String, salt: ByteArray, raw: String): String {
         val key = crypto.pbkdf2(passphrase, salt, PBKDF2_ITERATIONS, AES_KEY_BITS)
         val iv = crypto.randomBytes(IV_BYTES)
         val cipherText = crypto.aesGcmEncrypt(key, iv, raw.encodeToByteArray(), TAG_BITS)
