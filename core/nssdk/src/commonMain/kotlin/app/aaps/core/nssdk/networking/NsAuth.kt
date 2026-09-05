@@ -27,7 +27,8 @@ import kotlin.time.Clock
  *   request - it answers **200 with the anonymous role**, which flows into `hasWritePermission` and
  *   makes `DataSyncWorker` skip the whole upload block. Nothing is logged. Here the header is always
  *   sent, even while the token is still empty.
- * - it refreshes on 401 only; Nightscout also answers **403**.
+ * - it refreshes on 401 only. This refreshes on 401 and 403 - see [REFRESHABLE], where that second
+ *   code is questioned against the server source rather than defended.
  * - its refresh hook never sees the response body, so the clock-skew case below could not exist.
  *
  * `NsSdkAuthContractTest` pins all of it.
@@ -105,13 +106,23 @@ internal object NsAuth {
     private fun nowMillis(): Long = Clock.System.now().toEpochMilliseconds()
 
     /**
-     * Nightscout answers 403 as well as 401 for an expired token.
+     * What is treated as "worth trying a new token for".
      *
-     * Deliberately unlike `GoogleDriveApi`, which treats **only** 401 as expiry: Google uses 403 for
-     * quota and permission, so widening it there signs a user out when their Drive is merely full.
-     * Two servers, two answers - and the risk differs too. This list only decides whether to *try a
-     * refresh*, which costs one request when it is wrong; the Drive path decides whether to throw a
-     * working sign in away.
+     * **The 403 here is doubtful and is kept only because it is what shipped.** This used to say
+     * "Nightscout answers 403 as well as 401 for an expired token", and that is not what the server
+     * source says. In `lib/api3/security.js` a missing, bad or expired token is
+     * `HTTP_401_MISSING_OR_BAD_TOKEN` / `HTTP_401_BAD_TOKEN`, while 403 is
+     * `HTTP_403_MISSING_PERMISSION` - the token authenticated and simply lacks the permission for
+     * that call. `lib/authorization/index.js` sends no 403 at all. So Nightscout draws the same line
+     * Google does, and a new token has the same permissions as the old one.
+     *
+     * The cost of the extra entry is a wasted refresh and one wasted retry on every
+     * permission-denied call, which then fails the same way. It is **not** the Drive bug: nothing
+     * here clears a credential, so no user is signed out by it.
+     *
+     * Left alone on purpose. Narrowing it to 401 is very likely right, but it changes behaviour
+     * against a server this session cannot test, and the reading above is from source rather than
+     * from a live 403. Worth doing with a Nightscout instance in front of you.
      */
     private val REFRESHABLE = listOf(401, 403)
 }
