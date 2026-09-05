@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoPrimitives
+import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.implementation.ImplementationStrings
 import app.aaps.implementation.maintenance.PrefsMetadataKeyImpl
 import app.aaps.implementation.maintenance.data.PrefFormatError
@@ -170,7 +171,12 @@ class PrefsFormatCodec(
 
                     else                              -> {
                         val cipherText = container["content"]?.jsonPrimitive?.content ?: ""
-                        val decrypted = masterPassword?.let { decryptContent(it, salt.fromHex(), cipherText) }
+                        // The shared reader, which lower-cases first. A private one here indexed
+                        // straight into a lower-case table, so an upper-case salt gave indexOf() = -1
+                        // and a garbage key - and the user was told the password was wrong, about a
+                        // correct password and an intact file. AAPS writes lower-case, so its own
+                        // exports were safe; anything hand-edited or written by another tool was not.
+                        val decrypted = masterPassword?.let { decryptContent(it, salt.hexStringToByteArray(), cipherText) }
                         if (decrypted == null) {
                             secure = PrefsStatusImpl.ERROR
                             issues.add(gs(ImplementationStrings.prefdecrypt_issue_wrong_pass))
@@ -292,9 +298,6 @@ class PrefsFormatCodec(
 
     private fun ByteArray.toHex(): String =
         joinToString("") { b -> HEX[(b.toInt() shr 4) and 0xF].toString() + HEX[b.toInt() and 0xF] }
-
-    private fun String.fromHex(): ByteArray =
-        ByteArray(length / 2) { i -> ((HEX.indexOf(this[i * 2]) shl 4) or HEX.indexOf(this[i * 2 + 1])).toByte() }
 
     private companion object {
 
