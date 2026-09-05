@@ -6,6 +6,7 @@ import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.implementation.maintenance.PrefsMetadataKeyImpl
 import app.aaps.implementation.maintenance.data.PrefFormatError
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
@@ -45,6 +47,10 @@ open class EncryptedPrefsFormatTest : TestBase() {
     @BeforeEach
     fun mock() {
         whenever(rh.gs(ArgumentMatchers.anyInt())).thenReturn("mock translation")
+        // The format now asks through TextRef, because the strings it shows are resolved the same
+        // way on every platform. Without this the shared codec gets null back and dies on the first
+        // metadata it builds.
+        whenever(rh.gs(any<TextRef>())).thenReturn("mock translation")
         whenever(context.contentResolver).thenReturn(contentResolver)
     }
 
@@ -63,7 +69,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
+        val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assumeAES256isSupported(cryptoUtil)
@@ -83,8 +89,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
     @Test
     fun preferenceSavingTest() {
         val storage = SingleStringStorage("")
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
-        encryptedFormat.secureEncrypt = SecureEncryptImpl(aapsLogger, cryptoUtil)
+        val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
         val prefs = Prefs(
             mapOf(
                 "key1" to "A",
@@ -101,8 +106,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
     @Test
     fun importExportStabilityTest() {
         val storage = SingleStringStorage("")
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
-        encryptedFormat.secureEncrypt = SecureEncryptImpl(aapsLogger, cryptoUtil)
+        val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
         val prefsIn = Prefs(
             mapOf(
                 "testpref1" to "--1--",
@@ -143,7 +147,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
+        val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "it-is-NOT-right-secret")
 
         assertThat(prefs.values).isEmpty()
@@ -170,7 +174,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
+        val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assumeAES256isSupported(cryptoUtil)
@@ -197,7 +201,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
+        val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assertThat(prefs.values).isEmpty()
@@ -212,7 +216,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
+        val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assertThat(prefs.values).isEmpty()
@@ -225,7 +229,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             val frozenPrefs = "whatever man, i duno care"
 
             val storage = SingleStringStorage(frozenPrefs)
-            val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
+            val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
             encryptedFormat.loadPreferences(frozenPrefs, "sikret")
         }
     }
@@ -246,7 +250,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
                 "}"
 
             val storage = SingleStringStorage(frozenPrefs)
-            val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context, rxBus)
+            val encryptedFormat = EncryptedPrefsFormat(rh, storage, context, rxBus, SecureEncryptImpl(aapsLogger, cryptoUtil))
             encryptedFormat.loadPreferences(frozenPrefs, "sikret")
         }
     }
