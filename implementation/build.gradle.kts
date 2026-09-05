@@ -78,7 +78,18 @@ kotlin {
     // rest formats user text through ResourceHelper and app.aaps.core.ui.R - the twenty command queue
     // classes are otherwise portable and fail only on that. They can follow once they take a
     // TextResolver and a TextRef instead, the same move :core:keys already made.
+    // The default hierarchy is otherwise switched off by the manual dependsOn below, which would
+    // silently unwire iosMain. Stated explicitly for the same reason :core:objects states it.
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        // Android and the desktop are both JVMs, so what is written on java.* is shared by them and
+        // not copied into each. The OAuth redirect listener is the first thing to live here: it is a
+        // ServerSocket on both, and iOS has its own on POSIX sockets.
+        val jvmSharedMain = create("jvmSharedMain") { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(jvmSharedMain)
+        jvmMain.get().dependsOn(jvmSharedMain)
+
         commonMain {
             kotlin.srcDir(generateImplementationStrings.flatMap { it.commonOutputDir })
             dependencies {
@@ -88,6 +99,12 @@ kotlin {
                 implementation(project(":core:objects"))
                 // For CoreUiStrings: the command queue names its user text instead of numbering it.
                 implementation(project(":core:ui"))
+                // Cloud storage talks to Google Drive over its REST API, so the client has to work on
+                // every platform. Ktor is already the project's multiplatform HTTP client - :core:nssdk
+                // reaches Nightscout with it - and each target brings its own engine below.
+                implementation(libs.io.ktor.client.core)
+                implementation(libs.io.ktor.client.content.negotiation)
+                implementation(libs.io.ktor.serialization.kotlinx.json)
             }
         }
 
@@ -97,6 +114,8 @@ kotlin {
             dependencies {
                 implementation(libs.cryptography.core)
                 implementation(libs.cryptography.provider.optimal)
+                // Darwin runs on NSURLSession, which is what an iOS build wants.
+                implementation(libs.io.ktor.client.darwin)
             }
         }
 
@@ -106,16 +125,24 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.kotlinx.coroutines.test)
+                // Ktor's own engine for tests: the Drive calls are checked against scripted replies,
+                // so they run on every platform with no network and no Google account.
+                implementation(libs.io.ktor.client.mock)
             }
         }
 
         iosTest {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.io.ktor.client.mock)
             }
         }
 
         androidMain {
+            dependencies {
+                // OkHttp on Android, the engine the app already ships.
+                implementation(libs.io.ktor.client.okhttp)
+            }
             // Android only: the string name to R.string id map.
             kotlin.srcDir(generateImplementationStrings.flatMap { it.androidOutputDir })
             dependencies {
