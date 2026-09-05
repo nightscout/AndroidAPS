@@ -26,10 +26,23 @@ import java.io.File
  */
 class DesktopClientConfig(
     override val VERSION_NAME: String = GeneratedBuildInfo.VERSION,
-    override val APPLICATION_ID: String = "info.nightscout.aapsclient",
+    /** Which client this build is, from `-Pclient=N`. Overridden in a test. */
+    private val client: Int = GeneratedBuildInfo.CLIENT,
     /** Overridden in a test, so it neither reads nor creates markers in the real AAPS folder. */
     private val extraDir: File = DesktopFolders.extra
 ) : Config {
+
+    /**
+     * The same ids the Android clients use, so a client keeps its identity across platforms.
+     *
+     * Nightscout and the client-control channel both read this, and two clients pointed at one site
+     * must not claim to be the same app.
+     */
+    override val APPLICATION_ID: String = when (client) {
+        2    -> "info.nightscout.aapsclient2"
+        3    -> "info.nightscout.aapsclient3"
+        else -> "info.nightscout.aapsclient"
+    }
 
     override val SUPPORTED_NS_VERSION: Int = 150000
 
@@ -39,9 +52,9 @@ class DesktopClientConfig(
     override val PUMPDRIVERS: Boolean = false
 
     override val AAPSCLIENT: Boolean = true
-    override val AAPSCLIENT1: Boolean = true
-    override val AAPSCLIENT2: Boolean = false
-    override val AAPSCLIENT3: Boolean = false
+    override val AAPSCLIENT1: Boolean = client == 1
+    override val AAPSCLIENT2: Boolean = client == 2
+    override val AAPSCLIENT3: Boolean = client == 3
 
     override val FLAVOR: String = "aapsclient"
     override val BUILD_TYPE: String = "debug"

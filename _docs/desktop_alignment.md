@@ -88,6 +88,39 @@ writes (`google_drive_refresh_token`, `google_drive_folder_id` and the rest), or
 sign in and silently loses the folder they picked; and a 401 from Drive must be retried with a forced
 token refresh before it is believed, or a clock a few minutes fast throws away a working sign in.
 
+## Client builds, and the two folders
+
+Desktop builds one client at a time: `./gradlew :desktop:shell:run -Pclient=2`, and 1 when nothing is
+passed. A build property rather than a runtime flag because it settles what a running app cannot -
+the installer's name and its icon are written by jpackage at package time. `GenerateBuildInfoTask`
+carries the number into `GeneratedBuildInfo.CLIENT`, and `DesktopClientConfig` turns it into the
+`AAPSCLIENT1/2/3` flags, the application id and the app name.
+
+The split that matters, and it mirrors a phone exactly:
+
+| | Android | Desktop |
+|---|---|---|
+| Per client | each client is its own app, with its own private data dir | `~/.aaps`, `~/.aaps2`, `~/.aaps3` |
+| Shared | `Documents/AAPS` - exports, `extra` markers | `~/AAPS` - `preferences`, `exports`, `extra` |
+
+So two clients follow two Nightscout sites at once with separate databases, preferences and keys,
+while a backup exported by one is visible to the other. Client 1 keeps the unsuffixed `~/.aaps`, so
+an install that already exists is never moved.
+
+Everything per client goes through `DesktopFolders.data`. That includes the database: the path is
+built in `DesktopAppGraph` and passed to `JvmAppDatabaseBuilder`, which used to construct `~/.aaps`
+itself - the one piece of per-client state that could not follow the client, in a module that has no
+business knowing where a user's home directory is.
+
+`Main.kt` sets `DesktopFolders.client` as its very first statement, before the single-instance lock
+and before the start up logger, because both read a path. Only one instance of the *same* client can
+run; a different client is unaffected, because its lock lives in its own directory.
+
+**Still open:** the installer icons. The *window* icon is already per client at runtime
+(`ic_yellowowl`, `ic_blueowl`, `ic_greenowl`), but `nativeDistributions` sets no `iconFile` at all,
+so every packaged build carries the jpackage default. It needs `.ico` for Windows and `.icns` for
+macOS; only `.png` exists today.
+
 ## Where desktop cannot follow, and that is fine
 
 Not everything should be chased. Some of these are real platform limits and the honest answer is to

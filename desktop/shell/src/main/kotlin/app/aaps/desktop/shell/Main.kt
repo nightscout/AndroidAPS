@@ -46,6 +46,7 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.shared.clientbindings.ClientGraphBindings
+import app.aaps.desktop.shell.config.GeneratedBuildInfo
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
 import app.aaps.implementation.logging.AAPSLoggerDesktop
@@ -92,10 +93,14 @@ import app.aaps.core.ui.compose.metroViewModel
  * terminal nobody is watching is how a broken launch gets mistaken for a working one.
  */
 fun main() {
+    // Before everything, including the lock and the logger below, because it decides which data
+    // directory all of them use. Each client keeps its own, the way each Android client is a
+    // separate app with its own private storage, so two can run at once against two sites.
+    DesktopFolders.client = GeneratedBuildInfo.CLIENT
     val startup = runCatching {
-        // First, and before the graph, because the graph opens the database. Two copies of this app
-        // sharing one database is the thing being prevented, so the check has to happen before
-        // anything touches it.
+        // Then the lock, before the graph, because the graph opens the database. Two copies of the
+        // *same* client sharing one database is what is being prevented - a different client has its
+        // own directory by the line above, and its own lock inside it, so it is unaffected.
         claimSingleInstance()
         val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
         startPlugins(graph)

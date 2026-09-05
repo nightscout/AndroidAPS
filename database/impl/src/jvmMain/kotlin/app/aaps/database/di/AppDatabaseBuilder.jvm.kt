@@ -20,10 +20,16 @@ import java.io.File
  *
  * ## Where the file goes
  *
- * Under the user's home directory in a dot folder, which is the plainest thing that works the same
- * on Windows, macOS and Linux. A per-OS location - `%APPDATA%`, `~/Library/Application Support` -
- * would be more idiomatic, and is worth changing to before the desktop build reaches anyone, because
- * moving a database after people have data in it is the expensive kind of change.
+ * Wherever the caller says. The desktop shell passes a path inside its own data directory, which is
+ * one per client - so two clients never open one database. This module used to build that path
+ * itself, which meant the database was the single piece of per-client state that could not follow
+ * the client.
+ *
+ * The shell currently picks a dot folder under the user's home, the plainest thing that works the
+ * same on Windows, macOS and Linux. A per-OS location - `%APPDATA%`, `~/Library/Application Support`
+ * - would be more idiomatic, and is worth changing to before the desktop build reaches anyone,
+ * because moving a database after people have data in it is the expensive kind of change. That
+ * decision now lives with the shell, where it belongs.
  *
  * ## No migrations here, on purpose
  *
@@ -39,7 +45,7 @@ import java.io.File
  */
 class JvmAppDatabaseBuilder {
 
-    /** Builds a repository over a database file in the AAPS folder under the user's home directory. */
+    /** Builds a repository over the database file at [fileName], which is a full path. */
     fun provideAppRepository(fileName: String): AppRepository =
         AppRepository { provideAppDatabase(fileName) }
 
@@ -83,9 +89,17 @@ class JvmAppDatabaseBuilder {
         connection.execSQL("CREATE INDEX IF NOT EXISTS `index_runningModes_end` ON `runningModes` (`timestamp` + `duration`)")
     }
 
-    private fun databasePath(fileName: String): String {
-        val dir = File(System.getProperty("user.home"), ".aaps")
-        dir.mkdirs()
-        return File(dir, fileName).absolutePath
+    /**
+     * Takes the path it is given, and only makes sure the folder exists.
+     *
+     * This used to build `~/.aaps/<name>` itself, which put the desktop's folder layout in a module
+     * that knows nothing about it - and made the database the one piece of per-client state that
+     * could not follow the client. The shell decides where its data lives; a database module should
+     * not have an opinion about a user's home directory.
+     */
+    private fun databasePath(path: String): String {
+        val file = File(path)
+        file.absoluteFile.parentFile?.mkdirs()
+        return file.absolutePath
     }
 }
