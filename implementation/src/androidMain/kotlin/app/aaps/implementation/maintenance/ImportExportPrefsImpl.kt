@@ -400,6 +400,12 @@ class ImportExportPrefsImpl @Inject constructor(
             aapsLogger.error(LTag.CORE, "File system exception: Pref File not found, export canceled", e)
         } catch (e: PrefIOError) {
             aapsLogger.error(LTag.CORE, "File system exception: PrefIOError, export canceled", e)
+        } catch (e: Exception) {
+            // Anything else, and the encryption is what makes this necessary: it throws where it used
+            // to return null, and a `GeneralSecurityException` matches none of the four above. It
+            // would leave this method through the export coroutine instead of coming back as a
+            // failed export, so the user would be told nothing while the backup did not happen.
+            aapsLogger.error(LTag.CORE, "Unhandled exception, export canceled", e)
         }
         aapsLogger.debug(LTag.CORE, "savePreferences: $resultOk")
         return resultOk

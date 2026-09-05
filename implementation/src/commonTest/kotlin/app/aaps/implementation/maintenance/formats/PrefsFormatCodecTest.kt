@@ -62,6 +62,30 @@ class PrefsFormatCodecTest {
         assertEquals(PrefsStatusImpl.OK, prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status)
     }
 
+    /**
+     * The salt is hex, and hex has two spellings.
+     *
+     * The reader this file replaced ran the salt through `hexStringToByteArray`, which lower-cases
+     * first. A private reader here indexed straight into a lower-case table, so `indexOf('A')` gave
+     * -1 and the derived key was garbage - and the user was told their password was wrong, about a
+     * correct password and an undamaged backup.
+     *
+     * The frozen fixture cannot catch this: AAPS writes lower-case, so it is lower-case. This is the
+     * same file with the salt upper-cased and nothing else touched, which is a valid encoding of the
+     * same bytes and must open the same way.
+     */
+    @Test
+    fun `an upper case salt is the same salt`() {
+        val upperCased = FROZEN_ENCRYPTED.replace(
+            "9581d7a9e56d8127ad6b74a876fa60b192b1c6f4343d857bc07e3874589f2fc9",
+            "9581D7A9E56D8127AD6B74A876FA60B192B1C6F4343D857BC07E3874589F2FC9"
+        )
+
+        val prefs = sut.decode(upperCased, "sikret")
+
+        assertEquals(mapOf("key1" to "A", "keyB" to "2"), prefs.values)
+    }
+
     /** A typo is an ordinary event, so it is an answer with a reason on it and never an exception. */
     @Test
     fun `a wrong password is reported and does not throw`() {

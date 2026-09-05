@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.resources.TextResolver
@@ -82,6 +83,7 @@ class IosImportExportPrefs @Inject constructor(
     private val passwordHasher: PasswordHasher,
     private val files: PrefsFileAccess,
     private val lister: PrefsFileLister,
+    private val exportPasswordDataStore: ExportPasswordDataStore,
     secureEncrypt: SecureEncrypt,
     textResolver: TextResolver
 ) : ImportExportPrefs {
@@ -100,14 +102,20 @@ class IosImportExportPrefs @Inject constructor(
     }
 
     /**
-     * Returns the password unchanged.
+     * Keeps the export password so a scheduled export can run without asking for it.
      *
-     * Android keeps an export password for a while so a scheduled export can run unattended, in a
-     * datastore that expires it. iOS has no unattended export to serve, so there is nothing to cache
-     * and nothing to expire - and a password stored with no expiry to answer a need that does not
-     * exist would be the worse answer.
+     * The same store Android uses, and for the same reason: `ActionSettingsExport` is an automation
+     * action in `commonMain`, so an iOS user can build a rule that exports on a schedule exactly as
+     * an Android user can.
+     *
+     * This used to return the password untouched, with a comment saying iOS had no unattended export
+     * to serve. That was not true on this branch. Nothing wrote the store, so
+     * `getPasswordFromDataStore()` always came back empty and every scheduled export took the
+     * failure branch - clearing the store, raising an urgent alert and announcing it to Nightscout,
+     * without ever writing a backup. An hourly rule produced an hourly alarm and no export.
      */
-    override fun cacheExportPassword(password: String): String = password
+    override fun cacheExportPassword(password: String): String =
+        exportPasswordDataStore.putPasswordToDataStore(password)
 
     // ----- Where an export goes. There is no cloud on iOS, and this says so rather than failing -----
 

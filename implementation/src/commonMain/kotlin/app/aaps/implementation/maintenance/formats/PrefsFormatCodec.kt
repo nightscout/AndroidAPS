@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoPrimitives
+import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.implementation.ImplementationStrings
 import app.aaps.implementation.maintenance.PrefsMetadataKeyImpl
 import app.aaps.implementation.maintenance.data.PrefFormatError
@@ -63,8 +64,10 @@ class PrefsFormatCodec(
      * Renders [prefs] as the text of an export file.
      *
      * Encrypts when a password is given and the metadata does not say encryption is off. If
-     * encryption is asked for and cannot be done, the file is written unencrypted and says so in its
-     * own `algorithm` field rather than pretending - the same fallback the Android writer has.
+     * encryption is asked for and cannot be done, this throws and no file is written: AAPS stopped
+     * producing unencrypted backups long ago, and quietly writing one because the cipher failed
+     * would hand over the settings unprotected at the worst possible moment. Callers report a failed
+     * export instead.
      */
     fun encode(prefs: Prefs, masterPassword: String?): String {
         val encStatus = prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status ?: PrefsStatusImpl.OK
@@ -88,15 +91,16 @@ class PrefsFormatCodec(
         if (encrypted) {
             val rawContent = content.toString()
             val salt = crypto.randomBytes(SALT_BYTES)
-            val attempt = encryptContent(plainPassword(masterPassword!!), salt, rawContent)
-            if (attempt != null) {
-                encodedContent = attempt
-                security["algorithm"] = "v1"
-                security["salt"] = salt.toHex()
-                security["content_hash"] = crypto.sha256(rawContent)
-            } else {
-                encrypted = false
-            }
+            // No "encryption failed, write it in the clear" branch. There used to be one, inherited
+            // from the Android writer, and it had already stopped being reachable: the crypto now
+            // throws where the old `CryptoUtil.encrypt` returned null. Removed rather than repaired -
+            // writing an unencrypted backup because encryption failed is not a fallback, it is
+            // handing over the settings unprotected at the one moment something is already wrong.
+            // AAPS stopped producing unencrypted backups long ago; a failure here fails the export.
+            encodedContent = encryptContent(plainPassword(masterPassword!!), salt, rawContent)
+            security["algorithm"] = "v1"
+            security["salt"] = salt.toHex()
+            security["content_hash"] = crypto.sha256(rawContent)
         }
         if (!encrypted) security["algorithm"] = "none"
 
@@ -170,7 +174,12 @@ class PrefsFormatCodec(
 
                     else                              -> {
                         val cipherText = container["content"]?.jsonPrimitive?.content ?: ""
-                        val decrypted = masterPassword?.let { decryptContent(it, salt.fromHex(), cipherText) }
+                        // The shared reader, which lower-cases first. A private one here indexed
+                        // straight into a lower-case table, so an upper-case salt gave indexOf() = -1
+                        // and a garbage key - and the user was told the password was wrong, about a
+                        // correct password and an intact file. AAPS writes lower-case, so its own
+                        // exports were safe; anything hand-edited or written by another tool was not.
+                        val decrypted = masterPassword?.let { decryptContent(it, salt.hexStringToByteArray(), cipherText) }
                         if (decrypted == null) {
                             secure = PrefsStatusImpl.ERROR
                             issues.add(gs(ImplementationStrings.prefdecrypt_issue_wrong_pass))
@@ -266,7 +275,7 @@ class PrefsFormatCodec(
         if (secureEncrypt.isValidDataString(candidate)) secureEncrypt.decrypt(candidate).ifEmpty { candidate } else candidate
 
     /** `[1 byte iv length][iv][ciphertext and tag]`, base64. The layout every existing file uses. */
-    private fun encryptContent(passphrase: String, salt: ByteArray, raw: String): String? {
+    private fun encryptContent(passphrase: String, salt: ByteArray, raw: String): String {
         val key = crypto.pbkdf2(passphrase, salt, PBKDF2_ITERATIONS, AES_KEY_BITS)
         val iv = crypto.randomBytes(IV_BYTES)
         val cipherText = crypto.aesGcmEncrypt(key, iv, raw.encodeToByteArray(), TAG_BITS)
@@ -292,9 +301,6 @@ class PrefsFormatCodec(
 
     private fun ByteArray.toHex(): String =
         joinToString("") { b -> HEX[(b.toInt() shr 4) and 0xF].toString() + HEX[b.toInt() and 0xF] }
-
-    private fun String.fromHex(): ByteArray =
-        ByteArray(length / 2) { i -> ((HEX.indexOf(this[i * 2]) shl 4) or HEX.indexOf(this[i * 2 + 1])).toByte() }
 
     private companion object {
 
