@@ -25,6 +25,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.platformCryptoPrimitives
 import app.aaps.implementation.maintenance.data.PrefsStatusImpl
+import app.aaps.implementation.maintenance.formats.ExportMetadata
 import app.aaps.implementation.maintenance.formats.PrefsFormatCodec
 import app.aaps.implementation.maintenance.formats.PrefsTransfer
 import dev.zacsweers.metro.AppScope
@@ -161,13 +162,13 @@ class IosImportExportPrefs @Inject constructor(
             false
         }
 
-    private fun metadataForExport(): Map<PrefsMetadataKey, PrefMetadata> = mapOf(
-        PrefsMetadataKeyImpl.DEVICE_NAME to PrefMetadata(UIDevice.currentDevice.name, PrefsStatusImpl.OK),
-        PrefsMetadataKeyImpl.CREATED_AT to PrefMetadata(dateUtil.toISOString(dateUtil.now()), PrefsStatusImpl.OK),
-        PrefsMetadataKeyImpl.AAPS_VERSION to PrefMetadata(config.VERSION_NAME, PrefsStatusImpl.OK),
-        PrefsMetadataKeyImpl.AAPS_FLAVOUR to PrefMetadata(config.FLAVOR, PrefsStatusImpl.OK),
-        PrefsMetadataKeyImpl.DEVICE_MODEL to PrefMetadata(config.currentDeviceModelString, PrefsStatusImpl.OK),
-        PrefsMetadataKeyImpl.ENCRYPTION to PrefMetadata("Enabled", PrefsStatusImpl.OK)
+    /** The platform finds the values; [ExportMetadata] decides what an export is stamped with. */
+    private fun metadataForExport(): Map<PrefsMetadataKey, PrefMetadata> = ExportMetadata.forExport(
+        deviceName = UIDevice.currentDevice.name,
+        createdAt = dateUtil.toISOString(dateUtil.now()),
+        version = config.VERSION_NAME,
+        flavour = config.FLAVOR,
+        deviceModel = config.currentDeviceModelString
     )
 
     // ----- Import -----
@@ -243,7 +244,14 @@ interface PrefsFileAccess {
 @OptIn(ExperimentalForeignApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosPrefsFileAccess @Inject constructor() : PrefsFileAccess {
+class IosPrefsFileAccess @Inject constructor(
+    /**
+     * Where exports are kept. Defaults to the app's Documents directory, which is the one the Files
+     * app shows; a test points it somewhere of its own so it neither reads the user's exports nor
+     * leaves files behind for the next test to list.
+     */
+    private val directory: String? = defaultDocumentsDirectory()
+) : PrefsFileAccess {
 
     /**
      * Pinned to `en_US_POSIX` and the Gregorian calendar on purpose.
@@ -276,8 +284,11 @@ class IosPrefsFileAccess @Inject constructor() : PrefsFileAccess {
         }
     }
 
-    private fun documentsDirectory(): String? =
-        NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstOrNull() as? String
+    private fun documentsDirectory(): String? = directory
 
     private fun documentsPath(name: String): String? = documentsDirectory()?.let { "$it/$name" }
 }
+
+/** The app's own Documents directory, or null on the rare build that has none. */
+private fun defaultDocumentsDirectory(): String? =
+    NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstOrNull() as? String
