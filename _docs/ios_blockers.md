@@ -376,6 +376,52 @@ step. The behaviour is unchanged and still documented in the gaps section.
 
 ## Ready for Android: what the iOS side has built
 
+### Google Drive: the shared client is proven, Android is the last one not using it
+
+`GoogleDriveManager` in `implementation/androidMain` is 1400 lines, and everything it does now
+exists in `commonMain` and has been run against a real Google account from an iPhone. Moving Android
+onto it is the last piece of the Drive work, and the only reason it has not been done from the macOS
+session is that **an Android change cannot be runtime-tested there** - the SDK is installed but there
+is no system image or AVD, and the behaviour at risk is user-facing.
+
+What already exists, all shared and tested on Android, desktop and iOS:
+
+- `GoogleAuthRequest` (PKCE, pinned to the RFC 7636 vector), `GoogleTokenStore`/`GoogleTokenClient`,
+  `GoogleDriveApi` and `GoogleDriveProvider` - about 65 tests, all against Ktor's mock engine, so
+  they run with no network and no account.
+- `JvmAuthRedirectListener` in `jvmSharedMain` - the loopback socket, already compiled into the
+  Android target. `AndroidAuthRedirectListener` is a one-line binding, the way `IosAuthRedirectListener`
+  is.
+- `OAuthCallback` and `ExportMetadata`, which Android already uses.
+
+What Android still needs:
+
+1. An `AuthBrowser` - a Custom Tab. **Not** the plain "open a link" opener: the sign in ends with a
+   redirect to a port this app is listening on, and a browser that switches away lets the OS suspend
+   the app and take the listener with it. Android is more forgiving than iOS here, but the shape is
+   the same and the interface's KDoc explains it.
+2. Construction, contributed into the `CloudStorageProvider` set. `IosGoogleDriveProvider` is thirty
+   lines and is the worked example.
+3. The behaviour `GoogleDriveManager` has and the shared provider does not: it raises **user-visible
+   notifications** on connection errors and pulls resource strings for them, where the shared one
+   keeps an in-memory flag and lets the caller decide what to show. That is the part worth reviewing
+   rather than porting mechanically - it is the only real behaviour difference, and it is the reason
+   a straight swap is not obviously safe for existing users.
+
+Three traps already paid for on the iOS side, all fixed in shared code, none of them obvious:
+
+- **Stored key names must be the ones Android already writes.** A name invented for the folder
+  (`google_drive_selected_folder_id` instead of `google_drive_folder_id`) kept the user signed in and
+  silently lost the folder they chose, so the next export went to the root of their Drive.
+  `GoogleDriveProviderTest` now asserts the *complete* set of stored names, not individual ones -
+  checking three of them is what let the fourth through.
+- **A 401 is not always a dead sign in.** It often just means the access token went stale early, so
+  it is retried with a forced refresh before the credentials are cleared.
+- **The sign in wait was sixty seconds.** That expires while a person is still typing a password, and
+  when it does the listener closes, so the redirect that arrives a moment later hits a dead port. It
+  is `AUTH_WAIT_MS` now, five minutes, shared - Android had the same bug, less visibly.
+
+
 - **`NsLoadExecutor` is done** - `CoroutineNsLoadExecutor` in `plugins/sync/iosMain`. The nine steps
   run as a coroutine sequence under one `Job`, so a new round replaces one in flight. Two details
   worth keeping if it is ever moved to `commonMain`: the chain stops at the first step that does not
