@@ -2,6 +2,14 @@ package app.aaps.implementation.maintenance
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.PrefMetadata
+import app.aaps.core.interfaces.maintenance.Prefs
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.objects.crypto.platformCryptoPrimitives
+import app.aaps.implementation.maintenance.data.PrefsStatusImpl
+import app.aaps.implementation.maintenance.formats.PrefsFormatCodec
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -49,7 +57,25 @@ class IosPrefsFileInfoTest {
     private val logger = RecordingLogger()
     private val temporaryDirectory = NSTemporaryDirectory()
 
-    private fun sut(directory: String? = temporaryDirectory) = IosPrefsFileInfo(logger, directory)
+    private val text = object : TextResolver {
+        override fun gs(ref: TextRef): String = "t"
+        override fun gs(ref: TextRef, vararg args: Any?): String = "t"
+        override fun gsNotLocalised(ref: TextRef): String = "t"
+        override fun shortTextMode(): Boolean = false
+    }
+
+    private val plainKeychain = object : SecureEncrypt {
+        override fun encrypt(plaintextSecret: String, keystoreAlias: String): String = plaintextSecret
+        override fun decrypt(encryptedSecret: String): String = encryptedSecret
+        override fun isValidDataString(data: String?): Boolean = false
+        override fun deleteKey(keystoreAlias: String) = Unit
+    }
+
+    private val files = FakePrefsFileAccess()
+    private val lister = PrefsFileLister(files, plainKeychain, text)
+    private val codec = PrefsFormatCodec(platformCryptoPrimitives(), text, plainKeychain)
+
+    private fun sut(directory: String? = temporaryDirectory) = IosPrefsFileInfo(logger, lister, directory)
 
     @Test
     fun `an old export is named by its date`() {
@@ -90,5 +116,44 @@ class IosPrefsFileInfoTest {
     fun `no directory at all is a no - with a line saying so`() {
         assertFalse(sut(directory = null).isDirectoryAccessGranted())
         assertEquals(1, logger.debugs.size)
+    }
+
+    /**
+     * The setup wizard asks this before it offers to import, so an empty answer means a new user is
+     * never shown their own backup. It used to be empty always.
+     */
+    @Test
+    fun `a real export is listed`() {
+        files.write("2026-09-05_010838_full.json", codec.encode(Prefs(mapOf("units" to "mmol"), emptyMap()), "password"))
+
+        assertEquals(1, sut().listPreferenceFiles().size)
+    }
+
+    /** Other json in the same directory belongs to somebody else and must not be offered. */
+    @Test
+    fun `json that is not an export is not listed`() {
+        files.write("something-else.json", """{"not":"ours"}""")
+
+        assertTrue(sut().listPreferenceFiles().isEmpty())
+    }
+
+    @Test
+    fun `an export is listed with the metadata the row shows`() {
+        val prefs = Prefs(mapOf("units" to "mmol"), mapOf(PrefsMetadataKeyImpl.AAPS_FLAVOUR to PrefMetadata("full", PrefsStatusImpl.OK)))
+        files.write("2026-09-05_010838_full.json", codec.encode(prefs, "password"))
+
+        val listed = sut().listPreferenceFiles().single()
+
+        assertEquals("full", listed.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.value)
+    }
+
+    /** Writes to a map, so the test never depends on what is lying in the simulator's directory. */
+    private class FakePrefsFileAccess : PrefsFileAccess {
+
+        private val written = mutableMapOf<String, String>()
+
+        override fun newExportName(flavour: String): String = "2026-09-05_010838_$flavour.json"
+        override fun write(name: String, contents: String) { written[name] = contents }
+        override fun list(): List<Pair<String, String>> = written.entries.map { it.key to it.value }
     }
 }

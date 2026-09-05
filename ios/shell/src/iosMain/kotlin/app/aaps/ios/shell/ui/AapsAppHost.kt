@@ -363,7 +363,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                                 onSearchResultClick = { entry -> navigator.handleSearchResultClick(entry) },
                                 onNotificationActionClick = { n -> navigator.handleNotificationAction(n.id) },
                                 onQuickLaunchActionClick = { action -> navigator.handleQuickLaunchAction(action) },
-                                onImportSettingsNavigate = { source -> logger.notWiredYet("import from $source") },
+                                // The destination is already in the shared graph and the view model is
+                                // already handed to it above, so this is the same call the other two
+                                // shells make. It was a placeholder only while iOS had no importer.
+                                onImportSettingsNavigate = { source -> navController.navigate(AppRoute.ImportSettings.createRoute(source.name)) },
                                 // Needs a UIDocumentPicker, which nothing on iOS has yet.
                                 onDirectoryClick = { logger.notWiredYet("directory picker") },
                                 onLaunchBrowser = { url -> graph.urlOpener.open(url) },

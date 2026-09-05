@@ -35,15 +35,12 @@ import platform.Foundation.dateWithTimeIntervalSince1970
  *
  * ## The file list
  *
- * Always empty, and it has to be for now. Finding the files is the easy half - they would be the
- * `.json` files in the same directory - but a [PrefsFile] carries parsed metadata, and both the
- * parser (`EncryptedPrefsFormat`) and the keys it fills in (`PrefsMetadataKeyImpl`) are Android
- * only. Returning files with no metadata would be worse than none: the import screen sorts and
- * filters on the flavour key, so every row would be dropped anyway, after being shown.
+ * Real, and it comes from [PrefsFileLister] rather than from a second reader written here. This used
+ * to answer with an empty list because the format and the metadata keys were Android only; both are
+ * shared code now, so an iPhone reads the same exports a phone writes.
  *
- * There is nothing to list yet in any case. `ImportExportPrefs` has no iOS implementation, so iOS
- * cannot write an export either. Offering a file the app then cannot import would be the misleading
- * answer, not the empty one.
+ * The list matters beyond the import screen: the setup wizard asks it whether to offer importing at
+ * all, so an empty answer used to mean a new iOS user was never offered their own backup.
  *
  * ## The directory
  *
@@ -56,6 +53,7 @@ import platform.Foundation.dateWithTimeIntervalSince1970
 @ContributesBinding(AppScope::class)
 class IosPrefsFileInfo @Inject constructor(
     private val aapsLogger: AAPSLogger,
+    private val lister: PrefsFileLister,
     private val exportDirectory: String? = defaultDocumentsDirectory()
 ) : PrefsFileInfo {
 
@@ -73,10 +71,7 @@ class IosPrefsFileInfo @Inject constructor(
         return relativeFormatter.localizedStringForDate(exported.toNSDate(), relativeToDate = now.toNSDate())
     }
 
-    override fun listPreferenceFiles(): MutableList<PrefsFile> {
-        aapsLogger.debug(LTag.UI, "Export files cannot be read on iOS yet, see the class docs")
-        return mutableListOf()
-    }
+    override fun listPreferenceFiles(): MutableList<PrefsFile> = lister.list().toMutableList()
 
     override fun isDirectoryAccessGranted(): Boolean {
         val directory = exportDirectory
