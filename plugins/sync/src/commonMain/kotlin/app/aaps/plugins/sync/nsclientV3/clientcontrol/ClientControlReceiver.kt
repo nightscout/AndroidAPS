@@ -697,7 +697,18 @@ class ClientControlReceiver @Inject constructor(
                 aapsLogger.warn(LTag.NSCLIENT, "ClientControl: preferences.update from ${entry.name} rejected $keyString (unknown or not client-writable)")
                 return@forEach
             }
-            if (pushed.lastModified <= preferences.get(LongComposedKey.SyncedPrefModified, keyString)) return@forEach // stale, LWW
+            // Stale, by last-writer-wins. Logged with both stamps because this is the one drop that
+            // used to be silent: if the master's stamp somehow sits ahead of the client's, every edit
+            // of that key is discarded for ever and nothing anywhere says why. Both numbers are
+            // needed to tell "the master edited it more recently" from "the two clocks disagree".
+            val ours = preferences.get(LongComposedKey.SyncedPrefModified, keyString)
+            if (pushed.lastModified <= ours) {
+                aapsLogger.warn(
+                    LTag.NSCLIENT,
+                    "ClientControl: preferences.update from ${entry.name} dropped $keyString as stale (theirs=${pushed.lastModified} <= ours=$ours)"
+                )
+                return@forEach
+            }
             when (key) {
                 is BooleanNonPreferenceKey -> {
                     val value = pushed.value.toBooleanStrictOrNull()

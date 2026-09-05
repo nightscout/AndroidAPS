@@ -16,6 +16,8 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
+import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.IntNonPreferenceKey
@@ -305,6 +307,17 @@ private fun setSharedStringState(map: SnapshotStateMap<String, Any?>, key: Strin
     map["string:$key"] = value
 }
 
+/**
+ * Forgets a cached string so the next read seeds it again from the preference.
+ *
+ * For values the map holds in a rendered form rather than the stored one - see the
+ * `UnitDoublePreferenceKey` branch of [sharedStateUpdaterFor]. Removing from a `SnapshotStateMap`
+ * invalidates whatever composition read that entry, which is what makes the row recompose.
+ */
+private fun clearSharedStringState(map: SnapshotStateMap<String, Any?>, key: String) {
+    map.remove("string:$key")
+}
+
 private fun getSharedIntState(map: SnapshotStateMap<String, Any?>, key: String, initialValue: Int): Int {
     return map.getOrPut("int:$key") { initialValue } as Int
 }
@@ -337,33 +350,72 @@ internal suspend fun observeSyncedKeysIntoState(
     sharedStates: SnapshotStateMap<String, Any?>
 ): Unit = coroutineScope {
     preferences.getSyncKeys().forEach { key ->
-        when (key) {
-            // PreferenceKey getter applies mode logic (simpleMode/engineering); write the EFFECTIVE value.
-            is BooleanPreferenceKey    -> launch {
-                preferences.observe(key).drop(1).collect { setSharedBooleanState(sharedStates, key.key, preferences.get(key)) }
-            }
-
-            is BooleanNonPreferenceKey -> launch {
-                preferences.observe(key).drop(1).collect { setSharedBooleanState(sharedStates, key.key, it) }
-            }
-            // PreferenceKey getter applies mode logic; write the EFFECTIVE value for it.
-            is StringPreferenceKey     -> launch {
-                preferences.observe(key).drop(1).collect { setSharedStringState(sharedStates, key.key, preferences.get(key)) }
-            }
-
-            is StringNonPreferenceKey  -> launch {
-                preferences.observe(key).drop(1).collect { setSharedStringState(sharedStates, key.key, it) }
-            }
-
-            is IntPreferenceKey        -> launch {
-                preferences.observe(key).drop(1).collect { setSharedIntState(sharedStates, key.key, preferences.get(key)) }
-            }
-
-            is IntNonPreferenceKey     -> launch {
-                preferences.observe(key).drop(1).collect { setSharedIntState(sharedStates, key.key, it) }
-            }
-        }
+        sharedStateUpdaterFor(key, preferences, sharedStates)?.let { updater -> launch { updater() } }
     }
+}
+
+/**
+ * How one synced key feeds its external changes back into the shared state, or null for a type
+ * nothing handles yet.
+ *
+ * Split out of [observeSyncedKeysIntoState] so a test can ask the question the `when` used to answer
+ * silently: **is every synced key type actually handled?** It was not. `UnitDoubleKey` gained a
+ * `SyncSpec`, so its value reached the other device and was stored - and the screen went on showing
+ * the old one, because nothing refreshed the cache the row reads. Adding `sync = ...` to a key of an
+ * unhandled type still compiles, still syncs, and still looks broken to the user; only a test can
+ * catch that, which is why this returns a value instead of launching.
+ */
+internal fun sharedStateUpdaterFor(
+    key: NonPreferenceKey,
+    preferences: Preferences,
+    sharedStates: SnapshotStateMap<String, Any?>
+): (suspend () -> Unit)? = when (key) {
+    // PreferenceKey getter applies mode logic (simpleMode/engineering); write the EFFECTIVE value.
+    is BooleanPreferenceKey    -> {
+        { preferences.observe(key).drop(1).collect { setSharedBooleanState(sharedStates, key.key, preferences.get(key)) } }
+    }
+
+    is BooleanNonPreferenceKey -> {
+        { preferences.observe(key).drop(1).collect { setSharedBooleanState(sharedStates, key.key, it) } }
+    }
+    // PreferenceKey getter applies mode logic; write the EFFECTIVE value for it.
+    is StringPreferenceKey     -> {
+        { preferences.observe(key).drop(1).collect { setSharedStringState(sharedStates, key.key, preferences.get(key)) } }
+    }
+
+    is StringNonPreferenceKey  -> {
+        { preferences.observe(key).drop(1).collect { setSharedStringState(sharedStates, key.key, it) } }
+    }
+
+    is IntPreferenceKey        -> {
+        { preferences.observe(key).drop(1).collect { setSharedIntState(sharedStates, key.key, preferences.get(key)) } }
+    }
+
+    is IntNonPreferenceKey     -> {
+        { preferences.observe(key).drop(1).collect { setSharedIntState(sharedStates, key.key, it) } }
+    }
+
+    // The slider does not read the stored number - it reads a formatted string, in the user's units
+    // rather than the stored mg/dl. So this drops the cached string instead of writing a new one, and
+    // the row re-seeds it from the preference on the next composition through its own `getOrPut`.
+    //
+    // Invalidate rather than re-format, deliberately: formatting here would need `ProfileUtil` at the
+    // theme level, and `LocalProfileUtil` has no default - every Compose test and preview that renders
+    // a preference screen would have to provide one. Removing the entry needs nothing and cannot
+    // round differently from the row, because the row is the only thing that formats.
+    is UnitDoublePreferenceKey -> {
+        { preferences.observe(key).drop(1).collect { clearSharedStringState(sharedStates, "unit_display:${key.key}") } }
+    }
+
+    is DoublePreferenceKey     -> {
+        { preferences.observe(key).drop(1).collect { setSharedDoubleState(sharedStates, key.key, preferences.get(key)) } }
+    }
+
+    is DoubleNonPreferenceKey  -> {
+        { preferences.observe(key).drop(1).collect { setSharedDoubleState(sharedStates, key.key, it) } }
+    }
+
+    else                       -> null
 }
 
 // =================================
@@ -549,6 +601,21 @@ class UnitDoublePreferenceState(
     }
 }
 
+/**
+ * The stored mg/dl value as the string the row shows, in whatever units the user is in.
+ *
+ * One implementation, used both when the row is first built and when a synced write refreshes it -
+ * see [sharedStateUpdaterFor]. Two copies of this would be two ways of rounding the same number, and
+ * the row would flicker between them as edits arrived.
+ */
+private fun formatUnitDoubleForDisplay(profileUtil: ProfileUtil, storedValue: Double): String {
+    val displayValue = profileUtil.valueInCurrentUnitsDetect(storedValue)
+    val isMgdl = displayValue == storedValue || (storedValue > 0 && displayValue / storedValue > 0.9)
+    val precision = if (isMgdl) 0 else 1
+    // SEPARATOR_DOT, not the locale separator: this string is parsed back as a number when edited.
+    return NumberFormat.withDecimalsHalfUp(precision).format(displayValue, NumberFormatPlatform.SEPARATOR_DOT)
+}
+
 @Composable
 fun rememberUnitDoublePreferenceState(
     key: UnitDoublePreferenceKey
@@ -557,18 +624,8 @@ fun rememberUnitDoublePreferenceState(
     val profileUtil = LocalProfileUtil.current
     val sharedStates = LocalSharedPreferenceStates.current
 
-    // Format the current stored value for display
-    fun formatForDisplay(): String {
-        val storedValue = preferences.get(key)
-        val displayValue = profileUtil.valueInCurrentUnitsDetect(storedValue)
-        val isMgdl = displayValue == storedValue || (storedValue > 0 && displayValue / storedValue > 0.9)
-        val precision = if (isMgdl) 0 else 1
-        // SEPARATOR_DOT, not the locale separator: this string is parsed back as a number when edited.
-        return NumberFormat.withDecimalsHalfUp(precision).format(displayValue, NumberFormatPlatform.SEPARATOR_DOT)
-    }
-
     // Back the display value with the shared state map so it's reactive
-    val formatted = formatForDisplay()
+    val formatted = formatUnitDoubleForDisplay(profileUtil, preferences.getRaw(key))
     val displayState = remember(key) {
         mutableStateOf(getSharedStringState(sharedStates, "unit_display:${key.key}", formatted))
     }
