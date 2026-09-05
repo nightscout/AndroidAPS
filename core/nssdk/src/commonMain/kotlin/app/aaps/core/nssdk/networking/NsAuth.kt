@@ -104,6 +104,14 @@ internal object NsAuth {
     // is already a dependency of this module.
     private fun nowMillis(): Long = Clock.System.now().toEpochMilliseconds()
 
-    /** Nightscout answers 403 as well as 401 for an expired token. */
+    /**
+     * Nightscout answers 403 as well as 401 for an expired token.
+     *
+     * Deliberately unlike `GoogleDriveApi`, which treats **only** 401 as expiry: Google uses 403 for
+     * quota and permission, so widening it there signs a user out when their Drive is merely full.
+     * Two servers, two answers - and the risk differs too. This list only decides whether to *try a
+     * refresh*, which costs one request when it is wrong; the Drive path decides whether to throw a
+     * working sign in away.
+     */
     private val REFRESHABLE = listOf(401, 403)
 }
