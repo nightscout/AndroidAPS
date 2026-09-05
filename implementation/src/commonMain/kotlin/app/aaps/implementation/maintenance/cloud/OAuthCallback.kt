@@ -43,7 +43,18 @@ object OAuthCallback {
         val parts = line.trim().split(" ")
         if (parts.size < 2) return Result.Malformed
 
-        val target = parts[1]
+        return parseTarget(parts[1])
+    }
+
+    /**
+     * The same, for a caller that already has the request target rather than the whole line.
+     *
+     * Android's server reads the path itself before dispatching, so it arrives here with
+     * `/oauth/callback?code=...` and no method or version around it. Splitting the entry point is
+     * what lets both platforms share one parser instead of keeping two that drift - which they had
+     * already begun to do, on exact-versus-prefix path matching and on percent decoding.
+     */
+    fun parseTarget(target: String): Result {
         val path = target.substringBefore('?')
         if (path != CALLBACK_PATH) return Result.NotTheCallback
 

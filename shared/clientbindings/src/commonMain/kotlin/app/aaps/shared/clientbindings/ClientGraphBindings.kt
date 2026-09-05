@@ -12,7 +12,16 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.PasswordHasher
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.implementation.maintenance.LocalImportExportPrefs
+import app.aaps.implementation.maintenance.PrefsFileAccess
+import app.aaps.implementation.maintenance.PrefsFileLister
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -109,6 +118,46 @@ object ClientGraphBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun textResolver(): TextResolver = GeneratedTextResolver(compactScreen = isCompactScreen())
+
+    /**
+     * Settings export and import, for iOS and desktop.
+     *
+     * Bound here rather than by `@ContributesBinding` on the class, because `commonMain` compiles for
+     * Android too and Android has its own `ImportExportPrefsImpl` - two bindings of one interface is
+     * a graph error. This file is included only by the two client shells, which is exactly the set of
+     * platforms that want the shared one.
+     *
+     * The only per-platform piece is `PrefsFileAccess`, which each shell binds for itself.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun importExportPrefs(
+        aapsLogger: AAPSLogger,
+        preferences: Preferences,
+        store: KeyValueStore,
+        config: Config,
+        dateUtil: DateUtil,
+        activePlugin: ActivePlugin,
+        passwordHasher: PasswordHasher,
+        files: PrefsFileAccess,
+        lister: PrefsFileLister,
+        exportPasswordDataStore: ExportPasswordDataStore,
+        secureEncrypt: SecureEncrypt,
+        textResolver: TextResolver
+    ): ImportExportPrefs = LocalImportExportPrefs(
+        aapsLogger = aapsLogger,
+        preferences = preferences,
+        store = store,
+        config = config,
+        dateUtil = dateUtil,
+        activePlugin = activePlugin,
+        passwordHasher = passwordHasher,
+        files = files,
+        lister = lister,
+        exportPasswordDataStore = exportPasswordDataStore,
+        secureEncrypt = secureEncrypt,
+        textResolver = textResolver
+    )
 
     /** The shared registry decides what exists; each platform's own class only shows it. */
     @Provides

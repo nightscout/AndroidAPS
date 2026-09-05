@@ -1,23 +1,15 @@
 package app.aaps.desktop.shell.platform
 
-import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
-import app.aaps.core.interfaces.maintenance.ExportConfig
-import app.aaps.core.interfaces.maintenance.ExportPreparation
 import app.aaps.core.interfaces.maintenance.ExportResult
-import app.aaps.core.interfaces.maintenance.ImportDecryptResult
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
-import app.aaps.core.interfaces.maintenance.Prefs
-import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.ui.compose.history.HistoryScope
 import dev.zacsweers.metro.AppScope
@@ -34,103 +26,6 @@ import kotlinx.coroutines.flow.StateFlow
  * a JVM and has simply not been moved. They are grouped so the size of what is left is visible in
  * one place, and each says what it would take.
  */
-
-/**
- * Import and export of settings.
- *
- * **The reason this used to refuse has gone.** It was the format, not the file dialogs: a phone has
- * to read back what a desktop writes, and a second implementation of an encrypted stored format is
- * how two platforms silently stop matching - surfacing as "your backup will not import" long after
- * the export.
- *
- * There is nothing left to reimplement. `PrefsFormatCodec` and `PrefsTransfer` are in `commonMain`,
- * `JvmCryptoPrimitives` is in `jvmSharedMain` so desktop already has the real crypto, and all of it
- * runs on desktop's own target - `jvmTest` executes the codec tests, the transfer tests and the
- * crypto known-answer vectors, including the export file Android froze years ago. What is missing is
- * only picking a file and reading and writing bytes.
- *
- * `IosImportExportPrefs` is the worked example, and much of it is Files-app plumbing a desktop does
- * not need. Do not be put off by the old line about 911 + 296 lines: that was the Android version
- * over the Storage Access Framework and WorkManager, and none of it is being ported.
- *
- * See `_docs/desktop_alignment.md`.
- *
- * Until then, reads answer with nothing and writes throw, so nothing here can be mistaken for a
- * completed export. `DesktopPrefsFileInfo` does list the export folder, so the screen shows which
- * files exist and then refuses to open one - deliberately, because seeing the list is what confirms
- * the folder is right. Keep that when the refusal goes.
- */
-@ContributesBinding(AppScope::class)
-@SingleIn(AppScope::class)
-class DesktopImportExportPrefs @Inject constructor(
-    private val aapsLogger: AAPSLogger
-) : ImportExportPrefs {
-
-    override fun isMasterPasswordSet(): Boolean = false
-    override fun isMasterPasswordCorrect(password: String): Boolean =
-        aapsLogger.failNotOnDesktopYet("ImportExportPrefs.isMasterPasswordCorrect")
-
-    override fun prepareExport(): ExportPreparation? {
-        aapsLogger.notOnDesktopYet("ImportExportPrefs.prepareExport")
-        return null
-    }
-
-    override suspend fun executeExport(password: String): ExportResult =
-        aapsLogger.failNotOnDesktopYet("ImportExportPrefs.executeExport")
-
-    override suspend fun executeCsvExport(): ExportResult =
-        aapsLogger.failNotOnDesktopYet("ImportExportPrefs.executeCsvExport")
-
-    override fun exportSharedPreferencesNonInteractive(password: String): Boolean {
-        // False, not true: the unattended export path checks this, and a "yes" would record a
-        // backup that does not exist.
-        aapsLogger.notOnDesktopYet("ImportExportPrefs.exportSharedPreferencesNonInteractive")
-        return false
-    }
-
-    override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) =
-        aapsLogger.notOnDesktopYet("ImportExportPrefs.exportCustomWatchface")
-
-    override fun exportUserEntriesCsv() = aapsLogger.notOnDesktopYet("ImportExportPrefs.exportUserEntriesCsv")
-
-    override fun exportApsResult(algorithm: String?, input: String, output: String?) =
-        aapsLogger.notOnDesktopYet("ImportExportPrefs.exportApsResult")
-
-    override fun cacheExportPassword(password: String): String =
-        aapsLogger.failNotOnDesktopYet("ImportExportPrefs.cacheExportPassword")
-
-    override fun getExportConfig(): ExportConfig = ExportConfig(
-        isCloudActive = false, isCloudError = false, hasCloudCredentials = false,
-        settingsLocal = false, settingsCloud = false, logEmail = false, logCloud = false,
-        csvLocal = false, csvCloud = false, cloudDisplayName = null
-    )
-
-    override fun setSettingsLocalEnabled(enabled: Boolean) = aapsLogger.notOnDesktopYet("export options")
-    override fun setSettingsCloudEnabled(enabled: Boolean) = aapsLogger.notOnDesktopYet("export options")
-    override fun setLogEmailEnabled(enabled: Boolean) = aapsLogger.notOnDesktopYet("export options")
-    override fun setLogCloudEnabled(enabled: Boolean) = aapsLogger.notOnDesktopYet("export options")
-    override fun setCsvLocalEnabled(enabled: Boolean) = aapsLogger.notOnDesktopYet("export options")
-    override fun setCsvCloudEnabled(enabled: Boolean) = aapsLogger.notOnDesktopYet("export options")
-
-    override suspend fun getLocalImportFiles(): List<PrefsFile> {
-        aapsLogger.notOnDesktopYet("ImportExportPrefs.getLocalImportFiles")
-        return emptyList()
-    }
-
-    override suspend fun getCloudImportFiles(pageToken: String?): Pair<List<PrefsFile>, String?> {
-        aapsLogger.notOnDesktopYet("ImportExportPrefs.getCloudImportFiles")
-        return emptyList<PrefsFile>() to null
-    }
-
-    override suspend fun getCloudImportFileCount(): Int = 0
-
-    override fun decryptImportFile(file: PrefsFile, password: String): ImportDecryptResult =
-        ImportDecryptResult.Error("Importing settings is not implemented on desktop yet")
-
-    override fun executeImport(prefs: Prefs) = aapsLogger.failNotOnDesktopYet("ImportExportPrefs.executeImport")
-
-    override fun prepareImportedSettings() = aapsLogger.notOnDesktopYet("ImportExportPrefs.prepareImportedSettings")
-}
 
 /**
  * Autotune, which is arithmetic sitting in the wrong source set.

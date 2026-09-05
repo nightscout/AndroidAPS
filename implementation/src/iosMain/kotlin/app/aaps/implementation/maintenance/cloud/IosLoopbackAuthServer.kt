@@ -19,7 +19,9 @@ import platform.posix.AF_INET
 import platform.posix.POLLIN
 import platform.posix.SOCK_STREAM
 import platform.posix.SOL_SOCKET
+import platform.posix.SO_RCVTIMEO
 import platform.posix.SO_REUSEADDR
+import platform.posix.timeval
 import platform.posix.accept
 import platform.posix.bind
 import platform.posix.close
@@ -116,42 +118,60 @@ class IosLoopbackAuthServer(private val aapsLogger: AAPSLogger) {
     }
 
     /**
-     * Waits for the browser to arrive, up to [timeoutMs].
+     * Waits for the browser to come back, up to [timeoutMs], and hands over only a callback that
+     * proves it is ours.
      *
-     * Returns null when nothing came in time, which is what a user who closed the browser without
-     * finishing looks like. Requests that are not the callback are answered and waited past, because
-     * a browser will happily ask for `/favicon.ico` first and that must not end the wait.
+     * Requests that are not the callback are answered and waited past, because a browser will happily
+     * ask for `/favicon.ico` first and that must not end the wait.
+     *
+     * @param expectedState the `state` sent to the provider. **Required, and compared here.** A
+     *   loopback listener accepts a connection from anything else running on the device, so the code
+     *   in the request is not by itself evidence that this app asked for it - `state` is what makes
+     *   it evidence, and PKCE does not replace that. It used to be parsed, carried and left for "the
+     *   caller" to check, with no caller in the tree to do it.
+     * @return the callback, or null when nothing came in time - which is also what a user who closed
+     *   the browser without finishing looks like. A callback whose state does not match is not
+     *   returned: the browser is told the sign in failed and the wait carries on, because the real
+     *   one may still be coming.
      */
-    suspend fun awaitCallback(timeoutMs: Long): OAuthCallback.Result? = withContext(Dispatchers.IO) {
+    suspend fun awaitCallback(expectedState: String, timeoutMs: Long): OAuthCallback.Result? = withContext(Dispatchers.IO) {
         val listening = listenSocket
         if (listening < 0) return@withContext null
 
-        var remaining = timeoutMs
-        while (remaining > 0) {
-            val slice = if (remaining > POLL_SLICE_MS) POLL_SLICE_MS else remaining
-            val ready = memScoped {
-                val descriptor = alloc<pollfd>()
-                descriptor.fd = listening
-                descriptor.events = POLLIN.toShort()
-                descriptor.revents = 0
-                poll(descriptor.ptr, 1.convert(), slice.toInt())
+        // Closed however this ends - answered, timed out, failed or cancelled. Leaving it open left a
+        // fixed, well known port listening for the life of the app, still accepting anything with a
+        // `code` on it, and was also why a second sign in found the port already held.
+        try {
+            var remaining = timeoutMs
+            while (remaining > 0) {
+                val slice = if (remaining > POLL_SLICE_MS) POLL_SLICE_MS else remaining
+                val ready = memScoped {
+                    val descriptor = alloc<pollfd>()
+                    descriptor.fd = listening
+                    descriptor.events = POLLIN.toShort()
+                    descriptor.revents = 0
+                    poll(descriptor.ptr, 1.convert(), slice.toInt())
+                }
+                if (ready < 0) {
+                    aapsLogger.error(LTag.CORE, "$TAG stopped waiting, poll failed")
+                    return@withContext null
+                }
+                if (ready > 0) {
+                    val result = acceptOne(expectedState)
+                    // Not the callback - a favicon, say - or a callback that was not ours. Either way
+                    // the real one may still arrive, so keep waiting rather than failing the sign in.
+                    if (result != null && result != OAuthCallback.Result.NotTheCallback) return@withContext result
+                }
+                remaining -= slice
             }
-            if (ready < 0) {
-                aapsLogger.error(LTag.CORE, "$TAG stopped waiting, poll failed")
-                return@withContext null
-            }
-            if (ready > 0) {
-                val result = acceptOne()
-                // Not the callback - a favicon, say. Keep waiting for the real one.
-                if (result != null && result != OAuthCallback.Result.NotTheCallback) return@withContext result
-            }
-            remaining -= slice
+            aapsLogger.debug(LTag.CORE, "$TAG gave up waiting for the browser")
+            null
+        } finally {
+            stop()
         }
-        aapsLogger.debug(LTag.CORE, "$TAG gave up waiting for the browser")
-        null
     }
 
-    private fun acceptOne(): OAuthCallback.Result? {
+    private fun acceptOne(expectedState: String): OAuthCallback.Result? {
         val client = memScoped {
             val length = alloc<socklen_tVar>()
             length.value = sizeOf<sockaddr_in>().convert()
@@ -159,6 +179,17 @@ class IosLoopbackAuthServer(private val aapsLogger: AAPSLogger) {
             accept(listenSocket, from.ptr.reinterpret<sockaddr>(), length.ptr)
         }
         if (client < 0) return null
+
+        // A read deadline on the accepted socket, which the poll loop above does not cover: poll
+        // watches the *listening* socket, so once a connection is accepted the wait below is outside
+        // every timeout this class has. Without it any local process could open a connection, send
+        // nothing, and park the sign in for ever - the documented timeout would never fire.
+        memScoped {
+            val deadline = alloc<timeval>()
+            deadline.tv_sec = READ_TIMEOUT_SECONDS.convert()
+            deadline.tv_usec = 0.convert()
+            setsockopt(client, SOL_SOCKET, SO_RCVTIMEO, deadline.ptr, sizeOf<timeval>().convert())
+        }
 
         val requestLine = memScoped {
             val buffer = allocArray<ByteVar>(REQUEST_BUFFER)
@@ -173,7 +204,20 @@ class IosLoopbackAuthServer(private val aapsLogger: AAPSLogger) {
             return null
         }
 
-        val result = OAuthCallback.parseRequestLine(requestLine)
+        val parsed = OAuthCallback.parseRequestLine(requestLine)
+        // The state check, and the reason this method takes the expected value at all. A code from a
+        // request this app did not start is refused before it can be returned, and the browser is
+        // told the sign in failed rather than being shown success for someone else's redirect.
+        //
+        // Refused as NotTheCallback rather than as an error, so the wait carries on. Ending it here
+        // would let any local process cancel a sign in by sending one bogus code, which is a nastier
+        // thing to hand over than the nuisance it looks like.
+        val result = if (parsed is OAuthCallback.Result.Code && parsed.state != expectedState) {
+            aapsLogger.error(LTag.CORE, "$TAG refused a callback whose state did not match the one sent")
+            OAuthCallback.Result.NotTheCallback
+        } else {
+            parsed
+        }
         val response = OAuthCallback.responseFor(result, SIGNED_IN, FAILED).encodeToByteArray()
         response.usePinned { pinned -> send(client, pinned.addressOf(0), response.size.convert(), 0) }
         close(client)
@@ -193,6 +237,14 @@ class IosLoopbackAuthServer(private val aapsLogger: AAPSLogger) {
         private const val TAG = "IosLoopbackAuthServer:"
         private const val REQUEST_BUFFER = 4096
         private const val POLL_SLICE_MS = 250L
+
+        /**
+         * How long a connected client has to send its request line.
+         *
+         * The browser sends it immediately; this exists only so that something which connects and
+         * then says nothing cannot hold the sign in open.
+         */
+        private const val READ_TIMEOUT_SECONDS = 5
         private const val BACKLOG = 8
         private const val LOOPBACK_BIG_ENDIAN = 0x0100007Fu
 

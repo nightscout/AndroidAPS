@@ -108,7 +108,7 @@ class IosLoopbackAuthServerTest {
         val port = nextPort++
         assertTrue(server.start(port))
 
-        val waiting = async { server.awaitCallback(timeoutMs = 5_000) }
+        val waiting = async { server.awaitCallback(expectedState = STATE, timeoutMs = 5_000) }
         assertTrue(requestLoopback(port, "GET /oauth/callback?code=the-code&state=xyz HTTP/1.1"))
 
         val result = assertIs<OAuthCallback.Result.Code>(waiting.await())
@@ -122,11 +122,59 @@ class IosLoopbackAuthServerTest {
         val port = nextPort++
         assertTrue(server.start(port))
 
-        val waiting = async { server.awaitCallback(timeoutMs = 5_000) }
+        val waiting = async { server.awaitCallback(expectedState = STATE, timeoutMs = 5_000) }
         assertTrue(requestLoopback(port, "GET /favicon.ico HTTP/1.1"))
-        assertTrue(requestLoopback(port, "GET /oauth/callback?code=after-the-favicon HTTP/1.1"))
+        assertTrue(requestLoopback(port, "GET /oauth/callback?code=after-the-favicon&state=$STATE HTTP/1.1"))
 
         assertEquals("after-the-favicon", assertIs<OAuthCallback.Result.Code>(waiting.await()).code)
+    }
+
+    /**
+     * The reason [IosLoopbackAuthServer.awaitCallback] demands the state it sent.
+     *
+     * Anything else on the device can open a loopback connection, so a `code` arriving here is not by
+     * itself proof that AAPS asked for it. Only the state says that, and it used to be read and
+     * carried and never compared.
+     */
+    @Test
+    fun `a code with the wrong state is refused`() = runTest {
+        val port = nextPort++
+        assertTrue(server.start(port))
+
+        val waiting = async { server.awaitCallback(expectedState = STATE, timeoutMs = 1_000) }
+        assertTrue(requestLoopback(port, "GET /oauth/callback?code=someone-elses&state=not-ours HTTP/1.1"))
+
+        assertNull(waiting.await())
+    }
+
+    /** A code with no state at all is the same refusal - absence is not a pass. */
+    @Test
+    fun `a code with no state is refused`() = runTest {
+        val port = nextPort++
+        assertTrue(server.start(port))
+
+        val waiting = async { server.awaitCallback(expectedState = STATE, timeoutMs = 1_000) }
+        assertTrue(requestLoopback(port, "GET /oauth/callback?code=no-state-on-this-one HTTP/1.1"))
+
+        assertNull(waiting.await())
+    }
+
+    /**
+     * A refused callback must not end the wait either.
+     *
+     * Otherwise anything on the device could cancel a sign in by sending one bogus code, which is a
+     * worse thing to hand over than it looks.
+     */
+    @Test
+    fun `a refused callback does not stop the real one arriving`() = runTest {
+        val port = nextPort++
+        assertTrue(server.start(port))
+
+        val waiting = async { server.awaitCallback(expectedState = STATE, timeoutMs = 5_000) }
+        assertTrue(requestLoopback(port, "GET /oauth/callback?code=someone-elses&state=not-ours HTTP/1.1"))
+        assertTrue(requestLoopback(port, "GET /oauth/callback?code=the-real-one&state=$STATE HTTP/1.1"))
+
+        assertEquals("the-real-one", assertIs<OAuthCallback.Result.Code>(waiting.await()).code)
     }
 
     /** A user who closes the browser without finishing is a timeout, not a hang. */
@@ -134,7 +182,7 @@ class IosLoopbackAuthServerTest {
     fun `nothing arriving is a timeout and not a hang`() = runTest {
         assertTrue(server.start(nextPort++))
 
-        assertNull(server.awaitCallback(timeoutMs = 500))
+        assertNull(server.awaitCallback(expectedState = STATE, timeoutMs = 500))
     }
 
     @Test
@@ -142,7 +190,7 @@ class IosLoopbackAuthServerTest {
         val port = nextPort++
         assertTrue(server.start(port))
 
-        val waiting = async { server.awaitCallback(timeoutMs = 5_000) }
+        val waiting = async { server.awaitCallback(expectedState = STATE, timeoutMs = 5_000) }
         assertTrue(requestLoopback(port, "GET /oauth/callback?error=access_denied HTTP/1.1"))
 
         assertEquals("access_denied", assertIs<OAuthCallback.Result.Denied>(waiting.await()).error)
@@ -156,5 +204,28 @@ class IosLoopbackAuthServerTest {
         server.stop()
 
         assertTrue(server.start(port), "the port was not released: ${logger.errors}")
+    }
+
+    /**
+     * And waiting has to free it too, without anyone remembering to call [IosLoopbackAuthServer.stop].
+     *
+     * A listener left open on a fixed, well known port keeps accepting `?code=` from anything on the
+     * device for the life of the app. It was also why a second sign in in one session could find the
+     * port still held.
+     */
+    @Test
+    fun `the port is free again after a wait that timed out`() = runTest {
+        val port = nextPort++
+        assertTrue(server.start(port))
+
+        assertNull(server.awaitCallback(expectedState = STATE, timeoutMs = 300))
+
+        assertTrue(server.start(port), "the wait did not release the port: ${logger.errors}")
+    }
+
+    private companion object {
+
+        /** The state AAPS pretends to have sent, so a test can send a matching or a different one. */
+        private const val STATE = "xyz"
     }
 }

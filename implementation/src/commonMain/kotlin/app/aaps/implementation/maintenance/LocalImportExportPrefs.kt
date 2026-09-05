@@ -9,9 +9,9 @@ import app.aaps.core.interfaces.maintenance.ExportResult
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefMetadata
+import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
-import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordHasher
@@ -24,59 +24,37 @@ import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.platformCryptoPrimitives
-import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import app.aaps.implementation.maintenance.formats.ExportMetadata
 import app.aaps.implementation.maintenance.formats.PrefsFormatCodec
 import app.aaps.implementation.maintenance.formats.PrefsTransfer
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlinx.cinterop.ExperimentalForeignApi
-import platform.Foundation.NSDate
-import platform.Foundation.NSDateFormatter
-import platform.Foundation.NSDocumentDirectory
-import platform.Foundation.NSLocale
-import platform.Foundation.NSFileManager
-import platform.Foundation.NSSearchPathForDirectoriesInDomains
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.NSUserDomainMask
-import platform.Foundation.create
-import platform.Foundation.stringWithContentsOfFile
-import platform.Foundation.writeToFile
-import platform.UIKit.UIDevice
 
 /**
- * Exporting and importing AAPS settings on iOS.
+ * Exporting and importing AAPS settings, for every platform that keeps its exports in a folder.
  *
- * ## What is real here and what is not
+ * This was `IosImportExportPrefs`, and moving it here is the point: exactly one line of it was ever
+ * about iOS - the device name - while the rest is the format, the crypto and the orchestration, all
+ * of which are the same everywhere. Desktop refused this feature for a long time on the grounds that
+ * a second implementation of an encrypted stored format is how two platforms silently stop matching.
+ * That was right, and the answer is not to write a second one but to have no second one: there is a
+ * single [PrefsFormatCodec], and the only thing a platform supplies is [PrefsFileAccess].
  *
- * Settings export and import are real, and they write the same files Android writes -
- * [PrefsFormatCodec] is the one implementation of the format now, so a file exported on a phone
- * opens on an iPhone and the other way round. What is not here is the cloud, the CSV export, the
- * watchface export and the APS result dump. Those are separate features rather than parts of this
- * one, and each says so rather than pretending to work: the cloud answers "not configured", which
- * is true, and the exports log that they are not implemented.
+ * Android keeps its own `ImportExportPrefsImpl`, which is a different job - the Storage Access
+ * Framework, WorkManager, cloud providers and CSV export - and not something to force into this.
  *
- * ## Where the files go
+ * ## What this deliberately does not do
  *
- * The app's own Documents directory. On Android the user picks a folder through the storage access
- * framework and AAPS holds a permission to it; iOS has no such picker for a folder the app then
- * keeps writing to, and does not need one - the app's Documents directory is exposed to the Files
- * app by `UIFileSharingEnabled`, so the user can reach an export, copy it off the phone, or drop one
- * in to import. That is the same shape of access with none of the permission machinery.
- *
- * The database used to live in this directory and no longer does, which is what makes exposing it
- * safe: a user tidying up their files can no longer delete the treatment history by accident.
+ * No cloud, no CSV export, no watchface export, no APS result dump. Each says so in the log rather
+ * than returning a shape that looks like success, and `getExportConfig` reports the cloud as
+ * inactive, which is true rather than a placeholder.
  */
 @Suppress("TooManyFunctions")
-@SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
-class IosImportExportPrefs @Inject constructor(
+class LocalImportExportPrefs(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
-    private val store: KeyValueStore,
+    store: KeyValueStore,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
@@ -104,20 +82,14 @@ class IosImportExportPrefs @Inject constructor(
     /**
      * Keeps the export password so a scheduled export can run without asking for it.
      *
-     * The same store Android uses, and for the same reason: `ActionSettingsExport` is an automation
-     * action in `commonMain`, so an iOS user can build a rule that exports on a schedule exactly as
-     * an Android user can.
-     *
-     * This used to return the password untouched, with a comment saying iOS had no unattended export
-     * to serve. That was not true on this branch. Nothing wrote the store, so
-     * `getPasswordFromDataStore()` always came back empty and every scheduled export took the
-     * failure branch - clearing the store, raising an urgent alert and announcing it to Nightscout,
-     * without ever writing a backup. An hourly rule produced an hourly alarm and no export.
+     * The same store Android uses. `ActionSettingsExport` is an automation action in `commonMain`, so
+     * a rule that exports on a schedule can be built on any platform, and it needs the password to
+     * still be there when it fires.
      */
     override fun cacheExportPassword(password: String): String =
         exportPasswordDataStore.putPasswordToDataStore(password)
 
-    // ----- Where an export goes. There is no cloud on iOS, and this says so rather than failing -----
+    // ----- Where an export goes. There is no cloud here, and this says so rather than failing -----
 
     override fun getExportConfig(): ExportConfig = ExportConfig(
         isCloudActive = false,
@@ -136,13 +108,19 @@ class IosImportExportPrefs @Inject constructor(
     override fun setCsvLocalEnabled(enabled: Boolean) = preferences.put(BooleanNonKey.ExportCsvLocalEnabled, enabled)
     override fun setLogEmailEnabled(enabled: Boolean) = preferences.put(BooleanNonKey.ExportLogEmailEnabled, enabled)
 
-    /** No cloud on iOS, so these stay off however they are set. */
-    override fun setSettingsCloudEnabled(enabled: Boolean) = notOnIos("setSettingsCloudEnabled")
-    override fun setLogCloudEnabled(enabled: Boolean) = notOnIos("setLogCloudEnabled")
-    override fun setCsvCloudEnabled(enabled: Boolean) = notOnIos("setCsvCloudEnabled")
+    /** No cloud here, so these stay off however they are set. */
+    override fun setSettingsCloudEnabled(enabled: Boolean) = notHere("setSettingsCloudEnabled")
+    override fun setLogCloudEnabled(enabled: Boolean) = notHere("setLogCloudEnabled")
+    override fun setCsvCloudEnabled(enabled: Boolean) = notHere("setCsvCloudEnabled")
 
     // ----- Export -----
 
+    /**
+     * The name is generated once and carried, not generated again at write time.
+     *
+     * Both used to call `newExportName`, seconds apart, so the confirmation dialog could name a file
+     * that did not match the one on disk - the names carry a timestamp to the second.
+     */
     override fun prepareExport(): ExportPreparation =
         ExportPreparation(fileName = files.newExportName(config.FLAVOR), cachedPassword = null)
 
@@ -162,9 +140,9 @@ class IosImportExportPrefs @Inject constructor(
             false
         }
 
-    /** The platform finds the values; [ExportMetadata] decides what an export is stamped with. */
+    /** The platform finds the device name; [ExportMetadata] decides what an export is stamped with. */
     private fun metadataForExport(): Map<PrefsMetadataKey, PrefMetadata> = ExportMetadata.forExport(
-        deviceName = UIDevice.currentDevice.name,
+        deviceName = platformDeviceName(),
         createdAt = dateUtil.toISOString(dateUtil.now()),
         version = config.VERSION_NAME,
         flavour = config.FLAVOR,
@@ -193,14 +171,13 @@ class IosImportExportPrefs @Inject constructor(
 
     override suspend fun getCloudImportFiles(pageToken: String?): Pair<List<PrefsFile>, String?> = emptyList<PrefsFile>() to null
     override suspend fun getCloudImportFileCount(): Int = 0
-    override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) = notOnIos("exportCustomWatchface")
-    override fun exportUserEntriesCsv() = notOnIos("exportUserEntriesCsv")
-    override suspend fun executeCsvExport(): ExportResult = ExportResult(localSuccess = false).also { notOnIos("executeCsvExport") }
-    override fun exportApsResult(algorithm: String?, input: String, output: String?) = notOnIos("exportApsResult")
+    override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) = notHere("exportCustomWatchface")
+    override fun exportUserEntriesCsv() = notHere("exportUserEntriesCsv")
+    override suspend fun executeCsvExport(): ExportResult = ExportResult(localSuccess = false).also { notHere("executeCsvExport") }
+    override fun exportApsResult(algorithm: String?, input: String, output: String?) = notHere("exportApsResult")
 
-    private fun notOnIos(what: String) = aapsLogger.debug(LTag.CORE, "Not implemented on iOS yet: ImportExportPrefs.$what")
+    private fun notHere(what: String) = aapsLogger.debug(LTag.CORE, "Not implemented on this platform: ImportExportPrefs.$what")
 }
-
 
 /**
  * The exports sitting in the directory, with enough metadata for a list to show them.
@@ -229,8 +206,8 @@ class PrefsFileLister @Inject constructor(
 /**
  * The file half of an export, kept apart from the format so both can be tested on their own.
  *
- * A fake of this in a test writes to a map instead of the Documents directory, which is what lets
- * the export and import path be tested without a simulator holding real files.
+ * A fake of this in a test writes to a map instead of a real directory, which is what lets the export
+ * and import path be tested without a simulator or a temp folder holding real files.
  */
 interface PrefsFileAccess {
 
@@ -239,56 +216,3 @@ interface PrefsFileAccess {
     fun write(name: String, contents: String)
     fun list(): List<Pair<String, String>>
 }
-
-/** [PrefsFileAccess] over the app's Documents directory, which the Files app shows to the user. */
-@OptIn(ExperimentalForeignApi::class)
-@SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
-class IosPrefsFileAccess @Inject constructor(
-    /**
-     * Where exports are kept. Defaults to the app's Documents directory, which is the one the Files
-     * app shows; a test points it somewhere of its own so it neither reads the user's exports nor
-     * leaves files behind for the next test to list.
-     */
-    private val directory: String? = defaultDocumentsDirectory()
-) : PrefsFileAccess {
-
-    /**
-     * Pinned to `en_US_POSIX` and the Gregorian calendar on purpose.
-     *
-     * An `NSDateFormatter` otherwise follows the user's own calendar and digits, so the same pattern
-     * gives a Buddhist year on a Thai phone and Eastern Arabic numerals on an Arabic one. A file name
-     * is not something the user reads in their language - it is sorted, matched and compared with
-     * files written by Android, which uses these digits.
-     */
-    private val nameFormatter = NSDateFormatter().apply {
-        setLocale(NSLocale("en_US_POSIX"))
-        setDateFormat("yyyy-MM-dd'_'HHmmss")
-    }
-
-    override fun newExportName(flavour: String): String = "${nameFormatter.stringFromDate(NSDate())}_$flavour.json"
-
-    override fun write(name: String, contents: String) {
-        val path = documentsPath(name) ?: error("no Documents directory")
-        val ok = NSString.create(string = contents).writeToFile(path, atomically = true, encoding = NSUTF8StringEncoding, error = null)
-        if (!ok) error("could not write $name")
-    }
-
-    override fun list(): List<Pair<String, String>> {
-        val manager = NSFileManager.defaultManager
-        val directory = documentsDirectory() ?: return emptyList()
-        @Suppress("UNCHECKED_CAST")
-        val names = manager.contentsOfDirectoryAtPath(directory, null) as? List<String> ?: return emptyList()
-        return names.filter { it.endsWith(".json") }.mapNotNull { name ->
-            NSString.stringWithContentsOfFile(directory + "/" + name, encoding = NSUTF8StringEncoding, error = null)?.let { name to it }
-        }
-    }
-
-    private fun documentsDirectory(): String? = directory
-
-    private fun documentsPath(name: String): String? = documentsDirectory()?.let { "$it/$name" }
-}
-
-/** The app's own Documents directory, or null on the rare build that has none. */
-private fun defaultDocumentsDirectory(): String? =
-    NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).firstOrNull() as? String
