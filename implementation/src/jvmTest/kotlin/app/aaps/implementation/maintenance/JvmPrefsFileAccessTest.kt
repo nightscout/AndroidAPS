@@ -21,11 +21,42 @@ import kotlin.test.assertTrue
 class JvmPrefsFileAccessTest {
 
     private val directory: File = Files.createTempDirectory("aaps-export-test").toFile()
-    private val sut = JvmPrefsFileAccess(directory)
+
+    /** Given explicitly, or a CSV in a test would be written into the real `~/AAPS/exports`. */
+    private val csvDirectory: File = Files.createTempDirectory("aaps-csv-test").toFile()
+    private val sut = JvmPrefsFileAccess(directory, csvDirectory)
 
     @AfterTest
     fun cleanUp() {
         directory.deleteRecursively()
+        csvDirectory.deleteRecursively()
+    }
+
+    /**
+     * Settings and the user-entry CSV go to different folders, because a phone puts them in
+     * different folders: `newPreferenceFile` creates in `AAPS/preferences`, `newExportCsvFile` in
+     * `AAPS/exports`. A desktop that pooled them would not be a mirror of a phone, and the listing
+     * below would start offering a CSV as a backup to restore from.
+     */
+    @Test
+    fun `the csv goes to the exports folder and the settings do not`() {
+        sut.write("2026-09-05_143022_full.json", "{}")
+        sut.write("2026-09-05_143022_UserEntry.csv", "date,action")
+
+        assertEquals(listOf("2026-09-05_143022_full.json"), directory.list()?.toList())
+        assertEquals(listOf("2026-09-05_143022_UserEntry.csv"), csvDirectory.list()?.toList())
+    }
+
+    /** The two names the writer generates have to land on the right side of that split. */
+    @Test
+    fun `the generated names route the way they are meant to`() {
+        sut.write(sut.newExportName("full"), "{}")
+        sut.write(sut.newCsvName(), "date,action")
+
+        assertEquals(1, directory.list()?.size)
+        assertEquals(1, csvDirectory.list()?.size)
+        assertTrue(directory.list()!!.single().endsWith("_full.json"))
+        assertTrue(csvDirectory.list()!!.single().endsWith("_UserEntry.csv"))
     }
 
     @Test
@@ -88,10 +119,11 @@ class JvmPrefsFileAccessTest {
     }
 
     /**
-     * A CSV shares the folder with the exports and is not one.
+     * A CSV is written, and is never offered as a backup.
      *
      * `list()` feeds the import screen, so a user-entry dump appearing there would be offered as a
-     * backup and then refused when they picked it.
+     * backup and then refused when they picked it. It lands in the exports folder rather than beside
+     * the settings, which is the same split a phone makes.
      */
     @Test
     fun `a csv is written but never offered as a backup`() {
@@ -99,6 +131,6 @@ class JvmPrefsFileAccessTest {
         sut.write("backup.json", "{}")
 
         assertEquals(listOf("backup.json"), sut.list().map { it.first })
-        assertTrue(directory.listFiles()!!.any { it.name.endsWith("_UserEntry.csv") })
+        assertTrue(csvDirectory.listFiles()!!.any { it.name.endsWith("_UserEntry.csv") })
     }
 }

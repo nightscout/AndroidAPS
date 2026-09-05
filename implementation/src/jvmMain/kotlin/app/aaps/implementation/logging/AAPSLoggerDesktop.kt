@@ -3,6 +3,7 @@ package app.aaps.implementation.logging
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.implementation.maintenance.DesktopFolders
 import java.io.File
 import java.time.Instant
 
@@ -18,7 +19,7 @@ import java.time.Instant
  * folder a user can find.
  */
 class AAPSLoggerDesktop(
-    private val file: File = File(File(System.getProperty("user.home"), ".aaps"), "aaps.log"),
+    private val file: File = File(DesktopFolders.data, "aaps.log"),
     private val maxBytes: Long = 5L * 1024 * 1024,
     /** Reads the stored per-tag switches. Null before the graph can supply one - see [enabled]. */
     private val logConfig: (() -> L)? = null

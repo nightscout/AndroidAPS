@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.implementation.maintenance.DesktopFolders
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -25,7 +26,9 @@ import java.io.File
  */
 class DesktopClientConfig(
     override val VERSION_NAME: String = GeneratedBuildInfo.VERSION,
-    override val APPLICATION_ID: String = "info.nightscout.aapsclient"
+    override val APPLICATION_ID: String = "info.nightscout.aapsclient",
+    /** Overridden in a test, so it neither reads nor creates markers in the real AAPS folder. */
+    private val extraDir: File = DesktopFolders.extra
 ) : Config {
 
     override val SUPPORTED_NS_VERSION: Int = 150000
@@ -105,14 +108,36 @@ class DesktopClientConfig(
     }
 
     override fun isDev(): Boolean = DEBUG
-    override fun isEngineeringMode(): Boolean = false
+
+    /**
+     * Read from the file, the same as `ConfigImpl` does on Android.
+     *
+     * This returned a flat `false` before, which quietly contradicted [isEnabled] below: the marker
+     * file could be created exactly as documented and the one option most likely to be turned on was
+     * the one that never looked.
+     */
+    override fun isEngineeringMode(): Boolean = isEnabled(ExternalOptions.ENGINEERING_MODE)
+
+    /**
+     * Always true, and correct rather than a shortcut.
+     *
+     * Android computes `if (!APS) true else isEngineeringMode() || !isDev()`. Desktop sets
+     * [APS] to false because it is a follower, so that expression is true here whatever the rest
+     * says. Written out rather than copied so it does not read as a stub.
+     */
     override fun isEngineeringModeOrRelease(): Boolean = true
 
     /**
-     * Read the same way Android does - by the presence of a file - because desktop does have a place
-     * to put one. The file sits in the AAPS folder beside the database, so turning an option on is
-     * `touch ~/.aaps/engineering_mode`.
+     * Read the same way Android does - by the presence of a file in the `extra` folder.
+     *
+     * Android looks in `AAPS/extra` through `FileListProvider.ensureExtraDirExists`, so this reads
+     * `~/AAPS/extra` and an option is turned on in the same relative place on both:
+     * `touch ~/AAPS/extra/engineering_mode`.
+     *
+     * It used to read `~/.aaps`, the data directory, which is the folder holding the database and
+     * the keys. Nothing pointed that out, because a marker file that is never found and an option
+     * that is switched off look exactly alike.
      */
     override fun isEnabled(option: ExternalOptions): Boolean =
-        File(File(System.getProperty("user.home"), ".aaps"), option.filename).exists()
+        File(extraDir, option.filename).exists()
 }
