@@ -1,6 +1,8 @@
 package app.aaps.implementation.maintenance
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ExportConfig
@@ -19,7 +21,11 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -62,6 +68,9 @@ class LocalImportExportPrefs(
     private val files: PrefsFileAccess,
     private val lister: PrefsFileLister,
     private val exportPasswordDataStore: ExportPasswordDataStore,
+    private val persistenceLayer: PersistenceLayer,
+    private val userEntryPresentationHelper: UserEntryPresentationHelper,
+    private val appScope: CoroutineScope,
     secureEncrypt: SecureEncrypt,
     textResolver: TextResolver
 ) : ImportExportPrefs {
@@ -149,6 +158,43 @@ class LocalImportExportPrefs(
         deviceModel = config.currentDeviceModelString
     )
 
+    // ----- The user entry log, as a CSV -----
+
+    /**
+     * The last 90 days of user entries, written beside the settings exports.
+     *
+     * Android does the same thing through a WorkManager job so it survives the screen going away.
+     * There is no WorkManager here and no need for one: neither an iOS app nor a desktop window is
+     * killed mid-export the way a backgrounded Android activity can be, and the work is a database
+     * read and one file write.
+     *
+     * It is not encrypted, and neither is Android's - it holds what the user already sees in the
+     * treatment log, and its value is being readable in a spreadsheet.
+     */
+    override suspend fun executeCsvExport(): ExportResult {
+        val since = MidnightTime.calc() - T.days(CSV_DAYS).msecs()
+        val entries = persistenceLayer.getUserEntryFilteredDataFromTime(since)
+        val name = files.newCsvName()
+        return try {
+            files.write(name, userEntryPresentationHelper.userEntriesToCsv(entries))
+            aapsLogger.info(LTag.CORE, "Exported ${entries.size} user entries to $name")
+            ExportResult(localSuccess = true)
+        } catch (e: Throwable) {
+            aapsLogger.error(LTag.CORE, "User entry export to $name failed: ${e.message}")
+            ExportResult(localSuccess = false)
+        }
+    }
+
+    /**
+     * The same export, from a screen that cannot wait for it.
+     *
+     * Android enqueues a worker here; this runs it on the application scope, which outlives the
+     * screen that asked. Failures are reported the same way - in the log, by [executeCsvExport].
+     */
+    override fun exportUserEntriesCsv() {
+        appScope.launch { executeCsvExport() }
+    }
+
     // ----- Import -----
 
     override suspend fun getLocalImportFiles(): List<PrefsFile> = lister.list()
@@ -172,11 +218,15 @@ class LocalImportExportPrefs(
     override suspend fun getCloudImportFiles(pageToken: String?): Pair<List<PrefsFile>, String?> = emptyList<PrefsFile>() to null
     override suspend fun getCloudImportFileCount(): Int = 0
     override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) = notHere("exportCustomWatchface")
-    override fun exportUserEntriesCsv() = notHere("exportUserEntriesCsv")
-    override suspend fun executeCsvExport(): ExportResult = ExportResult(localSuccess = false).also { notHere("executeCsvExport") }
     override fun exportApsResult(algorithm: String?, input: String, output: String?) = notHere("exportApsResult")
 
     private fun notHere(what: String) = aapsLogger.debug(LTag.CORE, "Not implemented on this platform: ImportExportPrefs.$what")
+
+    private companion object {
+
+        /** The same window Android exports, so the two produce comparable files. */
+        private const val CSV_DAYS = 90L
+    }
 }
 
 /**
@@ -213,6 +263,11 @@ interface PrefsFileAccess {
 
     /** The name a new export gets, in the same shape Android uses: `2026-09-05_143022_full.json`. */
     fun newExportName(flavour: String): String
+
+    /** The name a user-entry CSV gets, again matching Android: `2026-09-05_143022_UserEntry.csv`. */
+    fun newCsvName(): String
     fun write(name: String, contents: String)
+
+    /** Only the exports. A CSV lives in the same folder and is not one, so it is not listed. */
     fun list(): List<Pair<String, String>>
 }

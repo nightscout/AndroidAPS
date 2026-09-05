@@ -56,6 +56,8 @@ class IosPrefsFileAccess @Inject constructor(
 
     override fun newExportName(flavour: String): String = "${nameFormatter.stringFromDate(NSDate())}_$flavour.json"
 
+    override fun newCsvName(): String = "${nameFormatter.stringFromDate(NSDate())}_UserEntry.csv"
+
     override fun write(name: String, contents: String) {
         val path = documentsPath(name) ?: error("no Documents directory")
         val ok = NSString.create(string = contents).writeToFile(path, atomically = true, encoding = NSUTF8StringEncoding, error = null)
