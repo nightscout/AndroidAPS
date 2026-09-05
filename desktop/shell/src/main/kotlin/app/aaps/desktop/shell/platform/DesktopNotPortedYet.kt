@@ -10,7 +10,11 @@ import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
+import app.aaps.core.ui.compose.icons.IcGoogleDrive
+import app.aaps.implementation.ImplementationStrings
+import app.aaps.implementation.maintenance.cloud.CloudConstants
 import app.aaps.ui.compose.history.HistoryScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -107,11 +111,33 @@ class DesktopMaintenance @Inject constructor(
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class DesktopCloudDirectoryManager @Inject constructor(
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rh: TextResolver
 ) : CloudDirectoryManager {
 
-    override fun getCloudDirectoryInfo(): CloudDirectoryInfo =
-        aapsLogger.failNotOnDesktopYet("CloudDirectoryManager.getCloudDirectoryInfo")
+    /**
+     * Not connected, which on desktop is the true answer rather than an invented one.
+     *
+     * Everything here is what the screen draws - three flags, four strings and an icon - so there is
+     * no decision being faked. It names Google Drive with no credentials, the same shape
+     * `CloudDirectoryManagerImpl` returns on a phone that has never signed in, so the sheet reads
+     * "Google Drive, not connected" instead of showing a blank row.
+     *
+     * This used to call `failNotOnDesktopYet`, which threw on the AWT event thread and took the app
+     * down as soon as anyone opened the cloud row in Maintenance. That helper is for calls whose
+     * answer a screen acts on - "did the export succeed" - where a made up reply would be dangerous.
+     * A read the user only looks at is not one of those.
+     */
+    override fun getCloudDirectoryInfo(): CloudDirectoryInfo = CloudDirectoryInfo(
+        isCloudActive = false,
+        hasCredentials = false,
+        hasConnectionError = false,
+        providerDisplayName = rh.gs(ImplementationStrings.storage_google_drive),
+        providerDescription = rh.gs(ImplementationStrings.backup_to_google_drive),
+        providerIcon = IcGoogleDrive,
+        authorizedStatusText = "",
+        cloudPath = CloudConstants.CLOUD_PATH_EXPORT
+    )
 
     override fun clearCloudSettings() = aapsLogger.notOnDesktopYet("CloudDirectoryManager.clearCloudSettings")
 
