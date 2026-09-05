@@ -3,6 +3,7 @@ package app.aaps.implementation.maintenance.cloud.providers.googledrive
 import android.net.Uri
 import androidx.core.net.toUri
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.maintenance.AUTH_WAIT_MS
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -955,7 +956,7 @@ class GoogleDriveManager(
     /**
      * Wait and get authorization code
      */
-    suspend fun waitForAuthCode(timeoutMs: Long = 60000): String? {
+    suspend fun waitForAuthCode(timeoutMs: Long = AUTH_WAIT_MS): String? {
         return withContext(Dispatchers.IO) {
             val startTime = System.currentTimeMillis()
 
