@@ -153,6 +153,7 @@ class IosPrefsFileInfoTest {
         private val written = mutableMapOf<String, String>()
 
         override fun newExportName(flavour: String): String = "2026-09-05_010838_$flavour.json"
+        override fun newCsvName(): String = "2026-09-05_010838_UserEntry.csv"
         override fun write(name: String, contents: String) { written[name] = contents }
         override fun list(): List<Pair<String, String>> = written.entries.map { it.key to it.value }
     }
