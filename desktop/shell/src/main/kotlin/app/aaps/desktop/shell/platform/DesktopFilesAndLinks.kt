@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginPermissions
 import app.aaps.core.interfaces.ui.UrlOpener
+import app.aaps.implementation.maintenance.DesktopFolders
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -81,7 +82,9 @@ class DesktopPrefsFileInfo @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : PrefsFileInfo {
 
-    private val exportDir = File(File(System.getProperty("user.home"), ".aaps"), "exports")
+    // Asked for rather than spelled out again. This used to be its own ".aaps/exports" literal while
+    // JvmPrefsFileAccess wrote to "AAPS/exports", so every export succeeded and none was ever listed.
+    private val exportDir = DesktopFolders.preferences
 
     override fun listPreferenceFiles(): MutableList<PrefsFile> {
         val files = runCatching {
