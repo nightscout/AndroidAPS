@@ -120,7 +120,7 @@ class GoogleDriveProviderFactoryTest {
 
     /** A server having a bad day is worth telling the user about too, with a different message. */
     @Test
-    fun `a connection failure tells the user, and says something different`() = runTest {
+    fun `a connection failure tells the user and says something different`() = runTest {
         val tokens = GoogleTokenStore(store)
         tokens.refreshToken = "r"
         tokens.accessToken = "a"
