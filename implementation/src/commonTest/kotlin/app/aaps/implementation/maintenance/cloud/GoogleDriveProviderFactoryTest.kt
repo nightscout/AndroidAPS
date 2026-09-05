@@ -2,6 +2,7 @@ package app.aaps.implementation.maintenance.cloud
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.implementation.maintenance.formats.FakeKeyValueStore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -33,6 +34,7 @@ import kotlin.test.assertTrue
 class GoogleDriveProviderFactoryTest {
 
     private val store = FakeKeyValueStore()
+    private val notifications = RecordingNotificationManager()
 
     private fun providerReplying(vararg replies: Pair<HttpStatusCode, String>): GoogleDriveProvider {
         var call = 0
@@ -44,6 +46,7 @@ class GoogleDriveProviderFactoryTest {
             aapsLogger = SilentLogger(),
             store = store,
             listener = NeverCalledListener(),
+            notificationManager = notifications,
             http = HttpClient(engine),
             now = { 1_000_000L }
         )
@@ -88,6 +91,61 @@ class GoogleDriveProviderFactoryTest {
 
         assertEquals(StorageTypes.GOOGLE_DRIVE, provider.storageType)
         assertEquals("Google Drive", provider.displayName)
+    }
+
+    /**
+     * A backup that stopped working has to say so.
+     *
+     * This is the one behaviour Android's `GoogleDriveManager` had that the shared provider did not,
+     * and the reason a straight swap would have been a regression for existing users: nothing opens
+     * the maintenance screen on a schedule, so a silent failure is first noticed when someone needs
+     * a backup that was never written. It lives in shared code now, so iOS and the desktop gained it
+     * rather than Android losing it.
+     */
+    @Test
+    fun `a dead sign in tells the user`() = runTest {
+        val tokens = GoogleTokenStore(store)
+        tokens.refreshToken = "r"
+        tokens.accessToken = "a"
+        tokens.expiresAt = 1_000_000L + 3_600_000
+        val provider = providerReplying(
+            HttpStatusCode.Unauthorized to "",
+            HttpStatusCode.BadRequest to """{"error":"invalid_grant"}"""
+        )
+
+        provider.listSettingsFiles(pageSize = 10, pageToken = null)
+
+        assertEquals(listOf(NotificationId.GOOGLE_DRIVE_ERROR), notifications.posted.map { it.first })
+    }
+
+    /** A server having a bad day is worth telling the user about too, with a different message. */
+    @Test
+    fun `a connection failure tells the user, and says something different`() = runTest {
+        val tokens = GoogleTokenStore(store)
+        tokens.refreshToken = "r"
+        tokens.accessToken = "a"
+        tokens.expiresAt = 1_000_000L + 3_600_000
+        val provider = providerReplying(HttpStatusCode.ServiceUnavailable to "")
+
+        provider.listSettingsFiles(pageSize = 10, pageToken = null)
+
+        val posted = notifications.posted.single()
+        assertEquals(NotificationId.GOOGLE_DRIVE_ERROR, posted.first)
+        assertTrue(provider.hasValidCredentials(), "a temporary failure must not end the sign in")
+    }
+
+    /** Nothing failed, so nothing should be announced. */
+    @Test
+    fun `a working call says nothing`() = runTest {
+        val tokens = GoogleTokenStore(store)
+        tokens.refreshToken = "r"
+        tokens.accessToken = "a"
+        tokens.expiresAt = 1_000_000L + 3_600_000
+        val provider = providerReplying(HttpStatusCode.OK to """{"user":{}}""")
+
+        assertTrue(provider.testConnection())
+
+        assertTrue(notifications.posted.isEmpty(), "posted ${notifications.posted}")
     }
 
     /** Nothing here starts a sign in, so the listener must never be touched. */

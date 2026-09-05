@@ -2,6 +2,7 @@ package app.aaps.implementation.maintenance.cloud
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
@@ -34,11 +35,13 @@ import kotlin.time.Clock
 class DesktopGoogleDriveProvider(
     aapsLogger: AAPSLogger,
     store: KeyValueStore,
-    listener: AuthRedirectListener
+    listener: AuthRedirectListener,
+    notificationManager: NotificationManager
 ) : CloudStorageProvider by googleDriveProvider(
     aapsLogger = aapsLogger,
     store = store,
     listener = listener,
+    notificationManager = notificationManager,
     http = HttpClient(OkHttp),
     now = { Clock.System.now().toEpochMilliseconds() }
 )
