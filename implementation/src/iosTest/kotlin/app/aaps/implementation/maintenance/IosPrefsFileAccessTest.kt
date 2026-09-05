@@ -24,9 +24,11 @@ import kotlin.test.assertTrue
 class IosPrefsFileAccessTest {
 
     private val manager = NSFileManager.defaultManager
-    private val directory = NSTemporaryDirectory() + "aaps-export-test-" + NSUUID().UUIDString()
+    private val root = NSTemporaryDirectory() + "aaps-export-test-" + NSUUID().UUIDString()
+    private val directory = "$root/preferences"
+    private val csvDirectory = "$root/exports"
 
-    private val sut = IosPrefsFileAccess(directory)
+    private val sut = IosPrefsFileAccess(directory, csvDirectory)
 
     init {
         manager.createDirectoryAtPath(directory, withIntermediateDirectories = true, attributes = null, error = null)
@@ -34,7 +36,7 @@ class IosPrefsFileAccessTest {
 
     @AfterTest
     fun removeDirectory() {
-        manager.removeItemAtPath(directory, null)
+        manager.removeItemAtPath(root, null)
     }
 
     @Test
@@ -90,14 +92,14 @@ class IosPrefsFileAccessTest {
     /** A directory that is not there is an empty list, never a crash on a screen the user opened. */
     @Test
     fun `a directory that does not exist lists nothing`() {
-        val missing = IosPrefsFileAccess(NSTemporaryDirectory() + "not-there-" + NSUUID().UUIDString())
+        val missing = IosPrefsFileAccess(NSTemporaryDirectory() + "not-there-" + NSUUID().UUIDString(), csvDirectory)
 
         assertTrue(missing.list().isEmpty())
     }
 
     @Test
     fun `no directory at all lists nothing`() {
-        assertTrue(IosPrefsFileAccess(null).list().isEmpty())
+        assertTrue(IosPrefsFileAccess(null, null).list().isEmpty())
     }
 
     /** Exporting twice must replace, not append or fail. */
@@ -107,6 +109,39 @@ class IosPrefsFileAccessTest {
         sut.write("export.json", "second")
 
         assertEquals("second", sut.list().single().second)
+    }
+
+
+    /**
+     * The layout Android uses: settings in `preferences`, the CSV in `exports`. A user copying a
+     * backup between a phone and an iPhone has to find it in the same relative place.
+     */
+    @Test
+    fun `the csv goes to the exports folder and the export to preferences`() {
+        sut.write("2026-09-05_213435_full.json", "{}")
+        sut.write("2026-09-05_213435_UserEntry.csv", "a,b,c")
+
+        assertTrue(manager.fileExistsAtPath("$directory/2026-09-05_213435_full.json"), "the export is not in preferences")
+        assertTrue(manager.fileExistsAtPath("$csvDirectory/2026-09-05_213435_UserEntry.csv"), "the csv is not in exports")
+    }
+
+    /** The import list is settings exports. A CSV in the next folder is not one and must not appear. */
+    @Test
+    fun `the csv is not offered as an export`() {
+        sut.write("2026-09-05_213435_UserEntry.csv", "a,b,c")
+
+        assertTrue(sut.list().isEmpty())
+    }
+
+    /** Neither folder exists on a fresh install; the first write has to make its own. */
+    @Test
+    fun `a folder that does not exist yet is created by the write`() {
+        val fresh = "$root/made-on-demand"
+        val access = IosPrefsFileAccess("$fresh/preferences", "$fresh/exports")
+
+        access.write("2026-09-05_213435_full.json", "{}")
+
+        assertEquals(listOf("2026-09-05_213435_full.json"), access.list().map { it.first })
     }
 
     /**
