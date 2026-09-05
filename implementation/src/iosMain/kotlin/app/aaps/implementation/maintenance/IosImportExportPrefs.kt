@@ -24,7 +24,6 @@ import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.platformCryptoPrimitives
-import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import app.aaps.implementation.maintenance.formats.ExportMetadata
 import app.aaps.implementation.maintenance.formats.PrefsFormatCodec
 import app.aaps.implementation.maintenance.formats.PrefsTransfer
