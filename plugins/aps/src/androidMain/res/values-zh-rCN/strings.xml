@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">动态 ISF胰岛素敏感系数调整系数 %</string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">动态ISF(胰岛素敏感系数)</string>
+    <string name="openaps_auto_isf">自动胰岛素敏感系数</string>
+    <string name="openapsma_disabled">插件已禁用</string>
+    <string name="openapsma_no_glucose_data">没有可用的血糖数据</string>
+    <string name="openaps_no_as_data">Autosens 数据不可用</string>
+    <string name="dynisf_shortname">动态ISF</string>
+    <string name="autoisf_shortname">自动胰岛素敏感系数</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
+    <string name="oaps_shortname">OpenAPS</string>
+    <string name="description_ama">算法的状态在2017年</string>
+    <string name="description_smb">最新的适合高级用户的算法</string>
+    <string name="description_smb_dynamic_isf">面向高级用户的最新算法，可以动态/自动调整ISF胰岛素敏感系数</string>
+    <string name="description_auto_isf">面向高级用户的试验性算法，包含 AutoISF 扩展功能</string>
+    <string name="openapsma_last_run_label">上一次运行</string>
+    <string name="openapsma_input_parameters_label">输入参数</string>
+    <string name="openapsma_glucose_status_label">血糖状态</string>
+    <string name="openapsma_current_temp_label">当前临时基础率</string>
+    <string name="openapsma_iob_data_label">IOB活性胰岛素数据</string>
+    <string name="openapsma_profile_label">配置文件</string>
+    <string name="openapsma_meal_data_label">膳食数据</string>
+    <string name="openapsma_request_label">请求</string>
+    <string name="constraints">约束条件</string>
+    <string name="openapsma_autosensdata_label">Autosens 数据</string>
+    <string name="openapsma_script_debug_data_label">脚本调试</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">注意! \n 正常地您不必在下面更改这些值。请点击这里, 阅读说明, 并确保您了解它之前不要更改任何这些值。</string>
+    <string name="increasing_max_basal">增加最大基础率，因为设置参数低于你配置文件中的最大基础率</string>
+    <string name="max_basal_multiplier">最大基础率倍数</string>
+    <string name="max_daily_basal_multiplier">最大日基础率倍数</string>
+    <string name="smb_disabled_in_preferences">SMB微型大剂量在参数选项里被禁用了</string>
+    <string name="uam_disabled_in_preferences">UAM 在参数选项中被禁用了</string>
+    <string name="autosens_disabled_in_preferences">Autosens 在参数选项中被禁用了</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
+    <string name="maxvalueinpreferences">在参数选项里的最大值</string>
+    <string name="hardlimit">硬限制</string>
+    <!--    Autotune   -->
+    <string name="autotune_peak">峰值</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
+    <string name="pump_not_initialized">泵未初始化!</string>
+    <string name="loop_shortname">闭环</string>
+    <string name="description_loop">激活或停用这个工具触发闭环。</string>
+    <string name="no_aps_selected">未选择 APS 或未提供结果</string>
+    <string name="ignore5m">忽略5分钟</string>
+    <string name="ignore15m">忽略 15分钟</string>
+    <string name="ignore30m">忽略30分钟</string>
+    <string name="carbs_suggestion">碳水建议</string>
+    <string name="open_loop_new_suggestion">新的建议可用</string>
+    <string name="basal_set_correctly">正确地设置基础率</string>
+    <string name="last_run_label">上次运行</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">请求</string>
+    <string name="loop_constraints_processed_label">应用约束条件后</string>
+    <string name="loop_tbr_request_time_label">临时基础率请求时间</string>
+    <string name="loop_tbr_execution_time_label">临时基础率执行时间</string>
+    <string name="loop_tbr_set_by_pump_label">泵设置的临时基础率</string>
+    <string name="loop_smb_request_time_label">SMB 请求时间</string>
+    <string name="loop_smb_execution_time_label">SMB 执行时间</string>
+    <string name="loop_smb_set_by_pump_label">泵设置的 SMB</string>
+    <string name="fallback_smb_no_tdd">回退到 SMB（微型大剂量）。TDD（每日总剂量） 数据不足。</string>
+    <string name="fallback_to_isf_no_tdd">回退到配置文件敏感度。数据不足。原因：%1$s</string>
+    <!-- Autotune -->
+    <string name="autotune_description">帮助对配置文件进行潜在调整（胰岛素敏感系数、碳水化合物系数和基础率）</string>
+    <string name="autotune_shortname">自动调整</string>
+    <string name="autotune_default_tune_days_title">数据天数</string>
+    <string name="autotune_tunedprofile_name">已调整</string>
+    <string name="autotune_profile">配置文件：</string>
+    <string name="autotune_last_run">上一次运行</string>
+    <string name="autotune_warning">警告 :</string>
+    <string name="autotune_ic_warning">选定的配置文件包含 %1$d 个 IC 值。自动调整将使用 %2$.2f g/U</string>
+    <string name="autotune_isf_warning">选定的配置文件包含 %1$d 个 ISF 值。自动调节将使用 %2$.1f %3$s/U</string>
+    <string name="autotune_error">输入数据错误，尝试再次运行自动调谐或减少天数</string>
+    <string name="autotune_error_more_days">输入数据错误，增加天数</string>
+    <string name="autotune_warning_during_run">自动协调计算开始，请耐心等待</string>
+    <string name="autotune_warning_after_run">使用前请仔细检查结果！</string>
+    <string name="autotune_partial_result">部分结果天数 %1$d / %2$d 已调整</string>
+    <string name="autotune_result">结果: %1$s</string>
+    <string name="autotune_param">参数</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">缺失</string>
+    <string name="autotune_run">运行自动协调</string>
+    <string name="autotune_check_input_profile_button">检查输入配置</string>
+    <string name="autotune_compare_profile">比较配置文件</string>
+    <string name="autotune_copy_localprofile_button">复制到本地配置文件</string>
+    <string name="autotune_update_input_profile_button">更新输入配置文件</string>
+    <string name="autotune_revert_input_profile_button">检查输入配置</string>
+    <string name="autotune_copy_local_profile_message">从此 Autotune 配置文件创建新的本地配置文件？</string>
+    <string name="autotune_update_local_profile_message">用 Autotune 配置文件更新 %1$s 配置文件？</string>
+    <string name="autotune_revert_local_profile_message">使用输入配置文件还原 %1$s 配置文件？</string>
+    <string name="autotune_profile_invalid">配置文件无效</string>
+    <string name="pump_disconnected">泵已断开</string>
+    <!--    autoISF -->
+    <string name="autoISF_settings_title">自动 ISF（胰岛素敏感系数）设置</string>
+    <string name="smb_delivery_settings_title">SMB（微型大剂量）输注设置</string>
+</resources>

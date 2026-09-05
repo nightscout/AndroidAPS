@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Insulin</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Prikazuje tekuće obaveštenje sa kratkim pregledom onoga što vaša petlja radi</string>
+</resources>

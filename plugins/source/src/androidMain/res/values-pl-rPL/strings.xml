@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Otrzymuj glikemię z xDrip+ i kompatybilnych aplikacji (Juggluco itp.).</string>
+    <string name="dexcom_app_patched">Dexcom Patched</string>
+    <string name="dexcom_short">DEX.PATCH.</string>
+    <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Pobieraj wartości BG z uploadera pomp serii 600.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Odczytuj wartości BG z aplikacji Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Otrzymuj wartości z aplikacji Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Otrzymuj wartości z aplikacji Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Otrzymuj poziomy cukru (BG) z Apki Tomato) (urządzenie MiaoMiao)</string>
+    <string name="random_bg">Losowa glikemia</string>
+    <string name="description_source_random_bg">Generuj losowe odczyty glukozy (wyłącznie do celów demonstracyjnych)</string>
+    <string name="random_bg_short">BG</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Otrzymuj glikemię z aplikacji Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Otrzymuj glikemię z patchowanej aplikacji Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Otrzymuj glikemię z patchowanej aplikacji Sino.</string>
+    <!-- Instara App -->
+    <!-- Instara preferences -->
+    <!-- Notification Reader -->
+    <!-- Permission rationales -->
+</resources>

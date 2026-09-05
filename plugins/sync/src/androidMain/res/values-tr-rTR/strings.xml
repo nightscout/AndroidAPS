@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <string name="connection_settings_title">Bağlantı Ayarları</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Verilerinizi v3 API kullanarak Nightscout ile senkronize eder</string>
+    <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
+    <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
+    <string name="no_connectivity">Bağlantı yok</string>
+    <string name="unsupported_ns_version">Nightscout\'un desteklenmeyen sürümü</string>
+    <!-- AAPSClient -->
+    <string name="ns_client_v3_short_name">NSv3</string>
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_client_url">URL:</string>
+    <string name="deliver_now">Simdi ilet</string>
+    <string name="queue">Sıra:</string>
+    <string name="clear_log">Günlüğü temizle</string>
+    <string name="full_sync">Tam senkronizasyon</string>
+    <string name="full_sync_comment">Tam senkronizasyon? Birkaç saat sürebilir ve bitene kadar NS\'ta yeni veriler göremeyeceksiniz.</string>
+    <string name="ns_sync_options">Senkronizasyon</string>
+    <string name="ns_alarm_options">Alarm seçenekleri</string>
+    <!-- Tidepool -->
+    <string name="title_tidepool_dev_servers">Entegrasyon (test) sunucularını kullanın</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Tidepool\'a veri yükler</string>
+    <string name="upload_now">Şimdi yükle</string>
+    <string name="not_connected">Bağlantı yok</string>
+    <string name="read_only">Salt okunur</string>
+    <string name="working">İşleniyor</string>
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">xDrip+\'a verileri gönder</string>
+    <string name="xdrip_status_settings">xDrip+ Durum Satırı Gelişmiş</string>
+    <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
+    <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
+    <string name="xdrip_local_broadcasts_summary">KŞ ve tedavi verilerini xDrip+\'a gönderin. Veri Kaynağı \"xDrip+ Sync Follower\" seçilmeli ve Ayarlar - Uygulamalar arası ayarlar - KŞ/Tedavileri Kabul Et bölümünde verilerin kabul edilmesi etkinleştirilmelidir.</string>
+    <string name="xdrip_local_broadcasts_title">xDrip+ \'a yayınları etkinleştirin.</string>
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Garmin cihazına bağlantı (Fenix, Edge,…)</string>
+    <string name="garmin_local_http_server_port">Yerel HTTP sunucusu bağlantı noktası</string>
+    <string name="garmin_local_http_server">Yerel HTTP sunucusu</string>
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
+    <string name="no_watch_connected">(Saat Bağlı Değil)</string>
+    <string name="pump_status">Pompa durumu</string>
+    <string name="loop_status">Döngü durumu</string>
+    <string name="user_action_not_available">Seçili Kullanıcı Eylemi %1$s artık mevcut değil, lütfen kutucuğu yenileyin</string>
+    <string name="wear_action_tempt_unit_error">Saatte ve telefonda farklı birimler kullanılıyor!</string>
+    <string name="wear_action_tempt_min_bg_error">Min-KŞ aralık dışında!</string>
+    <string name="wear_action_tempt_max_bg_error">Maks-KŞ aralık dışında!</string>
+    <string name="wear_action_tempt_range_error">Geçersiz aralık: Düşük hedef (%1$s), Yüksek hedeften (%2$s) büyük olamaz</string>
+    <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
+    <string name="wear_general_settings">Genel Ayarlar</string>
+    <string name="wear_custom_watchface_settings">Özel Saat arayüzü Ayarları</string>
+    <string name="wear_custom_watchface">Özel Saat arayüzü: %1$s</string>
+    <string name="wear_load_watchface">Saat arayüzü yükle</string>
+    <string name="wear_infos_watchface">Saat arayüzü bilgisi</string>
+    <string name="wear_export_watchface">Şablonu Dışarı Aktar</string>
+    <string name="wear_new_custom_watchface_exported">Saat arayüzü şablonu dışa aktarıldı</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
+    <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
+    <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
+    <string name="cwf_infos_pref_locked">Saat arayüzü tarafından kilitlenen tercihlerin listesi</string>
+    <string name="cwf_infos_pref_required">Saat arayüzü için gerekli tercihlerin listesi</string>
+    <string name="cwf_infos_view_title">Saat arayüzüne dahil edilen alanların listesi</string>
+    <string name="pump_fetching_data">pompadan veri almaya çalışıyor.</string>
+    <string name="pump_old_data">TGD: Hala eski veriler! Pompadan yüklenemiyor.</string>
+    <string name="units_short">Ü</string>
+    <string name="hour_short">sa</string>
+    <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
+    <string name="target_only_aps_mode">Hedefler yalnızca APS modunda uygulanır!</string>
+    <string name="no_history">Geçmiş verisi yok!</string>
+    <string name="temp_target">Geçici Hedef</string>
+    <string name="until">kadar</string>
+    <string name="default_range">VARSAYILAN ARALIK</string>
+    <string name="target">hedef</string>
+    <string name="rate_duration">Oran: %1$.2fÜ/sa (%2$.2f%%) \nSüre %3$d dk</string>
+    <string name="no_profile">Profil yüklenmedi</string>
+    <string name="aps_only">Sadece APS modunda uygulayın!</string>
+    <string name="last_aps_result_na">Son sonuç mevcut değil!</string>
+    <string name="loop_status_closed">KAPALI DÖNGÜ</string>
+    <string name="loop_status_open">AÇIK DÖNGÜ</string>
+    <string name="loop_status_disabled">DÖNGÜ DEVRE DIŞI</string>
+    <string name="aps">APS (YPS)</string>
+    <string name="last_run">Son Çalıştırma</string>
+    <string name="last_enact">Son sahne</string>
+    <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
+    <string name="today">Bugün</string>
+    <string name="weighted">ağırlıklı</string>
+    <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
+    <string name="wear_action_loop_state_unauthorized">Lütfen tekrar deneyin.</string>
+    <string name="wear_action_loop_state_invalid">Geçersiz döngü durumu talep edildi</string>
+    <string name="garmin_request_key">Anahtar talebi</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Kominikatör</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator (kimlik doğrulama) uygulamasından %1$s için PIN girin</string>
+    <string name="smscommunicator_tab_otp_label">Authenticator (kimlik doğrulama) kurulumu</string>
+    <string name="smscommunicator_code_verify_info">Doğrulama kodu, Authenticator uygulaması (OTP olarak bilinir) tarafından görüntülenen 6 haneden ve ardından 3 veya daha fazla zorunlu PIN hanesinden oluşur.</string>
+    <string name="smscommunicator_otp_reset_btn">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
+    <string name="smscommunicator_otp_reset_title">Kimlik Doğrulayıcı Anahtarını Sıfırla</string>
+    <string name="smscommunicator_otp_reset_prompt">Kimlik Doğrulayıcı (Authenticator) anahtarını sıfırlamak istediğinizden emin misiniz? Şu anda yapılandırılmış tüm Kimlik Doğrulayıcıları geçersiz kılar ve bunları yeniden ayarlamanız gerekir.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Kimlik Doğrulayıcıyı (Authenticator) yükleyin</string>
+    <string name="smscommunicator_otp_reset_header">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
+    <string name="smscommunicator_otp_install_info">Her takipçi telefonuna, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Kimlik doğrulayıcıyı sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
+</resources>

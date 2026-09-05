@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Birim</string>
+    <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
+    <string name="next_button">İleri</string>
+    <string name="previous_button">Önceki</string>
+    <string name="setupwizard_finish">BİTTİ</string>
+    <string name="welcome">Hoş geldiniz</string>
+    <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
+    <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
+    <string name="end_user_license_agreement_text">TIBBİ KARAR VERMEK İÇİN KULLANILMAMALIDIR. UYGULANABİLİR YASANIN İZİN VERDİĞİ ÖLÇÜDE, PROGRAM İÇİN GARANTİ YOKTUR. TELİF HAKKI SAHİPLERİNİN VE / VEYA DİĞER TARAFLARIN YAZILI OLMASINA YÖNELİK BAŞKA HİÇBİR ŞEKİLDE BELİRTİLEN VEYA BELİRLİ BİR AMACA UYGUNLUK İLE İLGİLİ ZIMNİ GARANTİLER DE DAHİL OLMAK ÜZERE ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE AÇIK VEYA ZIMNİ HİÇBİR GARANTİ OLMAKSIZIN “OLDUĞU GİBİ” SAĞLAMAKTADIR. PROGRAMIN KALİTESİ VE PERFORMANSI İLE İLGİLİ TÜM RİSK SİZE AİTTİR. PROGRAMIN HASARLI OLMASI DURUMUNDA, TÜM GEREKLİ SERVİS, ONARIM VEYA DÜZELTME MALİYETİNİ KABUL ETMİŞ OLURSUNUZ.</string>
+    <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
+    <string name="display_settings">Görüntü Ayarları</string>
+    <string name="low_mark">DÜŞÜK işareti</string>
+    <string name="high_mark">Yüksek işareti</string>
+    <string name="low_mark_comment">Aralıktan daha düşük değer (sadece görüntüle)</string>
+    <string name="high_mark_comment">Aralıktan daha yüksek değer (Sadece görüntüle)</string>
+    <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
+    <string name="master_password_summary">Ana parola, yedekleme şifrelemesi ve uygulamanın güvenliği için kullanılır. Bu parolayı unutmayın ve güvenli bir yerde saklayın.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
+    <string name="syncinfotext">Verileri bulutla senkronize edin. Bu kısmı şimdi atlayabilirsiniz, ancak Nightscout veya Tidepool istemcisini kurmadan görevleri geçemezsiniz.</string>
+    <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
+    <string name="profile">Profil</string>
+    <string name="doprofileswitch">Profil Değişimi Yap</string>
+    <string name="exitwizard">Kurulum sihirbazını atla</string>
+    <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Lütfen aşağıda RileyLink\'inizi yapılandırın. Bir RileyLink seçtikten sonra, RileyLink durumu \"Bağlandı\" olduğunda kuruluma devam etmek mümkün olacaktır. Bu bir dakika sürebilir.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Not:</b> Pompa kurulduktan sonra kuruluma devam edebilirsiniz.\n</string>
+    <string name="startobjective">İlk görevinize başlayın</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink durumu:</string>
+    <string name="readstatus">Durum oku</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
+    <string name="configbuilder_aps_description">Hangi APS algoritması terapi ayarlamalarını yapsın?</string>
+    <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
+    <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
+    <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
+    <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelle.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

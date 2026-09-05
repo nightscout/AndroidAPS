@@ -13,26 +13,25 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class DeactivateTask @Inject constructor(
     private val stopBasalTask: StopBasalTask,
     private val tempBasalManager: TempBasalManager,
     private val aapsSchedulers: AapsSchedulers
 ) : TaskBase(TaskFunc.DEACTIVATE) {
 
-    private val DEACTIVATION: DeActivation = DeActivation()
+    @Inject lateinit var deactivation: DeActivation
 
     fun run(forced: Boolean, timeout: Long): Single<DeactivationStatus> {
         return isReadyCheckActivated()
             .timeout(timeout, TimeUnit.MILLISECONDS)
             .concatMapSingle<PatchBooleanResponse>(Function {
-                DEACTIVATION.start()
+                deactivation.start()
                     .doOnSuccess(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
                     .observeOn(aapsSchedulers.io)
                     .doOnSuccess(Consumer { onDeactivated() })
@@ -66,7 +65,7 @@ class DeactivateTask @Inject constructor(
 
     private fun onDeactivated() {
         synchronized(lock) {
-            patch.updateMacAddress(null, false)
+            patch.updateMacAddress("", false)
             if (patchConfig.lifecycleEvent.isShutdown) {
                 return
             }

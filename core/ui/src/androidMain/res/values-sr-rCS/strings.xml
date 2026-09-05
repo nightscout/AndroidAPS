@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <string name="constraint_applied">Primenjeno ograničenje!</string>
+    <string name="tt_label">TT</string>
+    <string name="save">Sačuvaj</string>
+    <string name="virtual_pump">Virtuelna Pumpa</string>
+    <string name="constraints">Ograničenja</string>
+    <string name="result">Rezultat</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <!-- master_password moved to core/keys/strings.xml -->
+    <string name="pump">Pumpa</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="goingtodeliver">Isporučujem %1$.2f U</string>
+    <string name="basal_label">Basal</string>
+    <string name="exit">Izađi</string>
+    <string name="iob">IOB</string>
+    <string name="bg_label">GUK</string>
+    <string name="duration_label">Trajanje</string>
+    <string name="profile">Profil</string>
+    <string name="overview_treatment_label">Tretman</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basalni IOB</string>
+    <string name="invalid">NEVAŽEĆE</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">Niska Glukoza Obustavi</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <string name="duration">Trajanje</string>
+    <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="glucosetype_sensor">Senzor</string>
+    <string name="wear">Sat</string>
+    <string name="loop">Loop</string>
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <string name="basalrate">Basal</string>
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Profile validation -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
+    <!--    Protection-->
+    <!--    Pumps -->
+    <!--    Constraints-->
+    <!--    Dialogs-->
+    <!-- TwoMessagesDialog -->
+    <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
+    <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    Pump pair/unpair (shared) -->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
+    <!-- About -->
+    <!--    Maintenance-->
+    <!--    Weekday-->
+    <!--    DecimalFormatterImpl -->
+    <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Food Management -->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
+</resources>

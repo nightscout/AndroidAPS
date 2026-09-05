@@ -9,17 +9,16 @@ import app.aaps.pump.eopatch.core.response.BolusResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class StartQuickBolusTask @Inject constructor() : BolusTask(TaskFunc.START_QUICK_BOLUS) {
 
-    private val NOW_BOLUS_START: BolusStart = BolusStart()
-    private val EXT_BOLUS_START: ExtBolusStart = ExtBolusStart()
-    private val COMBO_BOLUS_START: ComboBolusStart = ComboBolusStart()
+    @Inject lateinit var nowBolusStart: BolusStart
+    @Inject lateinit var extBolusStart: ExtBolusStart
+    @Inject lateinit var comboBolusStart: ComboBolusStart
 
     fun start(
         nowDoseU: Float, exDoseU: Float,
@@ -37,11 +36,11 @@ class StartQuickBolusTask @Inject constructor() : BolusTask(TaskFunc.START_QUICK
         exDuration: BolusExDuration
     ): Single<out BolusResponse> {
         return if (nowDoseU > 0 && exDoseU > 0) {
-            COMBO_BOLUS_START.start(nowDoseU, exDoseU, exDuration.minute)
+            comboBolusStart.start(nowDoseU, exDoseU, exDuration.minute)
         } else if (exDoseU > 0) {
-            EXT_BOLUS_START.start(exDoseU, exDuration.minute)
+            extBolusStart.start(exDoseU, exDuration.minute)
         } else {
-            NOW_BOLUS_START.start(nowDoseU)
+            nowBolusStart.start(nowDoseU)
         }
     }
 

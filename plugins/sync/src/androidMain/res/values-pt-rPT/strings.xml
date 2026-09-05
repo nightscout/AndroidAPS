@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <string name="connection_settings_title">Definições de ligação</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="unsupported_ns_version">Versão sem suporte do Nightscout</string>
+    <!-- AAPSClient -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_client_url">URL:</string>
+    <string name="deliver_now">Administrar agora</string>
+    <string name="queue">Fila de espera:</string>
+    <string name="clear_log">Limpar Registo</string>
+    <string name="full_sync">Sincronização completa</string>
+    <string name="full_sync_comment">Sincronização completa? Pode levar muitas horas até terminar e não irá ver dados novos no NS.</string>
+    <string name="ns_sync_options">Sincronização</string>
+    <string name="ns_alarm_options">Opções Alarme</string>
+    <!-- Tidepool -->
+    <string name="title_tidepool_dev_servers">Utilizar servidores de integração (teste)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Enviar dados para Tidepool</string>
+    <string name="upload_now">Fazer o upload agora</string>
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip_not_installed">xDrip+ não está instalado</string>
+    <string name="calibration_sent">Calibração enviada para xDrip+</string>
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="description_wear">Monitorizar e controlar a AndroidAPS utilizando o seu relógio WearOS.</string>
+    <string name="no_watch_connected">(Nenhum relógio Conectado)</string>
+    <string name="pump_status">Estado da Bomba</string>
+    <string name="loop_status">Estado do loop</string>
+    <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
+    <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
+    <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
+    <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
+    <string name="wear_general_settings">Definições Gerais</string>
+    <string name="wear_custom_watchface_settings">Definições da watchface predefinida</string>
+    <string name="wear_custom_watchface">Watchface Predefinida: %1$s</string>
+    <string name="wear_load_watchface">Carregar Watchface</string>
+    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_export_watchface">Exportar modelo</string>
+    <string name="wear_new_custom_watchface_exported">Modelo de Watchface Predefinida exportado</string>
+    <string name="resend_all_data">Reenviar Todos os Dados</string>
+    <string name="open_settings_on_wear">Abrir Definições no Relógio</string>
+    <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
+    <string name="cwf_infos_pref_required">Lista de preferências necessárias para a Watchface</string>
+    <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
+    <string name="pump_old_data">TID: Ainda dados antigos! Não é possível carregar a partir da bomba.</string>
+    <string name="units_short">U</string>
+    <string name="hour_short">h</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="today">Hoje</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+</resources>

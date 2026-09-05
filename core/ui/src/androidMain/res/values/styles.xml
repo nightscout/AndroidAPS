@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.Bridge">
+        <!-- Seed colors for system UI chrome (status bar tint, splash background,
+             permission/system dialogs that still read the activity theme) -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/aaps_theme_light_onPrimary</item>
+        <item name="colorSecondary">@color/aaps_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/aaps_theme_light_onSecondary</item>
+        <item name="colorError">@color/aaps_theme_light_error</item>
+        <item name="colorOnError">@color/aaps_theme_light_onError</item>
+        <item name="android:colorBackground">@color/aaps_theme_light_background</item>
+        <item name="colorOnBackground">@color/aaps_theme_light_onBackground</item>
+        <item name="colorSurface">@color/aaps_theme_light_surface</item>
+        <item name="colorOnSurface">@color/aaps_theme_light_onSurface</item>
+        <item name="colorPrimaryDark">@color/aaps_theme_light_primary</item>
+        <item name="colorAccent">@color/aaps_theme_light_secondary</item>
+        <!-- Cold-start flash prevention -->
+        <item name="android:windowBackground">@color/aaps_theme_light_background</item>
+        <!-- Text defaults for any framework-internal TextView (autofill, a11y overlays) -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- BolusProgress, Error -->
+    <style name="Theme.MaterialComponents.Translucent" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
+    <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar" />
+
+</resources>

@@ -8,17 +8,18 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class ReadBolusFinishTimeTask @Inject constructor() : BolusTask(TaskFunc.READ_BOLUS_FINISH_TIME) {
 
-    private val BOLUS_FINISH_TIME_GET: BolusFinishTimeGet = BolusFinishTimeGet()
+    @Inject lateinit var bolusFinishTimeGet: BolusFinishTimeGet
 
     fun read(): Single<BolusFinishTimeResponse> {
         return isReady()
-            .concatMapSingle<BolusFinishTimeResponse>(Function { BOLUS_FINISH_TIME_GET.get() })
+            .concatMapSingle<BolusFinishTimeResponse>(Function { bolusFinishTimeGet.get() })
             .firstOrError()
             .doOnSuccess(Consumer { response: BolusFinishTimeResponse -> this.checkResponse(response) })
             .doOnSuccess(Consumer { response: BolusFinishTimeResponse -> this.onResponse(response) })

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <string name="connection_settings_title">Configuració de connexió</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="unsupported_ns_version">Versió no compatible de Nightscout</string>
+    <!-- AAPSClient -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_client_url">URL:</string>
+    <string name="deliver_now">Lliurar ara</string>
+    <string name="queue">Cua:</string>
+    <string name="clear_log">Buidar log</string>
+    <string name="full_sync">Sincronització completa</string>
+    <string name="full_sync_comment">Sincronització completa? Pot tardar hores i fins que no es completi, no veuràs dades noves a NS.</string>
+    <string name="ns_sync_options">Sincronització</string>
+    <string name="ns_alarm_options">Configuració alarmes</string>
+    <!-- Tidepool -->
+    <string name="title_tidepool_dev_servers">Utilitzar servidors d\'integració (test)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Envia dades a Tidepool</string>
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip_not_installed">xDrip+ no instal·lat</string>
+    <string name="calibration_sent">Calibració enviada a xDrip+</string>
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="wear_wizard_settings_summary">Càlculs inclosos al resultat de l\'assistent:</string>
+    <string name="wear_general_settings">Configuració general</string>
+    <string name="resend_all_data">Reenviar totes les dades</string>
+    <string name="open_settings_on_wear">Obrir Configuració a Wear</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+</resources>

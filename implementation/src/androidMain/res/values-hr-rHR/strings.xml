@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Naredba se izvršava upravo sada</string>
+    <string name="basal_value_below_minimum">Bazalna vrijednost ispod minimuma. Profil nije postavljen!</string>
+    <!--       Stats -->
+    <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+</resources>

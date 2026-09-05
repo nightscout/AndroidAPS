@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <!--    Events-->
+    <string name="bolus_delivering">Dostarczam %1$.2fU</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2fU dostarczony prawidłowo</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Zmieniono ster. pompy.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$dmin temu</string>
+    <string name="secago">%1$ds temu</string>
+    <string name="minago_long">%1$d minut temu</string>
+    <string name="hoursago">%1$.1fh temu</string>
+    <string name="days_ago">%1$.1f dni temu</string>
+    <string name="days_ago_round">%1$.0f dni temu</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s dzień %2$s godziny temu</item>
+        <item quantity="few">%1$s dni %2$s godziny temu</item>
+        <item quantity="many">%1$s dni %2$s godziny temu</item>
+        <item quantity="other">%1$s dni %2$s godziny temu</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s godzinę temu</item>
+        <item quantity="few">%1$s godziny temu</item>
+        <item quantity="many">%1$s godzin temu</item>
+        <item quantity="other">%1$s godzin temu</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">chwilę temu</item>
+        <item quantity="few">%1$s minuty temu</item>
+        <item quantity="many">%1$s minut temu</item>
+        <item quantity="other">%1$s minut temu</item>
+    </plurals>
+    <string name="seconds_ago">sekundy temu</string>
+    <string name="in_days">za %1$.0f dni</string>
+    <string name="in_days_round">za %1$.0f dni</string>
+    <string name="shorthour">h</string>
+    <string name="days">dni</string>
+    <string name="hours">godzin</string>
+    <string name="unit_second">sekunda</string>
+    <string name="unit_minute">minuta</string>
+    <string name="unit_hour">godzina</string>
+    <string name="unit_day">dzień</string>
+    <string name="unit_week">tydzień</string>
+    <string name="unit_seconds">sekund</string>
+    <string name="unit_minutes">minut</string>
+    <string name="unit_hours">godzin</string>
+    <string name="unit_days">dni</string>
+    <string name="unit_weeks">tygodni</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="later_today">Dzisiaj, później</string>
+    <string name="tomorrow">Jutro</string>
+    <string name="today">Dziś</string>
+    <string name="yesterday">Wczoraj</string>
+    <!-- Rx -->
+    <string name="connecting_for">Łączenie przez %1$d s</string>
+    <string name="handshaking">Nawiązywanie połączenia</string>
+    <string name="connected">Połączono</string>
+    <string name="authorized">Zautoryzowano</string>
+    <string name="disconnecting">Rozłączanie</string>
+    <string name="waiting_for_disconnection">Oczekiwanie na rozłączenie</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Utworzono: %1$s</string>
+    <string name="metadata_label_watchface_author">Autor: %1$s</string>
+    <string name="metadata_label_watchface_name">Nazwa: %1$s</string>
+    <string name="metadata_wear_import_filename">Nazwa pliku: %1$s</string>
+    <string name="metadata_label_plugin_version">Wersja wtyczki: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Nazwa: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
+    <string name="pref_show_iob">Pokaż IOB</string>
+    <string name="pref_show_detailed_iob">Pokaż szczegółowe IOB</string>
+    <string name="pref_show_cob">Pokaż COB</string>
+    <string name="pref_show_delta">Pokaż Deltę</string>
+    <string name="pref_show_detailed_delta">Pokaż szczegółowo Deltę</string>
+    <string name="pref_show_avgdelta">Pokaż Śr. Deltę</string>
+    <string name="pref_show_tempTarget">Pokaż cel tymczasowy</string>
+    <string name="pref_show_reservoir_level">Pokaż poziom zbiornika</string>
+    <string name="pref_show_phone_battery">Pokaż Baterię Telefonu</string>
+    <string name="pref_show_rig_battery">Pokaż Baterię Zestawu</string>
+    <string name="pref_show_basal_rate">Pokaż Dawkę Bazową</string>
+    <string name="pref_show_loop_status">Pokaż Status Pętli</string>
+    <string name="pref_show_bg">Pokaż glikemię</string>
+    <string name="pref_show_bgi">Pokaż BGI</string>
+    <string name="pref_show_direction_arrow">Pokaż Strzałkę Trendu</string>
+    <string name="pref_show_ago">Pokaż Aktualność</string>
+    <string name="pref_show_week_number">Pokaż numer tygodnia</string>
+    <string name="pref_show_date">Pokaż Datę</string>
+    <string name="pref_show_seconds">Pokazuj Sekundy</string>
+    <string name="default_custom_watchface_comment">Domyślna tarcza, możesz kliknąć na EXPORTUJ TARCZĘ aby wygenerować szablon</string>
+    <string name="default_custom_watchface_external_comment">Domyślna tarcza zegarka, w tym zewnętrzne podglądy dla obserwujących. Możesz kliknąć na przycisk EKSPORT TARCZY aby wygenerować szablon</string>
+    <string name="wear_default_watchface">Domyślna Tarcza</string>
+    <string name="wear_more_watchfaces">Więcej tarcz zegarka</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Na zawsze</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Węglowodany</string>
+    <string name="alarminxmin">Uruchom alarm za %1$d min</string>
+    <string name="pumpsuspended">Pompa wstrzymana</string>
+    <string name="loopsuspended">Pętla wstrzymana</string>
+    <string name="pump_disconnected">Pompa odłączona</string>
+    <string name="basalprofilenotaligned">Wartości bazy nie są ustawione w pełnych godzinach: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Wpis</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">PRZEDŁUŻONE WĘGLOWODANY</string>
+    <string name="profile_low_target">Dolna granica celu profilu</string>
+    <string name="profile_high_target">Górna granica celu profilu</string>
+    <string name="profile_dia">Wartość DIA profilu</string>
+    <string name="profile_sensitivity_value">Wartość wrażliwości profilu</string>
+    <string name="profile_carbs_ratio_value">Stosunek węglowodanów profilu</string>
+    <string name="value_out_of_hard_limits">Wartość »%1$s« %2$.2f jest poza dopuszczalną granicą</string>
+    <string name="basal_value">Wartość bazy</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolus_constraint_applied_warn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
+    <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

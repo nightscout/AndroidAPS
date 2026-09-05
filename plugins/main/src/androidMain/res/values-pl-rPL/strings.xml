@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Przegląd historii</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulina</string>
+    <string name="pb_label">Bateria pompy</string>
+    <string name="cannula">Kaniula</string>
+    <string name="patch_pump">Pompa bezdrenowa</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAZ</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
+    <string name="old_data">NIEAKTUALNE DANE</string>
+</resources>

@@ -10,16 +10,15 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class StopComboBolusTask @Inject constructor() : BolusTask(TaskFunc.STOP_COMBO_BOLUS) {
 
-    private val BOLUS_STOP: BolusStop = BolusStop()
+    @Inject lateinit var bolusStop: BolusStop
 
     fun stop(): Single<ComboBolusStopResponse> {
         return isReady()
@@ -32,8 +31,8 @@ class StopComboBolusTask @Inject constructor() : BolusTask(TaskFunc.STOP_COMBO_B
 
     fun stopJob(): Single<ComboBolusStopResponse> {
         return Single.zip<BolusStopResponse, BolusStopResponse, ComboBolusStopResponse>(
-            BOLUS_STOP.stop(IPatchConstant.EXT_BOLUS_ID.toInt()),
-            BOLUS_STOP.stop(IPatchConstant.NOW_BOLUS_ID.toInt()),
+            bolusStop.stop(IPatchConstant.EXT_BOLUS_ID.toInt()),
+            bolusStop.stop(IPatchConstant.NOW_BOLUS_ID.toInt()),
             BiFunction { ext: BolusStopResponse, now: BolusStopResponse -> createStopComboBolusResponse(now, ext) })
     }
 

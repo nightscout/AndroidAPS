@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
-import app.aaps.plugins.main.general.persistentNotification.DummyServiceHelper
-import dagger.android.DaggerBroadcastReceiver
-import javax.inject.Inject
+import app.aaps.core.objects.workflow.MetroBroadcastReceiver
+import app.aaps.persistentNotification.DummyServiceHelper
+import dev.zacsweers.metro.Inject
 
-class AutoStartReceiver : DaggerBroadcastReceiver() {
+class AutoStartReceiver : MetroBroadcastReceiver() {
 
     @Inject lateinit var dummyServiceHelper: DummyServiceHelper
 

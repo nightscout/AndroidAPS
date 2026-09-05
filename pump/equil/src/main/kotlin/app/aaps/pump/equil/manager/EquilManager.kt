@@ -3,19 +3,23 @@ package app.aaps.pump.equil.manager
 import android.os.SystemClock
 import android.text.TextUtils
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.Event
-import app.aaps.core.interfaces.rx.events.EventNewNotification
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.waitMillis
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.ble.EquilBLE
@@ -51,25 +55,23 @@ import app.aaps.pump.equil.manager.command.CmdTempBasalSet
 import app.aaps.pump.equil.manager.command.PumpEvent
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
-import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.format.ISODateTimeFormat
-import java.lang.reflect.Type
 import java.util.Calendar
 import java.util.Optional
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.min
 
-@Singleton
+@SingleIn(AppScope::class)
 class EquilManager @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
@@ -79,42 +81,49 @@ class EquilManager @Inject constructor(
     private val equilBLE: EquilBLE,
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
     private val equilHistoryPumpDao: EquilHistoryPumpDao,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
-    private val dateUtil: DateUtil
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
+    private val dateUtil: DateUtil,
+    private val notificationManager: NotificationManager,
+    private val ch: ConcentrationHelper,
+    private val bolusProgressData: BolusProgressData
 ) {
 
     private val gsonInstance: Gson = createGson()
     var equilState: EquilState? = null
         private set
 
+    /** Guards the one-time read in [init]. */
+    private var podStateLoaded = false
+
+    val lastConnectionFlow = MutableStateFlow(0L)
+    val lastBolusTimeFlow = MutableStateFlow<Long?>(null)
+    val lastBolusAmountFlow = MutableStateFlow<Double?>(null)
+    val reservoirFlow = MutableStateFlow(0.0)
+    val batteryFlow = MutableStateFlow<Int?>(null)
+
+    /**
+     * Called from `EquilPumpPlugin.onStart`, which can run more than once per process - the plugin is
+     * started again whenever it is re-enabled.
+     *
+     * The pod state is only read from preferences the **first** time. Every change to [equilState] is
+     * written through to preferences immediately, so memory is never older than disk: a second load can
+     * only replace newer in-memory state with whatever happens to be persisted. That is not theoretical
+     * - `onStart` runs on a background coroutine, so a re-enable landing during pod activation reset an
+     * activation that was already in progress, and the wizard then waited forever for a COMPLETED it had
+     * already reached (#5040).
+     *
+     * [equilBLE] still initialises on every start; only the read is once.
+     */
     fun init() {
-        loadPodState()
-        initEquilError()
-        equilBLE.init(this)
-        //equilBLE.connect("EquilManager::init")
-    }
-
-    var listEvent: MutableList<PumpEvent> = ArrayList()
-
-    private fun initEquilError() {
-        listEvent = ArrayList()
-        listEvent.add(PumpEvent(4, 2, 2, rh.gs(R.string.equil_history_item3)))
-        listEvent.add(PumpEvent(4, 3, 0, rh.gs(R.string.equil_history_item4)))
-        listEvent.add(PumpEvent(4, 3, 2, rh.gs(R.string.equil_history_item5)))
-        listEvent.add(PumpEvent(4, 6, 1, rh.gs(R.string.equil_shutdown_be)))
-        listEvent.add(PumpEvent(4, 6, 2, rh.gs(R.string.equil_shutdown)))
-        listEvent.add(PumpEvent(4, 8, 0, rh.gs(R.string.equil_shutdown)))
-        listEvent.add(PumpEvent(5, 1, 2, rh.gs(R.string.equil_history_item18)))
-    }
-
-    fun getEquilError(port: Int, type: Int, level: Int): String {
-        val pumpEvent = PumpEvent(port, type, level, "")
-        val index = listEvent.indexOf(pumpEvent)
-        if (index == -1) {
-            return ""
+        if (!podStateLoaded) {
+            loadPodState()
+            podStateLoaded = true
         }
-        return listEvent[index].comment
+        equilBLE.init(this)
     }
+
+    fun getEquilError(port: Int, type: Int, level: Int): String =
+        PumpEvent.getErrorString(rh, port, type, level)
 
     fun closeBleAuto() {
         equilBLE.closeBleAuto()
@@ -125,12 +134,12 @@ class EquilManager @Inject constructor(
     }
 
     fun getTempBasalPump(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command = CmdTempBasalGet(aapsLogger, preferences, this)
             equilBLE.writeCmd(command)
             synchronized(command) {
-                (command as Object).wait(command.timeOut.toLong())
+                command.waitMillis(command.timeOut.toLong())
             }
             result.success = command.cmdSuccess
             result.enacted(command.time != 0)
@@ -142,15 +151,15 @@ class EquilManager @Inject constructor(
         return result
     }
 
-    fun setTempBasal(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+    suspend fun setTempBasal(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
+        val result = pumpEnactResultProvider()
         try {
             val command = CmdTempBasalSet(insulin, time, aapsLogger, preferences, this)
             command.cancel = cancel
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
             synchronized(command) {
-                (command as Object).wait(command.timeOut.toLong())
+                command.waitMillis(command.timeOut.toLong())
             }
             if (command.cmdSuccess) {
                 val currentTime = System.currentTimeMillis()
@@ -171,7 +180,7 @@ class EquilManager @Inject constructor(
                     setTempBasal(tempBasalRecord)
                     pumpSync.syncTemporaryBasalWithPumpId(
                         currentTime,
-                        insulin,
+                        PumpRate(insulin),
                         time.toLong() * 60 * 1000,
                         true,
                         PumpSync.TemporaryBasalType.NORMAL,
@@ -193,14 +202,14 @@ class EquilManager @Inject constructor(
         return result
     }
 
-    fun setExtendedBolus(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+    suspend fun setExtendedBolus(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
+        val result = pumpEnactResultProvider()
         try {
             val command = CmdExtendedBolusSet(insulin, time, cancel, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
             synchronized(command) {
-                (command as Object).wait(command.timeOut.toLong())
+                command.waitMillis(command.timeOut.toLong())
             }
 
             result.success = command.cmdSuccess
@@ -217,7 +226,7 @@ class EquilManager @Inject constructor(
                 } else {
                     pumpSync.syncExtendedBolusWithPumpId(
                         currentTimeMillis,
-                        insulin,
+                        PumpRate(insulin),
                         time.toLong() * 60 * 1000,
                         true,
                         currentTimeMillis,
@@ -238,14 +247,14 @@ class EquilManager @Inject constructor(
         return result
     }
 
-    fun bolus(detailedBolusInfo: DetailedBolusInfo, bolusProfile: BolusProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+    suspend fun bolus(detailedBolusInfo: DetailedBolusInfo, bolusProfile: BolusProfile): PumpEnactResult {
+        val result = pumpEnactResultProvider()
         try {
             val command = CmdLargeBasalSet(detailedBolusInfo.insulin, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
             synchronized(command) {
-                (command as Object).wait(command.timeOut.toLong())
+                command.waitMillis(command.timeOut.toLong())
             }
             bolusProfile.stop = false
             val sleep = 2000
@@ -256,14 +265,14 @@ class EquilManager @Inject constructor(
                 result.success = true
                 result.enacted(true)
                 while (!bolusProfile.stop && percent < 100) {
-                    rxBus.send(EventOverviewBolusProgress(rh, percent / 100.0 * detailedBolusInfo.insulin, id = detailedBolusInfo.id))
+                    bolusProgressData.updateProgress(percent.toInt())
                     SystemClock.sleep(sleep.toLong())
-                    percent = percent + percent1
+                    percent += percent1
                     aapsLogger.debug(LTag.PUMPCOMM, "isCmdStatus===" + percent + "====" + bolusProfile.stop)
                 }
                 // constraint percent.
                 percent = min(percent, 100.0f)
-                rxBus.send(EventOverviewBolusProgress(rh, percent = 100, id = detailedBolusInfo.id))
+                bolusProgressData.updateProgress(percent = 100)
                 result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
             } else {
                 result.success = false
@@ -276,7 +285,7 @@ class EquilManager @Inject constructor(
                 val currentTime = System.currentTimeMillis()
                 pumpSync.syncBolusWithPumpId(
                     currentTime,
-                    result.bolusDelivered,
+                    PumpInsulin(result.bolusDelivered),
                     detailedBolusInfo.bolusType,
                     detailedBolusInfo.timestamp,
                     PumpType.EQUIL,
@@ -294,13 +303,13 @@ class EquilManager @Inject constructor(
     }
 
     fun stopBolus(bolusProfile: BolusProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command: BaseCmd = CmdLargeBasalSet(0.0, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
             synchronized(command) {
-                (command as Object).wait(command.timeOut.toLong())
+                command.waitMillis(command.timeOut.toLong())
             }
             bolusProfile.stop = command.cmdSuccess
             aapsLogger.debug(LTag.PUMPCOMM, "stopBolus===")
@@ -323,7 +332,7 @@ class EquilManager @Inject constructor(
             val historyGet = CmdHistoryGet(index, aapsLogger, preferences, dateUtil, this)
             equilBLE.readHistory(historyGet)
             synchronized(historyGet) {
-                (historyGet as Object).wait(historyGet.timeOut.toLong())
+                historyGet.waitMillis(historyGet.timeOut.toLong())
             }
             aapsLogger.debug(LTag.PUMPCOMM, "loadHistory end: ")
             if (!historyGet.cmdSuccess) return -1
@@ -386,12 +395,12 @@ class EquilManager @Inject constructor(
     }
 
     fun readModeAndHistory(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command: BaseCmd = CmdRunningModeGet(aapsLogger, preferences, this)
             equilBLE.writeCmd(command)
             synchronized(command) {
-                (command as Object).wait(command.timeOut.toLong())
+                command.waitMillis(command.timeOut.toLong())
             }
             if (command.cmdSuccess) {
                 command.resolvedResult = ResolvedResult.SUCCESS
@@ -409,7 +418,7 @@ class EquilManager @Inject constructor(
 
     fun loadEquilHistory(): PumpEnactResult {
         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
-        val pumpEnactResult = pumpEnactResultProvider.get()
+        val pumpEnactResult = pumpEnactResultProvider()
         var startIndex = getStartHistoryIndex() ?: return pumpEnactResult
         val index = getHistoryIndex() ?: return pumpEnactResult
         aapsLogger.debug(LTag.PUMPCOMM, "return ===$index====$startIndex")
@@ -436,12 +445,12 @@ class EquilManager @Inject constructor(
     }
 
     fun executeCmd(command: BaseCmd): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
             synchronized(command) {
-                (command as Object).wait(command.timeOut.toLong())
+                command.waitMillis(command.timeOut.toLong())
             }
             if (command.cmdSuccess) {
                 command.resolvedResult = ResolvedResult.SUCCESS
@@ -457,39 +466,46 @@ class EquilManager @Inject constructor(
         return result
     }
 
-    fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {
-        val notification = Notification(id, message, urgency)
-        if (sound != null) {
-            notification.soundId = sound
-        }
-        sendEvent(EventNewNotification(notification))
-    }
-
-    private fun sendEvent(event: Event) {
-        rxBus.send(event)
-    }
-
     fun readPodState(): String {
         return preferences.get(EquilStringKey.State)
     }
 
+    /**
+     * Reads the persisted pod state into memory.
+     *
+     * The new state is built in a local and published in one assignment. It used to null [equilState]
+     * first and fill it in afterwards, which left a window where every concurrent reader saw no pod:
+     * `hasPodState()` false, `getActivationProgress()` NONE. This object is a singleton read by the
+     * overview screen, the wizard and the command queue while the BLE threads write to it, so that
+     * window was reachable - it is what made `activatedPod_...` fail as "expected to be true" (#5040).
+     */
     fun loadPodState() {
-        equilState = null
-
         val storedPodState = readPodState()
 
-        if (StringUtils.isEmpty(storedPodState)) {
-            equilState = EquilState()
+        val loaded = if (StringUtils.isEmpty(storedPodState)) {
             aapsLogger.info(LTag.PUMP, "loadPodState: no Pod state was provided")
+            EquilState()
         } else {
             aapsLogger.info(LTag.PUMP, "loadPodState: serialized Pod state was provided: $storedPodState")
             try {
-                equilState = gsonInstance.fromJson(storedPodState, EquilState::class.java)
+                gsonInstance.fromJson(storedPodState, EquilState::class.java) ?: EquilState()
             } catch (ex: Exception) {
-                equilState = EquilState()
                 aapsLogger.error(LTag.PUMP, "loadPodState: could not deserialize PodState: $storedPodState", ex)
+                EquilState()
             }
         }
+
+        equilState = loaded
+        syncOverviewFlows()
+    }
+
+    private fun syncOverviewFlows() {
+        val state = equilState ?: return
+        lastConnectionFlow.value = state.lastDataTime
+        reservoirFlow.value = state.currentInsulin.toDouble()
+        batteryFlow.value = state.battery
+        lastBolusTimeFlow.value = state.bolusRecord?.startTime
+        lastBolusAmountFlow.value = state.bolusRecord?.amount
     }
 
     fun hasPodState(): Boolean = equilState != null // 0x0=discarded
@@ -505,6 +521,7 @@ class EquilManager @Inject constructor(
         val podState = gsonInstance.toJson(equilState)
         aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: {}", podState)
         storePodState(podState)
+        syncOverviewFlows()
     }
 
     private fun storePodState(podState: String) {
@@ -536,6 +553,8 @@ class EquilManager @Inject constructor(
     fun setBolusRecord(bolusRecord: EquilBolusRecord?) {
         equilState?.bolusRecord = bolusRecord
         storePodState()
+        lastBolusTimeFlow.value = bolusRecord?.startTime
+        lastBolusAmountFlow.value = bolusRecord?.amount
     }
 
     fun getTempBasal(): EquilTempBasalRecord? = equilState?.tempBasal
@@ -573,11 +592,13 @@ class EquilManager @Inject constructor(
     fun setLastDataTime(lastDataTime: Long) {
         equilState?.lastDataTime = lastDataTime
         storePodState()
+        lastConnectionFlow.value = lastDataTime
     }
 
     fun setCurrentInsulin(currentInsulin: Int) {
         equilState?.currentInsulin = currentInsulin
         storePodState()
+        reservoirFlow.value = currentInsulin.toDouble()
     }
 
     fun setStartInsulin(startInsulin: Int) {
@@ -589,6 +610,7 @@ class EquilManager @Inject constructor(
     fun setBattery(battery: Int) {
         equilState?.battery = battery
         storePodState()
+        batteryFlow.value = battery
     }
 
     fun setRunMode(runMode: RunMode) {
@@ -620,7 +642,7 @@ class EquilManager @Inject constructor(
 
     fun getActivationProgress(): ActivationProgress {
         if (hasPodState()) {
-            return Optional.ofNullable<ActivationProgress>(equilState?.activationProgress).orElse(ActivationProgress.NONE)
+            return Optional.ofNullable(equilState?.activationProgress).orElse(ActivationProgress.NONE)
         }
         return ActivationProgress.NONE
     }
@@ -676,7 +698,7 @@ class EquilManager @Inject constructor(
 
     fun decodeHistory(data: ByteArray) {
         var year = data[6].toInt() and 0xff
-        year = year + 2000
+        year += 2000
 
         val month = data[7].toInt() and 0xff
         val day = data[8].toInt() and 0xff
@@ -723,7 +745,7 @@ class EquilManager @Inject constructor(
 
     fun decodeData(data: ByteArray, saveData: Boolean) {
         var year = data[11].toInt() and 0xFF
-        year = year + 2000
+        year += 2000
         val month = data[12].toInt() and 0xff
         val day = data[13].toInt() and 0xff
         val hour = data[14].toInt() and 0xff
@@ -741,11 +763,7 @@ class EquilManager @Inject constructor(
         val parm = data[27].toInt() and 0xff
         val errorTips = getEquilError(port, level, parm)
         if (!TextUtils.isEmpty(errorTips) && currentIndex != historyIndex) {
-            showNotification(
-                Notification.FAILED_UPDATE_PROFILE,
-                errorTips,
-                Notification.NORMAL, app.aaps.core.ui.R.raw.alarm
-            )
+            notificationManager.post(NotificationId.PUMP_ERROR, errorTips, sound = AlarmSound.ALARM)
             if (saveData) {
                 val time = System.currentTimeMillis()
                 val equilHistoryRecord = EquilHistoryRecord(EquilHistoryRecord.EventType.EQUIL_ALARM, time, getSerialNumber())
@@ -786,10 +804,10 @@ class EquilManager @Inject constructor(
 
         private fun createGson(): Gson {
             val gsonBuilder = GsonBuilder()
-                .registerTypeAdapter(DateTime::class.java, JsonSerializer { dateTime: DateTime?, typeOfSrc: Type?, context: JsonSerializationContext? -> JsonPrimitive(ISODateTimeFormat.dateTime().print(dateTime)) })
-                .registerTypeAdapter(DateTime::class.java, JsonDeserializer { json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext? -> ISODateTimeFormat.dateTime().parseDateTime(json!!.asString) })
-                .registerTypeAdapter(DateTimeZone::class.java, JsonSerializer { timeZone: DateTimeZone?, typeOfSrc: Type?, context: JsonSerializationContext? -> JsonPrimitive(timeZone!!.id) })
-                .registerTypeAdapter(DateTimeZone::class.java, JsonDeserializer { json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext? -> DateTimeZone.forID(json!!.asString) })
+                .registerTypeAdapter(DateTime::class.java, JsonSerializer { dateTime: DateTime?, _, _ -> JsonPrimitive(ISODateTimeFormat.dateTime().print(dateTime)) })
+                .registerTypeAdapter(DateTime::class.java, JsonDeserializer { json: JsonElement?, _, _ -> ISODateTimeFormat.dateTime().parseDateTime(json!!.asString) })
+                .registerTypeAdapter(DateTimeZone::class.java, JsonSerializer { timeZone: DateTimeZone?, _, _ -> JsonPrimitive(timeZone!!.id) })
+                .registerTypeAdapter(DateTimeZone::class.java, JsonDeserializer { json: JsonElement?, _, _ -> DateTimeZone.forID(json!!.asString) })
 
             return gsonBuilder.create()
         }

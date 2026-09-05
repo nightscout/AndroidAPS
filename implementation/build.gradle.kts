@@ -1,38 +1,189 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.ksp)
-    id("kotlin-android")
-    id("android-module-dependencies")
-    id("all-open-dependencies")
-    id("test-module-dependencies")
-    id("jacoco-module-dependencies")
+    id("kmp-test-defaults")
+    kotlin("multiplatform")
+    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
+    // Same reason as :core:ui, :core:interfaces and the other multiplatform modules.
+    alias(libs.plugins.android.kmp.library)
+    // Metro, the DI framework for this module.
+    alias(libs.plugins.metro)
+    // The compiler plugin that generates serializers. The kotlinx json runtime was already here and is
+    // used to parse trees, which needs no plugin - but StoredBolusInfo is @Serializable and does.
+    id("kotlinx-serialization")
+    // The Compose COMPILER, which ships with Kotlin and compiles @Composable for every target.
+    alias(libs.plugins.compose.compiler)
+    // The Compose Multiplatform framework. The compiler plugin above is applied per project rather
+    // than per target, so every target needs a Compose runtime on its class path.
+    alias(libs.plugins.compose.multiplatform)
+    // Opens @OpenForTesting classes for Mockito. Applied directly rather than through
+    // all-open-dependencies, which applies com.android.library and so cannot be used here.
+    kotlin("plugin.allopen")
 }
 
-android {
-    namespace = "app.aaps.implementation"
+allOpen {
+    annotation("app.aaps.annotations.OpenForTesting")
 }
 
-dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":core:interfaces"))
-    implementation(project(":core:keys"))
-    implementation(project(":core:objects"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-
-    testImplementation(project(":shared:tests"))
-    testImplementation(project(":plugins:aps"))
-    testImplementation(project(":pump:virtual"))
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.androidx.work.testing)
-
-    api(libs.androidx.datastore.preferences)
-    // Protection
-    api(libs.androidx.biometric)
-    //Logger
-    api(libs.org.slf4j.api)
-    api(libs.com.github.tony19.logback.android)
-
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.android.processor)
+// One task, not one per variant: a multiplatform module has no product flavours. Same generator as
+// :core:keys, :core:ui and :core:interfaces, pointed at this module's strings. It lets the classes here
+// name their user text instead of numbering it, which is what a commonMain class needs. The strings
+// themselves do not move, and AAPT keeps resolving them on Android exactly as before.
+val generateImplementationStrings = tasks.register<GenerateKeyStringsTask>("generateImplementationStrings") {
+    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
+    packageName.set("app.aaps.implementation")
+    owner.set("implementation")
+    objectName.set("ImplementationStrings")
+    idsObjectName.set("ImplementationStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/implementationStrings/translations.txt"))
+    // Set explicitly: addGeneratedSourceDirectory only applies a convention derived from the task name,
+    // so both properties would land on one directory and the second file written would delete the first.
+    commonOutputDir.set(layout.buildDirectory.dir("generated/implementationStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/implementationStrings/android"))
 }
+
+kotlin {
+    android {
+        namespace = "app.aaps.implementation"
+        compileSdk = Versions.compileSdk
+        minSdk = Versions.minSdk
+        // Off by default for a multiplatform library, unlike a plain android library. This module
+        // carries the maintenance and notification strings, so it must be on.
+        androidResources { enable = true }
+        // Creates the androidHostTest compilation, which also pulls in commonTest.
+        // Restated from test-module-dependencies, which this module can no longer apply.
+        withHostTest {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
+
+        // Restated from android-module-dependencies, which this module can no longer apply.
+        lint {
+            checkReleaseBuilds = false
+            disable += "MissingTranslation"
+            disable += "ExtraTranslation"
+        }
+    }
+
+    // Apple klibs cross compile on Windows. Linking and running still need a Mac, and those tasks
+    // report SKIPPED rather than failing. Keeping the targets is what stops an Android only import
+    // from quietly reaching commonMain later.
+    iosArm64()
+    iosSimulatorArm64()
+
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
+
+    // commonMain is small on purpose. Most of this module reaches Android directly, and most of the
+    // rest formats user text through ResourceHelper and app.aaps.core.ui.R - the twenty command queue
+    // classes are otherwise portable and fail only on that. They can follow once they take a
+    // TextResolver and a TextRef instead, the same move :core:keys already made.
+    sourceSets {
+        commonMain {
+            kotlin.srcDir(generateImplementationStrings.flatMap { it.commonOutputDir })
+            dependencies {
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(project(":core:keys"))
+                implementation(project(":core:objects"))
+                // For CoreUiStrings: the command queue names its user text instead of numbering it.
+                implementation(project(":core:ui"))
+            }
+        }
+
+        // Only the iOS SecureEncrypt needs this - AES-GCM and SHA-256 through the same library the
+        // client-control crypto already uses, so both platforms share one vetted implementation.
+        iosMain {
+            dependencies {
+                implementation(libs.cryptography.core)
+                implementation(libs.cryptography.provider.optimal)
+            }
+        }
+
+        // Tests for commonMain classes belong here, not in androidHostTest: a test that only runs on
+        // the JVM says nothing about the target the code was moved to common for.
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+
+        iosTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
+        androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateImplementationStrings.flatMap { it.androidOutputDir })
+            dependencies {
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(libs.kotlinx.datetime)
+                implementation(project(":core:keys"))
+                implementation(project(":core:objects"))
+                implementation(project(":core:ui"))
+                implementation(project(":core:utils"))
+                implementation(project(":shared:impl"))
+                implementation(libs.com.squareup.okhttp3.okhttp)
+
+                // Everything here was `api` on the old android library, so it must stay exported.
+                api(libs.androidx.datastore.preferences)
+                api(project.dependencies.platform(libs.androidx.compose.bom))
+                api(libs.androidx.compose.runtime)
+
+                // Protection
+                implementation(libs.androidx.biometric)
+                // Logger
+                implementation(libs.org.slf4j.api)
+                implementation(libs.com.github.tony19.logback.android)
+            }
+        }
+
+        // Hand written rather than taken from test-module-dependencies and
+        // compose-test-module-dependencies, because both convention plugins apply
+        // com.android.library and so cannot be used here.
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(project(":shared:tests"))
+                implementation(project(":plugins:aps"))
+                implementation(project(":pump:virtual"))
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.androidx.work.testing)
+
+                implementation(kotlin("test"))
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                implementation(libs.org.mockito.junit.jupiter)
+                implementation(libs.org.mockito.kotlin)
+                implementation(libs.joda.time)
+                implementation(libs.com.google.truth)
+                implementation(libs.org.skyscreamer.jsonassert)
+
+                implementation(project.dependencies.platform(libs.androidx.compose.bom))
+                implementation(libs.androidx.compose.ui.test.junit4)
+                implementation(libs.org.robolectric)
+                // Was debugImplementation: supplies the manifest holding the activity that
+                // createComposeRule() launches. The multiplatform library target has no build types.
+                implementation(libs.androidx.compose.ui.test.manifest)
+                runtimeOnly(libs.org.junit.vintage.engine)
+                runtimeOnly(libs.org.junit.platform.launcher)
+            }
+        }
+    }
+}
+
+tasks.withType<Test> {
+    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
+    // specific to this module.
+    // Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default
+    // JaCoCo on-the-fly agent records no coverage for the classes those tests exercise. Restated
+    // from jacoco-module-dependencies, which applies com.android.library.
+    extensions.configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+

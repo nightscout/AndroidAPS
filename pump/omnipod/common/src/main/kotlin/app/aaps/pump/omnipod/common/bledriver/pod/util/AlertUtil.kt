@@ -1,7 +1,7 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.util
 
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
-import java.util.*
+import java.util.EnumSet
 
 object AlertUtil {
 

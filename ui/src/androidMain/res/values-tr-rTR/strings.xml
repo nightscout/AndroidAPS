@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">Egzersiz Başlat GH</string>
+    <string name="start_eating_soon_tt">Yakında Yemek GH</string>
+    <string name="start_hypo_tt">Hipo GH başlat</string>
+    <string name="time_offset">Saat farkı</string>
+    <!--    Widget-->
+    <string name="configure">Şeffaflığı yapılandır</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Aktivite monitörü</string>
+    <string name="do_you_want_reset_stats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
+    <string name="do_you_want_recalculate_tdd_stats">GTD istatistiklerini tekrar hesaplamak istiyor musunuz?</string>
+    <string name="calculation_in_progress">Hesaplanıyor</string>
+    <string name="age">Yaş</string>
+    <string name="weight_label">Ağırlık</string>
+    <string name="glucose_type">Glikoz türü</string>
+    <string name="bg_other">Diğer</string>
+    <string name="bg_meter">GlkMetre</string>
+    <string name="bg_sensor">Sensör</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <!-- FillDialog -->
+    <string name="fill_warning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>
+    <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
+    <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
+    <string name="percentage_label">Yüzde</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Pompayı ayırın</string>
+    <string name="resume">Devam et</string>
+    <string name="reconnect">Pompayı tekrar bağla</string>
+    <string name="duration15m">15 dk</string>
+    <string name="duration30m">30 dk</string>
+    <string name="duration1h">1 saat</string>
+    <string name="duration2h">2 saat</string>
+    <string name="duration3h">3 saat</string>
+    <string name="duration10h">10 saat</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">%1$d g eksik</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Kayıt mevcut değil</string>
+    <string name="treatments_iob_label_string">AİNS:</string>
+    <string name="carbs_and_bolus">Karbonhidrat ve bolus</string>
+    <string name="show_invalidated">Geçersiz olanları göster</string>
+    <string name="hide_invalidated">Geçersiz olanları gizle</string>
+    <string name="careportal_remove_started_events">AAPS tarafından başlatılmış girdileri kaldırın</string>
+    <string name="user_entry">Kullanıcı girişi</string>
+    <string name="clone_label">Klon</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Profil tipi</string>
+    <string name="basal_pct_from_tdd_label">% bazalın</string>
+    <string name="selected_profile">Seçildi:</string>
+    <string name="motol_default_profile">Varsayılan profil</string>
+    <string name="current_profile">Mevcut profil</string>
+    <string name="available_profile">Kullanılabilir profil</string>
+    <string name="format_with_tdd">Yaş: %1$d GTD: %2$.0f Ü</string>
+    <string name="format_with_tdd_and_pct">Yaş: %1$d GTD: %2$.0f Ü %3$d%%</string>
+    <string name="format_with_weight">Yaş: %1$d Ağırlık: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Varsayılan profil</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Buton Metni</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Yalnızca pozitif AİNS</string>
+    <string name="overview_edit_quickwizard_superbolus">Süperbolus</string>
+    <!--    History browser-->
+    <string name="additional_ecarbs">yKarb ekle</string>
+    <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
+    <string name="recalculate">Tekrar Hesapla</string>
+    <!--    Widget-->
+    <string name="use_black_color">Siyah renk kullanın</string>
+    <string name="widget_configuration">Araç yapılandırması</string>
+    <string name="until_changed">Değiştirilene kadar</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>İkisi de</item>
+        <item>Sadece pozitif</item>
+        <item>Sadece negatif</item>
+    </string-array>
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Jednotky</string>
+    <string name="setupwizard_units_prompt">Vyberte jednotky, ve kterých chcete zobrazit hodnoty</string>
+    <string name="next_button">Další</string>
+    <string name="previous_button">Zpět</string>
+    <string name="setupwizard_finish">Dokončit</string>
+    <string name="welcome">Vítejte</string>
+    <string name="welcometosetupwizard">Vítejte v průvodci nastavením. Provede Vás procesem nastavení programu\n</string>
+    <string name="end_user_license_agreement">Licenční ujednání</string>
+    <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
+    <string name="end_user_license_agreement_i_understand">ROZUMÍM A POTVRZUJI</string>
+    <string name="display_settings">Nastavení zobrazení</string>
+    <string name="low_mark">Dolní značka</string>
+    <string name="high_mark">Horní značka</string>
+    <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
+    <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
+    <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
+    <string name="master_password_summary">Hlavní heslo se používá pro šifrování zálohy a pro \"přebití\" zabezpečení v aplikaci. Dobře si ho zapamatujte nebo uložte na bezpečném místě.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Použijte hodnoty pro největší jídlo, jaké obvykle jíte\n</string>
+    <string name="syncinfotext">Synchronizujte data s cloudem. Tuto část nyní můžete přeskočit, ale nebudete schopni dokončit cíle, dokud nebude nastavena synchronizace do NS nebo Tidepoolu.</string>
+    <string name="status_label">Stav:</string>
+    <string name="diawarning">Pozor: Nové inzulínové profily vyžadují DIA minimálně 5h. DIA 5–6 hodin odpovídá zhruba nastavení 3h na starších typech profilů nebo v pumpě.</string>
+    <string name="profile">Profil</string>
+    <string name="doprofileswitch">Proveďte přepnutí profilu</string>
+    <string name="exitwizard">Přeskočit průvodce</string>
+    <string name="setupwizard_sensitivity_description">Plugin senzitivita slouží k detekci změn v senzitivitě a k počítání COB. Více informací zde:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Vyberte jeden z dostupných algoritmů. Jsou seřazeny od nejstaršího k nejnovějšímu. Novější algoritmus je obvykle výkonnější. Nezapomeňte si před použitím přečíst dokumentaci OpenAPS a vše nastavit.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svůj RileyLink níže. Po výběru RileyLinku bude možné pokračovat v nastavení, jakmile stav RileyLinku je \"Připojeno\". Tato akce může chvilku trvat.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy můžete pokračovat v nastavení.\n</string>
+    <string name="startobjective">Spusťte první cíl</string>
+    <string name="open_objectives">Otevřít Cíle</string>
+    <string name="setupwizard_permissions">Oprávnění</string>
+    <string name="setupwizard_profile_info">Vytvořte profil s vašimi bazálními dávkami, IC, ISF a cílovými hodnotami. Více profilů můžete přidat později.</string>
+    <string name="setupwizard_permissions_info">AAPS potřebuje přístup k úložišti a oprávnění pro správnou funkci. Níže udělte požadovaná oprávnění.</string>
+    <string name="setupwizard_pump_riley_link_status">Status RileyLink:</string>
+    <string name="readstatus">Načíst status</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Jakou pumpu chcete s AAPS používat?</string>
+    <string name="configbuilder_aps_description">Jaký algoritmus má AndroidAPS používat?</string>
+    <string name="configbuilder_sync_description">Pluginy pro nahrávání dat, synchronizaci a komunikaci.</string>
+    <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
+    <string name="configbuilder_sensitivity_description">Jaký druh algoritmu pro detekci citlivosti chcete použít?</string>
+    <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
+    <string name="nsclient_version_does_not_match">Verze AAPSClienta se neshoduje s verzí AAPS. Aktualizujte prosím.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <string name="loading">Načítání…</string>
+    <string name="warning_wrong_directory_selected">Byl vybrán chybný adresář</string>
+    <string name="warning_wrong_directory_message">Místo kořenového adresáře AAPS jste vybrali podadresář „%1$s“. Vyberte prosím hlavní adresář AAPS. Podadresáře jsou automaticky vytvořeny a spravovány aplikací.</string>
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">Iniciar atividade TT</string>
+    <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
+    <string name="start_hypo_tt">Começar TT Hipo</string>
+    <string name="time_offset">Fuso horário</string>
+    <!--    Widget-->
+    <string name="configure">Configurar opacidade</string>
+    <string name="widget_description">Widget do AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Monitor de atividade</string>
+    <string name="do_you_want_reset_stats">Quer reiniciar as estatísticas de atividade?</string>
+    <string name="calculation_in_progress">Cálculo em andamento</string>
+    <string name="age">Idade</string>
+    <string name="weight_label">Peso</string>
+    <string name="glucose_type">Tipo de glicose</string>
+    <string name="bg_other">Outro</string>
+    <string name="bg_meter">Medidor</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <!-- FillDialog -->
+    <string name="fill_warning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
+    <string name="record_pump_site_change">Registar mudança de sítio</string>
+    <string name="record_insulin_cartridge_change">Registar mudança cartucho</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
+    <string name="percentage_label">Porcentagem</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Bomba Desconectada</string>
+    <string name="resume">Continuar</string>
+    <string name="reconnect">Reconectar Bomba</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 hora</string>
+    <string name="duration2h">2 horas</string>
+    <string name="duration3h">3 horas</string>
+    <string name="duration10h">10 horas</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Precisando de %1$d g</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Nenhum registro disponível</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">Carboidratos e bolus</string>
+    <string name="show_invalidated">Mostrar invalidados</string>
+    <string name="hide_invalidated">Ocultar invalidados</string>
+    <string name="careportal_remove_started_events">Remover entradas do AAPS iniciadas</string>
+    <string name="user_entry">Entrada do usuário</string>
+    <string name="clone_label">Clonar</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Tipo de perfil</string>
+    <string name="basal_pct_from_tdd_label">% da basal</string>
+    <string name="selected_profile">Seleccionado:</string>
+    <string name="motol_default_profile">Perfil padrão</string>
+    <string name="current_profile">Perfil atual</string>
+    <string name="available_profile">Perfis disponíveis</string>
+    <string name="format_with_tdd">Idade: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Idade: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Idade: %1$d Peso: %2$.0f kg</string>
+    <string name="dpv_default_profile">Perfil padrão DPV</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <!--    History browser-->
+    <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

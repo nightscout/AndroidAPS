@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="unsupported_ns_version">Nepodržana verzija Nightscout-a</string>
+    <!-- AAPSClient -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_alarm_options">Opcije alarma</string>
+    <!-- Tidepool -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="wear_shortname">SAT</string>
+    <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
+    <string name="no_watch_connected">(Nema povezanog sata)</string>
+    <string name="pump_status">Status pumpe</string>
+    <string name="loop_status">Loop status</string>
+    <string name="wear_action_tempt_unit_error">Različite jedinice se koriste na satu i telefonu!</string>
+    <string name="wear_action_tempt_min_bg_error">Minimalni ŠUK izvan opsega!</string>
+    <string name="wear_action_tempt_max_bg_error">MaksimalnI ŠUK izvan opsega!</string>
+    <string name="units_short">J</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+</resources>

@@ -5,14 +5,30 @@
     <uses-feature android:name="android.hardware.type.watch" />
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
+    <!-- Samsung-only, protectionLevel="normal" so it is granted automatically at install and is a
+         no-op on non-Samsung watches (the permission simply doesn't exist there). Lets us send
+         ACTION_EDIT_WATCH_FACE to Samsung SysUI's exported WatchFaceEditorBroadcastReceiver, which
+         is the only known way for an app to get the system to activate a watchface. -->
+    <uses-permission android:name="com.samsung.android.wearable.sysui.permission.EDIT_WATCH_FACE" />
+    <!-- Watch Face Push (Wear OS 6+): PUSH_WATCH_FACES gates binding to the system push service;
+         SET_PUSHED_WATCH_FACE_AS_ACTIVE allows re-activating the pushed AAPS watchface after the
+         one-shot activation on first install was used -->
+    <uses-permission android:name="com.google.wear.permission.PUSH_WATCH_FACES" />
+    <uses-permission android:name="com.google.wear.permission.SET_PUSHED_WATCH_FACE_AS_ACTIVE" />
 
-    <uses-sdk tools:overrideLibrary="androidx.wear.tiles" />
+    <!-- androidx.wear.watchfacepush requires minSdk 36; all usages are runtime-guarded by SDK checks -->
+    <uses-sdk tools:overrideLibrary="androidx.wear.tiles,androidx.wear.watchfacepush" />
+
+    <!-- Package visibility for the pushed watchface, so the install state can be verified -->
+    <queries>
+        <package android:name="${applicationId}.watchfacepush.aapsv4" />
+    </queries>
 
     <application
         android:name=".WearApp"
@@ -20,6 +36,14 @@
         android:icon="${appIcon}"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault">
+
+        <!-- androidx.wear.watchfacepush declares the wear-sdk platform library as required, which
+             blocks install on watches older than Wear OS 4 (INSTALL_FAILED_MISSING_SHARED_LIBRARY).
+             Make it optional: all Watch Face Push usage is guarded by SDK checks (Wear OS 6+). -->
+        <uses-library
+            android:name="wear-sdk"
+            android:required="false"
+            tools:node="replace" />
 
         <meta-data
             android:name="com.google.android.wearable.standalone"
@@ -44,6 +68,7 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
                 android:value="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
@@ -65,6 +90,7 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
                 android:value="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
@@ -89,6 +115,7 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
                 android:value="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
@@ -180,6 +207,48 @@
             android:exported="true"
             android:icon="@drawable/ic_sgv"
             android:label="@string/complication_blood_glucose"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
+        </service>
+
+        <service
+            android:name=".complications.BgGraphComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_bg_graph_mono"
+            android:label="@string/complication_bg_graph"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE,LARGE_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
+        </service>
+
+        <service
+            android:name=".complications.SgvLargeComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_sgv"
+            android:label="@string/complication_blood_glucose_large"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -284,6 +353,45 @@
         </service>
 
         <service
+            android:name=".complications.BrTtComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_br_tt"
+            android:label="@string/complication_br_tt"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
+        </service>
+
+        <service
+            android:name=".complications.TargetComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_tt"
+            android:label="@string/complication_target"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
             android:name=".complications.BrIobComplication"
             android:exported="true"
             android:icon="@drawable/ic_br_iob"
@@ -353,6 +461,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
         </service>
 
         <service
@@ -383,6 +494,9 @@
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />
@@ -492,7 +606,7 @@
 
             <meta-data
                 android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
-                android:value="tile_configuration_activity" />
+                android:value="tile_settings_actions" />
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/action_tile_preview" />
@@ -509,7 +623,7 @@
 
             <meta-data
                 android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
-                android:value="tile_configuration_tempt" />
+                android:value="tile_settings_tempt" />
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/temp_target_tile_preview" />
@@ -544,9 +658,26 @@
         </service>
 
         <service
-            android:name=".tile.LoopStateTileService"
+            android:name=".tile.SceneTileService"
             android:exported="true"
-            android:label="@string/label_loop_state_title"
+            android:label="@string/label_scene_tile"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
+                android:value="tile_settings_scene" />
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/scene_tile" />
+        </service>
+
+        <service
+            android:name=".tile.RunningModeTileService"
+            android:exported="true"
+            android:label="@string/label_running_mode_title"
             android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
             <intent-filter>
                 <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
@@ -554,23 +685,44 @@
 
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
-                android:resource="@drawable/loop_states_tile" />
+                android:resource="@drawable/running_mode_tile" />
+        </service>
+
+        <service
+            android:name=".tile.BgGraphTileService"
+            android:exported="true"
+            android:label="@string/label_bg_graph_tile"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
+                android:value="tile_settings_bg_graph" />
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/bg_graph_tile" />
         </service>
 
         <!-- Transparent activity to handle complication taps reliably on Android 12+ -->
         <activity
             android:name=".complications.ComplicationTapActivity"
-            android:exported="false"
             android:excludeFromRecents="true"
+            android:exported="false"
             android:launchMode="singleTask"
             android:noHistory="true"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <!-- singleTask: entry-point activity (launcher, tile tap, complication MENU action) — reuse
+             the alive instance Android 12+ keeps on back instead of stacking a duplicate on top -->
         <activity
             android:name=".interaction.menus.MainMenuActivity"
             android:exported="true"
-            android:label="@string/label_actions_activity">
+            android:label="@string/label_actions_activity"
+            android:launchMode="singleTask"
+            android:theme="@style/WearAppCompatDark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -579,98 +731,172 @@
         <activity
             android:name=".interaction.WatchfaceConfigurationActivity"
             android:exported="true"
-            android:label="@string/menu_settings" />
+            android:label="@string/menu_settings"
+            android:taskAffinity="" />
+        <!-- taskAffinity="": activities launched from tiles/complications (NEW_TASK) get their own
+             task, so back returns to the tile/watchface instead of a lingering main menu. Launches
+             from within the app (no NEW_TASK) still stack in the caller's task as before. -->
         <activity
             android:name=".interaction.actions.WizardActivity"
             android:exported="true"
-            android:label="@string/menu_wizard" />
+            android:label="@string/menu_wizard"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
+        <!-- taskAffinity="" on the two service-launched overlays: without it their NEW_TASK launch
+             routes into the default app task, dragging a backgrounded main menu to the front —
+             which is then what remains on screen once the overlay finishes -->
         <activity
-            android:name=".interaction.actions.WizardResultActivity"
+            android:name=".interaction.actions.ContactingMasterActivity"
             android:exported="false"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name="androidx.wear.activity.ConfirmationActivity"
             android:exported="false"
+            android:taskAffinity=""
             android:theme="@android:style/Theme.DeviceDefault" />
         <activity
             android:name=".interaction.menus.FillMenuActivity"
             android:exported="true"
-            android:label="@string/menu_prime_fill" />
+            android:label="@string/menu_prime_fill"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.menus.StatusMenuActivity"
             android:exported="true"
-            android:label="@string/menu_status" />
+            android:label="@string/menu_status"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.LoopStatusActivity"
-            android:exported="false"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
+        <activity
+            android:name=".interaction.activities.BgGraphActivity"
+            android:exported="true"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.menus.PreferenceMenuActivity"
             android:exported="true"
-            android:label="@string/menu_settings" />
+            android:label="@string/menu_settings"
+            android:theme="@style/WearAppCompatDark" />
+        <activity
+            android:name=".interaction.menus.TileMenuActivity"
+            android:exported="false"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
-            android:label="@string/menu_treatment" />
+            android:label="@string/menu_treatment"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.BolusActivity"
             android:exported="true"
-            android:label="@string/action_insulin" />
+            android:label="@string/action_insulin"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.ProfileSwitchActivity"
             android:exported="true"
-            android:label="@string/status_profile_switch" />
+            android:label="@string/status_profile_switch"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.AcceptActivity"
             android:exported="true"
             android:label="@string/action_confirm"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.FillActivity"
             android:exported="true"
-            android:label="@string/menu_prime_fill" />
+            android:label="@string/menu_prime_fill"
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.ECarbActivity"
             android:exported="true"
-            android:label="@string/action_ecarbs" />
+            android:label="@string/action_ecarbs"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.CarbActivity"
             android:exported="true"
-            android:label="@string/action_carbs" />
+            android:label="@string/action_carbs"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:exported="true"
-            android:label="@string/menu_tempt" />
+            android:label="@string/menu_tempt"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
 
         <activity
             android:name=".interaction.actions.BackgroundActionActivity"
             android:exported="true" />
 
         <activity
-            android:name=".interaction.actions.LoopStateTimedActivity"
-            android:exported="true" />
+            android:name=".interaction.actions.RunningModeTimedActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
 
         <activity
             android:name=".interaction.ConfigurationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".interaction.TileConfigurationActivity"
-            android:theme="@style/TileConfigTheme"
-            android:exported="true">
+            android:name=".tile.ActionsTileSettingsActivity"
+            android:exported="true"
+            android:theme="@style/WearAppCompatDark">
             <intent-filter>
-                <action android:name="tile_configuration_activity" />
+                <action android:name="tile_settings_actions" />
+
                 <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".tile.TempTargetTileSettingsActivity"
+            android:exported="true"
+            android:theme="@style/WearAppCompatDark">
             <intent-filter>
-                <action android:name="tile_configuration_tempt" />
+                <action android:name="tile_settings_tempt" />
+
+                <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".tile.BgGraphTileSettingsActivity"
+            android:exported="true"
+            android:theme="@style/WearAppCompatDark">
+            <intent-filter>
+                <action android:name="tile_settings_bg_graph" />
+
+                <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".tile.SceneTileSettingsActivity"
+            android:exported="true"
+            android:theme="@style/WearAppCompatDark">
+            <intent-filter>
+                <action android:name="tile_settings_scene" />
+
                 <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -678,10 +904,12 @@
 
         <activity
             android:name=".interaction.actions.QuickSnoozeActivity"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@drawable/ic_icon_snooze"
             android:label="@string/snooze_alert"
-            android:launchMode="singleTask">
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

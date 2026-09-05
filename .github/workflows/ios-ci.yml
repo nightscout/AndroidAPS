@@ -1,0 +1,168 @@
+name: iOS CI (Kotlin/Native)
+
+# The only place the Apple side can actually be checked.
+#
+# Klibs for iosArm64 / iosSimulatorArm64 cross compile on any host, so a developer on Windows or
+# Linux already knows the shared code COMPILES for iOS. What no other machine can do is RUN it:
+# `iosSimulatorArm64Test` is disabled off macOS with "simulator tests require macOS", and it reports
+# SKIPPED rather than failing, so a green build elsewhere says nothing about iOS behaviour.
+#
+# Two things run here and nowhere else. The first is `:ios:shell`'s own tests - the graph, the
+# history window scoping, the protection guard - which were written, passed locally, and then
+# executed on no machine at all, because this file named only the three core modules. The second is
+# the four platform actuals under the shared data spine. `utcOffset` is
+# written to every record, takes part in contentEqualsTo and is validated by Nightscout, and it comes
+# from NSTimeZone on Apple and TimeZone.getOffset on the JVM. NumberFormatParityTest and
+# SystemTimeZoneTest in commonTest exist to compare them; this job is where they finally execute.
+#
+# No secrets: nothing is signed, published or uploaded.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'core/**'
+      - 'database/**'
+      - 'ios/**'
+      - 'shared/**'
+      - 'plugins/**'
+      - 'implementation/**'
+      - 'ui/**'
+      - 'gradle/libs.versions.toml'
+      - 'buildSrc/**'
+      - '.github/workflows/ios-ci.yml'
+  pull_request:
+    paths:
+      - 'core/**'
+      - 'database/**'
+      - 'ios/**'
+      - 'shared/**'
+      - 'plugins/**'
+      - 'implementation/**'
+      - 'ui/**'
+      - 'gradle/libs.versions.toml'
+      - 'buildSrc/**'
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Load jdk version
+        run: |
+          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: gradle
+
+      # Kotlin/Native downloads its own toolchain on first use; without this every run pays for it.
+      - name: Cache Kotlin/Native
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
+
+      - name: Compile the Apple targets
+        run: |
+          # Actions runs `bash -e` but NOT pipefail, so without this the exit code of the pipeline
+          # would be tee's and a failed Gradle build would report success.
+          set -o pipefail
+          ./gradlew --console=plain --no-daemon \
+            :core:data:compileKotlinIosArm64 :core:data:compileKotlinIosSimulatorArm64 \
+            :core:nssdk:compileKotlinIosArm64 :core:nssdk:compileKotlinIosSimulatorArm64 \
+            :core:keys:compileKotlinIosArm64 :core:keys:compileKotlinIosSimulatorArm64 \
+            | tee compile.log
+
+      # A disabled Kotlin/Native task reports SKIPPED and still exits 0, so "BUILD SUCCESSFUL" alone
+      # would stay green even if the whole Apple side silently stopped building. Cross-compilability
+      # is also transitive: a single cinterop anywhere in the project dependency graph turns these
+      # into no-ops. Assert the work happened rather than that nothing complained.
+      - name: Assert the Apple compiles really ran
+        run: |
+          if grep -E "Task :core:(data|nssdk|keys):compileKotlinIos(Arm64|SimulatorArm64) (SKIPPED|NO-SOURCE)" compile.log; then
+            echo "::error::An iOS compile task was skipped instead of executed."
+            exit 1
+          fi
+          for m in data nssdk keys; do
+            for t in iosArm64 iosSimulatorArm64; do
+              MANIFEST=$(find core/$m/build/classes/kotlin/$t/main/klib -name manifest 2>/dev/null | head -1)
+              if [ -z "$MANIFEST" ]; then
+                echo "::error::core/$m produced no $t klib"
+                exit 1
+              fi
+              echo "core/$m $t -> $(grep native_targets "$MANIFEST")"
+            done
+          done
+
+      # The part that only exists here. commonTest runs through Kotlin/Native against the real
+      # NSNumberFormatter and NSTimeZone, which is what no other host can do.
+      #
+      # Only :core:data has commonTest today, so it is the one module asserted below. The other two
+      # are still run: if either grows shared tests later they start executing here with no change to
+      # this file, and until then they are simply NO-SOURCE.
+      - name: Run the shared tests on the iOS simulator
+        # GitHub's macOS runners are UTC, and at UTC every assertion in SystemTimeZoneTest passes
+        # trivially - the offset is zero whatever unit it is in, so a seconds-instead-of-milliseconds
+        # bug in the NSTimeZone actual would sail straight through. Pin a zone that has both a
+        # non-zero offset and daylight saving, so the whole-minutes, range and whole-hour-DST
+        # assertions actually mean something. Foundation honours TZ on macOS, as does the JVM.
+        env:
+          TZ: Europe/Prague
+        run: |
+          set -o pipefail
+          echo "Running with TZ=$TZ"
+          ./gradlew --console=plain --no-daemon \
+            :core:data:iosSimulatorArm64Test :core:nssdk:iosSimulatorArm64Test :core:keys:iosSimulatorArm64Test \
+            :implementation:iosSimulatorArm64Test :ios:shell:iosSimulatorArm64Test \
+            | tee test.log
+
+      # Every module that HAS iOS tests is checked by name. A module added to the run above but not
+      # to this list would be free to go SKIPPED again without anyone noticing, which is exactly how
+      # `:ios:shell` came to have eleven tests that no machine executed.
+      - name: Assert the iOS tests really ran
+        run: |
+          fail=0
+          check() {
+            local gradle_path="$1" dir="$2"
+            if grep -E "Task $gradle_path:iosSimulatorArm64Test (SKIPPED|NO-SOURCE)" test.log; then
+              echo "::error::$gradle_path had its iOS tests skipped instead of executed. On macOS they must run."
+              fail=1
+              return
+            fi
+            FOUND=$(find "$dir/build/test-results/iosSimulatorArm64Test" -name "TEST-*.xml" 2>/dev/null | wc -l)
+            echo "iOS test result files for $gradle_path: $FOUND"
+            if [ "$FOUND" -le 0 ]; then
+              echo "::error::$gradle_path produced no iOS test results."
+              fail=1
+              return
+            fi
+            # Surface the counts, so a run that executed zero assertions is visible in the log.
+            grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' \
+              "$dir"/build/test-results/iosSimulatorArm64Test/TEST-*.xml || true
+          }
+          check ":core:data" core/data
+          check ":implementation" implementation
+          check ":ios:shell" ios/shell
+          exit $fail
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-results
+          path: |
+            core/*/build/test-results/iosSimulatorArm64Test/**
+            implementation/build/test-results/iosSimulatorArm64Test/**
+            ios/shell/build/test-results/iosSimulatorArm64Test/**
+          if-no-files-found: warn

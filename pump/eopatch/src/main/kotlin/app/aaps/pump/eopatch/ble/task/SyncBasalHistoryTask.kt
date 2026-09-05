@@ -10,16 +10,17 @@ import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 @Suppress("unused", "PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class SyncBasalHistoryTask @Inject constructor() : TaskBase(TaskFunc.SYNC_BASAL_HISTORY) {
 
-    private val BASAL_HISTORY_INDEX_GET: BasalHistoryIndexGet = BasalHistoryIndexGet()
-    private val BASAL_HISTORY_GET_EX_BIG: BasalHistoryGetExBig = BasalHistoryGetExBig()
-    private val TEMP_BASAL_HISTORY_GET_EX_BIG: TempBasalHistoryGetExBig = TempBasalHistoryGetExBig()
+    @Inject lateinit var basalHistoryIndexGet: BasalHistoryIndexGet
+    @Inject lateinit var basalHistoryGetExBig: BasalHistoryGetExBig
+    @Inject lateinit var TEMP_basalHistoryGetExBig: TempBasalHistoryGetExBig
 
     fun sync(end: Int): Single<Int> {
         return Single.just<Int>(1) // 베이젤 싱크 사용 안함
@@ -30,7 +31,7 @@ class SyncBasalHistoryTask @Inject constructor() : TaskBase(TaskFunc.SYNC_BASAL_
     }
 
     private fun getLastIndex(): Single<Int> {
-        return BASAL_HISTORY_INDEX_GET.get()
+        return basalHistoryIndexGet.get()
             .doOnSuccess(Consumer { response: BasalHistoryIndexResponse -> this.checkResponse(response) })
             .map<Int>(Function { obj: BasalHistoryIndexResponse -> obj.lastFinishedIndex })
     }
@@ -40,8 +41,8 @@ class SyncBasalHistoryTask @Inject constructor() : TaskBase(TaskFunc.SYNC_BASAL_
 
         return if (count > 0) {
             Single.zip<BasalHistoryResponse, BasalHistoryResponse, Int>(
-                BASAL_HISTORY_GET_EX_BIG.get(start, count),
-                TEMP_BASAL_HISTORY_GET_EX_BIG.get(start, count),
+                basalHistoryGetExBig.get(start, count),
+                TEMP_basalHistoryGetExBig.get(start, count),
                 BiFunction { normal: BasalHistoryResponse, temp: BasalHistoryResponse -> onBasalHistoryResponse(normal, temp, start, end) })
         } else {
             Single.just<Int>(-1)

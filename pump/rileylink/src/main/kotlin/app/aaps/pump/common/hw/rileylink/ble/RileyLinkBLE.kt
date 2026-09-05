@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.extensions.connectGattCompat
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.core.utils.pump.ThreadUtil
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
@@ -38,14 +39,15 @@ import org.apache.commons.lang3.StringUtils
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.Semaphore
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by geoff on 5/26/16.
  * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
-@Singleton
+@SingleIn(AppScope::class)
 class RileyLinkBLE @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
@@ -69,11 +71,6 @@ class RileyLinkBLE @Inject constructor(
     private var radioResponseCountNotified: Runnable? = null
     var isConnected = false
         private set
-
-    @Inject fun onInit() {
-        //aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
-        orangeLink.rileyLinkBLE = this
-    }
 
     private fun isAnyRileyLinkServiceFound(service: BluetoothGattService): Boolean {
         val found = GattAttributes.isRileyLink(service.uuid)
@@ -174,7 +171,7 @@ class RileyLinkBLE @Inject constructor(
         if (config.PUMPDRIVERS && ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") != PackageManager.PERMISSION_GRANTED) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "no permission")
             return
-        } else bluetoothConnectionGatt = rileyLinkDevice?.connectGatt(context, true, bluetoothGattCallback)
+        } else bluetoothConnectionGatt = rileyLinkDevice?.connectGattCompat(context, true, bluetoothGattCallback)
         // , BluetoothDevice.TRANSPORT_LE
         if (bluetoothConnectionGatt == null)
             aapsLogger.error(LTag.PUMPBTCOMM, "Failed to connect to Bluetooth Low Energy device at " + bluetoothAdapter?.address)
@@ -340,7 +337,6 @@ class RileyLinkBLE @Inject constructor(
         }
 
     init {
-        //orangeLink.rileyLinkBLE = this;
         bluetoothGattCallback = object : BluetoothGattCallback() {
             @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
             override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {

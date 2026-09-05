@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">BG NSClient</string>
+    <string name="ns_client_bg_short">BG NS</string>
+    <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
+    <string name="source_xdrip">BG xDrip+</string>
+    <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+ e app compatibili (Juggluco ecc.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom ottenuta con \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Ricevi valori glicemia da 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ricevi valori glicemia da app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ricevi valori glicemia da app Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ricevi valori da app Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ricevi valori glicemia da app Tomato (dispositivo MiaoMiao)</string>
+    <string name="random_bg">BG casuale</string>
+    <string name="description_source_random_bg">Genera dati glicemia casuali (solo modalità demo)</string>
+    <string name="random_bg_short">BG</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">App SI</string>
+    <string name="description_source_patched_si_app">Ricevi i dati di glucosio dall\'app Sibionic SI patchata.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">App Sino</string>
+    <string name="description_source_patched_sino_app">Ricevi i dati di glucosio dall\'app Sino patchata.</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Ricevi valori glicemia dall\'app Instara.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Richiesta dati storici Instara</string>
+    <string name="pref_summary_instara_history_request">Richiesta possibile di dati storici mancanti in background</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Lettore Notifiche</string>
+    <string name="description_source_notification_reader">Leggi i valori di glucosio dalle notifiche pubblicate dalle app CGM ufficiali (Dexcom, Medtronic, Eversense, ecc.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">L\'applicazione ha bisogno dell\'autorizzazione per ricevere i dati CGM dall\'app Dexcom</string>
+    <string name="permission_notification_listener_title">Accesso notifiche</string>
+    <string name="permission_notification_listener_description">Richiesto per leggere i valori di glucosio dalle notifiche delle app CGM</string>
+    <string name="aidex">MicroTech CGM App</string>
+    <string name="aidex_short">App CGM</string>
+    <string name="description_source_aidex">Ricevi valori CGM da LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 ecc.</string>
+    <string name="aidex_sensor_expired">Sensore scaduto, sostituire con un nuovo sensore</string>
+    <string name="aidex_sensor_error">Errore del sensore, controllare lo stato del sensore</string>
+    <string name="aidex_sensor_stabilizing">Il sensore si sta stabilizzando, attendere…</string>
+    <string name="aidex_sensor_replace">Sostituzione del sensore necessaria, sostituire con un nuovo sensore il prima possibile</string>
+    <string name="aidex_signal_lost">Segnale sensore perso, controlla la connessione</string>
+</resources>

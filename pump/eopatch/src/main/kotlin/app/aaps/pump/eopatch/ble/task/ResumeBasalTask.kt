@@ -10,26 +10,25 @@ import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class ResumeBasalTask @Inject constructor(
     val alarmRegistry: IAlarmRegistry,
     val startNormalBasalTask: StartNormalBasalTask,
     val patchStateManager: PatchStateManager
 ) : TaskBase(TaskFunc.RESUME_BASAL) {
 
-    private val BASAL_RESUME: BasalResume = BasalResume()
+    @Inject lateinit var basalResume: BasalResume
 
     @Synchronized fun resume(): Single<out BaseResponse> {
         if (patchConfig.needSetBasalSchedule) {
             return startNormalBasalTask.start(normalBasalManager.normalBasal)
         }
 
-        return isReady().concatMapSingle<PatchBooleanResponse>(Function { BASAL_RESUME.resume() })
+        return isReady().concatMapSingle<PatchBooleanResponse>(Function { basalResume.resume() })
             .doOnNext(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
             .firstOrError()
             .doOnSuccess(Consumer { v: PatchBooleanResponse -> this.onResumeResponse(v) })
@@ -38,7 +37,7 @@ class ResumeBasalTask @Inject constructor(
 
     private fun onResumeResponse(v: PatchBooleanResponse) {
         if (v.isSuccess) {
-            patchStateManager.onBasalResumed(v.getTimestamp() + 1000)
+            patchStateManager.onBasalResumed(v.timestamp + 1000)
             alarmRegistry.remove(AlarmCode.B001).subscribe()
         }
         enqueue(TaskFunc.UPDATE_CONNECTION)

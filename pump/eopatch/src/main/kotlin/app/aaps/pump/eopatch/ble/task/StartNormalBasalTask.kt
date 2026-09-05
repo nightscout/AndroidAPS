@@ -9,25 +9,24 @@ import app.aaps.pump.eopatch.vo.NormalBasal
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class StartNormalBasalTask @Inject constructor(
     val patchStateManager: PatchStateManager,
     val aapsSchedulers: AapsSchedulers,
 ) : TaskBase(TaskFunc.START_NORMAL_BASAL) {
 
-    private val BASAL_SCHEDULE_SET_BIG: BasalScheduleSetBig = BasalScheduleSetBig()
+    @Inject lateinit var basalScheduleSetBig: BasalScheduleSetBig
 
     fun start(basal: NormalBasal): Single<BasalScheduleSetResponse> {
         return isReady().concatMapSingle<BasalScheduleSetResponse>(Function { startJob(basal) }).firstOrError()
     }
 
     fun startJob(basal: NormalBasal): Single<BasalScheduleSetResponse> {
-        return BASAL_SCHEDULE_SET_BIG.set(basal.doseUnitPerSegmentArray)
+        return basalScheduleSetBig.set(basal.doseUnitPerSegmentArray)
             .doOnSuccess(Consumer { response: BasalScheduleSetResponse -> this.checkResponse(response) })
             .observeOn(aapsSchedulers.io)
             .doOnSuccess(Consumer { v: BasalScheduleSetResponse -> onStartNormalBasalResponse(v, basal) })
@@ -35,7 +34,7 @@ class StartNormalBasalTask @Inject constructor(
     }
 
     private fun onStartNormalBasalResponse(response: BasalScheduleSetResponse, basal: NormalBasal) {
-        val timeStamp = response.getTimestamp()
+        val timeStamp = response.timestamp
         patchStateManager.onBasalStarted(basal, timeStamp + 1000)
 
         normalBasalManager.normalBasal = basal

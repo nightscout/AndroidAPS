@@ -6,16 +6,15 @@ import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class StopTempBasalTask @Inject constructor() : TaskBase(TaskFunc.STOP_TEMP_BASAL) {
 
-    private val TEMP_BASAL_SCHEDULE_STOP: TempBasalScheduleStop = TempBasalScheduleStop()
+    @Inject lateinit var tempBasalScheduleStop: TempBasalScheduleStop
 
     fun stop(): Single<PatchBooleanResponse> {
         return isReady().concatMapSingle<PatchBooleanResponse>(Function { stopJob() }).firstOrError()
@@ -23,7 +22,7 @@ class StopTempBasalTask @Inject constructor() : TaskBase(TaskFunc.STOP_TEMP_BASA
     }
 
     fun stopJob(): Single<PatchBooleanResponse> {
-        return TEMP_BASAL_SCHEDULE_STOP.stop()
+        return tempBasalScheduleStop.stop()
             .doOnSuccess(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
             .doOnSuccess(Consumer { onTempBasalCanceled() })
     }

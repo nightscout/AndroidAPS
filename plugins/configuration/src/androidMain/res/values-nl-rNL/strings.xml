@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Eenheden</string>
+    <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
+    <string name="next_button">Volgende</string>
+    <string name="previous_button">Vorige</string>
+    <string name="setupwizard_finish">FINISH</string>
+    <string name="welcome">Welkom</string>
+    <string name="welcometosetupwizard">Welkom bij de wizard setup. Het zal je begeleiden door het setup-process\n</string>
+    <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
+    <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
+    <string name="end_user_license_agreement_i_understand">Begrepen en goedgekeurd</string>
+    <string name="display_settings">Scherm instellingen</string>
+    <string name="low_mark">LAAG grens</string>
+    <string name="high_mark">HOOG grens</string>
+    <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
+    <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
+    <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
+    <string name="master_password_summary">Het masterwachtwoord wordt gebruikt voor het versleutelen van backups en om de app-beveiligingen te kunnen overschrijven. Onthoud het goed of bewaar het op een veilige plaats.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
+    <string name="syncinfotext">Gegevens naar de cloud synchroniseren. Je kan dit deel nu overslaan, maar je kan pas verder met de doelen wanneer je een Nightscout of Tidepool client hebt ingesteld.</string>
+    <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
+    <string name="profile">Profiel</string>
+    <string name="doprofileswitch">Profiel wissel uitvoeren</string>
+    <string name="exitwizard">De installatiewizard overslaan</string>
+    <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
+    <string name="startobjective">Start je eerste Doel</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
+    <string name="readstatus">Lees status</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Welke pomp wilt u gebruiken met AAPS?</string>
+    <string name="configbuilder_aps_description">Welk APS algoritme moet therapie aanpassingen maken?</string>
+    <string name="configbuilder_bgsource_description">Waar moet de AAPS zijn gegevens vandaan halen?</string>
+    <string name="configbuilder_sensitivity_description">Welk gevoeligheid algoritme moet worden gebruikt?</string>
+    <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die in de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
+    <string name="nsclient_version_does_not_match">NSClient versie en AndroidAPS versie komen niet overeen. Update alsjeblieft.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <string name="loading">Laden…</string>
+    <string name="warning_wrong_directory_selected">Verkeerde map geselecteerd</string>
+    <string name="warning_wrong_directory_message">U heeft de \"%1$s\" submap geselecteerd in plaats van de AAPS hoofdmap. Selecteer de bovenliggende AAPS map. De app zal automatisch submappen aanmaken en beheren.</string>
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

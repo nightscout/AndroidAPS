@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">История</string>
+    <string name="sensor_label">Сензор</string>
+    <string name="insulin_label">Инсулин</string>
+    <string name="pb_label">Батерия на помпата</string>
+    <string name="cannula">Канюла</string>
+    <string name="patch_pump">Пач помпа</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">БАЗА</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
+    <string name="old_data">СТАРИ ДАННИ</string>
+    <string name="notification_iob_short">%1$.1fЕ</string>
+</resources>

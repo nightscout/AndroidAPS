@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">Rozpocznij TT Ćwiczenia</string>
+    <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
+    <string name="start_hypo_tt">Rozpocznij TT Hipo</string>
+    <string name="time_offset">Przesunięcie czasu</string>
+    <!--    Widget-->
+    <string name="configure">Skonfiguruj przezroczystość</string>
+    <string name="widget_description">Widżet AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Monitor aktywności</string>
+    <string name="do_you_want_reset_stats">Czy chcesz zresetować statystyki aktywności?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Czy chcesz ponownie przeliczyć statystyki DDI?</string>
+    <string name="calculation_in_progress">Trwa obliczanie</string>
+    <string name="age">Czas</string>
+    <string name="weight_label">Waga</string>
+    <string name="glucose_type">Typ glukozy</string>
+    <string name="bg_other">Inne</string>
+    <string name="bg_meter">Glukometr</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <string name="edit_site">Edytuj</string>
+    <string name="record_site_location">Miejsce: %1$s</string>
+    <string name="record_site_arrow">Orientacja miejsca: %1$s</string>
+    <string name="record_site_note">Notatka: %1$s</string>
+    <string name="delete_site_note">Notatka usunięta</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Proszę upewnij się, że ilość wypełnienia odpowiada ilości właściwej dla twojego wkłucia!</string>
+    <string name="record_pump_site_change">Zapisz zmianę wkłucia</string>
+    <string name="record_insulin_cartridge_change">Zapisz zmianę zasobnika insuliny</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">Użyj ponownie %1$d%% %2$dh</string>
+    <string name="percentage_label">Procent</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Odłącz pompę</string>
+    <string name="resume">Wznów</string>
+    <string name="reconnect">Połącz ponownie pompę</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 godzina</string>
+    <string name="duration2h">2 godziny</string>
+    <string name="duration3h">3 godziny</string>
+    <string name="duration10h">10 godzin</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Brakuje %1$d g</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Brak wpisów</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">Węglowodany i bolus</string>
+    <string name="show_invalidated">Pokaż niepoprawne</string>
+    <string name="hide_invalidated">Ukryj niepoprawne</string>
+    <string name="careportal_remove_started_events">Usuń wpisy o uruchomieniu AAPS</string>
+    <string name="user_entry">Wpis użytkownika</string>
+    <string name="clone_label">Sklonuj</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Typ profilu</string>
+    <string name="basal_pct_from_tdd_label">% bazy</string>
+    <string name="selected_profile">Wybrany:</string>
+    <string name="motol_default_profile">Profil domyślny</string>
+    <string name="current_profile">Bieżący profil</string>
+    <string name="available_profile">Dostępny profil</string>
+    <string name="format_with_tdd">Wiek: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Wiek: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Wiek: %1$d Waga: %2$.0f kg</string>
+    <string name="dpv_default_profile">Domyślny profil DPV</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Tekst przycisku</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Tylko dodatnie wartości IoB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <!--    History browser-->
+    <string name="additional_ecarbs">Dodaj eCarbs</string>
+    <string name="confirm_treatment">Proszę potwierdzić leczenie</string>
+    <string name="recalculate">Przelicz</string>
+    <!--    Widget-->
+    <string name="use_black_color">Użyj czarnego koloru</string>
+    <string name="widget_configuration">Konfiguracja widżetu</string>
+    <string name="until_changed">Do zmiany</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Obie</item>
+        <item>Tylko pozytywne</item>
+        <item>Tylko negatywne</item>
+    </string-array>
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

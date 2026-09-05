@@ -1,28 +1,119 @@
 package app.aaps.wear.interaction.activities
 
 import android.os.Bundle
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.ScrollView
-import android.widget.TextView
+import android.text.format.DateFormat
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
+import androidx.wear.compose.material3.CircularProgressIndicator
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.Text
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
-import app.aaps.core.interfaces.rx.weardata.TempTargetInfo
-import app.aaps.core.interfaces.rx.weardata.TargetRange
 import app.aaps.core.interfaces.rx.weardata.OapsResultInfo
+import app.aaps.core.interfaces.rx.weardata.TargetRange
+import app.aaps.core.interfaces.rx.weardata.TempTargetInfo
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.wear.R
-import dagger.android.AndroidInjection
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
-import javax.inject.Inject
+import app.aaps.wear.interaction.actions.InsulinBlue
+import app.aaps.wear.interaction.actions.LoopClosedColor
+import app.aaps.wear.interaction.actions.LoopDisabledColor
+import app.aaps.wear.interaction.actions.LoopDisconnectedColor
+import app.aaps.wear.interaction.actions.LoopLgsColor
+import app.aaps.wear.interaction.actions.LoopOpenColor
+import app.aaps.wear.interaction.actions.LoopSuperbolusColor
+import app.aaps.wear.interaction.actions.LoopSuspendedColor
+import app.aaps.wear.interaction.actions.LoopUnknownColor
+import app.aaps.wear.interaction.actions.TempTargetYellow
+import app.aaps.wear.interaction.actions.WearDivider
+import app.aaps.wear.interaction.actions.WearSecondaryText
+import app.aaps.wear.interaction.actions.WearSummaryCardBg
+import app.aaps.wear.interaction.actions.formatDurationMinutes
+import dev.zacsweers.metro.Inject
+import java.util.Date
+import kotlin.math.abs
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
+
+// Loop mode / insulin / secondary-text colors shared with the wizard result screen live in
+// app.aaps.wear.interaction.actions.PlusMinusInputScreen.kt — imported above so the two screens
+// can't drift apart. Only colors unique to this screen are declared here.
+private val TempBasalColor         = Color(0xFFFF9800)
+private val TargetsAccentColor     = Color(0xFF1E88E5)
+private val TempTargetBg           = Color(0x1AF4D700)
+private val AutosensTargetBg       = Color(0x1A77DD77)
+
+private fun LoopStatusData.LoopMode.toColor(): Color = when (this) {
+    LoopStatusData.LoopMode.CLOSED       -> LoopClosedColor
+    LoopStatusData.LoopMode.OPEN         -> LoopOpenColor
+    LoopStatusData.LoopMode.LGS          -> LoopLgsColor
+    LoopStatusData.LoopMode.DISABLED     -> LoopDisabledColor
+    LoopStatusData.LoopMode.SUSPENDED       -> LoopSuspendedColor
+    LoopStatusData.LoopMode.PUMP_SUSPENDED  -> LoopDisabledColor
+    LoopStatusData.LoopMode.DST_SUSPENDED   -> LoopDisabledColor
+    LoopStatusData.LoopMode.DISCONNECTED    -> LoopDisconnectedColor
+    LoopStatusData.LoopMode.SUPERBOLUS   -> LoopSuperbolusColor
+    LoopStatusData.LoopMode.UNKNOWN      -> LoopUnknownColor
+}
+
+private fun loopAgeColor(ageMs: Long): Color {
+    val minutes = ageMs / 60_000
+    return when {
+        minutes < 4  -> LoopClosedColor
+        minutes < 10 -> TempBasalColor
+        else         -> LoopDisabledColor
+    }
+}
+
+sealed class LoopStatusUiState {
+    object Loading : LoopStatusUiState()
+    data class Error(val message: String) : LoopStatusUiState()
+    data class Success(val data: LoopStatusData) : LoopStatusUiState()
+}
 
 class LoopStatusActivity : AppCompatActivity() {
 
@@ -30,385 +121,547 @@ class LoopStatusActivity : AppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
 
-    private val disposable = CompositeDisposable()
-
-    // Main views
-    private lateinit var loadingView: ProgressBar
-    private lateinit var contentView: ScrollView
-    private lateinit var errorView: TextView
-    private lateinit var swipeRefresh: SwipeRefreshLayout
-
-    // Header section
-    private lateinit var loopModeText: TextView
-    private lateinit var apsNameText: TextView
-
-    // Loop Result section (merged loop info + oaps)
-    private lateinit var loopResultCard: View
-    private lateinit var lastRunEnactCombinedRow: View
-    private lateinit var lastRunEnactCombinedValue: TextView
-    private lateinit var lastRunRow: View
-    private lateinit var lastRunValue: TextView
-    private lateinit var lastEnactRow: View
-    private lateinit var lastEnactValue: TextView
-
-    // OpenAPS result section
-    private lateinit var oapsSmbRow: View
-    private lateinit var oapsSmbValue: TextView
-    private lateinit var oapsStatusText: TextView
-    private lateinit var oapsRateRow: View
-    private lateinit var oapsRateValue: TextView
-    private lateinit var oapsDurationRow: View
-    private lateinit var oapsDurationValue: TextView
-    private lateinit var oapsReasonContainer: View
-    private lateinit var oapsReasonLabel: TextView
-    private lateinit var oapsReasonToggle: TextView
-    private lateinit var oapsReasonText: TextView
-    private var isReasonExpanded = false
-
-    // Targets section
-    private lateinit var targetsCard: View
-    private lateinit var tempTargetContainer: View
-    private lateinit var tempTargetValue: TextView
-    private lateinit var tempTargetDuration: TextView
-    private lateinit var defaultRangeRow: View
-    private lateinit var defaultRangeValue: TextView
-    private lateinit var defaultTargetValue: TextView
+    private var uiState by mutableStateOf<LoopStatusUiState>(LoopStatusUiState.Loading)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_loop_status)
+        setContent {
+            MaterialTheme {
+                LoopStatusScreen(
+                    uiState = uiState,
+                    dateUtil = dateUtil,
+                    onRefresh = ::requestLoopStatus
+                )
+            }
+        }
 
-        initViews()
-
-        // Subscribe to responses
-        disposable += rxBus
-            .toObservable(EventData.LoopStatusResponse::class.java)
-            .subscribe({ event ->
-                           aapsLogger.debug(LTag.WEAR, "Received loop status response")
-                           runOnUiThread {
-                               displayStatus(event.data)
-                           }
-                       }, { error ->
-                           aapsLogger.error(LTag.WEAR, "Error receiving loop status", error)
-                           runOnUiThread {
-                               showError(getString(R.string.loop_status_error)  )
-                           }
-                       })
+        // lifecycleScope is Main and dies with the activity, so runOnUiThread is no longer needed.
+        // The Rx onError put the screen into an error state rather than only logging, so that is kept
+        // explicitly - collectResilient on its own would log and carry on with the UI still spinning.
+        rxBus.toFlow(EventData.LoopStatusResponse::class)
+            .collectResilient(lifecycleScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
+                try {
+                    aapsLogger.debug(LTag.WEAR, "Received loop status response")
+                    uiState = LoopStatusUiState.Success(event.data)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Throwable) {
+                    aapsLogger.error(LTag.WEAR, "Error receiving loop status", e)
+                    uiState = LoopStatusUiState.Error(getString(R.string.loop_status_error))
+                }
+            }
     }
 
     override fun onResume() {
         super.onResume()
-        // Always request fresh data when activity comes to foreground
         requestLoopStatus()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
     }
 
     private fun requestLoopStatus() {
-        // Show loading state (but not the loading view if we're refreshing)
-        if (contentView.visibility != View.VISIBLE) {
-            loadingView.visibility = View.VISIBLE
-            swipeRefresh.visibility = View.GONE
-        }
-        errorView.visibility = View.GONE
-
-        // Request detailed status from phone
+        if (uiState !is LoopStatusUiState.Success) uiState = LoopStatusUiState.Loading
         aapsLogger.debug(LTag.WEAR, "Requesting detailed loop status")
         rxBus.send(EventWearToMobile(EventData.ActionLoopStatusDetailed(System.currentTimeMillis())))
     }
+}
 
-    private fun initViews() {
-        loadingView = findViewById(R.id.loading_progress)
-        swipeRefresh = findViewById(R.id.swipe_refresh)
-        contentView = findViewById(R.id.content_container)
-        errorView = findViewById(R.id.error_text)
+// ─── Screen ───────────────────────────────────────────────────────────────────
 
-        // Setup swipe refresh
-        swipeRefresh.setOnRefreshListener {
-            requestLoopStatus()
+@Composable
+private fun LoopStatusScreen(
+    uiState: LoopStatusUiState,
+    dateUtil: DateUtil,
+    onRefresh: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
+        when (uiState) {
+            is LoopStatusUiState.Loading ->
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+
+            is LoopStatusUiState.Error ->
+                Text(
+                    text = uiState.message,
+                    color = LoopDisabledColor,
+                    fontSize = 13.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(12.dp)
+                )
+
+            is LoopStatusUiState.Success ->
+                LoopStatusContent(data = uiState.data, dateUtil = dateUtil, onRefresh = onRefresh)
         }
+    }
+}
 
-        // Set background to transparent/black
-        swipeRefresh.setProgressBackgroundColorSchemeColor(
-            ContextCompat.getColor(this, R.color.black)
+@Composable
+private fun LoopStatusContent(
+    data: LoopStatusData,
+    dateUtil: DateUtil,
+    onRefresh: () -> Unit
+) {
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = 10.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HeaderCard(mode = data.loopMode, apsName = data.apsName, modeEndTime = data.modeEndTime)
+        ResultCard(
+            lastRun = data.lastRun,
+            lastEnact = data.lastEnact,
+            oapsResult = data.oapsResult,
+            dateUtil = dateUtil
         )
+        TargetsCard(tempTarget = data.tempTarget, autosensTarget = data.autosensTarget, defaultRange = data.defaultRange, dateUtil = dateUtil)
+        RefreshButton(onClick = onRefresh)
+    }
+}
 
-        // Set spinner colors (can use multiple colors for animation)
-        swipeRefresh.setColorSchemeColors(
-            ContextCompat.getColor(this, R.color.loopClosed),
-            ContextCompat.getColor(this, R.color.loopOpen),
-            ContextCompat.getColor(this, R.color.tempBasal)
+// ─── Refresh button ───────────────────────────────────────────────────────────
+
+@Composable
+private fun RefreshButton(onClick: () -> Unit) {
+    var isPressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(targetValue = if (isPressed) 0.93f else 1f, animationSpec = tween(100), label = "refresh_scale")
+    val alpha by animateFloatAsState(targetValue = if (isPressed) 0.6f else 1f, animationSpec = tween(100), label = "refresh_alpha")
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .scale(scale)
+            .alpha(alpha)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color(0xFF1A237E))
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        isPressed = true
+                        val released = tryAwaitRelease()
+                        isPressed = false
+                        if (released) onClick()
+                    }
+                )
+            }
+            .padding(vertical = 10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.loop_status_refresh),
+            color = Color.White,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.wrapContentSize()
         )
+    }
+}
 
-        // Header
-        loopModeText = findViewById(R.id.loop_mode_text)
-        apsNameText = findViewById(R.id.aps_name_text)
+// ─── Shared primitives ────────────────────────────────────────────────────────
 
-        // Loop Result card
-        loopResultCard = findViewById(R.id.loop_result_card)
-        lastRunEnactCombinedRow = findViewById(R.id.last_run_enact_combined_row)
-        lastRunEnactCombinedValue = findViewById(R.id.last_run_enact_combined_value)
-        lastRunRow = findViewById(R.id.last_run_row)
-        lastRunValue = findViewById(R.id.last_run_value)
-        lastEnactRow = findViewById(R.id.last_enact_row)
-        lastEnactValue = findViewById(R.id.last_enact_value)
+@Composable
+private fun StatusCard(content: @Composable () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(WearSummaryCardBg)
+            .padding(10.dp)
+    ) {
+        Column { content() }
+    }
+}
 
-        // OpenAPS result
-        oapsSmbRow = findViewById(R.id.oaps_smb_row)
-        oapsSmbValue = findViewById(R.id.oaps_smb_value)
-        oapsStatusText = findViewById(R.id.oaps_status_text)
-        oapsRateRow = findViewById(R.id.oaps_rate_row)
-        oapsRateValue = findViewById(R.id.oaps_rate_value)
-        oapsDurationRow = findViewById(R.id.oaps_duration_row)
-        oapsDurationValue = findViewById(R.id.oaps_duration_value)
-        oapsReasonContainer = findViewById(R.id.oaps_reason_container)
-        oapsReasonLabel = findViewById(R.id.oaps_reason_label)
-        oapsReasonToggle = findViewById(R.id.oaps_reason_toggle)
-        oapsReasonText = findViewById(R.id.oaps_reason_text)
+@Composable
+private fun CardTitle(title: String, accentColor: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .width(3.dp)
+                .height(16.dp)
+                .background(accentColor)
+        )
+        Text(
+            text = title,
+            color = accentColor,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
+}
 
-        // Setup click listener for expandable reason
-        oapsReasonContainer.setOnClickListener {
-            isReasonExpanded = !isReasonExpanded
-            oapsReasonText.visibility = if (isReasonExpanded) View.VISIBLE else View.GONE
-            oapsReasonToggle.text = if (isReasonExpanded) "▲" else "▼"
+@Composable
+private fun InfoRow(label: String, value: String, valueColor: Color = Color.White) {
+    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(text = label, color = WearSecondaryText, fontSize = 11.sp, modifier = Modifier.weight(1f))
+        Text(text = value, color = valueColor, fontSize = 12.sp)
+    }
+}
+
+@Composable
+private fun RowDivider() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(WearDivider)
+    )
+}
+
+// ─── Header Card ──────────────────────────────────────────────────────────────
+
+@Composable
+private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndTime: Long?) {
+    val context = LocalContext.current
+
+    StatusCard {
+        Text(
+            text = when (mode) {
+                LoopStatusData.LoopMode.CLOSED       -> stringResource(R.string.loop_status_closed).uppercase()
+                LoopStatusData.LoopMode.OPEN         -> stringResource(R.string.loop_status_open).uppercase()
+                LoopStatusData.LoopMode.LGS          -> stringResource(R.string.loop_status_lgs).uppercase()
+                LoopStatusData.LoopMode.DISABLED     -> stringResource(R.string.loop_status_disabled).uppercase()
+                LoopStatusData.LoopMode.SUSPENDED      -> stringResource(R.string.loop_status_suspended).uppercase()
+                LoopStatusData.LoopMode.PUMP_SUSPENDED -> stringResource(R.string.loop_status_pump_suspended).uppercase()
+                LoopStatusData.LoopMode.DST_SUSPENDED  -> stringResource(R.string.loop_status_dst_suspended).uppercase()
+                LoopStatusData.LoopMode.DISCONNECTED   -> stringResource(R.string.loop_status_disconnected).uppercase()
+                LoopStatusData.LoopMode.SUPERBOLUS   -> stringResource(R.string.loop_status_superbolus).uppercase()
+                LoopStatusData.LoopMode.UNKNOWN      -> stringResource(R.string.loop_status_unknown).uppercase()
+            },
+            color = mode.toColor(),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        // Remaining duration of a temporary mode (suspend/disconnect/superbolus); hidden once expired
+        val remainingMinutes = modeEndTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() } ?: 0
+        if (modeEndTime != null && remainingMinutes > 0) {
+            val endTimeStr = remember(modeEndTime) {
+                DateFormat.getTimeFormat(context).format(Date(modeEndTime))
+            }
+            Text(
+                text = stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr),
+                color = WearSecondaryText,
+                fontSize = 11.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp)
+            )
         }
-
-        // Targets
-        targetsCard = findViewById(R.id.targets_card)
-        tempTargetContainer = findViewById(R.id.temp_target_container)
-        tempTargetValue = findViewById(R.id.temp_target_value)
-        tempTargetDuration = findViewById(R.id.temp_target_duration)
-        defaultRangeRow = findViewById(R.id.default_range_row)
-        defaultRangeValue = findViewById(R.id.default_range_value)
-        defaultTargetValue = findViewById(R.id.default_target_value)
-    }
-
-    private fun displayStatus(data: LoopStatusData) {
-        // Hide loading, show content
-        loadingView.visibility = View.GONE
-        errorView.visibility = View.GONE
-        swipeRefresh.visibility = View.VISIBLE
-        swipeRefresh.isRefreshing = false  // Stop the refresh animation
-
-        // Display all sections
-        displayLoopMode(data.loopMode, data.apsName)
-        displayLoopInfo(data.lastRun, data.lastEnact)
-        data.oapsResult?.let { displayOapsResult(it) }
-        displayTargets(data.tempTarget, data.defaultRange)
-    }
-
-    private fun showError(message: String) {
-        loadingView.visibility = View.GONE
-        swipeRefresh.visibility = View.GONE
-        swipeRefresh.isRefreshing = false  // Stop the refresh animation
-        errorView.visibility = View.VISIBLE
-        errorView.text = message
-    }
-
-    private fun displayLoopMode(mode: LoopStatusData.LoopMode, apsName: String?) {
-        val (text, colorRes) = when (mode) {
-            LoopStatusData.LoopMode.CLOSED -> getString(R.string.loop_status_closed).uppercase() to R.color.loopClosed
-            LoopStatusData.LoopMode.OPEN -> getString(R.string.loop_status_open).uppercase() to R.color.loopOpen
-            LoopStatusData.LoopMode.LGS -> getString(R.string.loop_status_lgs).uppercase() to R.color.loopLGS
-            LoopStatusData.LoopMode.DISABLED -> getString(R.string.loop_status_disabled).uppercase() to R.color.loopDisabled
-            LoopStatusData.LoopMode.SUSPENDED -> getString(R.string.loop_status_suspended).uppercase() to R.color.loopSuspended
-            LoopStatusData.LoopMode.DISCONNECTED -> getString(R.string.loop_status_disconnected).uppercase() to R.color.loopDisconnected
-            LoopStatusData.LoopMode.SUPERBOLUS -> getString(R.string.loop_status_superbolus).uppercase() to R.color.loopSuperbolus
-            LoopStatusData.LoopMode.UNKNOWN -> getString(R.string.loop_status_unknown).uppercase() to R.color.loopUnknown
-        }
-
-        loopModeText.text = text
-        loopModeText.setTextColor(ContextCompat.getColor(this, colorRes))
-
         if (apsName != null) {
-            apsNameText.text = apsName
-            apsNameText.visibility = View.VISIBLE
-        } else {
-            apsNameText.visibility = View.GONE
+            Text(
+                text = apsName,
+                color = WearSecondaryText,
+                fontSize = 11.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp)
+            )
         }
     }
+}
 
-    private fun displayLoopInfo(lastRun: Long?, lastEnact: Long?) {
-        if (lastRun != null) {
-            val runTimeString = dateUtil.timeString(lastRun)
-            val runAgeMs = System.currentTimeMillis() - lastRun
-            val runColor = ContextCompat.getColor(this, getAgeColorRes(runAgeMs))
+// ─── Result Card ──────────────────────────────────────────────────────────────
 
-            if (lastEnact != null) {
-                val enactTimeString = dateUtil.timeString(lastEnact)
-                val enactAgeMs = System.currentTimeMillis() - lastEnact
+@Composable
+private fun ResultCard(
+    lastRun: Long?,
+    lastEnact: Long?,
+    oapsResult: OapsResultInfo?,
+    dateUtil: DateUtil
+) {
+    var isReasonExpanded by remember { mutableStateOf(false) }
 
-                val timeWindowMs = 30_000L // 30 seconds
+    StatusCard {
+        CardTitle(stringResource(R.string.loop_status_result), TempBasalColor)
+        Spacer(Modifier.height(8.dp))
+        LastRunSection(lastRun = lastRun, lastEnact = lastEnact, dateUtil = dateUtil)
+        if (oapsResult != null) {
+            Spacer(Modifier.height(8.dp))
+            RowDivider()
+            Spacer(Modifier.height(8.dp))
+            OapsResultSection(
+                result = oapsResult,
+                isReasonExpanded = isReasonExpanded,
+                onToggleReason = { isReasonExpanded = !isReasonExpanded }
+            )
+        }
+    }
+}
 
-                // Check if enacted is within 30 seconds of suggested (before or after)
-                val timeDiff = kotlin.math.abs(lastRun - lastEnact)
-                val timesAreClose = timeDiff <= timeWindowMs
+@Composable
+private fun LastRunSection(lastRun: Long?, lastEnact: Long?, dateUtil: DateUtil) {
+    val now = System.currentTimeMillis()
 
-                if (timesAreClose) {
-                    // Show combined row - use the enacted time since it's the actual action
-                    lastRunEnactCombinedRow.visibility = View.VISIBLE
-                    lastRunEnactCombinedValue.text = enactTimeString
-                    lastRunEnactCombinedValue.setTextColor(ContextCompat.getColor(this, getAgeColorRes(enactAgeMs)))
+    if (lastRun != null) {
+        val runTimeStr = dateUtil.timeString(lastRun)
+        val runAgeMs   = now - lastRun
 
-                    // Hide separate rows
-                    lastRunRow.visibility = View.GONE
-                    lastEnactRow.visibility = View.GONE
-                } else {
-                    // Show separate rows
-                    lastRunEnactCombinedRow.visibility = View.GONE
+        if (lastEnact != null) {
+            val enactTimeStr  = dateUtil.timeString(lastEnact)
+            val enactAgeMs    = now - lastEnact
+            val timesAreClose = abs(lastRun - lastEnact) <= 30_000L
 
-                    lastRunRow.visibility = View.VISIBLE
-                    lastRunValue.text = runTimeString
-                    lastRunValue.setTextColor(runColor)
-
-                    lastEnactRow.visibility = View.VISIBLE
-                    lastEnactValue.text = enactTimeString
-                    lastEnactValue.setTextColor(ContextCompat.getColor(this, getAgeColorRes(enactAgeMs)))
-                }
+            if (timesAreClose) {
+                InfoRow(
+                    label = stringResource(R.string.loop_status_last_run_enact),
+                    value = enactTimeStr,
+                    valueColor = loopAgeColor(enactAgeMs)
+                )
             } else {
-                // Only Last Run exists
-                lastRunEnactCombinedRow.visibility = View.GONE
-                lastEnactRow.visibility = View.GONE
-
-                lastRunRow.visibility = View.VISIBLE
-                lastRunValue.text = runTimeString
-                lastRunValue.setTextColor(runColor)
+                InfoRow(
+                    label = stringResource(R.string.loop_status_last_run),
+                    value = runTimeStr,
+                    valueColor = loopAgeColor(runAgeMs)
+                )
+                Spacer(Modifier.height(4.dp))
+                InfoRow(
+                    label = stringResource(R.string.loop_status_last_enact),
+                    value = enactTimeStr,
+                    valueColor = loopAgeColor(enactAgeMs)
+                )
             }
         } else {
-            // No Last Run
-            lastRunEnactCombinedRow.visibility = View.GONE
-            lastEnactRow.visibility = View.GONE
-
-            lastRunRow.visibility = View.VISIBLE
-            lastRunValue.text = getString(R.string.loop_status_no_last_run)
-            lastRunValue.setTextColor(ContextCompat.getColor(this, R.color.tempTargetDisabled))
+            InfoRow(
+                label = stringResource(R.string.loop_status_last_run),
+                value = runTimeStr,
+                valueColor = loopAgeColor(runAgeMs)
+            )
         }
+    } else {
+        InfoRow(
+            label = stringResource(R.string.loop_status_last_run),
+            value = stringResource(R.string.loop_status_no_last_run),
+            valueColor = LoopUnknownColor
+        )
+    }
+}
+
+@Composable
+private fun OapsResultSection(
+    result: OapsResultInfo,
+    isReasonExpanded: Boolean,
+    onToggleReason: () -> Unit
+) {
+    // Local vals required: Kotlin cannot smart-cast public API properties from other modules
+    val rate        = result.rate
+    val ratePercent = result.ratePercent ?: 0
+    val duration    = result.duration
+
+    val smb = result.smbAmount
+    if (smb != null && smb > 0.0) {
+        InfoRow(
+            label = stringResource(R.string.loop_status_smb_text),
+            value = stringResource(R.string.loop_status_smb, smb),
+            valueColor = InsulinBlue
+        )
+        Spacer(Modifier.height(2.dp))
     }
 
-    private fun displayOapsResult(result: OapsResultInfo) {
-        loopResultCard.visibility = View.VISIBLE
-
-        // Show SMB if present
-        result.smbAmount?.let { smb ->
-            if (smb > 0.0) {
-                oapsSmbRow.visibility = View.VISIBLE
-                oapsSmbValue.text = getString(R.string.loop_status_smb, smb)
-            } else {
-                oapsSmbRow.visibility = View.GONE
-            }
-        } ?: run {
-            oapsSmbRow.visibility = View.GONE
-        }
-
-        when {
-            // Case 1: Let current temp basal run (or no temp active)
-            result.isLetTempRun -> {
-                oapsStatusText.text = getString(R.string.loop_status_tbr_continues)  // "Temp basal continues"
-                oapsStatusText.setTextColor(ContextCompat.getColor(this, R.color.loopClosed))
-                oapsStatusText.visibility = View.VISIBLE
-
-                // Show current TBR details if available
-                if (result.rate != null) {
-                    oapsRateRow.visibility = View.VISIBLE
-                    oapsRateValue.text = getString(R.string.loop_status_tbr_rate, result.rate, result.ratePercent ?: 0)
-
-                    result.duration?.let { duration ->
-                        oapsDurationRow.visibility = View.VISIBLE
-                        oapsDurationValue.text = getString(R.string.loop_status_tbr_duration_remaining, duration)
-                    } ?: run {
-                        oapsDurationRow.visibility = View.GONE
-                    }
-                } else {
-                    // No temp basal active - just show status
-                    oapsRateRow.visibility = View.GONE
-                    oapsDurationRow.visibility = View.GONE
-                }
-            }
-
-            // Case 2: New temp basal requested
-            else -> {
-                val percentValue = result.ratePercent ?: 0
-
-                // Check if this is essentially "canceling" (setting to 100% basal)
-                if (percentValue == 100) {
-                    oapsStatusText.text = getString(R.string.loop_status_tbr_cancel)
-                    oapsStatusText.setTextColor(ContextCompat.getColor(this, R.color.loopClosed))
-                    oapsStatusText.visibility = View.VISIBLE
-
-                    // Show rate but NOT duration for regular basal
-                    result.rate?.let { rate ->
-                        oapsRateRow.visibility = View.VISIBLE
-                        oapsRateValue.text = getString(R.string.loop_status_tbr_rate, rate, percentValue)
-                    } ?: run {
-                        oapsRateRow.visibility = View.GONE
-                    }
-
-                    oapsDurationRow.visibility = View.GONE  // Never show duration for 100%
-
-                } else {
-                    // Normal temp basal change
-                    oapsStatusText.visibility = View.GONE
-
-                    result.rate?.let { rate ->
-                        oapsRateRow.visibility = View.VISIBLE
-                        oapsRateValue.text = getString(R.string.loop_status_tbr_rate, rate, percentValue)
-                    } ?: run {
-                        oapsRateRow.visibility = View.GONE
-                    }
-
-                    result.duration?.let { duration ->
-                        oapsDurationRow.visibility = View.VISIBLE
-                        oapsDurationValue.text = getString(R.string.loop_status_tbr_duration, duration)
-                    } ?: run {
-                        oapsDurationRow.visibility = View.GONE
-                    }
+    when {
+        result.isLetTempRun -> {
+            Text(
+                text = stringResource(R.string.loop_status_tbr_continues),
+                color = LoopClosedColor,
+                fontSize = 12.sp
+            )
+            if (rate != null) {
+                Spacer(Modifier.height(2.dp))
+                InfoRow(
+                    label = stringResource(R.string.loop_status_basal_rate),
+                    value = stringResource(R.string.loop_status_tbr_rate, rate, ratePercent)
+                )
+                if (duration != null) {
+                    Spacer(Modifier.height(4.dp))
+                    InfoRow(
+                        label = stringResource(R.string.loop_status_duration),
+                        value = stringResource(R.string.loop_status_duration_remaining, formatDurationMinutes(duration))
+                    )
                 }
             }
         }
 
-        // Show reason if available (collapsed by default)
-        if (result.reason.isNotEmpty()) {
-            oapsReasonContainer.visibility = View.VISIBLE
-            oapsReasonText.text = result.reason
-            isReasonExpanded = false
-            oapsReasonText.visibility = View.GONE
-            oapsReasonToggle.text = "▼"
-        } else {
-            oapsReasonContainer.visibility = View.GONE
+        ratePercent == 100 -> {
+            Text(
+                text = stringResource(R.string.loop_status_tbr_cancel),
+                color = LoopClosedColor,
+                fontSize = 12.sp
+            )
+            if (rate != null) {
+                Spacer(Modifier.height(2.dp))
+                InfoRow(
+                    label = stringResource(R.string.loop_status_basal_rate),
+                    value = stringResource(R.string.loop_status_tbr_rate, rate, ratePercent)
+                )
+            }
+        }
+
+        else -> {
+            if (rate != null) {
+                InfoRow(
+                    label = stringResource(R.string.loop_status_basal_rate),
+                    value = stringResource(R.string.loop_status_tbr_rate, rate, ratePercent)
+                )
+            }
+            if (duration != null) {
+                Spacer(Modifier.height(4.dp))
+                InfoRow(
+                    label = stringResource(R.string.loop_status_duration),
+                    value = formatDurationMinutes(duration)
+                )
+            }
         }
     }
 
-    private fun displayTargets(tempTarget: TempTargetInfo?, defaultRange: TargetRange) {
+    if (result.reason.isNotEmpty()) {
+        Spacer(Modifier.height(6.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onToggleReason)
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.loop_status_oaps_reason),
+                color = WearSecondaryText,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = if (isReasonExpanded) "▲" else "▼",
+                color = WearSecondaryText,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
+        }
+        AnimatedVisibility(visible = isReasonExpanded) {
+            Text(
+                text = result.reason,
+                color = Color.White,
+                fontSize = 11.sp,
+                lineHeight = 15.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+            )
+        }
+    }
+}
+
+// ─── Targets Card ─────────────────────────────────────────────────────────────
+
+@Composable
+private fun TargetsCard(
+    tempTarget: TempTargetInfo?,
+    autosensTarget: String?,
+    defaultRange: TargetRange,
+    dateUtil: DateUtil
+) {
+    val context = LocalContext.current
+
+    StatusCard {
+        CardTitle(stringResource(R.string.loop_status_targets), TargetsAccentColor)
+        Spacer(Modifier.height(8.dp))
+
         if (tempTarget != null) {
-            tempTargetContainer.visibility = View.VISIBLE
-            tempTargetValue.text = "${tempTarget.targetDisplay} ${tempTarget.units}"
-            tempTargetDuration.text = getString(R.string.loop_status_tempt_duration, tempTarget.durationMinutes, dateUtil.timeString(tempTarget.endTime))
-        } else {
-            tempTargetContainer.visibility = View.GONE
+            val endTimeStr = remember(tempTarget.endTime) {
+                DateFormat.getTimeFormat(context).format(Date(tempTarget.endTime))
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(TempTargetBg)
+                    .padding(8.dp)
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.loop_status_temp_target),
+                            color = TempTargetYellow,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = "${tempTarget.targetDisplay} ${tempTarget.units}",
+                            color = TempTargetYellow,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Text(
+                        text = stringResource(R.string.loop_status_duration_until, formatDurationMinutes(tempTarget.durationMinutes), endTimeStr),
+                        color = WearSecondaryText,
+                        fontSize = 11.sp,
+                        modifier = Modifier.padding(top = 3.dp)
+                    )
+                }
+            }
+            Spacer(Modifier.height(6.dp))
         }
 
-        // Hide Range row if low == high
-        if (defaultRange.lowDisplay != defaultRange.highDisplay) {
-            defaultRangeRow.visibility = View.VISIBLE
-            defaultRangeValue.text = "${defaultRange.lowDisplay} - ${defaultRange.highDisplay} ${defaultRange.units}"
+        if (autosensTarget != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(AutosensTargetBg)
+                    .padding(8.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.loop_status_adjusted_target),
+                        color = AutosensTargetColor,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = autosensTarget,
+                        color = AutosensTargetColor,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         } else {
-            defaultRangeRow.visibility = View.GONE
-        }
-
-        defaultTargetValue.text = "${defaultRange.targetDisplay} ${defaultRange.units}"
-    }
-
-    private fun getAgeColorRes(ageMs: Long): Int {
-        val ageMinutes = ageMs / 60000
-        return when {
-            ageMinutes < 4 -> R.color.loopClosed  // Green < 4 min
-            ageMinutes < 10 -> R.color.tempBasal  // Orange < 10 min
-            else -> R.color.loopDisabled          // Red >= 10 min
+            if (defaultRange.lowDisplay != defaultRange.highDisplay) {
+                InfoRow(
+                    label = stringResource(R.string.loop_status_target_range),
+                    value = "${defaultRange.lowDisplay} - ${defaultRange.highDisplay} ${defaultRange.units}"
+                )
+                Spacer(Modifier.height(4.dp))
+            }
+            InfoRow(
+                label = stringResource(R.string.loop_status_target),
+                value = "${defaultRange.targetDisplay} ${defaultRange.units}"
+            )
         }
     }
 }

@@ -15,10 +15,7 @@
     <string name="description_pump_insight_local">Ενσωμάτωση αντλίας για αντλίες Accu-Chek Insight</string>
     <string name="not_inserted">Δεν έχει εισαχθεί</string>
     <string name="tdd_basal">TDD βασικός</string>
-    <string name="tbr_formatter">%1$d%% για %2$d / %3$d λεπτά</string>
     <string name="multiwave_bolus">Συνδυαστικό bolus</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U για %3$d λεπτά</string>
-    <string name="insight_last_bolus">Τελευταία Δόση Bolus</string>
     <string name="searching_for_devices">Αναζήτηση συσκευών…</string>
     <string name="pairing_completed">Σύζευξη ολοκληρώθηκε</string>
     <string name="code_compare">Ταιριάζουν οι εμφανιζόμενοι κωδικοί με αυτούς της αντλίας;</string>
@@ -33,15 +30,8 @@
     <string name="pump_stopped">Η αντλία σταμάτησε</string>
     <string name="pump_started">Η αντλία ξεκίνησε</string>
     <string name="release_software_version">Έκδοση λογισμικού</string>
-    <string name="ui_processor_software_version">Έκδοση λογισμικού επεξεργαστή UI</string>
-    <string name="pc_processor_software_version">Έκδοση λογισμικού επεξεργαστή PC</string>
-    <string name="md_tel_processor_software_version">Έκδοση λογισμικού επεξεργαστή MD tel</string>
-    <string name="safety_processor_software_version">Έκδοση λογισμικού ασφαλείας επεξεργαστή</string>
-    <string name="bt_info_page_version">Έκδοση σελίδας πληροφοριών BT</string>
     <string name="bluetooth_address">Διεύθυνση Bluetooth</string>
-    <string name="system_id_appendix">Σύστημα ID προσάρτημα</string>
     <string name="manufacturing_date">Ημερομηνία κατασκευής</string>
-    <string name="delete_pairing">Διαγραφή σύζευξης</string>
     <string name="log_site_changes">Αλλαγές αρχείου καταγραφής</string>
     <string name="log_reservoir_changes">Αλλαγές αρχείου αμπούλας</string>
     <string name="log_tube_changes">Αλλαγές αρχείου σωλήνα</string>
@@ -54,5 +44,4 @@
     <string name="max_recovery_duration">Μέγ. διάρκεια αποκατάστασης [s]</string>
     <string name="min_recovery_duration">Ελάχ. διάρκεια αποκατάστασης [s]</string>
     <string name="pump_alert">Συναγερμός αντλίας</string>
-    <string name="pairing_information">Πληροφορίεςσύζευξης</string>
 </resources>

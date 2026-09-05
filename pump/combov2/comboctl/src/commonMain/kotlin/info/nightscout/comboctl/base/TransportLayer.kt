@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.base
 
+import info.nightscout.comboctl.base.TransportLayer.MAX_VALID_PAYLOAD_SIZE
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -1142,8 +1143,6 @@ object TransportLayer {
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
                 Command.DATA               -> cachedInvariantPumpData.keyResponseAddress
-
-                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             val isCRCPacket = when (outgoingPacketInfo.command) {
@@ -1207,8 +1206,6 @@ object TransportLayer {
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
                 Command.DATA               -> cachedInvariantPumpData.clientPumpCipher
-
-                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             // Authenticate the packet if necessary.

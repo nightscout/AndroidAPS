@@ -5,21 +5,30 @@ import android.content.ComponentName
 import android.content.Intent
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.CountUpTimeReference
+import androidx.wear.watchface.complications.data.TimeDifferenceComplicationText
+import androidx.wear.watchface.complications.data.TimeDifferenceStyle
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.wear.data.ComplicationData as ComplicationStore
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.di.WearMetroService
 import app.aaps.wear.interaction.utils.Constants
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.WearUtil
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import app.aaps.wear.data.ComplicationData as ComplicationStore
 
 /**
  * Modern base class for complications using DataStore and AndroidX Wear APIs
@@ -33,6 +42,7 @@ import app.aaps.wear.data.ComplicationData as ComplicationStore
  * - Uses modern AndroidX Wear Watchface API
  *
  */
+@HasMemberInjections
 abstract class ModernBaseComplicationProviderService : ComplicationDataSourceService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -40,6 +50,15 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+
+    // Not derived from WearMetroService, so inject here for every concrete subclass. AndroidInjection
+    // resolves the injector by this instance's concrete runtime class, so each subclass is injected
+    // through its own @ContributesAndroidInjector binding in WearServicesModule — kept in the base to
+    // avoid duplicating the identical override in every complication.
+    override fun onCreate() {
+        injectMetroMembers(this)
+        super.onCreate()
+    }
 
     /**
      * Build complication data using modern DataStore-backed data models
@@ -201,7 +220,7 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
      */
     open fun getPreviewComplicationData(): ComplicationStore {
         return ComplicationStore(
-            bgData = app.aaps.core.interfaces.rx.weardata.EventData.SingleBg(
+            bgData = EventData.SingleBg(
                 dataset = 0,
                 timeStamp = System.currentTimeMillis(),
                 sgvString = "120",
@@ -217,7 +236,7 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
                 low = 70.0,
                 color = 0
             ),
-            statusData = app.aaps.core.interfaces.rx.weardata.EventData.Status(
+            statusData = EventData.Status(
                 dataset = 0,
                 externalStatus = "Looping",
                 iobSum = "1.2",
@@ -239,6 +258,27 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
             lastUpdateTimestamp = System.currentTimeMillis()
         )
     }
+
+    /**
+     * Build auto-updating complication text where the `^1` placeholder in [text] renders
+     * the elapsed time since [timeStamp] (e.g. "5m").
+     *
+     * The system re-renders the text every minute on its own — no wake-ups or update
+     * requests from the app are needed (see issue #3821).
+     *
+     * @param timeStamp Epoch millis the count-up is measured from (typically the BG reading time)
+     * @param text Text containing the `^1` placeholder, e.g. `"^1 +0.1"` or `"120↗ ^1 +2.5"`
+     */
+    fun buildCountUpText(timeStamp: Long, text: String): TimeDifferenceComplicationText =
+        // SHORT_SINGLE_UNIT rounds to nearest; adding 30_000ms makes it round down instead,
+        // matching CWF, AAPS overview, and BgGraphActivity
+        TimeDifferenceComplicationText.Builder(
+            style = TimeDifferenceStyle.SHORT_SINGLE_UNIT,
+            countUpTimeReference = CountUpTimeReference(Instant.ofEpochMilli(timeStamp + 30_000L))
+        )
+            .setMinimumTimeUnit(TimeUnit.MINUTES)
+            .setText(text)
+            .build()
 
     /**
      * Return canonical name for this provider (used for registration).

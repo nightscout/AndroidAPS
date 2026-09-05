@@ -12,25 +12,26 @@ import app.aaps.pump.eopatch.vo.PatchState.Companion.create
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 @Suppress("PropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class NeedleSensingTask @Inject constructor(
     private val alarmRegistry: IAlarmRegistry
 ) : TaskBase(TaskFunc.NEEDLE_SENSING) {
 
-    var START_NEEDLE_CHECK: StartNeedleCheck = StartNeedleCheck()
-    var UPDATE_CONNECTION: UpdateConnection = UpdateConnection()
+    @Inject lateinit var startNeedleCheck: StartNeedleCheck
+    @Inject lateinit var updateConnection: UpdateConnection
 
     fun start(): Single<Boolean> {
         return isReady()
-            .concatMapSingle<PatchBooleanResponse>(Function { START_NEEDLE_CHECK.start() })
+            .concatMapSingle<PatchBooleanResponse>(Function { startNeedleCheck.start() })
             .doOnNext(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
-            .concatMapSingle<UpdateConnectionResponse>(Function { UPDATE_CONNECTION.get() })
+            .concatMapSingle<UpdateConnectionResponse>(Function { updateConnection.get() })
             .doOnNext(Consumer { response: UpdateConnectionResponse -> this.checkResponse(response) })
-            .map<PatchState>(Function { updateConnectionResponse: UpdateConnectionResponse -> create(updateConnectionResponse.getPatchState(), System.currentTimeMillis()) })
+            .map<PatchState>(Function { updateConnectionResponse: UpdateConnectionResponse -> create(updateConnectionResponse.patchState, System.currentTimeMillis()) })
             .doOnNext(Consumer { v: PatchState -> this.onResponse(v) })
             .map<Boolean>(Function { patchState: PatchState -> !patchState.isNeedNeedleSensing })
             .firstOrError()

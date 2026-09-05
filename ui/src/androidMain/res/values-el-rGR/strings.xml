@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
+    <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
+    <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
+    <string name="time_offset">Χρονική μετατόπιση</string>
+    <!--    Widget-->
+    <string name="configure">Ρύθμιση διαφάνειας</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Παρακολούθηση δραστηριότητας</string>
+    <string name="do_you_want_reset_stats">Θέλετε να επαναφέρετε τα στατιστικά δραστηριότητας;</string>
+    <string name="calculation_in_progress">Υπολογισμός σε εξέλιξη</string>
+    <string name="age">Ηλικία</string>
+    <string name="weight_label">Βάρος</string>
+    <string name="glucose_type">Τύπος Γλυκόζης</string>
+    <string name="bg_other">Άλλο</string>
+    <string name="bg_meter">Μετρητής</string>
+    <string name="bg_sensor">Αισθητήρας</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <!-- FillDialog -->
+    <string name="fill_warning">Παρακαλώ ελέγξτε ότι η ποσότητα ταιριάζει με τις προδιαγραφές του σετ έγχυσης!</string>
+    <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
+    <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">Επαναχρησιμοποίηση %1$d%% %2$dh</string>
+    <string name="percentage_label">Ποσοστό</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Αποσυνδέστε την αντλία</string>
+    <string name="resume">Επαναφορά</string>
+    <string name="reconnect">Επανασύνδεση αντλίας</string>
+    <string name="duration15m">15 λεπτά</string>
+    <string name="duration30m">30 λεπτά</string>
+    <string name="duration1h">1 ώρα</string>
+    <string name="duration2h">2 ώρες</string>
+    <string name="duration3h">3 ώρες</string>
+    <string name="duration10h">10 ώρες</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Που υπολείπεται%1$d</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Δεν υπάρχουν διαθέσιμες εγγραφές</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">Υδατάνθρακες και bolus</string>
+    <string name="show_invalidated">Εμφάνιση ακυρωμένων</string>
+    <string name="hide_invalidated">Απόκρυψη ακυρωμένων</string>
+    <string name="careportal_remove_started_events">Αφαίρεση καταχωρήσεων έναρξης AAPS</string>
+    <string name="user_entry">Καταχώρηση χρήστη</string>
+    <string name="clone_label">Κλώνος</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Τύπος προφίλ</string>
+    <string name="basal_pct_from_tdd_label">% Ποσοστό βασικού ρυθμού basal</string>
+    <string name="selected_profile">Επιλεγμένο:</string>
+    <string name="motol_default_profile">Προεπιλεγμένο προφίλ</string>
+    <string name="current_profile">Τρέχον προφίλ</string>
+    <string name="available_profile">Διαθέσιμα προφίλ</string>
+    <string name="format_with_tdd">Ηλικία: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Ηλικία: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Ηλικία: %1$d Βάρος: %2$.0f Kg</string>
+    <string name="dpv_default_profile">Προεπιλεγμένο προφίλ DPV</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <!--    History browser-->
+    <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

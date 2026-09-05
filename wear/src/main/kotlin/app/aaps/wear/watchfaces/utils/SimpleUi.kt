@@ -15,7 +15,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.wear.R
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class SimpleUi @Inject constructor(
     private val context: Context,

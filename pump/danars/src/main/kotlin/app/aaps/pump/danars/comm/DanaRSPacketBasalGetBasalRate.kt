@@ -2,21 +2,17 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DanaRSPacketBasalGetBasalRate @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val uiInteraction: UiInteraction,
-    private val rxBus: RxBus,
-    private val rh: ResourceHelper,
+    private val notificationManager: NotificationManager,
     private val danaPump: DanaPump
 ) : DanaRSPacket() {
 
@@ -47,9 +43,9 @@ class DanaRSPacketBasalGetBasalRate @Inject constructor(
             aapsLogger.debug(LTag.PUMPCOMM, "Basal " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + danaPump.pumpProfiles!![danaPump.activeProfile][index])
         if (danaPump.basalStep != 0.01) {
             failed = true
-            uiInteraction.addNotification(Notification.WRONG_BASAL_STEP, rh.gs(app.aaps.pump.dana.R.string.danar_setbasalstep001), Notification.URGENT)
+            notificationManager.post(NotificationId.WRONG_BASAL_STEP, TextRef.AndroidRes(app.aaps.pump.dana.R.string.danar_setbasalstep001))
         } else {
-            rxBus.send(EventDismissNotification(Notification.WRONG_BASAL_STEP))
+            notificationManager.dismiss(NotificationId.WRONG_BASAL_STEP)
         }
     }
 

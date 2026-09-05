@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Kommando udføres lige nu</string>
+    <string name="basal_value_below_minimum">Basal værdi under minimum. Profil ikke angivet!</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Kulhydrater</string>
+    <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+</resources>

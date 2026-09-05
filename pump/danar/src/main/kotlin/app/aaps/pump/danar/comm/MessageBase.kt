@@ -1,10 +1,13 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -20,20 +23,25 @@ import app.aaps.pump.danar.comm.MessageOriginalNames.getName
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.utils.CRC.getCrc16
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.HasMemberInjections
+import kotlinx.coroutines.CoroutineScope
 import org.joda.time.DateTime
 import org.joda.time.IllegalInstantException
 import java.nio.charset.StandardCharsets
 import java.util.Calendar
 import java.util.GregorianCalendar
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /*
  *  00  01   02  03   04   05  06
  *
  *  7E  7E  len  F1  CMD  SUB data CRC CRC 2E  2E
  */
-open class MessageBase(injector: HasAndroidInjector) {
+// Metro reads this class now that interop is on. It is subclassable, so it must declare that its
+// injected fields are meant to be filled.
+@HasMemberInjections
+open class MessageBase(injector: MetroMemberInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
@@ -48,15 +56,21 @@ open class MessageBase(injector: HasAndroidInjector) {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var temporaryBasalStorage: TemporaryBasalStorage
-    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var ch: ConcentrationHelper
+    @Inject lateinit var bolusProgressData: BolusProgressData
+    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    var injector: HasAndroidInjector
+    var injector: MetroMemberInjector
     var buffer = ByteArray(512)
     private var position = 6
-    var isReceived = false
+    // Written by the reader thread (SerialIOThread.run) once the reply is processed, read by the
+    // sending thread (SerialIOThread.sendMessage). @Volatile so the sender reliably sees it - the
+    // post-wait check reads it outside the message monitor.
+    @Volatile var isReceived = false
     var failed = false
 
     fun setCommand(cmd: Int) {
@@ -165,7 +179,7 @@ open class MessageBase(injector: HasAndroidInjector) {
                 intFromBuff(buff, offset + 4, 1),
                 intFromBuff(buff, offset + 5, 1)
             ).millis
-        } catch (e: IllegalInstantException) {
+        } catch (_: IllegalInstantException) {
             // expect
             // org.joda.time.IllegalInstantException: Illegal instant due to time zone offset transition (daylight savings time 'gap')
             // add 1 hour
@@ -217,7 +231,8 @@ open class MessageBase(injector: HasAndroidInjector) {
 
     init {
         @Suppress("LeakingThis")
-        injector.androidInjector().inject(this)
+        // Loud on a missing entry - same check as DiaconnG8Packet and MedtrumPacket.
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
         this.injector = injector
     }
 }

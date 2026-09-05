@@ -3,6 +3,8 @@ package app.aaps.plugins.aps.openAPSSMBDynamicISF
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.IobTotal
@@ -21,14 +23,13 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.convertToJSONArray
+import app.aaps.shared.tests.extensions.convertToJSONArray
 import app.aaps.core.objects.extensions.convertedToAbsolute
-import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalResultSMBFromJS
 import app.aaps.plugins.aps.utils.ScriptReader
-import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -44,10 +45,10 @@ import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
 import java.security.InvalidParameterException
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.ln
 
-class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
+class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReader, private val injector: MetroMemberInjector) : DetermineBasalAdapter {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
@@ -275,7 +276,7 @@ class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReade
             this.profile.put("out_units", "mmol/L")
         }
         val now = System.currentTimeMillis()
-        val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
+        val tb = runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(now) }
         currentTemp.put("temp", "absolute")
         currentTemp.put("duration", tb?.plannedRemainingMinutes ?: 0)
         currentTemp.put("rate", tb?.convertedToAbsolute(now, profile) ?: 0.0)
@@ -301,11 +302,14 @@ class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReade
         this.mealData.put("lastBolusTime", mealData.lastBolusTime)
         this.mealData.put("lastCarbTime", mealData.lastCarbTime)
 
-        val insulin = activePlugin.activeInsulin
+        // Mirrors OpenAPSSMBPlugin: the peak belongs to the profile this calculation is about, not to a
+        // global "currently active insulin" — the result is replayed per timestamp. A profile carrying no
+        // insulin falls through to the rapid divisor.
+        val peak = profile.iCfg?.peak ?: 0
         val insulinDivisor = when {
-            insulin.peak > 65 -> 55 // lyumjev peak: 45
-            insulin.peak > 50 -> 65 // ultra rapid peak: 55
-            else              -> 75 // rapid peak: 75
+            peak > 65 -> 55 // lyumjev peak: 45
+            peak > 50 -> 65 // ultra rapid peak: 55
+            else      -> 75 // rapid peak: 75
         }
 
         val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
@@ -350,6 +354,8 @@ class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReade
     }
 
     init {
-        injector.androidInjector().inject(this)
+        // Loud on the wrong injector: the app wide one returns false for a class it does not know, which
+        // would leave these lateinit fields unset and fail later somewhere unrelated.
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
     }
 }

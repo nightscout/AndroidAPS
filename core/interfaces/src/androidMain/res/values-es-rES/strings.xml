@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmación</string>
+    <!--    Events-->
+    <string name="bolus_delivering">Entregando %1$.2fU</string>
+    <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU entregado</string>
+    <string name="bolus_delivered_successfully">Bolo %1$.2fU entregado con éxito</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Se ha cambiado el controlador de la bomba.</string>
+    <!--    DateUtil-->
+    <string name="minago">Hace %1$dm</string>
+    <string name="secago">Hace %1$ds</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
+    <string name="minago_long">Hace %1$d minutos</string>
+    <string name="hoursago">Hace %1$.1fh</string>
+    <string name="days_ago">Hace %1$.1f día</string>
+    <string name="days_ago_round">Hace %1$.0f días</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">hace %1$s día %2$s horas</item>
+        <item quantity="other">hace %1$s días %2$s horas</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">hace %1$s hora</item>
+        <item quantity="other">hace %1$s horas</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">hace un momento</item>
+        <item quantity="other">hace %1$s minutos</item>
+    </plurals>
+    <string name="seconds_ago">hace unos segundos</string>
+    <string name="in_days">en %1$.0f días</string>
+    <string name="in_days_round">en %1$.0f días</string>
+    <string name="shorthour">h</string>
+    <string name="days">días</string>
+    <string name="hours">horas</string>
+    <string name="unit_second">segundo</string>
+    <string name="unit_minute">minuto</string>
+    <string name="unit_hour">hora</string>
+    <string name="unit_day">día</string>
+    <string name="unit_week">semana</string>
+    <string name="unit_seconds">segundos</string>
+    <string name="unit_minutes">minutos</string>
+    <string name="unit_hours">horas</string>
+    <string name="unit_days">días</string>
+    <string name="unit_weeks">semanas</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="time_remaining_h_m">Faltan %1$dh %2$dm</string>
+    <string name="time_remaining_m">Faltan %1$dm</string>
+    <string name="later_today">Más tarde hoy</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
+    <!-- Rx -->
+    <string name="connecting_for">Conectando durante %1$d s</string>
+    <string name="handshaking">Estableciendo comunicación</string>
+    <string name="connected">Conectado</string>
+    <string name="authorized">Autorizado</string>
+    <string name="disconnecting">Desconectando</string>
+    <string name="waiting_for_disconnection">Esperando para desconectarse</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Creada: %1$s</string>
+    <string name="metadata_label_watchface_author">Autor: %1$s</string>
+    <string name="metadata_label_watchface_name">Nombre: %1$s</string>
+    <string name="metadata_wear_import_filename">Nombre del archivo: %1$s</string>
+    <string name="metadata_label_plugin_version">Versión del plugin: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Nombre: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
+    <string name="pref_show_iob">Mostrar IOB</string>
+    <string name="pref_show_detailed_iob">Mostrar IOB detallada</string>
+    <string name="pref_show_cob">Mostrar COB</string>
+    <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_detailed_delta">Mostrar delta detallado</string>
+    <string name="pref_show_avgdelta">Mostrar delta promedio</string>
+    <string name="pref_show_tempTarget">Mostrar ObjetivoTemporal</string>
+    <string name="pref_show_reservoir_level">Mostrar Nivel del Reservorio</string>
+    <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
+    <string name="pref_show_rig_battery">Mostrar batería global del bucle</string>
+    <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
+    <string name="pref_show_loop_status">Mostrar estado del bucle</string>
+    <string name="pref_show_bg">Mostrar glucosa</string>
+    <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
+    <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
+    <string name="pref_show_ago">Mostrar \"hace\"</string>
+    <string name="pref_show_week_number">Mostrar número de semana</string>
+    <string name="pref_show_date">Mostrar fecha</string>
+    <string name="pref_show_seconds">Mostrar segundos</string>
+    <string name="default_custom_watchface_comment">Esfera predeterminada, puedes hacer clic en el botón EXPORTAR ESFERA para generar una plantilla</string>
+    <string name="default_custom_watchface_external_comment">Esfera de reloj predeterminada que incluye vistas externas para los seguidores. Puedes hacer clic en el botón EXPORTAR WATCHFACE para generar una plantilla</string>
+    <string name="wear_default_watchface">Esfera por defecto</string>
+    <string name="wear_more_watchfaces">Más esferas</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Para siempre</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">La aplicación necesita permiso de Bluetooth para comunicarse con la bomba</string>
+    <!-- Insulin -->
+    <string name="unknown">Desconocido</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Pico Libre de OREF</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Tiempo de Pico [min]</string>
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Carbohidratos</string>
+    <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
+    <string name="pumpsuspended">Bomba suspendida</string>
+    <string name="loopsuspended">Lazo suspendido</string>
+    <string name="pump_disconnected">Bomba desconectada</string>
+    <string name="basalprofilenotaligned">Valores basales no alineados a las horas: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valor basal cambiado al valor mínimo soportado: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valor basal reemplazado por el valor máximo soportado: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Registro</string>
+    <string name="bolus">Bolo</string>
+    <string name="uel_extended_carbs">CARBOHIDRATOS EXTENDIDOS</string>
+    <string name="profile_low_target">Perfil de objetivo bajo</string>
+    <string name="profile_high_target">Perfil de objetivo alto</string>
+    <string name="profile_dia">Valor DIA del perfil</string>
+    <string name="profile_sensitivity_value">Valor de sensibilidad del perfil</string>
+    <string name="profile_carbs_ratio_value">Valor del ratio de carbohidratos del perfil</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de los límites estrictos</string>
+    <string name="basal_value">Valor basal</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">¡¡¡Absorción lenta de hidratos detectada: %1$d%% del tiempo. Revisa tus cálculos. Los COB pueden estar sobreestimados y el sistema podría darte demasiada insulina!!!</string>
+    <string name="bolus_constraint_applied_warn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
+    <string name="bolus_recorded_only">El bolo sólo se anotará (no será entregado por la bomba)</string>
+    <string name="advisoralarm">Ejecutar alarma cuando sea hora de comer</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

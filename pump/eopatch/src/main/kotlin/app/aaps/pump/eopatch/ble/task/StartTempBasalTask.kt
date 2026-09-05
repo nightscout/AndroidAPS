@@ -9,22 +9,21 @@ import app.aaps.pump.eopatch.vo.TempBasalManager
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class StartTempBasalTask @Inject constructor(
     private val tempBasalManager: TempBasalManager,
     private val aapsSchedulers: AapsSchedulers
 ) : TaskBase(TaskFunc.START_TEMP_BASAL) {
 
-    private val TEMP_BASAL_SCHEDULE_START: TempBasalScheduleStart = TempBasalScheduleStart()
+    @Inject lateinit var tempBasalScheduleStart: TempBasalScheduleStart
 
     fun start(tempBasal: TempBasal): Single<TempBasalScheduleSetResponse> {
         return isReady()
-            .concatMapSingle<TempBasalScheduleSetResponse>(Function { TEMP_BASAL_SCHEDULE_START.start(tempBasal.durationMinutes, tempBasal.doseUnitPerHour, tempBasal.percent) })
+            .concatMapSingle<TempBasalScheduleSetResponse>(Function { tempBasalScheduleStart.start(tempBasal.durationMinutes, tempBasal.doseUnitPerHour, tempBasal.percent) })
             .doOnNext(Consumer { response: TempBasalScheduleSetResponse -> this.checkResponse(response) })
             .firstOrError()
             .observeOn(aapsSchedulers.io)

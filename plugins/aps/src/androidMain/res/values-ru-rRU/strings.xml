@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
+    <string name="openapsma_disabled">модуль не активен</string>
+    <string name="openapsma_no_glucose_data">Данные гликемии недоступны</string>
+    <string name="openaps_no_as_data">Данные autosens недоступны</string>
+    <string name="dynisf_shortname">ДинISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
+    <string name="openapsama">Помощник болюса OpenAPS AMA</string>
+    <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Состояние алгоритма в 2017 году</string>
+    <string name="description_smb">Самый новый алгоритм для опытных пользователей</string>
+    <string name="description_smb_dynamic_isf">Последний алгоритм для опытных пользователей с динамическим/автоматическим ISF</string>
+    <string name="openapsma_last_run_label">Предыдущее выполнение</string>
+    <string name="openapsma_input_parameters_label">Параметры ввода</string>
+    <string name="openapsma_glucose_status_label">Состояние гликемии</string>
+    <string name="openapsma_current_temp_label">Текущий врем базал</string>
+    <string name="openapsma_iob_data_label">Данные IOB (активн инс)</string>
+    <string name="openapsma_profile_label">Профиль</string>
+    <string name="openapsma_meal_data_label">Данные приема пищи</string>
+    <string name="openapsma_request_label">запрос</string>
+    <string name="constraints">ограничения</string>
+    <string name="openapsma_autosensdata_label">данные autosens</string>
+    <string name="openapsma_script_debug_data_label">Отладка скрипта</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Внимание!\n Обычно нет необходимости изменять приведенные ниже величины. Нажмите ЗДЕСЬ, ПРОЧТИТЕ и убедитесь что вы ПОНИМАЕТЕ изложенное прежде чем менять какую-либо из этих величин.</string>
+    <string name="increasing_max_basal">Повышаю максимальное значение базы т. к. оно меньше максимального в профиле</string>
+    <string name="max_basal_multiplier">множитель макс базала</string>
+    <string name="max_daily_basal_multiplier">множитель макс суточного базала</string>
+    <string name="smb_disabled_in_preferences">Супер микро болюс SMB отключен в настройках</string>
+    <string name="uam_disabled_in_preferences">Непредвиденный прием пищи UAM отключен в настройках</string>
+    <string name="autosens_disabled_in_preferences">Автоматический подбор чувствительности Autosens отключен в настройках</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
+    <string name="maxvalueinpreferences">максимальное значение в настройках</string>
+    <string name="hardlimit">жесткий предел</string>
+    <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Болюс был подан в течение последних трех минут, минуя супер микро болюс SMB</string>
+    <string name="pump_not_initialized">Помпа не инициализирована!</string>
+    <string name="loop_shortname">ЗЦ</string>
+    <string name="description_loop">Активировать или деактивировать запуск цикла.</string>
+    <string name="no_aps_selected">APS не выбрана или не выдала результат</string>
+    <string name="ignore5m">Игнорировать 5 м</string>
+    <string name="ignore15m">Игнорировать 15 м</string>
+    <string name="ignore30m">Игнорировать 30 м</string>
+    <string name="carbs_suggestion">Предложены углеводы</string>
+    <string name="open_loop_new_suggestion">Есть новое предложение</string>
+    <string name="basal_set_correctly">Базал задан корректно</string>
+    <string name="last_run_label">Предыдущее выполнение</string>
+    <string name="loop_aps_label">Система ИПЖ</string>
+    <string name="request_label">Запрос</string>
+    <string name="loop_constraints_processed_label">После наложенных ограничений</string>
+    <string name="loop_tbr_request_time_label">Время запроса временной базальной скорости</string>
+    <string name="loop_tbr_execution_time_label">Время выполнения временной базальной скорости</string>
+    <string name="loop_tbr_set_by_pump_label">Временный базал задан помпой</string>
+    <string name="loop_smb_request_time_label">Время запроса микроболюса SMB</string>
+    <string name="loop_smb_execution_time_label">Время выполнения микроболюса SMB</string>
+    <string name="loop_smb_set_by_pump_label">Супер микро болюс SMB задан помпой</string>
+    <string name="fallback_smb_no_tdd">Возврат к SMB. Недостаточно данных TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Откат к чувствительности из профиля. Недостаточно данных. Причина: %1$s</string>
+    <!-- Autotune -->
+    <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
+    <string name="autotune_shortname">АвтТюн</string>
+    <string name="autotune_default_tune_days_title">Количество дней с данными</string>
+    <string name="autotune_tunedprofile_name">Настроено</string>
+    <string name="autotune_profile">Профиль:</string>
+    <string name="autotune_last_run">Последнее выполнение:</string>
+    <string name="autotune_warning">Внимание:</string>
+    <string name="autotune_ic_warning">Выбранный профиль имеет %1$d значений IC. Автоматически будет использоваться %2$.2f г/ед</string>
+    <string name="autotune_isf_warning">Выбранный профиль имеет %1$d значений ISF. Автоматически будет использоваться %2$.1f%3$s/ед</string>
+    <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
+    <string name="autotune_error_more_days">Ошибка в данных, увеличьте количество дней</string>
+    <string name="autotune_warning_during_run">Идет настройка автоматизации, ждите</string>
+    <string name="autotune_warning_after_run">Перед использованием внимательно проверьте результаты!</string>
+    <string name="autotune_partial_result">Частичный результат дня %1$d / %2$d для расчета</string>
+    <string name="autotune_result">Результат: %1$s</string>
+    <string name="autotune_param">Парам</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Отсутствует</string>
+    <string name="autotune_run">Выполнить Autotune</string>
+    <string name="autotune_check_input_profile_button">Проверьте профиль ввода</string>
+    <string name="autotune_compare_profile">Сравнить профили</string>
+    <string name="autotune_copy_localprofile_button">Копировать в локальный профиль</string>
+    <string name="autotune_update_input_profile_button">Обновить профиль ввода</string>
+    <string name="autotune_revert_input_profile_button">Вернуть профиль ввода</string>
+    <string name="autotune_copy_local_profile_message">Создать новый локальный профиль из этого профиля Autotune?</string>
+    <string name="autotune_update_local_profile_message">Обновить профиль %1$s профилем Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Восстановить профиль %1$s с помощью входного профиля?</string>
+    <string name="autotune_profile_invalid">Неверный профиль</string>
+    <string name="pump_disconnected">Помпа отключена</string>
+    <!--    autoISF -->
+    <string name="autoISF_settings_title">Настройки AutoISF</string>
+    <string name="smb_delivery_settings_title">Настройки введения микроболюсов SMB</string>
+</resources>

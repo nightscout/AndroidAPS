@@ -1,3 +1,4 @@
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -22,12 +23,11 @@ buildscript {
 }
 
 plugins {
-    alias(libs.plugins.klint)
-    alias(libs.plugins.moduleDependencyGraph)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler) apply false
     id(libs.plugins.android.test.get().pluginId) apply false
-    id(libs.plugins.kotlin.android.get().pluginId) apply false
+    // Aggregates the per-module coverage into one report.
+    id("jacoco-aggregation")
 }
 
 allprojects {
@@ -35,13 +35,15 @@ allprojects {
         mavenCentral()
         google()
         maven("https://jitpack.io")
+        maven("https://central.sonatype.com/repository/maven-snapshots/")
     }
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
             freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
             freeCompilerArgs.add("-opt-in=kotlin.ExperimentalUnsignedTypes")
-            freeCompilerArgs.add("-Xannotation-default-target=param-property")
-            freeCompilerArgs.add("-Xjvm-default=all") //Support @JvmDefault
+            //freeCompilerArgs.add("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+            // -Xannotation-default-target=param-property removed: it's the default since Kotlin 2.4, so the
+            // flag is now redundant and the compiler warns about it on every module.
             jvmTarget.set(Versions.jvmTarget)
         }
     }
@@ -53,13 +55,11 @@ allprojects {
         }
     }
 
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    apply(plugin = "jacoco")
+    apply<JacocoPlugin>()
 }
 
-// Setup all reports aggregation
-apply(from = "jacoco_aggregation.gradle.kts")
-
-tasks.register<Delete>("clean").configure {
+tasks.register<Delete>("clean") {
+    description = "Cleanup generated code"
+}.configure {
     delete(rootProject.layout.buildDirectory)
 }

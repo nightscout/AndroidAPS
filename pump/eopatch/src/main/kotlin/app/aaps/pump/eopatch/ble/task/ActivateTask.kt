@@ -9,20 +9,20 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class ActivateTask @Inject constructor(
     val startBasalTask: StartNormalBasalTask
 ) : TaskBase(TaskFunc.ACTIVATE) {
 
-    private val SET_KEY = SetKey()
+    @Inject lateinit var setKey: SetKey
 
     fun start(): Single<Boolean> {
         return isReady()
-            .concatMapSingle<PatchBooleanResponse>(Function { SET_KEY.setKey() })
+            .concatMapSingle<PatchBooleanResponse>(Function { setKey.setKey() })
             .doOnNext(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
             .firstOrError()
             .observeOn(Schedulers.io())

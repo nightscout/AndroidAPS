@@ -10,25 +10,25 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class UpdateConnectionTask @Inject constructor(
     private val patchStateManager: PatchStateManager
 ) : TaskBase(TaskFunc.UPDATE_CONNECTION) {
 
-    private val UPDATE_CONNECTION: UpdateConnection = UpdateConnection()
+    @Inject lateinit var updateConnection: UpdateConnection
 
     fun update(): Single<PatchState> {
         return isReady().concatMapSingle<PatchState>(Function { updateJob() }).firstOrError()
     }
 
     fun updateJob(): Single<PatchState> {
-        return UPDATE_CONNECTION.get()
+        return updateConnection.get()
             .doOnSuccess(Consumer { response: UpdateConnectionResponse -> this.checkResponse(response) })
-            .map<ByteArray>(Function { obj: UpdateConnectionResponse -> obj.getPatchState() })
+            .map<ByteArray>(Function { obj: UpdateConnectionResponse -> obj.patchState })
             .map<PatchState>(Function { bytes: ByteArray -> create(bytes, System.currentTimeMillis()) })
             .doOnSuccess(Consumer { patchState: PatchState -> this.onUpdateConnection(patchState) })
             .doOnError(Consumer { e: Throwable -> aapsLogger.error(LTag.PUMPCOMM, e.message ?: "UpdateConnectionTask error") })

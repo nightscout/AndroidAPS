@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Historique</string>
+    <string name="sensor_label">Capteur</string>
+    <string name="insulin_label">Insuline</string>
+    <string name="pb_label">Pile pompe</string>
+    <string name="cannula">Canule</string>
+    <string name="patch_pump">Pompe patch</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
+    <string name="old_data">DONNÉES ANCIENNES</string>
+    <string name="notification_iob_short">%1$.1f U</string>
+</resources>

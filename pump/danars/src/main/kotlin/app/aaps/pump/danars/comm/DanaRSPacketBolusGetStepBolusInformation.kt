@@ -7,7 +7,7 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DanaRSPacketBolusGetStepBolusInformation @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -35,7 +35,7 @@ class DanaRSPacketBolusGetStepBolusInformation @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $error")
         aapsLogger.debug(LTag.PUMPCOMM, "BolusType: $bolusType")
         aapsLogger.debug(LTag.PUMPCOMM, "Initial bolus amount: " + danaPump.initialBolusAmount + " U")
-        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + dateUtil.dateAndTimeString(danaPump.lastBolusTime))
+        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + dateUtil.dateAndTimeStringNullable(danaPump.lastBolusTime))
         aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaPump.lastBolusAmount)
         aapsLogger.debug(LTag.PUMPCOMM, "Max bolus: " + danaPump.maxBolus + " U")
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus step: " + danaPump.bolusStep + " U")

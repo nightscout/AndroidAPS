@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <string name="connection_settings_title">Indstillinger for forbindelse</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Synkroniserer dine data med NightScout ved brug af v3 API</string>
+    <string name="blocked_by_charging">Blokeret af opladningsmuligheder</string>
+    <string name="blocked_by_connectivity">Blokeret af forbindelsesmuligheder</string>
+    <string name="unsupported_ns_version">Ikke understøttet version af Nightscout</string>
+    <!-- AAPSClient -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_client_url">URL:</string>
+    <string name="deliver_now">Afgiver nu</string>
+    <string name="queue">Kø:</string>
+    <string name="clear_log">Ryd log</string>
+    <string name="full_sync">Fuld synkronisering</string>
+    <string name="full_sync_comment">Fuld synkronisering? Det kan tage mange timer, og indtil du er færdig, vil du ikke se nye data i NS.</string>
+    <string name="ns_sync_options">Synkronisering</string>
+    <string name="ns_alarm_options">Indstillinger for alarm</string>
+    <!-- Tidepool -->
+    <string name="title_tidepool_dev_servers">Brug Integration (test) servere</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Uploader data til Tidepool</string>
+    <string name="upload_now">Upload nu</string>
+    <string name="not_connected">Ikke tilsluttet</string>
+    <string name="read_only">Skrivebeskyttet</string>
+    <string name="working">Arbejder</string>
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Send data til xDrip+</string>
+    <string name="xdrip_status_settings">xDrip+ Statuslinje Avanceret</string>
+    <string name="xdrip_not_installed">xDrip+ ikke installeret</string>
+    <string name="calibration_sent">Kalibrering sendt til xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Send glukose og behandlingsdata til xDrip+. Datakilde \"xDrip+ Sync Follower\" skal vælges og accept af data skal være aktiveret i Indstillinger - \"Inter-app settings\" - \"Accept Glucose\"/\"Treatments\"</string>
+    <string name="xdrip_local_broadcasts_title">Aktivér udsendelser til xDrip+.</string>
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="wear_shortname">UR</string>
+    <string name="description_wear">Overvåg og kontrollér AndroidAPS ved hjælp af dit WearOS-ur.</string>
+    <string name="no_watch_connected">(Intet ur forbundet)</string>
+    <string name="pump_status">Pumpestatus</string>
+    <string name="loop_status">Loop status</string>
+    <string name="wear_action_tempt_unit_error">Forskellige enheder brugt på ur og telefon!</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BS udenfor området!</string>
+    <string name="wear_action_tempt_max_bg_error">Max-BS udenfor området!</string>
+    <string name="wear_wizard_settings_summary">Beregninger inkluderet i guide resultatet:</string>
+    <string name="wear_general_settings">Generelle indstillinger</string>
+    <string name="wear_custom_watchface_settings">Brugerdefinerede Urskiveindstillinger</string>
+    <string name="wear_custom_watchface">Brugerdefineret Urskive: %1$s</string>
+    <string name="wear_load_watchface">Indlæs Urskive</string>
+    <string name="wear_infos_watchface">Infos Urskiver</string>
+    <string name="wear_export_watchface">Eksporter skabelon</string>
+    <string name="wear_new_custom_watchface_exported">Brugerdefineret urskiveskabelon eksporteret</string>
+    <string name="resend_all_data">Send alle data igen</string>
+    <string name="open_settings_on_wear">Åbn indstillinger på ur</string>
+    <string name="cwf_infos_pref_locked">Liste over præferencer låst af urskiven</string>
+    <string name="cwf_infos_pref_required">Liste over præferencer påkrævet af urskiven</string>
+    <string name="cwf_infos_view_title">Liste over felter inkluderet i Urskiven</string>
+    <string name="pump_fetching_data">forsøger at hente data fra pumpen.</string>
+    <string name="pump_old_data">TDD: Stadig gammel data! Kan ikke indlæse fra pumpen.</string>
+    <string name="units_short">IE</string>
+    <string name="hour_short">t</string>
+    <string name="no_active_profile">Ingen aktiv profilskift!</string>
+    <string name="target_only_aps_mode">Mål gælder kun i APS-tilstand!</string>
+    <string name="no_history">Ingen historisk data!</string>
+    <string name="temp_target">Midlertidigt mål</string>
+    <string name="until">indtil</string>
+    <string name="default_range">Standardmål</string>
+    <string name="target">mål</string>
+    <string name="rate_duration">Rate: %1$.2fIE/t (%2$.2f%%) \nVarighed %3$d min</string>
+    <string name="no_profile">Ingen profil indlæst</string>
+    <string name="aps_only">Gælder kun i APS-tilstand!</string>
+    <string name="last_aps_result_na">Sidste resultat ikke tilgængeligt!</string>
+    <string name="loop_status_closed">LUKKET LOOP</string>
+    <string name="loop_status_open">ÅBEN LOOP</string>
+    <string name="loop_status_disabled">LOOP DEAKTIVERET</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Sidste brug</string>
+    <string name="last_enact">Sidste Aktivering</string>
+    <string name="tdd_line">%1$.2fIE %1$.0f%%</string>
+    <string name="today">I dag</string>
+    <string name="weighted">vægtet</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+</resources>

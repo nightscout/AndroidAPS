@@ -5,7 +5,6 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 enum class ComboStringNonKey(
     override val key: String,
     override val defaultValue: String,
-    override val exportable: Boolean = true
 ) : StringNonPreferenceKey {
 
     BtAddress("combov2-bt-address-key", ""),

@@ -1,0 +1,46 @@
+package app.aaps.wear.complications
+
+import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.ShortTextComplicationData
+import app.aaps.wear.AAPSLoggerTest
+import app.aaps.wear.interaction.utils.DisplayFormat
+import com.google.common.truth.Truth.assertThat
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
+import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [35])
+internal class BrTtComplicationTest {
+
+    private fun sut(): BrTtComplication =
+        Robolectric.buildService(BrTtComplication::class.java).get().also {
+            it.aapsLogger = AAPSLoggerTest()
+            it.displayFormat = DisplayFormat().also { d -> d.sp = mock(); d.context = it }
+        }
+
+    @Test
+    fun `preview builds a short-text complication for the sample basal and target`() {
+        val data = sut().getPreviewData(ComplicationType.SHORT_TEXT)
+
+        assertThat(data).isInstanceOf(ShortTextComplicationData::class.java)
+    }
+
+    @Test
+    fun `an unsupported complication type yields null`() {
+        assertThat(sut().getPreviewData(ComplicationType.RANGED_VALUE)).isNull()
+    }
+
+    @Test
+    fun `tapping the BrTt complication opens the temp target action`() {
+        assertThat(sut().getComplicationAction()).isEqualTo(ComplicationAction.TEMP_TARGET)
+    }
+
+    @Test
+    fun `the provider canonical name identifies this complication`() {
+        assertThat(sut().getProviderCanonicalName()).contains("BrTtComplication")
+    }
+}

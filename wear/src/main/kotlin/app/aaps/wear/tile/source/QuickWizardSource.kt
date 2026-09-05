@@ -10,12 +10,20 @@ import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.tile.Action
 import app.aaps.wear.tile.TileSource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.util.Calendar
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@SingleIn(AppScope::class)
 class QuickWizardSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
+
+    companion object {
+        // Mirrors QuickWizardMode in :core:objects (not a wear dependency): WIZARD(0), INSULIN(1), CARBS(2).
+        // An INSULIN button shows its fixed dose in U; WIZARD/CARBS show carbs in g (the wizard's carb input).
+        private const val MODE_INSULIN = 1
+        private const val MODE_CARBS   = 2
+    }
 
     override fun getSelectedActions(): List<Action> {
         val quickList = mutableListOf<Action>()
@@ -23,13 +31,20 @@ class QuickWizardSource @Inject constructor(private val context: Context, privat
         val sfm = secondsFromMidnight()
 
         for (quick in quickMap.entries) {
-            val isActive = sfm in quick.validFrom..quick.validTo
-            if (isActive && quick.guid.isNotEmpty()) {
+            if (sfm in quick.validFrom..quick.validTo && quick.guid.isNotEmpty()) {
+                val icon = when (quick.mode) {
+                    MODE_INSULIN -> R.drawable.ic_bolus
+                    MODE_CARBS   -> R.drawable.ic_carbs_orange
+                    else         -> R.drawable.ic_quick_wizard
+                }
                 quickList.add(
                     Action(
                         buttonText = quick.buttonText,
-                        buttonTextSub = "${quick.carbs} g",
-                        iconRes = R.drawable.ic_quick_wizard,
+                        buttonTextSub = if (quick.mode == MODE_INSULIN)
+                            context.resources.getString(R.string.quick_wizard_tile_insulin, quick.insulin)
+                        else
+                            context.resources.getString(R.string.quick_wizard_tile_carbs, quick.carbs),
+                        iconRes = icon,
                         activityClass = BackgroundActionActivity::class.java.name,
                         action = EventData.ActionQuickWizardPreCheck(quick.guid),
                         message = context.resources.getString(R.string.action_quick_wizard_confirmation)
@@ -51,15 +66,13 @@ class QuickWizardSource @Inject constructor(private val context: Context, privat
         var validTill = 24 * 60 * 60
 
         for (quick in quickMap.entries) {
-            val isActive = sfm in quick.validFrom..quick.validTo
             if (quick.guid.isNotEmpty()) {
-                if (isActive && validTill > quick.validTo) validTill = quick.validTo
+                if (sfm in quick.validFrom..quick.validTo && validTill > quick.validTo) validTill = quick.validTo
                 if (quick.validFrom in (sfm + 1) until validTill) validTill = quick.validFrom
             }
         }
 
         val validWithin = 60
-        //aapsLogger.info(LTag.WEAR, "getValidTill: sfm$sfm till$validTill d=${(validTill - sfm + validWithin) * 1000L}")
         return (validTill - sfm + validWithin) * 1000L
     }
 
@@ -77,5 +90,9 @@ class QuickWizardSource @Inject constructor(private val context: Context, privat
         return (passed / 1000).toInt()
     }
 
-    override fun getResourceReferences(resources: Resources): List<Int> = listOf(R.drawable.ic_quick_wizard)
+    override fun getResourceReferences(resources: Resources): List<Int> = listOf(
+        R.drawable.ic_quick_wizard,
+        R.drawable.ic_bolus,
+        R.drawable.ic_carbs_orange
+    )
 }

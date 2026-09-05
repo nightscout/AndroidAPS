@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Просмотр журнала</string>
+    <string name="sensor_label">Сенсор</string>
+    <string name="insulin_label">Инсулин</string>
+    <string name="pb_label">Батарея помпы</string>
+    <string name="cannula">Катетер помпы</string>
+    <string name="patch_pump">Разовая помпа</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">БАЗ</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
+    <string name="old_data">старые данные</string>
+    <string name="notification_iob_short">%1$.1f ед</string>
+</resources>

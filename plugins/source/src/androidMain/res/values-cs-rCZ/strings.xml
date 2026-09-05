@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">Glykémie z NS</string>
+    <string name="ns_client_bg_short">NSGL</string>
+    <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
+    <string name="source_xdrip">xDrip+ glykémie</string>
+    <string name="description_source_xdrip">Přijímat hodnoty glykémie z xDripu+ a kompatibilních aplikací (Juggluco atd.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Přijímat glykémie z upravené aplikace Dexcom (BYODA).</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Přijímat glykémie z aplikace Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Přijímat glykémie z Uploaderu 640G.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Přijímat glykémie z aplikace Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Přijímat glykémie z aplikace Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Přijímat glykémie z aplikace Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Přijímat glykémie z aplikace Tomato (MiaoMiao zařízení)</string>
+    <string name="random_bg">Náhodná glykémie</string>
+    <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
+    <string name="random_bg_short">Gly</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Přijímat glykémie z aplikace Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Aplikace SI</string>
+    <string name="description_source_patched_si_app">Přijímat glykémie z upravené aplikace Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Aplikace Sino</string>
+    <string name="description_source_patched_sino_app">Přijímat glykémie z upravené aplikace Sino.</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Přijímat hodnoty glykémie z aplikace Instara.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Žádost o historická data Instara</string>
+    <string name="pref_summary_instara_history_request">Požadovat možné chybějící historické údaje na pozadí</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Čtečka oznámení</string>
+    <string name="description_source_notification_reader">Čte hodnoty glykémie z oznámení zasílaných oficiálními CGM aplikacemi (Dexcom, Medtronic, Eversense atd.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Aplikace potřebuje oprávnění k přijímání dat CGM z aplikace Dexcom</string>
+    <string name="permission_notification_listener_title">Přístup k oznámením</string>
+    <string name="permission_notification_listener_description">Vyžadováno pro čtení hodnot glykémie z oznámení CGM aplikace</string>
+    <string name="aidex">Aplikace pro CGM MicroTech</string>
+    <string name="aidex_short">Aplikace CGM</string>
+    <string name="description_source_aidex">Přijímat hodnoty CGM od LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 atd.</string>
+    <string name="aidex_sensor_expired">Senzor vypršel, nahraďte prosím novým senzorem</string>
+    <string name="aidex_sensor_error">Chyba senzoru, zkontrolujte stav senzoru</string>
+    <string name="aidex_sensor_stabilizing">Senzor se stabilizuje, počkejte prosím…</string>
+    <string name="aidex_sensor_replace">Vyžadována výměna senzoru, prosím nahraďte novým senzorem co nejdříve</string>
+    <string name="aidex_signal_lost">Ztráta signálu, zkontrolujte prosím připojení</string>
+</resources>

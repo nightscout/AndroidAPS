@@ -8,13 +8,13 @@ class DanaRsPacketGeneralInitialScreenInformationTest : DanaRSTestBase() {
 
     @Test
     fun runTest() {
-        var packet = DanaRSPacketGeneralInitialScreenInformation(aapsLogger, danaPump)
+        var packet = DanaRSPacketGeneralInitialScreenInformation(aapsLogger, danaPump, notificationManager)
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         // test for the length message
         packet.handleMessage(createArray(1, 0.toByte()))
         Assertions.assertEquals(true, packet.failed)
-        packet = DanaRSPacketGeneralInitialScreenInformation(aapsLogger, danaPump)
+        packet = DanaRSPacketGeneralInitialScreenInformation(aapsLogger, danaPump, notificationManager)
         packet.handleMessage(createArray(17, 1.toByte()))
         Assertions.assertEquals(false, packet.failed)
         Assertions.assertEquals(true, danaPump.pumpSuspended)

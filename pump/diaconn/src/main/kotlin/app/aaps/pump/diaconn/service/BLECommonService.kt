@@ -17,11 +17,13 @@ import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.utils.extensions.connectGattCompat
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.diaconn.DiaconnG8Pump
@@ -33,16 +35,17 @@ import app.aaps.pump.diaconn.packet.DiaconnG8ResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.DiaconnG8SettingResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.InjectionBlockReportPacket
 import app.aaps.pump.diaconn.packet.InsulinLackReportPacket
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 @Suppress("SpellCheckingInspection")
-@Singleton
+@SingleIn(AppScope::class)
 class BLECommonService @Inject internal constructor(
-    private val injector: HasAndroidInjector,
+    private val injector: MetroMemberInjector,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val context: Context,
@@ -88,7 +91,7 @@ class BLECommonService @Inject internal constructor(
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
+            rxBus.send(EventShowSnackbar(context.getString(app.aaps.core.ui.R.string.need_connect_permission), EventShowSnackbar.Type.Error))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }
@@ -127,7 +130,7 @@ class BLECommonService @Inject internal constructor(
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
         connectDeviceName = device.name
-        bluetoothGatt = device.connectGatt(context, false, mGattCallback)
+        bluetoothGatt = device.connectGattCompat(context, false, mGattCallback)
 
         isConnected = false
         isConnecting = true
@@ -352,20 +355,20 @@ class BLECommonService @Inject internal constructor(
             if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), app.aaps.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), AlarmSound.BOLUS_ERROR)
                 return
             }
             // battery warning report
             if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), app.aaps.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), AlarmSound.BOLUS_ERROR)
                 return
             }
 
             // insulin lack warning report
             if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), app.aaps.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), AlarmSound.BOLUS_ERROR)
                 return
             }
 

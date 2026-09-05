@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
-    id("kotlin-android")
-    id("kotlin-kapt")
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.metro)
+    alias(libs.plugins.ksp)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -9,25 +10,21 @@ plugins {
 
 android {
     namespace = "app.aaps.pump.medtrum"
-    buildFeatures {
-        dataBinding = true
-    }
 }
 
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:validators"))
-    implementation(project(":pump:common"))
+
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":core:objects"))
 
-    kapt(libs.com.google.dagger.compiler)
-    kapt(libs.com.google.dagger.android.processor)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+
 }

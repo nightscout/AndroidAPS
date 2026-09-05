@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Befehl wird zurzeit ausgeführt</string>
+    <string name="basal_value_below_minimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">KHs</string>
+    <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">历史浏览</string>
+    <string name="sensor_label">传感器</string>
+    <string name="insulin_label">胰岛素</string>
+    <string name="pb_label">泵电池</string>
+    <string name="cannula">输注导管</string>
+    <string name="patch_pump">Patch 泵</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">基础率</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
+    <string name="old_data">旧数据</string>
+    <string name="notification_iob_short">%1$.1fU</string>
+</resources>

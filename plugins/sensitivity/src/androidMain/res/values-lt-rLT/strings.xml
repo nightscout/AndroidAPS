@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Jautrumo nustatymo algoritmas Oref1</string>
+    <string name="sensitivity_aaps">Jautrumo nustatymo algoritmas AAPS</string>
+    <string name="sensitivity_weighted_average">Jautrumas pagal svertinį vidurkį</string>
+    <string name="description_sensitivity_aaps">Jautrumas insulinui apskaičiuojamas taip pat kaip ir Oref0, tačiau Jūs galite nustatyti, koks praeities laikotarpis bus naudojamas. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas remiantis maksimaliu angliavandenių įsisavinimo greičiu, kuris įvestas nustatymuose.</string>
+    <string name="description_sensitivity_oref1">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 8 ar 24 val. duomenimis. Neįsisavinti angliavandeniai eliminuojami iš skaičiavimų praėjus nustatymuose nurodytam laikui. Įskiepis taip pat skaičiuoja NDM (nedeklaruotą maistą).</string>
+    <string name="description_sensitivity_weighted_average">Jautrumas insulinui apskaičiuojamas kaip nuokrypių svertinis vidurkis. Naujausių nuokrypių svoris yra didesnis. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas iš maksimalaus angliavandenių įsisavinimo greičio, kuris nurodytas nustatymuose. Šis algoritmas greičiausiai aptinka pasikeitusį jautrumą insulinui.</string>
+    <string name="uam_disabled_oref1_not_selected">NDM neveikia, nes priklauso nuo Oref1 jautrumo įskiepio</string>
+    <string name="absorption_settings_title">Angliavandenių įsisavinimo parametrai</string>
+</resources>

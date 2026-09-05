@@ -5,10 +5,10 @@ import android.util.Log
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
+import dev.zacsweers.metro.Inject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectOutputStream
-import javax.inject.Inject
 
 class ExceptionHandlerWear @Inject constructor(
     private val rxBus: RxBus,

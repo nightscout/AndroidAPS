@@ -1,9 +1,7 @@
 package app.aaps.pump.omnipod.dash
 
-import android.content.Context
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
+import android.os.Handler
+import android.os.HandlerThread
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -11,18 +9,26 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.OmnipodDash
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.Command
@@ -31,31 +37,15 @@ import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.icons.IcPluginOmnipod
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.DateTimeUtil
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
-import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
-import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
-import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
-import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
-import app.aaps.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
-import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
-import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
-import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
-import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
-import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
-import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertTrigger
@@ -68,61 +58,95 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants.Compan
 import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
 import app.aaps.pump.omnipod.common.bledriver.pod.state.CommandConfirmed
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
+import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
+import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
+import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
+import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
+import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
+import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
+import app.aaps.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
+import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
+import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
+import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
+import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
+import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
+import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
 import app.aaps.pump.omnipod.dash.history.data.BolusRecord
 import app.aaps.pump.omnipod.dash.history.data.BolusType
 import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
-import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
-import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
-import app.aaps.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
+import app.aaps.pump.omnipod.dash.ui.compose.OmnipodDashComposeContent
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx3.await
+import kotlinx.coroutines.rx3.rxCompletable
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.concurrent.thread
 import kotlin.math.ceil
+import kotlin.time.Duration.Companion.hours
 
-@Singleton
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@IntKey(1080)
+@SingleIn(AppScope::class)
 class OmnipodDashPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val omnipodManager: OmnipodDashManager,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val profileFunction: ProfileFunction,
     private val history: DashHistory,
     private val pumpSync: PumpSync,
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
     private val uiInteraction: UiInteraction,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
-    private val dashHistoryDatabase: DashHistoryDatabase
+    private val notificationManager: NotificationManager,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
+    private val bolusProgressData: BolusProgressData,
+    private val dashHistoryDatabase: DashHistoryDatabase,
+    private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck,
+    private val blePreCheck: app.aaps.core.interfaces.pump.BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(OmnipodDashOverviewFragment::class.java.name)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
-        .pluginName(R.string.omnipod_dash_name)
-        .shortName(R.string.omnipod_dash_name_short)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .description(R.string.omnipod_dash_pump_description),
-    ownPreferences = listOf(
-        OmnipodBooleanPreferenceKey::class.java, OmnipodIntPreferenceKey::class.java,
-        DashBooleanPreferenceKey::class.java, DashStringNonPreferenceKey::class.java
-    ),
+        .composeContent { _ ->
+            OmnipodDashComposeContent(
+                pluginName = rh.gs(R.string.omnipod_dash_name),
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck
+            )
+        }
+        .icon(IcPluginOmnipod)
+        .pluginName(TextRef.AndroidRes(R.string.omnipod_dash_name))
+        .shortName(TextRef.AndroidRes(R.string.omnipod_dash_name_short))
+        .description(TextRef.AndroidRes(R.string.omnipod_dash_pump_description)),
+    ownPreferences = OmnipodBooleanPreferenceKey.entries + OmnipodIntPreferenceKey.entries + DashBooleanPreferenceKey.entries +
+        DashStringNonPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ),
     Pump, OmnipodDash, OwnDatabasePlugin {
@@ -130,10 +154,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false
 
+    private var handler: Handler? = null
     private var statusChecker: Runnable
     private var nextPodWarningCheck: Long = 0
     @Volatile var stopConnecting: CountDownLatch? = null
-    private var disposables: CompositeDisposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     companion object {
 
@@ -162,7 +187,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    private fun createFakeTBRWhenNoActivePod(): Completable = Completable.defer {
+    private fun createFakeTBRWhenNoActivePod(): Completable = rxCompletable(Dispatchers.IO) {
         if (!podStateManager.isPodRunning) {
             val expectedState = pumpSync.expectedPumpState()
             val tbr = expectedState.temporaryBasal
@@ -170,7 +195,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 aapsLogger.info(LTag.PUMP, "createFakeTBRWhenNoActivePod")
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
-                    rate = 0.0,
+                    rate = PumpRate(0.0),
                     duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -182,34 +207,29 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 )
             }
         }
-        Completable.complete()
     }
 
     private fun updatePodWarnings() {
         if (System.currentTimeMillis() > nextPodWarningCheck) {
             if (!podStateManager.isPodRunning) {
-                uiInteraction.addNotification(
-                    Notification.OMNIPOD_POD_NOT_ATTACHED,
-                    rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod),
-                    Notification.NORMAL
-                )
+                notificationManager.post(
+                    NotificationId.OMNIPOD_POD_NOT_ATTACHED,
+                    TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod))
             } else {
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
+                notificationManager.dismiss(NotificationId.OMNIPOD_POD_NOT_ATTACHED)
                 if (podStateManager.isSuspended) {
                     showNotification(
-                        Notification.OMNIPOD_POD_SUSPENDED,
+                        NotificationId.OMNIPOD_POD_SUSPENDED,
                         rh.gs(R.string.insulin_delivery_suspended),
-                        Notification.NORMAL,
-                        app.aaps.core.ui.R.raw.boluserror
+                        AlarmSound.BOLUS_ERROR
                     )
                 } else {
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
+                    notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
                     if (!podStateManager.sameTimeZone) {
-                        uiInteraction.addNotification(
-                            Notification.OMNIPOD_TIME_OUT_OF_SYNC,
-                            rh.gs(R.string.timezone_on_pod_is_different_from_the_timezone),
-                            Notification.NORMAL
-                        )
+                        notificationManager.post(
+                            NotificationId.OMNIPOD_TIME_OUT_OF_SYNC,
+                            TextRef.AndroidRes(R.string.timezone_on_pod_is_different_from_the_timezone),
+                            level = NotificationLevel.NORMAL)
                     }
                 }
             }
@@ -223,7 +243,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             commandQueue.size() == 0 &&
             commandQueue.performing() == null
         ) {
-            commandQueue.readStatus(rh.gs(R.string.unconfirmed_command), null)
+            pluginScope.launch { commandQueue.readStatus(rh.gs(R.string.unconfirmed_command)) }
         }
     }
 
@@ -303,7 +323,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         omnipodManager.disconnect(true)
     }
 
-    override fun getPumpStatus(reason: String) {
+    override suspend fun getPumpStatus(reason: String) {
         aapsLogger.debug(LTag.PUMP, "getPumpStatus reason=$reason")
         if (reason != "REQUESTED BY USER" && !podStateManager.isActivationCompleted) {
             // prevent races on BLE when the pod is not activated
@@ -325,6 +345,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", e)
         }
+        syncPumpFlows()
     }
 
     private fun getPodStatus(): Completable = Completable.concat(
@@ -334,20 +355,19 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 .ignoreElements(),
             history.updateFromState(podStateManager),
             podStateManager.updateActiveCommand()
-                .map { handleCommandConfirmation(it) }
-                .ignoreElement(),
+                .flatMapCompletable { rxCompletable(Dispatchers.IO) { handleCommandConfirmation(it) } },
             verifyPumpState(),
             checkPodKaput(),
         )
     )
 
-    private fun checkPodKaput(): Completable = Completable.defer {
+    private fun checkPodKaput(): Completable = rxCompletable(Dispatchers.IO) {
         if (podStateManager.isPodKaput) {
             val tbr = pumpSync.expectedPumpState().temporaryBasal
             if (tbr == null || tbr.rate != 0.0) {
                 pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = System.currentTimeMillis(),
-                    rate = 0.0,
+                    rate = PumpRate(0.0),
                     duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
@@ -363,7 +383,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     val bolusHistoryEntry = history.getById(historyId)
                     val sync = pumpSync.syncBolusWithPumpId(
                         timestamp = bolusHistoryEntry.createdAt,
-                        amount = deliveredUnits,
+                        amount = PumpInsulin(deliveredUnits),
                         pumpId = bolusHistoryEntry.pumpId(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber(),
@@ -374,12 +394,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             if (!podStateManager.alarmSynced) {
                 podStateManager.alarmType?.let {
-                    if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class.java)) {
+                    if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class)) {
                         showNotification(
-                            Notification.OMNIPOD_POD_FAULT,
+                            NotificationId.OMNIPOD_POD_FAULT,
                             it.toString(),
-                            Notification.URGENT,
-                            app.aaps.core.ui.R.raw.boluserror
+                            AlarmSound.BOLUS_ERROR
                         )
                     }
                     pumpSync.insertAnnouncement(
@@ -392,12 +411,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 }
             }
         }
-        Completable.complete()
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         if (!podStateManager.isActivationCompleted) {
-            return pumpEnactResultProvider.get().success(true).enacted(true)
+            // Pod not activated yet — deferred, not an actual write. enacted=false => no PROFILE_SET_OK.
+            return pumpEnactResultProvider().success(true).enacted(false)
         }
         aapsLogger.debug(LTag.PUMP, "setNewBasalProfile profile=$profile")
         return setNewBasalProfile(profile, OmnipodCommandType.SET_BASAL_PROFILE)
@@ -427,27 +446,17 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun failWhenUnconfirmed(deliverySuspended: Boolean): Completable = Completable.defer {
-        rxBus.send(EventTempBasalChange())
         if (podStateManager.activeCommand != null) {
-            if (deliverySuspended) {
-                showNotification(
-                    Notification.FAILED_UPDATE_PROFILE,
-                    rh.gs(R.string.failed_to_set_the_new_basal_profile),
-                    Notification.URGENT,
-                    app.aaps.core.ui.R.raw.boluserror
+            // FAILED_UPDATE_PROFILE is posted centrally (onProfileChanged) from success=false; carry the specific
+            // reason in the exception so result.comment surfaces it there.
+            Completable.error(
+                java.lang.IllegalStateException(
+                    if (deliverySuspended) rh.gs(R.string.failed_to_set_the_new_basal_profile)
+                    else rh.gs(R.string.setting_basal_profile_might_have_failed)
                 )
-            } else {
-                showNotification(
-                    Notification.FAILED_UPDATE_PROFILE,
-                    rh.gs(R.string.setting_basal_profile_might_have_failed),
-                    Notification.URGENT,
-                    app.aaps.core.ui.R.raw.boluserror
-                )
-            }
-            Completable.error(java.lang.IllegalStateException("Command not confirmed"))
+            )
         } else {
-            showNotification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, null)
-
+            // PROFILE_SET_OK posted centrally (onProfileChanged) on success && enacted.
             Completable.complete()
         }
     }
@@ -460,70 +469,75 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 historyEntry = history.createRecord(OmnipodCommandType.SUSPEND_DELIVERY),
                 command = omnipodManager.suspendDelivery(hasBasalBeepEnabled())
                     .filter { podEvent -> podEvent.isCommandSent() }
-                    .map {
-                        pumpSyncTempBasal(
-                            0.0,
-                            PodConstants.MAX_POD_LIFETIME.toMinutes(),
-                            PumpSync.TemporaryBasalType.PUMP_SUSPEND
-                        )
-                        rxBus.send(EventTempBasalChange())
+                    .concatMapCompletable {
+                        rxCompletable(Dispatchers.IO) {
+                            pumpSyncTempBasal(
+                                0.0,
+                                PodConstants.MAX_POD_LIFETIME.toMinutes(),
+                                PumpSync.TemporaryBasalType.PUMP_SUSPEND
+                            )
+                        }
                     }
-                    .ignoreElements()
             ).doOnComplete {
                 notifyOnUnconfirmed(
-                    Notification.FAILED_UPDATE_PROFILE,
+                    NotificationId.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.suspend_delivery_is_unconfirmed),
-                    app.aaps.core.ui.R.raw.boluserror,
+                    AlarmSound.BOLUS_ERROR,
+                    level = NotificationLevel.IMPORTANT
                 )
             }
     }
 
-    override fun onStart() {
+    override suspend fun onStart() {
         super.onStart()
         podStateManager.onStart()
+        // Own handler. PumpPluginBase used to create one for every pump, but this is the only driver
+        // that posted to it, so it lives here now and is torn down in onStop below.
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         handler?.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
-        disposables += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe(
-                {
-                    if (it.isChanged(OmnipodBooleanPreferenceKey.ExpirationReminder.key) ||
-                        it.isChanged(OmnipodIntPreferenceKey.ExpirationReminderHours.key) ||
-                        it.isChanged(OmnipodBooleanPreferenceKey.ExpirationAlarm.key) ||
-                        it.isChanged(OmnipodIntPreferenceKey.ExpirationAlarmHours.key) ||
-                        it.isChanged(OmnipodBooleanPreferenceKey.LowReservoirAlert.key) ||
-                        it.isChanged(OmnipodIntPreferenceKey.LowReservoirAlertUnits.key)
-                    ) {
-                        commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
-                    }
-                },
-                fabricPrivacy::logException
-            )
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        merge(
+            preferences.observe(OmnipodBooleanPreferenceKey.ExpirationReminder).drop(1).map {},
+            preferences.observe(OmnipodIntPreferenceKey.ExpirationReminderHours).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.ExpirationAlarm).drop(1).map {},
+            preferences.observe(OmnipodIntPreferenceKey.ExpirationAlarmHours).drop(1).map {},
+            preferences.observe(OmnipodBooleanPreferenceKey.LowReservoirAlert).drop(1).map {},
+            preferences.observe(OmnipodIntPreferenceKey.LowReservoirAlertUnits).drop(1).map {},
+        ).collectResilient(newScope, aapsLogger, LTag.PUMP) { commandQueue.customCommand(CommandUpdateAlertConfiguration()) }
     }
 
-    override fun onStop() {
+    override suspend fun onStop() {
         super.onStop()
-        disposables.clear()
+        scope?.cancel()
+        scope = null
+        handler?.removeCallbacksAndMessages(null)
+        handler?.looper?.quit()
+        handler = null
     }
 
     private fun deliverBasalCorrection(): PumpEnactResult {
         if (!podStateManager.needsBasalCorrection()) {
             aapsLogger.info(LTag.PUMP, "Basal correction no longer appropriate")
-            return pumpEnactResultProvider.get().success(true).enacted(false).comment("Basal correction no longer appropriate")
+            return pumpEnactResultProvider().success(true).enacted(false).comment("Basal correction no longer appropriate")
         }
-        
+
         // Set cooldown to prevent duplicate corrections
         podStateManager.lastBasalCorrectionTime = System.currentTimeMillis()
-        
+
         val requestedInsulinAmount = PodConstants.POD_PULSE_BOLUS_UNITS
 
-        if (requestedInsulinAmount > reservoirLevel) {
-            aapsLogger.info(LTag.PUMP, "Basal correction skipped: not enough insulin in reservoir ($requestedInsulinAmount > $reservoirLevel)")
-            return pumpEnactResultProvider.get().success(false).enacted(false).comment("Not enough insulin in reservoir")
+        // Same staleness guard as deliverTreatment: refresh the reservoir from the current pod state so a freshly
+        // activated pod (whose _reservoirLevel is still the 0.0 init until the next getPumpStatus) isn't wrongly skipped.
+        syncPumpFlows()
+        val availableInsulin = reservoirLevel.value.cU
+        if (requestedInsulinAmount > availableInsulin) {
+            aapsLogger.info(LTag.PUMP, "Basal correction skipped: not enough insulin in reservoir ($requestedInsulinAmount > $availableInsulin)")
+            return pumpEnactResultProvider().success(false).enacted(false).comment("Not enough insulin in reservoir")
         }
         if (podStateManager.deliveryStatus?.bolusDeliveringActive() == true) {
             aapsLogger.info(LTag.PUMP, "Basal correction skipped: bolus already in progress")
-            return pumpEnactResultProvider.get().success(false).enacted(false).comment("Bolus already in progress")
+            return pumpEnactResultProvider().success(false).enacted(false).comment("Bolus already in progress")
         }
         try {
             bolusDeliveryInProgress = true
@@ -572,7 +586,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         if (!podStateManager.isActivationCompleted) {
             // prevent setBasal requests
             return true
@@ -587,36 +601,50 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return equal
     }
 
-    override val lastBolusTime: Long? get() = podStateManager.lastBolus?.startTime
-    override val lastBolusAmount: Double? get() = podStateManager.lastBolus?.requestedUnits
-    override val lastDataTime: Long get() = podStateManager.lastUpdatedSystem
-    override val baseBasalRate: Double
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
+
+    private val _lastBolusTime = MutableStateFlow<Long?>(null)
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
+
+    private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(null)
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
+
+    override val baseBasalRate: PumpRate
         get() {
             val date = System.currentTimeMillis()
             val ret = podStateManager.basalProgram?.rateAt(date) ?: 0.0
             aapsLogger.info(LTag.PUMP, "baseBasalRate: $ret at $date}")
-            return if (podStateManager.alarmType != null) {
-                0.0
-            } else
-                ret
+            return PumpRate(
+                if (podStateManager.alarmType != null) {
+                    0.0
+                } else
+                    ret
+            )
         }
 
-    override val reservoirLevel: Double
-        get() {
-            if (podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)) {
-                return 0.0
-            }
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
 
-            // Omnipod only reports reservoir level when there's < 1023 pulses left
-            return podStateManager.pulsesRemaining?.let {
-                it * PodConstants.POD_PULSE_BOLUS_UNITS
-            } ?: RESERVOIR_OVER_50_UNITS_DEFAULT
+    // Omnipod Dash doesn't report its battery level
+    override val batteryLevel: StateFlow<Int?> = MutableStateFlow(null)
+
+    private fun syncPumpFlows() {
+        _lastDataTime.value = podStateManager.lastUpdatedSystem
+        _lastBolusTime.value = podStateManager.lastBolus?.startTime
+        _lastBolusAmount.value = podStateManager.lastBolus?.requestedUnits?.let { PumpInsulin(it) }
+        _reservoirLevel.value = if (podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)) {
+            PumpInsulin(0.0)
+        } else {
+            PumpInsulin(
+                podStateManager.pulsesRemaining?.let {
+                    it * PodConstants.POD_PULSE_BOLUS_UNITS
+                } ?: RESERVOIR_OVER_50_UNITS_DEFAULT
+            )
         }
+    }
 
-    // Omnipod Dash doesn't report it's battery level. We return 0 here and hide related fields in the UI
-    override val batteryLevel: Int? = null
-
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+    override suspend fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         // Insulin value must be greater than 0
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
@@ -624,16 +652,21 @@ class OmnipodDashPumpPlugin @Inject constructor(
         try {
             bolusDeliveryInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo $bolusCanceled")
+            // Recompute the reservoir from the current pod state before the gate below. _reservoirLevel is otherwise
+            // refreshed only by getPumpStatus(), so right after a pod activation (no status poll yet) it is still its
+            // 0.0 init and the gate would falsely reject every bolus as "not enough insulin". podStateManager is the
+            // source of truth here (a full pod → pulsesRemaining null → the 75.0 fallback in syncPumpFlows).
+            syncPumpFlows()
             val requestedBolusAmount = detailedBolusInfo.insulin
-            if (requestedBolusAmount > reservoirLevel) {
-                return pumpEnactResultProvider.get()
+            if (requestedBolusAmount > reservoirLevel.value.cU) {
+                return pumpEnactResultProvider()
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
                     .comment(rh.gs(R.string.omnipod_dash_not_enough_insulin))
             }
             if (podStateManager.deliveryStatus?.bolusDeliveringActive() == true) {
-                return pumpEnactResultProvider.get()
+                return pumpEnactResultProvider()
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
@@ -671,8 +704,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     bolusBeeps,
                     bolusBeeps
                 ).filter { podEvent -> podEvent.isCommandSent() }
-                    .map { pumpSyncBolusStart(requestedBolusAmount, detailedBolusInfo.bolusType) }
-                    .ignoreElements(),
+                    .concatMapCompletable { rxCompletable(Dispatchers.IO) { pumpSyncBolusStart(requestedBolusAmount, detailedBolusInfo.bolusType) } },
                 post = waitForBolusDeliveryToComplete(requestedBolusAmount, detailedBolusInfo.bolusType)
                     .map {
                         deliveredBolusAmount = it
@@ -682,22 +714,22 @@ class OmnipodDashPumpPlugin @Inject constructor(
             ).doFinally {
                 if (detailedBolusInfo.bolusType == BS.Type.SMB) {
                     notifyOnUnconfirmed(
-                        Notification.OMNIPOD_UNCERTAIN_SMB,
+                        NotificationId.OMNIPOD_UNCERTAIN_SMB,
                         "Unable to verify whether SMB bolus ($requestedBolusAmount U) succeeded. " +
-                            "<b>Refresh pod status to confirm or deny this command.",
-                        app.aaps.core.ui.R.raw.boluserror
+                            "Refresh pod status to confirm or deny this command.",
+                        AlarmSound.BOLUS_ERROR
                     )
                 } else {
                     if (podStateManager.activeCommand != null) {
-                        val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
+                        val sound = if (hasBolusErrorBeepEnabled()) AlarmSound.BOLUS_ERROR else null
                         showErrorDialog(rh.gs(R.string.bolus_delivery_status_uncertain), sound)
                     }
                 }
             }.toSingle {
-                pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
+                pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
             }.onErrorReturnItem(
                 // success if canceled
-                pumpEnactResultProvider.get().success(bolusCanceled).enacted(false)
+                pumpEnactResultProvider().success(bolusCanceled).enacted(false)
             )
                 .blockingGet()
             aapsLogger.info(
@@ -723,7 +755,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun updateBolusProgressDialog(msg: String, percent: Int) {
-        rxBus.send(EventOverviewBolusProgress(status = msg, percent = percent))
+        bolusProgressData.updateProgress(percent, TextRef.Literal(msg))
     }
 
     private fun waitForBolusDeliveryToComplete(
@@ -760,7 +792,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 continue
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
-            rxBus.send(EventOverviewBolusProgress(rh, percent = percent.toInt()))
+            bolusProgressData.updateProgress(percent = percent.toInt())
         }
 
         (1..BOLUS_RETRIES).forEach { tryNumber ->
@@ -788,7 +820,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 // delivery not complete yet
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
                 val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
-                rxBus.send(EventOverviewBolusProgress(rh, percent = percent.toInt()))
+                bolusProgressData.updateProgress(percent = percent.toInt())
 
                 val sleepSeconds = if (bolusCanceled)
                     BOLUS_RETRY_INTERVAL_MS
@@ -816,7 +848,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return ceil(requestedBolusAmount / PodConstants.POD_PULSE_BOLUS_UNITS).toLong() * 2 + 3
     }
 
-    private fun pumpSyncBolusStart(
+    private suspend fun pumpSyncBolusStart(
         requestedBolusAmount: Double,
         bolusType: BS.Type
     ): Boolean {
@@ -832,7 +864,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val historyEntry = history.getById(activeCommand.historyId)
         val ret = pumpSync.syncBolusWithPumpId(
             timestamp = historyEntry.createdAt,
-            amount = requestedBolusAmount,
+            amount = PumpInsulin(requestedBolusAmount),
             type = bolusType,
             pumpId = historyEntry.pumpId(),
             pumpType = PumpType.OMNIPOD_DASH,
@@ -849,10 +881,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    override fun setTempBasalAbsolute(
+    override suspend fun setTempBasalAbsolute(
         absoluteRate: Double,
         durationInMinutes: Int,
-        profile: Profile,
         enforceNew: Boolean,
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
@@ -888,13 +919,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 tempBasalBeeps
             )
                 .filter { podEvent -> podEvent.isCommandSent() }
-                .map { pumpSyncTempBasal(absoluteRate, durationInMinutes.toLong(), tbrType) }
-                .ignoreElements(),
+                .concatMapCompletable { rxCompletable(Dispatchers.IO) { pumpSyncTempBasal(absoluteRate, durationInMinutes.toLong(), tbrType) } },
         ).doOnComplete {
             notifyOnUnconfirmed(
-                Notification.OMNIPOD_TBR_ALERTS,
+                NotificationId.OMNIPOD_TBR_ALERTS,
                 rh.gs(R.string.setting_temp_basal_might_have_basal_failed),
-                app.aaps.core.ui.R.raw.boluserror,
+                AlarmSound.BOLUS_ERROR,
             )
         }.toPumpEnactResultImpl()
 
@@ -905,7 +935,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return ret
     }
 
-    private fun pumpSyncTempBasal(
+    private suspend fun pumpSyncTempBasal(
         absoluteRate: Double,
         durationInMinutes: Long,
         tbrType: PumpSync.TemporaryBasalType
@@ -924,7 +954,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         )
         val ret = pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = historyEntry.createdAt,
-            rate = absoluteRate,
+            rate = PumpRate(absoluteRate),
             duration = T.mins(durationInMinutes).msecs(),
             isAbsolute = true,
             type = tbrType,
@@ -950,30 +980,21 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     command = omnipodManager.stopTempBasal(hasTempBasalBeepEnabled()).ignoreElements()
                 ).doOnComplete {
                     notifyOnUnconfirmed(
-                        Notification.OMNIPOD_TBR_ALERTS,
+                        NotificationId.OMNIPOD_TBR_ALERTS,
                         rh.gs(R.string.cancelling_temp_basal_might_have_failed),
-                        app.aaps.core.ui.R.raw.boluserror,
+                        AlarmSound.BOLUS_ERROR,
                     )
                 }
             }
         }
     }
 
-    override fun setTempBasalPercent(
-        percent: Int,
-        durationInMinutes: Int,
-        profile: Profile,
-        enforceNew: Boolean,
-        tbrType: PumpSync.TemporaryBasalType
-    ): PumpEnactResult {
-        // TODO i18n
-        return pumpEnactResultProvider.get().success(false).enacted(false)
-            .comment("Omnipod Dash driver does not support percentage temp basals")
-    }
+    override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+        error("Pump doesn't support percent basal rate")
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
+    override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         // TODO i18n
-        return pumpEnactResultProvider.get().success(false).enacted(false)
+        return pumpEnactResultProvider().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support extended boluses")
     }
 
@@ -986,12 +1007,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun hasBolusErrorBeepEnabled(): Boolean =
         preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification)
 
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
+    override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         if (!podStateManager.tempBasalActive &&
             pumpSync.expectedPumpState().temporaryBasal == null
         ) {
             // nothing to cancel
-            return pumpEnactResultProvider.get().success(true).enacted(false)
+            return pumpEnactResultProvider().success(true).enacted(false)
         }
 
         return executeProgrammingCommand(
@@ -999,32 +1020,34 @@ class OmnipodDashPumpPlugin @Inject constructor(
             command = omnipodManager.stopTempBasal(hasTempBasalBeepEnabled()).ignoreElements(),
         ).doOnComplete {
             notifyOnUnconfirmed(
-                Notification.OMNIPOD_TBR_ALERTS,
+                NotificationId.OMNIPOD_TBR_ALERTS,
                 rh.gs(R.string.cancel_temp_basal_result_is_uncertain),
-                app.aaps.core.ui.R.raw.boluserror, // TODO: add setting for this
+                AlarmSound.BOLUS_ERROR, // TODO: add setting for this
             )
         }.toPumpEnactResultImpl()
     }
 
-    private fun notifyOnUnconfirmed(notificationId: Int, msg: String, sound: Int?) {
+    private fun notifyOnUnconfirmed(notificationId: NotificationId, msg: String, sound: AlarmSound?, level: NotificationLevel = NotificationLevel.IMPORTANT) {
         if (podStateManager.activeCommand != null) {
             aapsLogger.debug(LTag.PUMP, "Notification for active command: ${podStateManager.activeCommand}")
-            showNotification(notificationId, msg, Notification.URGENT, sound)
+            showNotification(notificationId, msg, sound, level = level)
         }
     }
 
     private fun Completable.toPumpEnactResultImpl(): PumpEnactResult {
-        return this.toSingleDefault(pumpEnactResultProvider.get().success(true).enacted(true))
+        return this.toSingleDefault(pumpEnactResultProvider().success(true).enacted(true))
             .doOnError { throwable ->
                 aapsLogger.error(LTag.PUMP, "toPumpEnactResult, error executing command: $throwable")
             }
-            .onErrorReturnItem(pumpEnactResultProvider.get().success(false).enacted(false))
+            // Carry the failure reason (e.g. failWhenUnconfirmed's specific string) into comment so the central
+            // FAILED_UPDATE_PROFILE handler surfaces it instead of the generic fallback.
+            .onErrorReturn { throwable -> pumpEnactResultProvider().success(false).enacted(false).comment(throwable.message ?: "") }
             .blockingGet()
     }
 
-    override fun cancelExtendedBolus(): PumpEnactResult {
+    override suspend fun cancelExtendedBolus(): PumpEnactResult {
         // TODO i18n
-        return pumpEnactResultProvider.get().success(false).enacted(false)
+        return pumpEnactResultProvider().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support extended boluses")
     }
 
@@ -1034,8 +1057,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     override fun serialNumber(): String = podStateManager.uniqueId?.toString() ?: Constants.PUMP_SERIAL_FOR_FAKE_TBR
     override val isFakingTempsByExtendedBoluses: Boolean = false
 
-    override fun loadTDDs(): PumpEnactResult =
-        pumpEnactResultProvider.get().success(false).enacted(false)
+    override suspend fun loadTDDs(): PumpEnactResult =
+        pumpEnactResultProvider().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support TDD")
 
     override fun canHandleDST(): Boolean = false
@@ -1045,13 +1068,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 silenceAlerts()
 
             is CommandResumeDelivery           ->
-                resumeDelivery()
+                runBlocking { resumeDelivery() }
 
             is CommandDeactivatePod            ->
                 deactivatePod()
 
             is CommandHandleTimeChange         ->
-                handleTimeChange()
+                runBlocking { handleTimeChange() }
 
             is CommandUpdateAlertConfiguration ->
                 updateAlertConfiguration()
@@ -1067,9 +1090,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
             else                               -> {
                 aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
-                pumpEnactResultProvider.get().success(false).enacted(false).comment(
+                pumpEnactResultProvider().success(false).enacted(false).comment(
                     rh.gs(
-                        app.aaps.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command,
+                        TextRef.AndroidRes(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command),
                         customCommand.javaClass.name
                     )
                 )
@@ -1084,7 +1107,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 historyEntry = history.createRecord(commandType = OmnipodCommandType.ACKNOWLEDGE_ALERTS),
                 command = omnipodManager.silenceAlerts(it).ignoreElements(),
             ).toPumpEnactResultImpl()
-        } ?: pumpEnactResultProvider.get().success(false).enacted(false).comment("No active alerts") // TODO i18n
+        } ?: pumpEnactResultProvider().success(false).enacted(false).comment("No active alerts") // TODO i18n
     }
 
     private fun disableSuspendAlerts(): PumpEnactResult {
@@ -1111,8 +1134,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return ret
     }
 
-    private fun resumeDelivery(): PumpEnactResult {
-        return profileFunction.getProfile()?.let {
+    private suspend fun resumeDelivery(): PumpEnactResult {
+        return pumpSync.expectedPumpState().profile?.let {
             executeProgrammingCommand(
                 pre = observeDeliverySuspended(),
                 historyEntry = history.createRecord(OmnipodCommandType.RESUME_DELIVERY, basalProfileRecord = BasalValuesRecord(it.getBasalValues().toList())),
@@ -1120,12 +1143,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .ignoreElements()
             ).doFinally {
                 notifyOnUnconfirmed(
-                    Notification.FAILED_UPDATE_PROFILE,
+                    NotificationId.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.unconfirmed_resumedelivery_command_please_refresh_pod_status),
-                    app.aaps.core.ui.R.raw.boluserror
+                    AlarmSound.BOLUS_ERROR,
+                    level = NotificationLevel.IMPORTANT
                 )
             }.toPumpEnactResultImpl()
-        } ?: pumpEnactResultProvider.get().success(false).enacted(false).comment("No profile active") // TODO i18n
+        } ?: pumpEnactResultProvider().success(false).enacted(false).comment("No profile active") // TODO i18n
     }
 
     private fun deactivatePod(): PumpEnactResult {
@@ -1139,7 +1163,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 success = false
             } else {
                 podStateManager.reset()
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
+                notificationManager.dismiss(NotificationId.OMNIPOD_POD_FAULT)
             }
         }.toPumpEnactResultImpl()
         if (!success) {
@@ -1148,10 +1172,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return ret
     }
 
-    private fun handleTimeChange(): PumpEnactResult {
-        return profileFunction.getProfile()?.let {
+    private suspend fun handleTimeChange(): PumpEnactResult {
+        return pumpSync.expectedPumpState().profile?.let {
             setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
-        } ?: pumpEnactResultProvider.get().success(false).enacted(false).comment("No profile active")
+        } ?: pumpEnactResultProvider().success(false).enacted(false).comment("No profile active")
     }
 
     private fun updateAlertConfiguration(): PumpEnactResult {
@@ -1173,12 +1197,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 lowReservoirAlertUnits
             )                             -> {
                 aapsLogger.debug(LTag.PUMP, "Ignoring updateAlertConfiguration because the settings did not change")
-                return pumpEnactResultProvider.get().success(true).enacted(false)
+                return pumpEnactResultProvider().success(true).enacted(false)
             }
 
             !podStateManager.isPodRunning -> {
                 aapsLogger.debug(LTag.PUMP, "Ignoring updateAlertConfiguration because there is no active pod")
-                return pumpEnactResultProvider.get().success(true).enacted(false)
+                return pumpEnactResultProvider().success(true).enacted(false)
             }
         }
 
@@ -1189,7 +1213,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 LTag.PUMPBTCOMM,
                 "updateAlertConfiguration negative expiryAlertDuration=$expiryReminderDelay"
             )
-            pumpEnactResultProvider.get().success(false).enacted(false)
+            pumpEnactResultProvider().success(false).enacted(false)
         }
         // expiry Alarm Delay, add 8 hours (grace period)
         val expiryAlarmDelay = podLifeLeft.minus(Duration.ofHours(expirationAlarmHours.toLong())).plus(Duration.ofHours(8))
@@ -1198,7 +1222,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 LTag.PUMPBTCOMM,
                 "updateAlertConfiguration negative expiryAlarmDuration=$expiryAlarmDelay"
             )
-            pumpEnactResultProvider.get().success(false).enacted(false)
+            pumpEnactResultProvider().success(false).enacted(false)
         }
         val expiryImminentDelay = podLifeLeft.minus(Duration.ofHours(POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING)).plus(Duration.ofHours(8))
         if (expiryImminentDelay.isNegative) {
@@ -1206,7 +1230,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 LTag.PUMPBTCOMM,
                 "updateAlertConfiguration negative expiryImminentDuration=$expiryImminentDelay"
             )
-            pumpEnactResultProvider.get().success(false).enacted(false)
+            pumpEnactResultProvider().success(false).enacted(false)
         }
         val alerts = listOf(
             AlertConfiguration(
@@ -1232,7 +1256,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             AlertConfiguration(
                 AlertType.EXPIRATION,
                 enabled = expirationAlarmEnabled,
-                durationInMinutes = TimeUnit.HOURS.toMinutes((expirationAlarmHours - 1).toLong()).toShort(),
+                durationInMinutes = (expirationAlarmHours - 1).toLong().hours.inWholeMinutes.toShort(),
                 autoOff = false,
                 AlertTrigger.TimerTrigger(
                     expiryAlarmDelay.toMinutes().toShort()
@@ -1277,7 +1301,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         ).toPumpEnactResultImpl()
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.info(LTag.PUMP, "Ignoring time change because automatic time handling is not implemented. timeChangeType=${timeChangeType.name}")
     }
 
@@ -1306,8 +1330,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 }.onErrorComplete(),
                 history.updateFromState(podStateManager),
                 podStateManager.updateActiveCommand()
-                    .map { handleCommandConfirmation(it) }
-                    .ignoreElement(),
+                    .flatMapCompletable { rxCompletable(Dispatchers.IO) { handleCommandConfirmation(it) } },
                 verifyPumpState(),
                 checkPodKaput(),
                 refreshOverview(),
@@ -1321,7 +1344,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         Completable.complete()
     }
 
-    private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
+    private suspend fun handleCommandConfirmation(confirmation: CommandConfirmed) {
         val command = confirmation.command
         val historyEntry = history.getById(command.historyId)
         aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation ${historyEntry.commandType}")
@@ -1337,12 +1360,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.info(LTag.PUMP, "syncStopTemporaryBasalWithPumpId ret=$ret pumpId=${historyEntry.pumpId()}")
                     podStateManager.tempBasal = null
 
-                    // Evaluate basal drift correction after confirmed temp basal cancel
+                    // Evaluate basal drift correction after confirmed temp basal cancel.
                     if (podStateManager.needsBasalCorrection()) {
-                        commandQueue.customCommand(CommandDeliverBasalCorrection(), null)
+                        // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+                        pluginScope.launch { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
                     }
                 }
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
+                notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
             }
 
             OmnipodCommandType.RESUME_DELIVERY        -> {
@@ -1356,11 +1380,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         serialNumber()
                     )
                     podStateManager.tempBasal = null
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
-                    rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
-                    commandQueue.customCommand(CommandDisableSuspendAlerts(rh), null)
+                    notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
+                    notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
+                    notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
+                    notificationManager.dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
+                    // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+                    pluginScope.launch { commandQueue.customCommand(CommandDisableSuspendAlerts(rh)) }
                 }
             }
 
@@ -1372,7 +1397,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     }
                     if (!commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                         // we are late-confirming this command. before that, we answered with success:false
-                        rxBus.send(EventProfileSwitchChanged())
+                        rxBus.send(EventProfileChangeRequested())
                     }
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,
@@ -1380,11 +1405,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         PumpType.OMNIPOD_DASH,
                         serialNumber()
                     )
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
-                    rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
-                    rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
-                    commandQueue.customCommand(CommandDisableSuspendAlerts(rh), null)
+                    notificationManager.dismiss(NotificationId.OMNIPOD_POD_SUSPENDED)
+                    notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
+                    notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
+                    notificationManager.dismiss(NotificationId.OMNIPOD_TIME_OUT_OF_SYNC)
+                    // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+                    pluginScope.launch { commandQueue.customCommand(CommandDisableSuspendAlerts(rh)) }
                 }
             }
 
@@ -1400,14 +1426,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 } else {
                     podStateManager.tempBasal = command.tempBasal
 
-                    // Evaluate basal drift correction after confirmed temp basal set
-                    if (!commandQueue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class.java) &&
+                    // Evaluate basal drift correction after confirmed temp basal set.
+                    if (!commandQueue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class) &&
                         podStateManager.needsBasalCorrection()
                     ) {
-                        commandQueue.customCommand(CommandDeliverBasalCorrection(), null)
+                        // Queue-worker deadlock guard — don't unwrap the .launch. See CommandQueue kdoc.
+                        pluginScope.launch { commandQueue.customCommand(CommandDeliverBasalCorrection()) }
                     }
                 }
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
+                notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
             }
 
             OmnipodCommandType.SUSPEND_DELIVERY       -> {
@@ -1445,14 +1472,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 } else {
                     pumpSync.syncBolusWithPumpId(
                         timestamp = historyEntry.createdAt,
-                        amount = 0.0,
+                        amount = PumpInsulin(0.0),
                         pumpId = historyEntry.pumpId(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber(),
                         type = null
                     )
                 }
-                rxBus.send(EventDismissNotification(Notification.OMNIPOD_UNCERTAIN_SMB))
+                notificationManager.dismiss(NotificationId.OMNIPOD_UNCERTAIN_SMB)
             }
 
             OmnipodCommandType.CANCEL_BOLUS           -> {
@@ -1466,7 +1493,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         val bolusHistoryEntry = history.getById(historyId)
                         val sync = pumpSync.syncBolusWithPumpId(
                             timestamp = bolusHistoryEntry.createdAt,
-                            amount = deliveredUnits,
+                            amount = PumpInsulin(deliveredUnits),
                             pumpId = bolusHistoryEntry.pumpId(),
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = serialNumber(),
@@ -1486,13 +1513,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    private fun verifyPumpState(): Completable = Completable.defer {
-        aapsLogger.debug(LTag.PUMP, "verifyPumpState, AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
-        val tbr = pumpSync.expectedPumpState().temporaryBasal
+    private fun verifyPumpState(): Completable = rxCompletable(Dispatchers.IO) {
+        val expectedState = pumpSync.expectedPumpState()
+        aapsLogger.debug(LTag.PUMP, "verifyPumpState, AAPS: ${expectedState.temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
+        val tbr = expectedState.temporaryBasal
         if (tbr != null && podStateManager.deliveryStatus?.basalActive() == true) {
-            aapsLogger.error(LTag.PUMP, "AAPS expected a TBR running but pump has no TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
+            aapsLogger.error(LTag.PUMP, "AAPS expected a TBR running but pump has no TBR running! AAPS: ${expectedState.temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
             // Alert user
-            val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
+            val sound = if (hasBolusErrorBeepEnabled()) AlarmSound.BOLUS_ERROR else null
             showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
             // Sync stopped basal with AAPS
             val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -1504,180 +1532,86 @@ class OmnipodDashPumpPlugin @Inject constructor(
             aapsLogger.info(LTag.PUMP, "syncStopTemporaryBasalWithPumpId ret=$ret pumpId=${tbr.id}")
             podStateManager.tempBasal = null
         } else if (tbr == null && podStateManager.deliveryStatus?.tempBasalActive() == true) {
-            aapsLogger.error(LTag.PUMP, "AAPS expected no TBR running but pump has a TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
+            aapsLogger.error(LTag.PUMP, "AAPS expected no TBR running but pump has a TBR running! AAPS: ${expectedState.temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
             // Alert user
-            val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
+            val sound = if (hasBolusErrorBeepEnabled()) AlarmSound.BOLUS_ERROR else null
             showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
             // If this is reached is reached there is probably a something wrong with the time (maybe it has changed?).
             // No way to calculate the TBR end time and update pumpSync properly.
             // Cancel TBR running on Pump
-            return@defer observeNoActiveTempBasal()
+            observeNoActiveTempBasal()
                 .concatWith(
                     podStateManager.updateActiveCommand()
-                        .map { handleCommandConfirmation(it) }
-                        .ignoreElement())
+                        .flatMapCompletable { rxCompletable(Dispatchers.IO) { handleCommandConfirmation(it) } })
+                .await()
         }
-
-        return@defer Completable.complete()
     }
 
-    private fun showErrorDialog(message: String, sound: Int) {
+    private fun showErrorDialog(message: String, sound: AlarmSound?) {
         uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound)
     }
 
-    private fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {
-        uiInteraction.addNotificationWithSound(
+    private fun showNotification(id: NotificationId, message: String, sound: AlarmSound?, level: NotificationLevel = id.defaultLevel) {
+        notificationManager.post(
             id,
             message,
-            urgency,
-            if (sound != null && soundEnabledForNotificationType(id)) sound else null
+            level = level,
+            sound = if (sound != null && soundEnabledForNotificationType(id)) sound else null
         )
     }
 
-    private fun soundEnabledForNotificationType(notificationType: Int): Boolean =
+    private fun soundEnabledForNotificationType(notificationType: NotificationId): Boolean =
         when (notificationType) {
-            Notification.OMNIPOD_TBR_ALERTS    -> preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification)
-            Notification.OMNIPOD_UNCERTAIN_SMB -> preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification)
-            Notification.OMNIPOD_POD_SUSPENDED -> preferences.get(DashBooleanPreferenceKey.SoundDeliverySuspendedNotification)
-            else                               -> true
+            NotificationId.OMNIPOD_TBR_ALERTS    -> preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification)
+            NotificationId.OMNIPOD_UNCERTAIN_SMB -> preferences.get(OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification)
+            NotificationId.OMNIPOD_POD_SUSPENDED -> preferences.get(DashBooleanPreferenceKey.SoundDeliverySuspendedNotification)
+            else                                 -> true
         }
 
     override fun clearAllTables() = dashHistoryDatabase.clearAllTables()
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "omnipod_dash_settings",
+        titleResId = R.string.omnipod_dash_name,
+        items = listOf(
+            // Beeps subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_dash_beeps",
+                titleResId = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_confirmation_beeps,
+                items = listOf(
+                    OmnipodBooleanPreferenceKey.BolusBeepsEnabled,
+                    OmnipodBooleanPreferenceKey.BasalBeepsEnabled,
+                    OmnipodBooleanPreferenceKey.SmbBeepsEnabled,
+                    OmnipodBooleanPreferenceKey.TbrBeepsEnabled,
+                    DashBooleanPreferenceKey.UseBonding
+                )
+            ),
+            // Alerts subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_dash_alerts",
+                titleResId = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_alerts,
+                items = listOf(
+                    OmnipodBooleanPreferenceKey.ExpirationReminder,
+                    OmnipodIntPreferenceKey.ExpirationReminderHours,
+                    OmnipodBooleanPreferenceKey.ExpirationAlarm,
+                    OmnipodIntPreferenceKey.ExpirationAlarmHours,
+                    OmnipodBooleanPreferenceKey.LowReservoirAlert,
+                    OmnipodIntPreferenceKey.LowReservoirAlertUnits
+                )
+            ),
+            // Notifications subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_dash_notifications",
+                titleResId = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_notifications,
+                items = listOf(
+                    OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification,
+                    OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
+                    OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification,
+                    DashBooleanPreferenceKey.SoundDeliverySuspendedNotification
+                )
+            )
+        ),
+        icon = pluginDescription.icon
+    )
 
-        val beepCategory = PreferenceCategory(context)
-        parent.addPreference(beepCategory)
-        beepCategory.apply {
-            key = "omnipod_dash_beeps"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_confirmation_beeps)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.BolusBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_bolus_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.BasalBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_basal_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SmbBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_smb_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.TbrBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_tbr_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = DashBooleanPreferenceKey.UseBonding,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_dash_use_bonding
-                )
-            )
-        }
-
-        val alertsCategory = PreferenceCategory(context)
-        parent.addPreference(alertsCategory)
-        alertsCategory.apply {
-            key = "omnipod_dash_alerts"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_alerts)
-            initialExpandedChildrenCount = 0
-
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.ExpirationReminder,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_enabled,
-                    summary = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_enabled_summary
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = OmnipodIntPreferenceKey.ExpirationReminderHours,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_hours_before_expiry
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.ExpirationAlarm,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_alarm_enabled,
-                    summary = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_alarm_enabled_summary
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = OmnipodIntPreferenceKey.ExpirationAlarmHours,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_alarm_hours_before_shutdown
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.LowReservoirAlert,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_low_reservoir_alert_enabled
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = OmnipodIntPreferenceKey.LowReservoirAlertUnits,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_low_reservoir_alert_units
-                )
-            )
-
-        }
-        val notificationsCategory = PreferenceCategory(context)
-        parent.addPreference(notificationsCategory)
-        notificationsCategory.apply {
-            key = "omnipod_dash_notifications"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_notifications)
-            initialExpandedChildrenCount = 0
-
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_tbr_sound_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_smb_sound_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_bolus_sound_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = DashBooleanPreferenceKey.SoundDeliverySuspendedNotification,
-                    title = R.string.omnipod_common_preferences_notification_delivery_suspended_sound_enabled
-                )
-            )
-        }
-    }
 }

@@ -1,0 +1,74 @@
+package app.aaps.plugins.smoothing
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Timeline
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.smoothing.Smoothing
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import kotlin.math.abs
+
+@Inject
+@SingleIn(AppScope::class)
+// Bound as PluginBase, not implicitly: these classes have two supertypes (PluginBase and Smoothing),
+// so Metro cannot pick one. The plugin list wants PluginBase.
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(620)
+class AvgSmoothingPlugin(
+    aapsLogger: AAPSLogger,
+    rh: TextResolver
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.SMOOTHING)
+        .icon(Icons.Default.Timeline)
+        .pluginName(SmoothingStrings.avg_smoothing_name)
+        .shortName(SmoothingStrings.smoothing_shortname)
+        .description(SmoothingStrings.description_avg_smoothing),
+    aapsLogger, rh
+), Smoothing {
+
+    override fun smooth(data: MutableList<InMemoryGlucoseValue>): MutableList<InMemoryGlucoseValue> {
+        if (data.lastIndex < 4) {
+            aapsLogger.debug(LTag.GLUCOSE, "Not enough value's to smooth!")
+            return data
+        }
+
+        for (i in data.lastIndex - 1 downTo 1) {
+            // Check if value's are in a valid range
+            // Bucketed is always calculated to 5 min, we still check if our data is evenly spaced with an allowance of 30 seconds
+            if (isValid(data[i].value) && isValid(data[i - 1].value) && isValid(data[i + 1].value)
+                && abs(data[i].timestamp - data[i - 1].timestamp - (data[i + 1].timestamp - data[i].timestamp)) < T.secs(30).msecs()
+            ) {
+                // We could further improve this by adding a weight to the neighbours, for simplicity this is not done.
+                data[i].smoothed = ((data[i - 1].calibratedOrValue + data[i].calibratedOrValue + data[i + 1].calibratedOrValue) / 3.0)
+                data[i].trendArrow = TrendArrow.NONE
+            } else {
+                // data[i].smoothed = data[i].value
+                val currentTime = data[i].timestamp
+                val value = data[i].value
+                aapsLogger.debug(LTag.GLUCOSE, "Value: $value at $currentTime not smoothed")
+            }
+        }
+        // We leave the data we can not smooth as is, alternatively we could provide raw value's to the smoothed value's:
+        // data[data.lastIndex].smoothed = data[data.lastIndex].value
+        // data[0].smoothed = data[0].value
+        return data
+    }
+
+    private fun isValid(n: Double): Boolean {
+        // For Dexcom: Below 39 is LOW, above 401 Dexcom just says HI
+        return n > 39 && n < 401
+    }
+}

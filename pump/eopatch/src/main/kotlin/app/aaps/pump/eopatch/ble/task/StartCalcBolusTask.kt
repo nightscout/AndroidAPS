@@ -8,15 +8,14 @@ import app.aaps.pump.eopatch.core.response.BolusResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class StartCalcBolusTask @Inject constructor() : BolusTask(TaskFunc.START_CALC_BOLUS) {
 
-    private val NOW_BOLUS_START: BolusStart = BolusStart()
+    @Inject lateinit var nowBolusStart: BolusStart
 
     fun start(detailedBolusInfo: DetailedBolusInfo): Single<out BolusResponse> {
         return isReady().concatMapSingle(Function { startBolusImpl(detailedBolusInfo.insulin.toFloat()) })
@@ -27,7 +26,7 @@ class StartCalcBolusTask @Inject constructor() : BolusTask(TaskFunc.START_CALC_B
     }
 
     private fun startBolusImpl(nowDoseU: Float): Single<out BolusResponse> {
-        return NOW_BOLUS_START.start(nowDoseU)
+        return nowBolusStart.start(nowDoseU)
     }
 
     private fun onSuccess(nowDoseU: Float) {

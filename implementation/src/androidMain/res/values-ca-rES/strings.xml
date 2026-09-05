@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Ordre executant-se ara mateix</string>
+    <string name="basal_value_below_minimum">Valor de basal per sota del mínim. Perfil no definit!</string>
+    <!--       Stats -->
+    <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+</resources>

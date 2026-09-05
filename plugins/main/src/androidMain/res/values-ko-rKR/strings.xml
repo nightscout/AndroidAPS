@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">이력 브라우저</string>
+    <string name="sensor_label">센서</string>
+    <string name="insulin_label">인슐린</string>
+    <string name="pb_label">펌프 배터리</string>
+    <string name="cannula">캐뉼라</string>
+    <string name="patch_pump">패치 펌프</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>
+    <string name="old_data">오래된 데이터</string>
+</resources>

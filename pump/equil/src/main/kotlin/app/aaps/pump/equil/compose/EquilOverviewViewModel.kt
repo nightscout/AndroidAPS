@@ -1,0 +1,281 @@
+package app.aaps.pump.equil.compose
+
+import android.content.Context
+import android.text.TextUtils
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.runtime.Stable
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.pump.ActionCategory
+import app.aaps.core.ui.compose.pump.PumpAction
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
+import app.aaps.core.ui.compose.pump.PumpInfoRow
+import app.aaps.core.ui.compose.pump.PumpOverviewUiState
+import app.aaps.core.ui.compose.pump.StatusBanner
+import app.aaps.core.ui.compose.pump.tickerFlow
+import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.R
+import app.aaps.pump.equil.data.RunMode
+import app.aaps.pump.equil.events.EventEquilDataChanged
+import app.aaps.pump.equil.events.EventEquilModeChanged
+import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.equil.manager.command.CmdModelSet
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import dev.zacsweers.metro.Inject
+import app.aaps.core.ui.R as CoreUiR
+
+sealed class EquilOverviewEvent {
+    data class StartWizard(val workflow: EquilWorkflow) : EquilOverviewEvent()
+    data object StartHistory : EquilOverviewEvent()
+}
+
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
+@Stable
+class EquilOverviewViewModel @Inject constructor(
+    private val rh: ResourceHelper,
+    private val aapsLogger: AAPSLogger,
+    private val dateUtil: DateUtil,
+    private val ch: ConcentrationHelper,
+    private val equilPumpPlugin: EquilPumpPlugin,
+    private val equilManager: EquilManager,
+    private val commandQueue: CommandQueue,
+    private val preferences: Preferences,
+    private val rxBus: RxBus,
+    private val context: Context
+) : ViewModel() {
+
+    private val _events = MutableSharedFlow<EquilOverviewEvent>(extraBufferCapacity = 5)
+    val events: SharedFlow<EquilOverviewEvent> = _events
+
+    // Loading state for mode toggle
+    private val _isModeChanging = MutableStateFlow(false)
+    val isModeChanging: StateFlow<Boolean> = _isModeChanging
+
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
+
+    // Trigger re-composition on RxBus events and periodic ticks
+    private val _refreshTrigger = MutableStateFlow(0L)
+
+    init {
+        rxBus.toFlow(EventEquilDataChanged::class)
+            .onEach { _refreshTrigger.value = System.currentTimeMillis() }
+            .launchIn(viewModelScope)
+        rxBus.toFlow(EventEquilModeChanged::class)
+            .onEach { _refreshTrigger.value = System.currentTimeMillis() }
+            .launchIn(viewModelScope)
+    }
+
+    val uiState: StateFlow<PumpOverviewUiState> = combine(
+        _refreshTrigger,
+        communicationStatus.refreshTrigger,
+        tickerFlow(T.mins(1).msecs())
+    ) { _, _, _ ->
+        buildUiState()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), buildUiState())
+
+    private fun buildUiState(): PumpOverviewUiState {
+        val devName = equilManager.equilState?.serialNumber
+        val isPaired = !TextUtils.isEmpty(devName)
+
+        val infoRows = if (isPaired) buildPairedInfoRows() else emptyList()
+        val primaryActions = buildPrimaryActions(isPaired)
+        val managementActions = buildManagementActions(isPaired)
+
+        val pumpWarning = if (isPaired) buildStatusBanner() else null
+        return PumpOverviewUiState(
+            statusBanner = pumpWarning ?: communicationStatus.statusBanner(),
+            queueStatus = communicationStatus.queueStatus(),
+            infoRows = infoRows,
+            primaryActions = primaryActions,
+            managementActions = managementActions
+        )
+    }
+
+    private fun buildStatusBanner(): StatusBanner? {
+        if (!equilManager.isActivationCompleted()) {
+            return StatusBanner(
+                text = rh.gs(R.string.equil_init_insulin_error),
+                level = StatusLevel.WARNING
+            )
+        }
+        val runMode = equilManager.equilState?.runMode
+        return when (runMode) {
+            RunMode.RUN     -> null
+            RunMode.SUSPEND -> StatusBanner(
+                text = rh.gs(R.string.equil_mode_suspended),
+                level = StatusLevel.WARNING
+            )
+
+            RunMode.STOP    -> StatusBanner(
+                text = rh.gs(R.string.equil_mode_stopped),
+                level = StatusLevel.CRITICAL
+            )
+
+            else            -> null
+        }
+    }
+
+    private fun buildPairedInfoRows(): List<PumpInfoRow> = buildList {
+        val state = equilManager.equilState ?: return@buildList
+
+        add(PumpInfoRow(label = rh.gs(R.string.equil_serialnumber), value = state.serialNumber ?: "-"))
+        add(PumpInfoRow(label = rh.gs(R.string.equil_firmware_version), value = state.firmwareVersion ?: "-"))
+        add(
+            PumpInfoRow(
+                label = rh.gs(R.string.equil_mode),
+                value = when {
+                    !equilManager.isActivationCompleted() -> rh.gs(R.string.equil_init_insulin_error)
+                    state.runMode == RunMode.RUN          -> rh.gs(R.string.equil_mode_running)
+                    state.runMode == RunMode.STOP         -> rh.gs(R.string.equil_mode_stopped)
+                    state.runMode == RunMode.SUSPEND      -> rh.gs(R.string.equil_mode_suspended)
+                    else                                  -> "-"
+                },
+                level = when {
+                    !equilManager.isActivationCompleted() -> StatusLevel.WARNING
+                    state.runMode == RunMode.STOP         -> StatusLevel.CRITICAL
+                    state.runMode == RunMode.SUSPEND      -> StatusLevel.WARNING
+                    else                                  -> StatusLevel.UNSPECIFIED
+                }
+            )
+        )
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = "${state.battery}%"))
+        add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = ch.insulinAmountString(PumpInsulin(state.currentInsulin.toDouble()))))
+        add(
+            PumpInfoRow(
+                label = rh.gs(R.string.equil_basal_speed),
+                value = ch.basalRateString(equilPumpPlugin.baseBasalRate, isAbsolute = true, decimals = 3)
+            )
+        )
+
+        // Temp basal
+        val tempBasal = state.tempBasal
+        if (tempBasal != null && equilManager.isTempBasalRunning()) {
+            val startTime = tempBasal.startTime
+            val duration = tempBasal.duration / 60 / 1000
+            add(PumpInfoRow(label = rh.gs(R.string.equil_temp_basal_rate), value = ch.basalTbrString( rate = PumpRate(tempBasal.rate),startTime = startTime, durationInMin = duration)))
+        }
+
+        // Total delivered
+        val totalDelivered = if (state.startInsulin == -1) "-"
+        else ch.insulinAmountString(PumpInsulin((state.startInsulin - state.currentInsulin).toDouble()))
+        add(PumpInfoRow(label = rh.gs(R.string.equil_total_delivered), value = totalDelivered))
+
+        // Last bolus (bolusRecord.amount is in cU from PumpWithConcentration)
+        val lastBolusText = state.bolusRecord?.let {
+            ch.insulinAmountAgoString(
+                PumpInsulin(it.amount),
+                it.startTime
+            )
+        }
+        lastBolusText?.let {
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it))
+        }
+    }
+
+    private fun buildPrimaryActions(isPaired: Boolean): List<PumpAction> = buildList {
+        if (isPaired && equilManager.isActivationCompleted()) {
+            val runMode = equilManager.equilState?.runMode
+            if (runMode == RunMode.RUN) {
+                add(
+                    PumpAction(
+                    label = rh.gs(R.string.equil_common_overview_button_suspend_delivery),
+                    icon = IcEquilSuspendDelivery,
+                    category = ActionCategory.PRIMARY,
+                    onClick = { toggleMode() }
+                ))
+            } else if (runMode == RunMode.SUSPEND) {
+                add(
+                    PumpAction(
+                    label = rh.gs(R.string.equil_common_overview_button_resume_delivery),
+                    icon = IcEquilResumeDelivery,
+                    category = ActionCategory.PRIMARY,
+                    onClick = { toggleMode() }
+                ))
+            }
+        }
+    }
+
+    private fun buildManagementActions(isPaired: Boolean): List<PumpAction> = buildList {
+        if (!isPaired) {
+            add(
+                PumpAction(
+                label = rh.gs(R.string.equil_pair),
+                icon = Icons.Filled.Bluetooth,
+                category = ActionCategory.MANAGEMENT,
+                onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.PAIR)) }
+            ))
+        } else {
+            add(
+                PumpAction(
+                label = rh.gs(R.string.equil_dressing),
+                icon = Icons.Filled.SwapHoriz,
+                category = ActionCategory.MANAGEMENT,
+                onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.CHANGE_INSULIN)) }
+            ))
+            add(
+                PumpAction(
+                label = rh.gs(CoreUiR.string.history),
+                icon = Icons.Filled.History,
+                category = ActionCategory.MANAGEMENT,
+                onClick = { _events.tryEmit(EquilOverviewEvent.StartHistory) }
+            ))
+            add(
+                PumpAction(
+                label = rh.gs(R.string.equil_unbind),
+                icon = Icons.Filled.Bluetooth,
+                category = ActionCategory.MANAGEMENT,
+                onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.UNPAIR)) }
+            ))
+        }
+    }
+
+    private fun toggleMode() {
+        val runMode = equilManager.equilState?.runMode ?: return
+        val targetMode = if (runMode == RunMode.RUN) RunMode.SUSPEND else RunMode.RUN
+        _isModeChanging.value = true
+        viewModelScope.launch {
+            val r = commandQueue.customCommand(CmdModelSet(targetMode.command, aapsLogger, preferences, equilManager))
+            _isModeChanging.value = false
+            aapsLogger.debug(LTag.PUMPCOMM, "toggleMode result: ${r.success}")
+            if (r.success) {
+                equilManager.equilState?.runMode = targetMode
+                _refreshTrigger.value = System.currentTimeMillis()
+            }
+        }
+    }
+
+
+    // viewModelScope cancels all coroutines automatically on onCleared()
+}

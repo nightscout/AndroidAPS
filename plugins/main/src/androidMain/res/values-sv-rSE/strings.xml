@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Historikläsare</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="pb_label">Pumpbatteri</string>
+    <string name="cannula">Kanyl</string>
+    <string name="patch_pump">Slanglös pump</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">Bas</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
+    <string name="old_data">Aktuellt BG saknas!</string>
+</resources>

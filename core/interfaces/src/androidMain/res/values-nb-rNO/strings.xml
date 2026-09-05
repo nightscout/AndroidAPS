@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Bekreftelse</string>
+    <!--    Events-->
+    <string name="bolus_delivering">Leverer %1$.2f E</string>
+    <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E levert</string>
+    <string name="bolus_delivered_successfully">Bolus på %1$.2f E ble levert</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver er endret.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$dm siden</string>
+    <string name="secago">%1$ds siden</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
+    <string name="minago_long">%1$d minutter siden</string>
+    <string name="hoursago">%1$.1ft siden</string>
+    <string name="days_ago">%1$.1f dager siden</string>
+    <string name="days_ago_round">%1$.0f dager siden</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">%1$s dag %2$s timer siden</item>
+        <item quantity="other">%1$s dager %2$s timer siden</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">%1$s time siden</item>
+        <item quantity="other">%1$s timer siden</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">et øyeblikk siden</item>
+        <item quantity="other">%1$s minutter siden</item>
+    </plurals>
+    <string name="seconds_ago">sekunder siden</string>
+    <string name="in_days">i %1$.0f dager</string>
+    <string name="in_days_round">om %1$.0f dager</string>
+    <string name="shorthour">t</string>
+    <string name="days">dager</string>
+    <string name="hours">timer</string>
+    <string name="unit_second">sekund</string>
+    <string name="unit_minute">minutt</string>
+    <string name="unit_hour">time</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">uke</string>
+    <string name="unit_seconds">sekunder</string>
+    <string name="unit_minutes">minutter</string>
+    <string name="unit_hours">timer</string>
+    <string name="unit_days">dager</string>
+    <string name="unit_weeks">uker</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dt %2$dm gjenstår</string>
+    <string name="time_remaining_m">%1$dm gjenstår</string>
+    <string name="later_today">Senere i dag</string>
+    <string name="tomorrow">I morgen</string>
+    <string name="today">Idag</string>
+    <string name="yesterday">I går</string>
+    <!-- Rx -->
+    <string name="connecting_for">Tilkobler i %1$d sek</string>
+    <string name="handshaking">Tilkobling verifiseres</string>
+    <string name="connected">Tilkoblet</string>
+    <string name="authorized">Autorisert</string>
+    <string name="disconnecting">Frakobler</string>
+    <string name="waiting_for_disconnection">Venter på frakobling</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Opprettet: %1$s</string>
+    <string name="metadata_label_watchface_author">Laget av: %1$s</string>
+    <string name="metadata_label_watchface_name">Navn: %1$s</string>
+    <string name="metadata_wear_import_filename">Filnavn: %1$s</string>
+    <string name="metadata_label_plugin_version">Plugin-versjon: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Navn: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
+    <string name="pref_show_iob">Vis IOB</string>
+    <string name="pref_show_detailed_iob">Vis detaljert IOB</string>
+    <string name="pref_show_cob">Vis COB</string>
+    <string name="pref_show_delta">Vis delta</string>
+    <string name="pref_show_detailed_delta">Vis detaljert delta</string>
+    <string name="pref_show_avgdelta">Vis gj.snittsdelta</string>
+    <string name="pref_show_tempTarget">Vis midlertidig mål</string>
+    <string name="pref_show_reservoir_level">Vis reservoarnivå</string>
+    <string name="pref_show_phone_battery">Vis telefonbatteri</string>
+    <string name="pref_show_rig_battery">Vis riggens batteri</string>
+    <string name="pref_show_basal_rate">Vis basaldose</string>
+    <string name="pref_show_loop_status">Vis loopstatus</string>
+    <string name="pref_show_bg">Vis BS</string>
+    <string name="pref_show_bgi">Vis BGI</string>
+    <string name="pref_show_direction_arrow">Vis retningspil</string>
+    <string name="pref_show_ago">Vis tid siden</string>
+    <string name="pref_show_week_number">Vis ukenummer</string>
+    <string name="pref_show_date">Vis dato</string>
+    <string name="pref_show_seconds">Vis sekunder</string>
+    <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTER MAL for å lage en mal</string>
+    <string name="default_custom_watchface_external_comment">Standard urskive inkludert eksterne visninger for følgere, du kan klikke på knappen EKSPORTER URSKIVE for å generere en mal</string>
+    <string name="wear_default_watchface">Standard urskive</string>
+    <string name="wear_more_watchfaces">Flere urskiver</string>
+    <string name="temp_basal_absolute_rate">%1$.2f E/t @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">F %1$.2f E/t @%2$s %3$d/%4$d min</string>
+    <string name="forever">Alltid</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Appen trenger Bluetooth-tillatelse for å kommunisere med pumpen</string>
+    <!-- Insulin -->
+    <string name="unknown">Ukjent</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Egendefinert topp Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Topptid [min]</string>
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/E</string>
+    <string name="profile_isf_units_mmol">mmol/L/E</string>
+    <string name="formatsignedinsulinunits">%1$+.2f E</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Karbo</string>
+    <string name="alarminxmin">Aktiver alarm om %1$d min</string>
+    <string name="pumpsuspended">Pumpen er pauset</string>
+    <string name="loopsuspended">Loop pauset</string>
+    <string name="pump_disconnected">Pumpe frakoblet</string>
+    <string name="basalprofilenotaligned">Basalverdier er ikke angitt på hele timer: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basalverdi erstattet med minste tillate verdi: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basalverdi erstattet med høyeste tillate verdi: %1$s</string>
+    <string name="profile_ins_units_per_hour">E/t</string>
+    <string name="profile_carbs_per_unit">g/E</string>
+    <string name="mins">%1$d min</string>
+    <string name="record">Registrer</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">FORLENGET KARBO</string>
+    <string name="profile_low_target">Profil lavt mål</string>
+    <string name="profile_high_target">Profil høyt mål</string>
+    <string name="profile_dia">Profil DIA verdi</string>
+    <string name="profile_sensitivity_value">Profilens insulinfølsomhet</string>
+    <string name="profile_carbs_ratio_value">Profilens insulin-til-karbohydratforhold (IK)</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
+    <string name="basal_value">Basalverdi</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Langsom karboabsorpsjon oppdaget: %1$d%% av tiden. Dobbeltsjekk beregningen din. COB kan overestimeres, og dermed kan mer insulin gis !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
+    <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
+    <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
+    <string name="wizard_ecarbs">eKarbo %1$dg / %2$dt (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f E</string>
+</resources>

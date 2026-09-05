@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_plugin_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensibilidad Oref1</string>
+    <string name="sensitivity_aaps">Sensibilidad AAPS</string>
+    <string name="sensitivity_weighted_average">Sensibilidad promedio ponderada</string>
+    <string name="description_sensitivity_aaps">La sensibilidad se calcula de la misma manera que en Oref0, pero puede especificarse el rango de tiempo. La absorción de carbohidratos mínima se calcula con el máximo tiempo de absorción de carbohidratos en preferencias</string>
+    <string name="description_sensitivity_oref1">La sensibilidad es calculada a partir de las últimas 8h o 24  de datos (se escoge el valor más sensible). Los carbohidratos (si no se absorben) son eliminados después del tiempo especificado en las preferencias. El complemento también calcula UAM (comidas no anunciadas).</string>
+    <string name="description_sensitivity_weighted_average">Sensibilidad es calculada como promedio ponderado a partir de las desviaciones. Las desviaciones más recientes tienen un mayor impacto. La absorción mínima de carbohidratos es calculada a partir del tiempo de absorción máximo definido en las preferencias. Este algoritmo es el más rápido para detectar cambios en la sensibilidad.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM (comidas no anunciadas) deshabilitado porque depende del complemento de sensibilidad Oref1</string>
+    <string name="absorption_settings_title">Ajustes de absorción</string>
+</resources>

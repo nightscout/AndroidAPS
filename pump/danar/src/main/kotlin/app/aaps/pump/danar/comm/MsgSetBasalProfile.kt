@@ -1,11 +1,10 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgSetBasalProfile(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     index: Byte,
     values: Array<Double>
 ) : MessageBase(injector) {
@@ -25,11 +24,11 @@ class MsgSetBasalProfile(
         if (result != 1) {
             failed = true
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result ERROR!!!")
-            uiInteraction.addNotification(Notification.PROFILE_SET_FAILED, rh.gs(app.aaps.pump.dana.R.string.profile_set_failed), Notification.URGENT)
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result")
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
         }
+        // Notifications (OK / FAILED) are owned centrally; the `failed` flag above drives the setNewBasalProfile
+        // return value (DanaRExecutionService.updateBasalsInPump -> AbstractDanaRPlugin -> onProfileChanged).
     }
 }

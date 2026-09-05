@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Storico</string>
+    <string name="sensor_label">Sensore</string>
+    <string name="insulin_label">Insulina</string>
+    <string name="pb_label">Batteria micro</string>
+    <string name="cannula">Cannula</string>
+    <string name="patch_pump">Micro a patch</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
+    <string name="old_data">DATI VECCHI</string>
+    <string name="notification_iob_short">%1$.1fU</string>
+</resources>

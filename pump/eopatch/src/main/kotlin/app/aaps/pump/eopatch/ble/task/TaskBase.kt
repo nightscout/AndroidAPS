@@ -2,22 +2,23 @@ package app.aaps.pump.eopatch.ble.task
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.eopatch.ble.PreferenceManager
-import app.aaps.pump.eopatch.core.Patch
 import app.aaps.pump.eopatch.core.exception.NoActivatedPatchException
 import app.aaps.pump.eopatch.core.exception.PatchDisconnectedException
 import app.aaps.pump.eopatch.core.response.BaseResponse
 import app.aaps.pump.eopatch.core.scan.BleConnectionState
+import app.aaps.pump.eopatch.core.scan.IBleDevice
 import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
-import java.lang.Exception
-import java.util.HashMap
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@HasMemberInjections
+@SingleIn(AppScope::class)
 open class TaskBase @Inject constructor(val func: TaskFunc) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -25,11 +26,11 @@ open class TaskBase @Inject constructor(val func: TaskFunc) {
     @Inject lateinit var normalBasalManager: NormalBasalManager
     @Inject lateinit var patchConfig: PatchConfig
     @Inject lateinit var taskQueue: TaskQueue
+    @Inject lateinit var patch: IBleDevice
 
     /* enqueue 시 사용 */
     var disposable: Disposable? = null
     protected val lock: Any = Any()
-    val patch = Patch.getInstance()
 
     init {
         maps.put(func, this)

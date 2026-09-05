@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">Start inspanning TT</string>
+    <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Tijdverschuiving</string>
+    <!--    Widget-->
+    <string name="configure">Configureer transparantie</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Activiteitsmonitor</string>
+    <string name="do_you_want_reset_stats">Wil je de activiteitenstatistieken resetten?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Wilt u de TDD statistieken opnieuw berekenen?</string>
+    <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
+    <string name="age">Leeftijd</string>
+    <string name="weight_label">Gewicht</string>
+    <string name="glucose_type">Glucose type</string>
+    <string name="bg_other">Andere</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <string name="edit_site">Bewerk</string>
+    <string name="record_site_location">Site locatie: %1$s</string>
+    <string name="record_site_arrow">Site pijl %1$s</string>
+    <string name="record_site_note">Notitie: %1$s</string>
+    <string name="delete_site_note">Notitie verwijderd</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Zorg ervoor dat de hoeveelheid overeenkomt met de specificatie van uw infusieset!</string>
+    <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
+    <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
+    <string name="percentage_label">Percentage</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Pomp afkoppelen</string>
+    <string name="resume">Hervatten</string>
+    <string name="reconnect">Opnieuw verbinden met pomp</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 uur</string>
+    <string name="duration2h">2 uur</string>
+    <string name="duration3h">3 uur</string>
+    <string name="duration10h">10 uur</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Er ontbreekt %1$d g</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Geen records beschikbaar</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">Koolhydraten en bolus</string>
+    <string name="show_invalidated">Toon ongeldig</string>
+    <string name="hide_invalidated">Verberg ongeldig</string>
+    <string name="careportal_remove_started_events">Verwijder AAPS is gestart items</string>
+    <string name="user_entry">Gebruikersinvoer</string>
+    <string name="clone_label">Dupliceren</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Profieltype</string>
+    <string name="basal_pct_from_tdd_label">% van basaal</string>
+    <string name="selected_profile">Geselecteerd:</string>
+    <string name="motol_default_profile">Basis profiel</string>
+    <string name="current_profile">Huidig profiel</string>
+    <string name="available_profile">Beschikbare profielen</string>
+    <string name="format_with_tdd">Duur: %1$d TDD: %2$.0f E</string>
+    <string name="format_with_tdd_and_pct">Leeftijd: %1$d TDD: %2$.0f E %3$d%%</string>
+    <string name="format_with_weight">Leeftijd: %1$d Gewicht: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Basis profiel</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Knop tekst</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Alleen positieve IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <!--    History browser-->
+    <string name="additional_ecarbs">Voeg eCarbs toe</string>
+    <string name="confirm_treatment">Bevestig alstublieft de behandeling</string>
+    <string name="recalculate">Herberekenen</string>
+    <!--    Widget-->
+    <string name="use_black_color">Gebruik zwarte kleur</string>
+    <string name="widget_configuration">Widget configuratie</string>
+    <string name="until_changed">Totdat gewijzigd</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Beide</item>
+        <item>Alleen positief</item>
+        <item>Alleen negatief</item>
+    </string-array>
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

@@ -1,0 +1,274 @@
+package app.aaps.plugins.source
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Bundle
+import androidx.core.content.ContextCompat
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.core.ui.compose.icons.IcPluginByoda
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.core.utils.receivers.Inbox
+import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.plugins.source.compose.BgSourceComposeContent
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlin.math.abs
+
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(440)
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<DexcomBoyda>())
+class DexcomPlugin @Inject constructor(
+    rh: ResourceHelper,
+    aapsLogger: AAPSLogger,
+    private val context: Context,
+    config: Config,
+    preferences: Preferences,
+) : AbstractBgSourceWithSensorInsertLogPlugin(
+    pluginDescription = PluginDescription()
+        .mainType(PluginType.BGSOURCE)
+        .composeContent { plugin ->
+            BgSourceComposeContent(
+                title = rh.gs(R.string.dexcom_app_patched)
+            )
+        }
+        .icon(IcPluginByoda)
+        .pluginName(TextRef.AndroidRes(R.string.dexcom_app_patched))
+        .shortName(TextRef.AndroidRes(R.string.dexcom_short))
+        .preferencesVisibleInSimpleMode(false)
+        .description(TextRef.AndroidRes(R.string.description_source_dexcom)),
+    aapsLogger = aapsLogger,
+    rh = rh,
+    preferences = preferences
+), BgSource, DexcomBoyda {
+
+    init {
+        if (!config.AAPSCLIENT) {
+            pluginDescription.setDefault()
+        }
+    }
+
+    override fun requiredPermissions(): List<PermissionGroup> =
+        if (isDexcomAppInstalled()) listOf(
+            PermissionGroup(
+                permissions = listOf(PERMISSION),
+                rationaleTitle = TextRef.AndroidRes(R.string.permission_dexcom_title),
+                rationaleDescription = TextRef.AndroidRes(R.string.permission_dexcom_description),
+                special = true,
+            )
+        ) else emptyList()
+
+    private fun isDexcomAppInstalled(): Boolean =
+        PACKAGE_NAMES.any { pkg ->
+            try {
+                @Suppress("DEPRECATION")
+                context.packageManager.getPackageInfo(pkg, 0)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+
+    override suspend fun onStart() {
+        super.onStart()
+        requestPermissionIfNeeded()
+    }
+
+    // cannot be inner class because of needed injection
+
+    class DexcomWorker @AssistedInject constructor(
+        @Assisted context: Context,
+        @Assisted params: WorkerParameters,
+        aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
+        private val dexcomPlugin: DexcomPlugin,
+        private val preferences: Preferences,
+        private val dateUtil: DateUtil,
+        private val dataInbox: DataInbox,
+        private val persistenceLayer: PersistenceLayer,
+        private val profileUtil: ProfileUtil
+    ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+
+        /**
+         * Metro builds this worker. The parameter names must match [MetroWorkerCreator],
+         * because Metro matches assisted parameters by name and not only by type.
+         */
+        @AssistedFactory
+        fun interface Factory : MetroWorkerCreator {
+
+            override fun create(context: Context, params: WorkerParameters): DexcomWorker
+        }
+
+        @SuppressLint("CheckResult")
+        override suspend fun doWorkAndLog(): Result {
+            // Drain first, unconditionally: drain() clears DataInbox's pending-work gate, so every
+            // enqueued worker MUST reach it. If we returned early (plugin disabled) before draining,
+            // the gate would stay set and silently block all future enqueues for this slot until
+            // the process restarts. Bundles drained while disabled are intentionally discarded.
+            val bundles = dataInbox.drain(DexcomInbox)
+            if (!dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            if (bundles.isEmpty()) return Result.success(workDataOf("Result" to "no data"))
+
+            var hadFailure = false
+            for ((index, bundle) in bundles.withIndex()) {
+                try {
+                    processBundle(bundle)
+                } catch (e: CancellationException) {
+                    // WorkManager stopped this run. The coroutine contract requires
+                    // CancellationException to propagate, otherwise the loop keeps fighting a
+                    // cancelled Job and spams failures for every remaining bundle. drain() already
+                    // removed the whole batch, so re-queue this bundle plus everything not yet
+                    // processed before propagating — otherwise those readings are lost.
+                    // requeue/enqueue are non-suspending, so they complete despite cancellation.
+                    dataInbox.requeue(DexcomInbox, bundles.subList(index, bundles.size))
+                    throw e
+                } catch (e: Exception) {
+                    // processBundle early-returns on malformed-bundle conditions; anything that
+                    // reaches the catch is a real exception (typically a DB write). Surface as
+                    // failure so WorkInfo reflects the truth.
+                    aapsLogger.error("Error while processing intent from Dexcom App", e)
+                    hadFailure = true
+                }
+            }
+            return if (hadFailure) Result.failure(workDataOf("Error" to "one or more bundles failed")) else Result.success()
+        }
+
+        private suspend fun processBundle(bundle: Bundle) {
+            // Both DEXCOM_BG and DEXCOM_G7_BG broadcast intents route here; the G6/G7
+            // discriminator lives in the bundle itself as "sensorType", so we don't
+            // need to thread the original intent action through the queue.
+            val sourceSensor = when (bundle.getString("sensorType") ?: "") {
+                "G6" -> SourceSensor.DEXCOM_G6_NATIVE
+                "G7" -> SourceSensor.DEXCOM_G7_NATIVE
+                else -> SourceSensor.DEXCOM_NATIVE_UNKNOWN
+            }
+            val calibrations = mutableListOf<PersistenceLayer.Calibration>()
+            bundle.getBundle("meters")?.let { meters ->
+                for (i in 0 until meters.size()) {
+                    meters.getBundle(i.toString())?.let {
+                        val timestamp = it.getLong("timestamp") * 1000
+                        val now = dateUtil.now()
+                        val value = it.getInt("meterValue").toDouble()
+                        if (timestamp > now - T.months(1).msecs() && timestamp < now) {
+                            calibrations.add(
+                                PersistenceLayer.Calibration(
+                                    timestamp = it.getLong("timestamp") * 1000,
+                                    value = value,
+                                    glucoseUnit = profileUtil.unitsDetect(value)
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+            val now = dateUtil.now()
+            val glucoseValuesBundle = bundle.getBundle("glucoseValues") ?: run {
+                aapsLogger.warn(LTag.BGSOURCE, "Skipping Dexcom bundle: missing glucoseValues")
+                return
+            }
+            val glucoseValues = mutableListOf<GV>()
+            for (i in 0 until glucoseValuesBundle.size()) {
+                val glucoseValueBundle = glucoseValuesBundle.getBundle(i.toString())!!
+                val timestamp = glucoseValueBundle.getLong("timestamp") * 1000
+                // G5 calibration bug workaround (calibration is sent as glucoseValue too)
+                var valid = true
+                // G6 is sending one 24h old changed value causing recalculation. Ignore
+                if (sourceSensor == SourceSensor.DEXCOM_G6_NATIVE)
+                    if ((now - timestamp) > T.hours(20).msecs()) valid = false
+                if (valid)
+                    glucoseValues += GV(
+                        timestamp = timestamp,
+                        value = glucoseValueBundle.getInt("glucoseValue").toDouble(),
+                        noise = null,
+                        raw = null,
+                        trendArrow = TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!),
+                        sourceSensor = sourceSensor
+                    )
+            }
+            var sensorStartTime = if (preferences.get(BooleanKey.BgSourceCreateSensorChange) && bundle.containsKey("sensorInsertionTime")) {
+                bundle.getLong("sensorInsertionTime", 0) * 1000
+            } else {
+                null
+            }
+            // check start time validity
+            sensorStartTime?.let {
+                if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null
+            }
+            val result = persistenceLayer.insertCgmSourceData(Sources.Dexcom, glucoseValues, calibrations, sensorStartTime)
+            // G6 calibration bug workaround (2 additional GVs are created within 1 minute)
+            for (i in result.inserted.indices) {
+                if (sourceSensor == SourceSensor.DEXCOM_G6_NATIVE) {
+                    if (i < result.inserted.size - 1) {
+                        if (abs(result.inserted[i].timestamp - result.inserted[i + 1].timestamp) < T.mins(1).msecs()) {
+                            persistenceLayer.invalidateGlucoseValue(result.inserted[i].id, Action.BG_REMOVED, Sources.Dexcom, note = null, listValues = listOf())
+                            persistenceLayer.invalidateGlucoseValue(result.inserted[i + 1].id, Action.BG_REMOVED, Sources.Dexcom, note = null, listValues = listOf())
+                            result.inserted.removeAt(i + 1)
+                            result.inserted.removeAt(i)
+                            continue
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun requestPermissionIfNeeded() {
+        if (ContextCompat.checkSelfPermission(context, PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+            val intent = Intent(context, RequestDexcomPermissionActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
+    }
+
+    override fun dexcomPackages() = PACKAGE_NAMES
+
+    companion object {
+
+        private val PACKAGE_NAMES = listOf(
+            "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
+            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol",
+            "com.dexcom.g6", "com.dexcom.g7"
+        )
+        const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
+    }
+}
+
+object DexcomInbox : Inbox<Bundle>("dexcom-bg", DexcomPlugin.DexcomWorker::class.java)

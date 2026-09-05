@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Потвърждение</string>
+    <!--    Events-->
+    <string name="bolus_delivering">Пускам %1$.2fЕ</string>
+    <string name="bolus_delivered_so_far">%1$.2fЕ / %2$.2fЕ пуснати</string>
+    <string name="bolus_delivered_successfully">Болус от %1$.2fЕд доставен успешно</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Драйверът на помпата е променен.</string>
+    <!--    DateUtil-->
+    <string name="minago">преди %1$dмин</string>
+    <string name="secago">преди %1$dсек</string>
+    <string name="min_plus">(+%1$dмин)</string>
+    <string name="sec_plus">(+%1$dсек)</string>
+    <string name="minago_long">Преди %1$d минути</string>
+    <string name="hoursago">преди %1$.1fч</string>
+    <string name="days_ago">преди %1$.1f дни</string>
+    <string name="days_ago_round">преди %1$.0f дни</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">преди %1$s дни и %2$s часа</item>
+        <item quantity="other">преди %1$s дни и %2$s часа</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">преди %1$s часа</item>
+        <item quantity="other">преди %1$s часа</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">преди %1$s минути</item>
+        <item quantity="other">преди %1$s минути</item>
+    </plurals>
+    <string name="seconds_ago">секунди преди</string>
+    <string name="in_days">за %1$.0f дни</string>
+    <string name="in_days_round">за %1$.0f дни</string>
+    <string name="shorthour">ч</string>
+    <string name="days">дни</string>
+    <string name="hours">часа</string>
+    <string name="unit_second">секунда</string>
+    <string name="unit_minute">минута</string>
+    <string name="unit_hour">час</string>
+    <string name="unit_day">ден</string>
+    <string name="unit_week">седмица</string>
+    <string name="unit_seconds">секунди</string>
+    <string name="unit_minutes">минути</string>
+    <string name="unit_hours">часове</string>
+    <string name="unit_days">дни</string>
+    <string name="unit_weeks">седмици</string>
+    <string name="shortminute">м</string>
+    <string name="shortday">д</string>
+    <string name="time_remaining_h_m">%1$dч %2$dмин остават</string>
+    <string name="time_remaining_m">%1$dмин остават</string>
+    <string name="later_today">По-късно днес</string>
+    <string name="tomorrow">Утре</string>
+    <string name="today">Днес</string>
+    <string name="yesterday">Вчера</string>
+    <!-- Rx -->
+    <string name="connecting_for">Свързване %1$d сек</string>
+    <string name="handshaking">Сдвояване</string>
+    <string name="connected">Свързана</string>
+    <string name="authorized">Оторизиран</string>
+    <string name="disconnecting">Разкачане</string>
+    <string name="waiting_for_disconnection">Изчакване за разкачане</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Създадено: %1$s</string>
+    <string name="metadata_label_watchface_author">Автор: %1$s</string>
+    <string name="metadata_label_watchface_name">Име: %1$s</string>
+    <string name="metadata_wear_import_filename">Име на файла: %1$s</string>
+    <string name="metadata_label_plugin_version">Plugin версия: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Име: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Информация: %1$s</string>
+    <string name="pref_show_iob">Покажи IOB</string>
+    <string name="pref_show_detailed_iob">Покажи подробен IOB</string>
+    <string name="pref_show_cob">Покажи COB</string>
+    <string name="pref_show_delta">Покажи Делта</string>
+    <string name="pref_show_detailed_delta">Показвай подробна делта</string>
+    <string name="pref_show_avgdelta">Покажи средна делта</string>
+    <string name="pref_show_tempTarget">Покажи временна цел</string>
+    <string name="pref_show_reservoir_level">Покажи ниво на резервоар</string>
+    <string name="pref_show_phone_battery">Покажи батерия на телефон</string>
+    <string name="pref_show_rig_battery">Покажи батерия на устройство</string>
+    <string name="pref_show_basal_rate">Покажи базал</string>
+    <string name="pref_show_loop_status">Покажи Loop Статус</string>
+    <string name="pref_show_bg">Покажи КЗ</string>
+    <string name="pref_show_bgi">Покажи BGI</string>
+    <string name="pref_show_direction_arrow">Покажи делта стрелка</string>
+    <string name="pref_show_ago">Покажи \"преди\"</string>
+    <string name="pref_show_week_number">Показване на номер седмица</string>
+    <string name="pref_show_date">Покажи дата</string>
+    <string name="pref_show_seconds">Покажи секунди</string>
+    <string name="default_custom_watchface_comment">Watchface по подразбиране, можете да изберете бутон ЕКСПОРТИРАНЕ НА WATCHFACE за създаване на шаблон</string>
+    <string name="default_custom_watchface_external_comment">Циферблат по подразбиране вкл такива за последователи. Натиснете ЕКСПОРТ бутона за да се генерира темплейт</string>
+    <string name="wear_default_watchface">Watchface по подразбиране</string>
+    <string name="wear_more_watchfaces">Още циферблати</string>
+    <string name="temp_basal_absolute_rate">%1$.2f Е/ч в %2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% в %2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">Уд болус %1$.2f Е/ч в %2$s %3$d/%4$d мин</string>
+    <string name="forever">Вечно</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Приложението се нуждае от bluetooth достъп за свързване с помпа</string>
+    <!-- Insulin -->
+    <string name="unknown">Непознат</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Пик [мин]</string>
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">мг/дл/E</string>
+    <string name="profile_isf_units_mmol">ммол/л/E</string>
+    <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
+    <string name="format_carbs">%1$d гр</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">въглехидрати</string>
+    <string name="alarminxmin">Аларма след %1$d мин</string>
+    <string name="pumpsuspended">Помпата е спряна</string>
+    <string name="loopsuspended">Loop изключен</string>
+    <string name="pump_disconnected">Няма връзка с помпата</string>
+    <string name="basalprofilenotaligned">Базалните стойности не са за кръгли часове: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Базалната стойност е заместена от минимално поддържаната стойност: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Базалната стойност е заместена от максимално поддържаната стойност %1$s</string>
+    <string name="profile_ins_units_per_hour">Е/ч</string>
+    <string name="profile_carbs_per_unit">гр/Е</string>
+    <string name="mins">%1$d мин</string>
+    <string name="record">Запиши</string>
+    <string name="bolus">Болус</string>
+    <string name="uel_extended_carbs">УДЪЛЖЕН БОЛУС</string>
+    <string name="profile_low_target">Профил ниска цел</string>
+    <string name="profile_high_target">Профил висока цел</string>
+    <string name="profile_dia">Профил време на действие на инсулин</string>
+    <string name="profile_sensitivity_value">Профил чувствителност</string>
+    <string name="profile_carbs_ratio_value">Профил въглехидратно число</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f е извън ограниченията</string>
+    <string name="basal_value">Базална стойност</string>
+    <string name="cobvsiob">COB срещу IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Засечено бавно усвояване на въглехидрати: %1$d%% от времето. Проверете калкулацията. Въглехидратите може би са прекалено много и това ще доведе до много инсулин !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Приложено болус ограничение: %1$.2f Е към %2$.2f Е</string>
+    <string name="bolus_recorded_only">Само запиши (без да да го стартираш в помпата)</string>
+    <string name="advisoralarm">Аларма, когато е време за хранене</string>
+    <string name="wizard_ecarbs">Уд въглехидрати %1$dгр / %2$dч (+%3$dмин)</string>
+    <string name="format_insulin_units">%1$.2fЕ</string>
+</resources>

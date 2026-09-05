@@ -7,23 +7,22 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Predicate
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class StartBondTask @Inject constructor() : TaskBase(TaskFunc.START_BOND) {
 
-    private val START_BOND: StartBonding = StartBonding()
+    @Inject lateinit var startBond: StartBonding
 
     fun start(mac: String): Single<Boolean> {
         prefSetMacAddress(mac)
         patch.updateMacAddress(mac, false)
 
         return isReady()
-            .concatMapSingle<BondingResponse>(Function { START_BOND.start(StartBonding.OPTION_NUMERIC) })
+            .concatMapSingle<BondingResponse>(Function { startBond.start(StartBonding.OPTION_NUMERIC) })
             .doOnNext(Consumer { response: BondingResponse -> this.checkResponse(response) })
             .concatMap<Int>(Function { patch.observeBondState() })
             .doOnNext(Consumer { state: Int ->

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">Start Aktivitets mål</string>
+    <string name="start_eating_soon_tt">Start \"Spiser snart\" mål</string>
+    <string name="start_hypo_tt">Begynd Hypo mål</string>
+    <string name="time_offset">Tidsforskydning</string>
+    <!--    Widget-->
+    <string name="configure">Indstil gennemsigtighed</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Aktivitetsovervågning</string>
+    <string name="do_you_want_reset_stats">Ønsker du at nulstille aktivitetsstatistik?</string>
+    <string name="calculation_in_progress">Beregning i gang</string>
+    <string name="age">Alder</string>
+    <string name="weight_label">Vægt</string>
+    <string name="glucose_type">Glukose type</string>
+    <string name="bg_other">Andet</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <!-- FillDialog -->
+    <string name="fill_warning">Sørg for, at mængden svarer til specifikationen på dit infusionssæt!</string>
+    <string name="record_pump_site_change">Registrer skift af infusionssæt</string>
+    <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">Genbrug %1$d%% %2$dt</string>
+    <string name="percentage_label">Procentdel</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Afbryd pumpe</string>
+    <string name="resume">Genoptag</string>
+    <string name="reconnect">Genforbind Pumpe</string>
+    <string name="duration15m">15 minutter</string>
+    <string name="duration30m">30 minutter</string>
+    <string name="duration1h">1 time</string>
+    <string name="duration2h">2 timer</string>
+    <string name="duration3h">3 timer</string>
+    <string name="duration10h">10 timer</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Mangler %1$d g</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Ingen poster tilgængelige</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">Kulhydrater og bolus</string>
+    <string name="show_invalidated">Vis ugyldige</string>
+    <string name="hide_invalidated">Skjul ugyldige</string>
+    <string name="careportal_remove_started_events">Fjern AAPS startede poster</string>
+    <string name="user_entry">Bruger indtastning</string>
+    <string name="clone_label">Klon</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Profil type</string>
+    <string name="basal_pct_from_tdd_label">% af basal</string>
+    <string name="selected_profile">Valgt:</string>
+    <string name="motol_default_profile">Standard profil</string>
+    <string name="current_profile">Nuværende profil</string>
+    <string name="available_profile">Tilgængelig profil</string>
+    <string name="format_with_tdd">Alder: %1$d TDD: %2$.0f IE</string>
+    <string name="format_with_tdd_and_pct">Alder: %1$d TDD: %2$.0f IE %3$d%%</string>
+    <string name="format_with_weight">Alder: %1$d Vægt: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV standardprofil</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <!--    History browser-->
+    <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

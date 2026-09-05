@@ -7,4 +7,4 @@ import app.aaps.core.interfaces.rx.events.Event
  *
  * @param message The sync status message.
  */
-class EventDanaRSyncStatus(var message: String) : Event()
+data class EventDanaRSyncStatus(var message: String) : Event()

@@ -6,10 +6,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.eopatch.EoPatchRxBus
 import app.aaps.pump.eopatch.OsAlarmReceiver
@@ -24,34 +24,44 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
+import kotlin.time.Duration.Companion.hours
 
-@Singleton
-class AlarmRegistry @Inject constructor() : IAlarmRegistry {
+/**
+ * Nothing outside this class read those fields; callers only use the [IAlarmRegistry] methods.
+ */
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+class AlarmRegistry @Inject constructor(
+    private val mContext: Context,
+    private val pm: PreferenceManager,
+    private val patchConfig: PatchConfig,
+    private val rxBus: RxBus,
+    private val notificationManager: NotificationManager,
+    private val aapsLogger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers,
+    private val dateUtil: DateUtil,
+    private val alarms: Alarms
+) : IAlarmRegistry {
 
-    @Inject lateinit var mContext: Context
-    @Inject lateinit var pm: PreferenceManager
-    @Inject lateinit var patchConfig: PatchConfig
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var alarms: Alarms
-
-    private lateinit var mOsAlarmManager: AlarmManager
+    // `by lazy`, not a direct assignment: Metro owns this class now, and a contributed class is built
+    // for real in the plain-JVM graph tests, where `getSystemService` returns a stand-in that cannot be
+    // cast ("java.lang.Object cannot be cast to android.app.AlarmManager"). Deferring to first use is
+    // also simply better - building the DI graph should not be reaching for a system service.
+    private val mOsAlarmManager: AlarmManager by lazy { mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager }
     private var mDisposable: Disposable? = null
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject fun onInit() {
-        mOsAlarmManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    init {
         mDisposable = pm.observePatchLifeCycle()
             .observeOn(aapsSchedulers.main)
             .subscribe {
                 when (it) {
                     PatchLifecycle.REMOVE_NEEDLE_CAP -> {
-                        val triggerAfter = patchConfig.patchWakeupTimestamp + TimeUnit.HOURS.toMillis(1) - System.currentTimeMillis()
+                        val triggerAfter = patchConfig.patchWakeupTimestamp + 1.hours.inWholeMilliseconds - System.currentTimeMillis()
                         compositeDisposable.add(add(AlarmCode.A020, triggerAfter).subscribe())
                     }
 
@@ -62,13 +72,11 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
                         sources.add(Maybe.just(true))
                         alarms.occurred.let { occurredAlarms ->
                             if (occurredAlarms.isNotEmpty()) {
-                                occurredAlarms.keys.forEach { alarmCode ->
-                                    sources.add(
-                                        Maybe.just(alarmCode)
-                                            .observeOn(aapsSchedulers.main)
-                                            .doOnSuccess { rxBus.send(EventDismissNotification(Notification.EOFLOW_PATCH_ALERTS + (alarmCode.aeCode + 10000))) }
-                                    )
-                                }
+                                sources.add(
+                                    Maybe.just(true)
+                                        .observeOn(aapsSchedulers.main)
+                                        .doOnSuccess { notificationManager.dismiss(NotificationId.EOFLOW_PATCH_ALERT) }
+                                )
                             }
                         }
                         alarms.registered.let { registeredAlarms ->
@@ -78,11 +86,12 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
                                 }
                             }
                         }
-                        compositeDisposable.add(Maybe.concat(sources)
-                                                    .subscribe {
-                                                        alarms.clear()
-                                                        pm.flushAlarms()
-                                                    }
+                        compositeDisposable.add(
+                            Maybe.concat(sources)
+                                .subscribe {
+                                    alarms.clear()
+                                    pm.flushAlarms()
+                                }
                         )
                     }
 

@@ -8,18 +8,17 @@ import app.aaps.pump.eopatch.core.response.BolusStopResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
+@SingleIn(AppScope::class)
 class StopNowBolusTask @Inject constructor(
     private val aapsSchedulers: AapsSchedulers
 ) : BolusTask(TaskFunc.STOP_NOW_BOLUS) {
 
-    private val BOLUS_STOP: BolusStop = BolusStop()
+    @Inject lateinit var bolusStop: BolusStop
 
     fun stop(): Single<BolusStopResponse> {
         return isReady()
@@ -29,7 +28,7 @@ class StopNowBolusTask @Inject constructor(
     }
 
     fun stopJob(): Single<BolusStopResponse> {
-        return BOLUS_STOP.stop(IPatchConstant.NOW_BOLUS_ID.toInt())
+        return bolusStop.stop(IPatchConstant.NOW_BOLUS_ID.toInt())
             .doOnSuccess(Consumer { response: BolusStopResponse -> this.checkResponse(response) })
             .doOnSuccess(Consumer { response: BolusStopResponse -> this.onNowBolusStopped(response) })
     }

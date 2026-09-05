@@ -15,13 +15,16 @@ import app.aaps.pump.eopatch.vo.PatchLifecycleEvent
 import app.aaps.pump.eopatch.vo.PatchState
 import app.aaps.pump.eopatch.vo.TempBasalManager
 import io.reactivex.rxjava3.core.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 
 /**
  * patch2 패키지에서 사용하는 프리퍼런스의 작업을 대신 처리하는 클래스
  */
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class PreferenceManagerImpl @Inject constructor() : PreferenceManager {
 
     @Inject lateinit var preferences: Preferences
@@ -34,16 +37,13 @@ class PreferenceManagerImpl @Inject constructor() : PreferenceManager {
 
     override var patchState = PatchState()
     override var bolusCurrent = BolusCurrent()
-    private lateinit var observePatchLifeCycle: Observable<PatchLifecycle>
-    private var initialized = false
-
-    @Inject
-    fun onInit() {
-        observePatchLifeCycle = patchConfig.observe()
+    private val observePatchLifeCycle: Observable<PatchLifecycle> by lazy {
+        patchConfig.observe()
             .map { patchConfig -> patchConfig.lifecycleEvent.lifeCycle }
             .distinctUntilChanged()
             .replay(1).refCount()
     }
+    private var initialized = false
 
     override fun init() {
         try {
@@ -82,8 +82,8 @@ class PreferenceManagerImpl @Inject constructor() : PreferenceManager {
 
         try {
             val jsonStr = preferences.get(EopatchStringNonKey.TempBasal)
-            val tempBasalManager = GsonHelper.sharedGson().fromJson(jsonStr, TempBasalManager::class.java)
-            tempBasalManager.update(tempBasalManager)
+            val loadedTempBasalManager = GsonHelper.sharedGson().fromJson(jsonStr, TempBasalManager::class.java)
+            tempBasalManager.update(loadedTempBasalManager)
         } catch (ex: Exception) {
             aapsLogger.error(LTag.PUMP, ex.message ?: "TempBasal load error")
         }

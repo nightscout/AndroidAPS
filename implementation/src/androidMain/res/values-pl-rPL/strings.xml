@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Polecenie jest teraz wykonywane</string>
+    <string name="basal_value_below_minimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Węglowodany</string>
+    <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Ost. Poł.: %1$d m. temu</string>
+    <string name="short_status_last_bolus">Ost. Bolus: %1$sU @ %2$s</string>
+    <string name="short_status_temp_basal">Tymcz.: %1$s</string>
+    <string name="short_status_battery">Bat.: %1$d%%</string>
+    <string name="short_status_not_initialized">Pompa nie zainicjal.</string>
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+</resources>

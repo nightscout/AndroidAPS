@@ -1,7 +1,7 @@
 package app.aaps.pump.common.hw.rileylink.service.tasks
 
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DiscoverGattServicesTask @Inject constructor(
     activePlugin: ActivePlugin

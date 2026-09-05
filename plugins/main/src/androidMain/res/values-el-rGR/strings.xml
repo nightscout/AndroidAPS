@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Ιστορικό περιήγησης</string>
+    <string name="sensor_label">Αισθητήρας</string>
+    <string name="insulin_label">Ινσουλίνη</string>
+    <string name="pb_label">Μπαταρία αντλίας</string>
+    <string name="cannula">Καθετήρας</string>
+    <string name="patch_pump">Αυτοκόλλητη αντλία</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
+    <string name="old_data">Παλιά Δεδομένα</string>
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="unsupported_ns_version">Nem támogatott Nightscout verzió</string>
+    <!-- AAPSClient -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_client_url">URL:</string>
+    <string name="clear_log">Napló törlése</string>
+    <!-- Tidepool -->
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="upload_now">Feltöltés most</string>
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="pump_status">Pumpa állapot</string>
+    <string name="wear_general_settings">Általános beállítások</string>
+    <string name="units_short">E</string>
+    <string name="hour_short">ó</string>
+    <string name="target_only_aps_mode">A célértékek csak APS módra vonatkoznak!</string>
+    <string name="no_history">Nincs előzményadat!</string>
+    <string name="temp_target">Átmeneti célérték</string>
+    <string name="default_range">ALAPÉRTELMEZETT TARTOMÁNY</string>
+    <string name="target">célérték</string>
+    <string name="rate_duration">Ráta: %1$.2fU/ó (%2$.2f%%) \nIdőtartam %3$d perc</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Legutóbbi futás</string>
+    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="today">Ma</string>
+    <string name="weighted">súlyozott</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+</resources>

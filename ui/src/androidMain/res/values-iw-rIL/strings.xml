@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">התחל ערך מטרה פ\' גופנית</string>
+    <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
+    <string name="start_hypo_tt">הפעלת היפו TT</string>
+    <string name="time_offset">היסט זמן</string>
+    <!--    Widget-->
+    <string name="configure">הגדרת אטימות</string>
+    <string name="widget_description">ווידג\'ט AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">מוניטור פעילות</string>
+    <string name="do_you_want_reset_stats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
+    <string name="do_you_want_recalculate_tdd_stats">האם ברצונכם לאפס את סטטיסטיקת המינונים היומיים הכוללים?</string>
+    <string name="calculation_in_progress">מבצע חישוב</string>
+    <string name="age">גיל</string>
+    <string name="weight_label">משקל</string>
+    <string name="glucose_type">סוג גלוקוז</string>
+    <string name="bg_other">אחר</string>
+    <string name="bg_meter">מד</string>
+    <string name="bg_sensor">חיישן</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <!-- FillDialog -->
+    <string name="fill_warning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
+    <string name="record_pump_site_change">רשום החלפת אתר עירוי</string>
+    <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
+    <string name="percentage_label">אחוזים</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">ניתוק משאבה</string>
+    <string name="resume">חידוש</string>
+    <string name="reconnect">חיבור משאבה מחדש</string>
+    <string name="duration15m">15 דקות</string>
+    <string name="duration30m">30 דקות</string>
+    <string name="duration1h">שעה אחת</string>
+    <string name="duration2h">שעתיים</string>
+    <string name="duration3h">3 שעות</string>
+    <string name="duration10h">10 שעות</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">חסרים %1$d גר\'</string>
+    <!-- Treatments -->
+    <string name="no_records_available">אין רישומים זמינים</string>
+    <string name="treatments_iob_label_string">אינסולין פעיל:</string>
+    <string name="carbs_and_bolus">פחמ\' ובולוס</string>
+    <string name="show_invalidated">הצג פסולים</string>
+    <string name="hide_invalidated">הסתר פסולים</string>
+    <string name="careportal_remove_started_events">הסרת רשומות הפעלת AAPS</string>
+    <string name="user_entry">קלט המשתמש</string>
+    <string name="clone_label">שכפול</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">סוג פרופיל</string>
+    <string name="basal_pct_from_tdd_label">% של הבזאלי</string>
+    <string name="selected_profile">נבחר:</string>
+    <string name="motol_default_profile">פרופיל ברירת מחדל</string>
+    <string name="current_profile">פרופיל נוכחי</string>
+    <string name="available_profile">פרופיל זמין</string>
+    <string name="format_with_tdd">גיל: %1$d יח\' מינון יומי כולל: %2$.0f יח\'</string>
+    <string name="format_with_tdd_and_pct">גיל: %1$d יח\' מינון יומי כולל: %2$.0f יח\' %3$d%%</string>
+    <string name="format_with_weight">גיל: %1$d יח\' משקל: %2$.0f ק\"ג</string>
+    <string name="dpv_default_profile">פרופיל ברירת מחדל DPV</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <!--    History browser-->
+    <string name="confirm_treatment">אשר טיפול</string>
+    <string name="recalculate">חשב מחדש</string>
+    <!--    Widget-->
+    <string name="use_black_color">השתמש בצבע שחור</string>
+    <string name="widget_configuration">תצורת ווידג\'ט</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

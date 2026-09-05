@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Watch Face Format face installed at runtime by the wear app via the Watch Face Push API.
+     Must stay code-free: Watch Face Push only accepts APKs whose manifest contains
+     manifest / uses-feature / uses-sdk / application / property / meta-data elements. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <!-- No backup and no cleartext traffic: this APK is code-free, has no data to back up and
+         cannot make network requests — explicit attributes keep static analysis happy.
+         dataExtractionRules deliberately omitted: with backup disabled and zero app data there
+         is nothing for extraction rules to govern (tools attributes are stripped at build) -->
+    <application
+        android:allowBackup="false"
+        android:hasCode="false"
+        android:icon="@drawable/preview_circular"
+        android:label="@string/watchface_name"
+        android:usesCleartextTraffic="false"
+        tools:ignore="DataExtractionRules">
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+        <property
+            android:name="com.google.wear.watchface.format.version"
+            android:value="1" />
+    </application>
+</manifest>

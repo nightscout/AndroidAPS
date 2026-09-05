@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">활동 임시목표 시작</string>
+    <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
+    <string name="start_hypo_tt">저혈당 임시목표 시작</string>
+    <string name="time_offset">시간 이동</string>
+    <!--    Widget-->
+    <string name="configure">불투명도 설정</string>
+    <string name="widget_description">AAPS 위젯</string>
+    <!--     Activities-->
+    <string name="activity_monitor">활동 모니터</string>
+    <string name="do_you_want_reset_stats">활동 통계를 초기화하시겠습니까?</string>
+    <string name="calculation_in_progress">계산 진행 중</string>
+    <string name="age">나이</string>
+    <string name="weight_label">가중</string>
+    <string name="glucose_type">혈당 종류</string>
+    <string name="bg_other">기타</string>
+    <string name="bg_meter">측정기</string>
+    <string name="bg_sensor">센서</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <!-- FillDialog -->
+    <string name="fill_warning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
+    <string name="record_pump_site_change">펌프 위치 변경 기록</string>
+    <string name="record_insulin_cartridge_change">인슐린 카트리지 변경 기록</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">%1$d%%를 %2$dh 동안 재사용하기</string>
+    <string name="percentage_label">퍼센트</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">펌프 일시중지</string>
+    <string name="resume">재실행</string>
+    <string name="reconnect">펌프 재연결</string>
+    <string name="duration15m">15분</string>
+    <string name="duration30m">30분</string>
+    <string name="duration1h">1시간</string>
+    <string name="duration2h">2시간</string>
+    <string name="duration3h">3시간</string>
+    <string name="duration10h">10시간</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">부족 %1$d g</string>
+    <!-- Treatments -->
+    <string name="no_records_available">사용 가능한 기록 없음</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="carbs_and_bolus">탄수화물과 bolus</string>
+    <string name="show_invalidated">무효화 표시</string>
+    <string name="hide_invalidated">무효화 숨기기</string>
+    <string name="careportal_remove_started_events">AAPS 시작 입력 제거</string>
+    <string name="user_entry">사용자 항목</string>
+    <string name="clone_label">복사</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">프로파일 종류</string>
+    <string name="basal_pct_from_tdd_label">% basal</string>
+    <string name="selected_profile">선택:</string>
+    <string name="motol_default_profile">기본 프로파일</string>
+    <string name="current_profile">현재 프로파일</string>
+    <string name="available_profile">사용 가능한 프로파일</string>
+    <string name="format_with_tdd">나이: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">나이: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">나이: %1$d 체중: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV 기본 프로파일</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <!--    History browser-->
+    <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>

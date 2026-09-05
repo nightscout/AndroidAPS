@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Historial</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulina</string>
+    <string name="pb_label">Batería de bomba</string>
+    <string name="cannula">Cánula</string>
+    <string name="patch_pump">Bomba parche</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
+    <string name="old_data">DATOS CADUCADOS</string>
+    <string name="notification_iob_short">%1$.1fU</string>
+</resources>

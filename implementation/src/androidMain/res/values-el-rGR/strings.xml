@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Η εντολή εκτελείται τώρα</string>
+    <string name="basal_value_below_minimum">Τιμή βασικού κάτω από το ελάχιστο. Δεν έχει ρυθμιστεί το προφίλ!</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Υδατάνθρακες</string>
+    <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+</resources>

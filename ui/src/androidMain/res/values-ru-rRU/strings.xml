@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
+    <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
+    <string name="start_hypo_tt">Начать временную цель ТТ Гипо</string>
+    <string name="time_offset">Смещение по времени</string>
+    <!--    Widget-->
+    <string name="configure">Настроить прозрачность</string>
+    <string name="widget_description">Виджет AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Монитор активности</string>
+    <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Хотите пересчитать статистику суточной дозировки TDD?</string>
+    <string name="calculation_in_progress">Идет подсчет</string>
+    <string name="age">Возраст</string>
+    <string name="weight_label">Вес</string>
+    <string name="glucose_type">Тип глюкозы</string>
+    <string name="bg_other">Другое</string>
+    <string name="bg_meter">Глюкометр</string>
+    <string name="bg_sensor">Сенсор</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <string name="edit_site">Редактировать</string>
+    <string name="record_site_location">Место установки: %1$s</string>
+    <string name="record_site_arrow">Стрелка места установки: %1$s</string>
+    <string name="record_site_note">Примечание: %1$s</string>
+    <string name="delete_site_note">Примечание удалено</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
+    <string name="record_pump_site_change">Внести запись о смене места катетера помпы</string>
+    <string name="record_insulin_cartridge_change">Внести запись о замене картриджа инсулина</string>
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="reuse_profile_pct_hours">Повторно использовать %1$d%%%2$dч</string>
+    <string name="percentage_label">В процентах</string>
+    <!-- LoopDialog -->
+    <string name="disconnectpump">Отсоединить помпу</string>
+    <string name="resume">Возобновить</string>
+    <string name="reconnect">Возобновить соединение с помпой</string>
+    <string name="duration15m">15 мин</string>
+    <string name="duration30m">30 мин</string>
+    <string name="duration1h">1 час</string>
+    <string name="duration2h">2 часа</string>
+    <string name="duration3h">3 часа</string>
+    <string name="duration10h">10 часов</string>
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Не хватает %1$d г</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Нет доступных записей</string>
+    <string name="treatments_iob_label_string">IOB акт инс:</string>
+    <string name="carbs_and_bolus">Углеводы и болюс</string>
+    <string name="show_invalidated">Показать недействительные</string>
+    <string name="hide_invalidated">Скрыть недействительные</string>
+    <string name="careportal_remove_started_events">Удалить записи о начале работы AAPS</string>
+    <string name="user_entry">Запись пользователя</string>
+    <string name="clone_label">Клонировать</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Тип профиля</string>
+    <string name="basal_pct_from_tdd_label">% базального</string>
+    <string name="selected_profile">Выбрано:</string>
+    <string name="motol_default_profile">Профиль по умолчанию</string>
+    <string name="current_profile">Текущий профиль</string>
+    <string name="available_profile">Доступный профиль</string>
+    <string name="format_with_tdd">Возраст: %1$d Суточная Потребность: %2$.0f ед</string>
+    <string name="format_with_tdd_and_pct">Возраст: %1$d Суточная Потребность: %2$.0f ед %3$d%%</string>
+    <string name="format_with_weight">Возраст: %1$d Вес: %2$.0f кг</string>
+    <string name="dpv_default_profile">Значение для профиля по умолчанию</string>
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Текст на кнопке</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Только положительный активный инсулин IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Суперболюс</string>
+    <!--    History browser-->
+    <string name="additional_ecarbs">Добавить eCarbs</string>
+    <string name="confirm_treatment">Подтвердите терапию</string>
+    <string name="recalculate">Пересчитать</string>
+    <!--    Widget-->
+    <string name="use_black_color">Использовать черный цвет</string>
+    <string name="widget_configuration">Настройки виджета</string>
+    <string name="until_changed">До изменения</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Оба варианта</item>
+        <item>Только положительный</item>
+        <item>Только отрицательный</item>
+    </string-array>
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>
