@@ -256,7 +256,6 @@ class GoogleDriveProviderTest {
         tokens.accessToken = "a"
         tokens.expiresAt = clock + 3_600_000
         val provider = providerReplying(HttpStatusCode.OK to """{"user":{}}""")
-        store.putBoolean("google_drive_connection_error", true)
 
         assertTrue(provider.testConnection())
         assertFalse(provider.hasConnectionError())
@@ -300,6 +299,55 @@ class GoogleDriveProviderTest {
         store.putString("google_drive_folder_id", "folder-from-android")
 
         assertEquals("folder-from-android", providerReplying().getSelectedFolderId())
+    }
+
+
+    /**
+     * Every name the shared code stores under has to be the one Android already writes, or a user who
+     * signed in on a phone keeps something and loses something else on their iPhone - silently, and
+     * differently for each value that got a new name. The folder was exactly that: a name of my own
+     * invention meant the sign in survived and the chosen folder did not, so the next export would
+     * have gone to the root of their Drive.
+     */
+    @Test
+    fun `nothing is stored under a name of our own invention`() {
+        val provider = providerReplying()
+        tokens.refreshToken = "r"
+        tokens.accessToken = "a"
+        tokens.expiresAt = 1
+        tokens.codeVerifier = "v"
+        tokens.state = "s"
+        provider.setSelectedFolderId("folder-1")
+
+        assertEquals(
+            setOf(
+                "google_drive_refresh_token",
+                "google_drive_access_token",
+                "google_drive_token_expiry",
+                "google_drive_code_verifier",
+                "google_drive_oauth_state",
+                "google_drive_folder_id"
+            ),
+            store.getAll().keys
+        )
+    }
+
+    /**
+     * A connection error describes now, not forever. Android holds it in memory for that reason, and
+     * storing it would leave a user who lost signal once looking at a warning on a working connection
+     * until something cleared it.
+     */
+    @Test
+    fun `a connection error is not written down`() = runTest {
+        tokens.refreshToken = "r"
+        tokens.accessToken = "a"
+        tokens.expiresAt = clock + 3_600_000
+        val provider = providerReplying(HttpStatusCode.ServiceUnavailable to "")
+
+        provider.listSettingsFiles(pageSize = 10, pageToken = null)
+
+        assertTrue(provider.hasConnectionError())
+        assertTrue(store.getAll().keys.none { it.contains("connection") }, "it survived a restart: ${store.getAll().keys}")
     }
 
     private class FakeRedirectListener : AuthRedirectListener {
