@@ -1,6 +1,6 @@
 # NFC plugin - migration to Kotlin Multiplatform
 
-Written 2026-08-20, updated 2026-09-04. What the NFC Commands plugin needs in order to fit the
+Written 2026-08-20, updated 2026-09-05. What the NFC Commands plugin needs in order to fit the
 Kotlin Multiplatform refactoring going on in `Nightscout/kmp`, and to line up with the architecture
 the other plugins already follow.
 
@@ -29,7 +29,7 @@ preparation work can happen without disturbing the main NFC line.
 
 | Step                                                       | State                                                                       |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Merge `Nightscout/kmp` into the branch                     | **done eleven times** - latest `e5362142d0`, 42 commits, one conflict          |
+| Merge `Nightscout/kmp` into the branch                     | **done twelve times** - latest `4b974e24e0`, 78 commits, no conflicts          |
 | Tier 1, the changes needed to compile at all (section 3)    | **done** - `9cd204b8da` "NFC Fix build after kmp merge"                        |
 | Architecture alignment (section 9)                         | **all done** - 9.1 to 9.8, the last being 9.5 in `57952b8690`                  |
 | The command format and the store blobs (section 5)          | **done** - `28305e0af6` and `ff1916852f`. No `org.json` left in the plugin      |
@@ -38,16 +38,16 @@ preparation work can happen without disturbing the main NFC line.
 | The `:plugins:sync` flip, step 6                            | **done** - upstream flipped it in `077aa2a6e4`, our files moved in `216e31867e` |
 | Strings on `SyncStrings`, step 7                            | **done** - `3aa6e921e5`, and the duplicates it found are section 9b            |
 | Build verification                                         | **green** - 93 NFC tests in `testAndroidHostTest`, 95 app tests, all pass       |
-| `Nightscout/kmp` freshness                                 | merged 2026-09-04 at `b80996b606`. Still not in `dev`, and now much bigger      |
+| `Nightscout/kmp` freshness                                 | merged 2026-09-05 at `d27a2febe9`. Still not in `dev`, and now much bigger      |
 
 Sections 3.7 to 3.12 are six breaks that only a compiler found, after an import-derived list had
 missed them. The lesson is recorded there because it will repeat on the next merge: **grepping imports
 finds moved packages, never changed signatures.** It took two rounds of discovery to find them all -
 the first list came from imports and was wrong - so budget for more than one pass.
 
-### What the pull request looks like, measured at merge 11
+### What the pull request looks like, measured at merge 12
 
-Against `Nightscout/kmp` at `b80996b606`: **71 files, +8601, -3**. The three removed lines are edits,
+Against `Nightscout/kmp` at `d27a2febe9`: **71 files, +8673, -3**. The three removed lines are edits,
 not removals, so the change is **purely additive** - nothing upstream owns is deleted or rewritten.
 
 48 of the 71 files are the plugin itself, under
@@ -116,6 +116,8 @@ anything was pushed, so that each one builds on its own:
 | `662dff1a58`  | **merge 10**, 123 upstream commits, 1 conflict                | does **not** build - one lost branch      |
 | `dcf479defc`  | fix build after merge 10 - one line in appshell                | mechanical, **builds**                    |
 | `e5362142d0`  | **merge 11**, 42 upstream commits, 1 conflict                 | nothing to fix afterwards                 |
+| `825a9e1f48`  | the note after merges 10 and 11                               | documentation only                       |
+| `4b974e24e0`  | **merge 12**, 78 upstream commits, no conflicts               | nothing to fix afterwards                 |
 
 Keeping these apart matters for review: the fix-build commit only has to answer "did the merge really
 force this?", and the alignment commit carries its own rationale. `f9e51ec06c` is also the one that
@@ -127,8 +129,8 @@ is cleanly cherry-pickable - see section 10.
 
 | Branch                           | HEAD          | Date       | Note                                      |
 |----------------------------------|---------------|------------|-------------------------------------------|
-| `nfc/new-nfc-plugin_kmp` (ours)  | `e5362142d0`  | 2026-09-04 | merged `kmp` at `b80996b606`               |
-| `Nightscout/kmp`                 | `b80996b606`  | 2026-09-03 | fully merged as of merge 11                |
+| `nfc/new-nfc-plugin_kmp` (ours)  | `4b974e24e0`  | 2026-09-05 | merged `kmp` at `d27a2febe9`               |
+| `Nightscout/kmp`                 | `d27a2febe9`  | 2026-09-05 | fully merged as of merge 12                |
 | `Nightscout/dev`                 | `283a184f60`  | 2026-08-25 | `kmp` has **not** landed here yet          |
 
 The rest of this section is the picture as it was on 2026-08-26, kept for the reasoning it records.
@@ -752,7 +754,7 @@ One thing may still move: follow-up 3 in the KMP note is `PluginDescription.desc
 | 0    | ~~Ask the owner the section 6 question~~ - upstream has answered it in its own doc and commits: `:plugins:sync` stays Android. Worth confirming, no longer worth waiting for.                                                                                    | -                    |
 | 1    | ~~The store blobs (section 5)~~ - **done**, `ff1916852f`.                                                                                                          | -                    |
 | 2    | ~~Convert the NFC plugin's DI to Metro and move the activity's manifest entry into the plugin~~ - **done**, `ba1cdbd518` and `009f4087ca`. See 1a for the two predictions that were wrong. | -                    |
-| 3    | **Keep merging `kmp` as it moves**, roughly daily while it is this active. Eleven merges in, `nfcCommands/` has never been touched by one and the conflicts are always in the same two or three shared files. Waiting costs more than merging - see the merge notes in section 10. | -                    |
+| 3    | **Keep merging `kmp` as it moves**, roughly daily while it is this active. Twelve merges in, `nfcCommands/` has never been touched by one and the conflicts are always in the same two or three shared files. Waiting costs more than merging - see the merge notes in section 10. | -                    |
 | 4    | ~~Tier 2~~ - **not needed.** Upstream's own doc and its conversion record say `:plugins:sync` stays Android, so the plugin lives in `androidMain`. See section 6. | -                    |
 | 5    | ~~Decide the NFC hardware seam~~ - **not needed** for the same reason. There is no iOS half to design. | -                    |
 | 6    | ~~When upstream makes `:plugins:sync` multiplatform, the plugin's files move from `src/main` to `src/androidMain`~~ - **done**, `216e31867e`. It happened at merge 8, and it *was* our task after all - see below. | -                    |
@@ -1424,6 +1426,21 @@ kept - upstream's block with the other preference observers, ours after it, beca
 kind of thing.
 
 `nfcCommands/` has now been untouched by upstream **eleven merges running**.
+
+### Merge 12 outcome, for reference
+
+Commit `4b974e24e0`, **78 upstream commits, no conflicts and nothing to fix** - the cleanest merge
+this branch has had. Upstream spent the batch on cloud storage: the Google Drive client is shared, so
+export and import work from desktop and iOS as well as Android, each desktop client gets its own data
+directory inside a shared AAPS folder, and only one desktop instance may run. Android is now the last
+platform not on the shared Drive client, which upstream has written down for itself.
+
+None of it comes near NFC, and `nfcCommands/` is untouched for the twelfth merge running.
+
+One local note, not a code problem: this build hit repeated *"Failed to compile with Kotlin daemon"*
+warnings and fell back to compiling without it, which turned a three minute run into eighteen. The
+result is the same and the fallback is automatic. `./gradlew.bat --stop` before a large merge build
+avoids it.
 
 ---
 
