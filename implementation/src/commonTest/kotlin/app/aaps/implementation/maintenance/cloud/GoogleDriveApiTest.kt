@@ -39,7 +39,7 @@ class GoogleDriveApiTest {
             val (status, reply) = replies[minOf(call++, replies.size - 1)]
             respond(ByteReadChannel(reply), status, headersOf(HttpHeaders.ContentType, "application/json"))
         }
-        return GoogleDriveApi(HttpClient(engine), accessToken = { token })
+        return GoogleDriveApi(HttpClient(engine), accessToken = { _ -> token })
     }
 
     // ----- Listing -----
@@ -233,6 +233,6 @@ class GoogleDriveApiTest {
             respond(ByteReadChannel("""{"files":[]}"""), HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
         }
 
-        GoogleDriveApi(HttpClient(engine), accessToken = { Result.success("access-1") }).listSettingsFiles("f", null).getOrThrow()
+        GoogleDriveApi(HttpClient(engine), accessToken = { _ -> Result.success("access-1") }).listSettingsFiles("f", null).getOrThrow()
     }
 }

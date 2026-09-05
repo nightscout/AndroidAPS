@@ -102,9 +102,10 @@ kotlin {
                 // Cloud storage talks to Google Drive over its REST API, so the client has to work on
                 // every platform. Ktor is already the project's multiplatform HTTP client - :core:nssdk
                 // reaches Nightscout with it - and each target brings its own engine below.
+                // The client only, with no content negotiation and no serialization plugin: Drive's
+                // answers are read field by field with kotlinx-json, and the upload builds its own
+                // multipart/related body, so nothing here asks Ktor to convert anything.
                 implementation(libs.io.ktor.client.core)
-                implementation(libs.io.ktor.client.content.negotiation)
-                implementation(libs.io.ktor.serialization.kotlinx.json)
             }
         }
 

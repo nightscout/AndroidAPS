@@ -1,6 +1,7 @@
 package app.aaps.implementation.maintenance.cloud
 
 import io.ktor.client.HttpClient
+import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -13,6 +14,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonArray
@@ -52,13 +54,14 @@ sealed interface DriveFailure {
  *
  * ## Failures are told apart
  *
- * A 401 means the sign in is finished and the user has to do something; anything else may be
- * temporary and should be tried again. Collapsing the two produces either a screen that nags a user
- * whose connection dropped, or one that silently retries a sign in that will never work again.
+ * A 401 that survives a forced token refresh means the sign in is finished and the user has to do
+ * something; anything else may be temporary and should be tried again. Collapsing the two produces
+ * either a screen that nags a user whose connection dropped, or one that silently retries a sign in
+ * that will never work again.
  */
 class GoogleDriveApi(
     private val http: HttpClient,
-    private val accessToken: suspend () -> Result<String>,
+    private val accessToken: suspend (forceRefresh: Boolean) -> Result<String>,
     private val driveUrl: String = DRIVE_API_URL,
     private val uploadUrl: String = UPLOAD_API_URL
 ) {
@@ -106,7 +109,7 @@ class GoogleDriveApi(
                 buildJsonObject {
                     put("name", JsonPrimitive(name))
                     put("mimeType", JsonPrimitive(FOLDER_MIME))
-                    put("parents", kotlinx.serialization.json.JsonArray(listOf(JsonPrimitive(parentId))))
+                    put("parents", JsonArray(listOf(JsonPrimitive(parentId))))
                 }.toString()
             )
         }
@@ -128,7 +131,7 @@ class GoogleDriveApi(
     ): Result<String> = call { token ->
         val metadata = buildJsonObject {
             put("name", JsonPrimitive(name))
-            put("parents", kotlinx.serialization.json.JsonArray(listOf(JsonPrimitive(parentId))))
+            put("parents", JsonArray(listOf(JsonPrimitive(parentId))))
         }.toString()
 
         val body = buildRelatedBody(metadata, content, mimeType)
@@ -140,13 +143,8 @@ class GoogleDriveApi(
     }.mapCatching { body -> Json.parseToJsonElement(body).jsonObject["id"]!!.jsonPrimitive.content }
 
     /** The bytes of a file. `alt=media` is what asks for the content rather than the description. */
-    suspend fun downloadFile(fileId: String): Result<ByteArray> {
-        val token = accessToken().getOrElse { return Result.failure(it) }
-        return runCatching {
-            val response = http.get("$driveUrl/files/${encode(fileId)}?alt=media&supportsAllDrives=true") { bearer(token) }
-            if (!response.status.isSuccess()) throw DriveException(failureFor(response, ""))
-            response.bodyAsBytes()
-        }
+    suspend fun downloadFile(fileId: String): Result<ByteArray> = callForBytes { token ->
+        http.get("$driveUrl/files/${encode(fileId)}?alt=media&supportsAllDrives=true") { bearer(token) }
     }
 
     /**
@@ -164,14 +162,48 @@ class GoogleDriveApi(
         return Result.success(parent)
     }
 
-    /** Runs a call with a fresh token and turns anything but success into a [DriveFailure]. */
-    private suspend fun call(request: suspend (String) -> HttpResponse): Result<String> {
-        val token = accessToken().getOrElse { return Result.failure(it) }
+    /** Runs a call with a fresh token and gives back the answer as text. */
+    private suspend fun call(request: suspend (String) -> HttpResponse): Result<String> =
+        retrying(request) { it.bodyAsText() }
+
+    /** The same, for the one call that wants the file itself rather than a description of it. */
+    private suspend fun callForBytes(request: suspend (String) -> HttpResponse): Result<ByteArray> =
+        retrying(request) { it.bodyAsBytes() }
+
+    /**
+     * Runs a call, and runs it a second time on a 401 with a forced refresh first.
+     *
+     * Whether the stored access token is still good is worked out from this device's clock, so a
+     * phone a few minutes fast - or a token Google dropped early - sends one Drive believes is
+     * expired while we believe it is not. That arrives as a 401 and looks exactly like a sign in the
+     * user revoked, and the caller answers a revoked sign in by throwing the refresh token away. One
+     * forced refresh tells the two apart: if a token minted seconds ago is also refused, the second
+     * 401 is the honest one and is passed on.
+     */
+    private suspend fun <T> retrying(
+        request: suspend (String) -> HttpResponse,
+        read: suspend (HttpResponse) -> T
+    ): Result<T> {
+        val first = attempt(request, read, forceRefresh = false)
+        val failure = (first.exceptionOrNull() as? DriveException)?.failure
+        if (failure !is DriveFailure.SignInExpired) return first
+        return attempt(request, read, forceRefresh = true)
+    }
+
+    /** One try. Anything but success becomes a [DriveFailure]. */
+    private suspend fun <T> attempt(
+        request: suspend (String) -> HttpResponse,
+        read: suspend (HttpResponse) -> T,
+        forceRefresh: Boolean
+    ): Result<T> {
+        val token = accessToken(forceRefresh).getOrElse { return Result.failure(it) }
         return runCatching {
             val response = request(token)
-            val body = runCatching { response.bodyAsText() }.getOrDefault("")
-            if (!response.status.isSuccess()) throw DriveException(failureFor(response, body))
-            body
+            if (!response.status.isSuccess()) {
+                val body = runCatching { response.bodyAsText() }.getOrDefault("")
+                throw DriveException(failureFor(response, body))
+            }
+            read(response)
         }
     }
 
@@ -179,7 +211,7 @@ class GoogleDriveApi(
         if (response.status.value == UNAUTHORIZED) DriveFailure.SignInExpired
         else DriveFailure.Failed("Drive refused the request (${response.status.value})${body.take(200).ifEmpty { "" }}")
 
-    private fun io.ktor.client.request.HttpRequestBuilder.bearer(token: String) {
+    private fun HttpRequestBuilder.bearer(token: String) {
         header(HttpHeaders.Authorization, "Bearer $token")
     }
 

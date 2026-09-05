@@ -11,7 +11,11 @@ import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
- * Google Drive as a place to keep settings exports, on every platform.
+ * Google Drive as a place to keep settings exports, written to work on every platform.
+ *
+ * Nothing constructs this yet. Android keeps its own `GoogleDriveManager`, and this is the shared
+ * version meant to replace it once iOS and the desktop have somewhere to show a sign in. Reading it
+ * as the live Drive code would be wrong: changing it changes nothing that ships today.
  *
  * Composed rather than written: [GoogleAuthRequest] builds the sign in, [AuthRedirectListener]
  * catches the answer, [GoogleTokenClient] turns it into tokens and keeps them fresh, and
@@ -219,7 +223,11 @@ class GoogleDriveProvider(
         const val REDIRECT_PORT = 8080
 
         private const val TAG = "GoogleDriveProvider:"
-        private const val SELECTED_FOLDER = "google_drive_selected_folder_id"
+
+        // The name Android already writes, like the token names in GoogleTokenStore. A different name
+        // here would keep the user signed in but lose the folder they picked, so the next export would
+        // go silently to the root of their Drive instead of to their backups folder.
+        private const val SELECTED_FOLDER = "google_drive_folder_id"
         private const val CONNECTION_ERROR = "google_drive_connection_error"
         private const val COUNT_PAGE_SIZE = 100
 

@@ -2,6 +2,9 @@ package app.aaps.implementation.maintenance.cloud
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.InetAddress
@@ -20,7 +23,8 @@ import java.net.SocketTimeoutException
  * listener off the local network; on a desktop it keeps a firewall quiet. Nothing outside the
  * machine has any business reaching a sign in that ends on this one.
  */
-class JvmAuthRedirectListener(private val aapsLogger: AAPSLogger) : AuthRedirectListener {
+@ContributesBinding(AppScope::class)
+class JvmAuthRedirectListener @Inject constructor(private val aapsLogger: AAPSLogger) : AuthRedirectListener {
 
     private var server: ServerSocket? = null
 

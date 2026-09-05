@@ -72,9 +72,8 @@ class DesktopPluginPermissions @Inject constructor() : PluginPermissions {
  * directly and needs no granting step - [isDirectoryAccessGranted] is true because there is nothing
  * to grant.
  *
- * The files are only listed here. Reading one back is `ImportExportPrefs`, which is not ported yet,
- * so the import screen will show what exists and then refuse to open it. That is the honest order to
- * build this in: seeing the list is what tells you the directory is right.
+ * The files are only listed here. Reading one back is `ImportExportPrefs`, which desktop now has
+ * through the shared `LocalImportExportPrefs`, so a file listed here can also be opened.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

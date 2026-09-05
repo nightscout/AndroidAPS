@@ -52,7 +52,7 @@ class GoogleDriveProviderTest {
             auth = GoogleAuthRequest(platformCryptoPrimitives()),
             tokens = tokens,
             tokenClient = tokenClient,
-            api = GoogleDriveApi(http, accessToken = { tokenClient.validAccessToken() }),
+            api = GoogleDriveApi(http, accessToken = { force -> tokenClient.validAccessToken(force) }),
             storageType = "google_drive",
             displayName = "Google Drive",
             icon = Icons.Default.Cloud,
@@ -190,17 +190,50 @@ class GoogleDriveProviderTest {
     /**
      * A revoked sign in has to send the user back through one, so the stored credentials go. Leaving
      * them would fail the same way on every screen with no way out.
+     *
+     * Drive answers 401, the forced refresh that follows is told `invalid_grant`, and that second
+     * answer is the one that settles it.
      */
     @Test
     fun `a revoked sign in is cleared when Drive refuses`() = runTest {
         tokens.refreshToken = "r"
         tokens.accessToken = "a"
         tokens.expiresAt = clock + 3_600_000
-        val provider = providerReplying(HttpStatusCode.Unauthorized to "")
+        val provider = providerReplying(
+            HttpStatusCode.Unauthorized to "",
+            HttpStatusCode.BadRequest to """{"error":"invalid_grant"}"""
+        )
 
         provider.listSettingsFiles(pageSize = 10, pageToken = null)
 
         assertFalse(provider.hasValidCredentials(), "the dead sign in should have been cleared")
+    }
+
+    /**
+     * The one this retry exists for.
+     *
+     * Whether the stored access token is still good is decided by this device's clock. A phone a few
+     * minutes fast believes a token is fine that Drive has already retired, and the 401 that comes
+     * back is indistinguishable from a revoked sign in. Before the retry that cost the user their
+     * refresh token - a working sign in thrown away because the clock was wrong - and automatic
+     * backups stopped until somebody noticed and signed in again.
+     */
+    @Test
+    fun `a token refused early is refreshed and the call goes through`() = runTest {
+        tokens.refreshToken = "r"
+        tokens.accessToken = "stale"
+        tokens.expiresAt = clock + 3_600_000
+        val provider = providerReplying(
+            HttpStatusCode.Unauthorized to "",
+            HttpStatusCode.OK to """{"access_token":"fresh","expires_in":3600}""",
+            HttpStatusCode.OK to """{"files":[{"id":"1","name":"export.json"}]}"""
+        )
+
+        val result = provider.listSettingsFiles(pageSize = 10, pageToken = null)
+
+        assertEquals(listOf("export.json"), result.files.map { it.name }, "the retry should have returned the listing")
+        assertTrue(provider.hasValidCredentials(), "the sign in was good and must survive")
+        assertEquals("fresh", tokens.accessToken)
     }
 
     /** A server having a bad day must not make the user sign in again. */
@@ -252,6 +285,21 @@ class GoogleDriveProviderTest {
     @Test
     fun `with no folder chosen the root is used`() {
         assertEquals("root", providerReplying().getSelectedFolderId())
+    }
+
+    /**
+     * The folder is read from the name Android already writes, like the tokens beside it.
+     *
+     * Getting this name wrong does not look like a bug: the user stays signed in, every screen works,
+     * and the only sign is that exports quietly start landing in the root of their Drive instead of
+     * in the folder they picked. Asserted on the stored name rather than through the provider,
+     * because a rename would keep every other test in this file passing.
+     */
+    @Test
+    fun `the folder is kept under the name Android writes`() {
+        store.putString("google_drive_folder_id", "folder-from-android")
+
+        assertEquals("folder-from-android", providerReplying().getSelectedFolderId())
     }
 
     private class FakeRedirectListener : AuthRedirectListener {

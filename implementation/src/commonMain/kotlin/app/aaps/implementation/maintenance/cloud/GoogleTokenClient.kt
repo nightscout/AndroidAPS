@@ -75,10 +75,12 @@ class GoogleTokenClient(
      * An access token that is good now, refreshing first if it is not.
      *
      * Returns the stored one untouched when it is still good, so ordinary use does not talk to Google
-     * at all.
+     * at all. [forceRefresh] skips that shortcut and always asks Google for a new one - the caller
+     * that wants this is one that just had a token refused, because the stored expiry says the token
+     * is fine and only Drive knows better.
      */
-    suspend fun validAccessToken(): Result<String> {
-        tokens.accessToken?.let { existing ->
+    suspend fun validAccessToken(forceRefresh: Boolean = false): Result<String> {
+        if (!forceRefresh) tokens.accessToken?.let { existing ->
             if (tokens.accessTokenUsableAt(now())) return Result.success(existing)
         }
         val refresh = tokens.refreshToken ?: return Result.failure(TokenException(TokenFailure.NotSignedIn))

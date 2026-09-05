@@ -64,12 +64,7 @@ import dev.zacsweers.metro.SingleIn
  *
  * The shell depends on the same 26 modules `:ios:shell` does, so every plugin that registers itself
  * with `@ContributesBinding` is already in the graph, and the classes in `app.aaps.desktop.shell.platform`
- * answer the platform half. Measured at **2**, down from 32:
- *
- * **`ImportExportPrefs`** is bigger than "file dialogs": `ImportExportPrefsImpl` is 911 lines over
- * `DocumentFile` and WorkManager, and the format underneath it, `EncryptedPrefsFormat`, is another
- * 296 over `Context`, `DocumentFile` and `org.json`. That format is what a phone reads back, so it
- * cannot be reimplemented here - it has to be ported, with the care a stored encrypted format wants.
+ * answer the platform half. Measured at **1**, down from 32:
  *
  * **`Autotune`** needs its plugin ported out of androidMain: about 2,700 lines of arithmetic whose
  * only Android parts are `Calendar`/`TimeZone` and a file dump, but it computes basal, ISF and ICR,
@@ -80,8 +75,10 @@ import dev.zacsweers.metro.SingleIn
  * as it reaches a phone. `DesktopNsLoadExecutor` still runs the REST round the plugin asks for.
  *
  * **Needs a port rather than an implementation:** `Autotune`, whose `AutotunePlugin` is arithmetic
- * over treatment history sitting in androidMain, and `LoopNotifier`, an interface whose only
- * implementation is Android notifications with actions.
+ * over treatment history sitting in androidMain.
+ *
+ * Settings import and export is no longer on this list. `LocalImportExportPrefs` in `commonMain`
+ * carries the whole flow, and desktop supplies only the file access - see `_docs/desktop_alignment.md`.
  *
  * Everything that was "absent by nature" is now answered rather than missing - see
  * `DesktopAutomationInputs` and `DesktopAbsentIntegrations`. Two of that group turned out to be real
