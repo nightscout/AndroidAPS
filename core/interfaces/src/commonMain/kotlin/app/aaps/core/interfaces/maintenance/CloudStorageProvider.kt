@@ -195,7 +195,16 @@ interface CloudStorageProvider {
      * @param timeoutMs Maximum time to wait in milliseconds
      * @return The authorization code, or null if timeout/cancelled
      */
-    suspend fun waitForAuthCode(timeoutMs: Long = 60000): String? = null
+    /**
+     * Waits for the browser to come back with an authorization code.
+     *
+     * Five minutes, not one. The wait covers a person typing an email, a password and very likely a
+     * second factor from another device; a minute expires in the middle of that, and when it does the
+     * listener closes, so the redirect that arrives a moment later reaches a dead port and the sign in
+     * fails for no reason the user can see. It was a minute, and it was found by watching a real sign
+     * in end at 61 seconds.
+     */
+    suspend fun waitForAuthCode(timeoutMs: Long = AUTH_WAIT_MS): String? = null
 
     /**
      * Count the number of settings files in the selected folder.

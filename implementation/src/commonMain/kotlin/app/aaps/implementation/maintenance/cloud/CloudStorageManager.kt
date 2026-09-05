@@ -3,7 +3,7 @@ package app.aaps.implementation.maintenance.cloud
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -26,8 +26,8 @@ import dev.zacsweers.metro.SingleIn
 @Inject
 class CloudStorageManager(
     private val aapsLogger: AAPSLogger,
-    private val sp: SP,
-    cloudStorageProviders: Set<@JvmSuppressWildcards CloudStorageProvider>
+    private val sp: KeyValueStore,
+    cloudStorageProviders: Set<CloudStorageProvider>
 ) {
 
     /**

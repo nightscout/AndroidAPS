@@ -186,11 +186,26 @@ class GoogleDriveProvider(
 
     // ----- Whether the last attempt worked -----
 
-    override fun hasConnectionError(): Boolean = store.getBoolean(CONNECTION_ERROR, false)
+    /**
+     * Whether the last attempt to reach Drive failed.
+     *
+     * Held in memory, not stored, which is what the Android manager does and is the right shape: a
+     * connection error describes now, not forever. Persisting it means a user whose train went into a
+     * tunnel yesterday still sees a warning today, on a working connection, until something happens
+     * to clear it - and if they stop trying, nothing ever does.
+     *
+     * Whether it is worth showing at all is the caller's question, since only it knows whether Drive
+     * is the storage the user actually chose.
+     */
+    private var connectionError = false
+
+    override fun hasConnectionError(): Boolean = connectionError
 
     override fun clearConnectionError() = storeConnectionError(false)
 
-    private fun storeConnectionError(failed: Boolean) = store.putBoolean(CONNECTION_ERROR, failed)
+    private fun storeConnectionError(failed: Boolean) {
+        connectionError = failed
+    }
 
     /**
      * A sign in that is finished is cleared; anything else is remembered as a connection error.
@@ -228,7 +243,6 @@ class GoogleDriveProvider(
         // here would keep the user signed in but lose the folder they picked, so the next export would
         // go silently to the root of their Drive instead of to their backups folder.
         private const val SELECTED_FOLDER = "google_drive_folder_id"
-        private const val CONNECTION_ERROR = "google_drive_connection_error"
         private const val COUNT_PAGE_SIZE = 100
 
         /** Every export is json; Drive is asked not to return anything else. */

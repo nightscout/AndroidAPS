@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.implementation.maintenance.LocalImportExportPrefs
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.maintenance.PrefsFileAccess
 import app.aaps.implementation.maintenance.PrefsFileLister
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -147,7 +148,8 @@ object ClientGraphBindings {
         userEntryPresentationHelper: UserEntryPresentationHelper,
         @ApplicationScope appScope: CoroutineScope,
         secureEncrypt: SecureEncrypt,
-        textResolver: TextResolver
+        textResolver: TextResolver,
+        cloudStorageManager: CloudStorageManager
     ): ImportExportPrefs = LocalImportExportPrefs(
         aapsLogger = aapsLogger,
         preferences = preferences,
@@ -158,6 +160,7 @@ object ClientGraphBindings {
         passwordHasher = passwordHasher,
         files = files,
         lister = lister,
+        cloudStorageManager = cloudStorageManager,
         exportPasswordDataStore = exportPasswordDataStore,
         persistenceLayer = persistenceLayer,
         userEntryPresentationHelper = userEntryPresentationHelper,

@@ -76,12 +76,21 @@ Two of the three missing pieces are now in, and both were small:
    not suspended, so the system browser is the better answer and the user signs in where they can
    see the address bar. `Desktop.browse` first, then `xdg-open`/`open`/`rundll32`, because AWT
    browse is missing on more Linux sessions than its name suggests - WSLg among them.
-3. **The wiring** - still to do, and deliberately. Nothing constructs the shared
-   `GoogleDriveProvider` on any platform yet; Android still runs its own `GoogleDriveManager`.
-   Desktop should not be first: let Android or iOS prove the shared path against a real Google
-   account, because a sign in that half works is worse than a stub that says no.
+3. **The wiring** - done on iOS, and the shared path is now proven against a real Google account.
+   `IosGoogleDriveProvider` builds the common provider with the Darwin engine and the loopback
+   listener; a real sign in completed, an export uploaded, and - the part worth knowing - exports
+   written by an **Android phone** were listed and parsed on an iPhone out of the same Drive folder.
+   So the shared client is no longer theory, and desktop is free to construct its own.
 
-So desktop is now waiting only on that last step, and on nothing of its own.
+Desktop now needs only its own construction: a `GoogleDriveProvider` built with the OkHttp engine,
+`JvmAuthRedirectListener`, `DesktopAuthBrowser` and `DesktopSp`, contributed into the
+`CloudStorageProvider` set. `IosGoogleDriveProvider` is thirty lines and is the worked example.
+
+Two things iOS hit that desktop will hit too, both already fixed in shared code but worth knowing
+about: `LocalImportExportPrefs` used to hardcode `isCloudActive = false` and stub the three cloud
+setters, so a working sign in left every Cloud button grey; and the sign in wait was sixty seconds,
+which expires while a person is still typing a password. Both are shared, so desktop inherits the
+fixes rather than the bugs.
 
 Two traps already paid for, worth not re-learning: the stored key names must stay the ones Android
 writes (`google_drive_refresh_token`, `google_drive_folder_id` and the rest), or a user keeps their
