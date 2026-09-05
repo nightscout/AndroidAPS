@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.platformCryptoPrimitives
@@ -67,6 +68,7 @@ class LocalImportExportPrefs(
     private val passwordHasher: PasswordHasher,
     private val files: PrefsFileAccess,
     private val lister: PrefsFileLister,
+    private val cloudStorageManager: CloudStorageManager,
     private val exportPasswordDataStore: ExportPasswordDataStore,
     private val persistenceLayer: PersistenceLayer,
     private val userEntryPresentationHelper: UserEntryPresentationHelper,
@@ -100,18 +102,31 @@ class LocalImportExportPrefs(
 
     // ----- Where an export goes. There is no cloud here, and this says so rather than failing -----
 
-    override fun getExportConfig(): ExportConfig = ExportConfig(
-        isCloudActive = false,
-        isCloudError = false,
-        hasCloudCredentials = false,
-        settingsLocal = preferences.get(BooleanNonKey.ExportSettingsLocalEnabled),
-        settingsCloud = false,
-        logEmail = preferences.get(BooleanNonKey.ExportLogEmailEnabled),
-        logCloud = false,
-        csvLocal = preferences.get(BooleanNonKey.ExportCsvLocalEnabled),
-        csvCloud = false,
-        cloudDisplayName = null
-    )
+    /**
+     * What the export screen shows, cloud included.
+     *
+     * The cloud half used to be hardcoded to "no", which was true when this was written and iOS had
+     * no provider. It stopped being true the moment one existed, and the symptom was a sign in that
+     * genuinely worked while every Cloud button stayed grey - the screen was reading an answer that
+     * could no longer change. Asked of [CloudStorageManager] now, the same way Android asks.
+     */
+    override fun getExportConfig(): ExportConfig {
+        val isCloudActive = cloudStorageManager.isCloudStorageActive()
+        val provider = cloudStorageManager.getActiveProvider()
+        val hasCloudError = isCloudActive && (provider?.hasConnectionError() == true || provider?.hasValidCredentials() != true)
+        return ExportConfig(
+            isCloudActive = isCloudActive,
+            isCloudError = hasCloudError,
+            hasCloudCredentials = cloudStorageManager.hasAnyCloudCredentials(),
+            settingsLocal = preferences.get(BooleanNonKey.ExportSettingsLocalEnabled),
+            settingsCloud = preferences.get(BooleanNonKey.ExportSettingsCloudEnabled),
+            logEmail = preferences.get(BooleanNonKey.ExportLogEmailEnabled),
+            logCloud = preferences.get(BooleanNonKey.ExportLogCloudEnabled),
+            csvLocal = preferences.get(BooleanNonKey.ExportCsvLocalEnabled),
+            csvCloud = preferences.get(BooleanNonKey.ExportCsvCloudEnabled),
+            cloudDisplayName = provider?.displayName
+        )
+    }
 
     override fun setSettingsLocalEnabled(enabled: Boolean) = preferences.put(BooleanNonKey.ExportSettingsLocalEnabled, enabled)
     override fun setCsvLocalEnabled(enabled: Boolean) = preferences.put(BooleanNonKey.ExportCsvLocalEnabled, enabled)
