@@ -430,7 +430,10 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                             onQuickLaunchActionClick = { action -> navigator.handleQuickLaunchAction(action) },
                             onImportSettingsNavigate = { source -> navController.navigate(AppRoute.ImportSettings.createRoute(source.name)) },
                             onDirectoryClick = { logger.debug(LTag.CORE, "Desktop reads its own folder") },
-                            onLaunchBrowser = { url -> graph.urlOpener.open(url) },
+                            // authBrowser, not urlOpener: the sign in ends at a port this app is
+                            // listening on, and DesktopAuthBrowser has the fallback launcher an
+                            // ordinary link opener does not. See AuthBrowser.
+                            onLaunchBrowser = { url -> graph.authBrowser.show(url) },
                             onBringToForeground = { logger.debug(LTag.CORE, "Desktop window is already in front") },
                             onRecreateActivity = { logger.notWiredYet("window recreate") },
                             onAuthorizationFailed = { logger.error(LTag.CORE, "Authorization failed") },
