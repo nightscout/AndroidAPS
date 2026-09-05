@@ -118,6 +118,11 @@ class GoogleTokenClient(
     /**
      * `invalid_grant` is Google saying the refresh token is finished - revoked, or the account's
      * password changed. Everything else may be temporary.
+     *
+     * Classified by the body's `error` field and **not** by the status code, on purpose. The OAuth
+     * token endpoint answers 400 for every kind of refusal, so the status says nothing about which
+     * one this is - and this is the only place that throws a refresh token away, so guessing from a
+     * status would sign users out for a bad gateway.
      */
     private fun failureFor(body: String, status: Int): TokenFailure {
         val error = runCatching { Json.parseToJsonElement(body).jsonObject["error"]?.jsonPrimitive?.content }.getOrNull()
