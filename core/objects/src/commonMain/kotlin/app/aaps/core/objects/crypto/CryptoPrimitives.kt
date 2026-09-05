@@ -27,6 +27,15 @@ interface CryptoPrimitives {
     /** SHA-256 of [source]'s UTF-8 bytes, lower-case hex. */
     fun sha256(source: String): String
 
+    /**
+     * SHA-256 of [source], as bytes.
+     *
+     * The same digest [sha256] returns, before it is written as hex. PKCE needs the raw bytes - its
+     * code challenge is base64url of the digest, and going through hex and back would be a longer
+     * way to the same place with one more thing to get wrong.
+     */
+    fun sha256Bytes(source: ByteArray): ByteArray
+
     /** HMAC-SHA256 of [message] under [secret], both UTF-8, lower-case hex. */
     fun hmac256(message: String, secret: String): String
 

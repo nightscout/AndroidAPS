@@ -24,6 +24,9 @@ class JvmCryptoPrimitives : CryptoPrimitives {
     override fun sha256(source: String): String =
         MessageDigest.getInstance("SHA-256").digest(source.toByteArray()).toHex()
 
+    override fun sha256Bytes(source: ByteArray): ByteArray =
+        MessageDigest.getInstance("SHA-256").digest(source)
+
     override fun hmac256(message: String, secret: String): String {
         val mac = Mac.getInstance("HmacSHA256")
         mac.init(SecretKeySpec(secret.toByteArray(), "HmacSHA256"))

@@ -33,6 +33,8 @@ class IosCryptoPrimitives : CryptoPrimitives {
 
     override fun sha256(source: String): String = sha.hashBlocking(source.encodeToByteArray()).toHex()
 
+    override fun sha256Bytes(source: ByteArray): ByteArray = sha.hashBlocking(source)
+
     override fun hmac256(message: String, secret: String): String {
         val key = hmac.keyDecoder(SHA256).decodeFromByteArrayBlocking(HMAC.Key.Format.RAW, secret.encodeToByteArray())
         return key.signatureGenerator().generateSignatureBlocking(message.encodeToByteArray()).toHex()
