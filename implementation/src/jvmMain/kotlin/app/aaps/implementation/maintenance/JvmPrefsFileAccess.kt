@@ -87,6 +87,14 @@ object DesktopFolders {
     /** The user-visible root, the counterpart of `Documents/AAPS` on a phone. */
     val root: File get() = File(System.getProperty("user.home") ?: ".", "AAPS")
 
+    /**
+     * The app's own directory, the counterpart of Android's private data directory.
+     *
+     * The database, the keys, the log, the preference store and the single-instance lock. Nothing
+     * here is meant to be found, created or copied by hand - that is what [root] is for.
+     */
+    val data: File get() = File(System.getProperty("user.home") ?: ".", ".aaps")
+
     /** Settings exports, matching Android's `newPreferenceFile`, which writes to `AAPS/preferences`. */
     val preferences: File get() = File(root, "preferences")
 
