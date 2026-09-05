@@ -78,4 +78,27 @@ class JvmPrefsFileAccessTest {
         assertTrue(name.endsWith("_full.json"), name)
         assertTrue(Regex("""\d{4}-\d{2}-\d{2}_\d{6}_full\.json""").matches(name), name)
     }
+
+    /** `2026-09-05_143022_UserEntry.csv`, the name Android's `newExportCsvFile` writes. */
+    @Test
+    fun `a csv name matches the one Android writes`() {
+        val name = sut.newCsvName()
+
+        assertTrue(Regex("""\d{4}-\d{2}-\d{2}_\d{6}_UserEntry\.csv""").matches(name), name)
+    }
+
+    /**
+     * A CSV shares the folder with the exports and is not one.
+     *
+     * `list()` feeds the import screen, so a user-entry dump appearing there would be offered as a
+     * backup and then refused when they picked it.
+     */
+    @Test
+    fun `a csv is written but never offered as a backup`() {
+        sut.write(sut.newCsvName(), "date,action\n2026-09-05,BOLUS")
+        sut.write("backup.json", "{}")
+
+        assertEquals(listOf("backup.json"), sut.list().map { it.first })
+        assertTrue(directory.listFiles()!!.any { it.name.endsWith("_UserEntry.csv") })
+    }
 }

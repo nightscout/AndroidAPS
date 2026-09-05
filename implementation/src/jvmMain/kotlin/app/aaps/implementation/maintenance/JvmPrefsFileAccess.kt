@@ -35,6 +35,8 @@ class JvmPrefsFileAccess @Inject constructor(
 
     override fun newExportName(flavour: String): String = "${LocalDateTime.now().format(nameFormatter)}_$flavour.json"
 
+    override fun newCsvName(): String = "${LocalDateTime.now().format(nameFormatter)}_UserEntry.csv"
+
     override fun write(name: String, contents: String) {
         if (!directory.exists() && !directory.mkdirs()) error("could not create ${directory.path}")
         File(directory, name).writeText(contents)
