@@ -61,19 +61,27 @@ most of it is already running on desktop's target without anyone asking for it:
   redirect, in plain `java.net`, already compiled into the desktop target.
 - `DesktopSp` already implements `KeyValueStore`, which is where the tokens go.
 
-Three things are missing, and none is the hard part:
+Two of the three missing pieces are now in, and both were small:
 
-1. **A Ktor engine on `jvmMain`.** `androidMain` gets OkHttp and `iosMain` gets Darwin; the desktop
-   target has none, so nothing can construct an `HttpClient`. Compiles today only because
-   `commonMain` takes one as a parameter and never builds one.
-2. **An `AuthBrowser` for the JVM.** Note the interface's KDoc argues for an embedded window, and
-   that argument is a mobile one - a phone suspends a backgrounded app within seconds and kills the
-   listener with it. A desktop app is not suspended, so `java.awt.Desktop.browse()` to the system
-   browser is correct here, and the loopback listener will still be there when the redirect lands.
-3. **The wiring.** Nothing constructs the shared `GoogleDriveProvider` on any platform yet - Android
-   still runs its own `GoogleDriveManager`. Desktop should not be first: let Android or iOS prove the
-   shared path against a real Google account, because a sign in that half works is worse than a
-   stub that says no.
+1. **A Ktor engine on `jvmMain`** - done. `ktor-client-core` is the API only and finds its engine
+   with a `ServiceLoader` when the client is built, so a missing one is not a compile error: it
+   throws `Failed to find HTTP client engine implementation` on the first real call. OkHttp rather
+   than CIO, because `:core:nssdk` already brings OkHttp to this target for Nightscout, so the
+   desktop gains an engine binding and not a second HTTP stack. `DesktopHttpEngineTest` builds a
+   bare `HttpClient()` so the gap cannot come back through a merge.
+2. **An `AuthBrowser` for the JVM** - done, as `DesktopAuthBrowser` in `jvmMain`. It is deliberately
+   *not* in `jvmSharedMain`: AWT does not exist on Android, which still wants a Custom Tab. The
+   interface's KDoc argues for a window presented over the app, and that argument is a mobile one -
+   a phone suspends a backgrounded app within seconds and takes the listener with it. A desktop is
+   not suspended, so the system browser is the better answer and the user signs in where they can
+   see the address bar. `Desktop.browse` first, then `xdg-open`/`open`/`rundll32`, because AWT
+   browse is missing on more Linux sessions than its name suggests - WSLg among them.
+3. **The wiring** - still to do, and deliberately. Nothing constructs the shared
+   `GoogleDriveProvider` on any platform yet; Android still runs its own `GoogleDriveManager`.
+   Desktop should not be first: let Android or iOS prove the shared path against a real Google
+   account, because a sign in that half works is worse than a stub that says no.
+
+So desktop is now waiting only on that last step, and on nothing of its own.
 
 Two traps already paid for, worth not re-learning: the stored key names must stay the ones Android
 writes (`google_drive_refresh_token`, `google_drive_folder_id` and the rest), or a user keeps their
