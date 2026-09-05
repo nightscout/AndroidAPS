@@ -46,7 +46,14 @@ data class AboutDialogData(
 @Composable
 fun AboutAlertDialog(
     data: AboutDialogData,
-    onOpenBatteryHelp: () -> Unit,
+    /**
+     * Null where there is no such problem, and then no button is drawn.
+     *
+     * Only Android lets the device maker kill a background app, and the page this opens is that
+     * site's page for the maker of the current device. Off Android it built an address for a
+     * manufacturer the site has never heard of - see `Config.oemBackgroundKilling`.
+     */
+    onOpenBatteryHelp: (() -> Unit)?,
     onDismiss: () -> Unit
 ) {
     val annotatedMessage = buildClickableMessage(data.message)
@@ -97,11 +104,11 @@ fun AboutAlertDialog(
                 Text(stringResource(CoreUiStrings.ok))
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = onOpenBatteryHelp
-            ) {
-                Text(stringResource(CoreUiStrings.cta_dont_kill_my_app_info))
+        dismissButton = onOpenBatteryHelp?.let { openHelp ->
+            {
+                TextButton(onClick = openHelp) {
+                    Text(stringResource(CoreUiStrings.cta_dont_kill_my_app_info))
+                }
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)

@@ -10,6 +10,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import app.aaps.implementation.maintenance.DesktopFolders
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.attribute.PosixFilePermission
@@ -52,7 +53,7 @@ class DesktopSecureEncrypt @Inject constructor(
     private val cryptoUtil: CryptoUtil
 ) : SecureEncrypt {
 
-    private val keyDir = File(File(System.getProperty("user.home"), ".aaps"), "keys")
+    private val keyDir = File(DesktopFolders.data, "keys")
 
     override fun encrypt(plaintextSecret: String, keystoreAlias: String): String {
         if (plaintextSecret.isEmpty()) {

@@ -59,11 +59,27 @@ val copyAppIcon = tasks.register<Copy>("copyDesktopAppIcon") {
     into(layout.buildDirectory.dir("generated/icon/icons"))
 }
 
+/**
+ * Which client to build: `-Pclient=2` or `-Pclient=3`, and 1 when nothing is passed.
+ *
+ * The desktop stand-in for Android's `aapsclient` product flavours. It is a build property rather
+ * than a runtime switch because it settles things a running app cannot change: the installer's name
+ * and its icon are written by jpackage when the package is built.
+ *
+ * Each client gets its own data directory, so two of them run side by side against two Nightscout
+ * sites, exactly as two Android clients do. The user-visible `AAPS` folder is *not* per client -
+ * exports and option markers are shared, which is also what a phone does.
+ */
+val desktopClient: Int = (project.findProperty("client") as String?)?.toIntOrNull() ?: 1
+
+require(desktopClient in 1..3) { "client must be 1, 2 or 3, but was $desktopClient" }
+
 val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBuildInfo") {
     version.set(Versions.appVersion)
     buildStamp.set(buildStamp())
     platform.set("Desktop")
     packageName.set("app.aaps.desktop.shell.config")
+    client.set(desktopClient)
     outputDir.set(layout.buildDirectory.dir("generated/buildInfo"))
 }
 
@@ -162,7 +178,10 @@ compose.desktop {
             // on Android. Not just cosmetic: Windows takes the notification header from the
             // launcher this produces, so a package called "AAPS" would put the master name on a
             // follower every time a notification appeared.
-            packageName = "AAPSClient"
+            //
+            // Numbered from the second, the way Android names AAPSClient2 and AAPSClient3, so two
+            // installed clients are told apart in the start menu rather than overwriting each other.
+            packageName = if (desktopClient == 1) "AAPSClient" else "AAPSClient$desktopClient"
             // jpackage demands a plain numeric version - an MSI rejects anything else - so the
             // `-dev-b-kmp` style suffix that Versions.appVersion carries is trimmed off here.
             packageVersion = Versions.appVersion.substringBefore('-')

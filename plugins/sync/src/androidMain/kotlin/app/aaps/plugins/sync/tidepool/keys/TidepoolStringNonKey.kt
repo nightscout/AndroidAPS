@@ -5,7 +5,6 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 enum class TidepoolStringNonKey(
     override val key: String,
     override val defaultValue: String,
-    override val exportable: Boolean = true
 ) : StringNonPreferenceKey {
 
     SubscriptionId("tidepool_subscription_id", ""),

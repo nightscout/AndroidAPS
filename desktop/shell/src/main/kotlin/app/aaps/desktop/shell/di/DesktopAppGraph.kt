@@ -40,9 +40,13 @@ import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.search.BuiltInSearchables
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.implementation.maintenance.PeriodicMaintenance
 import app.aaps.shared.clientbindings.ClientGraphBindings
+import kotlinx.coroutines.CoroutineScope
 import app.aaps.database.AppRepository
 import app.aaps.database.di.JvmAppDatabaseBuilder
+import app.aaps.implementation.maintenance.DesktopFolders
+import java.io.File
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
@@ -62,12 +66,7 @@ import dev.zacsweers.metro.SingleIn
  *
  * The shell depends on the same 26 modules `:ios:shell` does, so every plugin that registers itself
  * with `@ContributesBinding` is already in the graph, and the classes in `app.aaps.desktop.shell.platform`
- * answer the platform half. Measured at **2**, down from 32:
- *
- * **`ImportExportPrefs`** is bigger than "file dialogs": `ImportExportPrefsImpl` is 911 lines over
- * `DocumentFile` and WorkManager, and the format underneath it, `EncryptedPrefsFormat`, is another
- * 296 over `Context`, `DocumentFile` and `org.json`. That format is what a phone reads back, so it
- * cannot be reimplemented here - it has to be ported, with the care a stored encrypted format wants.
+ * answer the platform half. Measured at **1**, down from 32:
  *
  * **`Autotune`** needs its plugin ported out of androidMain: about 2,700 lines of arithmetic whose
  * only Android parts are `Calendar`/`TimeZone` and a file dump, but it computes basal, ISF and ICR,
@@ -78,8 +77,10 @@ import dev.zacsweers.metro.SingleIn
  * as it reaches a phone. `DesktopNsLoadExecutor` still runs the REST round the plugin asks for.
  *
  * **Needs a port rather than an implementation:** `Autotune`, whose `AutotunePlugin` is arithmetic
- * over treatment history sitting in androidMain, and `LoopNotifier`, an interface whose only
- * implementation is Android notifications with actions.
+ * over treatment history sitting in androidMain.
+ *
+ * Settings import and export is no longer on this list. `LocalImportExportPrefs` in `commonMain`
+ * carries the whole flow, and desktop supplies only the file access - see `_docs/desktop_alignment.md`.
  *
  * Everything that was "absent by nature" is now answered rather than missing - see
  * `DesktopAutomationInputs` and `DesktopAbsentIntegrations`. Two of that group turned out to be real
@@ -112,6 +113,9 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val pluginPermissions: PluginPermissions
     val textResolver: TextResolver
     val configBuilder: ConfigBuilder
+    // The periodic housekeeping shared with Android, and the scope the shell drives it on.
+    val periodicMaintenance: PeriodicMaintenance
+    val appScope: CoroutineScope
 
     /** Collected by the composition root, which rebuilds when it moves. */
     val uiRestart: UiRestart
@@ -144,10 +148,10 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val chipsViewModelFactory: ChipsViewModel.Factory
     val overviewDataCache: OverviewDataCache
 
-    /** The app's own database, in the AAPS folder under the user's home directory. */
+    /** The app's own database, inside this client's own data directory so two clients never share one. */
     @Provides
     @SingleIn(AppScope::class)
-    fun repository(): AppRepository = JvmAppDatabaseBuilder().provideAppRepository("aaps-desktop.db")
+    fun repository(): AppRepository = JvmAppDatabaseBuilder().provideAppRepository(File(DesktopFolders.data, "aaps-desktop.db").absolutePath)
 
     /**
      * [CoreObjectsGraph] is a plain binding container rather than a contributed one, so every graph

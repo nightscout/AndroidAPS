@@ -13,13 +13,6 @@ enum class ApsIntentKey(
     override val preferenceType: PreferenceType = PreferenceType.URL,
     // urlRef rather than urlResId: a resource id is an Android Int and means nothing off Android.
     override val urlRef: TextRef? = null,
-    override val defaultedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
     override val exportable: Boolean = false
 ) : IntentPreferenceKey {
 

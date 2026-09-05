@@ -17,13 +17,8 @@ enum class DoubleKey(
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
     override val defaultedBySM: Boolean = false,
     override val calculatedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true,
     override val unitType: UnitType = UnitType.NONE,
     override val sync: SyncSpec? = null
 ) : DoublePreferenceKey {

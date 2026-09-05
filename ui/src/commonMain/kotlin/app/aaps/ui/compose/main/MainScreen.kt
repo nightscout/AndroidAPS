@@ -105,7 +105,8 @@ fun MainScreen(
     onNavigate: (NavigationRequest) -> Unit,
     onDrawerClosed: () -> Unit,
     onAboutDialogDismiss: () -> Unit,
-    onOpenBatteryHelp: () -> Unit,
+    /** Null hides the button - only Android has the problem it links to. */
+    onOpenBatteryHelp: (() -> Unit)?,
     onMaintenanceSheetDismiss: () -> Unit,
     onDirectoryClick: () -> Unit,
     onLaunchBrowser: (String) -> Unit,
@@ -181,7 +182,8 @@ fun MainScreen(
                     onDrawerClosed()
                     onNavigate(request)
                 },
-                isTreatmentsEnabled = uiState.isProfileLoaded
+                isTreatmentsEnabled = uiState.isProfileLoaded,
+                showExit = mainViewModel.showExit
             )
         },
         gesturesEnabled = true,

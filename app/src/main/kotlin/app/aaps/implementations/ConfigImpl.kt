@@ -1,5 +1,6 @@
 package app.aaps.implementations
 
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import android.os.Build
 import app.aaps.BuildConfig
@@ -48,6 +49,7 @@ class ConfigImpl @Inject constructor(
     override val REMOTE: String = BuildConfig.REMOTE
     override val BUILD_TYPE: String = BuildConfig.BUILD_TYPE
     override val PLATFORM: String = "Android"
+    override val platform: AppPlatform = AppPlatform.Android
     override val VERSION: String = BuildConfig.VERSION
     override val APPLICATION_ID: String = BuildConfig.APPLICATION_ID
     override val DEBUG = BuildConfig.DEBUG

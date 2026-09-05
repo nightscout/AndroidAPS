@@ -11,9 +11,13 @@ interface NonPreferenceKey {
     val key: String
 
     /**
-     * If true, this preference is exported
+     * If true, this preference is exported. Set false to keep it out of an export.
+     *
+     * Defaulted, because 92 key enums declared it and every one of them said `true`. The handful
+     * that mean `false` are the non-preference keys, which say so themselves.
      */
     val exportable: Boolean
+        get() = true
 
     /**
      * Device-to-device sync classification (channel + authority). `null` (the default) means the key

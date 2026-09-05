@@ -1,6 +1,11 @@
 package app.aaps.core.interfaces.notifications
 
+import platform.UserNotifications.UNNotification
 import platform.UserNotifications.UNNotificationCategory
+import platform.UserNotifications.UNNotificationPresentationOptionBanner
+import platform.UserNotifications.UNNotificationPresentationOptionList
+import platform.UserNotifications.UNNotificationPresentationOptionSound
+import platform.UserNotifications.UNNotificationPresentationOptions
 import platform.UserNotifications.UNNotificationResponse
 import platform.UserNotifications.UNUserNotificationCenter
 import platform.UserNotifications.UNUserNotificationCenterDelegateProtocol
@@ -99,6 +104,26 @@ object IosNotificationDelegate {
         }
     }
 
+    /**
+     * How a notification is shown when it arrives while AAPS is the frontmost app.
+     *
+     * Without a `willPresent` answer iOS shows **nothing** in that case. The default assumes an app
+     * in front is already displaying whatever the notification would say, which is not true here:
+     * the in-app notification list is one screen among many, so an alarm raised while the user was
+     * looking at the overview produced no banner, no entry in Notification Centre and no sound.
+     * Android has no such rule - a posted notification appears whatever is on screen - so this was a
+     * silent gap between the platforms rather than a deliberate difference.
+     *
+     * `Banner` shows it now, `List` keeps it in Notification Centre afterwards. `Sound` only permits
+     * the sound the notification itself carries: `IosSystemNotificationPlatform` deliberately posts
+     * without one and drives alarm audio through `AlarmSoundPlayer`, so this does not double up,
+     * while the loop notifier's own sound is let through.
+     */
+    internal val PRESENTATION_OPTIONS: UNNotificationPresentationOptions =
+        UNNotificationPresentationOptionBanner or
+            UNNotificationPresentationOptionList or
+            UNNotificationPresentationOptionSound
+
     private class RoutingDelegate : NSObject(), UNUserNotificationCenterDelegateProtocol {
 
         override fun userNotificationCenter(
@@ -112,6 +137,15 @@ object IosNotificationDelegate {
             )
             // Always called, handled or not: iOS holds the response open until it is.
             withCompletionHandler()
+        }
+
+        /** See [PRESENTATION_OPTIONS]. Nothing is shown at all if this is not answered. */
+        override fun userNotificationCenter(
+            center: UNUserNotificationCenter,
+            willPresentNotification: UNNotification,
+            withCompletionHandler: (UNNotificationPresentationOptions) -> Unit
+        ) {
+            withCompletionHandler(PRESENTATION_OPTIONS)
         }
     }
 }

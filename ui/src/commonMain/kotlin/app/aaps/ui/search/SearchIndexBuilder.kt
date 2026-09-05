@@ -1,6 +1,7 @@
 package app.aaps.ui.search
 
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.TextResolver
@@ -28,6 +29,7 @@ class SearchIndexBuilder @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val providers: Set<SearchableProvider>,
     private val preferences: Preferences,
+    private val config: Config,
     private val rh: TextResolver
 ) {
 
@@ -229,6 +231,9 @@ class SearchIndexBuilder @Inject constructor(
 
         allKeys.forEach { prefKey ->
             // Skip keys not visible in the current build mode (mirror calculatePreferenceVisibility)
+            // Platform first: a row this shell cannot honour is not a result the user can act on,
+            // and search is the other way a hidden preference gets back on screen.
+            if (config.platform !in prefKey.platforms) return@forEach
             if (preferences.apsMode && !prefKey.showInApsMode) return@forEach
             if (preferences.nsclientMode && !prefKey.showInNsClientMode) return@forEach
             if (preferences.pumpControlMode && !prefKey.showInPumpControlMode) return@forEach

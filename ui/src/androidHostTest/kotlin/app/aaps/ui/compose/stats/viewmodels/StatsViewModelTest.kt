@@ -8,7 +8,10 @@ import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
+import org.mockito.kotlin.whenever
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +38,7 @@ internal class StatsViewModelTest {
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var preferences: Preferences
+    @Mock private lateinit var config: Config
 
     private lateinit var sut: StatsViewModel
 
@@ -46,9 +50,11 @@ internal class StatsViewModelTest {
         // default state. init only reads preferences.get(...) which return primitives (default false/0 on
         // unstubbed mocks) -> tddCycleExpanded is false, so loadCyclePatternData() is never invoked.
         Dispatchers.setMain(StandardTestDispatcher())
+        // Android, so the activity monitor card is drawn and loadAllStats behaves as it always did.
+        whenever(config.platform).thenReturn(AppPlatform.Android)
         sut = StatsViewModel(
             tddCalculator, tirCalculator, dexcomTirCalculator, activityMonitor, persistenceLayer,
-            rh, uel, dateUtil, profileUtil, preferences
+            rh, uel, dateUtil, profileUtil, preferences, config
         )
     }
 

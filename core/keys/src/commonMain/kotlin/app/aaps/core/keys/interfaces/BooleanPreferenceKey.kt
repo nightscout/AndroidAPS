@@ -11,11 +11,13 @@ interface BooleanPreferenceKey : PreferenceKey, BooleanNonPreferenceKey {
      * Default value is calculated instead of `defaultValue`
      */
     val calculatedDefaultValue: Boolean
+        get() = false
 
     /**
      * Visible in engineering mode only, otherwise `defaultValue`
      */
     val engineeringModeOnly: Boolean
+        get() = false
 }
 
 /**

@@ -2,10 +2,13 @@ package app.aaps.ios.shell.di
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.logging.AAPSLoggerIos
 import app.aaps.implementation.notifications.IosSystemNotificationPlatform
 import app.aaps.ios.shell.config.IosClientConfig
@@ -41,7 +44,10 @@ object IosPlatformBindings {
     /** The real iOS logger: NSLog for the console, a rotating file for afterwards. */
     @Provides
     @SingleIn(AppScope::class)
-    fun logger(): AAPSLogger = AAPSLoggerIos()
+    // `L` is deferred: it reads Preferences, which needs a logger, and the lambda is only invoked
+    // when a line is actually written - long after both exist. Without it the logger fell back to
+    // the compile-time tag defaults and the log-settings sheet did nothing.
+    fun logger(logConfig: () -> L): AAPSLogger = AAPSLoggerIos(logConfig = logConfig)
 
     /** NSUserDefaults, the store the preference layer sits on. */
     @Provides
@@ -62,8 +68,8 @@ object IosPlatformBindings {
     /** Notifications through UNUserNotificationCenter, with the shared registry above it. */
     @Provides
     @SingleIn(AppScope::class)
-    fun systemNotificationPlatform(logger: AAPSLogger, alarmSoundPlayer: AlarmSoundPlayer): SystemNotificationPlatform =
-        IosSystemNotificationPlatform(logger, alarmSoundPlayer)
+    fun systemNotificationPlatform(logger: AAPSLogger, alarmSoundPlayer: AlarmSoundPlayer, preferences: Preferences): SystemNotificationPlatform =
+        IosSystemNotificationPlatform(logger, alarmSoundPlayer) { preferences.get(BooleanKey.AlertOverrideDoNotDisturb) }
 
     /**
      * One history browsing window, app-scoped so every injection point sees the same one.

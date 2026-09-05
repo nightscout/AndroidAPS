@@ -206,7 +206,7 @@ fun OverviewScreen(
         onNavigate = onNavigate,
         onDrawerClosed = { mainViewModel.closeDrawer() },
         onAboutDialogDismiss = { mainViewModel.setShowAboutDialog(false) },
-        onOpenBatteryHelp = { mainViewModel.openBatteryHelp() },
+        onOpenBatteryHelp = if (mainViewModel.showBatteryHelp) ({ mainViewModel.openBatteryHelp() }) else null,
         onMaintenanceSheetDismiss = { mainViewModel.setShowMaintenanceSheet(false) },
         onDirectoryClick = onDirectoryClick,
         onLaunchBrowser = onLaunchBrowser,

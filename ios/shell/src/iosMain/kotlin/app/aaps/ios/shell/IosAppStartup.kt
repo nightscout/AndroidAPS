@@ -28,7 +28,9 @@ import app.aaps.ios.shell.di.GeneratedStringOwners
 internal class IosAppStartup(
     private val aapsLogger: AAPSLogger,
     private val registry: PluginRegistry,
-    private val contributedPlugins: Map<Int, PluginBase>
+    private val contributedPlugins: Map<Int, PluginBase>,
+    /** Starts the shared periodic housekeeping. A lambda so a test can run this without building it. */
+    private val startPeriodicWork: () -> Unit
 ) {
 
     fun run() {
@@ -51,6 +53,12 @@ internal class IosAppStartup(
         // the desktop `Main` call, rather than a copy of part of what it does. Calling only the
         // category check - which is what this did before - left every enabled plugin unstarted.
         registry.initializeConfig()
+
+        // The periodic housekeeping Android gets from KeepAliveWorker: the missed-reading alarm,
+        // snooze shortening, and log and database trimming. The work is shared; only the trigger is
+        // not, because there is no WorkManager here. Without this the AlertMissedBgReading
+        // preference was drawn on this platform and did nothing, and the database never shrank.
+        startPeriodicWork()
 
         aapsLogger.debug(LTag.CORE, "Plugins started and selection verified, starting the UI")
     }

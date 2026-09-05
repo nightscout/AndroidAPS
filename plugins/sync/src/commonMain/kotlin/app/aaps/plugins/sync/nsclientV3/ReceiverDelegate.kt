@@ -1,6 +1,8 @@
 package app.aaps.plugins.sync.nsclientV3
 
 import app.aaps.plugins.sync.SyncStrings
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.ChargingStatus
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.onEach
 
 @SingleIn(AppScope::class)
 class ReceiverDelegate @Inject constructor(
+    private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val preferences: Preferences,
     private val receiverStatusStore: ReceiverStatusStore
@@ -105,6 +108,34 @@ class ReceiverDelegate @Inject constructor(
     fun calculateStatus(ev: NetworkStatus): Boolean =
         ev.mobileConnected && preferences.get(BooleanKey.NsClientUseCellular) && !ev.roaming ||
             ev.mobileConnected && preferences.get(BooleanKey.NsClientUseCellular) && ev.roaming && preferences.get(BooleanKey.NsClientUseRoaming) ||
-            ev.wifiConnected && preferences.get(BooleanKey.NsClientUseWifi) && preferences.get(StringKey.NsClientWifiSsids).isEmpty() ||
-            ev.wifiConnected && preferences.get(BooleanKey.NsClientUseWifi) && preferences.get(StringKey.NsClientWifiSsids).split(";").contains(ev.ssid)
+            wifiAllowed(ev)
+
+    /**
+     * Whether this wifi link may carry Nightscout traffic.
+     *
+     * The list of allowed network names is only a filter where a network name can be read. Off
+     * Android none can be - iOS would need the Access WiFi Information entitlement, and a desktop
+     * `NetworkInterface` has no name at all - so `contains(ev.ssid)` could never be true, and a user
+     * who filled the field in lost Nightscout sync on every network at once, with nothing on screen
+     * and nothing in the log to connect the two.
+     *
+     * So where the name cannot be read the filter is skipped rather than treated as a miss. That is
+     * more permissive than the user asked for, and it is the better of the two errors here: syncing
+     * on a network they meant to exclude is a smaller harm than a follower that silently stops. It is
+     * logged at error, because a setting quietly not being applied should be findable.
+     *
+     * This is deliberately **not** keyed on the name being empty. On Android an empty name means the
+     * read failed this time, usually a missing location permission, and the user's filter must still
+     * be obeyed - see [NetworkStatus.ssidReadable].
+     */
+    private fun wifiAllowed(ev: NetworkStatus): Boolean {
+        if (!ev.wifiConnected || !preferences.get(BooleanKey.NsClientUseWifi)) return false
+        val allowed = preferences.get(StringKey.NsClientWifiSsids)
+        if (allowed.isEmpty()) return true
+        if (!ev.ssidReadable) {
+            aapsLogger.error(LTag.NSCLIENT, "Cannot read the network name on this platform, so the allowed network list is ignored")
+            return true
+        }
+        return allowed.split(";").contains(ev.ssid)
+    }
 }

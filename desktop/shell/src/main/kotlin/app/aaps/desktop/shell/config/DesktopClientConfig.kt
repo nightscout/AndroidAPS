@@ -3,7 +3,9 @@ package app.aaps.desktop.shell.config
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.implementation.maintenance.DesktopFolders
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,8 +26,23 @@ import java.io.File
  */
 class DesktopClientConfig(
     override val VERSION_NAME: String = GeneratedBuildInfo.VERSION,
-    override val APPLICATION_ID: String = "info.nightscout.aapsclient"
+    /** Which client this build is, from `-Pclient=N`. Overridden in a test. */
+    private val client: Int = GeneratedBuildInfo.CLIENT,
+    /** Overridden in a test, so it neither reads nor creates markers in the real AAPS folder. */
+    private val extraDir: File = DesktopFolders.extra
 ) : Config {
+
+    /**
+     * The same ids the Android clients use, so a client keeps its identity across platforms.
+     *
+     * Nightscout and the client-control channel both read this, and two clients pointed at one site
+     * must not claim to be the same app.
+     */
+    override val APPLICATION_ID: String = when (client) {
+        2    -> "info.nightscout.aapsclient2"
+        3    -> "info.nightscout.aapsclient3"
+        else -> "info.nightscout.aapsclient"
+    }
 
     override val SUPPORTED_NS_VERSION: Int = 150000
 
@@ -35,13 +52,14 @@ class DesktopClientConfig(
     override val PUMPDRIVERS: Boolean = false
 
     override val AAPSCLIENT: Boolean = true
-    override val AAPSCLIENT1: Boolean = true
-    override val AAPSCLIENT2: Boolean = false
-    override val AAPSCLIENT3: Boolean = false
+    override val AAPSCLIENT1: Boolean = client == 1
+    override val AAPSCLIENT2: Boolean = client == 2
+    override val AAPSCLIENT3: Boolean = client == 3
 
     override val FLAVOR: String = "aapsclient"
     override val BUILD_TYPE: String = "debug"
     override val PLATFORM: String = GeneratedBuildInfo.PLATFORM
+    override val platform: AppPlatform = AppPlatform.Desktop
     override val VERSION: String = VERSION_NAME
     override val BUILD_VERSION: String = GeneratedBuildInfo.BUILD
     override val DEBUG: Boolean = true
@@ -103,14 +121,36 @@ class DesktopClientConfig(
     }
 
     override fun isDev(): Boolean = DEBUG
-    override fun isEngineeringMode(): Boolean = false
+
+    /**
+     * Read from the file, the same as `ConfigImpl` does on Android.
+     *
+     * This returned a flat `false` before, which quietly contradicted [isEnabled] below: the marker
+     * file could be created exactly as documented and the one option most likely to be turned on was
+     * the one that never looked.
+     */
+    override fun isEngineeringMode(): Boolean = isEnabled(ExternalOptions.ENGINEERING_MODE)
+
+    /**
+     * Always true, and correct rather than a shortcut.
+     *
+     * Android computes `if (!APS) true else isEngineeringMode() || !isDev()`. Desktop sets
+     * [APS] to false because it is a follower, so that expression is true here whatever the rest
+     * says. Written out rather than copied so it does not read as a stub.
+     */
     override fun isEngineeringModeOrRelease(): Boolean = true
 
     /**
-     * Read the same way Android does - by the presence of a file - because desktop does have a place
-     * to put one. The file sits in the AAPS folder beside the database, so turning an option on is
-     * `touch ~/.aaps/engineering_mode`.
+     * Read the same way Android does - by the presence of a file in the `extra` folder.
+     *
+     * Android looks in `AAPS/extra` through `FileListProvider.ensureExtraDirExists`, so this reads
+     * `~/AAPS/extra` and an option is turned on in the same relative place on both:
+     * `touch ~/AAPS/extra/engineering_mode`.
+     *
+     * It used to read `~/.aaps`, the data directory, which is the folder holding the database and
+     * the keys. Nothing pointed that out, because a marker file that is never found and an option
+     * that is switched off look exactly alike.
      */
     override fun isEnabled(option: ExternalOptions): Boolean =
-        File(File(System.getProperty("user.home"), ".aaps"), option.filename).exists()
+        File(extraDir, option.filename).exists()
 }

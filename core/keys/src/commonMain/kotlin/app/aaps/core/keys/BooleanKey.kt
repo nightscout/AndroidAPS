@@ -1,5 +1,6 @@
 package app.aaps.core.keys
 
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.ElementVisibility
 import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
@@ -16,14 +17,13 @@ enum class BooleanKey(
     override val preferenceType: PreferenceType = PreferenceType.SWITCH,
     override val calculatedDefaultValue: Boolean = false,
     override val defaultedBySM: Boolean = false,
+    override val platforms: Set<AppPlatform> = AppPlatform.ALL,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
-    override val exportable: Boolean = true,
     override val visibility: ElementVisibility = ElementVisibility.ALWAYS,
     override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS,
     override val sync: SyncSpec? = null
@@ -36,7 +36,13 @@ enum class BooleanKey(
         enabledCondition = PreferenceEnabledCondition { it.isConcentrationEnabled },
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    OverviewKeepScreenOn(key = "keep_screen_on", defaultValue = false, title = KeysStrings.pref_title_keep_screen_on, summary = KeysStrings.pref_summary_keep_screen_on, calculatedDefaultValue = true),
+    // Android only: the wake lock is held by ComposeMainActivity, and neither other shell has a
+    // counterpart - an iOS app cannot keep the screen lit from the background, and a desktop screen
+    // is the machine's business, not the app's.
+    OverviewKeepScreenOn(
+        key = "keep_screen_on", defaultValue = false, title = KeysStrings.pref_title_keep_screen_on, summary = KeysStrings.pref_summary_keep_screen_on,
+        calculatedDefaultValue = true, platforms = AppPlatform.ANDROID_ONLY
+    ),
     OverviewShowTreatmentButton(key = "show_treatment_button", defaultValue = false, title = KeysStrings.pref_title_show_treatment_button, defaultedBySM = true),
     OverviewShowWizardButton(key = "show_wizard_button", defaultValue = true, title = KeysStrings.pref_title_show_wizard_button, defaultedBySM = true),
     OverviewShowInsulinButton(key = "show_insulin_button", defaultValue = true, title = KeysStrings.pref_title_show_insulin_button, defaultedBySM = true),
@@ -65,7 +71,13 @@ enum class BooleanKey(
     AlertMissedBgReading("enable_missed_bg_readings", false, KeysStrings.pref_title_alert_missed_bg_reading),
     AlertPumpUnreachable("enable_pump_unreachable_alert", true, KeysStrings.pref_title_alert_pump_unreachable),
     AlertCarbsRequired("enable_carbs_required_alert_local", true, KeysStrings.pref_title_alert_carbs_required),
-    AlertUrgentAsAndroidNotification("raise_urgent_alarms_as_android_notification", true, KeysStrings.pref_title_alert_urgent_as_android_notification),
+    // Android only: it decides whether AAPS raises an OS notification at all. iOS gives an app no say
+    // in that - the user grants or denies notifications in Settings - so there is nothing here for
+    // the switch to do, and a switch that does nothing reads as a promise.
+    AlertUrgentAsAndroidNotification(
+        "raise_urgent_alarms_as_android_notification", true, KeysStrings.pref_title_alert_urgent_as_android_notification,
+        platforms = AppPlatform.ANDROID_ONLY
+    ),
     AlertIncreaseVolume("gradually_increase_notification_volume", true, KeysStrings.pref_title_alert_increase_volume),
     AlertOverrideDoNotDisturb("alert_override_dnd", true, KeysStrings.pref_title_alert_override_dnd, KeysStrings.pref_summary_alert_override_dnd, defaultedBySM = true),
 
@@ -219,7 +231,11 @@ enum class BooleanKey(
     NsClientNotificationsFromAlarms("ns_alarms", false, KeysStrings.pref_title_ns_notifications_from_alarms, calculatedDefaultValue = true),
     NsClientNotificationsFromAnnouncements("ns_announcements", false, KeysStrings.pref_title_ns_notifications_from_announcements, calculatedDefaultValue = true),
     NsClientUseCellular("ns_cellular", true, KeysStrings.pref_title_ns_use_cellular),
-    NsClientUseRoaming("ns_allow_roaming", true, KeysStrings.pref_title_ns_use_roaming, dependency = NsClientUseCellular),
+    // Android only. `ReceiverDelegate` reads this in shared code, but the clause it sits in also
+    // needs `ev.roaming`, and neither other shell can ever report that: iOS publishes no roaming
+    // state at all, and desktop calls every link wifi on purpose so these preferences stay out of
+    // the decision. Both say so in their own KDoc. So the row is a control with nothing behind it.
+    NsClientUseRoaming("ns_allow_roaming", true, KeysStrings.pref_title_ns_use_roaming, dependency = NsClientUseCellular, platforms = AppPlatform.ANDROID_ONLY),
     NsClientUseWifi("ns_wifi", true, KeysStrings.pref_title_ns_use_wifi),
     NsClientUseOnBattery("ns_battery", true, KeysStrings.pref_title_ns_use_on_battery),
     NsClientUseOnCharging("ns_charging", true, KeysStrings.pref_title_ns_use_on_charging),

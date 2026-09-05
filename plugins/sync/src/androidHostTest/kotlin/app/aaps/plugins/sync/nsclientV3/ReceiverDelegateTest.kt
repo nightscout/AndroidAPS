@@ -34,7 +34,7 @@ class ReceiverDelegateTest : TestBase() {
         whenever(preferences.observe(BooleanKey.NsClientUseRoaming)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(BooleanKey.NsClientUseOnCharging)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(BooleanKey.NsClientUseOnBattery)).thenReturn(MutableStateFlow(false))
-        sut = ReceiverDelegate(rh, preferences, receiverStatusStore)
+        sut = ReceiverDelegate(aapsLogger, rh, preferences, receiverStatusStore)
     }
 
     @Test
@@ -47,6 +47,48 @@ class ReceiverDelegateTest : TestBase() {
         whenever(preferences.get(BooleanKey.NsClientUseOnCharging)).thenReturn(true)
         assertThat(sut.calculateStatus(ReceiverStatusStore.ChargingStatus(true, 0))).isTrue()
         assertThat(sut.calculateStatus(ReceiverStatusStore.ChargingStatus(false, 0))).isFalse()
+    }
+
+    /**
+     * The allowed-network list where no network name can be read.
+     *
+     * Off Android nothing can produce one - iOS wants the Access WiFi Information entitlement, a
+     * desktop `NetworkInterface` has no name - so `contains(ssid)` could never match and a user who
+     * filled the field in lost Nightscout sync on every network, silently. The list is skipped there
+     * instead.
+     *
+     * The pair below is the whole point: same empty name, opposite answers, because on Android an
+     * empty name means the read failed this time and the user's filter must still be obeyed.
+     */
+    @Test
+    fun `a platform that cannot read the network name ignores the allowed list`() {
+        whenever(preferences.get(BooleanKey.NsClientUseWifi)).thenReturn(true)
+        whenever(preferences.get(StringKey.NsClientWifiSsids)).thenReturn("home;work")
+
+        val cannotRead = ReceiverStatusStore.NetworkStatus(wifiConnected = true, ssid = "", ssidReadable = false)
+        assertThat(sut.calculateStatus(cannotRead)).isTrue()
+
+        val readFailedThisTime = ReceiverStatusStore.NetworkStatus(wifiConnected = true, ssid = "", ssidReadable = true)
+        assertThat(sut.calculateStatus(readFailedThisTime)).isFalse()
+    }
+
+    /** Skipping the filter must not turn wifi on when the user switched wifi off outright. */
+    @Test
+    fun `an unreadable network name does not override the wifi switch`() {
+        whenever(preferences.get(BooleanKey.NsClientUseWifi)).thenReturn(false)
+        whenever(preferences.get(StringKey.NsClientWifiSsids)).thenReturn("home")
+
+        assertThat(sut.calculateStatus(ReceiverStatusStore.NetworkStatus(wifiConnected = true, ssidReadable = false))).isFalse()
+    }
+
+    /** Where the name is readable, the list still decides - the Android path is untouched. */
+    @Test
+    fun `a readable network name is still matched against the list`() {
+        whenever(preferences.get(BooleanKey.NsClientUseWifi)).thenReturn(true)
+        whenever(preferences.get(StringKey.NsClientWifiSsids)).thenReturn("home;work")
+
+        assertThat(sut.calculateStatus(ReceiverStatusStore.NetworkStatus(wifiConnected = true, ssid = "home"))).isTrue()
+        assertThat(sut.calculateStatus(ReceiverStatusStore.NetworkStatus(wifiConnected = true, ssid = "cafe"))).isFalse()
     }
 
     @Test

@@ -54,6 +54,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -611,10 +612,39 @@ class MainViewModel @Inject constructor(
         urlOpener.open("https://dontkillmyapp.com/" + config.deviceManufacturer.lowercase().replace(" ", "-"))
     }
 
+    /**
+     * Whether the About dialog offers the button at all.
+     *
+     * Android only. The page is per device maker, so off Android [openBatteryHelp] built addresses
+     * like `dontkillmyapp.com/apple` and `dontkillmyapp.com/windows-11` - dead links, for a problem
+     * those systems do not have. This was Android-only before the dialog moved to shared code, and
+     * the move dropped the gate rather than deciding to remove it.
+     *
+     * A preference would say this with `platforms = AppPlatform.ANDROID_ONLY` in its own definition.
+     * A button in a dialog has no such definition to carry a flag, so it asks [Config.platform] -
+     * the same fact, read the same way.
+     */
+    val showBatteryHelp: Boolean get() = config.platform == AppPlatform.Android
+
+    /**
+     * Whether the drawer offers "Exit".
+     *
+     * Not on iOS, where `IosAppExit` refuses on purpose - Apple's guidance is that an app must not
+     * terminate itself, and one that does is recorded as a crash. The row was drawn there anyway, so
+     * tapping it ran `exitApp`, which writes an `EXIT_AAPS` user entry and sends `EventAppExit`
+     * before the platform declines. Nothing on iOS listens for that event, so the app was not left
+     * half stopped - but the audit log gained a record of an exit that never happened, and the user
+     * got no answer. Android and desktop both really can close.
+     */
+    val showExit: Boolean get() = config.platform != AppPlatform.Ios
+
     fun buildAboutDialogData(appName: String): AboutDialogData {
         var message = "Build: ${config.BUILD_VERSION}\n"
         message += "Flavor: ${config.FLAVOR}${config.BUILD_TYPE}\n"
-        // Only where there is one. Android is the original and shows no platform line.
+        // Only where the build declares one. All three shells do - Android's `ConfigImpl` says
+        // "Android" - so in practice the line is always there; the guard is for a Config that
+        // predates the property, such as a test double, which then omits the line rather than
+        // claiming a platform.
         if (config.PLATFORM.isNotEmpty()) message += "Platform: ${config.PLATFORM}\n"
         message += "${rh.gs(CoreUiStrings.configbuilder_nightscoutversion_label)} ${nsClient.detectedNsVersion() ?: rh.gs(CoreUiStrings.not_available_full)}"
         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(CoreUiStrings.fabric_upload_disabled)}"

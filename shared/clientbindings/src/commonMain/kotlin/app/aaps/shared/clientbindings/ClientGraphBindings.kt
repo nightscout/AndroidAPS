@@ -12,13 +12,24 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.PasswordHasher
+import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.implementation.maintenance.LocalImportExportPrefs
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
+import app.aaps.implementation.maintenance.PrefsFileAccess
+import app.aaps.implementation.maintenance.PrefsFileLister
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
@@ -27,6 +38,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.implementation.notifications.CommonNotificationManager
 import app.aaps.implementation.resources.GeneratedTextResolver
+import app.aaps.implementation.resources.isCompactScreen
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.DurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective
@@ -107,7 +119,55 @@ object ClientGraphBindings {
      */
     @Provides
     @SingleIn(AppScope::class)
-    fun textResolver(): TextResolver = GeneratedTextResolver()
+    fun textResolver(): TextResolver = GeneratedTextResolver(compactScreen = isCompactScreen())
+
+    /**
+     * Settings export and import, for iOS and desktop.
+     *
+     * Bound here rather than by `@ContributesBinding` on the class, because `commonMain` compiles for
+     * Android too and Android has its own `ImportExportPrefsImpl` - two bindings of one interface is
+     * a graph error. This file is included only by the two client shells, which is exactly the set of
+     * platforms that want the shared one.
+     *
+     * The only per-platform piece is `PrefsFileAccess`, which each shell binds for itself.
+     */
+    @Provides
+    @SingleIn(AppScope::class)
+    fun importExportPrefs(
+        aapsLogger: AAPSLogger,
+        preferences: Preferences,
+        store: KeyValueStore,
+        config: Config,
+        dateUtil: DateUtil,
+        activePlugin: ActivePlugin,
+        passwordHasher: PasswordHasher,
+        files: PrefsFileAccess,
+        lister: PrefsFileLister,
+        exportPasswordDataStore: ExportPasswordDataStore,
+        persistenceLayer: PersistenceLayer,
+        userEntryPresentationHelper: UserEntryPresentationHelper,
+        @ApplicationScope appScope: CoroutineScope,
+        secureEncrypt: SecureEncrypt,
+        textResolver: TextResolver,
+        cloudStorageManager: CloudStorageManager
+    ): ImportExportPrefs = LocalImportExportPrefs(
+        aapsLogger = aapsLogger,
+        preferences = preferences,
+        store = store,
+        config = config,
+        dateUtil = dateUtil,
+        activePlugin = activePlugin,
+        passwordHasher = passwordHasher,
+        files = files,
+        lister = lister,
+        cloudStorageManager = cloudStorageManager,
+        exportPasswordDataStore = exportPasswordDataStore,
+        persistenceLayer = persistenceLayer,
+        userEntryPresentationHelper = userEntryPresentationHelper,
+        appScope = appScope,
+        secureEncrypt = secureEncrypt,
+        textResolver = textResolver
+    )
 
     /** The shared registry decides what exists; each platform's own class only shows it. */
     @Provides

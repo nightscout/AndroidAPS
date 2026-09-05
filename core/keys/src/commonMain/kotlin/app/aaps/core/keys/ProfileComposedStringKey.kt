@@ -9,7 +9,6 @@ enum class ProfileComposedStringKey(
     override val key: String,
     override val format: String,
     override val defaultValue: String,
-    override val exportable: Boolean = true
 ) : StringComposedNonPreferenceKey {
 
     LocalProfileNumberedIsf(LOCAL_PROFILE + "_isf_", "%d", DEFAULT_ARRAY),

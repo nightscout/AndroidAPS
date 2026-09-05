@@ -3,8 +3,6 @@ package app.aaps.ios.shell.missing
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudOff
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
-import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.ExportResult
 import app.aaps.core.interfaces.maintenance.Maintenance
 import dev.zacsweers.metro.AppScope
@@ -33,64 +31,4 @@ class IosMaintenance @Inject constructor(
         aapsLogger.failNotOnIosYet("Maintenance.executeSendLogs")
 
     override fun deleteLogs(keep: Int) = aapsLogger.notOnIosYet("Maintenance.deleteLogs")
-}
-
-/**
- * Cloud export. Reported as inactive with no credentials, which every screen already handles - it is
- * the same state an Android user sees before connecting a cloud account.
- */
-@SingleIn(AppScope::class)
-@ContributesBinding(AppScope::class)
-class IosCloudDirectoryManager @Inject constructor(
-    private val aapsLogger: AAPSLogger
-) : CloudDirectoryManager {
-
-    override fun getCloudDirectoryInfo(): CloudDirectoryInfo {
-        aapsLogger.notOnIosYet("CloudDirectoryManager.getCloudDirectoryInfo")
-        return CloudDirectoryInfo(
-            isCloudActive = false,
-            hasCredentials = false,
-            hasConnectionError = false,
-            providerDisplayName = "",
-            providerDescription = "",
-            providerIcon = Icons.Default.CloudOff,
-            authorizedStatusText = "",
-            cloudPath = ""
-        )
-    }
-
-    override fun clearCloudSettings() = aapsLogger.notOnIosYet("CloudDirectoryManager.clearCloudSettings")
-    override fun resetExportToLocal() = aapsLogger.notOnIosYet("CloudDirectoryManager.resetExportToLocal")
-    override fun enableAllCloudExport() = aapsLogger.notOnIosYet("CloudDirectoryManager.enableAllCloudExport")
-    override fun enableLocalStorage() = aapsLogger.notOnIosYet("CloudDirectoryManager.enableLocalStorage")
-
-    override suspend fun deauthorizeAndClearCloudSettings(): Boolean {
-        aapsLogger.notOnIosYet("CloudDirectoryManager.deauthorizeAndClearCloudSettings")
-        return false
-    }
-
-    override suspend fun testConnection(): Boolean {
-        aapsLogger.notOnIosYet("CloudDirectoryManager.testConnection")
-        return false
-    }
-
-    override suspend fun startAuth(): String? {
-        aapsLogger.notOnIosYet("CloudDirectoryManager.startAuth")
-        return null
-    }
-
-    override suspend fun waitForAuthCode(timeoutMs: Long): String? {
-        aapsLogger.notOnIosYet("CloudDirectoryManager.waitForAuthCode")
-        return null
-    }
-
-    override suspend fun completeAuth(authCode: String): Boolean {
-        aapsLogger.notOnIosYet("CloudDirectoryManager.completeAuth")
-        return false
-    }
-
-    override suspend fun setupCloudStorage(): Boolean {
-        aapsLogger.notOnIosYet("CloudDirectoryManager.setupCloudStorage")
-        return false
-    }
 }

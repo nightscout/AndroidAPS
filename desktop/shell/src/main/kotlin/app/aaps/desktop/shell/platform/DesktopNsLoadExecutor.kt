@@ -3,6 +3,8 @@ package app.aaps.desktop.shell.platform
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.objects.workflow.WorkOutcome
+import app.aaps.plugins.sync.nsclientV3.ws.NsLoadChain
 import app.aaps.plugins.sync.nsclientV3.workers.DataSyncRunner
 import app.aaps.plugins.sync.nsclientV3.workers.LoadBgRunner
 import app.aaps.plugins.sync.nsclientV3.workers.LoadDeviceStatusRunner
@@ -21,6 +23,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -68,7 +71,7 @@ class DesktopNsLoadExecutor @Inject constructor(
 
     private var round: Job? = null
 
-    private val _idle = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val _idle = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     override val isRunning: Boolean get() = round?.isActive == true
 
@@ -106,21 +109,47 @@ class DesktopNsLoadExecutor @Inject constructor(
                 // A cancelled round stops between steps rather than part way through one, so a step
                 // either ran or did not - it is never half applied to the database.
                 if (!isActive) break
-                runStep(step)
+                // Stops at the first step that fails, through the same rule the other two platforms
+                // use. This used to run the whole chain regardless: the outcome was computed, logged
+                // and dropped. A failed BG step still reached LoadDeviceStatusRunner, which sets
+                // initialLoadFinished = true, so the round declared the catch-up done and
+                // executeLoop returned early from then on - the missed window never fetched, and no
+                // error left to show for it because a later step had cleared it.
+                if (!NsLoadChain.shouldContinue(runStep(step))) break
             }
-            _idle.emit(Unit)
+        }.also { started ->
+            // Idle is reported from invokeOnCompletion, not as the last line of the block above, so
+            // that a **cancelled** round reports it too. The plugin queues its next round on this
+            // signal, so a round that ends without it leaves pendingLoop and pendingUpload set and
+            // the queued uploads waiting for an unrelated trigger.
+            //
+            // It did work before, but only by accident: the emit was reached because the cancellation
+            // was swallowed upstream, and `emit` happened to take a fast path rather than suspending
+            // and throwing. Nothing pinned either of those. This is the arrangement iOS already uses -
+            // see `CoroutineNsLoadExecutor.replaceRound` - and DROP_OLDEST above is the other half of
+            // it, so tryEmit cannot silently fail on a full buffer.
+            started.invokeOnCompletion { _idle.tryEmit(Unit) }
         }
     }
 
-    private suspend fun runStep(step: NsLoadStep) {
+    /**
+     * One step, with a thrown runner counted as a failure.
+     *
+     * The iOS executor lets a throw propagate and kill the round. Catching keeps this shell running
+     * and reaches the same decision, which is the behaviour worth keeping of the two.
+     */
+    private suspend fun runStep(step: NsLoadStep): WorkOutcome {
         val outcome = runCatching { runnerFor(step)() }
-            .onFailure { aapsLogger.error(LTag.NSCLIENT, "Load step $step failed: ${it.message}") }
-            .getOrNull()
+            .getOrElse {
+                aapsLogger.error(LTag.NSCLIENT, "Load step $step failed: ${it.message}")
+                WorkOutcome.Failure(it.message ?: "threw")
+            }
         aapsLogger.debug(LTag.NSCLIENT, "Load step $step: $outcome")
+        return outcome
     }
 
     /** The same mapping the WorkManager executor makes, one runner per step. */
-    private fun runnerFor(step: NsLoadStep): suspend () -> Any = when (step) {
+    private fun runnerFor(step: NsLoadStep): suspend () -> WorkOutcome = when (step) {
         NsLoadStep.STATUS            -> ({ loadStatus().run() })
         NsLoadStep.LAST_MODIFICATION -> ({ loadLastModification().run() })
         NsLoadStep.BG                -> ({ loadBg().run() })

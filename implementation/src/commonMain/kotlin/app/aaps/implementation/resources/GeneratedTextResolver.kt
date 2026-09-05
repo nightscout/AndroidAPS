@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.resources.formatTemplate
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 
 /**
  * Reads text from the generated string maps, for the platforms that have no Android resource table.
@@ -32,19 +33,54 @@ import app.aaps.core.keys.interfaces.TextRef
  * to AAPT - so it renders as `res:<id>`. Shared code should not be producing one; if this shows up on
  * screen, that is the bug it is pointing at.
  */
-class GeneratedTextResolver : TextResolver {
+class GeneratedTextResolver(
+    /**
+     * Whether to shorten text for a narrow screen. See [isCompactScreen], which is what the shells
+     * pass; the default keeps a test deterministic rather than answering from the machine running it.
+     */
+    private val compactScreen: Boolean = false
+) : TextResolver {
 
+    /**
+     * Mirrors `ResourceHelper.gs(ref)` on Android, arguments included.
+     *
+     * A [TextRef] can carry its own [TextRef.Named.args], and this used to ignore them: only the
+     * `vararg` overload formatted anything. So a ref built with `withArgs(...)` and passed to a
+     * single-argument reader - which is most of them, including the notification and constraint
+     * paths - rendered the raw format string. Users saw "Limiting max basal rate to %1$.2f U/h" with
+     * the number missing, and the same text went to Nightscout that way.
+     *
+     * An unresolved name falls back to the name itself, unformatted, exactly as Android does: there
+     * is no template to substitute into, and showing the name is the signal that a string owner was
+     * not registered.
+     */
     override fun gs(ref: TextRef): String = when (ref) {
         is TextRef.Literal    -> ref.text
-        is TextRef.Named      -> TextRefValueRegistry.textOf(ref) ?: ref.name
+        is TextRef.Named      -> {
+            val template = TextRefValueRegistry.textOf(ref)
+            when {
+                template == null   -> ref.name
+                ref.args.isEmpty() -> template
+                else               -> formatTemplate(template, ref.args)
+            }
+        }
+
         is TextRef.AndroidRes -> "res:${ref.id}"
     }
 
-    override fun gs(ref: TextRef, vararg args: Any?): String = formatTemplate(gs(ref), args.toList())
+    /**
+     * Same, with format arguments.
+     *
+     * Rebuilds the ref rather than formatting the resolved text, so there is exactly one place that
+     * substitutes and [TextRef.Named.args] is always the thing it reads - the shape Android uses. The
+     * previous form formatted the *output* of `gs(ref)`, which meant a ref carrying its own arguments
+     * was formatted twice or not at all depending on which overload the caller reached for.
+     */
+    override fun gs(ref: TextRef, vararg args: Any?): String = gs(ref.withArgs(*args))
 
     /** The map is English already, so this is the same lookup. */
     override fun gsNotLocalised(ref: TextRef): String = gs(ref)
 
-    /** A desktop window and an iPad are both wide. Nothing here runs on a watch. */
-    override fun shortTextMode(): Boolean = false
+    /** Answered by the shell through [isCompactScreen]: true on an iPhone, false on an iPad or a desktop. */
+    override fun shortTextMode(): Boolean = compactScreen
 }

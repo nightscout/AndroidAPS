@@ -43,7 +43,16 @@ interface CloudDirectoryManager {
     fun enableLocalStorage()
     suspend fun testConnection(): Boolean
     suspend fun startAuth(): String?
-    suspend fun waitForAuthCode(timeoutMs: Long = 60000): String?
+    /**
+     * Waits for the browser to come back with an authorization code.
+     *
+     * Five minutes, not one. The wait covers a person typing an email, a password and very likely a
+     * second factor from another device; a minute expires in the middle of that, and when it does the
+     * listener closes, so the redirect that arrives a moment later reaches a dead port and the sign in
+     * fails for no reason the user can see. It was a minute, and it was found by watching a real sign
+     * in end at 61 seconds.
+     */
+    suspend fun waitForAuthCode(timeoutMs: Long = AUTH_WAIT_MS): String?
     suspend fun completeAuth(authCode: String): Boolean
     suspend fun setupCloudStorage(): Boolean
 }

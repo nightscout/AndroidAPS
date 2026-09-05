@@ -6,7 +6,6 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 enum class OhStringKey(
     override val key: String,
     override val defaultValue: String,
-    override val exportable: Boolean = true
 ) : StringNonPreferenceKey {
 
     AppId("openhumans_appid", ""),

@@ -161,6 +161,7 @@ fun ProvidePreferenceTheme(
     // Reflect external preference writes (device-to-device sync) into the shared state so every
     // preference screen live-updates, not just on-screen edits. Scoped to synced keys.
     val preferences = LocalPreferences.current
+
     LaunchedEffect(preferences) { observeSyncedKeysIntoState(preferences, sharedPreferenceStates) }
     CompositionLocalProvider(
         LocalPreferenceTheme provides theme,

@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.wizard.QuickWizard
@@ -155,5 +156,42 @@ internal class MainViewModelTest {
     fun `formatDuration delegates to dateUtil`() {
         whenever(dateUtil.timeRemainingString(any(), any())).thenReturn("1h 30m")
         assertThat(sut.formatDuration(5_400_000L)).isEqualTo("1h 30m")
+    }
+
+    /**
+     * The About dialog's "don't kill my app" button, which is Android's problem and nobody else's.
+     *
+     * The dialog moved into shared code and the gate did not come with it, so iOS and desktop drew a
+     * button that opened `dontkillmyapp.com/apple` and `dontkillmyapp.com/windows-11` - addresses
+     * that are not pages, for a thing those systems do not do.
+     */
+    /**
+     * The Exit row, which iOS must not offer.
+     *
+     * `IosAppExit` refuses on purpose - Apple records a self-terminating app as a crash - so the row
+     * ran `exitApp`, wrote an `EXIT_AAPS` user entry, and then nothing happened.
+     */
+    @Test
+    fun `the exit row is offered everywhere except iOS`() {
+        whenever(config.platform).thenReturn(AppPlatform.Android)
+        assertThat(sut.showExit).isTrue()
+
+        whenever(config.platform).thenReturn(AppPlatform.Desktop)
+        assertThat(sut.showExit).isTrue()
+
+        whenever(config.platform).thenReturn(AppPlatform.Ios)
+        assertThat(sut.showExit).isFalse()
+    }
+
+    @Test
+    fun `the battery help button is offered only on Android`() {
+        whenever(config.platform).thenReturn(AppPlatform.Android)
+        assertThat(sut.showBatteryHelp).isTrue()
+
+        whenever(config.platform).thenReturn(AppPlatform.Ios)
+        assertThat(sut.showBatteryHelp).isFalse()
+
+        whenever(config.platform).thenReturn(AppPlatform.Desktop)
+        assertThat(sut.showBatteryHelp).isFalse()
     }
 }

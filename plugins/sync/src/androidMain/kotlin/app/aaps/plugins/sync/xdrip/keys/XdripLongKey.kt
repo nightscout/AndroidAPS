@@ -5,7 +5,6 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 enum class XdripLongKey(
     override val key: String,
     override val defaultValue: Long,
-    override val exportable: Boolean = true
 ) : LongNonPreferenceKey {
 
     BolusLastSyncedId("xdrip_bolus_last_synced_id", 0L),

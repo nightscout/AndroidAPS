@@ -144,6 +144,86 @@ Two warnings from having done several of these:
 - `Dispatchers.IO` reports itself as `internal` rather than missing. Use `aapsIoDispatcher` from
   `:core:interfaces`.
 
+## For the iOS side: move the database out of Documents, with a migration that fails closed
+
+> **Done on the iOS side, and the question is answered: yes, a build has reached a tester with real
+> data.** The TestFlight build is installed on an iPhone 15, so by this section's own criterion the
+> migration wants a second pair of eyes. What to look at first is `resolveDatabasePath`, which
+> decides the path from what is on disk rather than from what the move returned - a rollback can
+> fail too, and trusting the return value there strands the `.db` at the new path while sending Room
+> to the old one, which is the silent empty database this was written to prevent. A test found that;
+> it was not spotted by reading.
+>
+> Also moved: `aaps-ios.db.lck`, which the shipped build leaves beside the database and this section
+> did not list. It moves best-effort and its failure is not the migration's failure, because it holds
+> no data - but it had to be handled, or the export feature's `UIFileSharingEnabled` would put a
+> stray lock file in the user's Files app.
+>
+> Verified on the simulator against a real database, not only in tests: the four files moved, the
+> rows survived, and `aaps.log` recorded the move. Eleven tests in `IosDatabaseMigrationTest` cover
+> the move, the journal files, the fail-closed path, the partial move that is put back, and the
+> stranded case.
+
+The last open item from the platform parity audit. Everything else from that audit is fixed and
+pushed; this one is yours because only the Apple side can test it, and because the decision it needs
+is about iOS storage policy rather than about shared code.
+
+**Where it is now.** `AppDatabaseBuilder.ios.kt`, `documentsPath()`: `aaps-ios.db` and its `-wal` /
+`-shm` siblings are created in `NSDocumentDirectory`. That directory was not chosen as a policy - the
+KDoc above the function says it was settled while fixing a CI failure, where the directory did not
+exist on a clean runner.
+
+**What actually makes this urgent is not the backup.** The audit filed it as a privacy problem,
+because Documents is included in the iCloud/device backup and nothing calls
+`NSURLIsExcludedFromBackupKey`. On reflection that is the wrong way round: a backup is how an iOS user
+keeps their treatment history when they replace a phone, which is better than Android manages today.
+Do **not** exclude it from backup to "fix" this - that trades a real benefit for a theoretical gain
+the user can already get with Advanced Data Protection.
+
+The hazard is the directory itself, and it works like this:
+
+- `Room.databaseBuilder(name = path)` performs **no existence check**. Point it somewhere with no
+  file and it does not fail - it creates a new, empty, schema-correct database. To the user that is
+  indistinguishable from a fresh install, with the whole treatment history gone and no error anywhere.
+- Documents is one build setting away from being user-visible. `UIFileSharingEnabled` and
+  `LSSupportsOpeningDocumentsInPlace` appear nowhere today (checked `Info.plist` and the pbxproj), so
+  the files are currently safe from the Files app.
+- But `IosPrefsFileInfo` is meant to write preference exports into that same directory, and an export
+  nobody can reach is useless. So whoever finishes that feature will find `UIFileSharingEnabled`, set
+  it, and be right to - at which point a user tidying up their Files app can delete `aaps-ios.db` and
+  get a silent empty database on the next launch.
+
+**What to do.** Move to `NSApplicationSupportDirectory`, which is app-private and still backed up, and
+migrate the three files once. The existing helper already creates the directory when it is missing, so
+that part costs nothing.
+
+**The migration has to fail closed, and this is the whole risk of the change.** If the `.db` did not
+arrive at the new path and a file still exists at the old one, keep using the old path for that launch
+and log loudly. Failing open lands exactly on the silent-empty-database case above. Move rather than
+copy, so it cannot run twice or leave two histories that then diverge. Take `-wal` and `-shm` with it -
+a database file separated from its write-ahead log is not the database.
+
+Do not use `NSCachesDirectory`. iOS evicts it under storage pressure, and combined with the missing
+existence check the app would come back empty on its own.
+
+**One question the Windows side cannot answer, and it decides how carefully this needs reviewing:**
+has any iOS build reached a tester with real data? `git tag -l "ios-testflight-*"` is empty, but the
+release workflow also fires on `workflow_dispatch`, which leaves no tag behind - so the repo does not
+know. Write the migration either way; if the answer is yes, it wants a second pair of eyes.
+
+### While you are in the notification code: the other half of the actions gap
+
+Not a blocker, and smaller. `IosSystemNotificationPlatform.show()` still ignores
+`AapsNotification.actions`, so an alarm's snooze buttons never reach the iOS banner - the user has to
+open the app to answer. The dangerous half is already fixed: a swipe can no longer be taken as an
+answer (see `clearedByDismissal`), because it used to silence an urgent Nightscout alarm, throw away
+the card holding the snooze buttons and never acknowledge Nightscout.
+
+Attaching them properly is a `UNNotificationCategory` per resolved label set, registered before
+posting and routed back by instance key. `IosLoopNotifier` already does exactly this for its "ignore
+for N minutes" buttons and is the worked example. Android cannot be copied here - it suppresses such
+notifications from the tray instead, because its actions are `PendingIntent`s.
+
 ## Ready for iOS: the Nightscout client
 
 Written by the Windows session, for the macOS one - the other direction from the rest of this file.
@@ -295,6 +375,75 @@ bus, and nothing posts that event on iOS, so the list stays empty without a seco
 step. The behaviour is unchanged and still documented in the gaps section.
 
 ## Ready for Android: what the iOS side has built
+
+### Two things the Windows session found in the Drive merge
+
+Written back for the macOS session. Both are fixed; neither was visible from your side.
+
+**`IosGoogleDriveProvider` was dropping the forced token refresh.** It passed
+`accessToken = { tokenClient.validAccessToken() }`, which compiles - the lambda's `it` is the
+`forceRefresh` flag and is simply unused - so the retry a 401 triggers re-sent the *same* stale token,
+was refused again, and cleared the sign in. That is exactly the clock-skew bug the retry was added to
+prevent, reintroduced at the construction site. `GoogleDriveProviderTest` could not see it because it
+builds its own wiring rather than using the platform class.
+
+The construction is shared now: `googleDriveProvider()` in `commonMain` takes the engine and does the
+rest, so `IosGoogleDriveProvider` and `DesktopGoogleDriveProvider` are one line of engine choice each,
+and the client id is stated once. `GoogleDriveProviderFactoryTest` covers it and fails if the flag is
+dropped again - verified by putting the bug back.
+
+**Moving `CloudDirectoryManagerImpl` to `commonMain` broke the desktop build.** It carries
+`@ContributesBinding(AppScope::class)`, so it collided with `DesktopCloudDirectoryManager`
+(`[Metro/DuplicateBinding]`), and desktop contributed no `CloudStorageProvider`
+(`[Metro/MissingBinding]`). Both are `:desktop:shell` compile errors, which the macOS session never
+builds. Worth remembering: **a commonMain class with a contributed binding lands on all three shells
+at once.** Desktop is fixed - the stub is deleted and it runs the real shared manager.
+
+### Google Drive: the shared client is proven, Android is the last one not using it
+
+`GoogleDriveManager` in `implementation/androidMain` is 1400 lines, and everything it does now
+exists in `commonMain` and has been run against a real Google account from an iPhone. Moving Android
+onto it is the last piece of the Drive work, and the only reason it has not been done from the macOS
+session is that **an Android change cannot be runtime-tested there** - the SDK is installed but there
+is no system image or AVD, and the behaviour at risk is user-facing.
+
+What already exists, all shared and tested on Android, desktop and iOS:
+
+- `GoogleAuthRequest` (PKCE, pinned to the RFC 7636 vector), `GoogleTokenStore`/`GoogleTokenClient`,
+  `GoogleDriveApi` and `GoogleDriveProvider` - about 65 tests, all against Ktor's mock engine, so
+  they run with no network and no account.
+- `JvmAuthRedirectListener` in `jvmSharedMain` - the loopback socket, already compiled into the
+  Android target. `AndroidAuthRedirectListener` is a one-line binding, the way `IosAuthRedirectListener`
+  is.
+- `OAuthCallback` and `ExportMetadata`, which Android already uses.
+
+What Android still needs:
+
+1. An `AuthBrowser` - a Custom Tab. **Not** the plain "open a link" opener: the sign in ends with a
+   redirect to a port this app is listening on, and a browser that switches away lets the OS suspend
+   the app and take the listener with it. Android is more forgiving than iOS here, but the shape is
+   the same and the interface's KDoc explains it.
+2. Construction, contributed into the `CloudStorageProvider` set. `IosGoogleDriveProvider` is thirty
+   lines and is the worked example.
+3. The behaviour `GoogleDriveManager` has and the shared provider does not: it raises **user-visible
+   notifications** on connection errors and pulls resource strings for them, where the shared one
+   keeps an in-memory flag and lets the caller decide what to show. That is the part worth reviewing
+   rather than porting mechanically - it is the only real behaviour difference, and it is the reason
+   a straight swap is not obviously safe for existing users.
+
+Three traps already paid for on the iOS side, all fixed in shared code, none of them obvious:
+
+- **Stored key names must be the ones Android already writes.** A name invented for the folder
+  (`google_drive_selected_folder_id` instead of `google_drive_folder_id`) kept the user signed in and
+  silently lost the folder they chose, so the next export went to the root of their Drive.
+  `GoogleDriveProviderTest` now asserts the *complete* set of stored names, not individual ones -
+  checking three of them is what let the fourth through.
+- **A 401 is not always a dead sign in.** It often just means the access token went stale early, so
+  it is retried with a forced refresh before the credentials are cleared.
+- **The sign in wait was sixty seconds.** That expires while a person is still typing a password, and
+  when it does the listener closes, so the redirect that arrives a moment later hits a dead port. It
+  is `AUTH_WAIT_MS` now, five minutes, shared - Android had the same bug, less visibly.
+
 
 - **`NsLoadExecutor` is done** - `CoroutineNsLoadExecutor` in `plugins/sync/iosMain`. The nine steps
   run as a coroutine sequence under one `Job`, so a new round replaces one in flight. Two details
@@ -598,9 +747,20 @@ answered "24 hour" and a Traditional Chinese user with the "24-Hour Time" switch
 been given a 24 hour picker on the profile activation screen.
 
 It now reads the hour field instead, which the Unicode standard fixes rather than the locale: `h`
-and `K` count to twelve, `H` and `k` count to twenty four. The parser is `usesTwelveHourClock` in
-`core/ui/src/iosMain/.../ClockPattern.kt`, kept apart from the composable so it can be tested, and
-it skips quoted literals so the `'h'` in a pattern like `HH'h'mm` is not mistaken for a field.
+and `K` count to twelve, `H` and `k` count to twenty four. The parser is `usesTwelveHourClock`, kept
+apart from the composable so it can be tested, and it skips quoted literals so the `'h'` in a pattern
+like `HH'h'mm` is not mistaken for a field.
+
+**Since this was written, the Windows side found the same bug a second time and moved the parser.**
+`DateFormatPlatform` asks the same question for `DateUtil`, and `IosDateFormatPlatform` still used the
+AM/PM reading - so iOS gave two different answers at once, printing `HH:mm` next to a twelve hour
+picker on a `zh-Hant` phone. The JVM had a third copy of the parse, written out again. There is now one
+implementation, in `core/interfaces/src/commonMain/.../utils/ClockPattern.kt`, used by the theme on
+both iOS and desktop and by `DateFormatPlatform` on iOS and the JVM. `:core:interfaces` is the lowest
+module `:core:ui` and `:shared:impl` already share, so this needed no new dependency. The tests moved
+with it, and the live `zh_TW` case now covers the `j` template that `IosDateFormatPlatform` asks for as
+well as the short-time pattern the theme uses - they are different formatter calls, which is how the
+two answers were allowed to disagree.
 
 Found by running the real formatter over 40 locales and comparing the two readings, not by
 inspection - `zh_TW` was the only disagreement, and nothing but running it would have shown that.
@@ -664,8 +824,11 @@ notification registry through `setAudibleAlarm`, and `OWNER_FULLSCREEN`, used by
 
 - `AndroidSystemNotificationPlatform.cancelAll()` calls `alarmNotificationManager().cancelAlarm()`,
   which stops the **`OWNER_FULLSCREEN`** audio and cancels the notification.
-- `IosSystemNotificationPlatform.cancelAll()` only removes pending and delivered notifications.
-  Nothing on the iOS side stops `OWNER_FULLSCREEN`, because nothing starts it.
+- `IosSystemNotificationPlatform.cancelAll()` removes only the delivered notifications it posted
+  itself, matched by the instance-key parse. Nothing on the iOS side stops `OWNER_FULLSCREEN`,
+  because nothing starts it. (It used to call `removeAllPendingNotificationRequests()` as well,
+  which deleted the scheduled automation reminders - they share the `aaps-` prefix. Whatever
+  `runAlarm` ends up doing, it must not widen this back out.)
 
 So an iOS `runAlarm` that plays with `OWNER_FULLSCREEN` would produce a **ramping alarm that
 `stopAlarm` cannot silence**. In a medical app that is the worse of the two failure directions, and

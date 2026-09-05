@@ -1,19 +1,20 @@
 package app.aaps.implementation.maintenance.data
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.core.interfaces.maintenance.Prefs
-import app.aaps.core.interfaces.maintenance.PrefsStatus
 
+/**
+ * Reading and writing an export through Android's storage access framework.
+ *
+ * Only the file access is here. The format itself - the JSON layout, the hashes and the encryption -
+ * is `PrefsFormatCodec` in commonMain, so that iOS reads and writes the same files rather than a
+ * second format that happens to look similar. See `PrefsFormatCommon.kt` for the shared vocabulary.
+ */
 interface PrefsFormat {
     companion object {
 
-        const val FORMAT_KEY_ENC = "aaps_encrypted"
+        const val FORMAT_KEY_ENC = PrefsFormatKey.FORMAT_KEY_ENC
     }
 
     fun savePreferences(file: DocumentFile, prefs: Prefs, masterPassword: String? = null)
@@ -21,23 +22,3 @@ interface PrefsFormat {
     fun loadMetadata(contents: String? = null): PrefMetadataMap
     fun isPreferencesFile(file: DocumentFile, preloadedContents: String? = null): Boolean
 }
-
-enum class PrefsStatusImpl : PrefsStatus {
-
-    OK, WARN, ERROR, UNKNOWN, DISABLED;
-
-    override val icon: ImageVector
-        get() = when (this) {
-            OK                       -> Icons.Default.Check
-            WARN                     -> Icons.Default.Warning
-            ERROR, UNKNOWN, DISABLED -> Icons.Default.Error
-        }
-
-    override val isOk: Boolean get() = this == OK
-    override val isWarning: Boolean get() = this == WARN
-    override val isError: Boolean get() = this == ERROR
-}
-
-class PrefFileNotFoundError(message: String) : Exception(message)
-class PrefIOError(message: String) : Exception(message)
-class PrefFormatError(message: String) : Exception(message)

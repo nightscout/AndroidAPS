@@ -5,7 +5,6 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 enum class UkfLongNonKey(
     override val key: String,
     override val defaultValue: Long,
-    override val exportable: Boolean = true
 ) : LongNonPreferenceKey {
 
     LastSavedTimestamp("ukf_last_saved_timestamp", 0L),

@@ -1,5 +1,6 @@
 package app.aaps.ios.shell.config
 
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -63,6 +64,7 @@ class IosClientConfig(
     override val BUILD_TYPE: String =
         (NSBundle.mainBundle.objectForInfoDictionaryKey("AAPSBuildType") as? String)?.lowercase() ?: "debug"
     override val PLATFORM: String = GeneratedBuildInfo.PLATFORM
+    override val platform: AppPlatform = AppPlatform.Ios
     override val VERSION: String = VERSION_NAME
     override val BUILD_VERSION: String = GeneratedBuildInfo.BUILD
     /** Anything that is not a release build is treated as a debug one, which is the safe way round. */

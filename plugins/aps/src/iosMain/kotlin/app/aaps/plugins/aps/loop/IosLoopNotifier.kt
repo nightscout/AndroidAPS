@@ -17,6 +17,7 @@ import platform.UserNotifications.UNNotificationAction
 import platform.UserNotifications.UNNotificationCategory
 import platform.UserNotifications.UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive
 import platform.UserNotifications.UNNotificationRequest
+import platform.UserNotifications.UNNotificationSound
 import platform.UserNotifications.UNUserNotificationCenter
 
 /**
@@ -92,11 +93,19 @@ class IosLoopNotifier @Inject constructor(
     /**
      * One identifier for both, so a new notification replaces the old rather than stacking - the
      * same behaviour the Android side gets from reusing one notification id.
+     *
+     * The sound is not decoration. `AndroidLoopNotifier` posts both of these on an `IMPORTANCE_HIGH`
+     * channel and calls `setVibrate` on each, so on Android they alert. This posted silently, which
+     * made "the loop wants carbs" and "there is a suggestion waiting" easy to miss entirely - and
+     * unlike `IosSystemNotificationPlatform` there is no separate `AlarmSoundPlayer` path here to
+     * carry the audio instead. The interface says a silent implementation of this is a safety
+     * problem; it was one.
      */
     private fun post(title: String, text: String, category: String?) {
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
             setBody(text)
+            setSound(UNNotificationSound.defaultSound())
             setInterruptionLevel(UNNotificationInterruptionLevelTimeSensitive)
             category?.let { setCategoryIdentifier(it) }
         }

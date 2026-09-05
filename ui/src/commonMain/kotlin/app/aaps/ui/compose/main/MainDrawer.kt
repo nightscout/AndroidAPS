@@ -35,6 +35,8 @@ fun MainDrawer(
     versionName: String,
     onNavigate: (NavigationRequest) -> Unit,
     isTreatmentsEnabled: Boolean,
+    /** False on iOS, where the app may not close itself. See `MainViewModel.showExit`. */
+    showExit: Boolean,
     modifier: Modifier = Modifier
 ) {
     ModalDrawerSheet(
@@ -78,7 +80,7 @@ fun MainDrawer(
         Spacer(modifier = Modifier.height(8.dp))
 
         DrawerMenuItem(ElementType.ABOUT) { onNavigate(NavigationRequest.Element(ElementType.ABOUT)) }
-        DrawerMenuItem(ElementType.EXIT) { onNavigate(NavigationRequest.Element(ElementType.EXIT)) }
+        if (showExit) DrawerMenuItem(ElementType.EXIT) { onNavigate(NavigationRequest.Element(ElementType.EXIT)) }
 
         Spacer(modifier = Modifier.height(16.dp))
     }

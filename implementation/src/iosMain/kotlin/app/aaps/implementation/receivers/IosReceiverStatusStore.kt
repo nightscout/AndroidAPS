@@ -81,6 +81,9 @@ class IosReceiverStatusStore @Inject constructor(
                     // No public API for either. See the class docs - roaming in particular has a cost.
                     vpnConnected = false,
                     ssid = "",
+                    // Not "we did not get a name this time" - nothing here can ever produce one.
+                    // See NetworkStatus.ssidReadable for what that changes.
+                    ssidReadable = false,
                     roaming = false,
                     metered = nw_path_is_expensive(path)
                 )

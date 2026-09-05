@@ -7,6 +7,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import app.aaps.implementation.maintenance.DesktopFolders
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.attribute.PosixFilePermission
@@ -33,7 +34,7 @@ class DesktopExportPasswordPlatform @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ExportPasswordPlatform {
 
-    private val file = File(File(System.getProperty("user.home"), ".aaps"), "export-password.properties")
+    private val file = File(DesktopFolders.data, "export-password.properties")
 
     override fun read(): ExportPasswordPlatform.Stored? {
         if (!file.isFile) return null

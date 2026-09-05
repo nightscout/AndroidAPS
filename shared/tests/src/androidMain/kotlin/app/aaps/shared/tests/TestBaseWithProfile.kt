@@ -10,6 +10,7 @@ import app.aaps.core.data.model.PS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.MetroMemberInjector
@@ -193,6 +194,11 @@ open class TestBaseWithProfile : TestBase() {
             duration = 0,
             iCfg = ICfg("", 0, 0)
         )
+
+        // Every host test runs as the Android shell unless it says otherwise. Without this an
+        // unstubbed enum comes back null from Mockito and anything reading it - the preference
+        // platform filter, for one - fails on a non-null type rather than on its own logic.
+        whenever(config.platform).thenReturn(AppPlatform.Android)
 
         whenever(rh.gs(R.string.ok)).thenReturn("OK")
         whenever(rh.gs(R.string.error)).thenReturn("Error")

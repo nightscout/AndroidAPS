@@ -21,10 +21,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.platform.LocalWindowInfo
 import app.aaps.appshell.AapsAppRoot
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
+import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.interfaces.resources.LanguageTag
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
 import app.aaps.core.keys.StringKey
+import java.io.File
+import java.io.RandomAccessFile
+import java.nio.channels.FileChannel
+import java.nio.channels.FileLock
 import java.util.Locale
 import app.aaps.appshell.navigation.AppRoute
 import app.aaps.appshell.navigation.appNavGraph
@@ -33,11 +42,15 @@ import app.aaps.appshell.navigation.handleNotificationAction
 import app.aaps.appshell.navigation.handleQuickLaunchAction
 import app.aaps.appshell.navigation.handleSearchResultClick
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.shared.clientbindings.ClientGraphBindings
+import app.aaps.desktop.shell.config.GeneratedBuildInfo
 import app.aaps.desktop.shell.di.DesktopAppGraph
 import app.aaps.desktop.shell.di.GeneratedStringOwners
+import app.aaps.implementation.logging.AAPSLoggerDesktop
+import app.aaps.implementation.maintenance.DesktopFolders
 import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -80,7 +93,15 @@ import app.aaps.core.ui.compose.metroViewModel
  * terminal nobody is watching is how a broken launch gets mistaken for a working one.
  */
 fun main() {
+    // Before everything, including the lock and the logger below, because it decides which data
+    // directory all of them use. Each client keeps its own, the way each Android client is a
+    // separate app with its own private storage, so two can run at once against two sites.
+    DesktopFolders.client = GeneratedBuildInfo.CLIENT
     val startup = runCatching {
+        // Then the lock, before the graph, because the graph opens the database. Two copies of the
+        // *same* client sharing one database is what is being prevented - a different client has its
+        // own directory by the line above, and its own lock inside it, so it is unaffected.
+        claimSingleInstance()
         val graph = createGraphFactory<DesktopAppGraph.Factory>().create(CoreObjectsGraph, ClientGraphBindings)
         startPlugins(graph)
         graph
@@ -108,6 +129,54 @@ fun main() {
 }
 
 /**
+ * Held for the life of the process, and never released by hand.
+ *
+ * A [FileLock] is let go when its channel is closed, and a channel with nothing referring to it can
+ * be collected - so the lock has to be kept reachable or it would quietly disappear while the app is
+ * still running. The operating system drops it when the process ends, which is exactly the behaviour
+ * wanted: an instance that is killed, or that crashes, does not leave a stale lock behind that stops
+ * the next start.
+ */
+private var instanceLock: FileLock? = null
+private var instanceChannel: FileChannel? = null
+
+/**
+ * Refuses to start when another copy of this app is already running.
+ *
+ * Two instances share one `aaps-desktop.db`, one preference file and one log, and neither knows the
+ * other is there. It is easy to end up with: the window can be behind another, and starting from the
+ * IDE or from Gradle again looks like a fresh start. It really happened - two were found running at
+ * once, more than half an hour apart, and neither had complained.
+ *
+ * The lock lives beside the database in [DesktopFolders.data], not in the user's `AAPS` folder,
+ * because it is the app's own business and nobody should ever see it. Throws rather than exits, so
+ * the message reaches the same window a failed startup already uses instead of the process vanishing
+ * with nothing shown.
+ */
+private fun claimSingleInstance() {
+    val dataDir = DesktopFolders.data
+    if (!dataDir.exists() && !dataDir.mkdirs()) error("Could not create ${dataDir.path}")
+    val channel = RandomAccessFile(File(dataDir, "aaps-desktop.lock"), "rw").channel
+    // null means somebody else holds it; the exception means this JVM already does, which can only
+    // happen if this is called twice. Both mean the same thing to the user.
+    val lock = runCatching { channel.tryLock() }.getOrNull()
+    // Its own logger, because there is no graph yet and there may never be one on this path.
+    // AAPSLoggerDesktop takes a null log config for exactly this moment, and it writes to the same
+    // file the started instance writes to - so a refused start leaves a line in the log a user reads
+    // rather than only a message in a window they may have closed.
+    val logger = AAPSLoggerDesktop()
+    if (lock == null) {
+        channel.close()
+        val message = "AAPSClient is already running. Only one copy can use the database in ${dataDir.path} at a time."
+        logger.error(LTag.CORE, message)
+        error(message)
+    }
+    logger.debug(LTag.CORE, "Single instance lock taken in ${dataDir.path}")
+    instanceChannel = channel
+    instanceLock = lock
+}
+
+/**
  * Registers the plugins and picks the active one in each category, before anything draws.
  *
  * Order matters and both steps are needed. Registering the list is not enough on its own: until the
@@ -124,14 +193,31 @@ private fun startPlugins(graph: DesktopAppGraph) {
     // than an argument to every lookup - the same arrangement Android gets from `Resources`, which is
     // why `gs(ref)` needs no locale and no call site changed. Without this the desktop is English
     // whatever the setting says, which is how it behaved before the translations were generated.
-    val chosen = graph.preferences.get(StringKey.GeneralLanguage)
-    TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
+    // Through LanguageTag, not straight from the preference: the stored values are not all tags.
+    // "dk" is a country code where a language code belongs, and "pt_BR"/"zh_TW"/"zh_CN" use the Java
+    // underscore form. Passing those on raw matched no translation, so four of the offered languages
+    // showed a fully English app here while Android translated.
+    TextRefValueRegistry.locale =
+        LanguageTag.of(graph.preferences.get(StringKey.GeneralLanguage)) ?: Locale.getDefault().toLanguageTag()
     graph.logger.debug(LTag.CORE, "Language: ${TextRefValueRegistry.locale}")
+    // Which marker files were found, so the answer is in the log rather than only in whether a
+    // preference row happens to be drawn. An option that is switched off and a marker file that is
+    // looked for in the wrong folder produce exactly the same silence, which is how desktop went a
+    // long time reading these from the data directory while Android reads them from AAPS/extra.
+    val enabledOptions = ExternalOptions.entries.filter { graph.config.isEnabled(it) }
+    graph.logger.debug(
+        LTag.CORE,
+        "External options in ${DesktopFolders.extra.path}: " +
+            if (enabledOptions.isEmpty()) "none" else enabledOptions.joinToString { it.filename }
+    )
     // Sorted by the key each plugin registers itself with, which is the order the plugin list is
     // shown in and the order category defaults are picked in.
     val plugins = graph.contributedPlugins.entries.sortedBy { it.key }.map { it.value }
     graph.pluginStore.plugins = plugins
     graph.configBuilder.initialize()
+    // The periodic housekeeping Android gets from KeepAliveWorker. The work is shared; only the
+    // trigger is not, because there is no WorkManager here.
+    graph.periodicMaintenance.start(graph.appScope)
     graph.logger.debug(LTag.CORE, "Registered ${plugins.size} plugins and verified selections")
 }
 
@@ -161,6 +247,21 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
             TextRefValueRegistry.locale = if (chosen == "default") Locale.getDefault().toLanguageTag() else chosen
             logger.debug(LTag.CORE, "Language changed to ${TextRefValueRegistry.locale}")
             graph.uiRestart.request()
+        }
+    }
+
+    // Clears a granted PIN or biometric session when the window stops being the active one - the
+    // desktop counterpart of Android's `ProcessLifecycleListener.onPause`. Nothing did this before,
+    // so the authorization outlived leaving the app and coming back to the window reached whatever
+    // the user had protected without a prompt. `ProtectionTimeout` defaults to a second, so only a
+    // user who raised it was affected, which is why it went unnoticed.
+    val windowInfo = LocalWindowInfo.current
+    LaunchedEffect(windowInfo) {
+        // No `drop(1)`: the first value is either focused, which this ignores, or unfocused, and
+        // clearing a session nobody has granted yet does nothing.
+        snapshotFlow { windowInfo.isWindowFocused }.filter { !it }.collect {
+            logger.debug(LTag.CORE, "Window lost focus, clearing the authorization")
+            graph.protectionCheck.resetAuthorization()
         }
     }
 
@@ -284,9 +385,13 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                             if (result == app.aaps.core.interfaces.protection.ProtectionResult.GRANTED) action()
                         }
                     },
+                    // The same check `ComposeMainActivity` makes - see the note in `AapsAppHost`. It
+                    // used to grant unconditionally, so settings protection did not cover the edit
+                    // pencil on the management screens.
                     requestEditModeAuthorization = { onGranted ->
-                        logger.notWiredYet("edit mode authorization - granting")
-                        onGranted()
+                        graph.protectionCheck.requestAuthorization(ProtectionCheck.Protection.PREFERENCES) { result ->
+                            if (result.grantedLevel != null) onGranted()
+                        }
                     },
                     onRefreshPermissions = { logger.debug(LTag.CORE, "No runtime permissions to refresh on desktop") },
                     onExecuteQuickWizard = { guid -> mainViewModel.executeQuickWizard(guid) },

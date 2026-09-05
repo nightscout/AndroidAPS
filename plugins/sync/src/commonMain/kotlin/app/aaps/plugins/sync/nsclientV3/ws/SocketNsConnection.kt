@@ -85,6 +85,7 @@ class SocketNsConnection @Inject constructor(
     private val config: Config,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsFrameHandler: NsFrameHandler,
+    private val nsConnectHandler: NsConnectHandler,
     private val nsClientRepository: NSClientRepository,
     private val nsSocketFactory: NsSocketFactory
 ) : NsConnection {
@@ -122,6 +123,27 @@ class SocketNsConnection @Inject constructor(
         }
 
         val base = preferences.get(StringKey.NsClientUrl).lowercase().trimEnd('/')
+        // socket.io throws for a URL it can parse but cannot use - an unusable transport, a host it
+        // will not accept - rather than reporting it. Android still guards this in
+        // `NSClientV3Service` and dev did too; the port kept only the URI-syntax half, which is the
+        // `create() == null` branch below. Without the guard the throw leaves
+        // `NSClientV3Plugin.onStart` part way through, so the plugin ends up enabled with no
+        // observers and no upload collector attached and only a restart repairs it. Losing the
+        // socket is bad, losing the rest of the plugin silently is worse.
+        try {
+            openSockets(base, reason)
+        } catch (e: RuntimeException) {
+            stop()
+            nsClientRepository.addLog("● WS", "RuntimeException: ${e.message}")
+        }
+    }
+
+    /**
+     * Both sockets: created, listened to and asked to connect.
+     *
+     * Split out of [start] only so one `try` can cover all of it, which is the shape Android has.
+     */
+    private fun openSockets(base: String, reason: String) {
         val storage = nsSocketFactory.create("$base/storage")
         if (storage == null) {
             stop()
@@ -149,12 +171,7 @@ class SocketNsConnection @Inject constructor(
             }
             alarmSocket = alarm
             alarm.on(NsSocket.EVENT_CONNECT) { onConnectAlarms() }
-            alarm.on(NsSocket.EVENT_DISCONNECT) { reason ->
-                // The reason was discarded here while the storage socket logged its own. Android
-                // logs both.
-                aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: $reason")
-                nsClientRepository.addLog("◄ WS", "disconnect alarm event")
-            }
+            alarm.on(NsSocket.EVENT_DISCONNECT) { reason -> nsConnectHandler.onDisconnectAlarm(reason) }
             alarm.on("announcement") { raw -> onAnnouncement(raw) }
             alarm.on("alarm") { raw -> onAlarm(raw) }
             alarm.on("urgent_alarm") { raw -> onUrgentAlarm(raw) }
@@ -182,53 +199,15 @@ class SocketNsConnection @Inject constructor(
     // Storage socket
     // ---------------------------------------------------------------------------------------------
 
-    private fun onConnectStorage() {
-        val socket = storageSocket ?: return
-        nsClientRepository.addLog("◄ WS", "connected storage ID: ${socket.id ?: "NULL"}")
-        val auth = buildJsonObject {
-            put("accessToken", preferences.get(StringKey.NsClientAccessToken))
-            put("collections", buildJsonArray { COLLECTIONS.forEach { add(it) } })
-        }
-        nsClientRepository.addLog("► WS", "requesting auth for storage")
-        socket.emitWithAck("subscribe", auth.toString()) { raw ->
-            val response = parse(raw)
-            _connected.value = if (response?.bool("success") == true) {
-                nsClientRepository.addLog("◄ WS", "Subscribed for: ${NsWsPayload.text(response, "collections")}")
-                // Nothing arrives while disconnected, so the next round has to be a catch-up one.
-                nsClientV3Plugin().initialLoadFinished = false
-                nsClientV3Plugin().executeLoop("WS_CONNECT")
-                true
-            } else {
-                nsClientRepository.addLog("◄ WS", "Auth failed")
-                false
-            }
-            nsClientRepository.updateStatus(nsClientV3Plugin().status)
-        }
-    }
+    private fun onConnectStorage() = nsConnectHandler.onConnectStorage(storageSocket) { _connected.value = it }
 
-    private fun onDisconnectStorage(reason: String) {
-        aapsLogger.debug(LTag.NSCLIENT, "disconnect storage reason: $reason")
-        nsClientRepository.addLog("◄ WS", "disconnect storage event")
-        _connected.value = false
-        nsClientV3Plugin().initialLoadFinished = false
-        nsClientRepository.updateStatus(nsClientV3Plugin().status)
-    }
+    private fun onDisconnectStorage(reason: String) = nsConnectHandler.onDisconnectStorage(reason) { _connected.value = false }
 
     // ---------------------------------------------------------------------------------------------
     // Alarm socket
     // ---------------------------------------------------------------------------------------------
 
-    private fun onConnectAlarms() {
-        val socket = alarmSocket ?: return
-        nsClientRepository.addLog("◄ WS", "connected alarms ID: ${socket.id ?: "NULL"}")
-        val auth = buildJsonObject { put("accessToken", preferences.get(StringKey.NsClientAccessToken)) }
-        nsClientRepository.addLog("► WS", "requesting auth for alarms")
-        socket.emitWithAck("subscribe", auth.toString()) { raw ->
-            val response = parse(raw)
-            if (response?.bool("success") == true) nsClientRepository.addLog("◄ WS", response.str("message") ?: "")
-            else nsClientRepository.addLog("◄ WS", "Auth failed")
-        }
-    }
+    private fun onConnectAlarms() = nsConnectHandler.onConnectAlarms(alarmSocket)
 
     // Frame handling is shared with Android - see NsFrameHandler. These stay as delegates so the
     // characterization tests written against this class still exercise the real routing.

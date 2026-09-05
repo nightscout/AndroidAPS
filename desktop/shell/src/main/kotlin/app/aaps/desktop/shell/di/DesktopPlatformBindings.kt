@@ -2,6 +2,7 @@ package app.aaps.desktop.shell.di
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.desktop.shell.appIconResource
 import app.aaps.desktop.shell.loadAwtAppIcon
@@ -39,7 +40,8 @@ object DesktopPlatformBindings {
     /** Console for now, and a rotating file beside the database for afterwards. */
     @Provides
     @SingleIn(AppScope::class)
-    fun logger(): AAPSLogger = AAPSLoggerDesktop()
+    // `L` is deferred: it reads Preferences, which needs a logger. See IosPlatformBindings.
+    fun logger(logConfig: () -> L): AAPSLogger = AAPSLoggerDesktop(logConfig = logConfig)
 
     /** A properties file next to the database, which `PreferencesImpl` sits on unchanged. */
     @Provides

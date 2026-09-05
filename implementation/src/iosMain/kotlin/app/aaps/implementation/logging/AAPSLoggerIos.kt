@@ -1,6 +1,7 @@
 package app.aaps.implementation.logging
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDate
@@ -43,7 +44,9 @@ import platform.Foundation.writeData
 @OptIn(ExperimentalForeignApi::class)
 class AAPSLoggerIos(
     private val fileName: String = "aaps.log",
-    private val maxBytes: Long = 5L * 1024 * 1024
+    private val maxBytes: Long = 5L * 1024 * 1024,
+    /** Reads the stored per-tag switches. Null before the graph can supply one - see [enabled]. */
+    private val logConfig: (() -> L)? = null
 ) : AAPSLogger {
 
     private val timestamps = NSISO8601DateFormatter()
@@ -67,16 +70,16 @@ class AAPSLoggerIos(
     override fun warn(tag: LTag, message: String) = write("WARN", tag, message)
     override fun warn(tag: LTag, format: String, vararg arguments: Any?) = write("WARN", tag, format.fill(arguments))
 
-    override fun error(tag: LTag, message: String) = write("ERROR", tag, message)
+    override fun error(tag: LTag, message: String) = write("ERROR", tag, message, gated = false)
     override fun error(tag: LTag, message: String, throwable: Throwable) =
-        write("ERROR", tag, "$message\n${throwable.stackTraceToString()}")
+        write("ERROR", tag, "$message\n${throwable.stackTraceToString()}", gated = false)
 
-    override fun error(tag: LTag, format: String, vararg arguments: Any?) = write("ERROR", tag, format.fill(arguments))
-    override fun error(message: String) = write("ERROR", null, message)
+    override fun error(tag: LTag, format: String, vararg arguments: Any?) = write("ERROR", tag, format.fill(arguments), gated = false)
+    override fun error(message: String) = write("ERROR", null, message, gated = false)
     override fun error(message: String, throwable: Throwable) =
-        write("ERROR", null, "$message\n${throwable.stackTraceToString()}")
+        write("ERROR", null, "$message\n${throwable.stackTraceToString()}", gated = false)
 
-    override fun error(format: String, vararg arguments: Any?) = write("ERROR", null, format.fill(arguments))
+    override fun error(format: String, vararg arguments: Any?) = write("ERROR", null, format.fill(arguments), gated = false)
 
     override fun debug(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) =
         write("DEBUG", tag, "$className.$methodName($lineNumber): $message")
@@ -88,15 +91,33 @@ class AAPSLoggerIos(
         write("WARN", tag, "$className.$methodName($lineNumber): $message")
 
     override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) =
-        write("ERROR", tag, "$className.$methodName($lineNumber): $message")
+        write("ERROR", tag, "$className.$methodName($lineNumber): $message", gated = false)
 
     // ---------------------------------------------------------------------------------------------
     // Sinks
     // ---------------------------------------------------------------------------------------------
 
-    private fun write(level: String, tag: LTag?, message: String) {
-        // The tag's own switch, the same gate the Android logger applies.
-        if (tag != null && !tag.defaultValue) return
+    /**
+     * Whether [tag] is switched on, from the stored preference when there is one.
+     *
+     * This used to read `tag.defaultValue`, which is the compile-time default and not a switch at
+     * all: eight tags ship `false`, so they could never be turned on however the log-settings sheet
+     * was set, and "enable NSCLIENT_SYNC and send me the log" was impossible off Android. The
+     * preference-backed answer is `L`, which lives in `shared/impl` commonMain and is available on
+     * every platform.
+     *
+     * Deferred and nullable because this logger is one of the first things the graph builds - the
+     * probe shell and the tests construct it with no graph at all - and `L` needs `Preferences`.
+     * Before it can be read, the compile-time default is the only answer there is.
+     */
+    internal fun enabled(tag: LTag): Boolean =
+        logConfig?.let { runCatching { it().findByName(tag.tag).enabled }.getOrNull() } ?: tag.defaultValue
+
+    private fun write(level: String, tag: LTag?, message: String, gated: Boolean = true) {
+        // Errors are never gated, matching Android: a tag switched off must quieten the running
+        // commentary, not hide the thing that went wrong. This gated everything, so an error on one
+        // of the tags that ship disabled was dropped and nothing recorded that it had been.
+        if (gated && tag != null && !enabled(tag)) return
 
         val line = "${timestamps.stringFromDate(NSDate())} $level ${tag?.tag ?: "CORE"}: $message"
         // NSLog is a C varargs function, so `%@` needs a real Obj-C object. Passing the Kotlin

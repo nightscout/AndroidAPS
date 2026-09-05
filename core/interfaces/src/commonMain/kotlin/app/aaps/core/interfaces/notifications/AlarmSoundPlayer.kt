@@ -18,6 +18,14 @@ import app.aaps.core.interfaces.notifications.AlarmSoundPlayer.Companion.OWNER_I
  * full-screen activity on rotation) cannot silence an alarm started by the other driver.
  * Volume ramp and DND/stream routing follow the user's `AlertIncreaseVolume` /
  * `AlertOverrideDoNotDisturb` preferences.
+ *
+ * `AlertOverrideDoNotDisturb` takes two levers to honour off Android, because iOS splits what
+ * Android's alarm stream does in one. The Ring/Silent switch is answered by the audio session
+ * category chosen here - and only by that, since iOS publishes no way to read the switch - while
+ * Focus is answered by the notification's interruption level in `SystemNotificationPlatform`. An
+ * implementation that sets only one of the two honours half the setting, which is what iOS did.
+ *
+ * Desktop honours neither, and cannot: AWT offers a single system beep and no notion of silent mode.
  */
 interface AlarmSoundPlayer {
 

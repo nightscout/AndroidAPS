@@ -67,6 +67,20 @@ kotlin {
                 api(libs.kotlin.stdlib.jdk8)
             }
         }
+        iosMain {
+            dependencies {
+                // Kotlin/Native has no javax.crypto, so the iOS side of CryptoPrimitives goes
+                // through this instead. It wraps CommonCrypto and CryptoKit rather than
+                // implementing anything, which is what is wanted in a path that protects an export.
+                implementation(libs.cryptography.core)
+                implementation(libs.cryptography.provider.optimal)
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
         getByName("androidHostTest") {
             dependencies {
                 implementation(project(":shared:tests"))

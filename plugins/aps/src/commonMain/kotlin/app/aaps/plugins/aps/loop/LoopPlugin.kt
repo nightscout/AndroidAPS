@@ -92,7 +92,6 @@ import app.aaps.core.objects.extensions.jsonObject
 import app.aaps.plugins.aps.loop.extensions.jsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
-import kotlin.experimental.ExperimentalNativeApi
 import kotlin.math.abs
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
@@ -259,10 +258,25 @@ class LoopPlugin @Inject constructor(
         return modes
     }
 
-    // `assert` is disabled unless assertions are switched on, so these three have always been no-ops in
-    // a release build. Opting in keeps that exactly; `check` would start throwing in the running-mode
-    // path, which is not a change to make in passing.
-    @OptIn(ExperimentalNativeApi::class)
+    /**
+     * A precondition that is reported rather than enforced.
+     *
+     * These used to be `assert`, which is not one behaviour across platforms. The JVM checks
+     * assertions only under `-ea`, which Android never sets, so on a phone they have always done
+     * nothing. Kotlin/Native turns them on in a **debug** binary, so the very same lines threw
+     * `AssertionError` on iOS - out of the middle of a running mode change, failing a user action
+     * that Android completes without complaint. A precondition that is ignored on one platform and
+     * aborts on another is worse than one that only reports, especially where the failure lands on
+     * the insulin path.
+     *
+     * Logging is the behaviour worth keeping of the two. Every case below is a combination the UI is
+     * meant to prevent and the code that follows already copes with; what was missing was any way to
+     * learn that a caller had got it wrong, which `assert` never provided on Android either.
+     */
+    private inline fun expected(condition: Boolean, message: () -> String) {
+        if (!condition) aapsLogger.error(LTag.CORE, "Running mode precondition failed: ${message()}")
+    }
+
     override suspend fun handleRunningModeChange(newRM: RM.Mode, action: Action, source: Sources, listValues: List<ValueWithUnit>, durationInMinutes: Int, profile: Profile): Boolean {
         val now = dateUtil.now()
         val currentRM = runningModeRecord()
@@ -270,10 +284,10 @@ class LoopPlugin @Inject constructor(
             // do nothing. Handled in runningModePreCheck
             return false
         }
-        // Preconditions (hardcoded logic)
-        if (newRM.mustBeTemporary()) assert(durationInMinutes > 0)
-        if (newRM.isLoopRunning()) assert(durationInMinutes == 0)
-        if (newRM == RM.Mode.RESUME) assert(currentRM.isTemporary())
+        // Preconditions (hardcoded logic). Logged rather than asserted - see `expected`.
+        expected(!newRM.mustBeTemporary() || durationInMinutes > 0) { "$newRM must be temporary but duration is $durationInMinutes" }
+        expected(!newRM.isLoopRunning() || durationInMinutes == 0) { "$newRM is a running mode but carries duration $durationInMinutes" }
+        expected(newRM != RM.Mode.RESUME || currentRM.isTemporary()) { "RESUME from a permanent mode ${currentRM.mode}" }
 
         // Change running mode
         when (newRM) {
@@ -843,9 +857,8 @@ class LoopPlugin @Inject constructor(
      * Pure DB write: the RunningModeReconciler observes the change and cancels any active TBR
      * on the pump side.
      */
-    @OptIn(ExperimentalNativeApi::class)
     suspend fun suspendLoop(mode: RM.Mode, autoForced: Boolean, reasons: String?, durationInMinutes: Int, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = emptyList()) {
-        assert(mode == RM.Mode.SUSPENDED_BY_PUMP || mode == RM.Mode.SUSPENDED_BY_USER || mode == RM.Mode.SUSPENDED_BY_DST)
+        expected(mode == RM.Mode.SUSPENDED_BY_PUMP || mode == RM.Mode.SUSPENDED_BY_USER || mode == RM.Mode.SUSPENDED_BY_DST) { "$mode is not a suspend mode" }
         persistenceLayer.insertOrUpdateRunningMode(
             runningMode = RM(timestamp = dateUtil.now(), duration = T.mins(durationInMinutes.toLong()).msecs(), mode = mode, autoForced = autoForced, reasons = reasons),
             action = action,

@@ -10,6 +10,7 @@ import app.aaps.core.data.model.TDD
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -21,6 +22,7 @@ import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.activityMonitor.ActivityStatsProvider
 import app.aaps.ui.activityMonitor.ActivityStats
@@ -59,8 +61,20 @@ class StatsViewModel @Inject constructor(
     private val uel: UserEntryLogger,
     val dateUtil: DateUtil,
     val profileUtil: ProfileUtil,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val config: Config
 ) : ViewModel() {
+
+    /**
+     * Whether the activity monitor card is worth drawing.
+     *
+     * Android only. It counts time spent on each screen from an `ActivityLifecycleCallbacks`, which
+     * has no counterpart elsewhere: both `IosActivityStatsProvider` and the desktop one return an
+     * empty list and log "not on this platform", and their KDocs call that an answer rather than a
+     * gap. The card was drawn anyway - no empty check - so those users got a headed card with
+     * nothing in it and a Reset button that reset nothing.
+     */
+    val showActivityStats: Boolean get() = config.platform == AppPlatform.Android
 
     private val _uiState = MutableStateFlow(StatsUiState())
     val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()
@@ -96,7 +110,8 @@ class StatsViewModel @Inject constructor(
         loadTddStats()
         loadTirStats()
         loadDexcomTirStats()
-        loadActivityStats()
+        // Skipped where the card is not drawn - the provider would only log that it has nothing.
+        if (showActivityStats) loadActivityStats()
     }
 
     private fun loadTddStats() {

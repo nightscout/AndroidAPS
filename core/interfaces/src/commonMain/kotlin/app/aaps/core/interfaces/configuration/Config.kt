@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.configuration
 
+import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -70,6 +71,19 @@ interface Config {
      * platform the build never declared.
      */
     val PLATFORM: String get() = ""
+
+    /**
+     * The same fact as [PLATFORM], as something code can branch on.
+     *
+     * [PLATFORM] is a string shown to the user in the About dialog, and a display string should not
+     * become load bearing - it was briefly used as an "is this Android" test, which was already
+     * wrong because `ConfigImpl` sets it to "Android" rather than leaving it empty.
+     *
+     * This is what decides whether a platform-specific piece of UI is drawn, and what
+     * [app.aaps.core.keys.interfaces.PreferenceKey.platforms] is matched against. Deliberately
+     * without a default: a new shell has to say what it is rather than inherit someone else's answer.
+     */
+    val platform: AppPlatform
     val APPLICATION_ID: String
     val DEBUG: Boolean
     val currentDeviceModelString: String

@@ -43,6 +43,7 @@ import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.extensions.toRunningConfiguration
 import app.aaps.plugins.sync.nsclientV3.json.JsonBridge.toKotlinxJson
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
+import app.aaps.plugins.sync.nsclientV3.ws.NsConnectHandler
 import app.aaps.plugins.sync.nsclientV3.ws.NsFrameHandler
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocket
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
@@ -67,6 +68,7 @@ class NSClientV3Service : MetroService() {
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Inject lateinit var nsFrameHandler: NsFrameHandler
+    @Inject lateinit var nsConnectHandler: NsConnectHandler
     @Inject lateinit var nsClientRepository: NSClientRepository
     @Inject lateinit var runningConfiguration: RunningConfiguration
     @Inject lateinit var orphanDetector: OrphanDetector
@@ -204,61 +206,13 @@ class NSClientV3Service : MetroService() {
         }
     }
 
-    private val onConnectStorage: (String) -> Unit = {
-        val socketId = storageSocket?.id ?: "NULL"
-        nsClientRepository.addLog("◄ WS", "connected storage ID: $socketId")
-        if (storageSocket != null) {
-            val authMessage = JSONObject().also {
-                it.put("accessToken", preferences.get(StringKey.NsClientAccessToken))
-                it.put("collections", JSONArray(arrayOf("devicestatus", "entries", "profile", "treatments", "foods", "settings")))
-            }
-            nsClientRepository.addLog("► WS", "requesting auth for storage")
-            storageSocket?.emitWithAck("subscribe", authMessage.toString(), { raw ->
-                val response = JSONObject(raw)
-                wsConnected = if (response.optBoolean("success")) {
-                    nsClientRepository.addLog("◄ WS", "Subscribed for: ${response.optString("collections")}")                    // during disconnection updated data is not received
-                    // thus run non WS load to get missing data
-                    nsClientV3Plugin.initialLoadFinished = false
-                    nsClientV3Plugin.executeLoop("WS_CONNECT")
-                    true
-                } else {
-                    nsClientRepository.addLog("◄ WS", "Auth failed")
-                    false
-                }
-                nsClientRepository.updateStatus(nsClientV3Plugin.status)
-            })
-        }
-    }
+    private val onConnectStorage: (String) -> Unit = { nsConnectHandler.onConnectStorage(storageSocket) { ok -> wsConnected = ok } }
 
-    private val onConnectAlarms: (String) -> Unit = {
-        val socket = alarmSocket
-        val socketId = socket?.id ?: "NULL"
-        nsClientRepository.addLog("◄ WS", "connected alarms ID: $socketId")
-        if (socket != null) {
-            val authMessage = JSONObject().also {
-                it.put("accessToken", preferences.get(StringKey.NsClientAccessToken))
-            }
-            nsClientRepository.addLog("► WS", "requesting auth for alarms")
-            socket.emitWithAck("subscribe", authMessage.toString(), { raw ->
-                val response = JSONObject(raw)
-                if (response.optBoolean("success")) nsClientRepository.addLog("◄ WS", response.optString("message"))
-                else nsClientRepository.addLog("◄ WS", "Auth failed")
-            })
-        }
-    }
+    private val onConnectAlarms: (String) -> Unit = { nsConnectHandler.onConnectAlarms(alarmSocket) }
 
-    private val onDisconnectStorage: (String) -> Unit = { reason ->
-        aapsLogger.debug(LTag.NSCLIENT, "disconnect storage reason: $reason")
-        nsClientRepository.addLog("◄ WS", "disconnect storage event")
-        wsConnected = false
-        nsClientV3Plugin.initialLoadFinished = false
-        nsClientRepository.updateStatus(nsClientV3Plugin.status)
-    }
+    private val onDisconnectStorage: (String) -> Unit = { reason -> nsConnectHandler.onDisconnectStorage(reason) { wsConnected = false } }
 
-    private val onDisconnectAlarm: (String) -> Unit = { reason ->
-        aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: $reason")
-        nsClientRepository.addLog("◄ WS", "disconnect alarm event")
-    }
+    private val onDisconnectAlarm: (String) -> Unit = { reason -> nsConnectHandler.onDisconnectAlarm(reason) }
 
     /** Acking an alarm back to Nightscout needs the alarm socket, which this service owns. */
     fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
