@@ -3,18 +3,12 @@ package app.aaps.desktop.shell.platform
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
-import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.ExportResult
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
-import app.aaps.core.ui.compose.icons.IcGoogleDrive
-import app.aaps.implementation.ImplementationStrings
-import app.aaps.implementation.maintenance.cloud.CloudConstants
 import app.aaps.ui.compose.history.HistoryScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -102,60 +96,6 @@ class DesktopMaintenance @Inject constructor(
     override fun deleteLogs(keep: Int) = aapsLogger.notOnDesktopYet("Maintenance.deleteLogs")
 }
 
-/**
- * Cloud backup, which is Google Drive behind an OAuth flow.
- *
- * Every read reports "not connected" and every action refuses, so the settings screen shows cloud
- * export as unavailable rather than offering a sign-in that cannot complete.
- */
-@ContributesBinding(AppScope::class)
-@SingleIn(AppScope::class)
-class DesktopCloudDirectoryManager @Inject constructor(
-    private val aapsLogger: AAPSLogger,
-    private val rh: TextResolver
-) : CloudDirectoryManager {
-
-    /**
-     * Not connected, which on desktop is the true answer rather than an invented one.
-     *
-     * Everything here is what the screen draws - three flags, four strings and an icon - so there is
-     * no decision being faked. It names Google Drive with no credentials, the same shape
-     * `CloudDirectoryManagerImpl` returns on a phone that has never signed in, so the sheet reads
-     * "Google Drive, not connected" instead of showing a blank row.
-     *
-     * This used to call `failNotOnDesktopYet`, which threw on the AWT event thread and took the app
-     * down as soon as anyone opened the cloud row in Maintenance. That helper is for calls whose
-     * answer a screen acts on - "did the export succeed" - where a made up reply would be dangerous.
-     * A read the user only looks at is not one of those.
-     */
-    override fun getCloudDirectoryInfo(): CloudDirectoryInfo = CloudDirectoryInfo(
-        isCloudActive = false,
-        hasCredentials = false,
-        hasConnectionError = false,
-        providerDisplayName = rh.gs(ImplementationStrings.storage_google_drive),
-        providerDescription = rh.gs(ImplementationStrings.backup_to_google_drive),
-        providerIcon = IcGoogleDrive,
-        authorizedStatusText = "",
-        cloudPath = CloudConstants.CLOUD_PATH_EXPORT
-    )
-
-    override fun clearCloudSettings() = aapsLogger.notOnDesktopYet("CloudDirectoryManager.clearCloudSettings")
-
-    override suspend fun deauthorizeAndClearCloudSettings(): Boolean {
-        aapsLogger.notOnDesktopYet("CloudDirectoryManager.deauthorizeAndClearCloudSettings")
-        return false
-    }
-
-    override fun resetExportToLocal() = aapsLogger.notOnDesktopYet("CloudDirectoryManager.resetExportToLocal")
-    override fun enableAllCloudExport() = aapsLogger.notOnDesktopYet("CloudDirectoryManager.enableAllCloudExport")
-    override fun enableLocalStorage() = aapsLogger.notOnDesktopYet("CloudDirectoryManager.enableLocalStorage")
-
-    override suspend fun testConnection(): Boolean = false
-    override suspend fun startAuth(): String? = null
-    override suspend fun waitForAuthCode(timeoutMs: Long): String? = null
-    override suspend fun completeAuth(authCode: String): Boolean = false
-    override suspend fun setupCloudStorage(): Boolean = false
-}
 
 /**
  * The history browser's own calculation scope.

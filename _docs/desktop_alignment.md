@@ -82,9 +82,23 @@ Two of the three missing pieces are now in, and both were small:
    written by an **Android phone** were listed and parsed on an iPhone out of the same Drive folder.
    So the shared client is no longer theory, and desktop is free to construct its own.
 
-Desktop now needs only its own construction: a `GoogleDriveProvider` built with the OkHttp engine,
-`JvmAuthRedirectListener`, `DesktopAuthBrowser` and `DesktopSp`, contributed into the
-`CloudStorageProvider` set. `IosGoogleDriveProvider` is thirty lines and is the worked example.
+**Done.** `DesktopGoogleDriveProvider` in `implementation/jvmMain` contributes into the
+`CloudStorageProvider` set, and `DesktopCloudDirectoryManager` is deleted - `CloudDirectoryManagerImpl`
+moved to `commonMain`, so desktop gets the real one instead of a stub that answered "not connected".
+
+That move is also what broke the desktop build in the merge, and it is worth knowing why nothing
+caught it: the shared `CloudDirectoryManagerImpl` carries `@ContributesBinding(AppScope::class)`, so
+the moment it reached `commonMain` it collided with the desktop stub that bound the same interface -
+`[Metro/DuplicateBinding]`, plus `[Metro/MissingBinding] Set<CloudStorageProvider>` because desktop
+contributed no provider. Both are compile errors in `:desktop:shell` only, and the macOS session does
+not build that module. **A commonMain class carrying a contributed binding lands on every shell at
+once**; check the other two when adding one.
+
+The construction is now shared as well. `IosGoogleDriveProvider` and `DesktopGoogleDriveProvider` are
+each an engine choice around `googleDriveProvider()` in `commonMain` - `Darwin` and `OkHttp` - and
+everything else, including the client id, is stated once. They were copies for about an hour, and in
+that hour the copies were not equal: see the note in `_docs/ios_blockers.md` about the dropped
+`forceRefresh` flag.
 
 Two things iOS hit that desktop will hit too, both already fixed in shared code but worth knowing
 about: `LocalImportExportPrefs` used to hardcode `isCloudActive = false` and stub the three cloud
