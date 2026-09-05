@@ -38,19 +38,27 @@ import kotlinx.coroutines.flow.StateFlow
 /**
  * Import and export of settings.
  *
- * The largest thing still missing, and it is not "file dialogs": `ImportExportPrefsImpl` is 911 lines
- * over the Storage Access Framework and WorkManager, and the format under it,
- * `EncryptedPrefsFormat`, is another 296 over `Context`, `DocumentFile` and `org.json`.
+ * **The reason this used to refuse has gone.** It was the format, not the file dialogs: a phone has
+ * to read back what a desktop writes, and a second implementation of an encrypted stored format is
+ * how two platforms silently stop matching - surfacing as "your backup will not import" long after
+ * the export.
  *
- * The format is the reason this refuses rather than getting a quick desktop version. A phone has to
- * read back what a desktop writes; a second implementation of an encrypted stored format is how the
- * two silently stop matching, and the failure would appear as "your backup will not import" long
- * after the export.
+ * There is nothing left to reimplement. `PrefsFormatCodec` and `PrefsTransfer` are in `commonMain`,
+ * `JvmCryptoPrimitives` is in `jvmSharedMain` so desktop already has the real crypto, and all of it
+ * runs on desktop's own target - `jvmTest` executes the codec tests, the transfer tests and the
+ * crypto known-answer vectors, including the export file Android froze years ago. What is missing is
+ * only picking a file and reading and writing bytes.
  *
- * Reads answer with nothing and writes throw, so nothing here can be mistaken for a completed
- * export. `DesktopPrefsFileInfo` does list the export folder, so the screen shows which files exist
- * and then refuses to open one - deliberately, because seeing the list is what confirms the folder
- * is right.
+ * `IosImportExportPrefs` is the worked example, and much of it is Files-app plumbing a desktop does
+ * not need. Do not be put off by the old line about 911 + 296 lines: that was the Android version
+ * over the Storage Access Framework and WorkManager, and none of it is being ported.
+ *
+ * See `_docs/desktop_alignment.md`.
+ *
+ * Until then, reads answer with nothing and writes throw, so nothing here can be mistaken for a
+ * completed export. `DesktopPrefsFileInfo` does list the export folder, so the screen shows which
+ * files exist and then refuses to open one - deliberately, because seeing the list is what confirms
+ * the folder is right. Keep that when the refusal goes.
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
