@@ -376,6 +376,29 @@ step. The behaviour is unchanged and still documented in the gaps section.
 
 ## Ready for Android: what the iOS side has built
 
+### Two things the Windows session found in the Drive merge
+
+Written back for the macOS session. Both are fixed; neither was visible from your side.
+
+**`IosGoogleDriveProvider` was dropping the forced token refresh.** It passed
+`accessToken = { tokenClient.validAccessToken() }`, which compiles - the lambda's `it` is the
+`forceRefresh` flag and is simply unused - so the retry a 401 triggers re-sent the *same* stale token,
+was refused again, and cleared the sign in. That is exactly the clock-skew bug the retry was added to
+prevent, reintroduced at the construction site. `GoogleDriveProviderTest` could not see it because it
+builds its own wiring rather than using the platform class.
+
+The construction is shared now: `googleDriveProvider()` in `commonMain` takes the engine and does the
+rest, so `IosGoogleDriveProvider` and `DesktopGoogleDriveProvider` are one line of engine choice each,
+and the client id is stated once. `GoogleDriveProviderFactoryTest` covers it and fails if the flag is
+dropped again - verified by putting the bug back.
+
+**Moving `CloudDirectoryManagerImpl` to `commonMain` broke the desktop build.** It carries
+`@ContributesBinding(AppScope::class)`, so it collided with `DesktopCloudDirectoryManager`
+(`[Metro/DuplicateBinding]`), and desktop contributed no `CloudStorageProvider`
+(`[Metro/MissingBinding]`). Both are `:desktop:shell` compile errors, which the macOS session never
+builds. Worth remembering: **a commonMain class with a contributed binding lands on all three shells
+at once.** Desktop is fixed - the stub is deleted and it runs the real shared manager.
+
 ### Google Drive: the shared client is proven, Android is the last one not using it
 
 `GoogleDriveManager` in `implementation/androidMain` is 1400 lines, and everything it does now

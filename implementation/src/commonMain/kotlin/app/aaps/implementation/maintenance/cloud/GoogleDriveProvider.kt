@@ -9,13 +9,18 @@ import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.core.objects.crypto.platformCryptoPrimitives
+import app.aaps.core.ui.compose.icons.IcGoogleDrive
+import app.aaps.implementation.ImplementationStrings
+import io.ktor.client.HttpClient
 
 /**
  * Google Drive as a place to keep settings exports, written to work on every platform.
  *
- * Nothing constructs this yet. Android keeps its own `GoogleDriveManager`, and this is the shared
- * version meant to replace it once iOS and the desktop have somewhere to show a sign in. Reading it
- * as the live Drive code would be wrong: changing it changes nothing that ships today.
+ * iOS and the desktop both run this - `IosGoogleDriveProvider` and `DesktopGoogleDriveProvider` are
+ * the two lines of engine choice around [googleDriveProvider] below. Android is the last one still
+ * on its own `GoogleDriveManager`, so a change here reaches two of the three platforms and does not
+ * touch a phone.
  *
  * Composed rather than written: [GoogleAuthRequest] builds the sign in, [AuthRedirectListener]
  * catches the answer, [GoogleTokenClient] turns it into tokens and keeps them fresh, and
@@ -237,6 +242,19 @@ class GoogleDriveProvider(
         /** The port Google already has registered against the redirect for this client. */
         const val REDIRECT_PORT = 8080
 
+        /**
+         * The client AAPS is registered as, on every platform.
+         *
+         * Not a secret - a native app cannot keep one, which is exactly why the flow uses PKCE
+         * instead of relying on it. One definition because it is one registration: Android, iOS and
+         * the desktop all present this id against the same `http://localhost:8080/oauth/callback`,
+         * and a second copy of it is a second thing to get wrong.
+         */
+        const val CLIENT_ID = "705061051276-3ied5cqa3kqhb0hpr7p0rggoffhq46ef.apps.googleusercontent.com"
+
+        /** Where the redirect lands, built from [REDIRECT_PORT] so the two cannot disagree. */
+        const val REDIRECT_URI = "http://localhost:$REDIRECT_PORT/oauth/callback"
+
         private const val TAG = "GoogleDriveProvider:"
 
         // The name Android already writes, like the token names in GoogleTokenStore. A different name
@@ -248,4 +266,50 @@ class GoogleDriveProvider(
         /** Every export is json; Drive is asked not to return anything else. */
         private const val SETTINGS_MIME = "application/json"
     }
+}
+
+/**
+ * Builds the Drive provider for a platform, given that platform's HTTP engine.
+ *
+ * Every platform needs the same seven pieces put together in the same order, and the only thing that
+ * genuinely differs is the engine - `Darwin` on iOS, `OkHttp` on Android and the desktop. This
+ * existed as a copy per platform and the copies were not equal: one of them passed
+ * `{ tokenClient.validAccessToken() }` for [GoogleDriveApi]'s access token, which compiles, silently
+ * drops the `forceRefresh` flag, and turns a 401 caused by a fast clock into a cleared sign in. The
+ * wiring is written once here so that cannot happen a second time when Android joins.
+ *
+ * The caller supplies [http] and keeps ownership of it; nothing here closes it, because the provider
+ * lives as long as the app does.
+ */
+fun googleDriveProvider(
+    aapsLogger: AAPSLogger,
+    store: KeyValueStore,
+    listener: AuthRedirectListener,
+    http: HttpClient,
+    now: () -> Long
+): GoogleDriveProvider {
+    val tokens = GoogleTokenStore(store)
+    val tokenClient = GoogleTokenClient(
+        http = http,
+        tokens = tokens,
+        clientId = GoogleDriveProvider.CLIENT_ID,
+        redirectUri = GoogleDriveProvider.REDIRECT_URI,
+        now = now
+    )
+    return GoogleDriveProvider(
+        aapsLogger = aapsLogger,
+        store = store,
+        listener = listener,
+        auth = GoogleAuthRequest(platformCryptoPrimitives()),
+        tokens = tokens,
+        tokenClient = tokenClient,
+        // `force` is passed on, not dropped. See the KDoc above.
+        api = GoogleDriveApi(http, accessToken = { force -> tokenClient.validAccessToken(force) }),
+        storageType = StorageTypes.GOOGLE_DRIVE,
+        displayName = "Google Drive",
+        icon = IcGoogleDrive,
+        authorizedText = ImplementationStrings.google_drive_authorized,
+        reAuthRequiredText = ImplementationStrings.google_drive_reauth_required,
+        clientId = GoogleDriveProvider.CLIENT_ID
+    )
 }
