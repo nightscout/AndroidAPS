@@ -26,6 +26,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.OutputStream
+import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.URLEncoder
@@ -53,6 +54,13 @@ class GoogleDriveManager(
 
         private const val CLIENT_ID = "705061051276-3ied5cqa3kqhb0hpr7p0rggoffhq46ef.apps.googleusercontent.com"
         private const val REDIRECT_PORT = 8080
+
+        /**
+         * More than one, because a browser opens several connections around a redirect - a favicon,
+         * a prefetch - and with a backlog of one the redirect itself can be the connection refused.
+         * The same number the iOS listener uses.
+         */
+        private const val SERVER_BACKLOG = 8
         private const val REDIRECT_URI = "http://localhost:$REDIRECT_PORT/oauth/callback"
         private const val SCOPE = "https://www.googleapis.com/auth/drive.file"
         private const val AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -677,8 +685,15 @@ class GoogleDriveManager(
             // Stop existing server
             stopLocalServer()
 
-            // Create new server
-            localServer = ServerSocket(REDIRECT_PORT)
+            // Create new server, on loopback only.
+            //
+            // `ServerSocket(port)` binds every interface, so during a sign in this listener was
+            // reachable from anything else on the same wifi - and it hands out the callback page and
+            // accepts `?code=`. The browser that follows the redirect is on this device by
+            // definition (the redirect is http://localhost:$REDIRECT_PORT/...), so nothing legitimate
+            // ever needed to reach it from outside. The iOS listener binds loopback for the same
+            // reason.
+            localServer = ServerSocket(REDIRECT_PORT, SERVER_BACKLOG, InetAddress.getLoopbackAddress())
             localServer?.soTimeout = 1000  // Set timeout to avoid permanent blocking
 
             // Start server to handle requests
@@ -746,7 +761,11 @@ class GoogleDriveManager(
                     return@withContext
                 }
 
-                aapsLogger.debug(LTag.CORE, "$LOG_PREFIX HTTP Request: $requestLine")
+                // The path only, never the query. The query on the callback carries the
+                // authorization code, and this log goes into the file users export and attach to
+                // bug reports - so the whole request line put a live credential somewhere it gets
+                // shared. What is useful for debugging is which path was hit, and that survives.
+                aapsLogger.debug(LTag.CORE, "$LOG_PREFIX HTTP Request: ${requestLine.substringBefore('?')}")
 
                 // Parse request path
                 val parts = requestLine.split(" ")
@@ -792,7 +811,12 @@ class GoogleDriveManager(
             aapsLogger.debug(LTag.CORE, "$LOG_PREFIX OAuth callback received - code: ${code != null}, state: $state, error: $error")
 
             if (error != null) {
-                sendHttpResponse(output, 400, "OAuth error: $error")
+                // The provider's own words are logged, not shown. `error` arrives in the query and is
+                // whoever-sent-the-request's text; it used to be interpolated into the HTML this
+                // serves, which made the page reflect arbitrary markup back on the localhost origin.
+                // [sendHttpResponse] escapes now as well - this is the belt to that braces.
+                aapsLogger.error(LTag.CORE, "$LOG_PREFIX OAuth callback reported an error: $error")
+                sendHttpResponse(output, 400, "Authorization failed. You can close this window and try again.")
                 return
             }
 
@@ -838,6 +862,21 @@ class GoogleDriveManager(
     /**
      * Send HTTP response
      */
+    /**
+     * Makes [text] safe to place in the HTML this serves.
+     *
+     * At the sink rather than at one call site, because the callers are the problem: a message here
+     * ends up inside `<p>` in a page served from `localhost`, and one of them used to be built from a
+     * query parameter. Escaping where the text is written means the next caller cannot reintroduce
+     * that by being careless with a string.
+     */
+    private fun escapeHtml(text: String): String =
+        text.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&#39;")
+
     private fun sendHttpResponse(output: OutputStream, statusCode: Int, message: String) {
         try {
             val statusText = when (statusCode) {
@@ -907,7 +946,7 @@ class GoogleDriveManager(
                 </head>
                 <body>
                     <h1>AAPS Google Drive Authorization</h1>
-                    <p class="$className">$message</p>
+                    <p class="$className">${escapeHtml(message)}</p>
                     $autoCloseScript
                 </body>
                 </html>
