@@ -369,9 +369,25 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                                 onImportSettingsNavigate = { source -> navController.navigate(AppRoute.ImportSettings.createRoute(source.name)) },
                                 // Needs a UIDocumentPicker, which nothing on iOS has yet.
                                 onDirectoryClick = { logger.notWiredYet("directory picker") },
-                                onLaunchBrowser = { url -> graph.urlOpener.open(url) },
-                                // An iOS app cannot bring itself to the front; the system decides.
-                                onBringToForeground = { logger.notWiredYet("bring to foreground") },
+                                // The Google sign in, and the only thing that reaches this callback.
+                                // Shown *over* AAPS rather than handed to Safari: switching to Safari
+                                // lets iOS suspend this app within seconds, and the loopback listener
+                                // waiting for Google's redirect goes with it - so the sign in would
+                                // never complete. `urlOpener` is right for ordinary links and wrong
+                                // for this one. See AuthBrowser.
+                                onLaunchBrowser = { url -> graph.authBrowser.show(url) },
+                                // Android says "bring the app back" because the browser took over the
+                                // screen; on iOS the browser is a sheet this app presented, so the
+                                // same intent is to close it.
+                                //
+                                // Only ever after the wait has ended, never while it is running. This
+                                // event is also emitted when a sign in fails, and the first version
+                                // dismissed on that too - which closed the Google page while the user
+                                // was still typing into it, because the wait had timed out at a
+                                // minute. The timeout is now five minutes; this stays defensive
+                                // because "bring the app forward" is harmless on Android and
+                                // destructive here.
+                                onBringToForeground = { graph.authBrowser.dismiss() },
                                 // No activity to recreate. A Compose scene is not restarted this way.
                                 onRecreateActivity = { logger.notWiredYet("recreate") },
                                 onAuthorizationFailed = { logger.error(LTag.CORE, "Authorization failed") },

@@ -3,6 +3,7 @@ package app.aaps.ios.shell.di
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.interfaces.ui.UrlOpener
+import app.aaps.implementation.maintenance.cloud.AuthBrowser
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -169,6 +170,9 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val receiverStatusStore: IosReceiverStatusStore
 
     val urlOpener: UrlOpener
+
+    /** Where a Google sign in is shown. Not [urlOpener] - see `AuthBrowser` for why they differ. */
+    val authBrowser: AuthBrowser
     val notificationManager: NotificationManager
 
     /**
