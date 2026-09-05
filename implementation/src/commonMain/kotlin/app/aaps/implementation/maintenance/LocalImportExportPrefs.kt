@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.Prefs
+import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -27,6 +28,7 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.implementation.maintenance.cloud.CloudConstants
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -133,9 +135,12 @@ class LocalImportExportPrefs(
     override fun setLogEmailEnabled(enabled: Boolean) = preferences.put(BooleanNonKey.ExportLogEmailEnabled, enabled)
 
     /** No cloud here, so these stay off however they are set. */
-    override fun setSettingsCloudEnabled(enabled: Boolean) = notHere("setSettingsCloudEnabled")
-    override fun setLogCloudEnabled(enabled: Boolean) = notHere("setLogCloudEnabled")
-    override fun setCsvCloudEnabled(enabled: Boolean) = notHere("setCsvCloudEnabled")
+    // Real, now that there is a cloud to enable. These were stubs written when there was not, and a
+    // stub here is worse than it looks: the switch moves, nothing is stored, and the next export goes
+    // locally while the screen says otherwise.
+    override fun setSettingsCloudEnabled(enabled: Boolean) = preferences.put(BooleanNonKey.ExportSettingsCloudEnabled, enabled)
+    override fun setLogCloudEnabled(enabled: Boolean) = preferences.put(BooleanNonKey.ExportLogCloudEnabled, enabled)
+    override fun setCsvCloudEnabled(enabled: Boolean) = preferences.put(BooleanNonKey.ExportCsvCloudEnabled, enabled)
 
     // ----- Export -----
 
@@ -148,11 +153,61 @@ class LocalImportExportPrefs(
     override fun prepareExport(): ExportPreparation =
         ExportPreparation(fileName = files.newExportName(config.FLAVOR), cachedPassword = null)
 
-    override suspend fun executeExport(password: String): ExportResult =
-        ExportResult(localSuccess = writeExport(files.newExportName(config.FLAVOR), password))
+    /**
+     * Writes the export to wherever the user chose, which may be both places.
+     *
+     * Each destination is reported on its own. A cloud upload that fails while the local file was
+     * written is not a failed export, and saying so would send someone looking for a backup they
+     * already have; the other way round matters just as much.
+     */
+    override suspend fun executeExport(password: String): ExportResult {
+        val config = getExportConfig()
+        val contents = runCatching { transfer.exportContents(metadataForExport(), password) }
+            .getOrElse {
+                aapsLogger.error(LTag.CORE, "Settings could not be prepared for export: ${it.message}")
+                return ExportResult(localSuccess = if (config.settingsLocal) false else null)
+            }
+
+        val localSuccess = if (config.settingsLocal) writeContents(files.newExportName(this.config.FLAVOR), contents) else null
+        val cloudSuccess = if (config.settingsCloud && config.isCloudActive) uploadToCloud(contents) else null
+        return ExportResult(localSuccess = localSuccess, cloudSuccess = cloudSuccess)
+    }
+
+    /**
+     * Sends the export to the active cloud provider.
+     *
+     * The bytes are already in hand, so there is no temporary file: the Android version writes one
+     * because its uploader takes a document, and nothing here needs that. The folder is the same
+     * `CLOUD_PATH_SETTINGS` every platform uses, so one account's backups sit together whichever
+     * device wrote them.
+     */
+    private suspend fun uploadToCloud(contents: String): Boolean {
+        val provider = cloudStorageManager.getActiveProvider()
+        if (provider == null) {
+            aapsLogger.error(LTag.CORE, "Export to the cloud was asked for with no provider signed in")
+            return false
+        }
+        val name = files.newExportName(config.FLAVOR)
+        return runCatching {
+            provider.uploadFileToPath(name, contents.encodeToByteArray(), "application/json", CloudConstants.CLOUD_PATH_SETTINGS) != null
+        }.getOrElse {
+            aapsLogger.error(LTag.CORE, "Export to the cloud failed: ${it.message}")
+            false
+        }.also { ok -> aapsLogger.info(LTag.CORE, if (ok) "Settings exported to the cloud as $name" else "Settings were not exported to the cloud") }
+    }
 
     override fun exportSharedPreferencesNonInteractive(password: String): Boolean =
         writeExport(files.newExportName(config.FLAVOR), password)
+
+    private fun writeContents(name: String, contents: String): Boolean =
+        try {
+            files.write(name, contents)
+            aapsLogger.info(LTag.CORE, "Settings exported to $name")
+            true
+        } catch (e: Throwable) {
+            aapsLogger.error(LTag.CORE, "Settings export to $name failed: ${e.message}")
+            false
+        }
 
     private fun writeExport(name: String, password: String): Boolean =
         try {
@@ -230,14 +285,41 @@ class LocalImportExportPrefs(
 
     // ----- Not this feature. Each says so rather than looking like it worked -----
 
-    override suspend fun getCloudImportFiles(pageToken: String?): Pair<List<PrefsFile>, String?> = emptyList<PrefsFile>() to null
-    override suspend fun getCloudImportFileCount(): Int = 0
+    /**
+     * The exports in the cloud, with their contents, so the list can show what is in each.
+     *
+     * Each file is downloaded to read its metadata - the flavour and version the import screen gates
+     * on. That is a download per row, which is why the page is small; a listing that only named the
+     * files would show rows the import screen then refuses.
+     */
+    override suspend fun getCloudImportFiles(pageToken: String?): Pair<List<PrefsFile>, String?> {
+        val provider = cloudStorageManager.getActiveProvider() ?: return emptyList<PrefsFile>() to null
+        return runCatching {
+            provider.getOrCreateFolderPath(CloudConstants.CLOUD_PATH_SETTINGS)?.let { provider.setSelectedFolderId(it) }
+            val page = provider.listSettingsFiles(pageSize = CloudConstants.DEFAULT_PAGE_SIZE, pageToken = pageToken)
+            val exports = page.files.filter { EXPORT_NAME.containsMatchIn(it.name) }.mapNotNull { file ->
+                val bytes = provider.downloadFile(file.id) ?: return@mapNotNull null
+                val contents = bytes.decodeToString()
+                PrefsFile(name = file.name, content = contents, metadata = lister.metadataOf(contents), id = file.id)
+            }
+            exports to page.nextPageToken
+        }.getOrElse {
+            aapsLogger.error(LTag.CORE, "The cloud exports could not be listed: ${it.message}")
+            emptyList<PrefsFile>() to null
+        }
+    }
+
+    override suspend fun getCloudImportFileCount(): Int =
+        runCatching { cloudStorageManager.getActiveProvider()?.countSettingsFiles() ?: 0 }.getOrDefault(0)
     override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) = notHere("exportCustomWatchface")
     override fun exportApsResult(algorithm: String?, input: String, output: String?) = notHere("exportApsResult")
 
     private fun notHere(what: String) = aapsLogger.debug(LTag.CORE, "Not implemented on this platform: ImportExportPrefs.$what")
 
     private companion object {
+
+        /** `2026-09-05_210602_full.json`. Anything else in the folder is not one of ours. */
+        private val EXPORT_NAME = Regex("^\\d{4}-\\d{2}-\\d{2}_\\d{6}.*\\.json$", RegexOption.IGNORE_CASE)
 
         /** The same window Android exports, so the two produce comparable files. */
         private const val CSV_DAYS = 90L
@@ -264,8 +346,16 @@ class PrefsFileLister @Inject constructor(
     /** Only files that really are exports. Anything else in the directory is somebody else's. */
     fun list(): List<PrefsFile> = files.list().mapNotNull { (name, contents) ->
         if (!codec.looksLikePreferences(contents)) null
-        else PrefsFile(name = name, content = contents, metadata = codec.decodeMetadata(contents))
+        else PrefsFile(name = name, content = contents, metadata = metadataOf(contents))
     }
+
+    /**
+     * What a file says about itself, without the password.
+     *
+     * Shared with the cloud listing, which has the contents in hand from a download rather than from
+     * a directory. Both lists gate on the same metadata, so both have to read it the same way.
+     */
+    fun metadataOf(contents: String): PrefMetadataMap = codec.decodeMetadata(contents)
 }
 
 /**
