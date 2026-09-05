@@ -45,6 +45,8 @@ import app.aaps.shared.clientbindings.ClientGraphBindings
 import kotlinx.coroutines.CoroutineScope
 import app.aaps.database.AppRepository
 import app.aaps.database.di.JvmAppDatabaseBuilder
+import app.aaps.implementation.maintenance.DesktopFolders
+import java.io.File
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
@@ -146,10 +148,10 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val chipsViewModelFactory: ChipsViewModel.Factory
     val overviewDataCache: OverviewDataCache
 
-    /** The app's own database, in the AAPS folder under the user's home directory. */
+    /** The app's own database, inside this client's own data directory so two clients never share one. */
     @Provides
     @SingleIn(AppScope::class)
-    fun repository(): AppRepository = JvmAppDatabaseBuilder().provideAppRepository("aaps-desktop.db")
+    fun repository(): AppRepository = JvmAppDatabaseBuilder().provideAppRepository(File(DesktopFolders.data, "aaps-desktop.db").absolutePath)
 
     /**
      * [CoreObjectsGraph] is a plain binding container rather than a contributed one, so every graph

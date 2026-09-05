@@ -1,6 +1,7 @@
 package app.aaps.desktop.shell.prefs
 
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
+import app.aaps.implementation.maintenance.DesktopFolders
 import java.io.File
 import java.util.Properties
 
@@ -30,7 +31,7 @@ import java.util.Properties
  * `SharedPreferences` makes for its own file.
  */
 class DesktopSp(
-    private val file: File = File(File(System.getProperty("user.home"), ".aaps"), "preferences.properties")
+    private val file: File = File(DesktopFolders.data, "preferences.properties")
 ) : KeyValueStore {
 
     private val properties = Properties().also { loaded ->

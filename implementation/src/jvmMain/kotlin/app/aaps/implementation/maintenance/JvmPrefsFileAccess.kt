@@ -88,12 +88,28 @@ object DesktopFolders {
     val root: File get() = File(System.getProperty("user.home") ?: ".", "AAPS")
 
     /**
+     * Which client is running: 1, 2 or 3. Set once by `Main.kt` before anything reads [data].
+     *
+     * A variable rather than an argument because [data] is read before the graph exists - the
+     * single-instance lock and the start up logger both need it - so there is nothing to inject it
+     * from yet. The same arrangement `TextRefValueRegistry.locale` already uses, and for the same
+     * reason. It is written once at start up and never again.
+     */
+    var client: Int = 1
+
+    /**
      * The app's own directory, the counterpart of Android's private data directory.
      *
      * The database, the keys, the log, the preference store and the single-instance lock. Nothing
      * here is meant to be found, created or copied by hand - that is what [root] is for.
+     *
+     * **One per client**, because on Android each client is a separate app and the system gives each
+     * its own private directory. Sharing one here would mean two clients writing one database, which
+     * is what the single-instance lock inside this folder now prevents - and preventing it is only
+     * correct if a *different* client still gets its own. Client 1 keeps the plain `.aaps` name so an
+     * existing install is not moved.
      */
-    val data: File get() = File(System.getProperty("user.home") ?: ".", ".aaps")
+    val data: File get() = File(System.getProperty("user.home") ?: ".", if (client == 1) ".aaps" else ".aaps$client")
 
     /** Settings exports, matching Android's `newPreferenceFile`, which writes to `AAPS/preferences`. */
     val preferences: File get() = File(root, "preferences")

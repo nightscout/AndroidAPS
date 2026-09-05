@@ -49,8 +49,27 @@ abstract class GenerateBuildInfoTask : DefaultTask() {
     @get:Input
     abstract val packageName: Property<String>
 
+    /**
+     * Which client this build is: 1, 2 or 3.
+     *
+     * The desktop equivalent of Android's `aapsclient` flavours, and it decides more than a name.
+     * Each client keeps its own database, preferences and keys, exactly as each Android client is a
+     * separate app with its own private directory - so two of them can run against two Nightscout
+     * sites at once. It is a build input rather than a command line flag because the packaged app
+     * needs its own name and its own icon, and jpackage settles both when the installer is built.
+     *
+     * Defaults to 1, which is what iOS and an ordinary desktop build want.
+     */
+    @get:Input
+    abstract val client: Property<Int>
+
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
+
+    init {
+        // So the iOS shell, and any build that does not care, needs to say nothing.
+        client.convention(1)
+    }
 
     @TaskAction
     fun generate() {
@@ -80,6 +99,14 @@ abstract class GenerateBuildInfoTask : DefaultTask() {
             |
             |    /** "Desktop" or "iOS". Android does not set one, and shows no platform line. */
             |    const val PLATFORM: String = "${platform.get()}"
+            |
+            |    /**
+            |     * Which client this build is: 1, 2 or 3.
+            |     *
+            |     * Decides the app name, the icon, and - the part that matters most - which data
+            |     * directory it uses, so two clients never share one database.
+            |     */
+            |    const val CLIENT: Int = ${client.get()}
             |}
             |
             """.trimMargin()

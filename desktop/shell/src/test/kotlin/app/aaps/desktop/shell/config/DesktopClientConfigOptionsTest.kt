@@ -1,10 +1,12 @@
 package app.aaps.desktop.shell.config
 
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.keys.interfaces.TextRef
 import java.io.File
 import java.nio.file.Files
 import kotlin.test.AfterTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -69,5 +71,46 @@ class DesktopClientConfigOptionsTest {
         createMarker(ExternalOptions.ENGINEERING_MODE)
 
         assertTrue(config.isEngineeringModeOrRelease())
+    }
+
+    /**
+     * Each client build says which one it is, and only one flag is ever set.
+     *
+     * The flags drive the app name and the window icon, and `-Pclient=N` is the only thing that
+     * moves them. Two set at once, or none, would give a client the wrong identity on a Nightscout
+     * site shared with the phone it follows.
+     */
+    @Test
+    fun `exactly one client flag is set, whichever client this build is`() {
+        (1..3).forEach { n ->
+            val built = DesktopClientConfig(client = n, extraDir = extraDir)
+
+            assertEquals(
+                1,
+                listOf(built.AAPSCLIENT1, built.AAPSCLIENT2, built.AAPSCLIENT3).count { it },
+                "client $n should set exactly one flag"
+            )
+            assertTrue(built.AAPSCLIENT, "every desktop build is a client")
+        }
+    }
+
+    /** The ids the Android clients use, so two clients on one site are told apart. */
+    @Test
+    fun `each client has its own application id`() {
+        val ids = (1..3).map { DesktopClientConfig(client = it, extraDir = extraDir).APPLICATION_ID }
+
+        assertEquals(3, ids.toSet().size, "two clients must not claim the same application id")
+        assertEquals("info.nightscout.aapsclient", ids.first(), "client 1 keeps the id it already had")
+    }
+
+    /** The name follows the flags, so a window and a package do not disagree. */
+    @Test
+    fun `the app name follows the client`() {
+        val names = (1..3).map { n ->
+            val built = DesktopClientConfig(client = n, extraDir = extraDir)
+            (built.appName as TextRef.Literal).text
+        }
+
+        assertEquals(listOf("AAPSClient", "AAPSClient2", "AAPSClient3"), names)
     }
 }
