@@ -61,6 +61,7 @@ import app.aaps.implementation.maintenance.data.PrefIOError
 import app.aaps.implementation.maintenance.data.PrefsFormat
 import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat
+import app.aaps.implementation.maintenance.formats.ExportMetadata
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -343,19 +344,21 @@ class ImportExportPrefsImpl @Inject constructor(
     override fun cacheExportPassword(password: String): String =
         exportPasswordDataStore.putPasswordToDataStore(password)
 
-    private fun prepareMetadata(context: Context): Map<PrefsMetadataKey, PrefMetadata> {
-
-        val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
-
-        metadata[PrefsMetadataKeyImpl.DEVICE_NAME] = PrefMetadata(detectUserName(context), PrefsStatusImpl.OK)
-        metadata[PrefsMetadataKeyImpl.CREATED_AT] = PrefMetadata(dateUtil.toISOString(dateUtil.now()), PrefsStatusImpl.OK)
-        metadata[PrefsMetadataKeyImpl.AAPS_VERSION] = PrefMetadata(config.VERSION_NAME, PrefsStatusImpl.OK)
-        metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR] = PrefMetadata(config.FLAVOR, PrefsStatusImpl.OK)
-        metadata[PrefsMetadataKeyImpl.DEVICE_MODEL] = PrefMetadata(config.currentDeviceModelString, PrefsStatusImpl.OK)
-        metadata[PrefsMetadataKeyImpl.ENCRYPTION] = PrefMetadata("Enabled", PrefsStatusImpl.OK)
-
-        return metadata
-    }
+    /**
+     * The platform finds the values; [ExportMetadata] decides what an export is stamped with.
+     *
+     * This used to build the map itself, and iOS built an identical one of its own - two lists of the
+     * same six keys, free to drift, in a stamp the import screen reads to decide whether a backup may
+     * be restored at all. Only the device name is really Android's here, and it stays that way.
+     */
+    private fun prepareMetadata(context: Context): Map<PrefsMetadataKey, PrefMetadata> =
+        ExportMetadata.forExport(
+            deviceName = detectUserName(context),
+            createdAt = dateUtil.toISOString(dateUtil.now()),
+            version = config.VERSION_NAME,
+            flavour = config.FLAVOR,
+            deviceModel = config.currentDeviceModelString
+        )
 
     @Suppress("SpellCheckingInspection")
     private fun detectUserName(context: Context): String {

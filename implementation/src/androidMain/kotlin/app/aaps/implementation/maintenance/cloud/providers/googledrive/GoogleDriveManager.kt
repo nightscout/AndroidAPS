@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.cloud.CloudConstants
+import app.aaps.implementation.maintenance.cloud.OAuthCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -796,42 +797,43 @@ class GoogleDriveManager(
      */
     private fun handleOAuthCallback(path: String, output: OutputStream) {
         try {
-            // Parse query parameters
-            val queryIndex = path.indexOf('?')
-            val params = if (queryIndex >= 0) {
-                parseQueryString(path.substring(queryIndex + 1))
-            } else {
-                emptyMap()
-            }
+            // The shared parser, the one iOS uses. It had its own copy here, and the two had already
+            // started to differ: this one matched the path by prefix where the shared one matches it
+            // exactly, and it did not percent decode at all. Both differences favour the shared one -
+            // an exact path is the stricter reading, and a value arriving encoded was silently used
+            // encoded. `state` is a UUID so decoding is a no-op for it, which is why nothing had
+            // broken yet rather than why it was safe.
+            val parsed = OAuthCallback.parseTarget(path)
 
-            val code = params["code"]
-            val state = params["state"]
-            val error = params["error"]
+            aapsLogger.debug(
+                LTag.CORE,
+                "$LOG_PREFIX OAuth callback received - ${parsed::class.simpleName}, code: ${parsed is OAuthCallback.Result.Code}"
+            )
 
-            aapsLogger.debug(LTag.CORE, "$LOG_PREFIX OAuth callback received - code: ${code != null}, state: $state, error: $error")
-
-            if (error != null) {
-                // The provider's own words are logged, not shown. `error` arrives in the query and is
-                // whoever-sent-the-request's text; it used to be interpolated into the HTML this
-                // serves, which made the page reflect arbitrary markup back on the localhost origin.
-                // [sendHttpResponse] escapes now as well - this is the belt to that braces.
-                aapsLogger.error(LTag.CORE, "$LOG_PREFIX OAuth callback reported an error: $error")
-                sendHttpResponse(output, 400, "Authorization failed. You can close this window and try again.")
-                return
-            }
-
-            if (code != null && state != null) {
-                // Verify state
-                val savedState = sp.getString("google_drive_oauth_state", "")
-                if (state == savedState) {
-                    authCodeReceived = code
-                    authState = state
-                    sendHttpResponse(output, 200, "Authorization successful! You can close this window.")
-                } else {
-                    sendHttpResponse(output, 400, "Invalid state parameter")
+            when (parsed) {
+                is OAuthCallback.Result.Denied -> {
+                    // The provider's own words are logged, not shown. `error` arrives in the query and
+                    // is whoever-sent-the-request's text; it used to be interpolated into the HTML
+                    // this serves, which made the page reflect arbitrary markup back on the localhost
+                    // origin. [sendHttpResponse] escapes now as well - this is the belt to that braces.
+                    aapsLogger.error(LTag.CORE, "$LOG_PREFIX OAuth callback reported an error: ${parsed.error}")
+                    sendHttpResponse(output, 400, "Authorization failed. You can close this window and try again.")
                 }
-            } else {
-                sendHttpResponse(output, 400, "Missing code or state parameter")
+
+                is OAuthCallback.Result.Code   -> {
+                    // Verify state. Kept here rather than in the shared parser because the value to
+                    // compare against is this class's, saved when the URL was built.
+                    val savedState = sp.getString("google_drive_oauth_state", "")
+                    if (parsed.state != null && parsed.state == savedState) {
+                        authCodeReceived = parsed.code
+                        authState = parsed.state
+                        sendHttpResponse(output, 200, "Authorization successful! You can close this window.")
+                    } else {
+                        sendHttpResponse(output, 400, "Invalid state parameter")
+                    }
+                }
+
+                else                           -> sendHttpResponse(output, 400, "Missing code or state parameter")
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.CORE, "$LOG_PREFIX Error handling OAuth callback", e)
@@ -845,23 +847,6 @@ class GoogleDriveManager(
         }
     }
 
-    /**
-     * Parse query string
-     */
-    private fun parseQueryString(query: String?): Map<String, String> {
-        if (query.isNullOrEmpty()) return emptyMap()
-
-        return query.split("&").associate { param ->
-            val keyValue = param.split("=", limit = 2)
-            val key = keyValue[0]
-            val value = if (keyValue.size > 1) keyValue[1] else ""
-            key to value
-        }
-    }
-
-    /**
-     * Send HTTP response
-     */
     /**
      * Makes [text] safe to place in the HTML this serves.
      *
@@ -877,6 +862,9 @@ class GoogleDriveManager(
             .replace("\"", "&quot;")
             .replace("'", "&#39;")
 
+    /**
+     * Send HTTP response
+     */
     private fun sendHttpResponse(output: OutputStream, statusCode: Int, message: String) {
         try {
             val statusText = when (statusCode) {
