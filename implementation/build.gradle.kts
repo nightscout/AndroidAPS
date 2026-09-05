@@ -120,6 +120,15 @@ kotlin {
             }
         }
 
+        jvmMain {
+            dependencies {
+                // The desktop's Ktor engine. OkHttp rather than CIO because :core:nssdk already
+                // brings OkHttp to this target for the Nightscout client, so this adds a binding for
+                // an HTTP stack the desktop ships anyway instead of a second one.
+                implementation(libs.io.ktor.client.okhttp)
+            }
+        }
+
         // Tests for commonMain classes belong here, not in androidHostTest: a test that only runs on
         // the JVM says nothing about the target the code was moved to common for.
         commonTest {
