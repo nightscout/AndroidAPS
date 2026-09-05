@@ -6,10 +6,11 @@ import app.aaps.core.interfaces.logging.LTag
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class ServiceTaskExecutor @Inject constructor() : ThreadPoolExecutor(1, 1, 10000, TimeUnit.MILLISECONDS, taskQueue) {
 
     @Inject lateinit var aapsLogger: AAPSLogger

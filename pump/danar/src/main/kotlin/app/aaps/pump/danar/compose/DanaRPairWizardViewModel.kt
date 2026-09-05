@@ -9,24 +9,26 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
-import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 data class BondedDevice(val name: String, val address: String)
 
@@ -45,7 +47,10 @@ sealed class DanaRPairWizardEvent {
     data object Finish : DanaRPairWizardEvent()
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class DanaRPairWizardViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -55,7 +60,6 @@ class DanaRPairWizardViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
     private val rfcommTransport: RfcommTransport
 ) : ViewModel() {
 
@@ -65,7 +69,6 @@ class DanaRPairWizardViewModel @Inject constructor(
     private val _events = MutableSharedFlow<DanaRPairWizardEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<DanaRPairWizardEvent> = _events
 
-    private val disposable = CompositeDisposable()
 
     /** Dana device name pattern: 3 letters + 5 digits + 2 letters */
     private val danaNamePattern = Regex("^[a-zA-Z]{3}[0-9]{5}[a-zA-Z]{2}(_[a-zA-Z])?$")
@@ -85,14 +88,13 @@ class DanaRPairWizardViewModel @Inject constructor(
                 }
             }
         }
-        disposable += rxBus
-            .toObservable(EventDanaRNewStatus::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ onPumpStatusUpdate() }, { aapsLogger.error(LTag.PUMP, "Error", it) })
-        disposable += rxBus
-            .toObservable(EventInitializationChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ onPumpStatusUpdate() }, { aapsLogger.error(LTag.PUMP, "Error", it) })
+        // viewModelScope is Main, like observeOn(aapsSchedulers.main), and dies with the view model
+        // like the CompositeDisposable did. UNDISPATCHED because RxBus has no replay, so a scheduled
+        // collector could miss a status sent before it starts.
+        rxBus.toFlow(EventDanaRNewStatus::class)
+            .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { onPumpStatusUpdate() }
+        rxBus.toFlow(EventInitializationChanged::class)
+            .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { onPumpStatusUpdate() }
     }
 
     fun reset() {
@@ -163,10 +165,5 @@ class DanaRPairWizardViewModel @Inject constructor(
 
     fun finish() {
         _events.tryEmit(DanaRPairWizardEvent.Finish)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
     }
 }

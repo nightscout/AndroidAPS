@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metro)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -22,7 +22,6 @@ dependencies {
     testImplementation(project(":core:objects"))
 
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.com.google.code.gson)
 
     implementation(libs.com.google.guava)
@@ -32,9 +31,5 @@ dependencies {
     api(libs.com.polidea.rxandroidble3)
     implementation(libs.com.jakewharton.rx3.replaying.share)
 
-    implementation(libs.com.google.dagger.hilt.android)
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
 }

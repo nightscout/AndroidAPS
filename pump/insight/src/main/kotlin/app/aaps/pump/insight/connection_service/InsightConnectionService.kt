@@ -11,6 +11,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.ActivityCompat
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
@@ -87,15 +88,15 @@ import app.aaps.pump.insight.utils.crypto.Cryptograph.deriveKeys
 import app.aaps.pump.insight.utils.crypto.Cryptograph.generateRSAKey
 import app.aaps.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import app.aaps.pump.insight.utils.crypto.KeyPair
-import dagger.android.DaggerService
 import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
 import java.security.SecureRandom
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
+// Fully qualified: this module has its own app_layer.Service, so the simple name is taken.
+class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
@@ -225,6 +226,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     @Synchronized override fun onCreate() {
+        // What MetroService does; this module does not depend on :core:objects, where that base lives.
+        injectMetroMembers(this)
         super.onCreate()
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             bluetoothAdapter = (applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter

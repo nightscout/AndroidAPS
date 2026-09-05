@@ -90,7 +90,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 /**
  * Integration tests for DanaRSService through the full emulator stack.
@@ -111,7 +110,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var decimalFormatter: DecimalFormatter
-    @Mock lateinit var profileStoreProvider: Provider<ProfileStore>
+    @Mock lateinit var profileStoreProvider: () -> ProfileStore
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var commandQueue: CommandQueue
@@ -125,7 +124,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     @Mock lateinit var ch: ConcentrationHelper
     @Mock lateinit var profile: Profile
 
-    private val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
+    private val bolusProgressData by lazy { BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)) }
     private lateinit var danaPump: DanaPump
     private lateinit var bleEncryption: BleEncryption
     private lateinit var emulatorTransport: EmulatorBleTransport
@@ -202,7 +201,6 @@ class DanaRSServiceIntegrationTest : TestBase() {
         // Create service and wire all dependencies
         danaRSService = DanaRSService()
         danaRSService.aapsLogger = aapsLogger
-        danaRSService.aapsSchedulers = aapsSchedulers
         danaRSService.rxBus = rxBus
         danaRSService.preferences = preferences
         danaRSService.rh = rh
@@ -213,60 +211,59 @@ class DanaRSServiceIntegrationTest : TestBase() {
         danaRSService.activePlugin = activePlugin
         danaRSService.uiInteraction = uiInteraction
         danaRSService.bleComm = bleComm
-        danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
         danaRSService.bolusProgressData = bolusProgressData
-        danaRSService.pumpEnactResultProvider = Provider { pumpEnactResult }
+        danaRSService.pumpEnactResultProvider = { pumpEnactResult }
         danaRSService.notificationManager = notificationManager
         danaRSService.appScope = CoroutineScope(Dispatchers.Unconfined)
 
         // Wire all packet providers with real instances
-        danaRSService.danaRSPacketEtcKeepConnection = Provider { DanaRSPacketEtcKeepConnection(aapsLogger) }
-        danaRSService.danaRSPacketGeneralGetShippingInformation = Provider { DanaRSPacketGeneralGetShippingInformation(aapsLogger, dateUtil, danaPump) }
-        danaRSService.danaRSPacketGeneralGetPumpCheck = Provider { DanaRSPacketGeneralGetPumpCheck(aapsLogger, danaPump, notificationManager) }
-        danaRSService.danaRSPacketBasalGetProfileNumber = Provider { DanaRSPacketBasalGetProfileNumber(aapsLogger, danaPump) }
-        danaRSService.danaRSPacketBolusGetBolusOption = Provider { DanaRSPacketBolusGetBolusOption(aapsLogger, notificationManager, danaPump) }
-        danaRSService.danaRSPacketBasalGetBasalRate = Provider { DanaRSPacketBasalGetBasalRate(aapsLogger, notificationManager, danaPump) }
-        danaRSService.danaRSPacketBolusGetCalculationInformation = Provider { DanaRSPacketBolusGetCalculationInformation(aapsLogger, danaPump) }
-        danaRSService.danaRSPacketBolusGet24CIRCFArray = Provider {
+        danaRSService.danaRSPacketEtcKeepConnection = { DanaRSPacketEtcKeepConnection(aapsLogger) }
+        danaRSService.danaRSPacketGeneralGetShippingInformation = { DanaRSPacketGeneralGetShippingInformation(aapsLogger, dateUtil, danaPump) }
+        danaRSService.danaRSPacketGeneralGetPumpCheck = { DanaRSPacketGeneralGetPumpCheck(aapsLogger, danaPump, notificationManager) }
+        danaRSService.danaRSPacketBasalGetProfileNumber = { DanaRSPacketBasalGetProfileNumber(aapsLogger, danaPump) }
+        danaRSService.danaRSPacketBolusGetBolusOption = { DanaRSPacketBolusGetBolusOption(aapsLogger, notificationManager, danaPump) }
+        danaRSService.danaRSPacketBasalGetBasalRate = { DanaRSPacketBasalGetBasalRate(aapsLogger, notificationManager, danaPump) }
+        danaRSService.danaRSPacketBolusGetCalculationInformation = { DanaRSPacketBolusGetCalculationInformation(aapsLogger, danaPump) }
+        danaRSService.danaRSPacketBolusGet24CIRCFArray = {
             DanaRSPacketBolusGet24CIRCFArray(aapsLogger).also { it.danaPump = danaPump }
         }
-        danaRSService.danaRSPacketBolusGetCIRCFArray = Provider { DanaRSPacketBolusGetCIRCFArray(aapsLogger, danaPump) }
-        danaRSService.danaRSPacketOptionGetUserOption = Provider { DanaRSPacketOptionGetUserOption(aapsLogger, danaPump) }
-        danaRSService.danaRSPacketGeneralInitialScreenInformation = Provider { DanaRSPacketGeneralInitialScreenInformation(aapsLogger, danaPump, notificationManager) }
-        danaRSService.danaRSPacketBolusGetStepBolusInformation = Provider { DanaRSPacketBolusGetStepBolusInformation(aapsLogger, dateUtil, danaPump) }
-        danaRSService.danaRSPacketOptionGetPumpTime = Provider { DanaRSPacketOptionGetPumpTime(aapsLogger, dateUtil, danaPump) }
-        danaRSService.danaRSPacketOptionGetPumpUTCAndTimeZone = Provider {
+        danaRSService.danaRSPacketBolusGetCIRCFArray = { DanaRSPacketBolusGetCIRCFArray(aapsLogger, danaPump) }
+        danaRSService.danaRSPacketOptionGetUserOption = { DanaRSPacketOptionGetUserOption(aapsLogger, danaPump) }
+        danaRSService.danaRSPacketGeneralInitialScreenInformation = { DanaRSPacketGeneralInitialScreenInformation(aapsLogger, danaPump, notificationManager) }
+        danaRSService.danaRSPacketBolusGetStepBolusInformation = { DanaRSPacketBolusGetStepBolusInformation(aapsLogger, dateUtil, danaPump) }
+        danaRSService.danaRSPacketOptionGetPumpTime = { DanaRSPacketOptionGetPumpTime(aapsLogger, dateUtil, danaPump) }
+        danaRSService.danaRSPacketOptionGetPumpUTCAndTimeZone = {
             DanaRSPacketOptionGetPumpUTCAndTimeZone(aapsLogger, dateUtil).also { it.danaPump = danaPump }
         }
-        danaRSService.danaRSPacketOptionSetPumpTime = Provider { DanaRSPacketOptionSetPumpTime(aapsLogger, dateUtil) }
-        danaRSService.danaRSPacketOptionSetPumpUTCAndTimeZone = Provider { DanaRSPacketOptionSetPumpUTCAndTimeZone(aapsLogger, dateUtil) }
-        danaRSService.danaRSPacketOptionSetUserOption = Provider { DanaRSPacketOptionSetUserOption(aapsLogger, danaPump) }
-        danaRSService.danaRSPacketAPSHistoryEvents = Provider {
+        danaRSService.danaRSPacketOptionSetPumpTime = { DanaRSPacketOptionSetPumpTime(aapsLogger, dateUtil) }
+        danaRSService.danaRSPacketOptionSetPumpUTCAndTimeZone = { DanaRSPacketOptionSetPumpUTCAndTimeZone(aapsLogger, dateUtil) }
+        danaRSService.danaRSPacketOptionSetUserOption = { DanaRSPacketOptionSetUserOption(aapsLogger, danaPump) }
+        danaRSService.danaRSPacketAPSHistoryEvents = {
             DanaRSPacketAPSHistoryEvents(aapsLogger, dateUtil, rxBus, rh, danaPump, detailedBolusInfoStorage, temporaryBasalStorage, preferences, pumpSync)
         }
-        danaRSService.danaRSPacketAPSSetEventHistory = Provider { DanaRSPacketAPSSetEventHistory(aapsLogger, dateUtil, danaPump) }
-        danaRSService.danaRSPacketBasalSetCancelTemporaryBasal = Provider { DanaRSPacketBasalSetCancelTemporaryBasal(aapsLogger) }
-        danaRSService.danaRSPacketBasalSetTemporaryBasal = Provider { DanaRSPacketBasalSetTemporaryBasal(aapsLogger) }
-        danaRSService.danaRSPacketAPSBasalSetTemporaryBasal = Provider { DanaRSPacketAPSBasalSetTemporaryBasal(aapsLogger) }
-        danaRSService.danaRSPacketBolusSetExtendedBolus = Provider { DanaRSPacketBolusSetExtendedBolus(aapsLogger) }
-        danaRSService.danaRSPacketBolusSetExtendedBolusCancel = Provider { DanaRSPacketBolusSetExtendedBolusCancel(aapsLogger) }
-        danaRSService.danaRSPacketBolusSetStepBolusStart = Provider { DanaRSPacketBolusSetStepBolusStart(aapsLogger, danaPump) }
-        danaRSService.danaRSPacketBolusSetStepBolusStop = Provider { DanaRSPacketBolusSetStepBolusStop(aapsLogger, bolusProgressData, rh, danaPump) }
-        danaRSService.danaRSPacketBasalSetProfileBasalRate = Provider { DanaRSPacketBasalSetProfileBasalRate(aapsLogger) }
-        danaRSService.danaRSPacketBasalSetProfileNumber = Provider { DanaRSPacketBasalSetProfileNumber(aapsLogger) }
-        danaRSService.danaRSPacketGeneralSetHistoryUploadMode = Provider { DanaRSPacketGeneralSetHistoryUploadMode(aapsLogger) }
-        danaRSService.danaRSPacketBolusSet24CIRCFArray = Provider { DanaRSPacketBolusSet24CIRCFArray(aapsLogger, danaPump, profileUtil) }
-        danaRSService.danaRSPacketHistoryAlarm = Provider { DanaRSPacketHistoryAlarm(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
-        danaRSService.danaRSPacketHistoryBasal = Provider { DanaRSPacketHistoryBasal(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
-        danaRSService.danaRSPacketHistoryBloodGlucose = Provider { DanaRSPacketHistoryBloodGlucose(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
-        danaRSService.danaRSPacketHistoryBolus = Provider { DanaRSPacketHistoryBolus(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
-        danaRSService.danaRSPacketHistoryCarbohydrate = Provider { DanaRSPacketHistoryCarbohydrate(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
-        danaRSService.danaRSPacketHistoryDaily = Provider { DanaRSPacketHistoryDaily(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
-        danaRSService.danaRSPacketHistoryPrime = Provider { DanaRSPacketHistoryPrime(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
-        danaRSService.danaRSPacketHistoryRefill = Provider { DanaRSPacketHistoryRefill(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
-        danaRSService.danaRSPacketHistorySuspend = Provider { DanaRSPacketHistorySuspend(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketAPSSetEventHistory = { DanaRSPacketAPSSetEventHistory(aapsLogger, dateUtil, danaPump) }
+        danaRSService.danaRSPacketBasalSetCancelTemporaryBasal = { DanaRSPacketBasalSetCancelTemporaryBasal(aapsLogger) }
+        danaRSService.danaRSPacketBasalSetTemporaryBasal = { DanaRSPacketBasalSetTemporaryBasal(aapsLogger) }
+        danaRSService.danaRSPacketAPSBasalSetTemporaryBasal = { DanaRSPacketAPSBasalSetTemporaryBasal(aapsLogger) }
+        danaRSService.danaRSPacketBolusSetExtendedBolus = { DanaRSPacketBolusSetExtendedBolus(aapsLogger) }
+        danaRSService.danaRSPacketBolusSetExtendedBolusCancel = { DanaRSPacketBolusSetExtendedBolusCancel(aapsLogger) }
+        danaRSService.danaRSPacketBolusSetStepBolusStart = { DanaRSPacketBolusSetStepBolusStart(aapsLogger, danaPump) }
+        danaRSService.danaRSPacketBolusSetStepBolusStop = { DanaRSPacketBolusSetStepBolusStop(aapsLogger, bolusProgressData, rh, danaPump) }
+        danaRSService.danaRSPacketBasalSetProfileBasalRate = { DanaRSPacketBasalSetProfileBasalRate(aapsLogger) }
+        danaRSService.danaRSPacketBasalSetProfileNumber = { DanaRSPacketBasalSetProfileNumber(aapsLogger) }
+        danaRSService.danaRSPacketGeneralSetHistoryUploadMode = { DanaRSPacketGeneralSetHistoryUploadMode(aapsLogger) }
+        danaRSService.danaRSPacketBolusSet24CIRCFArray = { DanaRSPacketBolusSet24CIRCFArray(aapsLogger, danaPump, profileUtil) }
+        danaRSService.danaRSPacketHistoryAlarm = { DanaRSPacketHistoryAlarm(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketHistoryBasal = { DanaRSPacketHistoryBasal(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketHistoryBloodGlucose = { DanaRSPacketHistoryBloodGlucose(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketHistoryBolus = { DanaRSPacketHistoryBolus(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketHistoryCarbohydrate = { DanaRSPacketHistoryCarbohydrate(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketHistoryDaily = { DanaRSPacketHistoryDaily(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketHistoryPrime = { DanaRSPacketHistoryPrime(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketHistoryRefill = { DanaRSPacketHistoryRefill(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
+        danaRSService.danaRSPacketHistorySuspend = { DanaRSPacketHistorySuspend(aapsLogger, dateUtil, rxBus, danaHistoryRecordDao, pumpSync, danaPump) }
     }
 
     private fun connectAndHandshake() {

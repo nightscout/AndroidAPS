@@ -114,24 +114,8 @@
     <string name="equil_history_item18">Injection anormale arrêtée</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspendre</string>
     <string name="equil_common_overview_button_resume_delivery">Reprendre l\'injection</string>
-    <string name="equil_common_moments_ago">À l\'instant</string>
-    <string name="equil_common_less_than_a_minute_ago">Il y a moins d\'une minute</string>
-    <string name="equil_common_time_ago">il y a %1$s</string>
-    <string name="equil_common_composite_time">%1$s et %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Vous n\'avez pas encore terminé toutes les étapes. Êtes-vous sûr de vouloir quitter ?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Quitter</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minute</item>
-        <item quantity="other">%1$d minutes</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d heure</item>
-        <item quantity="other">%1$d heures</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d jour</item>
-        <item quantity="other">%1$d jours</item>
-    </plurals>
     <string name="equil_support_error">Version du firmware trop ancienne. Non pris en charge</string>
     <string name="equil_password_tips">Optionnellement, définisez un mot de passe pour l\'appairage avec l\'Equil v5.3. Ce mot de passe sera également utilisé pour dissocier la pompe actuelle dans le futur, donc n\'oubliez pas de le noter. Règle pour le mot de passe : Il doit comporter 4 caractères, choisi parmi ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Définir le mot de passe d\'appairage</string>

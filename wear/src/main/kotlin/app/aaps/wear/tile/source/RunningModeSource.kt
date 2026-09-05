@@ -10,10 +10,11 @@ import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.interaction.actions.RunningModeTimedActivity
 import app.aaps.wear.tile.Action
 import app.aaps.wear.tile.TileSource
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class RunningModeSource @Inject constructor(private val context: Context, private val sp: SP) : TileSource {
 
     override fun getSelectedActions(): List<Action> {

@@ -3,6 +3,7 @@ package app.aaps.pump.eopatch.alarm
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
@@ -15,6 +16,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.eopatch.EoPatchRxBus
 import app.aaps.pump.eopatch.alarm.AlarmCode.A005
 import app.aaps.pump.eopatch.alarm.AlarmCode.A016
@@ -37,12 +39,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.time.Duration.Companion.hours
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class AlarmManager @Inject constructor() : IAlarmManager {
 
     @Inject lateinit var patchManager: IPatchManager
@@ -62,17 +67,11 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var pumpSync: PumpSync
 
-    private lateinit var mAlarmProcess: AlarmProcess
+    private val mAlarmProcess: AlarmProcess by lazy { AlarmProcess(patchManager, patchManagerExecutor) }
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var alarmDisposable: Disposable? = null
-
-    @Suppress("unused")
-    @Inject
-    fun onInit() {
-        mAlarmProcess = AlarmProcess(patchManager, patchManagerExecutor)
-    }
 
     override fun init() {
         alarmDisposable = EoPatchRxBus.listen(EventEoPatchAlarm::class.java)
@@ -144,7 +143,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
 
         // Critical alarms trigger the global alarm sound overlay
         if (isCritical) {
-            uiInteraction.runAlarm(alarmMsg, resourceHelper.gs(app.aaps.core.ui.R.string.alarm), app.aaps.core.ui.R.raw.error)
+            uiInteraction.runAlarm(alarmMsg, resourceHelper.gs(app.aaps.core.ui.R.string.alarm), AlarmSound.ERROR)
         }
 
         notificationManager.post(
@@ -152,14 +151,16 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             text = alarmMsg,
             level = if (isCritical) NotificationLevel.IMPORTANT else NotificationLevel.INFO,
             date = alarms.getOccuredAlarmTimestamp(alarmCode),
-            soundRes = if (!isCritical) app.aaps.core.ui.R.raw.error else null,
+            sound = if (!isCritical) AlarmSound.ERROR else null,
             actions = listOf(
                 NotificationAction(
-                    when (alarmCode) {
-                        B001           -> app.aaps.core.ui.R.string.pump_resume
-                        AlarmCode.A007 -> app.aaps.core.ui.R.string.retry
-                        else           -> app.aaps.core.ui.R.string.confirm
-                    }
+                    TextRef.AndroidRes(
+                        when (alarmCode) {
+                            B001           -> app.aaps.core.ui.R.string.pump_resume
+                            AlarmCode.A007 -> app.aaps.core.ui.R.string.retry
+                            else           -> app.aaps.core.ui.R.string.confirm
+                        }
+                    )
                 ) {
                     compositeDisposable.add(
                         Single.just(isValid(alarmCode))

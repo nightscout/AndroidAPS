@@ -13,7 +13,7 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.roundToLong
 
 /**

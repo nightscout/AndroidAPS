@@ -10,23 +10,25 @@ import androidx.wear.watchface.complications.data.TimeDifferenceComplicationText
 import androidx.wear.watchface.complications.data.TimeDifferenceStyle
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.wear.data.ComplicationData as ComplicationStore
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.di.WearMetroService
 import app.aaps.wear.interaction.utils.Constants
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.WearUtil
-import dagger.android.AndroidInjection
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import app.aaps.wear.data.ComplicationData as ComplicationStore
 
 /**
  * Modern base class for complications using DataStore and AndroidX Wear APIs
@@ -40,6 +42,7 @@ import app.aaps.wear.data.ComplicationData as ComplicationStore
  * - Uses modern AndroidX Wear Watchface API
  *
  */
+@HasMemberInjections
 abstract class ModernBaseComplicationProviderService : ComplicationDataSourceService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -48,12 +51,12 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    // Not derived from DaggerService, so inject here for every concrete subclass. AndroidInjection
+    // Not derived from WearMetroService, so inject here for every concrete subclass. AndroidInjection
     // resolves the injector by this instance's concrete runtime class, so each subclass is injected
     // through its own @ContributesAndroidInjector binding in WearServicesModule — kept in the base to
     // avoid duplicating the identical override in every complication.
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate()
     }
 

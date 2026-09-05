@@ -3,7 +3,6 @@ package app.aaps.pump.medtronic.comm.history.cgms
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.pump.medtronic.comm.history.MedtronicHistoryEntry
-import app.aaps.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 

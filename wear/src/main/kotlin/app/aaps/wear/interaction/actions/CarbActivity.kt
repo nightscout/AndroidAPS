@@ -47,10 +47,10 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import app.aaps.wear.di.WearMetroActivity
+import dev.zacsweers.metro.Inject
 
-class CarbActivity : DaggerAppCompatActivity() {
+class CarbActivity : WearMetroActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences

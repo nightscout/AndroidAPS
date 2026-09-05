@@ -39,9 +39,7 @@ class DanaRExecutionServiceTest : TestBaseWithProfile() {
         danaRExecutionService.context = context
         danaRExecutionService.rh = rh
         danaRExecutionService.danaPump = danaPump
-        danaRExecutionService.fabricPrivacy = fabricPrivacy
         danaRExecutionService.dateUtil = dateUtil
-        danaRExecutionService.aapsSchedulers = aapsSchedulers
         danaRExecutionService.pumpSync = pumpSync
         danaRExecutionService.activePlugin = activePlugin
         danaRExecutionService.notificationManager = notificationManager

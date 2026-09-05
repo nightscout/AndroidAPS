@@ -31,26 +31,6 @@ android {
         disable += "ExtraTranslation"
     }
 
-    flavorDimensions.add("standard")
-    productFlavors {
-        create("full") {
-            isDefault = true
-            dimension = "standard"
-        }
-        create("pumpcontrol") {
-            dimension = "standard"
-        }
-        create("aapsclient") {
-            dimension = "standard"
-        }
-        create("aapsclient2") {
-            dimension = "standard"
-        }
-        create("aapsclient3") {
-            dimension = "standard"
-        }
-    }
-
     buildFeatures {
         // disable for modules here
         buildConfig = false

@@ -1,69 +1,95 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "9.3.2"
+gradlePlugin = "9.4.0"
 googleServices = "4.5.0"
 kotlin = "2.4.10"
 room = "2.8.4"
 sqlite = "2.7.0"
-dagger = "2.60.1"
+# Snapshot on purpose: 1.4.2 has a member-injection codegen bug (ZacSweers/metro#2731) that blocks
+# converting the remaining Android entry points. Fixed on main. Move back to a release version as soon
+# as 1.5.0 ships - snapshots are mutable and can be collected.
+metro = "1.5.0-SNAPSHOT"
 mockito = "5.23.0"
 junit = "6.1.3"
 robolectric = "4.16.1"
 okhttp = "5.5.0"
 retrofit = "3.0.0"
+ktor = "3.5.2"
 kotlinx-serialization = "1.11.0"
+# cryptography-kotlin: HMAC-SHA256, PBKDF2 and AES-256-GCM for the client-control signing and
+# pairing path. It wraps each platform's vetted implementation (JCA, CryptoKit, OpenSSL 3) rather
+# than implementing the algorithms, which is what we want in a signing path.
+cryptographyKotlin = "0.6.0"
 kotlinx-coroutines = "1.11.0"
 work = "2.11.2"
-androidxHilt = "1.4.0"
 datastorePreferences = "1.2.1"
 
 # Compose
 activityCompose = "1.13.0"
 composeBom = "2026.08.00"
 wearCompose = "1.6.2"
-hiltNavigationCompose = "1.4.0"
-navigationCompose = "2.9.8"
+navigationCompose = "2.10.0"
+# The JetBrains republish of navigation-compose - same `androidx.navigation` package names, with
+# Apple targets. Same reason as the lifecycle and navigationevent entries below.
+jetbrainsNavigation = "2.9.2"
 lifecycleRuntimeKtx = "2.11.0"
-vico = "3.3.0"
-composeUi = "1.11.4"
-glance = "1.1.1"
+vico = "3.3.1"
+composeUi = "1.12.0"
+glance = "1.2.0"
+
+# Compose Multiplatform - spike only, see :spike:cmp. Separate from the androidx Compose above:
+# CMP publishes the same androidx.compose.* package names and its Android variants delegate to
+# androidx, so the composeBom still decides the Android versions.
+# 1.11.1 rather than 1.12.0-beta03 on purpose: the beta's Android side delegates to androidx
+# 1.12.0-beta02, which would drag a pre-release androidx into an app pinned to stable 1.11.x.
+composeMultiplatform = "1.12.0"
+navigationEvent = "1.1.0"
+jetbrainsLifecycle = "2.11.0"
+# material3 and material-icons-extended are separate, lagging version lines in CMP.
+cmpMaterial3 = "1.9.0"
+cmpIcons = "1.7.3"
 
 [plugins]
 android-library = { id = "com.android.library" }
-klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+# No version, exactly like android-library above: both plugin ids ship in com.android.tools.build:gradle,
+# which is already on the root buildscript classpath. AGP 9 refuses com.android.library together with
+# the Kotlin multiplatform plugin, so a multiplatform module with an Android target needs this one.
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.10" }
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+# Compose Multiplatform framework plugin. It hard-fails unless compose-compiler above is applied in
+# the same module - the compiler itself ships with Kotlin, this plugin only adds the framework.
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 
 [libraries]
+# Metro's own view model extension, same version train as the compiler plugin. It replaces a
+# hand-written ViewModelProvider.Factory and it is multiplatform: it builds on
+# org.jetbrains.androidx.lifecycle, the republish the Apple targets need.
+metrox-viewmodel = { module = "dev.zacsweers.metro:metrox-viewmodel", version.ref = "metro" }
 com-android-tools-build = { group = "com.android.tools.build", name = "gradle", version.ref = "gradlePlugin" }
 com-google-gms = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
 
-com-google-dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
-com-google-dagger-android = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
-com-google-dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
-com-google-dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
-com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
-com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
-com-google-dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 
-com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.7" }
+com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.8" }
 com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.18.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 com-google-android-gms-playservices-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version = "20.0.1" }
 com-google-android-gms-playservices-location = { group = "com.google.android.gms", name = "play-services-location", version = "21.4.0" }
+com-google-watchface-validator-push-cli = { group = "com.google.android.wearable.watchface.validator", name = "validator-push-cli", version = "1.1.0-alpha01" }
 
 # Check for bugfix in MaterialDataPicker and remove workaround in DateUtil::mergeUtcDateToTimestamp
 # https://github.com/material-components/material-components-android/issues/4373
 com-google-android-material = { group = "com.google.android.material", name = "material", version = "1.14.0" }
 
-com-google-guava = { group = "com.google.guava", name = "guava", version = "33.6.0-jre" }
+com-google-guava = { group = "com.google.guava", name = "guava", version = "33.7.1-jre" }
 com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.14.0" }
 com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.23.0" }
 com-google-truth = { group = "com.google.truth", name = "truth", version = "1.4.5" }
+com-google-zxing-core = { group = "com.google.zxing", name = "core", version = "3.5.4" }
 
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
@@ -71,18 +97,24 @@ kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serializ
 kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 
+cryptography-core = { group = "dev.whyoleg.cryptography", name = "cryptography-core", version.ref = "cryptographyKotlin" }
+cryptography-provider-optimal = { group = "dev.whyoleg.cryptography", name = "cryptography-provider-optimal", version.ref = "cryptographyKotlin" }
+
 kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf" }
-
 kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android" }
+# What -android is to a phone, this is to a desktop window: the Main dispatcher, backed by the Swing
+# event thread. kotlinx-coroutines-core has no Main dispatcher of its own, so without this every
+# `withContext(Dispatchers.Main)` throws "Module with the Main dispatcher is missing" at runtime -
+# it compiles perfectly.
+kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing" }
 kotlinx-coroutines-rx3 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-rx3" }
 kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava" }
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test" }
-
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.8.0" }
 
 
@@ -90,6 +122,11 @@ androidx-activity = { group = "androidx.activity", name = "activity-ktx", versio
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.8.0" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.1.0" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.10.0" }
+# Declared rather than left to transitive resolution: it used to land on 1.1.0 in some modules and
+# 1.5.0 in others, and those are different generations of the same class (the newer one is a Kotlin
+# rewrite where size is also a property), so the same code did not compile everywhere. From 1.4.0 it
+# is multiplatform, which is what keeps LongSparseArray usable from shared code.
+androidx-collection = { group = "androidx.collection", name = "collection", version = "1.6.0" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.2" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.0" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
@@ -107,8 +144,6 @@ androidx-test-rules = { group = "androidx.test", name = "rules", version = "1.7.
 androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version = "2.4.0" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work" }
-androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidxHilt" }
-androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHilt" }
 androidx-wear = { group = "androidx.wear", name = "wear", version = "1.4.0" }
 androidx-wear-tiles = { group = "androidx.wear.tiles", name = "tiles", version = "1.6.2" }
 androidx-wear-protolayout = { group = "androidx.wear.protolayout", name = "protolayout", version = "1.4.2" }
@@ -118,19 +153,29 @@ androidx-wear-watchface-complications-data = { group = "androidx.wear.watchface"
 androidx-wear-watchface-complications-datasource = { group = "androidx.wear.watchface", name = "watchface-complications-data-source", version = "1.3.0" }
 androidx-wear-watchface-complications-datasource-ktx = { group = "androidx.wear.watchface", name = "watchface-complications-data-source-ktx", version = "1.3.0" }
 androidx-wear-watchfacepush = { group = "androidx.wear.watchfacepush", name = "watchfacepush", version = "1.0.0" }
-com-google-watchface-validator-push-cli = { group = "com.google.android.wearable.watchface.validator", name = "validator-push-cli", version = "1.1.0-alpha01" }
 androidx-wear-compose-material3 = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "wearCompose" }
 androidx-wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "wearCompose" }
 
 io-reactivex-rxjava3-rxkotlin = { group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1" }
 io-reactivex-rxjava3-rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version = "3.0.2" }
 com-uber-rxdogtag2-rxdogtag = { group = "com.uber.rxdogtag2", name = "rxdogtag", version = "2.0.2" }
+com-polidea-rxandroidble3 = { group = "com.polidea.rxandroidble3", name = "rxandroidble", version = "1.19.1" }
 
 com-squareup-leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version = "2.14" }
 com-squareup-okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 com-squareup-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+com-squareup-okhttp3-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver3-junit5", version.ref = "okhttp" }
 com-squareup-retrofit2-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 com-squareup-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+io-ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+io-ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+io-ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+io-ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+io-ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+io-ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+io-ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
+com-squareup-retrofit2-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 
 org-apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version = "3.20.0" }
 org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.9.1" }
@@ -153,14 +198,18 @@ com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.14.2.1" }
 joda-time = { group = "joda-time", name = "joda-time", version = "2.14.3" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
+# Test-only oracle. On Android `org.json` comes from the platform, so a plain JVM test has no real
+# implementation to compare against. This is AOSP's own org.json, repackaged for the JVM - NOT
+# Crockford's `org.json:json`, which is a different implementation and disagrees on real cases
+# (optString of a JSON null gives "" there and "null" on Android). It is what jsonassert already
+# pulls in, so Android module tests are measured against this too. Never use it in main source.
+org-json-android = { group = "com.vaadin.external.google", name = "android-json", version = "0.0.20131108.vaadin1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "1.0.0" }
 com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta10" } # do not update to 4.xx
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
-com-google-zxing-core = { group = "com.google.zxing", name = "core", version = "3.5.4" }
 io-socket-client = { group = "io.socket", name = "socket.io-client", version = "2.1.2" }
 org-osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version = "6.1.20" }
 io-kotlintest-runner-junit5 = { group = "io.kotlintest", name = "kotlintest-runner-junit5", version = "3.4.2" }
-com-polidea-rxandroidble3 = { group = "com.polidea.rxandroidble3", name = "rxandroidble", version = "1.19.1" }
 com-jakewharton-rx3-replaying-share = { group = "com.jakewharton.rx3", name = "replaying-share", version = "3.0.0" }
 commons-codec = { group = "commons-codec", name = "commons-codec", version = "1.22.1" }
 com-thoughtworks-xstream = { group = "com.thoughtworks.xstream", name = "xstream", version = "1.4.21" }
@@ -181,8 +230,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
-androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+androidx-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jetbrainsNavigation" }
 com-patrykandpatrick-vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeUi" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
@@ -191,4 +239,25 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "3.1.0" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
+
+# Compose Multiplatform - spike only. Explicit coordinates rather than the `compose.xxx` DSL
+# accessors, which are deprecated in 1.11.1.
+cmp-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+cmp-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
+cmp-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+cmp-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
+# Replaces the deprecated `compose.components.uiToolingPreview`. It declares the annotation under the
+# androidx package name for every target, so common and Android code share one import.
+cmp-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+# The JetBrains republish of androidx lifecycle. The plain `androidx.lifecycle` artifacts are
+# Android only; these carry the uikit targets, so ViewModel, viewModelScope, `viewModel { }` and
+# collectAsStateWithLifecycle can all be used from commonMain.
+jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsLifecycle" }
+jetbrains-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsLifecycle" }
+# Replacement for the deprecated `androidx.compose.ui.backhandler.BackHandler`.
+# The JetBrains republish, not `androidx.navigationevent:navigationevent-compose` - the plain androidx
+# one ships Android/JVM variants only and cannot be used from commonMain.
+androidx-navigationevent-compose = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "navigationEvent" }
+cmp-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "cmpMaterial3" }
+cmp-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "cmpIcons" }
 

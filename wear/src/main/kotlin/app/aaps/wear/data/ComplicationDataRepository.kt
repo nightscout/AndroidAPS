@@ -13,15 +13,16 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.impl.weardata.ResFileMap
 import app.aaps.wear.R
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import java.io.InputStream
+import java.io.OutputStream
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.protobuf.ProtoBuf
-import java.io.InputStream
-import java.io.OutputStream
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Repository for complication data using DataStore with Protocol Buffers
@@ -34,7 +35,7 @@ import javax.inject.Singleton
  * - Reactive updates via Flow
  *
  */
-@Singleton
+@SingleIn(AppScope::class)
 class ComplicationDataRepository @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,

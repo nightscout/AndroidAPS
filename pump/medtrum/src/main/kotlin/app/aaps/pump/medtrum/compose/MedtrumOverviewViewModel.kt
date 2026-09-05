@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.timeAgoFullString
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
@@ -42,8 +43,10 @@ import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -56,7 +59,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class MedtrumOverviewEvent {
@@ -65,7 +68,10 @@ sealed class MedtrumOverviewEvent {
     data object ConfirmUnpair : MedtrumOverviewEvent()
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class MedtrumOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -79,11 +85,11 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val ch: ConcentrationHelper,
     private val preferences: Preferences,
     private val uel: UserEntryLogger,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, scope)
     private val stateBuilder = PumpOverviewStateBuilder(rh)
 
     private val _events = MutableSharedFlow<MedtrumOverviewEvent>(extraBufferCapacity = 5)
@@ -279,7 +285,7 @@ class MedtrumOverviewViewModel @Inject constructor(
             // Patch age
             if (medtrumPump.patchStartTime != 0L) {
                 val age = System.currentTimeMillis() - medtrumPump.patchStartTime
-                val agoString = dateUtil.timeAgoFullString(age, rh)
+                val agoString = timeAgoFullString(age, rh)
                 val ageString = dateUtil.dateAndTimeString(medtrumPump.patchStartTime) + "\n" + agoString
                 add(PumpInfoRow(label = rh.gs(R.string.patch_activation_time_label), value = ageString))
             }

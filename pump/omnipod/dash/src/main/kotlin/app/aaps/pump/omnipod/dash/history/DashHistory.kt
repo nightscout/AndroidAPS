@@ -2,9 +2,6 @@ package app.aaps.pump.omnipod.dash.history
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
-import app.aaps.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
-import app.aaps.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants.Companion.POD_PULSE_BOLUS_UNITS
 import app.aaps.pump.omnipod.common.bledriver.pod.state.CommandConfirmationDenied
 import app.aaps.pump.omnipod.common.bledriver.pod.state.CommandConfirmationSuccess
@@ -12,6 +9,9 @@ import app.aaps.pump.omnipod.common.bledriver.pod.state.CommandSendingFailure
 import app.aaps.pump.omnipod.common.bledriver.pod.state.CommandSendingNotConfirmed
 import app.aaps.pump.omnipod.common.bledriver.pod.state.NoActiveCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
+import app.aaps.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
+import app.aaps.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
 import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
 import app.aaps.pump.omnipod.dash.history.data.BolusRecord
 import app.aaps.pump.omnipod.dash.history.data.HistoryRecord
@@ -24,7 +24,7 @@ import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.lang.System.currentTimeMillis
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DashHistory @Inject constructor(
     private val dao: HistoryRecordDao,

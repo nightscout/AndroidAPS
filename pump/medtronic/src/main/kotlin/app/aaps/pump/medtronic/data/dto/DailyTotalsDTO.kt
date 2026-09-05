@@ -2,9 +2,9 @@ package app.aaps.pump.medtronic.data.dto
 
 import app.aaps.core.utils.formatUS
 import app.aaps.core.utils.pump.ByteUtil
-import com.google.gson.annotations.Expose
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntryType
+import com.google.gson.annotations.Expose
 import org.apache.commons.lang3.builder.ToStringBuilder
 import java.util.Locale
 

@@ -32,11 +32,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.Inject
 
 @SuppressLint("MissingPermission")
-@Singleton
+@SingleIn(AppScope::class)
 class EquilBleTransportImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger

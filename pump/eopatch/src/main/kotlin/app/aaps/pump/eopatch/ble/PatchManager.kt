@@ -4,6 +4,8 @@ import android.content.Context
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -13,6 +15,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
@@ -40,13 +43,20 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Predicate
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.hours
 
-@Singleton
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class PatchManager @Inject constructor(
     private val aapsPatchManager: PatchManagerExecutor,
     private val pm: PreferenceManager,
@@ -67,11 +77,13 @@ class PatchManager @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var patchScanner: IPatchScanner = PatchScanner(context, aapsLogger)
+    // App lifetime, like the CompositeDisposable above: this is a singleton that never tears down.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    private val patchScanner: IPatchScanner by lazy { PatchScanner(context, aapsLogger) }
     private var mConnectingDisposable: Disposable? = null
 
-    @Inject
-    fun onInit() {
+    init {
         compositeDisposable.add(
             aapsPatchManager.observePatchConnectionState()
                 .subscribe(Consumer { bleConnectionState: BleConnectionState ->
@@ -99,20 +111,18 @@ class PatchManager @Inject constructor(
                     }
                 })
         )
-        compositeDisposable.add(
-            rxBus
-                .toObservable(EventPatchActivationNotComplete::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribeOn(aapsSchedulers.main)
-                .subscribe(Consumer {
-                    notificationManager.post(
-                        id = NotificationId.EOFLOW_PATCH_ALERT,
-                        text = rh.gs(R.string.patch_activate_reminder_desc),
-                        level = NotificationLevel.URGENT,
-                        soundRes = app.aaps.core.ui.R.raw.alarm
-                    )
-                })
-        )
+        // App lifetime scope, matching the CompositeDisposable here which is never cleared. IO, like
+        // observeOn(aapsSchedulers.io). UNDISPATCHED because RxBus has no replay, so a scheduled
+        // collector could miss an alert sent before it starts.
+        rxBus.toFlow(EventPatchActivationNotComplete::class)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                notificationManager.post(
+                    id = NotificationId.EOFLOW_PATCH_ALERT,
+                    text = rh.gs(R.string.patch_activate_reminder_desc),
+                    level = NotificationLevel.URGENT,
+                    sound = AlarmSound.ALARM
+                )
+            }
     }
 
     override fun init() {

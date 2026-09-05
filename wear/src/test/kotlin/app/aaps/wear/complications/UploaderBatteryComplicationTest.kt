@@ -13,13 +13,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [UploaderBatteryComplication] and the shared [ModernBaseComplicationProviderService] logic
- * it inherits: [getPreviewData]/[getPreviewComplicationData] build the phone-battery complication for
- * the supported types (RANGED_VALUE / SHORT_TEXT / MONOCHROMATIC_IMAGE / SMALL_IMAGE), the else branch
- * yields null, and the action/name accessors resolve. Built via [Robolectric] so a Context is attached
- * without running onCreate's Dagger injection; the `@Inject` fields are set directly.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class UploaderBatteryComplicationTest {

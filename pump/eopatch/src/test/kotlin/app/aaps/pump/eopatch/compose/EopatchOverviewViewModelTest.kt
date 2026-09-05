@@ -11,8 +11,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.PumpInfoRow
+import app.aaps.pump.eopatch.R
 import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManagerExecutor
 import app.aaps.pump.eopatch.ble.PreferenceManager
@@ -38,7 +40,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import app.aaps.pump.eopatch.R
 import app.aaps.core.ui.R as CoreUiR
 
 /**
@@ -91,8 +92,8 @@ internal class EopatchOverviewViewModelTest {
         whenever(patchManagerExecutor.observePatchConnectionState()).thenReturn(Observable.empty())
 
         // PumpCommunicationStatus field-initializer subscribes to these rx flows at construction.
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
 
         // buildUiState computes insulinText unconditionally (before the isActivated guard).
         whenever(ch.insulinAmountString(any())).thenReturn("0 U")
@@ -102,11 +103,17 @@ internal class EopatchOverviewViewModelTest {
 
         // Info-row / action / banner labels touched by buildUiState (unstubbed -> null -> NPE).
         whenever(rh.gs(CoreUiR.string.tempbasal_label)).thenReturn("Temp basal")
+        whenever(rh.gs(CoreUiStrings.tempbasal_label)).thenReturn("Temp basal")
         whenever(rh.gs(CoreUiR.string.extended_bolus_label)).thenReturn("Extended bolus")
+        whenever(rh.gs(CoreUiStrings.extended_bolus_label)).thenReturn("Extended bolus")
         whenever(rh.gs(CoreUiR.string.status)).thenReturn("Status")
+        whenever(rh.gs(CoreUiStrings.status)).thenReturn("Status")
         whenever(rh.gs(CoreUiR.string.reservoir_label)).thenReturn("Reservoir")
+        whenever(rh.gs(CoreUiStrings.reservoir_label)).thenReturn("Reservoir")
         whenever(rh.gs(CoreUiR.string.pump_suspend)).thenReturn("Suspend")
+        whenever(rh.gs(CoreUiStrings.pump_suspend)).thenReturn("Suspend")
         whenever(rh.gs(CoreUiR.string.pump_resume)).thenReturn("Resume")
+        whenever(rh.gs(CoreUiStrings.pump_resume)).thenReturn("Resume")
         whenever(rh.gs(R.string.eopatch_not_activated)).thenReturn("Not activated")
         whenever(rh.gs(R.string.string_activate_patch)).thenReturn("Activate Patch")
         whenever(rh.gs(R.string.string_running)).thenReturn("Running")

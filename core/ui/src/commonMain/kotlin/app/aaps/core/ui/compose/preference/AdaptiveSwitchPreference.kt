@@ -1,0 +1,99 @@
+/*
+ * Adaptive Switch Preference for Jetpack Compose
+ */
+
+package app.aaps.core.ui.compose.preference
+
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import app.aaps.core.keys.interfaces.BooleanKeyWithChangeGuard
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.stringResource
+
+/**
+ * Composable switch preference for use inside card sections.
+ *
+ * @param title Optional title override. If null, uses booleanKey.title
+ * @param summary Optional summary override. If null, uses booleanKey.summary
+ * @param visibilityContext Optional context for evaluating runtime visibility/enabled conditions
+ *
+ * @see AdaptiveSwitchPreferencePreview
+ */
+@Composable
+fun AdaptiveSwitchPreferenceItem(
+    booleanKey: BooleanPreferenceKey,
+    title: TextRef? = null,
+    summary: TextRef? = null,
+    summaryOn: TextRef? = null,
+    summaryOff: TextRef? = null,
+    visibilityContext: VisibilityContext? = null
+) {
+    val effectiveTitle = title ?: booleanKey.title
+    val effectiveSummary = summary ?: booleanKey.summary
+
+    val visibility = calculatePreferenceVisibility(
+        preferenceKey = booleanKey,
+        engineeringModeOnly = booleanKey.engineeringModeOnly,
+        visibilityContext = visibilityContext
+    )
+
+    if (!visibility.visible) return
+
+    val state = rememberPreferenceBooleanState(booleanKey)
+    val changeGuard = (booleanKey as? BooleanKeyWithChangeGuard)?.guard
+
+    var guardMessage by remember { mutableStateOf<String?>(null) }
+
+    val summary: @Composable (() -> Unit)? = when {
+        summaryOn != null && summaryOff != null -> {
+            { Text(stringResource(if (state.value) summaryOn else summaryOff)) }
+        }
+
+        effectiveSummary != null                -> {
+            { Text(stringResource(effectiveSummary)) }
+        }
+
+        else                                    -> null
+    }
+
+    if (changeGuard != null) {
+        SwitchPreference(
+            value = state.value,
+            onValueChange = { newValue ->
+                val message = changeGuard(newValue)
+                if (message == null) {
+                    state.value = newValue
+                } else {
+                    guardMessage = message
+                }
+            },
+            title = { PreferenceTitleWithSyncBadge(effectiveTitle, booleanKey) },
+            summary = summary,
+            enabled = visibility.enabled
+        )
+    } else {
+        SwitchPreference(
+            state = state,
+            title = { PreferenceTitleWithSyncBadge(effectiveTitle, booleanKey) },
+            summary = summary,
+            enabled = visibility.enabled
+        )
+    }
+
+    // Show guard rejection dialog
+    guardMessage?.let { message ->
+        OkDialog(
+            title = stringResource(CoreUiStrings.error),
+            message = message,
+            onDismiss = { guardMessage = null }
+        )
+    }
+}

@@ -9,17 +9,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.tiles.TileService
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class BgGraphTileSettingsActivity : AppCompatActivity() {
 
     @Inject lateinit var sp: SP
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {

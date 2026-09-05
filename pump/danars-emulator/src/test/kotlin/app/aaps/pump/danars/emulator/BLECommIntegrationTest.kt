@@ -81,7 +81,7 @@ class BLECommIntegrationTest : TestBase() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var decimalFormatter: DecimalFormatter
-    @Mock lateinit var profileStoreProvider: javax.inject.Provider<ProfileStore>
+    @Mock lateinit var profileStoreProvider: dev.zacsweers.metro.Provider<ProfileStore>
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
 
@@ -396,7 +396,7 @@ class BLECommIntegrationTest : TestBase() {
         bleComm.sendMessage(startPacket)
 
         // Stop the bolus
-        val stopPacket = DanaRSPacketBolusSetStepBolusStop(aapsLogger, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), rh, danaPump)
+        val stopPacket = DanaRSPacketBolusSetStepBolusStop(aapsLogger, BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)), rh, danaPump)
         bleComm.sendMessage(stopPacket)
 
         assertThat(stopPacket.isReceived).isTrue()

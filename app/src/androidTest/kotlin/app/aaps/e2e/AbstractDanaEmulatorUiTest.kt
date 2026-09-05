@@ -10,6 +10,7 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.work.WorkManager
+import app.aaps.di.testGraphs
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
@@ -26,29 +27,28 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
+import app.aaps.e2e.AbstractDanaEmulatorUiTest.Companion.BOLUS_UNITS
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.DanaPump
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
 import org.junit.After
 import org.junit.Before
 import java.io.File
 import java.util.regex.Pattern
-import javax.inject.Inject
 
 /**
  * Pump-agnostic base for the Dana **UI** E2E tests: everything that reaches the emulated pump through
  * the whole production stack — UI → `CommandQueue` → active pump plugin → its service → the transport
  * — without touching a pump-specific field. Concrete subclasses (one per Dana family, e.g. Dana-i/RS)
  * supply the pump-specific wiring through the abstract hooks below and add their own `@Test` methods.
- *
  * The insulin-delivery flow ([deliverInsulinFromUi]) is pump-agnostic — Manage → command queue →
  * active pump — so the *same* body proves every Dana variant, which is the reuse that makes an E2E
  * worth more than a per-plugin unit test.
- *
  * ## Fragility (read before editing)
  * Same rules as the other in-process E2E: selectors match **case-insensitively against text OR
  * content-desc** and match whole strings (so "Save" will not find "Save options to pump"), opens are
@@ -56,39 +56,31 @@ import javax.inject.Inject
  * where they bite: the pump screens are reached via Manage → Pump, *not* the bottom bar's setup
  * button ([openDanaPlugin]), and the Dana overview's action list vanishes and returns while a status
  * read is in flight, so every interaction with it waits for [waitForQueueIdle] first.
- *
- * The `@Inject` fields here are inherited: Hilt injects them when the concrete subclass calls
- * `hiltRule.inject()` (via [injectHilt]).
  */
 abstract class AbstractDanaEmulatorUiTest {
 
-    // Public rather than protected: Dagger's generated member injector cannot write Kotlin
-    // `protected` fields. Still accessible to subclasses as inherited members.
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var insulinManager: InsulinManager
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var config: Config
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    protected val preferences get() = testGraphs.preferences
+    protected val pluginStore get() = testGraphs.pluginStore
+    protected val commandQueue get() = testGraphs.commandQueue
+    protected val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    protected val configBuilder get() = testGraphs.configBuilder
+    protected val profileFunction get() = testGraphs.profileFunction
+    protected val profileRepository get() = testGraphs.profileRepository
+    protected val insulinManager get() = testGraphs.insulinManager
+    protected val dateUtil get() = testGraphs.dateUtil
+    protected val activePlugin get() = testGraphs.activePlugin
+    protected val config get() = testGraphs.config
 
     protected val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     protected val device: UiDevice get() = UiDevice.getInstance(instrumentation)
 
     // ---- pump-specific hooks (implemented per Dana family) --------------------------------------
 
-    /** Subclass body: `hiltRule.inject()`. Kept a hook because the `HiltAndroidRule` lives on the concrete test. */
-    protected abstract fun injectHilt()
 
     /** Seeds the transport/pairing/active-pump/maxDaily/history state for [variant] on the concrete pump. */
     protected abstract fun seedPairedPump(variant: ExternalOptions)
 
-    /** Disconnects and unbinds the concrete pump before the Hilt component dies. */
+    /** Disconnects and unbinds the concrete pump before the graph dies. */
     protected abstract fun tearDownPump()
 
     /** Queues a status read the way the app does on a device change (subclass: `changePump()`). */
@@ -123,8 +115,7 @@ abstract class AbstractDanaEmulatorUiTest {
 
     /**
      * Brings the app up with [variant] as the paired, active Dana pump.
-     *
-     * Per test rather than `@Before` because the variant has to be set *before* `hiltRule.inject()`:
+     * Per test rather than `@Before` because the variant has to be set *before* the graph is built:
      * `BleTransport` is `@Singleton`, so `DanaModules` reads which `EMULATE_*` option is on once,
      * when the graph first constructs it. The whole insulin-delivery flow below is pump-agnostic
      * (Manage → command queue → active pump), so the same flow runs against every RS handshake — only
@@ -132,7 +123,6 @@ abstract class AbstractDanaEmulatorUiTest {
      */
     protected fun bringUp(variant: ExternalOptions) {
         EmulatedOptions.enabled = setOf(variant)
-        injectHilt()
 
         // BLEComm.connect gates on this before it ever reaches the transport.
         instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_CONNECT)
@@ -182,31 +172,27 @@ abstract class AbstractDanaEmulatorUiTest {
 
     /**
      * Adds the local profile through [ProfileRepository], **not** by writing its preferences.
-     *
      * `ProfileRepositoryImpl` reads those preferences once, from its `init` block — which
-     * `hiltRule.inject()` has already run by the time any test code executes, so a profile seeded
+     * The graph is built by the time any test code executes, so a profile seeded
      * into preferences here is never read and the store stays empty. Going through `add` also
      * persists it, so the result is the same state the profile editor would leave behind.
-     *
      * [ProfileRepository.newDraft] names it (`LocalProfile1`) and zeroes every block, which is
      * deliberately invalid — fill them in or the profile switch below is rejected as invalid.
      */
     private fun seedLocalProfile() {
-        val profile = profileRepository.newDraft().apply {
-            mgdl = true
-            ic = JSONArray(singleValue(10.0))
-            isf = JSONArray(singleValue(50.0))
-            basal = JSONArray(singleValue(0.5))
-            targetLow = JSONArray(singleValue(100.0))
-            targetHigh = JSONArray(singleValue(110.0))
-        }
+        val profile = profileRepository.newDraft().copy(
+            mgdl = true,
+            ic = singleBlock(10.0),
+            isf = singleBlock(50.0),
+            basal = singleBlock(0.5),
+            target = singleTargetBlock(100.0, 110.0)
+        )
         check(profile.name == PROFILE_NAME) { "Expected the draft to be named $PROFILE_NAME, got ${profile.name}" }
         runBlocking { profileRepository.add(profile) }.getOrThrow()
     }
 
     /**
      * Activates the profile [seedLocalProfile] added, the way the profile UI does.
-     *
      * Adding a profile only makes it *selectable*: without a ProfileSwitch the overview sits on
      * "NO PROFILE SET" and anything needing a profile is refused — including [bolusFromUi].
      */
@@ -242,9 +228,6 @@ abstract class AbstractDanaEmulatorUiTest {
     }
 
     /** The profile-editor JSON shape: a single all-day value. */
-    private fun singleValue(value: Double) =
-        """[{"time":"00:00","timeAsSeconds":0,"value":$value}]"""
-
     /** Polls [supplier] until it returns non-null or [timeoutMs] elapses. */
     private fun <T> awaitNotNull(timeoutMs: Long, supplier: () -> T?): T? {
         val end = SystemClock.uptimeMillis() + timeoutMs
@@ -279,7 +262,6 @@ abstract class AbstractDanaEmulatorUiTest {
      * status read each following command runs (`DanaRSService.loadEvents` → `DanaRSPacketAPSHistoryEvents`),
      * parsing and syncing these very events (the `**NEW** EVENT …` log lines). Asserted here on the
      * pump's own store, the true far side, so it holds for every handshake the flow runs over.
-     *
      * These are events the test *generated*, not seeded ones — which is the whole point. A hand-planted
      * past bolus would carry an encoded time in the current minute that the live UI bolus then reads as
      * a duplicate and drops; real deliveries carry their real times and nothing live follows to collide.
@@ -293,7 +275,6 @@ abstract class AbstractDanaEmulatorUiTest {
 
     /**
      * Reads pump status through the command queue until the pump reports initialized.
-     *
      * The overview can't bootstrap this itself: Refresh/Pump history/User options are all
      * `visible = isInitialized` (DanaOverviewViewModel), and the bottom-bar button that got us onto
      * this screen only shows while the pump is *not* initialized — so the first read has to come
@@ -315,7 +296,6 @@ abstract class AbstractDanaEmulatorUiTest {
 
     /**
      * True when no command is queued or running.
-     *
      * The one deterministic "the overview has settled" signal: `isInitialized` is stable-true and
      * every action present exactly while nothing is in flight. A read in flight has just called
      * `danaPump.reset()`, so `isInitialized` is false and the whole action list is gone until it
@@ -364,14 +344,12 @@ abstract class AbstractDanaEmulatorUiTest {
      * Overview → Manage → Pump management, which renders the active pump's compose content
      * (`ComposeMainActivity.handlePluginClick`) — the Dana overview screen, reachable because the
      * subclass's `seedPairedPump` makes this Dana the active pump.
-     *
      * Deliberately **not** the "Dana-i/RS" button in the bottom bar, which is the more obvious
      * route: `ComposeMainActivity` only offers that one while the pump is *not* initialized
      * (`showPumpSetup`), and the pump initializes itself moments after the activity launches. Which
      * of the two wins is a race the test cannot control — it lost locally (button never rendered)
      * and won in CI (build 40254), on identical code. Manage → Pump management has no such gate, and
      * is also the route a user with a working pump actually takes.
-     *
      * Not the nav drawer either: that is a fixed menu (history/statistics/maintenance/...) with no
      * plugin entries.
      */
@@ -383,13 +361,11 @@ abstract class AbstractDanaEmulatorUiTest {
     /**
      * The main overview → Treatments → Insulin → a [BOLUS_UNITS] bolus, confirmed and delivered to
      * the emulated pump.
-     *
      * The one leg that leaves the pump plugin's own screens, and the reason the profile has to be
      * real (see [activateSeededProfile]) — the dialog refuses to bolus without one. This is the
      * path a user actually boluses through, and the most safety-critical one in the app:
      * InsulinDialog → `CommandQueue.bolus` → QueueWorker → `DanaRSPlugin.deliverTreatment` →
      * `DanaRSService` → `BLEComm` → emulator.
-     *
      * Asserted on the emulator's own `lastBolusAmount`, so it fails if the driver delivers nothing,
      * or delivers the wrong dose.
      */
@@ -424,7 +400,6 @@ abstract class AbstractDanaEmulatorUiTest {
 
     /**
      * Overview → Manage → Temp basal: raise the rate above 100% and commit it to the pump.
-     *
      * Drives `setTempBasalPercent` end to end — the Manage sheet's TBR dialog → command queue →
      * `DanaRSPlugin` → `DanaRSService` → emulator — and asserts the temp basal on the emulator's own
      * state, not the driver's. Only reachable once the pump is initialized (Manage gates the action
@@ -449,7 +424,6 @@ abstract class AbstractDanaEmulatorUiTest {
 
     /**
      * Overview → Manage → Extended bolus: set an amount and commit it to the pump.
-     *
      * Drives `setExtendedBolus` end to end, asserted on the emulator's `extendedBolusAmount`.
      */
     private fun applyExtendedBolusFromUi() {
@@ -472,7 +446,7 @@ abstract class AbstractDanaEmulatorUiTest {
         find(label, timeout)
     }
 
-    // ---- ui helpers (same contract as SetupWizardE2EHiltTest) -----------------------------------
+    // ---- ui helpers (same contract as SetupWizardE2ETest) -----------------------------------
 
     protected fun byText(s: String): BySelector =
         By.text(Pattern.compile(Pattern.quote(s), Pattern.CASE_INSENSITIVE))
@@ -506,7 +480,6 @@ abstract class AbstractDanaEmulatorUiTest {
 
     /**
      * Opens the Manage sheet and taps [action], scrolling the sheet to reach it.
-     *
      * Temp basal / Extended bolus sit near the bottom of `ManageBottomSheet`, below the fold, so a
      * plain find never sees them — the sheet has to be scrolled first.
      */
@@ -613,8 +586,6 @@ abstract class AbstractDanaEmulatorUiTest {
         private const val OPEN_ATTEMPTS = 3
 
 
-        /** The insulin dialog's middle quick-add button (DoubleKey.OverviewInsulinButtonIncrement2 default).
-         *  Its on-screen label ("+1.00"/"+1.0") is pump-step-dependent — see [bolusChipLabel]. */
         private const val BOLUS_UNITS = 1.0
         private const val POLL_MS = 250L
     }

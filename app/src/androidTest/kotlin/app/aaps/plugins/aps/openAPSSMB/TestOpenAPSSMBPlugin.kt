@@ -3,6 +3,7 @@ package app.aaps.plugins.aps.openAPSSMB
 import android.content.Context
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
@@ -35,25 +36,27 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.utils.ScriptReader
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import app.aaps.di.metro.AlgTestScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.floor
 
-@Singleton
+@SingleIn(AlgTestScope::class)
 open class TestOpenAPSSMBPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
+    private val injector: StaticInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     val context: Context,
     private val activePlugin: ActivePlugin,
@@ -72,10 +75,10 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
-        .pluginName(R.string.openapssmb)
-        .shortName(app.aaps.core.ui.R.string.smb_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.openapssmb))
+        .shortName(TextRef.AndroidRes(app.aaps.core.ui.R.string.smb_shortname))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_smb)
+        .description(TextRef.AndroidRes(R.string.description_smb))
         .setDefault(),
     aapsLogger, rh
 ), APS, PluginConstraints {
@@ -147,13 +150,13 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
         var minBg =
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetLowMgdl(), 0.1),
-                app.aaps.core.ui.R.string.profile_low_target,
+                app.aaps.core.interfaces.R.string.profile_low_target,
                 HardLimits.LIMIT_MIN_BG
             )
         var maxBg =
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetHighMgdl(), 0.1),
-                app.aaps.core.ui.R.string.profile_high_target,
+                app.aaps.core.interfaces.R.string.profile_high_target,
                 HardLimits.LIMIT_MAX_BG
             )
         var targetBg =
@@ -181,14 +184,14 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                     HardLimits.LIMIT_TEMP_TARGET_BG
                 )
         }
-        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.diaRange())) return
+        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.interfaces.R.string.profile_dia, hardLimits.diaRange())) return
         if (!hardLimits.checkHardLimits(
                 profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()),
-                app.aaps.core.ui.R.string.profile_carbs_ratio_value,
+                app.aaps.core.interfaces.R.string.profile_carbs_ratio_value,
                 hardLimits.icRange()
             )
         ) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.LIMIT_ISF)) return
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.interfaces.R.string.profile_sensitivity_value, HardLimits.LIMIT_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(ch.fromPump(pump.baseBasalRate), app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
@@ -282,7 +285,9 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                     .isTempBasalRequested =
                     false
                 //determineBasalResultSMB.iob = iobArray[0]
-                determineBasalResultSMB.json()?.put("timestamp", dateUtil.toISOString(now))
+                // The timestamp put() that stood here wrote into the stored document for the export
+                // below, which is commented out. The document is immutable now, so it is added at the
+                // export instead - see the commented call and TestOpenAPSAMAPlugin for the live one.
                 determineBasalResultSMB.inputConstraints = inputConstraints
                 //lastDetermineBasalAdapter = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMBFromJS
@@ -293,7 +298,8 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                 //         is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName
                 //         is DetermineBasalAdapterSMBDynamicISFJS -> OpenAPSSMBDynamicISFPlugin::class.simpleName
                 //         else -> "Error"
-                //     }, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json()
+                //     }, determineBasalAdapterSMBJS.json().toString(),
+                //     determineBasalResultSMB.json()?.with { put("timestamp", dateUtil.toISOString(now)) }?.toString()
                 // )
                 rxBus.send(EventAPSCalculationFinished())
             }

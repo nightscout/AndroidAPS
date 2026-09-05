@@ -43,10 +43,10 @@ import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionTempTargetPreCheck
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import app.aaps.wear.di.WearMetroActivity
+import dev.zacsweers.metro.Inject
 
-class TempTargetActivity : DaggerAppCompatActivity() {
+class TempTargetActivity : WearMetroActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP

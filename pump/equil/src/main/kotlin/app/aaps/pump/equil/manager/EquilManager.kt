@@ -6,6 +6,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -65,12 +66,12 @@ import org.joda.time.DateTimeZone
 import org.joda.time.format.ISODateTimeFormat
 import java.util.Calendar
 import java.util.Optional
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.min
 
-@Singleton
+@SingleIn(AppScope::class)
 class EquilManager @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
@@ -80,7 +81,7 @@ class EquilManager @Inject constructor(
     private val equilBLE: EquilBLE,
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
     private val equilHistoryPumpDao: EquilHistoryPumpDao,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
@@ -91,14 +92,33 @@ class EquilManager @Inject constructor(
     var equilState: EquilState? = null
         private set
 
+    /** Guards the one-time read in [init]. */
+    private var podStateLoaded = false
+
     val lastConnectionFlow = MutableStateFlow(0L)
     val lastBolusTimeFlow = MutableStateFlow<Long?>(null)
     val lastBolusAmountFlow = MutableStateFlow<Double?>(null)
     val reservoirFlow = MutableStateFlow(0.0)
     val batteryFlow = MutableStateFlow<Int?>(null)
 
+    /**
+     * Called from `EquilPumpPlugin.onStart`, which can run more than once per process - the plugin is
+     * started again whenever it is re-enabled.
+     *
+     * The pod state is only read from preferences the **first** time. Every change to [equilState] is
+     * written through to preferences immediately, so memory is never older than disk: a second load can
+     * only replace newer in-memory state with whatever happens to be persisted. That is not theoretical
+     * - `onStart` runs on a background coroutine, so a re-enable landing during pod activation reset an
+     * activation that was already in progress, and the wizard then waited forever for a COMPLETED it had
+     * already reached (#5040).
+     *
+     * [equilBLE] still initialises on every start; only the read is once.
+     */
     fun init() {
-        loadPodState()
+        if (!podStateLoaded) {
+            loadPodState()
+            podStateLoaded = true
+        }
         equilBLE.init(this)
     }
 
@@ -114,7 +134,7 @@ class EquilManager @Inject constructor(
     }
 
     fun getTempBasalPump(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command = CmdTempBasalGet(aapsLogger, preferences, this)
             equilBLE.writeCmd(command)
@@ -132,7 +152,7 @@ class EquilManager @Inject constructor(
     }
 
     suspend fun setTempBasal(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command = CmdTempBasalSet(insulin, time, aapsLogger, preferences, this)
             command.cancel = cancel
@@ -183,7 +203,7 @@ class EquilManager @Inject constructor(
     }
 
     suspend fun setExtendedBolus(insulin: Double, time: Int, cancel: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command = CmdExtendedBolusSet(insulin, time, cancel, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
@@ -228,7 +248,7 @@ class EquilManager @Inject constructor(
     }
 
     suspend fun bolus(detailedBolusInfo: DetailedBolusInfo, bolusProfile: BolusProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command = CmdLargeBasalSet(detailedBolusInfo.insulin, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
@@ -283,7 +303,7 @@ class EquilManager @Inject constructor(
     }
 
     fun stopBolus(bolusProfile: BolusProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command: BaseCmd = CmdLargeBasalSet(0.0, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
@@ -375,7 +395,7 @@ class EquilManager @Inject constructor(
     }
 
     fun readModeAndHistory(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val command: BaseCmd = CmdRunningModeGet(aapsLogger, preferences, this)
             equilBLE.writeCmd(command)
@@ -398,7 +418,7 @@ class EquilManager @Inject constructor(
 
     fun loadEquilHistory(): PumpEnactResult {
         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
-        val pumpEnactResult = pumpEnactResultProvider.get()
+        val pumpEnactResult = pumpEnactResultProvider()
         var startIndex = getStartHistoryIndex() ?: return pumpEnactResult
         val index = getHistoryIndex() ?: return pumpEnactResult
         aapsLogger.debug(LTag.PUMPCOMM, "return ===$index====$startIndex")
@@ -425,7 +445,7 @@ class EquilManager @Inject constructor(
     }
 
     fun executeCmd(command: BaseCmd): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         try {
             val equilHistoryRecord = addHistory(command)
             equilBLE.writeCmd(command)
@@ -450,23 +470,32 @@ class EquilManager @Inject constructor(
         return preferences.get(EquilStringKey.State)
     }
 
+    /**
+     * Reads the persisted pod state into memory.
+     *
+     * The new state is built in a local and published in one assignment. It used to null [equilState]
+     * first and fill it in afterwards, which left a window where every concurrent reader saw no pod:
+     * `hasPodState()` false, `getActivationProgress()` NONE. This object is a singleton read by the
+     * overview screen, the wizard and the command queue while the BLE threads write to it, so that
+     * window was reachable - it is what made `activatedPod_...` fail as "expected to be true" (#5040).
+     */
     fun loadPodState() {
-        equilState = null
-
         val storedPodState = readPodState()
 
-        if (StringUtils.isEmpty(storedPodState)) {
-            equilState = EquilState()
+        val loaded = if (StringUtils.isEmpty(storedPodState)) {
             aapsLogger.info(LTag.PUMP, "loadPodState: no Pod state was provided")
+            EquilState()
         } else {
             aapsLogger.info(LTag.PUMP, "loadPodState: serialized Pod state was provided: $storedPodState")
             try {
-                equilState = gsonInstance.fromJson(storedPodState, EquilState::class.java)
+                gsonInstance.fromJson(storedPodState, EquilState::class.java) ?: EquilState()
             } catch (ex: Exception) {
-                equilState = EquilState()
                 aapsLogger.error(LTag.PUMP, "loadPodState: could not deserialize PodState: $storedPodState", ex)
+                EquilState()
             }
         }
+
+        equilState = loaded
         syncOverviewFlows()
     }
 
@@ -734,7 +763,7 @@ class EquilManager @Inject constructor(
         val parm = data[27].toInt() and 0xff
         val errorTips = getEquilError(port, level, parm)
         if (!TextUtils.isEmpty(errorTips) && currentIndex != historyIndex) {
-            notificationManager.post(NotificationId.PUMP_ERROR, errorTips, soundRes = app.aaps.core.ui.R.raw.alarm)
+            notificationManager.post(NotificationId.PUMP_ERROR, errorTips, sound = AlarmSound.ALARM)
             if (saveData) {
                 val time = System.currentTimeMillis()
                 val equilHistoryRecord = EquilHistoryRecord(EquilHistoryRecord.EventType.EQUIL_ALARM, time, getSerialNumber())

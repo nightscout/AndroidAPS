@@ -19,15 +19,15 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
@@ -47,41 +47,47 @@ import app.aaps.pump.danar.comm.MsgHistoryRefill
 import app.aaps.pump.danar.comm.MsgHistorySuspend
 import app.aaps.pump.danar.comm.MsgPCCommStart
 import app.aaps.pump.danar.comm.MsgPCCommStop
-import dagger.android.DaggerService
-import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.objects.workflow.MetroService
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 import kotlin.math.min
 
 /**
  * Created by mike on 28.01.2018.
  */
-abstract class AbstractDanaRExecutionService : DaggerService() {
+// Metro reads this class now that interop is on. It is subclassable, so it must declare that its
+// injected fields are meant to be filled.
+@HasMemberInjections
+abstract class AbstractDanaRExecutionService : MetroService() {
 
-    @Inject lateinit var injector: HasAndroidInjector
+    // Android constructs this service, so [MetroService] fills these fields in onCreate from the same
+    // map the messages it builds use. A subclass missing from that map fails by name on start.
+    @Inject lateinit var injector: MetroMemberInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var context: Context
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject lateinit var pumpEnactResultProvider: () -> PumpEnactResult
     @Inject lateinit var rfcommTransport: RfcommTransport
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    private val disposable = CompositeDisposable()
+    // Service lifetime. appScope above is the application scope and must not be cancelled here.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     // These are read/written across the connect() worker thread, the reader thread, the BT/app-exit
     // observers (io scheduler), disconnect(), and the command methods - @Volatile for visibility.
     @Volatile protected var mRfcommSocket: RfcommSocket? = null
@@ -107,30 +113,29 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
-        disposable += rxBus
-            .toObservable(EventBTChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventBTChange ->
-                           if (event.state === EventBTChange.Change.DISCONNECT) {
-                               aapsLogger.debug(LTag.PUMP, "Device was disconnected " + event.deviceName) //Device was disconnected
-                               if (preferences.get(DanaStringNonKey.RName) == event.deviceName) {
-                                   mSerialIOThread?.disconnect("BT disconnection broadcast")
-                                   rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
-                               }
-                           }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.PUMP, "EventAppExit received")
-                           mSerialIOThread?.disconnect("Application exit")
-                           stopSelf()
-                       }, fabricPrivacy::logException)
+        // Service lifetime scope on IO, like the io scheduler used before, cancelled in onDestroy
+        // like the CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a
+        // scheduled collector could miss an event sent before it starts.
+        rxBus.toFlow(EventBTChange::class)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                if (event.state === EventBTChange.Change.DISCONNECT) {
+                    aapsLogger.debug(LTag.PUMP, "Device was disconnected " + event.deviceName) //Device was disconnected
+                    if (preferences.get(DanaStringNonKey.RName) == event.deviceName) {
+                        mSerialIOThread?.disconnect("BT disconnection broadcast")
+                        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+                    }
+                }
+            }
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.PUMP, "EventAppExit received")
+                mSerialIOThread?.disconnect("Application exit")
+                stopSelf()
+            }
     }
 
     override fun onDestroy() {
-        disposable.clear()
+        scope.cancel()
         super.onDestroy()
     }
 
@@ -220,7 +225,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     }
 
     fun loadHistory(type: Byte): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!isConnected) return result
         val msg: MessageBase = when (type) {
             RecordTypes.RECORD_TYPE_ALARM     -> MsgHistoryAlarm(injector)
@@ -267,7 +272,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                 if (temporaryBasal.rate != danaPump.tempBasalPercent.toDouble()
                     || abs(temporaryBasal.timestamp - danaPump.tempBasalStart) > 10000
                 ) { // Close current temp basal
-                    notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, app.aaps.pump.danar.R.string.unsupported_action_in_pump)
+                    notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                     aapsLogger.error(LTag.PUMP, "Different temporary basal found running AAPS: " + (temporaryBasal.toString() + " DanaPump " + danaPump.temporaryBasalToString()))
                     pumpSync.syncTemporaryBasalWithPumpId(
                         danaPump.tempBasalStart,
@@ -287,7 +292,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                     activePlugin.activePump.model(),
                     activePlugin.activePump.serialNumber()
                 )
-                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, app.aaps.pump.danar.R.string.unsupported_action_in_pump)
+                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                 aapsLogger.error(LTag.PUMP, "Temporary basal should not be running. Sending stop to AAPS")
             }
         } else {
@@ -302,7 +307,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                     activePlugin.activePump.model(),
                     activePlugin.activePump.serialNumber()
                 )
-                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, app.aaps.pump.danar.R.string.unsupported_action_in_pump)
+                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                 aapsLogger.error(LTag.PUMP, "Temporary basal should be running: DanaPump " + danaPump.temporaryBasalToString())
             }
         }
@@ -312,7 +317,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                 if (extendedBolus.rate != danaPump.extendedBolusAbsoluteRate
                     || abs(extendedBolus.timestamp - danaPump.extendedBolusStart) > 10000
                 ) { // Close current extended
-                    notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, app.aaps.pump.danar.R.string.unsupported_action_in_pump)
+                    notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                     aapsLogger.error(LTag.PUMP, "Different extended bolus found running AAPS: " + (extendedBolus.toString() + " DanaPump " + danaPump.extendedBolusToString()))
                     pumpSync.syncExtendedBolusWithPumpId(
                         danaPump.extendedBolusStart,
@@ -331,12 +336,12 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                     activePlugin.activePump.model(),
                     activePlugin.activePump.serialNumber()
                 )
-                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, app.aaps.pump.danar.R.string.unsupported_action_in_pump)
+                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                 aapsLogger.error(LTag.PUMP, "Extended bolus should not be running. Sending stop to AAPS")
             }
         } else {
             if (danaPump.isExtendedInProgress) { // Create new
-                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, app.aaps.pump.danar.R.string.unsupported_action_in_pump)
+                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                 aapsLogger.error(LTag.PUMP, "Extended bolus should not be running:  DanaPump " + danaPump.extendedBolusToString())
                 pumpSync.syncExtendedBolusWithPumpId(
                     danaPump.extendedBolusStart,

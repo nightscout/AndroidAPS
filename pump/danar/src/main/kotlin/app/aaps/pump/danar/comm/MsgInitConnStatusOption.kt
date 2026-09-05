@@ -2,10 +2,11 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
-import dagger.android.HasAndroidInjector
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgInitConnStatusOption(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {
@@ -31,7 +32,7 @@ class MsgInitConnStatusOption(
             failed = true
         }
         if (!danaPump.isPasswordOK) {
-            notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, app.aaps.pump.dana.R.string.wrongpumppassword)
+            notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, TextRef.AndroidRes(app.aaps.pump.dana.R.string.wrongpumppassword))
         } else {
             notificationManager.dismiss(NotificationId.WRONG_PUMP_PASSWORD)
         }

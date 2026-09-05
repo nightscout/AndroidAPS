@@ -8,11 +8,11 @@ import app.aaps.pump.eopatch.core.response.BolusResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class StartCalcBolusTask @Inject constructor() : BolusTask(TaskFunc.START_CALC_BOLUS) {
 
     @Inject lateinit var nowBolusStart: BolusStart

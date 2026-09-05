@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metro)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     id("android-module-dependencies")
@@ -10,12 +11,11 @@ plugins {
 android {
 
     namespace = "app.aaps.pump.insight"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+}
+
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -31,7 +31,4 @@ dependencies {
     api(libs.androidx.room.runtime)
 
     ksp(libs.androidx.room.compiler)
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
 }

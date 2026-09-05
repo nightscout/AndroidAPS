@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Provider
 
 /**
  * Activation type: LONG (full 5-step) or SHORT (3-step, resume after prime).
@@ -66,7 +65,7 @@ sealed class ActionState {
 abstract class OmnipodWizardViewModel(
     protected val logger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    protected val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    protected val pumpEnactResultProvider: () -> PumpEnactResult,
     protected val profileFunction: ProfileFunction,
     protected val profileRepository: ProfileRepository
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {

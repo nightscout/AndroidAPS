@@ -1,0 +1,417 @@
+package app.aaps.plugins.constraints
+
+import app.aaps.core.data.model.RM
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.profiling.Profiler
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.stats.TddCalculator
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringKey
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.implementation.pump.PumpWithConcentrationImpl
+import app.aaps.plugins.aps.ApsStrings
+import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
+import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
+import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
+import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
+import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import app.aaps.plugins.constraints.objectives.objectives.Objective0
+import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
+import app.aaps.plugins.constraints.objectives.objectives.Objective1
+import app.aaps.plugins.constraints.objectives.objectives.Objective2
+import app.aaps.plugins.constraints.objectives.objectives.Objective3
+import app.aaps.plugins.constraints.objectives.objectives.Objective4
+import app.aaps.plugins.constraints.objectives.objectives.Objective5
+import app.aaps.plugins.constraints.objectives.objectives.Objective6
+import app.aaps.plugins.constraints.objectives.objectives.Objective7
+import app.aaps.plugins.constraints.objectives.objectives.Objective8
+import app.aaps.plugins.constraints.objectives.objectives.Objective9
+import app.aaps.plugins.constraints.safety.SafetyPlugin
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danar.DanaRPlugin
+import app.aaps.pump.danars.DanaRSPlugin
+import app.aaps.pump.insight.InsightPlugin
+import app.aaps.pump.insight.database.InsightDatabase
+import app.aaps.pump.insight.database.InsightDatabaseDao
+import app.aaps.pump.insight.database.InsightDbHelper
+import app.aaps.pump.virtual.VirtualPumpPlugin
+import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
+
+/**
+ * Created by mike on 18.03.2018.
+ */
+class ConstraintsCheckerImplTest : TestBaseWithProfile() {
+
+    private val testScope = CoroutineScope(Dispatchers.Unconfined)
+
+    @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
+    @Mock lateinit var commandQueue: CommandQueue
+    @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
+    @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
+    @Mock lateinit var profiler: Profiler
+    @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
+    @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
+    @Mock lateinit var insightDatabase: InsightDatabase
+    @Mock lateinit var bgQualityCheck: BgQualityCheck
+    @Mock lateinit var tddCalculator: TddCalculator
+    @Mock lateinit var determineBasalSMB: DetermineBasalSMB
+    @Mock lateinit var determineBasalAMA: DetermineBasalAMA
+    @Mock lateinit var loop: Loop
+    @Mock lateinit var passwordCheck: PasswordCheck
+    @Mock lateinit var pumpWithConcentration: PumpWithConcentrationImpl
+    @Mock lateinit var blePreCheck: BlePreCheck
+    @Mock lateinit var bolusProgressData: BolusProgressData
+
+    private lateinit var danaPump: DanaPump
+    private lateinit var insightDbHelper: InsightDbHelper
+    private lateinit var constraintChecker: ConstraintsCheckerImpl
+    private lateinit var safetyPlugin: SafetyPlugin
+    private lateinit var objectivesPlugin: ObjectivesPlugin
+    private lateinit var danaRPlugin: DanaRPlugin
+    private lateinit var danaRSPlugin: DanaRSPlugin
+    private lateinit var insightPlugin: InsightPlugin
+    private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
+    private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
+
+    @BeforeEach
+    fun prepare() {
+        // Mock persistenceLayer for OpenAPSSMBPlugin.onStart()
+        runTest {
+            whenever(persistenceLayer.getApsResults(any(), any())).thenReturn(emptyList())
+        }
+
+        whenever(rh.gs(ConstraintsStrings.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
+        whenever(rh.gs(CoreUiStrings.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
+        // :plugins:aps resolves its own strings through TextRef, so these need the ApsStrings key, not ConstraintsStrings.
+        whenever(rh.gs(ApsStrings.hardlimit)).thenReturn("hard limit")
+        whenever(rh.gs(CoreUiStrings.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        whenever(rh.gs(ApsStrings.maxvalueinpreferences)).thenReturn("max value in preferences")
+        whenever(rh.gs(ApsStrings.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
+        whenever(rh.gs(ApsStrings.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
+        whenever(rh.gs(CoreUiStrings.pumplimit)).thenReturn("pump limit")
+        whenever(rh.gs(CoreUiStrings.itmustbepositivevalue)).thenReturn("it must be positive value")
+        whenever(rh.gs(ConstraintsStrings.maxvalueinpreferences)).thenReturn("max value in preferences")
+        whenever(rh.gs(ApsStrings.max_basal_multiplier)).thenReturn("max basal multiplier")
+        whenever(rh.gs(ApsStrings.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
+        whenever(rh.gs(CoreUiStrings.pumplimit)).thenReturn("pump limit")
+        whenever(rh.gs(CoreUiStrings.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
+        whenever(rh.gs(ConstraintsStrings.hardlimit)).thenReturn("hard limit")
+        whenever(rh.gs(ConstraintsStrings.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
+        whenever(rh.gs(ApsStrings.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
+        whenever(rh.gs(CoreUiStrings.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        whenever(rh.gs(CoreUiStrings.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        whenever(rh.gs(CoreUiStrings.itmustbepositivevalue)).thenReturn("it must be positive value")
+        whenever(rh.gs(ConstraintsStrings.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
+        whenever(rh.gs(CoreUiStrings.pumplimit)).thenReturn("pump limit")
+        whenever(rh.gs(ConstraintsStrings.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
+        whenever(rh.gs(CoreUiStrings.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        whenever(rh.gs(CoreUiStrings.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
+        whenever(rh.gs(CoreUiStrings.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        whenever(rh.gs(ConstraintsStrings.objectivenotstarted)).thenReturn("Objective %1\$d not started")
+
+        whenever(activePlugin.activePump).thenReturn(pumpWithConcentration)
+        whenever(pumpWithConcentration.pumpDescription).thenReturn(PumpDescription())
+
+        // RS constructor
+        whenever(preferences.get(DanaStringNonKey.RsName)).thenReturn("")
+        whenever(preferences.get(DanaStringNonKey.MacAddress)).thenReturn("")
+        // R
+        whenever(preferences.get(DanaStringNonKey.RName)).thenReturn("")
+
+        //SafetyPlugin
+        constraintChecker = ConstraintsCheckerImpl(activePlugin, aapsLogger, ch, rh)
+
+        insightDbHelper = InsightDbHelper(insightDatabaseDao)
+        danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
+        // The real formatter rather than a mock: it is pure arithmetic over a duration, and the
+        // objectives only read it for display.
+        val durationText = PlainDurationText()
+        val objectives = listOf(
+            Objective0(preferences, rh, durationText, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
+            Objective1(preferences, rh, durationText, dateUtil),
+            Objective2(preferences, rh, durationText, dateUtil),
+            Objective3(preferences, rh, durationText, dateUtil),
+            Objective4(preferences, rh, durationText, dateUtil, profileFunction),
+            Objective5(preferences, rh, durationText, dateUtil),
+            Objective6(preferences, rh, durationText, dateUtil, constraintsChecker, loop),
+            Objective7(preferences, rh, durationText, dateUtil),
+            Objective8(preferences, rh, durationText, dateUtil),
+            Objective9(preferences, rh, durationText, dateUtil)
+        )
+        objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, preferences, config, objectives)
+        runBlocking { objectivesPlugin.onStart() }
+        danaRPlugin = DanaRPlugin(
+            aapsLogger, rh, preferences, config, commandQueue, rxBus, context, activePlugin, danaPump, dateUtil, pumpSync,
+            notificationManager, danaHistoryDatabase, decimalFormatter, bolusProgressData, pumpEnactResultProvider
+        )
+        danaRSPlugin =
+            DanaRSPlugin(
+                aapsLogger, rh, preferences, commandQueue, rxBus, context,
+                danaPump, detailedBolusInfoStorage, temporaryBasalStorage,
+                dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData
+            )
+        insightPlugin = InsightPlugin(
+            aapsLogger, rh, preferences, commandQueue, rxBus,
+            context, dateUtil, insightDbHelper, pumpSync, insightDatabase, pumpEnactResultProvider, notificationManager, ch, bolusProgressData, testScope, aapsSchedulers, blePreCheck
+        )
+        openAPSSMBPlugin =
+            OpenAPSSMBPlugin(
+                aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin, iobCobCalculator,
+                hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, smbGlucoseStatusProvider, tddCalculator, bgQualityCheck,
+                notificationManager, determineBasalSMB, profiler, GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider() }, ch,
+                fabricPrivacy
+            )
+        openAPSAMAPlugin =
+            OpenAPSAMAPlugin(
+                aapsLogger, rxBus, constraintChecker, rh, config, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
+                hardLimits, dateUtil, persistenceLayer, smbGlucoseStatusProvider, preferences, determineBasalAMA,
+                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider() }, ch, fabricPrivacy
+            )
+        safetyPlugin =
+            SafetyPlugin(
+                aapsLogger, rh, preferences, constraintChecker, activePlugin, hardLimits,
+                config, persistenceLayer, dateUtil, notificationManager, decimalFormatter
+            )
+        val constraintsPluginsList = ArrayList<PluginBase>()
+        constraintsPluginsList.add(safetyPlugin)
+        constraintsPluginsList.add(objectivesPlugin)
+        // Pump plugins are no longer PluginConstraints — their cU delivery caps are PumpPluginConstraints,
+        // folded into the scan by ConstraintsCheckerImpl via activePumpInternal (stubbed per test).
+        constraintsPluginsList.add(openAPSAMAPlugin)
+        constraintsPluginsList.add(openAPSSMBPlugin)
+        whenever(activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class)).thenReturn(constraintsPluginsList)
+    }
+
+    // Combo & Objectives
+    @Test
+    fun isLoopInvocationAllowedTest() {
+        val c = constraintChecker.isLoopInvocationAllowed()
+        assertThat(c.reasonList).hasSize(1) // Objectives
+        assertThat(c.mostLimitedReasonList).hasSize(1) // Objectives
+        assertThat(c.value()).isFalse()
+    }
+
+    // Safety & Objectives
+    // 2x Safety & Objectives
+    @Test
+    fun isClosedLoopAllowedTest() = runTest {
+        whenever(config.isEngineeringModeOrRelease()).thenReturn(true)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
+        objectivesPlugin.objectives[Objectives.CLOSED_LOOP_OBJECTIVE].startedOn = 0
+        val c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
+        aapsLogger.debug("Reason list: " + c.reasonList.toString())
+        assertThat(c.reasonList[0]).contains("Objectives: Objective 7 not started") // Safety & Objectives
+        assertThat(c.value()).isFalse()
+    }
+
+    // Safety & Objectives
+    @Test
+    fun isAutosensModeEnabledTest() {
+        openAPSSMBPlugin.setPluginEnabledBlocking(PluginType.APS, true)
+        objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
+        whenever(preferences.get(BooleanKey.ApsUseAutosens)).thenReturn(false)
+        val c = constraintChecker.isAutosensModeEnabled()
+        assertThat(c.reasonList).hasSize(2) // Safety & Objectives
+        assertThat(c.mostLimitedReasonList).hasSize(2) // Safety & Objectives
+        assertThat(c.value()).isFalse()
+    }
+
+    // Safety
+    @Test
+    fun isAdvancedFilteringEnabledTest() = runTest {
+        whenever(persistenceLayer.isAdvancedFilteringSupported()).thenReturn(false)
+        val c = constraintChecker.isAdvancedFilteringEnabled()
+        assertThat(c.reasonList).hasSize(1) // Safety
+        assertThat(c.mostLimitedReasonList).hasSize(1) // Safety
+        assertThat(c.value()).isFalse()
+    }
+
+    // SMB should limit
+    @Test
+    fun isSuperBolusEnabledTest() {
+        openAPSSMBPlugin.setPluginEnabledBlocking(PluginType.APS, true)
+        val c = constraintChecker.isSuperBolusEnabled()
+        assertThat(c.value()).isFalse() // SMB should limit
+    }
+
+    // Safety & Objectives
+    @Test
+    fun isSMBModeEnabledTest() = runTest {
+        openAPSSMBPlugin.setPluginEnabledBlocking(PluginType.APS, true)
+        objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
+        whenever(preferences.get(BooleanKey.ApsUseSmb)).thenReturn(false)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
+//        whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true))
+        val c = constraintChecker.isSMBModeEnabled()
+        assertThat(c.reasonList).hasSize(3) // 2x Safety & Objectives
+        assertThat(c.mostLimitedReasonList).hasSize(3) // 2x Safety & Objectives
+        assertThat(c.value()).isFalse()
+    }
+
+    // applyBasalConstraints tests
+    @Test
+    fun basalRateShouldBeLimited() {
+        whenever(pumpWithConcentration.activePumpInternal).thenReturn(danaRPlugin)
+        // The active pump's cU cap is folded into the IU scan by ConstraintsChecker via activePumpInternal.
+        whenever(activePlugin.activePumpInternal).thenReturn(danaRPlugin)
+        // DanaR, RS
+        danaRPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+        danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+        danaPump.maxBasal = 0.8
+
+        // Insight
+//        insightPlugin.setPluginEnabledBlocking(PluginType.PUMP, true);
+//        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+//        result.maximumBasalAmount = 1.1d;
+//        insightPlugin.setStatusResult(result);
+
+        // No limit by default
+        whenever(preferences.get(DoubleKey.ApsMaxBasal)).thenReturn(1.0)
+        whenever(preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier)).thenReturn(4.0)
+        whenever(preferences.get(DoubleKey.ApsMaxDailyMultiplier)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+
+        // Apply all limits
+        val d = constraintChecker.getMaxBasalAllowed(validProfile)
+        assertThat(d.value()).isWithin(0.01).of(0.8)
+        // Safety hard-limit + the active pump's cU cap (DanaR), now folded into the IU scan by ConstraintsChecker.
+        // DanaRS no longer contributes (only the active pump's PumpPluginConstraints cap is folded).
+        assertThat(d.reasonList).hasSize(2)
+        assertThat(d.getMostLimitedReasons()).isEqualTo("DanaR: Limiting max basal rate to 0.80 U/h because of pump limit")
+    }
+
+    @Test
+    fun percentBasalRateShouldBeLimited() {
+        whenever(pumpWithConcentration.activePumpInternal).thenReturn(danaRPlugin)
+        // DanaR, RS
+        danaRPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+        danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+        danaPump.maxBasal = 0.8
+
+        // Insight
+//        insightPlugin.setPluginEnabledBlocking(PluginType.PUMP, true);
+//        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+//        result.maximumBasalAmount = 1.1d;
+//        insightPlugin.setStatusResult(result);
+
+        // No limit by default
+        whenever(preferences.get(DoubleKey.ApsMaxBasal)).thenReturn(1.0)
+        whenever(preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier)).thenReturn(4.0)
+        whenever(preferences.get(DoubleKey.ApsMaxDailyMultiplier)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+
+        // Apply all limits
+        val i = constraintChecker.getMaxBasalPercentAllowed(validProfile)
+        assertThat(i.value()).isEqualTo(200)
+        // Pump plugins no longer contribute percent reasons — their percent cap was redundant with SafetyPlugin,
+        // which still caps to the same value (tbrSettings.maxDose); remaining reasons are all from SafetyPlugin.
+        assertThat(i.reasonList).hasSize(4)
+        assertThat(i.getMostLimitedReasons()).isEqualTo("Safety: Limiting max percent rate to 200% because of pump limit")
+    }
+
+    // applyBolusConstraints tests
+    @Test
+    fun bolusAmountShouldBeLimited() {
+        whenever(pumpWithConcentration.activePumpInternal).thenReturn(virtualPumpPlugin)
+        whenever(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription())
+        // DanaR, RS
+        danaRPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+        danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, true)
+        danaPump.maxBolus = 6.0
+
+        // Insight
+//        insightPlugin.setPluginEnabledBlocking(PluginType.PUMP, true);
+//        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+//        result.maximumBolusAmount = 7d;
+//        insightPlugin.setStatusResult(result);
+
+        // No limit by default
+        whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("child")
+
+        // Apply all limits
+        val d = constraintChecker.getMaxBolusAllowed()
+        assertThat(d.value()).isWithin(0.01).of(3.0)
+        // 2x Safety only. Pump bolus caps (DanaR/RS) are now cU-domain (PumpPluginConstraints), applied at the
+        // PumpWithConcentration boundary, NOT in the IU global fan-out, so they no longer add reasons here.
+        assertThat(d.reasonList).hasSize(2)
+        assertThat(d.getMostLimitedReasons()).isEqualTo("Safety: Limiting bolus to 3.0 U because of max value in preferences")
+    }
+
+    // applyCarbsConstraints tests
+    @Test
+    fun carbsAmountShouldBeLimited() {
+        // No limit by default
+        whenever(preferences.get(IntKey.SafetyMaxCarbs)).thenReturn(48)
+
+        // Apply all limits
+        val i = constraintChecker.getMaxCarbsAllowed()
+        assertThat(i.value()).isEqualTo(48)
+        assertThat(i.reasonList).hasSize(1)
+        assertThat(i.getMostLimitedReasons()).isEqualTo("Safety: Limiting carbs to 48 g because of max value in preferences")
+    }
+
+    // applyMaxIOBConstraints tests
+    @Test
+    fun iobAMAShouldBeLimited() = runTest {
+        // No limit by default
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
+        whenever(preferences.get(DoubleKey.ApsAmaMaxIob)).thenReturn(1.5)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("teenage")
+        openAPSAMAPlugin.setPluginEnabledBlocking(PluginType.APS, true)
+        openAPSSMBPlugin.setPluginEnabledBlocking(PluginType.APS, false)
+
+        // Apply all limits
+        val d = constraintChecker.getMaxIOBAllowed()
+        assertThat(d.value()).isWithin(0.01).of(1.5)
+        assertThat(d.reasonList).hasSize(2)
+        assertThat(d.getMostLimitedReasons()).isEqualTo("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences")
+    }
+
+    @Test
+    fun iobSMBShouldBeLimited() = runTest {
+        // No limit by default
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
+        whenever(preferences.get(DoubleKey.ApsSmbMaxIob)).thenReturn(3.0)
+        whenever(preferences.get(StringKey.SafetyAge)).thenReturn("teenage")
+        openAPSSMBPlugin.setPluginEnabledBlocking(PluginType.APS, true)
+        openAPSAMAPlugin.setPluginEnabledBlocking(PluginType.APS, false)
+
+        // Apply all limits
+        val d = constraintChecker.getMaxIOBAllowed()
+        assertThat(d.value()).isWithin(0.01).of(3.0)
+        assertThat(d.reasonList).hasSize(2)
+        assertThat(d.getMostLimitedReasons()).isEqualTo("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences")
+    }
+}

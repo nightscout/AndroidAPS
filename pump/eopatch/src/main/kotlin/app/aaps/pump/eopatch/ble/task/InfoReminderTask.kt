@@ -7,11 +7,12 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 @Suppress("PrivatePropertyName", "SpellCheckingInspection")
-@Singleton
+@SingleIn(AppScope::class)
 class InfoReminderTask @Inject constructor() : TaskBase(TaskFunc.INFO_REMINDER) {
 
     @Inject lateinit var infoReminderSet: InfoReminderSet

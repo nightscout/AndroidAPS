@@ -20,15 +20,16 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.data.GattAttributes
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
-import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringPreferenceKey
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.Inject
 
 enum class RileyLinkPairStep {
     BLE_SCAN,
@@ -45,14 +46,15 @@ sealed class RileyLinkPairWizardEvent {
     data object Finish : RileyLinkPairWizardEvent()
 }
 
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class RileyLinkPairWizardViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val activePlugin: ActivePlugin,
     private val rileyLinkUtil: RileyLinkUtil,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RileyLinkPairWizardUiState())
@@ -111,7 +113,7 @@ class RileyLinkPairWizardViewModel @Inject constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLinkPairWizard: selected ${device.name} (${device.address})")
         stopScan()
 
-        preferences.put(RileyLinkStringPreferenceKey.MacAddress, device.address)
+        preferences.put(RileyLinkStringKey.MacAddress, device.address)
         preferences.put(RileyLinkStringKey.Name, device.name)
 
         // Force RL reconnection with new address

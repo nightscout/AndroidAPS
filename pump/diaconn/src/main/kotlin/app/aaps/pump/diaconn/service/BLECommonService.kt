@@ -17,6 +17,7 @@ import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -34,16 +35,17 @@ import app.aaps.pump.diaconn.packet.DiaconnG8ResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.DiaconnG8SettingResponseMessageHashTable
 import app.aaps.pump.diaconn.packet.InjectionBlockReportPacket
 import app.aaps.pump.diaconn.packet.InsulinLackReportPacket
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 @Suppress("SpellCheckingInspection")
-@Singleton
+@SingleIn(AppScope::class)
 class BLECommonService @Inject internal constructor(
-    private val injector: HasAndroidInjector,
+    private val injector: MetroMemberInjector,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val context: Context,
@@ -353,20 +355,20 @@ class BLECommonService @Inject internal constructor(
             if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), app.aaps.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), AlarmSound.BOLUS_ERROR)
                 return
             }
             // battery warning report
             if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), app.aaps.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), AlarmSound.BOLUS_ERROR)
                 return
             }
 
             // insulin lack warning report
             if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), app.aaps.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), AlarmSound.BOLUS_ERROR)
                 return
             }
 

@@ -9,8 +9,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Instant
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.time.Instant
 
 /**
  * Emulates Dana RS pump command processing.

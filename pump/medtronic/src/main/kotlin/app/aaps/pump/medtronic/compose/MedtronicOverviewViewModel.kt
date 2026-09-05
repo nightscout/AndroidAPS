@@ -44,8 +44,6 @@ import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -55,8 +53,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 
@@ -69,7 +70,8 @@ sealed class MedtronicOverviewEvent {
 }
 
 @Stable
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class MedtronicOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val ch: ConcentrationHelper,
@@ -82,9 +84,9 @@ class MedtronicOverviewViewModel @Inject constructor(
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>,
-    private val wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
-    @ApplicationContext private val context: Context
+    private val resetRileyLinkConfigurationTaskProvider: () -> ResetRileyLinkConfigurationTask,
+    private val wakeAndTuneTaskProvider: () -> WakeAndTuneTask,
+    private val context: Context
 ) : ViewModel() {
 
     companion object {
@@ -92,22 +94,22 @@ class MedtronicOverviewViewModel @Inject constructor(
         private const val PLACEHOLDER = "-"
     }
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     private val _events = MutableSharedFlow<MedtronicOverviewEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<MedtronicOverviewEvent> = _events
 
     private val medtronicRefresh = MutableStateFlow(0L).also { flow ->
         viewModelScope.launch {
-            rxBus.toFlow(EventMedtronicPumpValuesChanged::class.java)
+            rxBus.toFlow(EventMedtronicPumpValuesChanged::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
         viewModelScope.launch {
-            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
                 .collect { flow.value = System.currentTimeMillis() }
         }
         viewModelScope.launch {
-            rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class.java)
+            rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class)
                 .collect {
                     aapsLogger.debug(LTag.PUMP, "EventMedtronicPumpConfigurationChanged triggered")
                     medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
@@ -344,7 +346,7 @@ class MedtronicOverviewViewModel @Inject constructor(
                 category = ActionCategory.MANAGEMENT,
                 onClick = {
                     if (isConfigured) {
-                        serviceTaskExecutor.startTask(wakeAndTuneTaskProvider.get())
+                        serviceTaskExecutor.startTask(wakeAndTuneTaskProvider())
                         _events.tryEmit(MedtronicOverviewEvent.ShowSnackbar(rh.gs(R.string.medtronic_custom_action_wake_and_tune)))
                     } else {
                         emitNotConfiguredDialog()
@@ -366,7 +368,7 @@ class MedtronicOverviewViewModel @Inject constructor(
                 icon = Icons.Filled.RestartAlt,
                 category = ActionCategory.MANAGEMENT,
                 onClick = {
-                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider.get())
+                    serviceTaskExecutor.startTask(resetRileyLinkConfigurationTaskProvider())
                     _events.tryEmit(MedtronicOverviewEvent.ShowSnackbar(rh.gs(RileyLinkR.string.rileylink_config_reset)))
                 }
             )

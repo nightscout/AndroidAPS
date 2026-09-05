@@ -10,12 +10,12 @@ import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.round
 
-class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: ByteArray) : MedtrumPacket(injector) {
+class ActivatePacket(injector: MetroMemberInjector, private val basalProfile: ByteArray) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var tddCalculator: TddCalculator

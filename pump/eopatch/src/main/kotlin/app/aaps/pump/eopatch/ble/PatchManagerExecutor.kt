@@ -94,8 +94,9 @@ import java.util.Arrays
 import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import javax.crypto.KeyAgreement
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.ByteArray
@@ -108,7 +109,7 @@ import kotlin.Throws
 import kotlin.check
 import kotlin.synchronized
 
-@Singleton
+@SingleIn(AppScope::class)
 class PatchManagerExecutor @Inject constructor(
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,
@@ -133,7 +134,20 @@ class PatchManagerExecutor @Inject constructor(
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject fun onInit() {
+    /**
+     * Opens the patch BLE client and wires the observers. Called from [EopatchPumpPlugin.onStart],
+     * beside `preferenceManager.init()`, `patchManager.init()` and `alarmManager.init()`.
+     *
+     * **Must not become an `init` block.** That would run `RxBleClient.create(context)` and register a
+     * bond-state receiver the moment the class is constructed - for *every* user, whether or not
+     * eopatch is their pump - and it would put the class out of Metro's reach, because a contributed
+     * class is built for real in the plain-JVM graph tests where the Bluetooth service is a stand-in
+     * and the cast fails. On the plugin's own lifecycle it starts only when eopatch is enabled.
+     *
+     * Idempotent: `Patch.init` already guards on its own `initDone`, and the disposables are added to a
+     * `CompositeDisposable` that `onStop` clears.
+     */
+    fun init() {
         patch.init(context)
         patch.setSeq(patchConfig.seq15)
 

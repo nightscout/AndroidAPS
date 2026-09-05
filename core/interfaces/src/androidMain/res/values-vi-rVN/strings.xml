@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Xác nhận</string>
+    <!--    Events-->
+    <string name="bolus_delivering">Đang tiêm %1$.2f U</string>
+    <string name="bolus_delivered_so_far">Đã truyền %1$.2fU trên %2$.2fU</string>
+    <string name="bolus_delivered_successfully">Đã tiêm Bolus thành công %1$.2f U</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Thay trình điều khiển Bơm.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$dm ago</string>
+    <string name="secago">%1$ds ago</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
+    <string name="minago_long">%1$d phút trước</string>
+    <string name="hoursago">%1$.1fh ago</string>
+    <string name="days_ago">%1$.1f ngày trước</string>
+    <string name="days_ago_round">%1$.0f ngày trước</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="other">%1$s ngày %2$s giờ trước</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="other">%1$s giờ trước</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="other">%1$s phút trước</item>
+    </plurals>
+    <string name="seconds_ago">cách đây vài giây</string>
+    <string name="in_days">trong %1$.0f ngày</string>
+    <string name="in_days_round">trong %1$.0f ngày</string>
+    <string name="shorthour">h</string>
+    <string name="days">ngày</string>
+    <string name="hours">giờ</string>
+    <string name="unit_second">giây</string>
+    <string name="unit_minute">phút</string>
+    <string name="unit_hour">giờ</string>
+    <string name="unit_day">ngày</string>
+    <string name="unit_week">tuần</string>
+    <string name="unit_seconds">giây</string>
+    <string name="unit_minutes">phút</string>
+    <string name="unit_hours">giờ</string>
+    <string name="unit_days">ngày</string>
+    <string name="unit_weeks">tuần</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="time_remaining_h_m">Còn %1$d giờ %2$d phút</string>
+    <string name="time_remaining_m">Còn %1$d phút</string>
+    <string name="later_today">Sau ngày hôm nay</string>
+    <string name="tomorrow">Ngày mai</string>
+    <string name="today">Hôm nay</string>
+    <string name="yesterday">Hôm qua</string>
+    <!-- Rx -->
+    <string name="connecting_for">Đang kết nối trong %1$d giây</string>
+    <string name="handshaking">Đang bắt tay</string>
+    <string name="connected">Đã kết nối</string>
+    <string name="authorized">Đã ủy quyền</string>
+    <string name="disconnecting">Ngắt kết nối</string>
+    <string name="waiting_for_disconnection">Đang chờ ngắt kết nối</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Đã tạo lúc: %1$s</string>
+    <string name="metadata_label_watchface_author">Tác giả: %1$s</string>
+    <string name="metadata_label_watchface_name">Tên: %1$s</string>
+    <string name="metadata_wear_import_filename">Tên tệp: %1$s</string>
+    <string name="metadata_label_plugin_version">Phiên bản plugin: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Tên: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Thông tin: %1$s</string>
+    <string name="pref_show_iob">Hiển thị IOB</string>
+    <string name="pref_show_detailed_iob">Hiển thị chi tiết IOB</string>
+    <string name="pref_show_cob">Hiển thị COB</string>
+    <string name="pref_show_delta">Hiển thị độ lệch</string>
+    <string name="pref_show_detailed_delta">Hiển thị chi tiết độ lệch</string>
+    <string name="pref_show_avgdelta">Hiển thị AvgDelta</string>
+    <string name="pref_show_tempTarget">Hiển thị mục tiêu tạm thời</string>
+    <string name="pref_show_reservoir_level">Hiển thị mức bình chứa</string>
+    <string name="pref_show_phone_battery">Hiển thị pin điện thoại</string>
+    <string name="pref_show_rig_battery">Hiển thị mức pin Rig</string>
+    <string name="pref_show_basal_rate">Hiển thị liều nền</string>
+    <string name="pref_show_loop_status">Hiển thị trạng thái vòng lặp</string>
+    <string name="pref_show_bg">Hiển thị đường huyết</string>
+    <string name="pref_show_bgi">Hiển thị BGI</string>
+    <string name="pref_show_direction_arrow">Hiển thị mũi tên xu hướng</string>
+    <string name="pref_show_ago">Hiển thị thời gian trước</string>
+    <string name="pref_show_week_number">Hiển thị số tuần</string>
+    <string name="pref_show_date">Hiển thị ngày</string>
+    <string name="pref_show_seconds">Hiển thị giây</string>
+    <string name="default_custom_watchface_comment">Mặt đồng hồ mặc định, bạn có thể nhấn nút EXPORT WATCHFACE để tạo mẫu</string>
+    <string name="default_custom_watchface_external_comment">Mặt đồng hồ mặc định bao gồm cả chế độ xem bên ngoài cho người theo dõi, bạn có thể nhấn nút EXPORT WATCHFACE để tạo mẫu</string>
+    <string name="wear_default_watchface">Mặt đồng hồ mặc định</string>
+    <string name="wear_more_watchfaces">Thêm mặt đồng hồ</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Vĩnh viễn</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Ứng dụng cần quyền Bluetooth để giao tiếp với bơm insulin</string>
+    <!-- Insulin -->
+    <string name="unknown">Không xác định</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Đỉnh Oref tùy chỉnh</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Thời gian đạt đỉnh [phút]</string>
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">Carbs</string>
+    <string name="alarminxmin">Báo động sau %1$d phút</string>
+    <string name="pumpsuspended">Bơm đã tạm dừng</string>
+    <string name="loopsuspended">Vòng lặp đã tạm dừng</string>
+    <string name="pump_disconnected">Bơm đã ngắt kết nối</string>
+    <string name="basalprofilenotaligned">Giá trị liều nền không khớp với giờ: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Giá trị liều nền đã được thay bằng giá trị tối thiểu được hỗ trợ: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Giá trị liều nền đã được thay bằng giá trị tối đa được hỗ trợ: %1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d phút</string>
+    <string name="record">Record</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">CARBS MỞ RỘNG</string>
+    <string name="profile_low_target">Cấu hình mục tiêu thấp</string>
+    <string name="profile_high_target">Cấu hình mục tiêu cao</string>
+    <string name="profile_dia">Cấu hình giá trị DIA</string>
+    <string name="profile_sensitivity_value">Cấu hình giá trị độ nhạy</string>
+    <string name="profile_carbs_ratio_value">Cấu hình tỷ lệ Carb</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f nằm ngoài giới hạn an toàn</string>
+    <string name="basal_value">Giá trị liều liều nền</string>
+    <string name="cobvsiob">COB với IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Phát hiện hấp thu carb chậm trong %1$d%% thời gian. Hãy kiểm tra lại phép tính của bạn. COB có thể bị ước tính cao, do đó có thể dẫn đến việc cung cấp nhiều insulin hơn !!!!!</string>
+    <string name="bolus_constraint_applied_warn">Giới hạn bolus đã áp dụng: %1$.2f U đến %2$.2f U</string>
+    <string name="bolus_recorded_only">Liều Bolus chỉ được ghi lại (không tiêm qua Bơm)</string>
+    <string name="advisoralarm">Chạy báo thức khi đến giờ ăn</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

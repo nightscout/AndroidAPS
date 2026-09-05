@@ -104,30 +104,8 @@
     <string name="equil_history_item18">Nieprawidłowa infuzja zatrzymana</string>
     <string name="equil_common_overview_button_suspend_delivery">Zawieś</string>
     <string name="equil_common_overview_button_resume_delivery">Wznów podawanie</string>
-    <string name="equil_common_moments_ago">Chwilę temu</string>
-    <string name="equil_common_less_than_a_minute_ago">Mniej niż minutę temu</string>
-    <string name="equil_common_time_ago">%1$s temu</string>
-    <string name="equil_common_composite_time">%1$s i %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Nie ukończono jeszcze wszystkich kroków. Czy na pewno chcesz zakończyć?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Wyjście</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minuta</item>
-        <item quantity="few">%1$d minuty</item>
-        <item quantity="many">%1$d minut</item>
-        <item quantity="other">%1$d minut</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d godzina</item>
-        <item quantity="few">%1$d godziny</item>
-        <item quantity="many">%1$d godzin</item>
-        <item quantity="other">%1$d godzin</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d dzień</item>
-        <item quantity="few">%1$d dni</item>
-        <item quantity="many">%1$d dni</item>
-        <item quantity="other">%1$d dni</item>
-    </plurals>
     <string name="equil_support_error">Zbyt niska wersja firmware\'u urządzenia - nie jest obsługiwana</string>
     <string name="equil_set_pair_password">Ustaw hasło parowania</string>
     <string name="equil_hint1">Po zainstalowaniu pompy na płytce bazowej wybierz, czy usunąć powietrze z igły, która ma być wkłuta.</string>

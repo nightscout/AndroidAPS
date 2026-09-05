@@ -6,11 +6,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.common.defs.PumpHistoryEntryGroup
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import app.aaps.pump.medtronic.data.MedtronicHistoryData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.Inject
 
 data class MedtronicHistoryUiState(
     val selectedGroup: PumpHistoryEntryGroup = PumpHistoryEntryGroup.All,
@@ -18,7 +21,8 @@ data class MedtronicHistoryUiState(
 )
 
 @Stable
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class MedtronicHistoryViewModel @Inject constructor(
     val rh: ResourceHelper,
     private val medtronicHistoryData: MedtronicHistoryData

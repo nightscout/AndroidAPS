@@ -9,12 +9,12 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.danar.comm.MessageBase
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
 import java.util.GregorianCalendar
 
 class MsgHistoryEventsV2(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     var from: Long = 0
 ) : MessageBase(injector) {
 

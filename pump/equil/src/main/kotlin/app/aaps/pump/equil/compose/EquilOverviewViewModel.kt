@@ -1,6 +1,11 @@
 package app.aaps.pump.equil.compose
 
+import android.content.Context
 import android.text.TextUtils
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,20 +14,17 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bluetooth
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.SwapHoriz
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
-import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
+import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.core.ui.compose.pump.PumpOverviewUiState
 import app.aaps.core.ui.compose.pump.StatusBanner
 import app.aaps.core.ui.compose.pump.tickerFlow
@@ -33,11 +35,10 @@ import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.events.EventEquilModeChanged
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
-import android.content.Context
-import app.aaps.core.interfaces.pump.PumpRate
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.launch
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -47,8 +48,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import java.time.Duration
-import javax.inject.Inject
+import kotlinx.coroutines.launch
+import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class EquilOverviewEvent {
@@ -56,7 +57,10 @@ sealed class EquilOverviewEvent {
     data object StartHistory : EquilOverviewEvent()
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class EquilOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
@@ -68,7 +72,7 @@ class EquilOverviewViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val preferences: Preferences,
     private val rxBus: RxBus,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<EquilOverviewEvent>(extraBufferCapacity = 5)
@@ -78,16 +82,16 @@ class EquilOverviewViewModel @Inject constructor(
     private val _isModeChanging = MutableStateFlow(false)
     val isModeChanging: StateFlow<Boolean> = _isModeChanging
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     // Trigger re-composition on RxBus events and periodic ticks
     private val _refreshTrigger = MutableStateFlow(0L)
 
     init {
-        rxBus.toFlow(EventEquilDataChanged::class.java)
+        rxBus.toFlow(EventEquilDataChanged::class)
             .onEach { _refreshTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
-        rxBus.toFlow(EventEquilModeChanged::class.java)
+        rxBus.toFlow(EventEquilModeChanged::class)
             .onEach { _refreshTrigger.value = System.currentTimeMillis() }
             .launchIn(viewModelScope)
     }
@@ -272,31 +276,6 @@ class EquilOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun readableDuration(duration: Duration): String {
-        val hours = duration.toHours().toInt()
-        val minutes = duration.toMinutes().toInt()
-        val seconds = duration.seconds
-        return when {
-            seconds < 10           -> rh.gs(R.string.equil_common_moments_ago)
-            seconds < 60           -> rh.gs(R.string.equil_common_less_than_a_minute_ago)
-            seconds < 60 * 60      -> rh.gs(R.string.equil_common_time_ago, rh.gq(R.plurals.equil_common_minutes, minutes, minutes))
-
-            seconds < 24 * 60 * 60 -> {
-                val minutesLeft = minutes % 60
-                if (minutesLeft > 0)
-                    rh.gs(R.string.equil_common_time_ago, rh.gs(R.string.equil_common_composite_time, rh.gq(R.plurals.equil_common_hours, hours, hours), rh.gq(R.plurals.equil_common_minutes, minutesLeft, minutesLeft)))
-                else rh.gs(R.string.equil_common_time_ago, rh.gq(R.plurals.equil_common_hours, hours, hours))
-            }
-
-            else                   -> {
-                val days = hours / 24
-                val hoursLeft = hours % 24
-                if (hoursLeft > 0)
-                    rh.gs(R.string.equil_common_time_ago, rh.gs(R.string.equil_common_composite_time, rh.gq(R.plurals.equil_common_days, days, days), rh.gq(R.plurals.equil_common_hours, hoursLeft, hoursLeft)))
-                else rh.gs(R.string.equil_common_time_ago, rh.gq(R.plurals.equil_common_days, days, days))
-            }
-        }
-    }
 
     // viewModelScope cancels all coroutines automatically on onCleared()
 }

@@ -12,12 +12,13 @@ import app.aaps.pump.eopatch.vo.PatchConfig
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
-import java.lang.Exception
-import java.util.HashMap
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@HasMemberInjections
+@SingleIn(AppScope::class)
 open class TaskBase @Inject constructor(val func: TaskFunc) {
 
     @Inject lateinit var aapsLogger: AAPSLogger

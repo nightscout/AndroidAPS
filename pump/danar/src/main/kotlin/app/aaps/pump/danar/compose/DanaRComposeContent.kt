@@ -14,11 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.compose.DanaHistoryScreen
@@ -48,8 +48,8 @@ class DanaRComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: DanaOverviewViewModel = hiltViewModel()
-        val wizardViewModel: DanaRPairWizardViewModel = hiltViewModel()
+        val overviewViewModel: DanaOverviewViewModel = metroViewModel()
+        val wizardViewModel: DanaRPairWizardViewModel = metroViewModel()
 
         // Navigation state
         var currentScreen by remember { mutableStateOf(DanaRScreen.OVERVIEW) }
@@ -154,12 +154,12 @@ class DanaRComposeContent(
             }
 
             DanaRScreen.HISTORY      -> {
-                val historyViewModel: DanaHistoryViewModel = hiltViewModel()
+                val historyViewModel: DanaHistoryViewModel = metroViewModel()
                 DanaHistoryScreen(viewModel = historyViewModel)
             }
 
             DanaRScreen.USER_OPTIONS -> {
-                val userOptionsViewModel: DanaUserOptionsViewModel = hiltViewModel()
+                val userOptionsViewModel: DanaUserOptionsViewModel = metroViewModel()
 
                 LaunchedEffect(userOptionsViewModel) {
                     userOptionsViewModel.events.collect { event ->

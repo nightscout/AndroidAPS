@@ -35,20 +35,22 @@ import androidx.wear.tiles.RequestBuilders.ResourcesRequest
 import androidx.wear.tiles.ResourceBuilders
 import androidx.wear.tiles.TileBuilders.Tile
 import androidx.wear.tiles.TileService
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
+import app.aaps.wear.di.WearMetroService
 import com.google.common.util.concurrent.ListenableFuture
-import dagger.android.AndroidInjection
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
+import kotlin.math.sqrt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.guava.future
-import javax.inject.Inject
-import kotlin.math.sqrt
 
 private const val SPACING_ACTIONS = 3f
 private const val ICON_SIZE_FRACTION = 0.4f // Percentage of button diameter
@@ -149,6 +151,7 @@ enum class WearControl {
     DISABLED
 }
 
+@HasMemberInjections
 abstract class TileBase : TileService() {
 
     @Inject lateinit var preferences: Preferences
@@ -160,9 +163,9 @@ abstract class TileBase : TileService() {
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
 
-    // Not derived from DaggerService, do injection here
+    // Not derived from WearMetroService, do injection here
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate()
     }
 

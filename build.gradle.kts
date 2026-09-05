@@ -1,3 +1,4 @@
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -22,22 +23,19 @@ buildscript {
 }
 
 plugins {
-    alias(libs.plugins.klint)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler) apply false
     id(libs.plugins.android.test.get().pluginId) apply false
+    // Aggregates the per-module coverage into one report.
+    id("jacoco-aggregation")
 }
-
-// Dagger/Hilt (≥2.57 unshades kotlin-metadata-jvm) ships a metadata reader that lags new Kotlin releases.
-// Pin it to the Kotlin version so the Hilt KSP processor can parse current class metadata; captured here
-// (where the `libs` catalog accessor is in scope) and forced per-configuration below.
-val kotlinMetadataVersion = libs.versions.kotlin.get()
 
 allprojects {
     repositories {
         mavenCentral()
         google()
         maven("https://jitpack.io")
+        maven("https://central.sonatype.com/repository/maven-snapshots/")
     }
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
@@ -57,20 +55,8 @@ allprojects {
         }
     }
 
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    apply(plugin = "jacoco")
-
-    // Only affects configurations that actually pull kotlin-metadata-jvm (the Hilt/Dagger KSP processor
-    // classpath), so it's a no-op elsewhere. Keeps the metadata reader in sync with future Kotlin bumps.
-    configurations.configureEach {
-        resolutionStrategy {
-            force("org.jetbrains.kotlin:kotlin-metadata-jvm:$kotlinMetadataVersion")
-        }
-    }
+    apply<JacocoPlugin>()
 }
-
-// Setup all reports aggregation
-apply(from = "jacoco_aggregation.gradle.kts")
 
 tasks.register<Delete>("clean") {
     description = "Cleanup generated code"

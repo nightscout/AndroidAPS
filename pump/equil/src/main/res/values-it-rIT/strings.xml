@@ -114,24 +114,8 @@
     <string name="equil_history_item18">Infusione Anomala Fermata</string>
     <string name="equil_common_overview_button_suspend_delivery">Sospendi</string>
     <string name="equil_common_overview_button_resume_delivery">Riprendi erogazione</string>
-    <string name="equil_common_moments_ago">Un momento fa</string>
-    <string name="equil_common_less_than_a_minute_ago">Meno di 1 minuto fa</string>
-    <string name="equil_common_time_ago">%1$sm fa</string>
-    <string name="equil_common_composite_time">%1$s e %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Non hai ancora completato tutti i passaggi. Sei sicuro di voler uscire?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Esci</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minuto</item>
-        <item quantity="other">%1$d minuti</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d ora</item>
-        <item quantity="other">%1$d ore</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d giorno</item>
-        <item quantity="other">%1$d giorni</item>
-    </plurals>
     <string name="equil_support_error">Versione firmware troppo vecchia. Non supportata</string>
     <string name="equil_password_tips">Si prega di impostare una nuova password per l\'accoppiamento col micro Equil v5.3. Questa password verrà utilizzata anche per disaccoppiarsi con la pompa in futuro, quindi assicurati di ricordarla.
 Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</string>

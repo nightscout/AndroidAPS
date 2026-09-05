@@ -2,11 +2,11 @@ package app.aaps.pump.danarv2.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danar.comm.MessageBase
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 @Suppress("UNUSED_PARAMETER")
 class MsgSetAPSTempBasalStartV2(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     private var percent: Int,
     fifteenMinutes: Boolean,
     thirtyMinutes: Boolean

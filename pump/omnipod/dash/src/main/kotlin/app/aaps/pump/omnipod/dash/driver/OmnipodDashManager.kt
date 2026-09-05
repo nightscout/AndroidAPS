@@ -8,7 +8,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BeepType
 import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
 import io.reactivex.rxjava3.core.Observable
-import java.util.*
+import java.util.EnumSet
 import java.util.concurrent.CountDownLatch
 
 interface OmnipodDashManager {

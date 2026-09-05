@@ -25,7 +25,6 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import javax.inject.Provider
 
 class DanaRSServiceTest : TestBaseWithProfile() {
 
@@ -35,11 +34,11 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var bleComm: BLEComm
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var danaRSPacketGeneralInitialScreenInformationProvider: Provider<DanaRSPacketGeneralInitialScreenInformation>
-    @Mock lateinit var danaRSPacketOptionSetUserOptionProvider: Provider<DanaRSPacketOptionSetUserOption>
-    @Mock lateinit var danaRSPacketBolusSetStepBolusStopProvider: Provider<DanaRSPacketBolusSetStepBolusStop>
-    @Mock lateinit var danaRSPacketAPSBasalSetTemporaryBasalProvider: Provider<DanaRSPacketAPSBasalSetTemporaryBasal>
-    @Mock lateinit var danaRSPacketBasalSetCancelTemporaryBasalProvider: Provider<DanaRSPacketBasalSetCancelTemporaryBasal>
+    @Mock lateinit var danaRSPacketGeneralInitialScreenInformationProvider: () -> DanaRSPacketGeneralInitialScreenInformation
+    @Mock lateinit var danaRSPacketOptionSetUserOptionProvider: () -> DanaRSPacketOptionSetUserOption
+    @Mock lateinit var danaRSPacketBolusSetStepBolusStopProvider: () -> DanaRSPacketBolusSetStepBolusStop
+    @Mock lateinit var danaRSPacketAPSBasalSetTemporaryBasalProvider: () -> DanaRSPacketAPSBasalSetTemporaryBasal
+    @Mock lateinit var danaRSPacketBasalSetCancelTemporaryBasalProvider: () -> DanaRSPacketBasalSetCancelTemporaryBasal
     @Mock lateinit var packetGeneralInitialScreenInfo: DanaRSPacketGeneralInitialScreenInformation
     @Mock lateinit var packetOptionSetUserOption: DanaRSPacketOptionSetUserOption
     @Mock lateinit var packetBolusSetStepBolusStop: DanaRSPacketBolusSetStepBolusStop
@@ -52,7 +51,6 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     fun setup() {
         danaRSService = DanaRSService()
         danaRSService.aapsLogger = aapsLogger
-        danaRSService.aapsSchedulers = aapsSchedulers
         danaRSService.rxBus = rxBus
         danaRSService.preferences = preferences
         danaRSService.rh = rh
@@ -64,10 +62,9 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         danaRSService.activePlugin = activePlugin
         danaRSService.uiInteraction = uiInteraction
         danaRSService.bleComm = bleComm
-        danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
-        danaRSService.bolusProgressData = BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined))
+        danaRSService.bolusProgressData = BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined))
         danaRSService.pumpEnactResultProvider = pumpEnactResultProvider
         danaRSService.danaRSPacketGeneralInitialScreenInformation = danaRSPacketGeneralInitialScreenInformationProvider
         danaRSService.danaRSPacketOptionSetUserOption = danaRSPacketOptionSetUserOptionProvider
@@ -81,11 +78,11 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         `when`(danaRSPlugin.pumpDescription).thenReturn(mockPumpDescription())
 
         // Setup packet providers
-        `when`(danaRSPacketGeneralInitialScreenInformationProvider.get()).thenReturn(packetGeneralInitialScreenInfo)
-        `when`(danaRSPacketOptionSetUserOptionProvider.get()).thenReturn(packetOptionSetUserOption)
-        `when`(danaRSPacketBolusSetStepBolusStopProvider.get()).thenReturn(packetBolusSetStepBolusStop)
-        `when`(danaRSPacketAPSBasalSetTemporaryBasalProvider.get()).thenReturn(packetAPSBasalSetTemporaryBasal)
-        `when`(danaRSPacketBasalSetCancelTemporaryBasalProvider.get()).thenReturn(packetBasalSetCancelTemporaryBasal)
+        `when`(danaRSPacketGeneralInitialScreenInformationProvider()).thenReturn(packetGeneralInitialScreenInfo)
+        `when`(danaRSPacketOptionSetUserOptionProvider()).thenReturn(packetOptionSetUserOption)
+        `when`(danaRSPacketBolusSetStepBolusStopProvider()).thenReturn(packetBolusSetStepBolusStop)
+        `when`(danaRSPacketAPSBasalSetTemporaryBasalProvider()).thenReturn(packetAPSBasalSetTemporaryBasal)
+        `when`(danaRSPacketBasalSetCancelTemporaryBasalProvider()).thenReturn(packetBasalSetCancelTemporaryBasal)
 
         // Setup packet behavior
         `when`(packetGeneralInitialScreenInfo.failed).thenReturn(true)

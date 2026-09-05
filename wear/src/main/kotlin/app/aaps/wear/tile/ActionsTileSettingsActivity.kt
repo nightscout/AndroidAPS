@@ -9,11 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.tiles.TileService
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.tile.source.ActionSource
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class ActionsTileSettingsActivity : AppCompatActivity() {
 
@@ -21,7 +21,7 @@ class ActionsTileSettingsActivity : AppCompatActivity() {
     @Inject lateinit var actionSource: ActionSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate(savedInstanceState)
         val options = actionSource.getActions(resources)
             .map { TileSettingOption(it.settingName, it.settingLabel ?: it.buttonText ?: it.settingName) } +

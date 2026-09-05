@@ -8,8 +8,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ScanException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ScanFailFoundTooManyException
-import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner as PodScannerInterface
 import java.util.Arrays
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner as PodScannerInterface
 
 class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: BluetoothAdapter) : PodScannerInterface {
 

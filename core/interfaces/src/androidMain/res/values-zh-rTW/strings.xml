@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">確認</string>
+    <!--    Events-->
+    <string name="bolus_delivering">正在注射 %1$.2fU</string>
+    <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU 已輸送</string>
+    <string name="bolus_delivered_successfully">注射 %1$.2fU 已成功完成</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">幫浦驅動程式已更改。</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d 分鐘前</string>
+    <string name="secago">%1$d 秒前</string>
+    <string name="min_plus">(+%1$d 分)</string>
+    <string name="sec_plus">(+%1$d 秒)</string>
+    <string name="minago_long">%1$d 分鐘前</string>
+    <string name="hoursago">%1$.1f 小時前</string>
+    <string name="days_ago">%1$.1f 天前</string>
+    <string name="days_ago_round">%1$.0f 天前</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="other">One
+%1$s 天 %2$s 小時前
+Other
+
+%1$s 天 %2$s 小時前</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="other">One
+%1$s 小時前
+
+Other
+%1$s 小時前</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="other">One
+剛剛
+
+Other
+%1$s 分鐘前</item>
+    </plurals>
+    <string name="seconds_ago">幾秒前</string>
+    <string name="in_days">%1$.0f 天內</string>
+    <string name="in_days_round">%1$.0f 天內</string>
+    <string name="shorthour">小時</string>
+    <string name="days">天</string>
+    <string name="hours">小時</string>
+    <string name="unit_second">秒</string>
+    <string name="unit_minute">分鐘</string>
+    <string name="unit_hour">小時</string>
+    <string name="unit_day">天</string>
+    <string name="unit_week">週</string>
+    <string name="unit_seconds">秒</string>
+    <string name="unit_minutes">分鐘</string>
+    <string name="unit_hours">小時</string>
+    <string name="unit_days">天</string>
+    <string name="unit_weeks">週</string>
+    <string name="shortminute">分</string>
+    <string name="shortday">天</string>
+    <string name="time_remaining_h_m">剩餘 %1$d 小時 %2$d 分鐘</string>
+    <string name="time_remaining_m">剩餘 %1$d 分鐘</string>
+    <string name="later_today">今天稍晚</string>
+    <string name="tomorrow">明天</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <!-- Rx -->
+    <string name="connecting_for">連線中 %1$d 秒</string>
+    <string name="handshaking">交握中</string>
+    <string name="connected">已連線</string>
+    <string name="authorized">已授權</string>
+    <string name="disconnecting">斷線中</string>
+    <string name="waiting_for_disconnection">等待斷線</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">建立於：%1$s</string>
+    <string name="metadata_label_watchface_author">作者：%1$s</string>
+    <string name="metadata_label_watchface_name">名稱：%1$s</string>
+    <string name="metadata_wear_import_filename">檔案名稱：%1$s</string>
+    <string name="metadata_label_plugin_version">外掛版本：%1$s</string>
+    <string name="metadata_label_watchface_name_version">名稱：%1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">資訊：%1$s</string>
+    <string name="pref_show_iob">顯示 IOB</string>
+    <string name="pref_show_detailed_iob">顯示詳細 IOB</string>
+    <string name="pref_show_cob">顯示 COB</string>
+    <string name="pref_show_delta">顯示增量</string>
+    <string name="pref_show_detailed_delta">顯示詳細增量</string>
+    <string name="pref_show_avgdelta">顯示平均增量</string>
+    <string name="pref_show_tempTarget">顯示臨時目標</string>
+    <string name="pref_show_reservoir_level">顯示胰島素儲存量</string>
+    <string name="pref_show_phone_battery">顯示手機電池</string>
+    <string name="pref_show_rig_battery">顯示設備電池</string>
+    <string name="pref_show_basal_rate">顯示基礎率</string>
+    <string name="pref_show_loop_status">顯示循環狀態</string>
+    <string name="pref_show_bg">顯示 血糖</string>
+    <string name="pref_show_bgi">顯示血糖變化率</string>
+    <string name="pref_show_direction_arrow">顯示方向箭頭</string>
+    <string name="pref_show_ago">顯示前</string>
+    <string name="pref_show_week_number">顯示週數</string>
+    <string name="pref_show_date">顯示日期</string>
+    <string name="pref_show_seconds">顯示秒數</string>
+    <string name="default_custom_watchface_comment">預設錶盤，您可以點擊匯出錶盤按鈕來生成模板</string>
+    <string name="default_custom_watchface_external_comment">預設錶盤包含外部視圖供追蹤者使用，您可以點擊匯出錶盤按鈕來生成模板</string>
+    <string name="wear_default_watchface">預設錶盤</string>
+    <string name="wear_more_watchfaces">更多錶盤</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">永遠</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">藍牙</string>
+    <string name="permission_bluetooth_description">應用程式需要藍牙權限才能與幫浦通訊</string>
+    <!-- Insulin -->
+    <string name="unknown">未知</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid、Novolog、Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">峰值時間 [分鐘]</string>
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
+    <string name="carbs">碳水化合物</string>
+    <string name="alarminxmin">在 %1$d 分鐘內運行警報</string>
+    <string name="pumpsuspended">幫浦已暫停</string>
+    <string name="loopsuspended">循環已暫停</string>
+    <string name="pump_disconnected">幫浦已中斷連線</string>
+    <string name="basalprofilenotaligned">基礎率值未對齊小時：%1$s</string>
+    <string name="minimalbasalvaluereplaced">基礎率值已被最低支援值取代：%1$s</string>
+    <string name="maximumbasalvaluereplaced">基礎率值已被最高支援值取代：%1$s</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d 分鐘</string>
+    <string name="record">紀錄</string>
+    <string name="bolus">注射</string>
+    <string name="uel_extended_carbs">延長碳水化合物</string>
+    <string name="profile_low_target">設定檔低目標</string>
+    <string name="profile_high_target">設定檔高目標</string>
+    <string name="profile_dia">設定檔 DIA 值</string>
+    <string name="profile_sensitivity_value">設定檔敏感度值</string>
+    <string name="profile_carbs_ratio_value">設定檔碳水化合物比率值</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f 超出硬限制範圍</string>
+    <string name="basal_value">基礎率值</string>
+    <string name="cobvsiob">COB 對 IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! 偵測到碳水吸收偏慢：%1$d%% 的時間。請再次檢查你的計算。活性碳水化合物可能被高估，因此可能會注射過多胰島素 !!!!!</string>
+    <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>
+    <string name="bolus_recorded_only">僅紀錄注射（不由幫浦傳送）</string>
+    <string name="advisoralarm">當到達用餐時間時提醒我</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

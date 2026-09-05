@@ -14,14 +14,15 @@ import app.aaps.pump.medtronic.util.MedtronicUtil
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDateTime
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 5/9/18.
  * High level decoder for data returned through MedtroniUIComm
  */
-@Singleton
+@SingleIn(AppScope::class)
 class MedtronicConverter @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val medtronicUtil: MedtronicUtil

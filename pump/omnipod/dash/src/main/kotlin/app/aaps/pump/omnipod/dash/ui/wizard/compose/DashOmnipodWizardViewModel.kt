@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.dash.ui.wizard.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
@@ -43,7 +44,10 @@ import app.aaps.pump.omnipod.dash.history.data.ResolvedResult
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.I8n
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -52,12 +56,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.await
 import kotlinx.coroutines.rx3.rxSingle
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
 import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class DashOmnipodWizardViewModel @Inject constructor(
     private val omnipodManager: OmnipodDashManager,
     private val podStateManager: OmnipodDashPodStateManager,
@@ -72,7 +78,7 @@ class DashOmnipodWizardViewModel @Inject constructor(
     profileFunction: ProfileFunction,
     profileRepository: ProfileRepository,
     private val persistenceLayer: PersistenceLayer,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
 ) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, profileRepository) {
@@ -162,14 +168,14 @@ class DashOmnipodWizardViewModel @Inject constructor(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
                         source.onSuccess(
-                            pumpEnactResultProvider.get()
+                            pumpEnactResultProvider()
                                 .success(false)
                                 .comment(I8n.textFromException(throwable, rh))
                         )
                     },
                     onComplete = {
                         logger.debug("Pod activation part 1 completed")
-                        source.onSuccess(pumpEnactResultProvider.get().success(true))
+                        source.onSuccess(pumpEnactResultProvider().success(true))
                     }
                 )
         }
@@ -232,10 +238,10 @@ class DashOmnipodWizardViewModel @Inject constructor(
             // Without this it stays 0.0 (wrong reservoir display, and bolus/basal gates that read it) until the next
             // loop poll. Fire-and-forget so the activation-complete UI isn't delayed by the BLE round-trip.
             viewModelScope.launch { commandQueue.readStatus(rh.gs(CommonR.string.omnipod_common_pod_activation_wizard_pod_activated_title)) }
-            pumpEnactResultProvider.get().success(true)
+            pumpEnactResultProvider().success(true)
         } catch (throwable: Throwable) {
             logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-            pumpEnactResultProvider.get().success(false).comment(I8n.textFromException(throwable, rh))
+            pumpEnactResultProvider().success(false).comment(I8n.textFromException(throwable, rh))
         }
     }
 

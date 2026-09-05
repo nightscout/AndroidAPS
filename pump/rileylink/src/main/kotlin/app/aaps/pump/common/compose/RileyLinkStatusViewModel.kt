@@ -17,12 +17,15 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.Inject
 
 data class RileyLinkStatusUiState(
     // General
@@ -50,7 +53,8 @@ data class RileyLinkHistoryItem(
 )
 
 @Stable
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class RileyLinkStatusViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val rileyLinkServiceData: RileyLinkServiceData,
@@ -67,7 +71,7 @@ class RileyLinkStatusViewModel @Inject constructor(
     init {
         refresh()
         viewModelScope.launch {
-            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)
+            rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)
                 .collect { refresh() }
         }
     }

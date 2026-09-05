@@ -19,28 +19,30 @@ import app.aaps.pump.dana.keys.DanaStringNonKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.InvalidParameterException
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.milliseconds
 
-@Singleton
+@SingleIn(AppScope::class)
 class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
-    private val profileStoreProvider: Provider<ProfileStore>
+    private val profileStoreProvider: () -> ProfileStore
 ) {
 
     @Suppress("unused")
@@ -408,7 +410,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return profileStoreProvider.get().with(json)
+            return profileStoreProvider().with(Json.parseToJsonElement(json.toString()).jsonObject)
         }
         return null
     }

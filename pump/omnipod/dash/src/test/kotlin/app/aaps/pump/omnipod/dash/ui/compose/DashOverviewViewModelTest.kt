@@ -74,9 +74,9 @@ internal class DashOverviewViewModelTest {
 
         // rx wiring touched at construction: PumpCommunicationStatus subscribes to these two, and the
         // omnipodRefresh field launches a collector on EventOmnipodDashPumpValuesChanged.
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventOmnipodDashPumpValuesChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventOmnipodDashPumpValuesChanged::class)).thenReturn(emptyFlow())
 
         // buildUiState() reads activationProgress heavily; NOT_STARTED keeps the simple pre-activation branch.
         whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)

@@ -1,0 +1,493 @@
+package app.aaps.ui.compose.fillDialog
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.TE
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LocalDecimalFormatter
+import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.DateTimeSection
+import app.aaps.core.ui.compose.EventTimeRow
+import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.bottomBarSafeArea
+import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.consumeOverscroll
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
+import app.aaps.core.ui.compose.insulin.SelectInsulin
+import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.preference.PreferenceSheetContent
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.siteRotation.SiteLocationSummary
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
+import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.EventDatePicker
+import app.aaps.ui.compose.EventTimePicker
+
+/**
+ * @see PreviewSiteChange
+ * @see PreviewCartridgeChangeMultipleInsulins
+ * @see PreviewPumpUnitsWarning
+ * @see PreviewAapsClient
+ * @see PreviewInsulinSelectionExpanded
+ */
+@Composable
+fun FillDialogScreen(
+    viewModel: FillDialogViewModel = metroViewModel(),
+    fillButtonsDef: PreferenceSubScreenDef,
+    onNavigateBack: () -> Unit,
+    onPickSiteLocation: () -> Unit = {},
+    siteLocationResult: Pair<String?, String?>? = null
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Process site location result from picker screen
+    LaunchedEffect(siteLocationResult) {
+        siteLocationResult?.let { (locationName, arrowName) ->
+            if (locationName != null) {
+                val location = try {
+                    TE.Location.valueOf(locationName)
+                } catch (_: Exception) {
+                    TE.Location.NONE
+                }
+                viewModel.updateSiteLocation(location)
+            }
+            if (arrowName != null) {
+                val arrow = try {
+                    TE.Arrow.valueOf(arrowName)
+                } catch (_: Exception) {
+                    TE.Arrow.NONE
+                }
+                viewModel.updateSiteArrow(arrow)
+            }
+        }
+    }
+
+    // Dialog states (rememberSaveable to survive rotation)
+    var showConfirmation by rememberSaveable { mutableStateOf(false) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
+    var showButtonSettings by rememberSaveable { mutableStateOf(false) }
+
+    // Observe side effects
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is FillDialogViewModel.SideEffect.ShowNoActionDialog -> {
+                    showNoAction = true
+                }
+
+            }
+        }
+    }
+
+    // Confirmation dialog
+    if (showConfirmation) {
+        if (!uiState.hasAction) {
+            showConfirmation = false
+            showNoAction = true
+        } else {
+            ElementConfirmationDialog(
+                elementType = ElementType.FILL,
+                lines = viewModel.buildConfirmationSummary(),
+                onConfirm = {
+                    viewModel.confirmAndSave()
+                    onNavigateBack()
+                },
+                onDismiss = { showConfirmation = false }
+            )
+        }
+    }
+
+    // No action dialog
+    if (showNoAction) {
+        ElementConfirmationDialog(
+            elementType = ElementType.FILL,
+            message = stringResource(CoreUiStrings.no_action_selected),
+            onConfirm = { showNoAction = false },
+            onDismiss = { showNoAction = false }
+        )
+    }
+
+    // Date picker
+    if (showDatePicker) {
+        EventDatePicker(
+            eventTimeMillis = uiState.eventTime,
+            onEventTimeChanged = { viewModel.updateEventTime(it) },
+            onDismiss = { showDatePicker = false }
+        )
+    }
+
+    // Time picker
+    if (showTimePicker) {
+        EventTimePicker(
+            eventTimeMillis = uiState.eventTime,
+            onEventTimeChanged = { viewModel.updateEventTime(it) },
+            onDismiss = { showTimePicker = false }
+        )
+    }
+
+    // Preset button settings bottom sheet
+    if (showButtonSettings) {
+        FillButtonSettingsSheet(
+            settingsDef = fillButtonsDef,
+            viewModel = viewModel,
+            onDismiss = {
+                showButtonSettings = false
+                viewModel.refreshPresetButtons()
+            }
+        )
+    }
+
+    val dateString = remember(uiState.eventTime) { viewModel.dateUtil.dateString(uiState.eventTime) }
+    val timeString = remember(uiState.eventTime) { viewModel.dateUtil.timeString(uiState.eventTime) }
+    val bolusFormat = remember(uiState.bolusStep) { viewModel.decimalFormat() }
+
+    FillDialogContent(
+        uiState = uiState,
+        dateString = dateString,
+        timeString = timeString,
+        bolusFormat = bolusFormat,
+        onSiteChangeClick = { viewModel.updateSiteChange(!uiState.siteChange) },
+        onCartridgeChangeClick = { viewModel.updateCartridgeChange(!uiState.insulinCartridgeChange) },
+        onInsulinChange = viewModel::updateInsulin,
+        onInsulinSelect = viewModel::selectInsulin,
+        onNotesChange = viewModel::updateNotes,
+        onDateClick = { showDatePicker = true },
+        onTimeClick = { showTimePicker = true },
+        onSettingsClick = if (uiState.simpleMode) null else {
+            { showButtonSettings = true }
+        },
+        onNavigateBack = onNavigateBack,
+        onConfirmClick = { showConfirmation = true },
+        onPickSiteLocation = onPickSiteLocation
+    )
+}
+
+@Composable
+internal fun FillDialogContent(
+    uiState: FillDialogUiState,
+    dateString: String,
+    timeString: String,
+    bolusFormat: NumberFormat,
+    onSiteChangeClick: () -> Unit,
+    onCartridgeChangeClick: () -> Unit,
+    onInsulinChange: (Double) -> Unit,
+    onInsulinSelect: (ICfg) -> Unit,
+    onNotesChange: (String) -> Unit,
+    onDateClick: () -> Unit,
+    onTimeClick: () -> Unit,
+    onSettingsClick: (() -> Unit)?,
+    onNavigateBack: () -> Unit,
+    onConfirmClick: () -> Unit,
+    onPickSiteLocation: () -> Unit = {}
+) {
+    val focusManager = LocalFocusManager.current
+
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text((stringResourceOrNull(ElementType.FILL.label()) ?: "")) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(CoreUiStrings.close)
+                        )
+                    }
+                },
+                actions = {
+                    if (onSettingsClick != null) {
+                        IconButton(onClick = onSettingsClick) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(CoreUiStrings.settings),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            Button(
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
+                enabled = uiState.hasAction,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .bottomBarSafeArea()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(CoreUiStrings.ok))
+            }
+        }
+    ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .consumeOverscroll()
+                .verticalScroll(rememberScrollState())
+                .clearFocusOnTap(focusManager)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // --- Card 1: Switches ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Site change
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSiteChangeClick() },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(UiStrings.record_pump_site_change),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Switch(
+                            checked = uiState.siteChange,
+                            onCheckedChange = { onSiteChangeClick() }
+                        )
+                    }
+
+                    // Site location picker
+                    if (uiState.siteChange && uiState.siteRotationEnabled) {
+                        SiteLocationSummary(
+                            siteType = TE.Type.CANNULA_CHANGE,
+                            lastLocationString = uiState.lastSiteLocationString,
+                            selectedLocationString = uiState.selectedSiteLocationString,
+                            onPickSiteClick = onPickSiteLocation
+                        )
+                    }
+
+                    // Cartridge change
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onCartridgeChangeClick() },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(UiStrings.record_insulin_cartridge_change),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Switch(
+                            checked = uiState.insulinCartridgeChange,
+                            onCheckedChange = { onCartridgeChangeClick() }
+                        )
+                    }
+
+                    // Insulin selection
+                    AnimatedVisibility(visible = uiState.showInsulinChange) {
+                        SelectInsulin(
+                            availableInsulins = uiState.availableInsulins,
+                            selectedInsulin = uiState.selectedInsulin,
+                            activeInsulinLabel = uiState.activeInsulinLabel,
+                            onInsulinSelect = onInsulinSelect,
+                            concentrationDropDownEnabled = uiState.concentrationEnabled
+                        )
+                    }
+                }
+            }
+
+            // --- Card 2: Fill amount + DateTime + Notes ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    // Fill/prime amount + presets
+                    // Prime/fill amount + presets. On an AAPSCLIENT the prime can't be delivered remotely (it's a
+                    // physical at-the-pump action), so the input is shown but DISABLED (grayed); only the logging
+                    // actions (site / cartridge / insulin-type change) work on a client. showBolus = !AAPSCLIENT.
+                    Column(modifier = itemModifier) {
+                        NumberInputRow(
+                            labelRef = UiStrings.fill_prime_amount,
+                            value = uiState.insulin,
+                            onValueChange = onInsulinChange,
+                            valueRange = 0.0..uiState.maxInsulin,
+                            step = uiState.bolusStep,
+                            valueFormat = bolusFormat,
+                            unitLabel = CoreUiStrings.insulin_unit_shortname,
+                            enabled = uiState.showBolus
+                        )
+
+                        if (uiState.pumpUnitsWarning != null) {
+                            Text(
+                                text = uiState.pumpUnitsWarning,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
+                        if (uiState.showBolus) {
+                            PresetButtonsRow(
+                                presetButton1 = uiState.presetButton1,
+                                presetButton2 = uiState.presetButton2,
+                                presetButton3 = uiState.presetButton3,
+                                bolusStep = uiState.bolusStep,
+                                onPresetClick = onInsulinChange
+                            )
+                        }
+                    }
+
+                    // Time (collapsible "Now" pattern)
+                    EventTimeRow(
+                        timeChanged = uiState.eventTimeChanged,
+                        displayText = "$dateString $timeString",
+                        dateTimeContent = {
+                            DateTimeSection(
+                                dateString = dateString,
+                                timeString = timeString,
+                                eventTimeChanged = uiState.eventTimeChanged,
+                                onDateClick = onDateClick,
+                                onTimeClick = onTimeClick
+                            )
+                        },
+                        modifier = itemModifier
+                    )
+
+                    // Notes
+                    if (uiState.showNotesFromPreferences) {
+                        TextField(
+                            value = uiState.notes,
+                            onValueChange = onNotesChange,
+                            label = { Text(stringResource(CoreUiStrings.notes_label)) },
+                            modifier = itemModifier,
+                            singleLine = false,
+                            maxLines = 3
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+@Composable
+private fun PresetButtonsRow(
+    presetButton1: Double,
+    presetButton2: Double,
+    presetButton3: Double,
+    bolusStep: Double,
+    onPresetClick: (Double) -> Unit
+) {
+    val presets = listOf(presetButton1, presetButton2, presetButton3).filter { it > 0 }
+    if (presets.isEmpty()) return
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val decimalFormatter = LocalDecimalFormatter.current
+        presets.forEach { amount ->
+            val label = if (bolusStep <= 0.051) decimalFormatter.to2Decimal(amount) else decimalFormatter.to1Decimal(amount)
+            FilledTonalButton(onClick = { onPresetClick(amount) }) {
+                Text(label)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FillButtonSettingsSheet(
+    settingsDef: PreferenceSubScreenDef,
+    viewModel: FillDialogViewModel,
+    onDismiss: () -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surface
+    ) {
+        PreferenceSheetContent(
+            settingsDef = settingsDef,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+    }
+}
