@@ -100,7 +100,10 @@ internal object NetworkStackBuilder {
             JSONObject(json.asJsonObject.toString())
         }
     private fun provideGson(): Gson = GsonBuilder().also {
+        val longJsonDeserializer = LongJsonDeserializer()
         it.registerTypeAdapter(JSONObject::class.java, deserializer)
+        it.registerTypeAdapter(Long::class.java, longJsonDeserializer)
+        it.registerTypeAdapter(Long::class.javaObjectType, longJsonDeserializer)
     }.create()
 
     private const val OK_HTTP_CACHE_SIZE = 10L * 1024 * 1024
