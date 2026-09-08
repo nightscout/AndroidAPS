@@ -627,7 +627,11 @@
     <string name="aaps_directory">katalog AAPS</string>
     <string name="import_setting">Importuj ustawienia</string>
     <!-- Import settings screen -->
+    <string name="reset_aps_results">Zresetuj wyniki APS</string>
+    <string name="database_cleanup">Czyszczenie bazy danych</string>
+    <string name="nav_resetdb">Zresetuj bazy danych</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Zakres do wizualizacji (na wykresie)</string>
 </resources>
