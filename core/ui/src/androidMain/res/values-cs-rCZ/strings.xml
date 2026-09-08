@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_field_must_not_be_empty">Toto pole nesmí být prázdné</string>
+    <string name="error_field_must_not_be_empty">Položka nesmí být prázdná</string>
     <string name="error_mustbe4hexadidits">Musí obsahovat 4 znaky z ABCDEF0123456789</string>
     <string name="authorized_clients_manage_label">Autorizovaní klienti</string>
     <string name="authorized_clients_manage_desc">Spravujte spárovaná klientská zařízení.</string>
@@ -14,7 +14,7 @@
     <string name="nav_configuration_desc">Nastavte svou konfiguraci (CGM, pumpa, ...) a povolte funkce</string>
     <string name="count_selected">%1$d vybráno</string>
     <string name="delete">Smazat</string>
-    <string name="show_invalidated">Zobrazit neplatné</string>
+    <string name="show_invalidated">Zobrazit zneplatněné</string>
     <string name="hide_invalidated">Skrýt neplatné</string>
     <string name="more_options">Další možnosti</string>
     <string name="refresh">Obnovit</string>
@@ -24,7 +24,7 @@
     <string name="profile_set_ok">Bazální profil aktualizován</string>
     <string name="invalid_input">Chybná vstupní data</string>
     <string name="invalid_number">Neplatné číslo</string>
-    <string name="constraint_applied">Aplikováno omezení!</string>
+    <string name="constraint_applied">Omezení aplikováno!</string>
     <string name="tt_label">DC</string>
     <string name="pump_unreachable">Pumpa nedostupná</string>
     <string name="insulin_unit_shortname">U</string>
@@ -59,6 +59,8 @@
     <string name="configbuilder_pick_one_hint">Vyberte jeden. Pouze jeden může být aktivní.</string>
     <string name="configbuilder_pick_many_hint">Zvolte, co se použije.</string>
     <string name="configbuilder_no_selection_warning">V této kategorii není vybrán žádný plugin.</string>
+    <string name="configbuilder_switch_confirmation_title">Přepnout plugin?</string>
+    <string name="configbuilder_switch_confirmation">Tímto vypnete %1$s a zapnete %2$s.</string>
     <string name="expand">Rozbalit</string>
     <string name="collapse">Sbalit</string>
     <string name="no_compose_preferences">Pro tento plugin nejsou dostupné žádné předvolby</string>
@@ -66,7 +68,6 @@
     <string name="confirm_pin_hint">Potvrďte PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s - %4$s)</string>
     <string name="statuslights">Stavové indikátory</string>
-    <string name="copy_existing_values">Zkopírovat nastavení NS (pokud existuje)?</string>
     <string name="configbuilder_insulin">Inzulín</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_smoothing">Vyhlazování</string>
@@ -100,6 +101,7 @@
     <string name="tdd_total">CDD celkem</string>
     <string name="tdd_old_data">Stará data</string>
     <string name="goingtodeliver">Podávání %1$.2f U inzulínu</string>
+    <string name="carbs_not_saved_after_bolus">Bolus byl vydán, ale sacharidy nebylo možné uložit. Zadejte sacharidy znovu.</string>
     <string name="androidaps_start">AAPS spuštěno</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$dg</string>
     <string name="format_hours">%1$.2f h</string>
@@ -111,6 +113,12 @@
     <string name="stop_pressed">STISKNUTO STOP</string>
     <string name="invalid_profile">Neplatný profil!</string>
     <string name="no_profile_set">ŽÁDNÝ PROFIL NENASTAVEN</string>
+    <string name="profile_switch_no_insulin">Nelze přepnout profil: nepoužívá se žádný inzulín a žádný nebyl vybrán.</string>
+    <string name="profile_switch_select_insulin_hint">Zatím se nepoužívá žádný inzulín. Vyberte inzulín, který používáte, aby jej přepnutí profilu mohlo zaznamenat.</string>
+    <string name="insulin_activation_failed">Inzulín nebyl přepnut. Váš předchozí inzulin se stále používá.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Inzulín nebyl přepnut: %1$s. Váš předchozí inzulin se stále používá.</string>
+    <string name="insulin_activation_unconfirmed">Přepnutí inzulínu nemohlo být potvrzeno. Zkontrolujte, který inzulín je aktivní ve vašem profilu před dávkováním.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInzulín také nebyl přepnut.</string>
     <string name="active"><![CDATA[<Aktivní>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Jednotky</string>
@@ -199,7 +207,6 @@
     <string name="login">Přihlášení</string>
     <string name="logout">Odhlásit</string>
     <string name="prime_fill">Plnění/doplňování</string>
-    <string name="site_rotation">Střídání míst</string>
     <string name="edit_site">Upravit</string>
     <string name="select_arrow">Vybrat šipku</string>
     <string name="site_filter_info">Vyberte typ terapeutické události, kterou chcete vidět: výměna kanyly a/nebo výměna senzoru</string>
@@ -249,7 +256,6 @@
     <string name="pin_dont_match">PIN kódy se neshodují</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Zrušit dočasný bazál</string>
     <string name="let_temp_basal_run">Nechat běžet aktuální dočasný bazál</string>
@@ -286,7 +292,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Péče</string>
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ruční glykémie nebo kalibrace</string>
     <string name="careportal_announcement">Oznámení</string>
@@ -628,7 +633,6 @@
     <string name="uel_scene_deactivated">SCÉNA DEAKTIVOVÁNA</string>
     <string name="uel_remote_config_changed">VZDÁLENÁ KONFIGURACE ZMĚNĚNA</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Dolní hodnota dočasného cíle</string>
     <string name="temp_target_high_target">Horní hodnota dočasného cíle</string>
     <string name="temp_target_value">Hodnota dočasného cíle</string>
     <string name="insulin_dia">Hodnota DIA inzulínu</string>
@@ -787,7 +791,6 @@
     <string name="close">Zavřít</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
-    <string name="export_ok">OK</string>
     <string name="export_warning">Varování</string>
     <string name="export_expired">Vypršelo</string>
     <string name="export_disabled">Zakázáno</string>
@@ -820,7 +823,6 @@
     <string name="send_logs">Odeslat záznamy</string>
     <string name="file_management">Správa souborů</string>
     <string name="database_management">Správa databáze</string>
-    <string name="data_choices">Možnosti dat</string>
     <string name="unattended_settings_export">Bezobslužný export nastavení</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Konfigurovat úrovně podrobnosti záznamů</string>
@@ -881,7 +883,6 @@
     <string name="statistics_desc">Zobrazit statistiky a reporty</string>
     <string name="tdd_cycle_pattern">Vzory CDD podle periody</string>
     <string name="tdd_cycle_pattern_desc">Překrýt denní součty inzulínu ve 28denních cyklech pro odhalení opakujících se vzorců</string>
-    <string name="nav_profile_helper">Pomocník s profilem</string>
     <string name="nav_profile_helper_desc">Sestavte profil podle hmotnosti nebo CDD</string>
     <string name="quick_launch_configure">Konfigurace Rychlého spuštění</string>
     <string name="quick_launch_configure_desc">Přizpůsobit tlačítka rychlých akcí v přehledu</string>
@@ -891,6 +892,12 @@
     <string name="add">Výměna</string>
     <string name="remove">Odstranit</string>
     <string name="reorder">Přeřadit</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Přesunout dopředu</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Přesunout dozadu</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Zobrazit podrobnosti</string>
+    <string name="presets_changed_reorder_aborted">Předvolby se změnily jinde. Nové pořadí nebylo uloženo.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Pozice %1$d z %2$d</string>
     <string name="status">Stav</string>
     <string name="pump_actions">Akce pumpy</string>
     <string name="tempbasal_button">Dočasný bazál</string>
@@ -1013,8 +1020,6 @@
     <string name="import_wrong_password">Nesprávné heslo</string>
     <string name="import_btn">Importovat</string>
     <string name="import_anyway_btn">Přesto importovat</string>
-    <string name="import_restart_title">Nastavení importováno</string>
-    <string name="import_restart_message">Nastavení bylo importováno. Aplikaci je třeba restartovat.</string>
     <string name="import_source_local">Lokální</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Načíst více</string>
@@ -1056,8 +1061,6 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_grams">%1$d g</string>
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
     <string name="units_format_hours_double">%1$.0f h</string>
     <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
@@ -1087,5 +1090,5 @@
     <string name="units_percent">%</string>
     <string name="units_sec">s</string>
     <string name="units_years">r</string>
-    <string name="prefs_range_title">Rozsah pro vizualizaci</string>
+    <string name="prefs_range_title">Rozsah pro zobrazení</string>
 </resources>
