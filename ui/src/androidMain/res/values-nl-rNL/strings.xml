@@ -6,9 +6,9 @@
     <string name="time_offset">Tijdverschuiving</string>
     <!--    Widget-->
     <string name="configure">Configureer transparantie</string>
-    <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Activiteitsmonitor</string>
+    <string name="time_range">Tijdsinterval</string>
     <string name="do_you_want_reset_stats">Wil je de activiteitenstatistieken resetten?</string>
     <string name="do_you_want_recalculate_tdd_stats">Wilt u de TDD statistieken opnieuw berekenen?</string>
     <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
@@ -20,7 +20,6 @@
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="edit_site">Bewerk</string>
     <string name="record_site_location">Site locatie: %1$s</string>
     <string name="record_site_arrow">Site pijl %1$s</string>
     <string name="record_site_note">Notitie: %1$s</string>
@@ -36,9 +35,7 @@
     <!-- %1$s = action label -->
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
     <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
-    <string name="percentage_label">Percentage</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Pomp afkoppelen</string>
     <string name="resume">Hervatten</string>
     <string name="reconnect">Opnieuw verbinden met pomp</string>
     <string name="duration15m">15 min</string>
@@ -53,13 +50,12 @@
     <string name="no_records_available">Geen records beschikbaar</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="carbs_and_bolus">Koolhydraten en bolus</string>
-    <string name="show_invalidated">Toon ongeldig</string>
-    <string name="hide_invalidated">Verberg ongeldig</string>
     <string name="careportal_remove_started_events">Verwijder AAPS is gestart items</string>
     <string name="user_entry">Gebruikersinvoer</string>
     <string name="clone_label">Dupliceren</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profieltype</string>
+    <string name="profile_switches">Profiel wisselingen</string>
     <string name="basal_pct_from_tdd_label">% van basaal</string>
     <string name="selected_profile">Geselecteerd:</string>
     <string name="motol_default_profile">Basis profiel</string>
