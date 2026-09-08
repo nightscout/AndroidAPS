@@ -26,7 +26,6 @@
     <string name="cwf_comment_patient_name">Naam patiënt</string>
     <string name="cwf_comment_iob1">IOB label of IOB totaal indien gedetailleerd</string>
     <string name="cwf_comment_iob2">IOB totaal of (Bolus_IOB|Basal_IOB) indien gedetailleerd</string>
-    <string name="cwf_comment_cob1">COB label</string>
     <string name="cwf_comment_cob2">COB waarde</string>
     <string name="cwf_comment_delta">Korte BG delta</string>
     <string name="cwf_comment_avg_delta">Gemiddelde BG delta (15min)</string>
