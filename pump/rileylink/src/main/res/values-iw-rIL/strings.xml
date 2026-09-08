@@ -60,13 +60,11 @@
     <plurals name="duration_days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
-        <item quantity="many">%1$d ימים</item>
         <item quantity="other">%1$d ימים</item>
     </plurals>
     <plurals name="duration_hours">
         <item quantity="one">%1$d שעה</item>
         <item quantity="two">%1$d שעות</item>
-        <item quantity="many">%1$d שעות</item>
         <item quantity="other">%1$d שעות</item>
     </plurals>
     <string name="orange_use_scanning_level">השתמש בסריקה</string>
