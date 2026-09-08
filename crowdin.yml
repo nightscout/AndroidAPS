@@ -2,11 +2,33 @@
 #
 # The KMP flip moved these string files from src/main/res to src/androidMain/res. Changing the
 # path alone leaves Crowdin showing the old source AND the new one, which is a mess to untangle.
-# So each old location keeps an empty <resources/> file: Crowdin sees a source with no strings
-# and drops it, leaving only the new path.
+# So each old location keeps an empty <resources/> file, so that whatever Crowdin still holds for
+# the old path has no strings in it.
 #
-# Once Crowdin no longer lists the old files, delete these and this comment. They are not part
-# of any build - src/main/res is not a source set for these modules any more.
+# **The empty file does not make Crowdin remove the entry.** That was the hope when this was
+# written, and it is not what happens: Crowdin keeps a file it has already been given, so the old
+# path stays listed in Sources next to the new one - both `core/ui/src/main/res/values` and
+# `core/ui/src/androidMain/res/values` appear, with the same three names. Emptying them is only
+# half of it; the old entries have to be **deleted in Crowdin itself**, and no change in this
+# repository will do it, because none of these paths is a source here any more.
+#
+# So the order is: keep the empty file, delete the entry in Crowdin, then delete the file here and
+# this comment. They are not part of any build - src/main/res is not a source set for these
+# modules any more.
+#
+# The list is checkable rather than trusted. Every `src/androidMain/res/values/*.xml` source below
+# must have an empty counterpart at the same path with `androidMain` swapped for `main`:
+#
+#   grep -oE "^  - source: /[^ ]*androidMain[^ ]*" crowdin.yml | sed 's|^  - source: /||' |
+#     while read -r p; do
+#       old=$(echo "$p" | sed 's|/src/androidMain/res/|/src/main/res/|')
+#       [ -f "$old" ] || echo "MISSING $old"
+#     done
+#
+# That found `plugins/calibration`, which was added to this file later than the rest and never got
+# its placeholder. `core/interfaces/.../wear_paths.xml` is **not** on the list and needs no
+# placeholder: its two strings are `translatable="false"` wear message paths, so it is deliberately
+# not a Crowdin source at all.
 #
 #   core/interfaces/src/main/res/values/strings.xml
 #   core/keys/src/main/res/values/strings.xml
@@ -16,6 +38,7 @@
 #   implementation/src/main/res/values/strings.xml
 #   plugins/aps/src/main/res/values/strings.xml
 #   plugins/automation/src/main/res/values/strings.xml
+#   plugins/calibration/src/main/res/values/strings.xml
 #   plugins/configuration/src/main/res/values/strings.xml
 #   plugins/constraints/src/main/res/values/exam.xml
 #   plugins/constraints/src/main/res/values/objectives.xml
