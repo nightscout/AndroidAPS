@@ -8,7 +8,6 @@
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
-    <string name="basal_shortname">BAS</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
