@@ -578,7 +578,11 @@
     <string name="aaps_directory">AAPS dizini</string>
     <string name="import_setting">Ayarları içe aktarın</string>
     <!-- Import settings screen -->
+    <string name="reset_aps_results">APS sonuçlarını sıfırla</string>
+    <string name="database_cleanup">Veritabanı temizleme</string>
+    <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Görselleştirme Aralığı</string>
 </resources>
