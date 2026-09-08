@@ -1,44 +1,76 @@
+# TEMPORARY - delete the files listed below once Crowdin has settled.
+#
+# The KMP flip moved these string files from src/main/res to src/androidMain/res. Changing the
+# path alone leaves Crowdin showing the old source AND the new one, which is a mess to untangle.
+# So each old location keeps an empty <resources/> file: Crowdin sees a source with no strings
+# and drops it, leaving only the new path.
+#
+# Once Crowdin no longer lists the old files, delete these and this comment. They are not part
+# of any build - src/main/res is not a source set for these modules any more.
+#
+#   core/interfaces/src/main/res/values/strings.xml
+#   core/keys/src/main/res/values/strings.xml
+#   core/ui/src/main/res/values/strings_scene_wizard.xml
+#   core/ui/src/main/res/values/protection.xml
+#   core/ui/src/main/res/values/strings.xml
+#   implementation/src/main/res/values/strings.xml
+#   plugins/aps/src/main/res/values/strings.xml
+#   plugins/automation/src/main/res/values/strings.xml
+#   plugins/configuration/src/main/res/values/strings.xml
+#   plugins/constraints/src/main/res/values/exam.xml
+#   plugins/constraints/src/main/res/values/objectives.xml
+#   plugins/constraints/src/main/res/values/strings.xml
+#   plugins/main/src/main/res/values/strings.xml
+#   plugins/sensitivity/src/main/res/values/strings.xml
+#   plugins/smoothing/src/main/res/values/strings.xml
+#   plugins/source/src/main/res/values/strings.xml
+#   plugins/sync/src/main/res/values/oh_strings.xml
+#   plugins/sync/src/main/res/values/strings.xml
+#   pump/virtual/src/main/res/values/strings.xml
+#   shared/impl/src/main/res/values/strings.xml
+#   ui/src/main/res/values/strings.xml
+#
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/values-%android_code%/strings.xml
-  - source: /core/interfaces/src/main/res/values/strings.xml
-    translation: /core/interfaces/src/main/res/values-%android_code%/strings.xml
-  - source: /core/keys/src/main/res/values/strings.xml
-    translation: /core/keys/src/main/res/values-%android_code%/strings.xml
-  - source: /core/objects/src/main/res/values/strings.xml
-    translation: /core/objects/src/main/res/values-%android_code%/strings.xml
-  - source: /core/ui/src/main/res/values/strings_scene_wizard.xml
-    translation: /core/ui/src/main/res/values-%android_code%/strings_scene_wizard.xml
-  - source: /core/ui/src/main/res/values/protection.xml
-    translation: /core/ui/src/main/res/values-%android_code%/protection.xml
-  - source: /core/ui/src/main/res/values/strings.xml
-    translation: /core/ui/src/main/res/values-%android_code%/strings.xml
-  - source: /implementation/src/main/res/values/strings.xml
-    translation: /implementation/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/aps/src/main/res/values/strings.xml
-    translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/automation/src/main/res/values/strings.xml
-    translation: /plugins/automation/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/configuration/src/main/res/values/strings.xml
-    translation: /plugins/configuration/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/constraints/src/main/res/values/exam.xml
-    translation: /plugins/constraints/src/main/res/values-%android_code%/%original_file_name%
-  - source: /plugins/constraints/src/main/res/values/objectives.xml
-    translation: /plugins/constraints/src/main/res/values-%android_code%/%original_file_name%
-  - source: /plugins/constraints/src/main/res/values/strings.xml
-    translation: /plugins/constraints/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/main/src/main/res/values/strings.xml
-    translation: /plugins/main/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/sensitivity/src/main/res/values/strings.xml
-    translation: /plugins/sensitivity/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/smoothing/src/main/res/values/strings.xml
-    translation: /plugins/smoothing/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/source/src/main/res/values/strings.xml
-    translation: /plugins/source/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/sync/src/main/res/values/oh_strings.xml
-    translation: /plugins/sync/src/main/res/values-%android_code%/oh_strings.xml
-  - source: /plugins/sync/src/main/res/values/strings.xml
-    translation: /plugins/sync/src/main/res/values-%android_code%/strings.xml
+  - source: /core/interfaces/src/androidMain/res/values/strings.xml
+    translation: /core/interfaces/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /core/keys/src/androidMain/res/values/strings.xml
+    translation: /core/keys/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /core/ui/src/androidMain/res/values/strings_scene_wizard.xml
+    translation: /core/ui/src/androidMain/res/values-%android_code%/strings_scene_wizard.xml
+  - source: /core/ui/src/androidMain/res/values/protection.xml
+    translation: /core/ui/src/androidMain/res/values-%android_code%/protection.xml
+  - source: /core/ui/src/androidMain/res/values/strings.xml
+    translation: /core/ui/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /implementation/src/androidMain/res/values/strings.xml
+    translation: /implementation/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/aps/src/androidMain/res/values/strings.xml
+    translation: /plugins/aps/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/automation/src/androidMain/res/values/strings.xml
+    translation: /plugins/automation/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/calibration/src/androidMain/res/values/strings.xml
+    translation: /plugins/calibration/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/configuration/src/androidMain/res/values/strings.xml
+    translation: /plugins/configuration/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/constraints/src/androidMain/res/values/exam.xml
+    translation: /plugins/constraints/src/androidMain/res/values-%android_code%/%original_file_name%
+  - source: /plugins/constraints/src/androidMain/res/values/objectives.xml
+    translation: /plugins/constraints/src/androidMain/res/values-%android_code%/%original_file_name%
+  - source: /plugins/constraints/src/androidMain/res/values/strings.xml
+    translation: /plugins/constraints/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/main/src/androidMain/res/values/strings.xml
+    translation: /plugins/main/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/sensitivity/src/androidMain/res/values/strings.xml
+    translation: /plugins/sensitivity/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/smoothing/src/androidMain/res/values/strings.xml
+    translation: /plugins/smoothing/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/source/src/androidMain/res/values/strings.xml
+    translation: /plugins/source/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /plugins/sync/src/androidMain/res/values/oh_strings.xml
+    translation: /plugins/sync/src/androidMain/res/values-%android_code%/oh_strings.xml
+  - source: /plugins/sync/src/androidMain/res/values/strings.xml
+    translation: /plugins/sync/src/androidMain/res/values-%android_code%/strings.xml
   - source: /pump/combov2/src/main/res/values/strings.xml
     translation: /pump/combov2/src/main/res/values-%android_code%/strings.xml
   - source: /pump/dana/src/main/res/values/strings.xml
@@ -77,11 +109,11 @@ files:
     translation: /pump/common/src/main/res/values-%android_code%/strings.xml
   - source: /pump/rileylink/src/main/res/values/strings.xml
     translation: /pump/rileylink/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/virtual/src/main/res/values/strings.xml
-    translation: /pump/virtual/src/main/res/values-%android_code%/strings.xml
-  - source: /shared/impl/src/main/res/values/strings.xml
-    translation: /shared/impl/src/main/res/values-%android_code%/strings.xml
-  - source: /ui/src/main/res/values/strings.xml
-    translation: /ui/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/virtual/src/androidMain/res/values/strings.xml
+    translation: /pump/virtual/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /shared/impl/src/androidMain/res/values/strings.xml
+    translation: /shared/impl/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /ui/src/androidMain/res/values/strings.xml
+    translation: /ui/src/androidMain/res/values-%android_code%/strings.xml
   - source: /wear/src/main/res/values/strings.xml
     translation: /wear/src/main/res/values-%android_code%/strings.xml

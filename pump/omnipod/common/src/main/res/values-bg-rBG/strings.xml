@@ -165,4 +165,5 @@
         <item quantity="one">Pod аларма: %1$s</item>
         <item quantity="other">Pod аларми: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Твърд край на под</string>
 </resources>

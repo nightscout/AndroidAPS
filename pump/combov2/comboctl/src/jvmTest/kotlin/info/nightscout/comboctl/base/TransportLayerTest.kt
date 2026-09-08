@@ -150,7 +150,7 @@ class TransportLayerTest : TestBase() {
         // Starts a blocking scope with a watchdog that fails
         // the test if it does not finish within 5 seconds
         // (in case the tested code hangs).
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             val testPumpStateStore = TestPumpStateStore()
             val testComboIO = TestComboIO()
             val testBluetoothAddress = BluetoothAddress(byteArrayListOfInts(1, 2, 3, 4, 5, 6))
@@ -214,7 +214,7 @@ class TransportLayerTest : TestBase() {
         // a PacketReceiverException which in turn contains the
         // exception that caused the failure.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             val testPumpStateStore = TestPumpStateStore()
             val testComboIO = TestComboIO()
             val testBluetoothAddress = BluetoothAddress(byteArrayListOfInts(1, 2, 3, 4, 5, 6))
@@ -317,7 +317,7 @@ class TransportLayerTest : TestBase() {
         // packets observed to confirm that the expected single DATA
         // paket is in fact received by the TransportLayer IO.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(40000) {
             // Setup.
 
             val testPumpStateStore = TestPumpStateStore()

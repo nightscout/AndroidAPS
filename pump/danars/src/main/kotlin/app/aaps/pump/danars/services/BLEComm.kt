@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.extensions.scanForActivity
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
@@ -38,10 +39,11 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ScheduledFuture
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class BLEComm @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
@@ -125,6 +127,7 @@ class BLEComm @Inject constructor(
         encryptedDataRead = false
         encryptedCommandSent = false
         pumpCheckSent = false  // Reset the guard flag for new connection
+        notificationsEnabled = false  // Same lifetime: a new connection registers notifications again
         isConnecting = true
         bufferLength = 0
         bleTransport.updatePairingState(PairingState(step = PairingStep.CONNECTING))
@@ -202,6 +205,7 @@ class BLEComm @Inject constructor(
         encryptedDataRead = false
         encryptedCommandSent = false
         pumpCheckSent = false  // Reset for next connection attempt
+        notificationsEnabled = false
     }
 
     @SuppressLint("MissingPermission")
@@ -240,8 +244,23 @@ class BLEComm @Inject constructor(
         }.start()
     }
 
+    /**
+     * Notification registration completed for the current connection.
+     *
+     * [connect] enables notifications eagerly and [findCharacteristic] enables them again once services are
+     * discovered, so one connection legitimately produces two [onDescriptorWritten] callbacks. Only the first may
+     * drive the handshake: the second used to republish [PairingStep.HANDSHAKE_IN_PROGRESS], which downgrades the
+     * pair wizard from a user-input step back to the progress spinner — and, unlike [PairingStep.CONNECTING],
+     * restarts no timeout, so a first-time RSv3 pairing hung on the spinner instead of showing the PIN entry.
+     * On real hardware the second callback is usually masked by timing; the emulated transport is synchronous and
+     * hits it every time.
+     */
+    private var notificationsEnabled = false
+
     override fun onDescriptorWritten() {
         if (isConnected) return // Already connected, ignore duplicate notification enable
+        if (notificationsEnabled) return // Second registration for this same connection — see the field's doc
+        notificationsEnabled = true
         bleTransport.updatePairingState(PairingState(step = PairingStep.HANDSHAKE_IN_PROGRESS))
         sendConnect()
         // 1st message sent to pump after connect
@@ -260,6 +279,7 @@ class BLEComm @Inject constructor(
             encryptedDataRead = false
             encryptedCommandSent = false
             pumpCheckSent = false  // Reset for next connection attempt
+            notificationsEnabled = false
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
             bleTransport.updatePairingState(PairingState(step = PairingStep.IDLE))
             aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected")
@@ -280,6 +300,14 @@ class BLEComm @Inject constructor(
         if (buffer.isEmpty()) return
 
         synchronized(readBuffer) {
+            // Overflow guard: a desynced stream that never yields a valid packet start would keep
+            // accumulating past the fixed readBuffer capacity and crash on the arraycopy below with
+            // ArrayIndexOutOfBoundsException. Drop the un-parsable backlog and keep only the newest
+            // chunk (a single BLE notification, ≤20 B, which may hold a fresh packet start).
+            if (bufferLength + buffer.size > readBuffer.size) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "Read buffer overflow ($bufferLength + ${buffer.size} > ${readBuffer.size}); dropping unparsable backlog")
+                bufferLength = 0
+            }
             // Append incoming data to input buffer
             System.arraycopy(buffer, 0, readBuffer, bufferLength, buffer.size)
             bufferLength += buffer.size
@@ -339,7 +367,10 @@ class BLEComm @Inject constructor(
                             }
                             break
                         }
-                        break
+                        // NB: no unconditional break here — the loop must keep scanning so that a
+                        // packet start preceded by leading trash is found and re-synced (the block
+                        // above shifts it to offset 0). A stray break used to exit after index 0,
+                        // making that trash-skip/re-sync dead code and wedging comms on any desync.
                     }
                 }
             }
@@ -418,7 +449,7 @@ class BLEComm @Inject constructor(
 
         val deviceName = connectDeviceName
         if (deviceName == null || deviceName == "") {
-            notificationManager.post(NotificationId.DEVICE_NOT_PAIRED, R.string.pairfirst)
+            notificationManager.post(NotificationId.DEVICE_NOT_PAIRED, TextRef.AndroidRes(R.string.pairfirst))
             return
         }
 
@@ -494,7 +525,7 @@ class BLEComm @Inject constructor(
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumperror)))
             runBlocking { pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber) }
-            notificationManager.post(NotificationId.PUMP_ERROR, R.string.pumperror)
+            notificationManager.post(NotificationId.PUMP_ERROR, TextRef.AndroidRes(R.string.pumperror))
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -508,7 +539,7 @@ class BLEComm @Inject constructor(
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(app.aaps.core.ui.R.string.connection_error)))
             danaRSPlugin.clearPairing()
-            notificationManager.post(NotificationId.WRONG_SERIAL_NUMBER, app.aaps.core.ui.R.string.password_cleared)
+            notificationManager.post(NotificationId.WRONG_SERIAL_NUMBER, TextRef.AndroidRes(app.aaps.core.ui.R.string.password_cleared))
         }
     }
 
@@ -600,7 +631,7 @@ class BLEComm @Inject constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaPump.rsPassword)
             if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
-                notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, R.string.wrongpumppassword)
+                notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, TextRef.AndroidRes(R.string.wrongpumppassword))
                 bleTransport.updatePairingState(PairingState(step = PairingStep.WAITING_FOR_PASSWORD))
                 disconnect("WrongPassword")
             } else {
@@ -679,6 +710,12 @@ class BLEComm @Inject constructor(
     }
 
     // the rest of packets
+    // @Synchronized: this is a single-request-in-flight request/response primitive — it sets the shared
+    // processedMessage, does a check-then-act on mSendQueue, writes, then blocks for the reply. Without
+    // serialization a second caller (e.g. a post-bolus appScope coroutine) could interleave packets and
+    // clobber processedMessage mid-exchange. The reply path (processMessage) takes no `this` lock, so
+    // holding it across the reply wait is deadlock-safe.
+    @Synchronized
     fun sendMessage(message: DanaRSPacket) {
         encryptedCommandSent = true
         processedMessage = message

@@ -1,17 +1,17 @@
 package app.aaps.pump.diaconn.compose
 
+import android.content.Context
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
-import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -21,17 +21,23 @@ import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.common.RecordTypes
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class DiaconnHistoryViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -42,7 +48,7 @@ class DiaconnHistoryViewModel @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PumpHistoryUiState<DiaconnHistoryRecord>())
@@ -63,12 +69,13 @@ class DiaconnHistoryViewModel @Inject constructor(
 
         _uiState.value = PumpHistoryUiState(availableTypes = types, selectedType = types.firstOrNull())
 
-        disposable += rxBus
-            .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ event ->
-                           _uiState.update { it.copy(statusMessage = event.getStatus(context)) }
-                       }, { aapsLogger.error(LTag.PUMP, "Error", it) })
+        // viewModelScope is Main, like observeOn(aapsSchedulers.main), and dies with the view model
+        // like the CompositeDisposable did. UNDISPATCHED because RxBus has no replay, so a scheduled
+        // collector could miss a status sent before it starts.
+        rxBus.toFlow(EventPumpStatusChanged::class)
+            .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                _uiState.update { it.copy(statusMessage = rh.gs(event.getStatus())) }
+            }
 
         types.firstOrNull()?.let { loadRecords(it.type) }
     }
@@ -100,13 +107,13 @@ class DiaconnHistoryViewModel @Inject constructor(
     }
 
     fun formatDailyTotal(record: DiaconnHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
 
     fun formatDailyBolus(record: DiaconnHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus)
 
     fun formatDailyBasal(record: DiaconnHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBasal)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBasal)
 
     override fun onCleared() {
         super.onCleared()

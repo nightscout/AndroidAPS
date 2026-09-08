@@ -15,10 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
@@ -92,6 +90,10 @@ fun RetryActivationStep(
     )
 }
 
+/**
+ * @see PreviewRetryPrompt
+ * @see PreviewRetryConnecting
+ */
 @Composable
 internal fun RetryActivationContent(
     isConnecting: Boolean,
@@ -134,23 +136,5 @@ internal fun RetryActivationContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Retry - Prompt")
-@Composable
-private fun PreviewRetryPrompt() {
-    MaterialTheme {
-        RetryActivationContent(isConnecting = false, onRetry = {}, onDiscard = {}, onCancel = {})
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Retry - Connecting")
-@Composable
-private fun PreviewRetryConnecting() {
-    MaterialTheme {
-        RetryActivationContent(isConnecting = true, onRetry = {}, onDiscard = {}, onCancel = {})
     }
 }

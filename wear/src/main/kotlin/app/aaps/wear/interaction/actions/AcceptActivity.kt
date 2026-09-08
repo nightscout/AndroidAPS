@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import androidx.wear.activity.ConfirmationActivity
 import androidx.wear.compose.foundation.pager.HorizontalPager
 import androidx.wear.compose.foundation.pager.rememberPagerState
@@ -51,19 +52,19 @@ import androidx.wear.compose.material3.HorizontalPageIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import app.aaps.wear.comm.IntentCancelNotification
 import app.aaps.wear.comm.IntentWearToMobile
-import dagger.android.support.DaggerAppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import app.aaps.wear.di.WearMetroActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import java.text.DecimalFormat
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Two-page confirmation screen for an action authored on (or relayed by) the master.
@@ -82,7 +83,7 @@ import java.text.DecimalFormat
  * instead start a 30s grace-period job so a brief wrist-down doesn't destroy the result — cancelled by [onResume].
  * Non-wizard flows also have a 60s [LaunchedEffect] absolute timeout as a backstop.
  */
-class AcceptActivity : DaggerAppCompatActivity() {
+class AcceptActivity : AppCompatActivity() {
 
     private var actionKey = ""
     private var deferConfirm = false
@@ -308,7 +309,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
 @Composable
 private fun WizardConfirmPage(enabled: Boolean, totalInsulin: Double?, carbs: Int?, onConfirm: () -> Unit) {
     val haptic = LocalHapticFeedback.current
-    val fmt = remember { DecimalFormat("0.00") }
+    val fmt = remember { NumberFormat.DECIMAL_2 }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -361,8 +362,8 @@ private fun WizardConfirmPage(enabled: Boolean, totalInsulin: Double?, carbs: In
 
 @Composable
 private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: Int, onCorrectionStepsChange: (Int) -> Unit) {
-    val fmt2 = remember { DecimalFormat("0.00") }
-    val fmt1 = remember { DecimalFormat("0.0") }
+    val fmt2 = remember { NumberFormat.DECIMAL_2 }
+    val fmt1 = remember { NumberFormat.DECIMAL_1 }
     val haptic = LocalHapticFeedback.current
 
     // correctionSteps == 0 → exactly 0.0 (no FP drift); otherwise multiply once for display
@@ -641,7 +642,7 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
 }
 
 @Composable
-private fun WizardDetailRow(label: String, value: Double, fmt: DecimalFormat) {
+private fun WizardDetailRow(label: String, value: Double, fmt: NumberFormat) {
     val sign = if (value >= 0) "+" else ""
     val valueColor = when {
         value > 0  -> WearInsulinPositive

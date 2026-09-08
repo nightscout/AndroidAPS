@@ -10,9 +10,12 @@ import app.aaps.core.interfaces.logging.LTag
 /**
  * Long Status Flipped Complication
  *
- * Shows comprehensive glucose and status information in long text format (flipped layout)
- * Title: COB, IOB, and basal rate
- * Text: Glucose value, arrow, delta, and time
+ * Shows comprehensive glucose and status information as a single long text line
+ * (flipped layout): glucose value, arrow, auto-updating time, and delta, then
+ * COB, IOB, and basal rate.
+ *
+ * Everything lives in the text field (no title) so the separator between glucose and
+ * status is ours — watch faces join text and title with their own separator (often "/").
  *
  */
 class LongStatusFlippedComplication : ModernBaseComplicationProviderService() {
@@ -26,17 +29,18 @@ class LongStatusFlippedComplication : ModernBaseComplicationProviderService() {
         return when (type) {
             ComplicationType.LONG_TEXT      -> {
                 // Pass EventData arrays directly to DisplayFormat
-                val singleBg = arrayOf(data.bgData, data.bgData1, data.bgData2)
                 val status = arrayOf(data.statusData, data.statusData1, data.statusData2)
 
-                val glucoseLine = displayFormat.longGlucoseLine(singleBg, 0)
+                val bgData = data.bgData
+                val glucose = bgData.sgvString + bgData.slopeArrow
                 val detailsLine = displayFormat.longDetailsLine(status, 0)
+                val sep = displayFormat.fieldSeparator()
 
                 LongTextComplicationData.Builder(
-                    text = PlainComplicationText.Builder(text = glucoseLine).build(),
-                    contentDescription = PlainComplicationText.Builder(text = "Status: $detailsLine $glucoseLine").build()
+                    // Age + delta formatted like SgvComplication's title ("5m +0.1")
+                    text = buildCountUpText(bgData.timeStamp, "$glucose ^1 ${bgData.delta}$sep$detailsLine"),
+                    contentDescription = PlainComplicationText.Builder(text = "Status: $glucose ${bgData.delta} $detailsLine").build()
                 )
-                    .setTitle(PlainComplicationText.Builder(text = detailsLine).build())
                     .setTapAction(complicationPendingIntent)
                     .build()
             }

@@ -208,10 +208,7 @@
     <string name="wizard_confirmation_sent">Wysłano</string>
     <string name="tile_settings">Ustawienia kafelka</string>
     <string name="loop_status_error">Nie udało się odświeżyć statusu</string>
-    <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d min</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">pozostało %1$d min</string>
     <string name="loop_status_tbr_continues">Baza tymczasowa jest kontynuowana</string>
     <string name="loop_status_tbr_cancel">Ustawianie zwykłej bazy</string>
     <string name="loop_status_smb">%1$.2f U</string>

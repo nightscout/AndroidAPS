@@ -12,7 +12,7 @@ import org.mockito.kotlin.whenever
 
 open class DanaRSTestBase : TestBaseWithProfile() {
 
-    val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
+    val bolusProgressData by lazy { BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)) }
     lateinit var danaPump: DanaPump
 
     @BeforeEach

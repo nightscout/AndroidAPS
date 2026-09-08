@@ -5,25 +5,18 @@ import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceEnabledCondition
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.medtrum.R
 
 enum class MedtrumStringKey(
     override val key: String,
     override val defaultValue: String,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<String, Int> = emptyMap(),
-    override val defaultedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
+    private val entriesResIds: Map<String, Int> = emptyMap(),
     override val isPassword: Boolean = false,
     override val isPin: Boolean = false,
-    override val exportable: Boolean = true,
     override val enabledCondition: PreferenceEnabledCondition = PreferenceEnabledCondition.ALWAYS,
     override val validator: StringValidator = StringValidator.NONE
 ) : StringPreferenceKey {
@@ -34,7 +27,7 @@ enum class MedtrumStringKey(
         titleResId = R.string.alarm_setting_title,
         summaryResId = R.string.alarm_setting_summary,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             "0" to R.string.alarm_setting_light_vibrate_beep,
             "1" to R.string.alarm_setting_light_vibrate,
             "2" to R.string.alarm_setting_light_beep,
@@ -45,4 +38,9 @@ enum class MedtrumStringKey(
             "7" to R.string.alarm_setting_silent
         )
     ),
+    ;
+
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val entries: Map<String, TextRef> = entriesResIds.mapValues { TextRef.AndroidRes(it.value) }
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

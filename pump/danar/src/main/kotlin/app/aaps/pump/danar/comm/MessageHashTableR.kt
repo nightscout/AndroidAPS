@@ -1,12 +1,13 @@
 package app.aaps.pump.danar.comm
 
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
-import javax.inject.Singleton
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class MessageHashTableR @Inject constructor(
-    private val injector: HasAndroidInjector
+    private val injector: MetroMemberInjector
 ) : MessageHashTableBase {
 
     var messages: HashMap<Int, MessageBase> = HashMap()

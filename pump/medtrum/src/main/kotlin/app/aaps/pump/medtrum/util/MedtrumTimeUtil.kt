@@ -2,10 +2,11 @@ package app.aaps.pump.medtrum.util
 
 import java.time.Duration
 import java.time.Instant
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class MedtrumTimeUtil @Inject constructor() {
 
     fun getCurrentTimePumpSeconds(): Long {

@@ -1,5 +1,11 @@
 package app.aaps.pump.medtrum
 
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.plugin.PluginBase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -26,19 +32,19 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntriesProvider
 import app.aaps.core.ui.compose.icons.IcPluginMedtrum
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -53,43 +59,42 @@ import app.aaps.pump.medtrum.keys.MedtrumLongNonKey
 import app.aaps.pump.medtrum.keys.MedtrumStringKey
 import app.aaps.pump.medtrum.keys.MedtrumStringNonKey
 import app.aaps.pump.medtrum.services.MedtrumService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.min
 
-@Singleton
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1120)
+@SingleIn(AppScope::class)
 class MedtrumPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val medtrumPump: MedtrumPump,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val protectionCheck: ProtectionCheck,
     private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .icon(IcPluginMedtrum)
-        .pluginName(R.string.medtrum)
-        .shortName(R.string.medtrum_pump_shortname)
-        .description(R.string.medtrum_pump_description)
+        .pluginName(TextRef.AndroidRes(R.string.medtrum))
+        .shortName(TextRef.AndroidRes(R.string.medtrum_pump_shortname))
+        .description(TextRef.AndroidRes(R.string.medtrum_pump_description))
         .composeContent { _ ->
             MedtrumComposeContent(
                 pluginName = rh.gs(R.string.medtrum),
@@ -97,15 +102,11 @@ class MedtrumPlugin @Inject constructor(
                 blePreCheck = blePreCheck
             )
         },
-    ownPreferences = listOf(
-        MedtrumStringKey::class.java, MedtrumIntKey::class.java, MedtrumBooleanKey::class.java,
-        MedtrumIntNonKey::class.java, MedtrumLongNonKey::class.java, MedtrumStringNonKey::class.java, MedtrumDoubleNonKey::class.java,
-        MedtrumBooleanNonKey::class.java
-    ),
+    ownPreferences = MedtrumStringKey.entries + MedtrumIntKey.entries + MedtrumBooleanKey.entries + MedtrumIntNonKey.entries +
+        MedtrumLongNonKey.entries + MedtrumStringNonKey.entries + MedtrumDoubleNonKey.entries + MedtrumBooleanNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Medtrum {
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private var medtrumService: MedtrumService? = null
 
@@ -115,12 +116,13 @@ class MedtrumPlugin @Inject constructor(
         medtrumPump.loadVarsFromSP()
         val intent = Intent(context, MedtrumService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+        // Same scope as the preference observer below: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss an exit sent before it starts.
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
         preferences.observe(MedtrumStringNonKey.SnInput).drop(1).collectResilient(newScope, aapsLogger, LTag.PUMP) {
             updateMaxInsulinLimitsForPumpType()
         }
@@ -134,7 +136,6 @@ class MedtrumPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
-        disposable.clear()
         super.onStop()
     }
 
@@ -224,22 +225,22 @@ class MedtrumPlugin @Inject constructor(
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         // New profile will be set when patch is activated — a deferred write, not an actual change yet,
         // so enacted=false (no PROFILE_SET_OK); success=true keeps the not-ready case out of the failure alarm.
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(true).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(true).enacted(false)
 
         // Pump only stores basal bytes; iCfg/ISF/IC differences don't require a packet.
         // Avoids a spurious failure right after activation when an insulin-only profile switch
         // races with post-activation pump traffic.
         if (isThisProfileSet(profile)) {
             // Already set (no basal change) → enacted=false; central logic posts no PROFILE_SET_OK.
-            return pumpEnactResultProvider.get().success(true).enacted(false)
+            return pumpEnactResultProvider().success(true).enacted(false)
         }
 
         return if (medtrumService?.updateBasalsInPump(profile) == true) {
             // PROFILE_SET_OK posted (and FAILED cleared) centrally on the return value.
-            pumpEnactResultProvider.get().success(true).enacted(true)
+            pumpEnactResultProvider().success(true).enacted(true)
         } else {
             // FAILED_UPDATE_PROFILE posted centrally (onProfileChanged) from success=false; comment carries the reason.
-            pumpEnactResultProvider.get().success(false).enacted(false).comment(app.aaps.core.ui.R.string.failed_update_basal_profile)
+            pumpEnactResultProvider().success(false).enacted(false).comment(app.aaps.core.ui.R.string.failed_update_basal_profile)
         }
     }
 
@@ -272,11 +273,11 @@ class MedtrumPlugin @Inject constructor(
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: " + detailedBolusInfo.insulin + "U")
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
         // Already constrained in IU (queue) and in cU (PumpWithConcentration boundary); no re-apply here.
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
         val connectionOK = medtrumService?.setBolus(detailedBolusInfo) == true
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         // Verdict from the PUMP-TRACKED per-bolus amount, NOT the shared BolusProgressData UI state: a concurrent
         // SMB completing can null the shared singleton mid-bolus, which previously made this read 0.0 → false alarm.
         val delivered = PumpInsulin(medtrumPump.bolusAmountDelivered)
@@ -303,7 +304,7 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         // round rate to pump rate
@@ -315,7 +316,7 @@ class MedtrumPlugin @Inject constructor(
             && abs(medtrumPump.tempBasalAbsoluteRate - pumpRate) <= 0.05
         ) {
 
-            pumpEnactResultProvider.get().success(true).enacted(true).duration(durationInMinutes).absolute(medtrumPump.tempBasalAbsoluteRate)
+            pumpEnactResultProvider().success(true).enacted(true).duration(durationInMinutes).absolute(medtrumPump.tempBasalAbsoluteRate)
                 .isPercent(false)
                 .isTempCancel(false)
         } else {
@@ -323,35 +324,35 @@ class MedtrumPlugin @Inject constructor(
                 LTag.PUMP,
                 "setTempBasalAbsolute failed, connectionOK: $connectionOK, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}, tempBasalAbsoluteRate: ${medtrumPump.tempBasalAbsoluteRate}"
             )
-            pumpEnactResultProvider.get().success(false).enacted(false).comment("Medtrum setTempBasalAbsolute failed")
+            pumpEnactResultProvider().success(false).enacted(false).comment("Medtrum setTempBasalAbsolute failed")
         }
     }
 
     override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalPercent - percent: $percent, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
-        return pumpEnactResultProvider.get().success(false).enacted(false).comment("Medtrum driver does not support percentage temp basals")
+        return pumpEnactResultProvider().success(false).enacted(false).comment("Medtrum driver does not support percentage temp basals")
     }
 
     override suspend fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setExtendedBolus - insulin: $insulin, durationInMinutes: $durationInMinutes")
-        return pumpEnactResultProvider.get().success(false).enacted(false).comment("Medtrum driver does not support extended boluses")
+        return pumpEnactResultProvider().success(false).enacted(false).comment("Medtrum driver does not support extended boluses")
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
 
         aapsLogger.info(LTag.PUMP, "cancelTempBasal - enforceNew: $enforceNew")
         val connectionOK = medtrumService?.cancelTempBasal() == true
         return if (connectionOK && !medtrumPump.tempBasalInProgress) {
-            pumpEnactResultProvider.get().success(true).enacted(true).isTempCancel(true)
+            pumpEnactResultProvider().success(true).enacted(true).isTempCancel(true)
         } else {
             aapsLogger.error(LTag.PUMP, "cancelTempBasal failed, connectionOK: $connectionOK, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}")
-            pumpEnactResultProvider.get().success(false).enacted(false).comment("Medtrum cancelTempBasal failed")
+            pumpEnactResultProvider().success(false).enacted(false).comment("Medtrum cancelTempBasal failed")
         }
     }
 
     override suspend fun cancelExtendedBolus(): PumpEnactResult {
-        return pumpEnactResultProvider.get()
+        return pumpEnactResultProvider()
     }
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.Medtrum
@@ -359,7 +360,7 @@ class MedtrumPlugin @Inject constructor(
     override fun serialNumber(): String = medtrumPump.pumpSNFromSP.toString(radix = 16).uppercase()
     override val pumpDescription: PumpDescription get() = PumpDescription().fillFor(medtrumPump.pumpType())
     override val isFakingTempsByExtendedBoluses: Boolean = false
-    override suspend fun loadTDDs(): PumpEnactResult = pumpEnactResultProvider.get() // Note: Can implement this if we implement history fully (no priority)
+    override suspend fun loadTDDs(): PumpEnactResult = pumpEnactResultProvider() // Note: Can implement this if we implement history fully (no priority)
     override fun canHandleDST(): Boolean = true
 
     override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
@@ -376,32 +377,32 @@ class MedtrumPlugin @Inject constructor(
 
     // Medtrum interface
     override fun loadEvents(): PumpEnactResult {
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
         val connectionOK = medtrumService?.loadEvents() == true
-        return pumpEnactResultProvider.get().success(connectionOK)
+        return pumpEnactResultProvider().success(connectionOK)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
         val connectionOK = medtrumService?.setUserSettings() == true
-        return pumpEnactResultProvider.get().success(connectionOK)
+        return pumpEnactResultProvider().success(connectionOK)
     }
 
     override fun clearAlarms(): PumpEnactResult {
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
         val connectionOK = medtrumService?.clearAlarms() == true
-        return pumpEnactResultProvider.get().success(connectionOK)
+        return pumpEnactResultProvider().success(connectionOK)
     }
 
     override fun deactivate(): PumpEnactResult {
         val connectionOK = medtrumService?.deactivatePatch() == true
-        return pumpEnactResultProvider.get().success(connectionOK)
+        return pumpEnactResultProvider().success(connectionOK)
     }
 
     override fun updateTime(): PumpEnactResult {
-        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
+        if (!isInitialized()) return pumpEnactResultProvider().success(false).enacted(false)
         val connectionOK = medtrumService?.updateTimeIfNeeded() == true
-        return pumpEnactResultProvider.get().success(connectionOK)
+        return pumpEnactResultProvider().success(connectionOK)
     }
 
     // getPreferenceScreenContent() has a side effect (updateMaxInsulinLimitsForPumpType) we don't want
@@ -416,7 +417,7 @@ class MedtrumPlugin @Inject constructor(
             titleResId = R.string.medtrum_pump_setting,
             items = listOf(
                 MedtrumStringKey.MedtrumAlarmSettings.withEntriesProvider(
-                    provider = { context -> getAlarmEntriesForPumpType(context) }
+                    provider = { getAlarmEntriesForPumpType() }
                 ),
                 MedtrumBooleanKey.MedtrumWarningNotification,
                 MedtrumBooleanKey.MedtrumPatchExpiration,
@@ -458,23 +459,23 @@ class MedtrumPlugin @Inject constructor(
         preferences.put(MedtrumIntKey.MedtrumDailyMaxInsulin, min(preferences.get(MedtrumIntKey.MedtrumDailyMaxInsulin), MedtrumIntKey.MedtrumDailyMaxInsulin.max))
     }
 
-    private fun getAlarmEntriesForPumpType(context: Context): Map<String, String> {
+    private fun getAlarmEntriesForPumpType(): Map<String, TextRef> {
         // For NANO and 300U pumps, only Beep and Silent options are available
         return when (medtrumPump.pumpType()) {
             PumpType.MEDTRUM_NANO, PumpType.MEDTRUM_300U -> mapOf(
-                "6" to context.getString(R.string.alarm_setting_beep),
-                "7" to context.getString(R.string.alarm_setting_silent)
+                "6" to TextRef.AndroidRes(R.string.alarm_setting_beep),
+                "7" to TextRef.AndroidRes(R.string.alarm_setting_silent)
             )
 
             else                                         -> mapOf(
-                "0" to context.getString(R.string.alarm_setting_light_vibrate_beep),
-                "1" to context.getString(R.string.alarm_setting_light_vibrate),
-                "2" to context.getString(R.string.alarm_setting_light_beep),
-                "3" to context.getString(R.string.alarm_setting_light),
-                "4" to context.getString(R.string.alarm_setting_vibrate_beep),
-                "5" to context.getString(R.string.alarm_setting_vibrate),
-                "6" to context.getString(R.string.alarm_setting_beep),
-                "7" to context.getString(R.string.alarm_setting_silent)
+                "0" to TextRef.AndroidRes(R.string.alarm_setting_light_vibrate_beep),
+                "1" to TextRef.AndroidRes(R.string.alarm_setting_light_vibrate),
+                "2" to TextRef.AndroidRes(R.string.alarm_setting_light_beep),
+                "3" to TextRef.AndroidRes(R.string.alarm_setting_light),
+                "4" to TextRef.AndroidRes(R.string.alarm_setting_vibrate_beep),
+                "5" to TextRef.AndroidRes(R.string.alarm_setting_vibrate),
+                "6" to TextRef.AndroidRes(R.string.alarm_setting_beep),
+                "7" to TextRef.AndroidRes(R.string.alarm_setting_silent)
             )
         }
     }

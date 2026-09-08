@@ -23,10 +23,12 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
+import kotlin.time.Duration.Companion.minutes
 
-@Singleton
+@SingleIn(AppScope::class)
 class PauseBasalTask @Inject constructor(
     private val alarmRegistry: IAlarmRegistry,
     private val commandQueue: CommandQueue,
@@ -123,7 +125,7 @@ class PauseBasalTask @Inject constructor(
             pm.flushNormalBasalManager()
             pm.flushPatchConfig()
 
-            if ((alarmCode == null || alarmCode.type == AlarmCode.TYPE_ALERT) && pauseDurationHour != 0f) alarmRegistry.add(AlarmCode.B001, TimeUnit.MINUTES.toMillis((pauseDurationHour * 60).toLong()), false).subscribe()
+            if ((alarmCode == null || alarmCode.type == AlarmCode.TYPE_ALERT) && pauseDurationHour != 0f) alarmRegistry.add(AlarmCode.B001, (pauseDurationHour * 60).toLong().minutes.inWholeMilliseconds, false).subscribe()
         }
 
         enqueue(TaskFunc.UPDATE_CONNECTION)

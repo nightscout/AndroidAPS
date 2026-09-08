@@ -1,0 +1,630 @@
+package app.aaps.core.keys.interfaces
+
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+
+/** Shared empty flow backing the [Preferences.syncedLocalChanges] default (one instance, never emits). */
+private object EmptySyncedChanges {
+
+    val flow: SharedFlow<NonPreferenceKey> = MutableSharedFlow()
+}
+
+interface Preferences {
+
+    /**
+     * Emits a key every time a **bidirectionally-synced** preference ([SyncDirection.Bidirectional])
+     * is written **locally** (i.e. via the ordinary `put`, not [putRemote]). The device-to-device
+     * sync publisher collects this to push local edits to the master. Writes applied FROM sync go
+     * through [putRemote] and are intentionally NOT emitted here — that is what breaks the
+     * apply → observe → publish echo without any value comparison or snapshot.
+     *
+     * Default is an empty flow so non-syncing [Preferences] implementations need not override it.
+     */
+    val syncedLocalChanges: SharedFlow<NonPreferenceKey> get() = EmptySyncedChanges.flow
+
+    /**
+     * All declared keys carrying a [SyncSpec] (the single source of truth for sync membership).
+     * Default empty for implementations that don't sync.
+     */
+    fun getSyncKeys(): List<NonPreferenceKey> = emptyList()
+
+    /**
+     * Write a value that originated from sync (the master's republished config, or a client's
+     * pushed edit applied on the master). Stamps the key's modified time to [version] (not "now")
+     * and does NOT emit on [syncedLocalChanges], so it can't echo back out. For non-synced keys this
+     * behaves like an ordinary put. Default delegates to [put] for implementations that don't sync.
+     */
+    fun putRemote(key: BooleanNonPreferenceKey, value: Boolean, version: Long) = put(key, value)
+
+    /** [String] variant of [putRemote] — applied-from-sync write, stamps [version], does not re-publish. */
+    fun putRemote(key: StringNonPreferenceKey, value: String, version: Long) = put(key, value)
+
+    /** [Int] variant of [putRemote] — applied-from-sync write, stamps [version], does not re-publish. */
+    fun putRemote(key: IntNonPreferenceKey, value: Int, version: Long) = put(key, value)
+
+    /** [DoubleNonPreferenceKey] variant of [putRemote] — applied-from-sync (raw value, 1:1). */
+    fun putRemote(key: DoubleNonPreferenceKey, value: Double, version: Long) = put(key, value)
+
+    /**
+     * [UnitDoublePreferenceKey] variant of [putRemote]. [value] is the **raw stored** value (mg/dl),
+     * written 1:1 (the normal `put` already stores raw; the unit conversion is only on read/UI).
+     */
+    fun putRemote(key: UnitDoublePreferenceKey, value: Double, version: Long) = put(key, value)
+
+    /**
+     * Raw stored value of a [UnitDoublePreferenceKey] (mg/dl), bypassing the display-unit conversion
+     * that [get] applies. Used to sync the unit-independent stored value 1:1. Default delegates to
+     * [get] for non-syncing implementations (they never serialize UnitDouble).
+     */
+    fun getRaw(key: UnitDoublePreferenceKey): Double = get(key)
+
+    /**
+     * Are we in currently in SimpleMode ?
+     */
+    val simpleMode: Boolean
+
+    /**
+     * Are we in currently in APS build ?
+     */
+    val apsMode: Boolean
+
+    /**
+     * Are we in currently in NSClient build ?
+     */
+    val nsclientMode: Boolean
+
+    /**
+     * Are we in currently in PumpControl build ?
+     */
+    val pumpControlMode: Boolean
+
+    /* BOOLEAN */
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanNonPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: BooleanNonPreferenceKey): Boolean
+
+    /**
+     * Variant for publishing to the cold running-config (sync) doc. With [forSync] = `true`, returns the
+     * persisted value, falling back to the COMPUTED default ([app.aaps.core.keys.interfaces.PreferenceKey.calculatedDefaultValue])
+     * when unset, WITHOUT simple-mode presentation forcing — i.e. the value the device operatively uses, which
+     * is what must travel to clients (a plain raw read would publish the literal default and mis-tell clients
+     * for computed-default keys). Equals the raw value for keys without a computed default (incl. defaultedBySM
+     * keys, whose underlying user setting must travel). Default impl ignores [forSync]; only the real store overrides it.
+     */
+    fun get(key: BooleanNonPreferenceKey, forSync: Boolean): Boolean = get(key)
+
+    /**
+     * Get [Boolean] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanNonPreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: BooleanNonPreferenceKey): Boolean?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanNonPreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: BooleanNonPreferenceKey, value: Boolean)
+
+    /**
+     * Observe [Boolean] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: BooleanNonPreferenceKey): StateFlow<Boolean>
+
+    /**
+     * Get [Boolean] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: BooleanPreferenceKey): Boolean
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
+     * *
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value
+     */
+    fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
+     * *
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param defaultValue alternative default value
+     * @return value
+     */
+    fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, defaultValue: Boolean): Boolean
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value or null
+     */
+    fun getIfExists(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param value value
+     */
+    fun put(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, value: Boolean)
+
+    /**
+     * Observe [Boolean] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Boolean>
+
+    /**
+     * Remove value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.PreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     */
+    fun remove(key: ComposedKey, vararg arguments: Any)
+
+    /* STRING */
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
+     *
+     * @param key [StringNonPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: StringNonPreferenceKey): String
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [StringNonPreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: StringNonPreferenceKey): String?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [StringNonPreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: StringNonPreferenceKey, value: String)
+
+    /**
+     * Observe [String] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [StringNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: StringNonPreferenceKey): StateFlow<String>
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [StringPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: StringPreferenceKey): String
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
+     * *
+     * @param key [app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value
+     */
+    fun get(key: StringComposedNonPreferenceKey, vararg arguments: Any): String
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value or null
+     */
+    fun getIfExists(key: StringComposedNonPreferenceKey, vararg arguments: Any): String?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param value value
+     */
+    fun put(key: StringComposedNonPreferenceKey, vararg arguments: Any, value: String)
+
+    /**
+     * Observe [String] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String>
+
+    /* DOUBLE */
+
+    /**
+     * Get [Double] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoubleNonPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: DoubleNonPreferenceKey): Double
+
+    /**
+     * Get [Double] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoublePreferenceKey] enum
+     * @return value
+     */
+    fun get(key: DoublePreferenceKey): Double
+
+    /**
+     * Get [Double] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoublePreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: DoublePreferenceKey): Double?
+
+    /**
+     * Update [Double] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoubleNonPreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: DoubleNonPreferenceKey, value: Double)
+
+    /**
+     * Observe [Double] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoubleNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: DoubleNonPreferenceKey): StateFlow<Double>
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
+     * *
+     * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value
+     */
+    fun get(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value or null
+     */
+    fun getIfExists(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param value value
+     */
+    fun put(key: DoubleComposedNonPreferenceKey, vararg arguments: Any, value: Double)
+
+    /**
+     * Observe [Double] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Double>
+
+    /* UNIT DOUBLE */
+
+    /**
+     * Get [Double] value from [android.content.SharedPreferences] converted to current units
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [UnitDoublePreferenceKey] enum
+     * @return value
+     */
+    fun get(key: UnitDoublePreferenceKey): Double
+
+    /**
+     * Get [Double] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [UnitDoublePreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: UnitDoublePreferenceKey): Double?
+
+    /**
+     * Update [Double] value in [android.content.SharedPreferences]
+     *
+     * @param key [UnitDoublePreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: UnitDoublePreferenceKey, value: Double)
+
+    /**
+     * Observe [Double] value changes for unit-aware preference.
+     * Emits when the preference value OR the display units change.
+     *
+     * @param key [UnitDoublePreferenceKey] enum
+     * @return [StateFlow] emitting current value in user's units
+     */
+    fun observe(key: UnitDoublePreferenceKey): StateFlow<Double>
+
+    /* INT */
+
+    /**
+     * Get [Int] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: IntNonPreferenceKey): Int
+
+    /** Sync variant — see [get] with `forSync` for [BooleanNonPreferenceKey]; same contract for Int keys. */
+    fun get(key: IntNonPreferenceKey, forSync: Boolean): Int = get(key)
+
+    /**
+     * Get [Int] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: IntNonPreferenceKey): Int?
+
+    /**
+     * Update [Int] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param value value
+     */
+    fun put(key: IntComposedNonPreferenceKey, vararg arguments: Any, value: Int)
+
+    /**
+     * Update [Int] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: IntNonPreferenceKey, value: Int)
+
+    /**
+     * Observe [Int] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: IntNonPreferenceKey): StateFlow<Int>
+
+    /**
+     * Increment [Int] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
+     * @param value value
+     */
+    fun inc(key: IntNonPreferenceKey)
+
+    /**
+     * Get [Int] value from [android.content.SharedPreferences]
+     * *
+     * @param key [app.aaps.core.keys.interfaces.IntComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value
+     */
+    fun get(key: IntComposedNonPreferenceKey, vararg arguments: Any): Int
+
+    /**
+     * Observe [Int] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: IntComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Int>
+
+    /**
+     * Get [Int] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: IntPreferenceKey): Int
+
+    /* LONG */
+
+    /**
+     * Get [Long] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongNonPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: LongNonPreferenceKey): Long
+
+    /**
+     * Get [Long] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongNonPreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: LongNonPreferenceKey): Long?
+
+    /**
+     * Update [Long] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongNonPreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: LongNonPreferenceKey, value: Long)
+
+    /**
+     * Observe [Long] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: LongNonPreferenceKey): StateFlow<Long>
+
+    /**
+     * Get [Long] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: LongPreferenceKey): Long
+
+    /**
+     * Increment [Long] value in [android.content.SharedPreferences]
+     *
+     * @param key [LongNonPreferenceKey] enum
+     * @param value value
+     */
+    fun inc(key: LongNonPreferenceKey)
+
+    /**
+     * Get [Long] value from [android.content.SharedPreferences]
+     * *
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value
+     */
+    fun get(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long
+
+    /**
+     * Get [Long] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value or null
+     */
+    fun getIfExists(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long?
+
+    /**
+     * Update [Long] value in [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param value value
+     */
+    fun put(key: LongComposedNonPreferenceKey, vararg arguments: Any, value: Long)
+
+    /**
+     * Observe [Long] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: LongComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Long>
+
+    /* GENERAL */
+
+    /**
+     * Remove value from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.PreferenceKey] enum
+     */
+    fun remove(key: NonPreferenceKey)
+
+    /**
+     * @param key string representation of key
+     * @return true if key is unit dependent
+     */
+    fun isUnitDependent(key: String): Boolean
+
+    /**
+     * Find [app.aaps.core.keys.interfaces.NonPreferenceKey] definition
+     * @param key string representation of key
+     * @return [app.aaps.core.keys.interfaces.NonPreferenceKey] or null for [ComposedKey]
+     */
+    fun get(key: String): NonPreferenceKey?
+
+    /**
+     * Find [app.aaps.core.keys.interfaces.NonPreferenceKey] definition
+     * @param key string representation of key
+     * @return [app.aaps.core.keys.interfaces.NonPreferenceKey] or null
+     */
+    fun getIfExists(key: String): NonPreferenceKey?
+
+    /**
+     * Make new keys available to the Preference system.
+     * Called from PluginBase::init, normally as `registerPreferences(MyKey.entries + MyOtherKey.entries)`.
+     *
+     * Takes the key constants rather than their enum class: a `Class` only exists on the JVM, and
+     * the only thing the old signature ever did with it was read `enumConstants`.
+     *
+     * Registering the same key twice is allowed and does nothing.
+     */
+    fun registerPreferences(keys: List<NonPreferenceKey>)
+
+    /**
+     * List all stored preferences formatters
+     * Note: only single formatting "%s" parameter is supported
+     */
+    fun allMatchingStrings(key: ComposedKey): List<String>
+
+    /**
+     * List all stored preferences formatters
+     * Note: only single formatting "%d" parameter is supported
+     */
+    fun allMatchingInts(key: ComposedKey): List<Int>
+
+    /**
+     * Check if the key string looks like a valid registered key and is set exportable
+     * ie it does match exactly
+     * or has a valid registered prefix
+     * @return true if exportable key
+     */
+    fun isExportableKey(key: String): Boolean
+
+    /**
+     * Get all registered PreferenceKey instances.
+     * Used by the global search feature to build the search index.
+     * @return list of all PreferenceKey instances from registered enums
+     */
+    fun getAllPreferenceKeys(): List<PreferenceKey>
+
+}

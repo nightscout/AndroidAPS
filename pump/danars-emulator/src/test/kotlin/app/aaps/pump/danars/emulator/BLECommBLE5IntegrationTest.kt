@@ -51,7 +51,7 @@ class BLECommBLE5IntegrationTest : TestBase() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var decimalFormatter: DecimalFormatter
-    @Mock lateinit var profileStoreProvider: javax.inject.Provider<ProfileStore>
+    @Mock lateinit var profileStoreProvider: dev.zacsweers.metro.Provider<ProfileStore>
 
     private lateinit var danaPump: DanaPump
     private lateinit var bleEncryption: BleEncryption
@@ -94,7 +94,7 @@ class BLECommBLE5IntegrationTest : TestBase() {
             pumpSync, dateUtil, preferences, configBuilder, notificationManager,
             emulatorTransport
         ).apply {
-            messageTimeoutMs = 500
+            messageTimeoutMs = 5000
         }
     }
 

@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DanaRSPacketNotifyAlarm @Inject constructor(
     private val aapsLogger: AAPSLogger,

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">單位</string>
+    <string name="setupwizard_units_prompt">選擇您要顯示值的單位</string>
+    <string name="next_button">下一步</string>
+    <string name="previous_button">上一步</string>
+    <string name="setupwizard_finish">完成</string>
+    <string name="welcome">歡迎</string>
+    <string name="welcometosetupwizard">歡迎使用設定嚮導。它將引導您完成設置過程\n</string>
+    <string name="end_user_license_agreement">終端用戶許可協議</string>
+    <string name="end_user_license_agreement_text">不得用於醫療決策。本程式不提供任何保證，在適用法律允許的範圍內。除非另有書面說明，版權持有人和/或其他方提供的程式“按現狀”提供，不提供任何明示或暗示的保證，包括但不限於對特定用途的適銷性和適用性的隱含保證。程式的質量和性能風險完全由您承擔。如果程式被證明有缺陷，您將承擔所有必要的服務、維修或更正的費用。</string>
+    <string name="end_user_license_agreement_i_understand">我理解並同意</string>
+    <string name="display_settings">顯示設置</string>
+    <string name="low_mark">低標記</string>
+    <string name="high_mark">高標記</string>
+    <string name="low_mark_comment">範圍內區域的下限值（僅顯示）</string>
+    <string name="high_mark_comment">範圍內區域的上限值（僅顯示）</string>
+    <string name="storedsettingsfound">找到已存儲的設定</string>
+    <string name="master_password_summary">主密碼用於備份加密和覆蓋應用程式中的安全設置。請記住它或將其存放在安全的地方。</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">使用您通常吃的最大食物的值\n</string>
+    <string name="syncinfotext">將資料同步到雲端。您現在可以跳過此部分，但在設置Nightscout或Tidepool客戶端之前，您將無法完成目標。</string>
+    <string name="status_label">狀態:</string>
+    <string name="diawarning">請記住：新胰島素檔案需要至少5小時的DIA。在新檔案上DIA 5-6小時等於舊胰島素檔案上的DIA 3小時。</string>
+    <string name="profile">檔案</string>
+    <string name="doprofileswitch">切換檔案</string>
+    <string name="exitwizard">跳過設定嚮導</string>
+    <string name="setupwizard_sensitivity_description">敏感度外掛用於敏感度偵測和COB計算。更多資訊請查看：</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">請從可用的演算法中選擇一個。它們依從舊到新排序。較新的演算法通常更強大。別忘了閱讀 OpenAPS 文件，並在使用前完成設定。</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">請在下方配置您的RileyLink。選擇RileyLink後，一旦RileyLink狀態顯示為“已連線”，即可繼續設置。這可能需要一分鐘。\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b> 您可以在幫浦設置完成後繼續設置。\n</string>
+    <string name="startobjective">開始您的第一個目標</string>
+    <string name="open_objectives">開啟目標</string>
+    <string name="setupwizard_permissions">權限</string>
+    <string name="setupwizard_profile_info">使用你的基礎率、胰島素-碳水比 (IC)、胰島素敏感度 (ISF) 與目標值建立一個設定檔。之後可以新增多個設定檔。</string>
+    <string name="setupwizard_permissions_info">AAPS 需要儲存空間存取與其他權限才能正常運作。請在下方授予所需權限。</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink狀態：</string>
+    <string name="setupwizard_client_control_title">用戶端控制</string>
+    <string name="setupwizard_client_control_info">配對用戶端裝置，使其能透過 Nightscout 向此主控端傳送已簽章的指令。這是遠端控制 AAPS 的新建議方式。</string>
+    <string name="setupwizard_ns_receive_info">直接接受來自 Nightscout 的治療與資料（較不安全的方式）現在預設為關閉。僅在仍然需要時才開啟下方設定。若你需要透過 NS 或第三方應用程式輸入資料，才有必要啟用。</string>
+    <string name="setupwizard_open_ns_receive_settings">Nightscout 資料接收</string>
+    <string name="setupwizard_pair_with_master_info">將此用戶端與你的主控 AAPS 配對，使其能透過安全通道傳送指令。</string>
+    <string name="setupwizard_pairing_ws_warning">配對需要 Nightscout WebSocket 連線。請返回上一步先啟用它。</string>
+    <string name="setupwizard_pairing_status_master">已配對的用戶端：%1$d</string>
+    <string name="setupwizard_pairing_status_master_none">尚未配對任何用戶端</string>
+    <string name="setupwizard_pairing_status_client_paired">已與主控端配對</string>
+    <string name="setupwizard_pairing_status_client_not_paired">尚未配對</string>
+    <string name="readstatus">讀取狀態</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">您想用AAPS使用哪個幫浦？</string>
+    <string name="configbuilder_aps_description">哪個APS算法應進行療法調整？</string>
+    <string name="configbuilder_sync_description">資料上傳、同步與通訊外掛。</string>
+    <string name="configbuilder_bgsource_description">AAPS應從哪裡獲取資料？</string>
+    <string name="configbuilder_sensitivity_description">應使用哪個敏感度算法？</string>
+    <string name="allow_hardware_pump_text">注意：如果您啟用並連線到硬體幫浦，AAPS將從檔案中複製基礎設置到幫浦，覆蓋幫浦上存儲的現有基礎率。請確保您在AAPS中具有正確的基礎設置。如果您不確定或不想覆蓋幫浦上的基礎設置，請按取消並在稍後重複切換到幫浦。</string>
+    <string name="nsclient_version_does_not_match">AAPSClient 版本與 AAPS 版本不一致，請更新為一致版本。</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <string name="loading">載入中…</string>
+    <string name="warning_wrong_directory_selected">目錄選擇錯誤</string>
+    <string name="warning_wrong_directory_message">你選的是「%1$s」這個子目錄，而不是 AAPS 的根目錄。請改選上一層的 AAPS 目錄。App 會自動建立並管理子目錄。</string>
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

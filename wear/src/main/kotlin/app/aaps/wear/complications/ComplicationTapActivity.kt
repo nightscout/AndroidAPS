@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
+import app.aaps.wear.di.WearMetroActivity
 import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
@@ -23,8 +24,7 @@ import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.StatusMenuActivity
 import app.aaps.wear.interaction.utils.Constants
 import app.aaps.wear.interaction.utils.DisplayFormat
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Transparent activity to handle complication tap actions reliably.
@@ -35,7 +35,7 @@ import javax.inject.Inject
  * when trying to start a foreground service from a BroadcastReceiver
  * while the app is in the background.
  */
-class ComplicationTapActivity : DaggerAppCompatActivity() {
+class ComplicationTapActivity : WearMetroActivity() {
 
     @Inject lateinit var displayFormat: DisplayFormat
     @Inject lateinit var sp: SP
@@ -166,7 +166,10 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
         }
 
         if (intentOpen != null) {
-            intentOpen.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            // CLEAR_TASK: a complication tap is a fresh entry point from the watchface — replace
+            // whatever lingers in the app task (Android 12+ keeps the root launcher activity alive
+            // on back, which would otherwise resurface under the opened screen on back press)
+            intentOpen.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intentOpen)
         }
     }

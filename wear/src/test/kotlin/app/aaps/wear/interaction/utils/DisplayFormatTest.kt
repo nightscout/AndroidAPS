@@ -19,9 +19,9 @@ class DisplayFormatTest : WearTestBase() {
 
     private lateinit var displayFormat: DisplayFormat
 
-    // Complication glyphs, referenced via escapes so expectations don't depend on source encoding
-    private val sep = "⁞"            // vertical separator
-    private val basal = "⎍ "     // basal-rate symbol + thin space
+    // Field separator as produced by DisplayFormat.fieldSeparator() with unicode enabled
+    // (vertical dots padded with thin spaces, U+2006)
+    private val sep = " ⁞ "            // vertical dots padded with thin spaces
 
     @BeforeEach
     fun mock() {
@@ -29,12 +29,14 @@ class DisplayFormatTest : WearTestBase() {
         displayFormat.sp = sp
         displayFormat.context = context
         whenever(sp.getBoolean("complication_unicode", true)).thenReturn(true)
+        whenever(context.getString(R.string.insulin_unit_short)).thenReturn("U")
         whenever(context.getString(R.string.hour_short)).thenReturn("h")
         whenever(context.getString(R.string.day_short)).thenReturn("d")
         whenever(context.getString(R.string.week_short)).thenReturn("w")
     }
 
-    private fun status(cob: String = "0g", iobSum: String = "0U", currentBasal: String = "0U/h", iobDetail: String = ""): Array<EventData.Status> =
+    // iobSum is a bare number, like the phone sends it — longDetailsLine appends the unit itself
+    private fun status(cob: String = "0g", iobSum: String = "0", currentBasal: String = "0U/h", iobDetail: String = ""): Array<EventData.Status> =
         arrayOf(
             EventData.Status(
                 dataset = 0, externalStatus = "", iobSum = iobSum, iobDetail = iobDetail, cob = cob, currentBasal = currentBasal,
@@ -60,25 +62,27 @@ class DisplayFormatTest : WearTestBase() {
     }
 
     @Test fun longDetailsLineUnicode() {
-        // fits: wide separators and basal symbol
-        assertThat(displayFormat.longDetailsLine(status("0g", "0U", "3.5U/h"), 0)).isEqualTo("0g  $sep  0U  $sep  ${basal}3.5U/h")
-        assertThat(displayFormat.longDetailsLine(status("50g", "7.56U", "0%"), 0)).isEqualTo("50g  $sep  7.56U  $sep  ${basal}0%")
-        // too long: narrow separators, no basal symbol
-        assertThat(displayFormat.longDetailsLine(status("12g", "3.23U", "120%"), 0)).isEqualTo("12g $sep 3.23U $sep 120%")
-        assertThat(displayFormat.longDetailsLine(status("47g", "13.87U", "220%"), 0)).isEqualTo("47g $sep 13.87U $sep 220%")
+        // fits: separators with thin-space padding
+        assertThat(displayFormat.longDetailsLine(status("0g", "0", "3.5U/h"), 0)).isEqualTo("0g${sep}0U${sep}3.5U/h")
+        assertThat(displayFormat.longDetailsLine(status("50g", "7.56", "0%"), 0)).isEqualTo("50g${sep}7.56U${sep}0%")
+        // space between basal value and unit (as sent by the phone) is dropped to save width
+        assertThat(displayFormat.longDetailsLine(status("15g", "1.2", "0.80 U/h"), 0)).isEqualTo("15g${sep}1.2U${sep}0.80U/h")
+        // still separated at longer, but fitting, lengths
+        assertThat(displayFormat.longDetailsLine(status("12g", "3.23", "120%"), 0)).isEqualTo("12g${sep}3.23U${sep}120%")
+        assertThat(displayFormat.longDetailsLine(status("47g", "13.87", "220%"), 0)).isEqualTo("47g${sep}13.87U${sep}220%")
         // IOB precision reduced to fit
-        assertThat(displayFormat.longDetailsLine(status("2(40)g", "-1.5U", "0.55U/h"), 0)).isEqualTo("2(40)g $sep -2U $sep 0.55U/h")
+        assertThat(displayFormat.longDetailsLine(status("2(40)g", "-1.5", "0.55U/h"), 0)).isEqualTo("2(40)g${sep}-2U${sep}0.55U/h")
         // COB precision reduced (extra dropped) to fit
-        assertThat(displayFormat.longDetailsLine(status("19(38)g", "35.545U", "12.9U/h"), 0)).isEqualTo("19g $sep 36U $sep 12.9U/h")
+        assertThat(displayFormat.longDetailsLine(status("19(38)g", "35.545", "12.9U/h"), 0)).isEqualTo("19g${sep}36U${sep}12.9U/h")
         // still too long: separators collapse to single spaces
-        assertThat(displayFormat.longDetailsLine(status("100(1)g", "12.345U", "6.98647U/h"), 0)).isEqualTo("100g 12U 6.98647U/h")
+        assertThat(displayFormat.longDetailsLine(status("100(1)g", "12.345", "6.98647U/h"), 0)).isEqualTo("100g 12U 6.98647U/h")
     }
 
     @Test fun longDetailsLineAscii() {
         whenever(sp.getBoolean("complication_unicode", true)).thenReturn(false)
-        assertThat(displayFormat.longDetailsLine(status("0g", "0U", "3.5U/h"), 0)).isEqualTo("0g  |  0U  |  3.5U/h")
-        assertThat(displayFormat.longDetailsLine(status("12g", "3.23U", "120%"), 0)).isEqualTo("12g  |  3.23U  |  120%")
-        assertThat(displayFormat.longDetailsLine(status("19(38)g", "35.545U", "12.9U/h"), 0)).isEqualTo("19g | 36U | 12.9U/h")
+        assertThat(displayFormat.longDetailsLine(status("0g", "0", "3.5U/h"), 0)).isEqualTo("0g | 0U | 3.5U/h")
+        assertThat(displayFormat.longDetailsLine(status("12g", "3.23", "120%"), 0)).isEqualTo("12g | 3.23U | 120%")
+        assertThat(displayFormat.longDetailsLine(status("19(38)g", "35.545", "12.9U/h"), 0)).isEqualTo("19g | 36U | 12.9U/h")
     }
 
     @Test fun detailedIobSplitsBolusAndBasal() {

@@ -27,6 +27,18 @@
         <item>@string/menu_none</item>
     </string-array>
 
+    <string-array name="complication_bg_graph_hours">
+        <item>@string/duration_1_hour</item>
+        <item>@string/duration_3_hours</item>
+        <item>@string/duration_6_hours</item>
+    </string-array>
+
+    <string-array name="complication_bg_graph_hours_values">
+        <item>1</item>
+        <item>3</item>
+        <item>6</item>
+    </string-array>
+
     <string-array name="complication_tap_action_values">
         <item>default</item>
         <item>menu</item>

@@ -15,10 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
@@ -74,6 +72,9 @@ private fun ConfirmDeactivateStepContent(
     )
 }
 
+/**
+ * @see PreviewConfirmDeactivate
+ */
 @Composable
 internal fun ConfirmDeactivateContent(
     onNext: () -> Unit,
@@ -146,6 +147,10 @@ fun DeactivatingStep(
     }
 }
 
+/**
+ * @see PreviewDeactivating
+ * @see PreviewDeactivatingError
+ */
 @Composable
 internal fun DeactivatingContent(
     isError: Boolean,
@@ -189,6 +194,9 @@ fun DeactivateCompleteStep(
     )
 }
 
+/**
+ * @see PreviewDeactivateComplete
+ */
 @Composable
 internal fun DeactivateCompleteContent(
     onNewPatch: () -> Unit,
@@ -219,43 +227,5 @@ internal fun DeactivateCompleteContent(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-    }
-}
-
-// region Previews
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Confirm Deactivate")
-@Composable
-private fun PreviewConfirmDeactivate() {
-    MaterialTheme {
-        ConfirmDeactivateContent(onNext = {}, onCancel = {})
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Deactivating - In Progress")
-@Composable
-private fun PreviewDeactivating() {
-    MaterialTheme {
-        DeactivatingContent(isError = false, onDiscard = {}, onCancel = {})
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Deactivating - Error")
-@Composable
-private fun PreviewDeactivatingError() {
-    MaterialTheme {
-        DeactivatingContent(isError = true, onDiscard = {}, onCancel = {})
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Deactivate Complete")
-@Composable
-private fun PreviewDeactivateComplete() {
-    MaterialTheme {
-        DeactivateCompleteContent(onNewPatch = {}, onDone = {})
     }
 }

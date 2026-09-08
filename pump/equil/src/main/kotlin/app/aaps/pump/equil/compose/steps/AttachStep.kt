@@ -10,8 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.equil.R
@@ -32,9 +30,12 @@ internal fun AttachStep(
     )
 }
 
+/**
+ * @see AttachStepPreview
+ */
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun AttachStepContent(
+internal fun AttachStepContent(
     @DrawableRes imageRes: Int,
     onNext: () -> Unit,
     onCancel: () -> Unit
@@ -63,15 +64,4 @@ private fun AttachStepContent(
             contentScale = ContentScale.Fit
         )
     }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true)
-@Composable
-private fun AttachStepPreview() {
-    AttachStepContent(
-        imageRes = R.drawable.equil_animation_wizard_attach,
-        onNext = {},
-        onCancel = {}
-    )
 }

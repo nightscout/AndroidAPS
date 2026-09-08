@@ -29,25 +29,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
@@ -69,12 +72,12 @@ import app.aaps.wear.interaction.actions.TempTargetYellow
 import app.aaps.wear.interaction.actions.WearDivider
 import app.aaps.wear.interaction.actions.WearSecondaryText
 import app.aaps.wear.interaction.actions.WearSummaryCardBg
-import dagger.android.AndroidInjection
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.wear.interaction.actions.formatDurationMinutes
+import dev.zacsweers.metro.Inject
 import java.util.Date
-import javax.inject.Inject
 import kotlin.math.abs
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
 
 // Loop mode / insulin / secondary-text colors shared with the wizard result screen live in
 // app.aaps.wear.interaction.actions.PlusMinusInputScreen.kt — imported above so the two screens
@@ -118,11 +121,10 @@ class LoopStatusActivity : AppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
 
-    private val disposable = CompositeDisposable()
     private var uiState by mutableStateOf<LoopStatusUiState>(LoopStatusUiState.Loading)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -135,15 +137,21 @@ class LoopStatusActivity : AppCompatActivity() {
             }
         }
 
-        disposable += rxBus
-            .toObservable(EventData.LoopStatusResponse::class.java)
-            .subscribe({ event ->
-                aapsLogger.debug(LTag.WEAR, "Received loop status response")
-                runOnUiThread { uiState = LoopStatusUiState.Success(event.data) }
-            }, { error ->
-                aapsLogger.error(LTag.WEAR, "Error receiving loop status", error)
-                runOnUiThread { uiState = LoopStatusUiState.Error(getString(R.string.loop_status_error)) }
-            })
+        // lifecycleScope is Main and dies with the activity, so runOnUiThread is no longer needed.
+        // The Rx onError put the screen into an error state rather than only logging, so that is kept
+        // explicitly - collectResilient on its own would log and carry on with the UI still spinning.
+        rxBus.toFlow(EventData.LoopStatusResponse::class)
+            .collectResilient(lifecycleScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
+                try {
+                    aapsLogger.debug(LTag.WEAR, "Received loop status response")
+                    uiState = LoopStatusUiState.Success(event.data)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Throwable) {
+                    aapsLogger.error(LTag.WEAR, "Error receiving loop status", e)
+                    uiState = LoopStatusUiState.Error(getString(R.string.loop_status_error))
+                }
+            }
     }
 
     override fun onResume() {
@@ -153,7 +161,6 @@ class LoopStatusActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
     }
 
     private fun requestLoopStatus() {
@@ -212,7 +219,7 @@ private fun LoopStatusContent(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HeaderCard(mode = data.loopMode, apsName = data.apsName)
+        HeaderCard(mode = data.loopMode, apsName = data.apsName, modeEndTime = data.modeEndTime)
         ResultCard(
             lastRun = data.lastRun,
             lastEnact = data.lastEnact,
@@ -318,7 +325,9 @@ private fun RowDivider() {
 // ─── Header Card ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?) {
+private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndTime: Long?) {
+    val context = LocalContext.current
+
     StatusCard {
         Text(
             text = when (mode) {
@@ -339,6 +348,22 @@ private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?) {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
+        // Remaining duration of a temporary mode (suspend/disconnect/superbolus); hidden once expired
+        val remainingMinutes = modeEndTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() } ?: 0
+        if (modeEndTime != null && remainingMinutes > 0) {
+            val endTimeStr = remember(modeEndTime) {
+                DateFormat.getTimeFormat(context).format(Date(modeEndTime))
+            }
+            Text(
+                text = stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr),
+                color = WearSecondaryText,
+                fontSize = 11.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp)
+            )
+        }
         if (apsName != null) {
             Text(
                 text = apsName,
@@ -467,7 +492,7 @@ private fun OapsResultSection(
                     Spacer(Modifier.height(4.dp))
                     InfoRow(
                         label = stringResource(R.string.loop_status_duration),
-                        value = stringResource(R.string.loop_status_tbr_duration_remaining, duration)
+                        value = stringResource(R.string.loop_status_duration_remaining, formatDurationMinutes(duration))
                     )
                 }
             }
@@ -499,7 +524,7 @@ private fun OapsResultSection(
                 Spacer(Modifier.height(4.dp))
                 InfoRow(
                     label = stringResource(R.string.loop_status_duration),
-                    value = stringResource(R.string.loop_status_tbr_duration, duration)
+                    value = formatDurationMinutes(duration)
                 )
             }
         }
@@ -588,7 +613,7 @@ private fun TargetsCard(
                         )
                     }
                     Text(
-                        text = stringResource(R.string.loop_status_tempt_duration, tempTarget.durationMinutes, endTimeStr),
+                        text = stringResource(R.string.loop_status_duration_until, formatDurationMinutes(tempTarget.durationMinutes), endTimeStr),
                         color = WearSecondaryText,
                         fontSize = 11.sp,
                         modifier = Modifier.padding(top = 3.dp)

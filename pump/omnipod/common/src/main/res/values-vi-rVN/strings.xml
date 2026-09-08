@@ -161,4 +161,5 @@
     <plurals name="omnipod_common_pod_alerts">
         <item quantity="other">Cảnh báo Pod: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod hết hạn sử dụng</string>
 </resources>

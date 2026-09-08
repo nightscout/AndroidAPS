@@ -1,7 +1,7 @@
 package app.aaps.pump.eopatch.core.response
 
 import app.aaps.pump.eopatch.core.code.PatchBleResultCode
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 abstract class BaseResponse(
     var resultCode: PatchBleResultCode = PatchBleResultCode.SUCCESS
@@ -11,7 +11,7 @@ abstract class BaseResponse(
 
     val isSuccess: Boolean get() = resultCode.isSuccess
 
-    fun convertSecondToMilli(timeSec: Int): Long = TimeUnit.SECONDS.toMillis(timeSec.toLong())
+    fun convertSecondToMilli(timeSec: Int): Long = timeSec.toLong().seconds.inWholeMilliseconds
 
     override fun toString(): String = "{resultCode:$resultCode}"
 }

@@ -1,0 +1,820 @@
+package app.aaps.plugins.automation
+
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.alerts.ReminderScheduler
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.automation.AutomationEvent
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.location.LocationServiceController
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PermissionProvider
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.rx.events.EventBTChange
+import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.ComposablePluginContent
+import app.aaps.plugins.automation.actions.Action
+import app.aaps.plugins.automation.actions.ActionFactory
+import app.aaps.plugins.automation.compose.AutomationComposeContent
+import app.aaps.plugins.automation.elements.Comparator
+import app.aaps.plugins.automation.elements.InputDelta
+import app.aaps.plugins.automation.events.EventAutomationUpdateGui
+import app.aaps.plugins.automation.events.EventLocationChange
+import app.aaps.plugins.automation.triggers.Trigger
+import app.aaps.plugins.automation.triggers.TriggerAutosensValue
+import app.aaps.plugins.automation.triggers.TriggerBg
+import app.aaps.plugins.automation.triggers.TriggerBolusAgo
+import app.aaps.plugins.automation.triggers.TriggerCOB
+import app.aaps.plugins.automation.triggers.TriggerCannulaAge
+import app.aaps.plugins.automation.triggers.TriggerConnector
+import app.aaps.plugins.automation.triggers.TriggerDelta
+import app.aaps.plugins.automation.triggers.TriggerDeps
+import app.aaps.plugins.automation.triggers.TriggerFactory
+import app.aaps.plugins.automation.triggers.TriggerHeartRate
+import app.aaps.plugins.automation.triggers.TriggerInsulinAge
+import app.aaps.plugins.automation.triggers.TriggerIob
+import app.aaps.plugins.automation.triggers.TriggerLocation
+import app.aaps.plugins.automation.triggers.TriggerPodChange
+import app.aaps.plugins.automation.triggers.TriggerProfilePercent
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
+import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
+import app.aaps.plugins.automation.triggers.TriggerRecurringTime
+import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
+import app.aaps.plugins.automation.triggers.TriggerSensorAge
+import app.aaps.plugins.automation.triggers.TriggerStepsCount
+import app.aaps.plugins.automation.triggers.TriggerTempTarget
+import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
+import app.aaps.plugins.automation.triggers.TriggerTime
+import app.aaps.plugins.automation.triggers.TriggerTimeRange
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonArray
+import kotlin.concurrent.Volatile
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetch
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+
+/**
+ * Standalone automation runtime — no longer a [PluginBase].
+ *
+ * Lifecycle: started once at app boot via [start] (from MainApp). Execution is master-only: the
+ * processing loop, location service and event processing run only when [Config.APS]. On a client
+ * (AAPSCLIENT) the runtime still loads/edits/persists/syncs definitions, but never executes.
+ *
+ * Permissions are surfaced through [PermissionProvider] (the non-plugin parallel to
+ * `PluginBase.requiredPermissions`) and are reported dynamically — only while an enabled event
+ * actually uses a location trigger.
+ */
+@ContributesBinding(AppScope::class, binding = binding<Automation>())
+@ContributesBinding(AppScope::class, binding = binding<BtConnectionSource>())
+@ContributesIntoSet(AppScope::class, binding = binding<PermissionProvider>())
+@SingleIn(AppScope::class)
+@OptIn(ExperimentalAtomicApi::class)
+class AutomationRuntime @Inject constructor(
+    private val locationPermissions: LocationPermissions,
+    private val automationEventFactory: AutomationEventFactory,
+    private val aapsLogger: AAPSLogger,
+    private val rh: TextResolver,
+    private val preferences: Preferences,
+    private val loop: Loop,
+    private val rxBus: RxBus,
+    private val constraintChecker: ConstraintsChecker,
+    private val config: Config,
+    private val locationServiceController: LocationServiceController,
+    private val dateUtil: DateUtil,
+    private val activePlugin: ActivePlugin,
+    private val reminderScheduler: ReminderScheduler,
+    private val actionFactory: ActionFactory,
+    private val triggerFactory: TriggerFactory,
+    private val triggerDeps: TriggerDeps,
+    private val receiverStatusStore: ReceiverStatusStore,
+    // UI-only dependencies, forwarded to the Compose screen via [composeContent].
+    private val uel: UserEntryLogger,
+    private val profileRepository: ProfileRepository,
+    private val sceneApi: SceneAutomationApi,
+    private val pairedBtDevices: PairedBtDevices
+) : Automation, PermissionProvider, BtConnectionSource {
+
+    override val executionEnabled: Boolean get() = config.APS
+
+    /**
+     * Build the Compose screen content. Replaces the old plugin-descriptor `composeContent` lambda;
+     * called from the standalone `AutomationList` nav route.
+     */
+    fun composeContent(): ComposablePluginContent =
+        AutomationComposeContent(
+            plugin = this,
+            rxBus = rxBus,
+            aapsLogger = aapsLogger,
+            actionFactory = actionFactory,
+            automationEventFactory = automationEventFactory,
+            triggerFactory = triggerFactory,
+            uel = uel,
+            profileRepository = profileRepository,
+            sceneApi = sceneApi,
+            pairedBtDevices = pairedBtDevices
+        )
+
+    private var scope: CoroutineScope? = null
+
+    private val automationEvents = ArrayList<AutomationEventObject>()
+
+    /**
+     * Guards [automationEvents]. Was `@Synchronized` on every accessor plus `synchronized(this)` at the
+     * read sites, which is JVM only. [AapsLock] is reentrant and blocking, so the behaviour is
+     * unchanged - `markEdited()` is called from inside other guarded methods and relies on that.
+     *
+     * A dedicated lock rather than the instance monitor: nothing outside this class ever locked on the
+     * runtime, and the list it guards is a `val` that is never swapped.
+     */
+    private val eventsLock = AapsLock()
+
+    // AnnotatedString, not HTML in a String: the only entry that carries formatting is built below, and
+    // the screen renders this list directly. Nothing here ever leaves the app.
+    var executionLog: MutableList<AnnotatedString> = ArrayList()
+
+    /** BT connect/disconnect events accumulated between processActions() runs (master only). The
+     *  single external reader is TriggerBTDevice, via [recentBtConnects]. */
+    private val btConnects: MutableList<EventBTChange> = ArrayList()
+
+    override fun recentBtConnects(): List<EventBTChange> = ArrayList(btConnects)
+
+    /**
+     * Snapshot stream of [automationEvents]. Replaces the old `EventAutomationDataChanged` RxBus
+     * broadcast — collectors get the latest list, and the internal storeToSP subscribe reads this
+     * so persistence stays driven by the same source of truth.
+     *
+     * Mutations route through [notifyChanged] (or one of the wrapped add/remove/set/swap methods).
+     * Each emission wraps the snapshot in [IdentityList], whose `equals` is identity-only so
+     * `MutableStateFlow.value =` *always* publishes — without this, in-place mutations to event
+     * fields (e.g. `event.isEnabled = ...`) would silently dedupe because the underlying list
+     * contains the same `AutomationEventObject` references and `AutomationEventObject` has no
+     * equals override.
+     */
+    private val _events = MutableStateFlow<List<AutomationEventObject>>(IdentityList(emptyList()))
+    override val events: StateFlow<List<AutomationEvent>> = _events.asStateFlow()
+
+    // Persistence is driven by EDITS only ([requestPersist]), never by [loadFromSP] — so applying a
+    // master push is a pure verbatim reparse with no store, hence no echo. Deliberately decoupled from
+    // [_events] (the UI snapshot stream) so a load can refresh the UI/wear without persisting.
+    private val _persist = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
+    /** Emit a fresh snapshot for UI/wear collectors. Does NOT persist (see [requestPersist]). */
+    fun notifyChanged() {
+        eventsLock.withLock {
+            _events.value = IdentityList(automationEvents.toList())
+        }
+    }
+
+    /** Request a debounced persist. Only genuine edits / last-run call this — never a load. */
+    private fun requestPersist() {
+        _persist.tryEmit(Unit)
+    }
+
+    /**
+     * Definition edit from an in-place external editor (e.g. toggleEnabled): refresh the UI and request
+     * persist. The client→master sync version is stamped automatically by PreferencesImpl when
+     * storeToSP writes the bidirectionally-synced AutomationEvents key.
+     */
+    fun markEdited() {
+        eventsLock.withLock {
+            notifyChanged()
+            requestPersist()
+        }
+    }
+
+    /**
+     * List wrapper whose equals/hashCode use object identity. Bypasses [MutableStateFlow]'s default
+     * structural dedup so emissions fire for every mutation — including in-place edits to mutable
+     * `AutomationEventObject` fields that don't change list structure (toggleEnabled is the common
+     * case). The List API itself is delegated, so consumers using `events.value.filter { ... }`
+     * see no difference. Private — leaks only via `events` which exposes the `List<AutomationEvent>`
+     * interface.
+     */
+    private class IdentityList<T>(private val delegate: List<T>) : AbstractList<T>() {
+
+        // A per-instance number, because `AbstractList` hashes by content and `equals` here is identity.
+        // Was `System.identityHashCode`, which is JVM only; the contract only needs a value that is
+        // stable per instance and consistent with an identity `equals`.
+        private val identity = nextIdentity()
+
+        override val size: Int get() = delegate.size
+        override fun get(index: Int): T = delegate[index]
+        override fun equals(other: Any?): Boolean = this === other
+        override fun hashCode(): Int = identity
+
+        private companion object {
+
+            private val counter = AtomicInt(0)
+            fun nextIdentity(): Int = counter.incrementAndFetch()
+        }
+    }
+
+    companion object {
+
+        const val EMPTY_EVENT =
+            "{\"title\":\"Low\",\"enabled\":true,\"trigger\":\"{\\\"type\\\":\\\"TriggerConnector\\\",\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"type\\\\\\\":\\\\\\\"TriggerBg\\\\\\\",\\\\\\\"data\\\\\\\":{\\\\\\\"bg\\\\\\\":4,\\\\\\\"comparator\\\\\\\":\\\\\\\"IS_LESSER\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"mmol\\\\\\\"}}\\\",\\\"{\\\\\\\"type\\\\\\\":\\\\\\\"TriggerDelta\\\\\\\",\\\\\\\"data\\\\\\\":{\\\\\\\"value\\\\\\\":-0.1,\\\\\\\"units\\\\\\\":\\\\\\\"mmol\\\\\\\",\\\\\\\"deltaType\\\\\\\":\\\\\\\"DELTA\\\\\\\",\\\\\\\"comparator\\\\\\\":\\\\\\\"IS_LESSER\\\\\\\"}}\\\"]}}\",\"actions\":[\"{\\\"type\\\":\\\"ActionStartTempTarget\\\",\\\"data\\\":{\\\"value\\\":8,\\\"units\\\":\\\"mmol\\\",\\\"durationInMinutes\\\":60}}\"]}"
+    }
+
+    /**
+     * Location permission is required only on a master device that has at least one enabled event
+     * using a [TriggerLocation]. Queried by [app.aaps.core.interfaces.plugin.PluginPermissions.collectMissingPermissions] on every
+     * collection pass, so the permission appears/disappears as the event set changes.
+     */
+    override fun requiredPermissions(): List<PermissionGroup> =
+        if (config.APS && usesLocationTrigger()) locationPermissions.groups() else emptyList()
+
+    /** True when any enabled event's trigger tree contains a [TriggerLocation]. */
+    private fun usesLocationTrigger(): Boolean =
+        eventsLock.withLock { automationEvents.toList() }
+            .any { it.isEnabled && connectorHasLocation(it.trigger) }
+
+    private fun connectorHasLocation(connector: TriggerConnector): Boolean =
+        connector.list.any { t ->
+            when (t) {
+                is TriggerLocation  -> true
+                is TriggerConnector -> connectorHasLocation(t)
+                else                -> false
+            }
+        }
+
+    /**
+     * Start the runtime. Called once from MainApp at boot. Definition load + persistence + tile
+     * refresh run on every flavor; the processing loop and location service are master-only.
+     */
+    fun start(externalScope: CoroutineScope? = null) {
+        if (scope != null) return // idempotent — already started; avoid leaking a second scope + duplicate subscriptions
+        bootstrap()
+
+        // externalScope is injected by tests to drive the debounced persistence deterministically;
+        // production passes nothing and gets the long-lived IO scope.
+        // Default, not IO: IO does not exist in common code, and the work here does not need it - the
+        // only write is `storeToSP`, a JSON serialize plus a preference put, debounced to 300 ms. The
+        // same shape every other multiplatform plugin uses.
+        val newScope = externalScope ?: CoroutineScope(Dispatchers.Default + SupervisorJob())
+        scope = newScope
+
+        // Persist on EDITS only (never on a load — that's the whole point of the verbatim model).
+        // debounce coalesces rapid edit-flow mutations (toggle/move/save back-to-back) into a single write.
+        @Suppress("OPT_IN_USAGE")
+        _persist.debounce(300.milliseconds).onEach { storeToSP() }.launchIn(newScope)
+        // Refresh the wear UserAction tile on any cache change — fires for NS-synced edits too,
+        // not only when the in-app Automation screen is open. debounce(300) prevents per-drag-tick
+        // tile storms during reorder.
+        @Suppress("OPT_IN_USAGE")
+        _events.drop(1).debounce(300.milliseconds).onEach { rxBus.send(EventWearUpdateTiles()) }.launchIn(newScope)
+
+        // Adopt definitions written behind our back via putRemote — BOTH directions:
+        //  • master→client cold-sync push (on the client),
+        //  • client→master push applied by ClientControlReceiver (on the master) — this restores the
+        //    master reload the old bespoke `onVerifiedAutomationUpdate`/`reloadInternalState()` did,
+        //    which the move to the generic pref channel dropped.
+        // Skip OUR OWN writes (storeToSP, incl. master last-run persists) via the value echo-check so
+        // the master doesn't reparse on its own edits; loadFromSP preserves lastRun by id, so a real
+        // remote change doesn't reset run-timers for unchanged events.
+        preferences.observe(StringNonKey.AutomationEvents).drop(1).onEach { json ->
+            if (json != lastSelfWritten) loadFromSP()
+        }.launchIn(newScope)
+
+        // Execution is master-only. On a client we only edit + sync definitions — no loop, no
+        // location service, no event processing.
+        if (!config.APS) return
+
+        newScope.launch {
+            delay(1.minutes)
+            while (isActive) {
+                processActions()
+                delay(150.seconds)
+            }
+        }
+
+        receiverStatusStore.chargingStatusFlow
+            .filterNotNull()
+            .onEach { processActions() }
+            .launchIn(newScope)
+        receiverStatusStore.networkStatusFlow
+            .filterNotNull()
+            .onEach { processActions() }
+            .launchIn(newScope)
+
+        // Start/stop the location service reactively: run it only while an enabled event actually
+        // uses a location trigger (avoids a permanent foreground-service notification otherwise).
+        // No drop(1) — evaluate the freshly loaded state immediately.
+        _events.onEach { updateLocationService() }.launchIn(newScope)
+        // Re-create the service when the location provider mode changes — restart through the same
+        // deferred/flag-aware path (avoids a background startForegroundService crash on Android 12+).
+        preferences.observe(StringKey.AutomationLocation).drop(1).onEach {
+            // Force a full stop first, so the service comes back up reading the new provider mode.
+            locationServiceController.setLocationUpdatesEnabled(false)
+            updateLocationService()
+        }.launchIn(newScope)
+
+        // processActions() stays launched rather than called inline. A Flow collector is sequential, so
+        // calling it directly would serialize rule processing, which the Rx version did not do - it
+        // fired scope.launch and returned. That may well be an improvement, but changing when
+        // automation rules can run concurrently is not something to do as a side effect of swapping
+        // the subscription mechanism.
+        rxBus.toFlow(EventLocationChange::class)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.position.latitude} ${it.position.longitude} Provider: ${it.provider}")
+                scope?.launch { processActions() }
+            }
+        rxBus.toFlow(EventBTChange::class)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.AUTOMATION, "Grabbed new BT event: $it")
+                btConnects.add(it)
+                scope?.launch { processActions() }
+            }
+    }
+
+    /** Tear down the runtime. Not called in production (always-on singleton); used by tests. */
+    fun stop() {
+        scope?.cancel()
+        scope = null
+
+        locationServiceController.setLocationUpdatesEnabled(false)
+    }
+
+    // Only states what automation needs. The controller owns whether the platform can honour it
+    // right now - waiting for the process to be in foreground, and retrying after a location
+    // permission grant.
+    private fun updateLocationService() {
+        val need = eventsLock.withLock { usesLocationTrigger() }
+        locationServiceController.setLocationUpdatesEnabled(need)
+    }
+
+    /**
+     * The exact JSON this runtime last wrote itself (edit or last-run persist). The self-observe below
+     * compares against it to skip OUR OWN writes — so the master doesn't reparse (and clobber the
+     * runtime list) on its own edits / per-tick last-run persists, only on a genuine remote push.
+     */
+    @Volatile private var lastSelfWritten: String? = null
+
+    // Pure compose — only ever reached from the EDIT-driven [_persist] trigger (never from a load), so
+    // no Band-Aid is needed: a verbatim load doesn't persist, and an edit always changes content.
+    private fun storeToSP() {
+        val json = eventsToJson()
+        lastSelfWritten = json
+        preferences.put(StringNonKey.AutomationEvents, json)
+    }
+
+    /** Serialize the in-memory event list to the persisted JSON shape (what [storeToSP] writes). */
+    private fun eventsToJson(): String {
+        val elements = mutableListOf<JsonElement>()
+        eventsLock.withLock { automationEvents.toMutableList() }.forEach { event ->
+            runCatching { Json.parseToJsonElement(event.toJSON()) }
+                .onSuccess { elements.add(it) }
+                .onFailure { aapsLogger.error(LTag.AUTOMATION, "Cannot serialize event ${event.title}", it) }
+        }
+        return JsonArray(elements).toString()
+    }
+
+    // Verbatim mirror of the persisted definitions — parse only, NO store, NO seed, NO id-backfill-store.
+    // Id-backfill + the EMPTY_EVENT starter happen once in [bootstrap] (master); a master push is already
+    // canonical, so applying it is a pure reparse → no store → no echo. @VisibleForTesting + internal:
+    // production reaches this only via start()/self-observe; tests drive it to assert the load behavior.
+    internal fun loadFromSP() {
+        eventsLock.withLock {
+            // Carry run-timers across the reparse: lastRun isn't serialized, so a naive reload would reset
+            // every event's timer and (on a master that executes) risk re-firing automations right after a
+            // remote push. Preserve it by id for events that still exist; new/changed ids start fresh.
+            val previousLastRun = automationEvents.associate { it.id to it.lastRun }
+            automationEvents.clear()
+            val data = preferences.get(StringNonKey.AutomationEvents)
+            if (data != "")
+                runCatching {
+                    val array = Json.parseToJsonElement(data).jsonArray
+                    for (element in array) {
+                        val event = automationEventFactory.fromJSON(element.toString())
+                        previousLastRun[event.id]?.let { event.lastRun = it }
+                        automationEvents.add(event)
+                    }
+                }.onFailure { aapsLogger.error(LTag.AUTOMATION, "Cannot parse stored automation list", it) }
+            notifyChanged() // fan out to UI/wear collectors; does NOT persist
+        }
+    }
+
+    // One-time at init (from [start]).
+    // CLIENT: pure verbatim mirror — the master owns the canonical definitions; never re-serialize or
+    // persist (no echo, no mixed-version cosmetic divergence).
+    // MASTER: id-backfill legacy id-less events (fromJSON assigns ids in-memory) and seed the EMPTY_EVENT
+    // starter on a fresh install (pref never initialized = ""), then persist once via putRemote if the
+    // canonical form changed. Idempotent for already-canonical data.
+    private fun bootstrap() {
+        eventsLock.withLock {
+            if (config.AAPSCLIENT) {
+                loadFromSP()
+                return
+            }
+            val before = preferences.get(StringNonKey.AutomationEvents)
+            loadFromSP()
+            if (before == "") automationEvents.add(automationEventFactory.fromJSON(EMPTY_EVENT))
+            notifyChanged()
+            val after = eventsToJson()
+            if (after != before)
+                preferences.putRemote(
+                    StringNonKey.AutomationEvents, after,
+                    preferences.get(LongComposedKey.SyncedPrefModified, StringNonKey.AutomationEvents.key)
+                )
+        }
+    }
+
+    internal suspend fun processActions() {
+        if (!config.appInitialized) return
+        if (!config.APS) return // execution is master-only — clients never run automation
+        // Reconcile the location service each tick: retries a start that earlier no-op'd because the
+        // location permission wasn't granted yet, and stops it if the last location event was removed.
+        updateLocationService()
+        /**
+         * Changed to false if some condition prevents automation from running.
+         * In this case only system automations are enabled.
+         */
+        var commonEventsEnabled = true
+        /*
+         * Running mode must report running to process automation events.
+         */
+        val runningMode = loop.runningMode()
+        if (runningMode.pausesLoopExecution() || !runningMode.isLoopRunning()) {
+            aapsLogger.debug(LTag.AUTOMATION, "Loop suspended")
+            executionLog.add(AnnotatedString(rh.gs(InterfacesStrings.loopsuspended)))
+            rxBus.send(EventAutomationUpdateGui())
+            commonEventsEnabled = false
+        }
+        /*
+         * Loop must be enabled to process automation events.
+         */
+        if (!(loop as PluginBase).isEnabled()) {
+            aapsLogger.debug(LTag.AUTOMATION, "Loop not enabled")
+            executionLog.add(AnnotatedString(rh.gs(CoreUiStrings.disconnected)))
+            rxBus.send(EventAutomationUpdateGui())
+            commonEventsEnabled = false
+        }
+        /*
+         * Constraints must not block automation
+         */
+        val enabled = constraintChecker.isAutomationEnabled()
+        if (!enabled.value()) {
+            val reason = enabled.getMostLimitedReasons()
+            if (executionLog.lastOrNull()?.text != reason) executionLog.add(AnnotatedString(reason))
+            rxBus.send(EventAutomationUpdateGui())
+            commonEventsEnabled = false
+        }
+
+        aapsLogger.debug(LTag.AUTOMATION, "processActions")
+        val iterator = eventsLock.withLock { automationEvents.toMutableList().iterator() }
+        while (iterator.hasNext()) {
+            val event = iterator.next()
+            if (event.isEnabled && !event.userAction && event.shouldRun())
+                if (event.systemAction || commonEventsEnabled) {
+                    processEvent(event)
+                    if (event.hasStopProcessing()) break
+                }
+        }
+
+        /*
+         * We cannot detect connected BT devices
+         * So, let's collect all connection/disconnections between 2 runs of processActions()
+         * TriggerBTDevice can pick up and process these events
+         * after processing clear events to prevent repeated actions
+         */
+        btConnects.clear()
+
+        requestPersist() // persist last-run time (edit-driven trigger; master only)
+    }
+
+    override suspend fun processEvent(someEvent: AutomationEvent) {
+        if (!config.APS) return // execution is master-only — guards every UI entry point (wear, quick launch, scenes, run-now)
+        val event = someEvent as AutomationEventObject
+
+        // A rule with an action that cannot run is switched off here, before any of it runs, rather
+        // than half-executed. This decision used to live in `areActionsValid()`, which the Compose
+        // state builder calls - so drawing the list disabled rules, on whichever machine happened to
+        // draw it. A client has a smaller plugin set on purpose, so it would have disabled rules that
+        // work on the master. Doing it here keeps the behaviour and puts it behind the master-only
+        // guard above.
+        if (!event.areActionsValid()) {
+            event.isEnabled = false
+            for (action in event.actions.filterNot { it.isValid() }) {
+                executionLog.add(AnnotatedString("Invalid action: ${action.shortDescription()}"))
+                aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
+            }
+            rxBus.send(EventAutomationUpdateGui())
+            return
+        }
+
+        if (event.canRun() && event.preconditionCanRun()) {
+            val actions = event.actions
+            for (action in actions) {
+                action.title = event.title
+                val result = action.doAction()
+                val entry = buildAnnotatedString {
+                    append(dateUtil.timeString(dateUtil.now()))
+                    append(" ")
+                    append(if (result.success) "☺" else "▼")
+                    append(" ")
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append("${event.title}:") }
+                    append(" ")
+                    append(action.shortDescription())
+                    append(": ")
+                    append(result.comment)
+                }
+                executionLog.add(entry)
+                aapsLogger.debug(LTag.AUTOMATION, "Executed: ${entry.text}")
+                rxBus.send(EventAutomationUpdateGui())
+            }
+            event.lastRun = dateUtil.now()
+            if (event.autoRemove) remove(event)
+        }
+    }
+
+    fun add(event: AutomationEventObject) {
+        eventsLock.withLock {
+            automationEvents.add(event)
+            markEdited()
+        }
+    }
+
+    fun addIfNotExists(event: AutomationEventObject) {
+        eventsLock.withLock {
+            for (e in automationEvents) {
+                if (event.title == e.title) return
+            }
+            automationEvents.add(event)
+            markEdited()
+        }
+    }
+
+    fun removeIfExists(event: AutomationEvent) {
+        eventsLock.withLock {
+            for (e in automationEvents.reversed()) {
+                if (event.title == e.title) {
+                    automationEvents.remove(e)
+                    markEdited()
+                }
+            }
+        }
+    }
+
+    fun set(event: AutomationEventObject, index: Int) {
+        eventsLock.withLock {
+            automationEvents[index] = event
+            markEdited()
+        }
+    }
+
+    fun remove(event: AutomationEvent) {
+        eventsLock.withLock {
+            if (automationEvents.remove(event)) markEdited()
+        }
+    }
+
+    fun at(index: Int) = automationEvents[index]
+
+    fun size() = automationEvents.size
+
+    fun swap(fromPosition: Int, toPosition: Int) {
+        eventsLock.withLock {
+            val moved = automationEvents[fromPosition]
+            automationEvents[fromPosition] = automationEvents[toPosition]
+            automationEvents[toPosition] = moved
+            // Reorder is a config change — persisted ordering decides processing order in
+            // processActions, so collectors and storeToSP both need to see it.
+            markEdited()
+        }
+    }
+
+    override fun findEventById(id: String): AutomationEvent? {
+        return eventsLock.withLock { automationEvents.find { it.id == id } }
+    }
+
+    fun getActionDummyObjects(): List<Action> {
+        val actions = mutableListOf(
+            actionFactory.actionStopProcessing(),
+            actionFactory.actionStartTempTarget(),
+            actionFactory.actionStopTempTarget(),
+            actionFactory.actionNotification(),
+            actionFactory.actionAlarm(),
+            actionFactory.actionSettingsExport(),
+            actionFactory.actionCarePortalEvent(),
+            actionFactory.actionProfileSwitchPercent(),
+            actionFactory.actionProfileSwitch(),
+            actionFactory.actionSendSMS(),
+            actionFactory.actionSMBChange(),
+            actionFactory.actionRunScene(),
+            actionFactory.actionEnableScene(),
+            actionFactory.actionDisableScene()
+        )
+        // Autotune is only offered in engineering builds, as before.
+        if (config.isEngineeringMode() && config.isDev())
+            actions.add(actionFactory.actionRunAutotune())
+
+        return actions.toList()
+    }
+
+    fun getTriggerDummyObjects(): List<Trigger> {
+        val triggers = mutableListOf(
+            TriggerConnector(triggerDeps),
+            TriggerTime(triggerDeps),
+            TriggerRecurringTime(triggerDeps),
+            TriggerTimeRange(triggerDeps),
+            TriggerBg(triggerDeps),
+            TriggerDelta(triggerDeps),
+            TriggerIob(triggerDeps),
+            TriggerCOB(triggerDeps),
+            TriggerProfilePercent(triggerDeps),
+            TriggerTempTarget(triggerDeps),
+            TriggerTempTargetValue(triggerDeps),
+            triggerFactory.triggerWifiSsid(),
+            TriggerLocation(triggerDeps),
+            TriggerAutosensValue(triggerDeps),
+            TriggerBolusAgo(triggerDeps),
+            TriggerPumpLastConnection(triggerDeps),
+            triggerFactory.triggerBTDevice(),
+            TriggerHeartRate(triggerDeps),
+            TriggerSensorAge(triggerDeps),
+            TriggerCannulaAge(triggerDeps),
+            TriggerReservoirLevel(triggerDeps),
+            TriggerStepsCount(triggerDeps)
+        )
+
+        val pump = activePlugin.activePump
+
+        if (pump.pumpDescription.isPatchPump) {
+            triggers.add(TriggerPodChange(triggerDeps))
+        } else {
+            triggers.add(TriggerInsulinAge(triggerDeps))
+        }
+        if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
+            triggers.add(TriggerPumpBatteryAge(triggerDeps))
+        }
+        val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
+        if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
+            triggers.add(TriggerPumpBatteryLevel(triggerDeps))
+        }
+
+        return triggers.toList()
+    }
+
+    /**
+     * Generate reminder via [ReminderScheduler]
+     *
+     * @param seconds seconds to the future
+     */
+    override fun scheduleTimeToEatReminder(seconds: Int) =
+        reminderScheduler.scheduleReminder(seconds, rh.gs(AutomationStrings.time_to_eat))
+
+    /**
+     * Create new Automation event to alarm when is time to eat
+     */
+    override fun scheduleAutomationEventEatReminder() {
+        val event = automationEventFactory.newEvent().apply {
+            title = rh.gs(CoreUiStrings.bolus_advisor)
+            readOnly = true
+            systemAction = true
+            autoRemove = true
+            trigger = TriggerConnector(triggerDeps, TriggerConnector.Type.OR).apply {
+
+                // Bg under 180 mgdl and dropping by 15 mgdl
+                list.add(TriggerConnector(triggerDeps, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(triggerDeps, 180.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(triggerDeps, InputDelta(rh, -15.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(
+                        TriggerDelta(
+                            triggerDeps,
+                            InputDelta(rh, -8.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
+                            GlucoseUnit.MGDL,
+                            Comparator.Compare.IS_EQUAL_OR_LESSER
+                        )
+                    )
+                })
+                // Bg under 160 mgdl and dropping by 9 mgdl
+                list.add(TriggerConnector(triggerDeps, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(triggerDeps, 160.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(triggerDeps, InputDelta(rh, -9.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(
+                        TriggerDelta(
+                            triggerDeps,
+                            InputDelta(rh, -5.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
+                            GlucoseUnit.MGDL,
+                            Comparator.Compare.IS_EQUAL_OR_LESSER
+                        )
+                    )
+                })
+                // Bg under 145 mgdl and dropping
+                list.add(TriggerConnector(triggerDeps, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(triggerDeps, 145.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(triggerDeps, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(
+                        TriggerDelta(
+                            triggerDeps,
+                            InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.SHORT_AVERAGE),
+                            GlucoseUnit.MGDL,
+                            Comparator.Compare.IS_EQUAL_OR_LESSER
+                        )
+                    )
+                })
+            }
+            // this@AutomationRuntime: inside apply{} on AutomationEventObject, which has its own actionFactory field.
+            actions.add(this@AutomationRuntime.actionFactory.actionAlarm(rh.gs(AutomationStrings.time_to_eat)))
+        }
+
+        addIfNotExists(event)
+    }
+
+    /**
+     * Remove Automation event
+     */
+    override fun removeAutomationEventEatReminder() {
+        val event = automationEventFactory.newEvent().apply {
+            title = rh.gs(CoreUiStrings.bolus_advisor)
+        }
+        removeIfExists(event)
+    }
+
+    override fun scheduleAutomationEventBolusReminder() {
+        val event = automationEventFactory.newEvent().apply {
+            title = rh.gs(CoreUiStrings.bolus_reminder)
+            readOnly = true
+            systemAction = true
+            autoRemove = true
+            trigger = TriggerConnector(triggerDeps, TriggerConnector.Type.AND).apply {
+
+                // Bg above 70 mgdl and delta positive mgdl
+                list.add(TriggerBg(triggerDeps, 70.0, GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_GREATER))
+                list.add(
+                    TriggerDelta(
+                        triggerDeps, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, NumberFormat.INTEGER, InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare
+                            .IS_GREATER
+                    )
+                )
+            }
+            // this@AutomationRuntime: inside apply{} on AutomationEventObject, which has its own actionFactory field.
+            actions.add(this@AutomationRuntime.actionFactory.actionAlarm(rh.gs(AutomationStrings.time_to_bolus)))
+        }
+
+        addIfNotExists(event)
+    }
+
+    override fun removeAutomationEventBolusReminder() {
+        val event = automationEventFactory.newEvent().apply {
+            title = rh.gs(CoreUiStrings.bolus_reminder)
+        }
+        removeIfExists(event)
+    }
+}

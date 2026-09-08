@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <!--    Events-->
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pompa sürücüsü değişti.</string>
+    <!--    DateUtil-->
+    <string name="minago_long">%1$d dakika önce</string>
+    <string name="days_ago">%1$.1f gün önce</string>
+    <string name="days_ago_round">%1$.0f gün önce</string>
+    <string name="in_days">%1$.0f gün içinde</string>
+    <string name="in_days_round">%1$.0f gün içinde</string>
+    <string name="shorthour">s</string>
+    <string name="days">gün</string>
+    <string name="hours">saat</string>
+    <string name="unit_second">saniye</string>
+    <string name="unit_minute">dakika</string>
+    <string name="unit_hour">saat</string>
+    <string name="unit_day">gün</string>
+    <string name="unit_week">hafta</string>
+    <string name="unit_seconds">saniye</string>
+    <string name="unit_minutes">dakika</string>
+    <string name="unit_hours">saat</string>
+    <string name="unit_days">gün</string>
+    <string name="unit_weeks">hafta</string>
+    <string name="shortminute">d</string>
+    <string name="shortday">g</string>
+    <string name="later_today">Bugünden sonra</string>
+    <string name="tomorrow">Yarın</string>
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
+    <!-- Rx -->
+    <string name="connecting_for">%1$d bağlanıyor</string>
+    <string name="handshaking">Bağlandı</string>
+    <string name="connected">Bağlandı</string>
+    <string name="disconnecting">Bağlantı kesiliyor</string>
+    <string name="waiting_for_disconnection">Bağlantının kesilmesi bekleniyor</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Oluşturuldu: %1$s</string>
+    <string name="metadata_label_watchface_author">Yetki: %1$s</string>
+    <string name="metadata_label_watchface_name">İsim: %1$s</string>
+    <string name="metadata_wear_import_filename">Dosya adı: %1$s</string>
+    <string name="metadata_label_plugin_version">Eklenti sürümü: %1$s</string>
+    <string name="metadata_label_watchface_name_version">İsim: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Bilgi: %1$s</string>
+    <string name="pref_show_iob">AİNS Göster</string>
+    <string name="pref_show_detailed_iob">Detalı AİNS göster</string>
+    <string name="pref_show_cob">AKRB göster</string>
+    <string name="pref_show_delta">Deltayı göster</string>
+    <string name="pref_show_detailed_delta">Detaylı Delta göster</string>
+    <string name="pref_show_avgdelta">OrtDelta\'yı Göster</string>
+    <string name="pref_show_tempTarget">Geçici Hedefi Göster</string>
+    <string name="pref_show_reservoir_level">Rezervuar Seviyesini Göster</string>
+    <string name="pref_show_phone_battery">Telefon Pilini Göster</string>
+    <string name="pref_show_rig_battery">Teçhizat Pilini Göster</string>
+    <string name="pref_show_basal_rate">Bazal Oranı Göster</string>
+    <string name="pref_show_loop_status">Döngü Durumunu Göster</string>
+    <string name="pref_show_bg">KŞ\'ni göster</string>
+    <string name="pref_show_bgi">KŞ Etkisi Göster</string>
+    <string name="pref_show_direction_arrow">Ok yönünü Göster</string>
+    <string name="pref_show_ago">Önce Göster</string>
+    <string name="pref_show_week_number">Hafta sayısını göster</string>
+    <string name="pref_show_date">Tarihi Göster</string>
+    <string name="pref_show_seconds">Saniyeyi göster</string>
+    <string name="default_custom_watchface_comment">Varsayılan saat arayüzü; bir şablon oluşturmak için SAAT ARAYÜZÜNÜ DIŞA AKTAR butonuna tıklayabilirsiniz</string>
+    <string name="default_custom_watchface_external_comment">Takipçiler için harici görünümler içeren varsayılan saat arayüzü, bir şablon oluşturmak için SAAT ARAYÜZÜNÜ DIŞA AKTAR düğmesine tıklayabilirsiniz</string>
+    <string name="wear_default_watchface">Varsayılan saat arayüzü</string>
+    <string name="wear_more_watchfaces">Diğer saatarayüzleri</string>
+    <string name="temp_basal_absolute_rate">%1$.2f Ü/s @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f Ü/s @%2$s %3$d/%4$d dk</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
+    <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="carbs">Karbonhidrat</string>
+    <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
+    <string name="pumpsuspended">Pompa Durduruldu</string>
+    <string name="loopsuspended">Döngü duraklatıldı</string>
+    <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
+    <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Desteklenen minimum değerle değiştirilen bazal değer: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %1$s</string>
+    <string name="profile_ins_units_per_hour">Ü/s</string>
+    <string name="profile_carbs_per_unit">g/Ü</string>
+    <string name="mins">%1$d dak</string>
+    <string name="record">Kayıt</string>
+    <string name="bolus">Bolus</string>
+    <string name="uel_extended_carbs">YAYMA KARBONHİDRAT</string>
+    <string name="profile_low_target">Düşük hedef profili</string>
+    <string name="profile_high_target">Yüksek hedef profili</string>
+    <string name="profile_dia">Profil DIA değeri</string>
+    <string name="profile_sensitivity_value">Profil duyarlılık değeri</string>
+    <string name="profile_carbs_ratio_value">Profil karbonhidrat oranı değeri</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
+    <string name="basal_value">Bazal değer</string>
+    <string name="cobvsiob">AKRB vs AİNS</string>
+    <string name="bolus_constraint_applied_warn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
+    <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
+    <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
+    <string name="format_insulin_units">%1$.2f Ü</string>
+</resources>

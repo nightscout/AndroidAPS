@@ -6,9 +6,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.floor
 
 /**
@@ -16,7 +16,7 @@ import kotlin.math.floor
  */
 @Suppress("SpellCheckingInspection")
 class BigAPSMainInfoInquireResponsePacket(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump

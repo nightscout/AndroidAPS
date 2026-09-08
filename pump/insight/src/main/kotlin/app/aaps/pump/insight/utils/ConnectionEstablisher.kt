@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import androidx.annotation.RequiresPermission
-import app.aaps.core.data.time.T
 import app.aaps.core.utils.extensions.safeEnable
 import java.io.IOException
 import java.util.UUID

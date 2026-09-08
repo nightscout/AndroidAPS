@@ -5,8 +5,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.eopatch.R
@@ -22,6 +20,9 @@ fun WakeUpStep(viewModel: EopatchPatchViewModel) {
     )
 }
 
+/**
+ * @see WakeUpStepPreview
+ */
 @Composable
 internal fun WakeUpStepContent(onStartPairing: () -> Unit = {}, onCancel: () -> Unit = {}) {
     WizardStepLayout(
@@ -32,11 +33,4 @@ internal fun WakeUpStepContent(onStartPairing: () -> Unit = {}, onCancel: () -> 
         Text(text = stringResource(R.string.patch_wake_up_desc_1), style = MaterialTheme.typography.bodyMedium)
         Text(text = stringResource(R.string.patch_wake_up_desc_2), style = MaterialTheme.typography.bodyMedium)
     }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Wake Up Step")
-@Composable
-private fun WakeUpStepPreview() {
-    MaterialTheme { WakeUpStepContent() }
 }

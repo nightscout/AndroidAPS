@@ -8,11 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.data.model.ICfg
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.insulin.SelectInsulin
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -22,6 +19,8 @@ import app.aaps.core.ui.R as CoreUiR
 /**
  * Insulin selection step — shown when more than one insulin is configured.
  * Wraps the shared [SelectInsulin] composable from core/ui.
+ *
+ * @see PreviewSelectInsulin
  */
 @Composable
 fun SelectInsulinStep(
@@ -59,29 +58,3 @@ fun SelectInsulinStep(
         )
     }
 }
-
-// region Previews
-
-private val previewInsulins = listOf(
-    ICfg("Fiasp U100", peak = 55, dia = 5.0, concentration = 1.0),
-    ICfg("Lyumjev U200", peak = 45, dia = 5.0, concentration = 2.0),
-    ICfg("NovoRapid U100", peak = 75, dia = 5.0, concentration = 1.0)
-)
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Select Insulin")
-@Composable
-private fun PreviewSelectInsulin() {
-    MaterialTheme {
-        SelectInsulin(
-            availableInsulins = previewInsulins,
-            selectedInsulin = previewInsulins[0],
-            activeInsulinLabel = "Fiasp U100",
-            onInsulinSelect = {},
-            initialExpanded = true,
-            concentrationDropDownEnabled = true
-        )
-    }
-}
-
-// endregion

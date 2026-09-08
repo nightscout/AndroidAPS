@@ -1,0 +1,198 @@
+package app.aaps.plugins.constraints.safety
+
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Shield
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.constraints.Safety
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.withEntries
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metro.IntKey as MetroIntKey
+
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@MetroIntKey(800)
+@SingleIn(AppScope::class)
+class SafetyPlugin @Inject constructor(
+    aapsLogger: AAPSLogger,
+    override val rh: TextResolver,
+    private val preferences: Preferences,
+    private val constraintChecker: ConstraintsChecker,
+    private val activePlugin: ActivePlugin,
+    private val hardLimits: HardLimits,
+    private val config: Config,
+    private val persistenceLayer: PersistenceLayer,
+    private val dateUtil: DateUtil,
+    private val notificationManager: NotificationManager,
+    private val decimalFormatter: DecimalFormatter
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.CONSTRAINTS)
+        .alwaysEnabled(true)
+        .showInList { false }
+        .pluginName(ConstraintsStrings.safety)
+        .icon(Icons.Default.Shield),
+    aapsLogger, rh
+), PluginConstraints, Safety {
+
+    /**
+     * Constraints interface
+     */
+    override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (!activePlugin.activePump.pumpDescription.isTempBasalCapable) value.set(false, rh.gs(ConstraintsStrings.pumpisnottempbasalcapable), this)
+        return value
+    }
+
+    override suspend fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (!config.isEngineeringModeOrRelease()) {
+            if (value.value()) {
+                notificationManager.post(NotificationId.TOAST_ALARM, ConstraintsStrings.closed_loop_disabled_on_dev_branch, level = NotificationLevel.NORMAL)
+            }
+            value.set(false, rh.gs(ConstraintsStrings.closed_loop_disabled_on_dev_branch), this)
+        }
+        val pump = activePlugin.activePump
+        if (!pump.isFakingTempsByExtendedBoluses && persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) != null) {
+            value.set(false, rh.gs(ConstraintsStrings.closed_loop_disabled_with_eb), this)
+        }
+        return value
+    }
+
+    override suspend fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        val closedLoop = constraintChecker.isClosedLoopAllowed()
+        if (!closedLoop.value()) value.set(false, rh.gs(ConstraintsStrings.smbnotallowedinopenloopmode), this)
+        return value
+    }
+
+    override suspend fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (!persistenceLayer.isAdvancedFilteringSupported()) value.set(false, rh.gs(ConstraintsStrings.smbalwaysdisabled), this)
+        return value
+    }
+
+    override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
+        absoluteRate.setIfGreater(0.0, rh.gs(CoreUiStrings.limitingbasalratio, 0.0, rh.gs(CoreUiStrings.itmustbepositivevalue)), this)
+        absoluteRate.setIfSmaller(hardLimits.maxBasal(), rh.gs(CoreUiStrings.limitingbasalratio, hardLimits.maxBasal(), rh.gs(ConstraintsStrings.hardlimit)), this)
+        val pump = activePlugin.activePump
+        // check for pump max
+        if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+            // Concentration-adjusted max (the wrapper scales maxTempAbsolute by concentration); the raw
+            // pumpType.tbrSettings().maxDose is in pump units (cU) and would mis-cap an IU rate under U200/diluted.
+            val pumpLimit = pump.pumpDescription.maxTempAbsolute
+            absoluteRate.setIfSmaller(pumpLimit, rh.gs(CoreUiStrings.limitingbasalratio, pumpLimit, rh.gs(CoreUiStrings.pumplimit)), this)
+        }
+
+        // do rounding — floor, not round-to-nearest, so a max-constrained rate is never rounded
+        // back UP above the limit (and we never enact more basal than allowed). Effect is bounded by
+        // one pump step; for already step-aligned values it is a no-op.
+        if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+            absoluteRate.set(Round.floorTo(absoluteRate.value(), pump.pumpDescription.tempAbsoluteStep))
+        }
+        return absoluteRate
+    }
+
+    override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
+        val currentBasal = profile.getBasal()
+        val absoluteRate = currentBasal * (percentRate.originalValue().toDouble() / 100)
+        percentRate.addReason(
+            "Percent rate " + percentRate.originalValue() + "% recalculated to " + decimalFormatter.to2Decimal(absoluteRate) + " U/h with current basal " + decimalFormatter.to2Decimal(
+                currentBasal
+            ) + " U/h", this
+        )
+        val absoluteConstraint = ConstraintObject(absoluteRate, aapsLogger)
+        applyBasalConstraints(absoluteConstraint, profile)
+        percentRate.copyReasons(absoluteConstraint)
+        val pump = activePlugin.activePump
+        var percentRateAfterConst = (absoluteConstraint.value() / currentBasal * 100).toInt()
+        percentRateAfterConst =
+            if (percentRateAfterConst < 100) Round.ceilTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble())
+                .toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
+        percentRate.set(percentRateAfterConst, rh.gs(CoreUiStrings.limitingpercentrate, percentRateAfterConst, rh.gs(CoreUiStrings.pumplimit)), this)
+        if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
+            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
+            percentRate.setIfSmaller(pumpLimit.toInt(), rh.gs(CoreUiStrings.limitingbasalratio, pumpLimit, rh.gs(CoreUiStrings.pumplimit)), this)
+        }
+        return percentRate
+    }
+
+    override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        insulin.setIfGreater(0.0, rh.gs(CoreUiStrings.limitingbolus, 0.0, rh.gs(CoreUiStrings.itmustbepositivevalue)), this)
+        val maxBolus = preferences.get(DoubleKey.SafetyMaxBolus)
+        insulin.setIfSmaller(maxBolus, rh.gs(CoreUiStrings.limitingbolus, maxBolus, rh.gs(ConstraintsStrings.maxvalueinpreferences)), this)
+        insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(CoreUiStrings.limitingbolus, hardLimits.maxBolus(), rh.gs(ConstraintsStrings.hardlimit)), this)
+        // Floor to the pump's NATIVE step (not round-to-nearest): a max-constrained bolus must never be
+        // rounded back UP past SafetyMaxBolus / the hard limit, and we must not deliver more than asked.
+        // Native (not concentration-adjusted) on purpose: applyBolusConstraints is also called with cU values
+        // (e.g. FillDialog priming, entered in pump units), so it must floor on the pump-unit pulse grid. The
+        // IU-deliverable grid for a normal bolus is handled by the dialog snap + the PumpWithConcentration
+        // boundary, which floors the converted cU to the native pulse step.
+        val stepSize = activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulin.value())
+        val rounded = Round.floorTo(insulin.value(), stepSize)
+        insulin.setIfDifferent(rounded, rh.gs(CoreUiStrings.pumplimit), this)
+        return insulin
+    }
+
+    override fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        insulin.setIfGreater(0.0, rh.gs(ConstraintsStrings.limitingextendedbolus, 0.0, rh.gs(CoreUiStrings.itmustbepositivevalue)), this)
+        val maxBolus = preferences.get(DoubleKey.SafetyMaxBolus)
+        insulin.setIfSmaller(maxBolus, rh.gs(ConstraintsStrings.limitingextendedbolus, maxBolus, rh.gs(ConstraintsStrings.maxvalueinpreferences)), this)
+        insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(ConstraintsStrings.limitingextendedbolus, hardLimits.maxBolus(), rh.gs(ConstraintsStrings.hardlimit)), this)
+        val pump = activePlugin.activePump
+        // Floor to the extended-bolus step (not round-to-nearest) so a max-constrained amount is not
+        // rounded back UP above the limit.
+        val ebSettings = pump.pumpDescription.pumpType.extendedBolusSettings()
+        val rounded =
+            if (ebSettings != null) Round.floorTo(insulin.value().coerceAtMost(ebSettings.maxDose), ebSettings.step)
+            else insulin.value()
+        insulin.setIfDifferent(rounded, rh.gs(CoreUiStrings.pumplimit), this)
+        return insulin
+    }
+
+    override fun applyCarbsConstraints(carbs: Constraint<Int>): Constraint<Int> {
+        val maxCarbs = preferences.get(IntKey.SafetyMaxCarbs)
+        carbs.setIfSmaller(maxCarbs, rh.gs(ConstraintsStrings.limitingcarbs, maxCarbs, rh.gs(ConstraintsStrings.maxvalueinpreferences)), this)
+        return carbs
+    }
+
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "safety_settings",
+        title = ConstraintsStrings.safety,
+        items = listOf(
+            StringKey.SafetyAge.withEntries(
+                hardLimits.ageEntryValues().zip(hardLimits.ageEntries()).associate { it.first.toString() to TextRef.Literal(it.second.toString()) }
+            ),
+            DoubleKey.SafetyMaxBolus,
+            IntKey.SafetyMaxCarbs
+        ),
+        icon = pluginDescription.icon
+    )
+}

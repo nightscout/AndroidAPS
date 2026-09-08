@@ -2,6 +2,7 @@ package app.aaps.wear.complications
 
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.LongTextComplicationData
+import androidx.wear.watchface.complications.data.TimeDifferenceComplicationText
 import app.aaps.wear.AAPSLoggerTest
 import app.aaps.wear.interaction.utils.DisplayFormat
 import com.google.common.truth.Truth.assertThat
@@ -12,13 +13,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [LongStatusComplication] and the shared [ModernBaseComplicationProviderService] logic it
- * inherits: [getPreviewData]/[getPreviewComplicationData] (sample data + tap intent → build) and the
- * action/name accessors. Built via [Robolectric] so a Context is attached without running onCreate's
- * Dagger injection; the `@Inject` fields are set directly. This complication renders LONG_TEXT via
- * [DisplayFormat], so a DisplayFormat with a mocked SP and the service as Context is wired in.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class LongStatusComplicationTest {
@@ -37,6 +31,13 @@ internal class LongStatusComplicationTest {
         val data = sut().getPreviewData(ComplicationType.LONG_TEXT)
 
         assertThat(data).isInstanceOf(LongTextComplicationData::class.java)
+        // Reading age must auto-update via the system, not be baked in as static text
+        // (issue #3821 — no app wake-ups needed to keep it current)
+        assertThat((data as LongTextComplicationData).text)
+            .isInstanceOf(TimeDifferenceComplicationText::class.java)
+        // Everything is in the text field — a title would make watch faces join the two
+        // fields with their own separator (often "/")
+        assertThat(data.title).isNull()
     }
 
     @Test

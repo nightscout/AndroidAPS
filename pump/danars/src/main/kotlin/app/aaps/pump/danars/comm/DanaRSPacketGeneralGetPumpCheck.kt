@@ -4,9 +4,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class DanaRSPacketGeneralGetPumpCheck @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -38,7 +39,7 @@ class DanaRSPacketGeneralGetPumpCheck @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaPump.protocol))
         aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaPump.productCode))
         if (danaPump.productCode < 2) {
-            notificationManager.post(NotificationId.UNSUPPORTED_FIRMWARE, app.aaps.pump.dana.R.string.unsupportedfirmware)
+            notificationManager.post(NotificationId.UNSUPPORTED_FIRMWARE, TextRef.AndroidRes(app.aaps.pump.dana.R.string.unsupportedfirmware))
         }
     }
 

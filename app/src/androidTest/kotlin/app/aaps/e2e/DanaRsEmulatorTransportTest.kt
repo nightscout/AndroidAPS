@@ -1,22 +1,22 @@
 package app.aaps.e2e
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
-import org.junit.rules.RuleChain
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import javax.inject.Inject
 
 /**
  * Proves the seam that lets an instrumented test drive a real pump driver against the in-tree pump
@@ -27,25 +27,22 @@ import javax.inject.Inject
  * Deliberately asserts only the wiring — no UI, no connect. If this fails, every pump E2E built on
  * top is meaningless, so it is worth failing loudly and cheaply on its own.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardB
 class DanaRsEmulatorTransportTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    @Inject lateinit var bleTransport: BleTransport
-    @Inject lateinit var config: Config
+    private val bleTransport get() = testGraphs.pumps.bleTransport
+    private val config get() = testGraphs.config
 
     @Before
     fun setUp() {
         // Before inject(): BleTransport is @Singleton, so config.isEnabled is read once, when the
         // graph first constructs it.
         EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_DANA_RS_V3)
-        hiltRule.inject()
     }
 
     @After

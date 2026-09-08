@@ -18,11 +18,11 @@ import app.aaps.pump.medtrum.extension.toFloat
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int) : MedtrumPacket(injector) {
+class GetRecordPacket(injector: MetroMemberInjector, private val recordIndex: Int) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var pumpSync: PumpSync

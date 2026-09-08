@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaIntKey
@@ -49,7 +50,7 @@ import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
 class DanaRExecutionService : AbstractDanaRExecutionService() {
@@ -132,10 +133,10 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
             }
             rxBus.send(EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
-            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
                 aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
+                    notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, TextRef.AndroidRes(R.string.approachingdailylimit))
                     pumpSync.insertAnnouncement(
                         rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
                         null,
@@ -192,7 +193,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
         return true
     }
 
-    override fun loadEvents(): PumpEnactResult = pumpEnactResultProvider.get()
+    override fun loadEvents(): PumpEnactResult = pumpEnactResultProvider()
 
     override fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
         if (!isConnected) return false
@@ -212,6 +213,11 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
             } else {
                 return false
             }
+            // Arm the 15s comm watchdog from bolus start. It was never initialised here, so a stale
+            // bolusProgressLastTimeStamp (from a previous bolus / epoch) made the check below fire on
+            // the first iteration → false "Communication stopped" aborting the bolus. Newer drivers
+            // (DanaRSService, MedtrumService, DiaconnG8Service) already do this.
+            danaPump.bolusProgressLastTimeStamp = System.currentTimeMillis()
             while (!danaPump.bolusStopped && !start.failed) {
                 SystemClock.sleep(100)
                 if (System.currentTimeMillis() - danaPump.bolusProgressLastTimeStamp > 15 * 1000L) { // if I didn't receive status for more than 15 sec expecting broken comm
@@ -240,7 +246,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                 while (System.currentTimeMillis() < expectedEnd) {
                     val waitTime = expectedEnd - System.currentTimeMillis()
                     val currentPercent = bolusProgressData.state.value?.percent ?: 0
-                    bolusProgressData.updateProgress(currentPercent, rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
+                    bolusProgressData.updateProgress(currentPercent, TextRef.AndroidRes(R.string.waitingforestimatedbolusend, listOf(waitTime / 1000)), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
                     SystemClock.sleep(1000)
                 }
                 connect()
@@ -251,17 +257,17 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                 }
                 if (!isConnected) {
                     rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), EventShowSnackbar.Type.Error))
-                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: "", PumpInsulin(0.0))
+                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(0.0))
                     return false
                 }
                 mSerialIOThread?.sendMessage(MsgStatus(injector))
                 val lastBolusTime = danaPump.lastBolusTime
                 if (lastBolusTime != null && lastBolusTime > System.currentTimeMillis() - 2 * 60 * 1000L) { // last bolus max 2 min old
                     val lastAmount = danaPump.lastBolusAmount ?: 0.0
-                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: "", PumpInsulin(lastAmount))
+                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(lastAmount))
                     aapsLogger.debug(LTag.PUMP, "Used bolus amount from history: " + danaPump.lastBolusAmount)
                 } else {
-                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: "", PumpInsulin(0.0))
+                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(0.0))
                     aapsLogger.debug(LTag.PUMP, "Bolus amount in history too old: " + dateUtil.dateAndTimeStringNullable(lastBolusTime))
                     return false
                 }
@@ -296,12 +302,12 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isConnected) return pumpEnactResultProvider.get().success(false)
+        if (!isConnected) return pumpEnactResultProvider().success(false)
         SystemClock.sleep(300)
         val msg = MsgSetUserOptions(injector)
         mSerialIOThread?.sendMessage(msg)
         SystemClock.sleep(200)
-        return pumpEnactResultProvider.get().success(!msg.failed)
+        return pumpEnactResultProvider().success(!msg.failed)
     }
 
     inner class LocalBinder : Binder() {

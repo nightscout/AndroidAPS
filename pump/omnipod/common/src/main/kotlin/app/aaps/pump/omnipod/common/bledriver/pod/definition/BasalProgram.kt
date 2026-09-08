@@ -1,6 +1,7 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.definition
 
-import java.util.*
+import java.util.Calendar
+import java.util.Collections
 
 class BasalProgram(
     segments: List<Segment>

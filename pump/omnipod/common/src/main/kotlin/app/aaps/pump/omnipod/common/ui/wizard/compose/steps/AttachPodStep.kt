@@ -8,8 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -53,6 +51,9 @@ fun AttachPodStep(
     )
 }
 
+/**
+ * @see PreviewAttachPod
+ */
 @Composable
 internal fun AttachPodStepContent(
     text: String,
@@ -72,19 +73,6 @@ internal fun AttachPodStepContent(
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Attach Pod")
-@Composable
-private fun PreviewAttachPod() {
-    MaterialTheme {
-        AttachPodStepContent(
-            text = "Fill the new pod with insulin. You will hear two beeps when the pod is ready.",
-            onNext = {},
-            onCancel = {}
         )
     }
 }

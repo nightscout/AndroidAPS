@@ -79,6 +79,8 @@ class EmulatorBleTransport(
 
     private var listener: BleTransportListener? = null
     private var connected = false
+    // Set by findCharacteristics(); gates enableNotifications() so a pre-discovery registration is a no-op, as on hardware.
+    private var characteristicsFound = false
 
     // Read buffer for reassembling chunked packets
     private val readBuffer = ByteArray(1024)
@@ -191,6 +193,7 @@ class EmulatorBleTransport(
             bufferLength = 0
             connectionGeneration++
             v3PairingRequested = false
+            characteristicsFound = false
             connected = true
             listener?.onConnectionStateChanged(true)
             return true
@@ -200,11 +203,13 @@ class EmulatorBleTransport(
         // rather than delivered into a BLEComm that has already torn down (see sendResponse).
         override fun disconnect() {
             connected = false
+            characteristicsFound = false
             connectionGeneration++
         }
 
         override fun close() {
             connected = false
+            characteristicsFound = false
             connectionGeneration++
         }
 
@@ -212,9 +217,22 @@ class EmulatorBleTransport(
             listener?.onServicesDiscovered(true)
         }
 
-        override fun findCharacteristics(): Boolean = true
+        override fun findCharacteristics(): Boolean {
+            characteristicsFound = true
+            return true
+        }
 
+        /**
+         * Only registers once the characteristics exist — mirroring the real transport.
+         *
+         * `BLEComm.connect` enables notifications eagerly, before service discovery. On hardware `uartRead` is still
+         * null then, so `BleTransportImpl` fabricates a bare characteristic whose `getDescriptor(CCCD)` returns null,
+         * no `writeDescriptor` is issued and NO callback arrives; only the post-discovery registration completes.
+         * Firing unconditionally here made the emulator deliver two `onDescriptorWritten` per connection where a pump
+         * delivers one — which drove the pair wizard back off its PIN step and hung RSv3 pairing.
+         */
         override fun enableNotifications() {
+            if (!characteristicsFound) return
             listener?.onDescriptorWritten()
         }
 

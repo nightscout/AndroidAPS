@@ -1,0 +1,1149 @@
+package app.aaps.plugins.sync.smsCommunicator
+
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStrings
+import android.Manifest
+import android.content.Context
+import android.os.Bundle
+import android.telephony.SmsManager
+import android.telephony.SmsMessage
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpStatusProvider
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
+import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.withCompose
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.runningMode.PumpCommandGate
+import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.objects.workflow.WorkerInstanceFactory
+import app.aaps.core.ui.compose.ComposeScreenContent
+import app.aaps.core.ui.compose.icons.IcPluginSms
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.extensions.generateCOBString
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.core.utils.receivers.Inbox
+import app.aaps.plugins.sync.smsCommunicator.actions.BasalCancelAction
+import app.aaps.plugins.sync.smsCommunicator.actions.BolusAction
+import app.aaps.plugins.sync.smsCommunicator.actions.CalibrationAction
+import app.aaps.plugins.sync.smsCommunicator.actions.CarbsAction
+import app.aaps.plugins.sync.smsCommunicator.actions.ExtendedCancelAction
+import app.aaps.plugins.sync.smsCommunicator.actions.ExtendedSetAction
+import app.aaps.plugins.sync.smsCommunicator.actions.LoopClosedAction
+import app.aaps.plugins.sync.smsCommunicator.actions.LoopDisableAction
+import app.aaps.plugins.sync.smsCommunicator.actions.LoopLgsAction
+import app.aaps.plugins.sync.smsCommunicator.actions.LoopResumeAction
+import app.aaps.plugins.sync.smsCommunicator.actions.LoopSuspendAction
+import app.aaps.plugins.sync.smsCommunicator.actions.ProfileSwitchAction
+import app.aaps.plugins.sync.smsCommunicator.actions.PumpConnectAction
+import app.aaps.plugins.sync.smsCommunicator.actions.PumpDisconnectAction
+import app.aaps.plugins.sync.smsCommunicator.actions.RestartAction
+import app.aaps.plugins.sync.smsCommunicator.actions.SmsDisableAction
+import app.aaps.plugins.sync.smsCommunicator.actions.TempBasalAbsoluteAction
+import app.aaps.plugins.sync.smsCommunicator.actions.TempBasalPercentAction
+import app.aaps.plugins.sync.smsCommunicator.actions.TempTargetCancelAction
+import app.aaps.plugins.sync.smsCommunicator.actions.TempTargetSetAction
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorComposeContent
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorOtpScreen
+import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
+import app.aaps.plugins.sync.smsCommunicator.keys.SmsIntentKey
+import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import java.text.Normalizer
+import java.util.Locale
+import java.util.regex.Pattern
+import kotlin.math.max
+import kotlin.math.min
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
+import org.apache.commons.lang3.Strings
+import org.joda.time.DateTime
+
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class, binding = binding<SmsCommunicator>())
+class SmsCommunicatorPlugin @Inject constructor(
+    aapsLogger: AAPSLogger,
+    override val rh: ResourceHelper,
+    private val smsManager: SmsManager?,
+    preferences: Preferences,
+    private val constraintChecker: ConstraintsChecker,
+    private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
+    private val activePlugin: ActivePlugin,
+    private val profileRepository: ProfileRepository,
+    private val commandQueue: CommandQueue,
+    private val loop: Loop,
+    private val iobCobCalculator: IobCobCalculator,
+    private val xDripBroadcast: XDripBroadcast,
+    private var otp: OneTimePassword,
+    private val config: Config,
+    private val dateUtil: DateUtil,
+    private val uel: UserEntryLogger,
+    private val glucoseStatusProvider: GlucoseStatusProvider,
+    private val persistenceLayer: PersistenceLayer,
+    private val decimalFormatter: DecimalFormatter,
+    private val configBuilder: ConfigBuilder,
+    private val pumpStatusProvider: PumpStatusProvider,
+    private val notificationManager: NotificationManager,
+    private val runningModeGuard: RunningModeGuard,
+    private val bolusProgressData: BolusProgressData,
+    @ApplicationScope private val appScope: CoroutineScope,
+    val repository: SmsCommunicatorRepository
+) : PluginBaseWithPreferences(
+    PluginDescription()
+        .mainType(PluginType.SYNC)
+        .composeContent { SmsCommunicatorComposeContent() }
+        .icon(IcPluginSms)
+        .pluginName(SyncStrings.smscommunicator)
+        .shortName(SyncStrings.smscommunicator_shortname)
+        .description(SyncStrings.description_sms_communicator),
+    ownPreferences = SmsIntentKey.entries,
+    aapsLogger, rh, preferences
+), SmsCommunicator {
+
+    private var scope: CoroutineScope? = null
+    var allowedNumbers: MutableList<String> = ArrayList()
+    @Volatile var messageToConfirm: AuthRequest? = null
+    @Volatile var lastRemoteBolusTime: Long = 0
+    override var messages = ArrayList<Sms>()
+
+    private fun shortStatusBlocking() = runBlocking { pumpStatusProvider.shortStatus(true) }
+
+    /** Hides DI plumbing — every call site only supplies the per-request data. */
+    private fun authRequest(requester: Sms, requestText: String, confirmCode: String, action: SmsAction): AuthRequest =
+        AuthRequest(requester, requestText, confirmCode, action, aapsLogger, this, rh, otp, dateUtil, commandQueue)
+
+    private fun notifyMessagesChanged() {
+        repository.updateMessages(messages)
+    }
+
+    private val commands = mapOf(
+        "BG" to "BG",
+        "LOOP" to "LOOP STOP/DISABLE/RESUME/STATUS/CLOSED/LGS\nLOOP SUSPEND 20",
+        "PUMP" to "PUMP\nPUMP CONNECT\nPUMP DISCONNECT 30\n",
+        "BASAL" to "BASAL STOP/CANCEL\nBASAL 0.3\nBASAL 0.3 20\nBASAL 30%\nBASAL 30% 20\n",
+        "BOLUS" to "BOLUS 1.2\nBOLUS 1.2 MEAL",
+        "EXTENDED" to "EXTENDED STOP/CANCEL\nEXTENDED 2 120",
+        "CAL" to "CAL 5.6",
+        "PROFILE" to "PROFILE STATUS/LIST\nPROFILE 1\nPROFILE 2 30",
+        "TARGET" to "TARGET MEAL/ACTIVITY/HYPO/STOP",
+        "SMS" to "SMS DISABLE/STOP",
+        "CARBS" to "CARBS 12\nCARBS 12 23:05\nCARBS 12 11:05PM",
+        "HELP" to "HELP\nHELP command",
+        "RESTART" to "RESTART\nRestart AAPS"
+    )
+
+    override fun requiredPermissions(): List<PermissionGroup> = listOf(
+        PermissionGroup(
+            permissions = listOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_MMS),
+            rationaleTitle = SyncStrings.permission_sms_title,
+            rationaleDescription = SyncStrings.permission_sms_description,
+        )
+    )
+
+    override suspend fun onStart() {
+        processSettings()
+        super.onStart()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        preferences.observe(StringKey.SmsAllowedNumbers)
+            .drop(1)
+            .onEach { processSettings() }
+            .launchIn(newScope)
+    }
+
+    override suspend fun onStop() {
+        scope?.cancel()
+        scope = null
+        super.onStop()
+    }
+
+    // cannot be inner class because of needed injection
+    class SmsCommunicatorWorker @AssistedInject constructor(
+        @Assisted context: Context,
+        @Assisted params: WorkerParameters,
+        aapsLogger: AAPSLogger,
+        fabricPrivacy: FabricPrivacy,
+        private val smsCommunicatorPlugin: SmsCommunicatorPlugin,
+        private val dataInbox: DataInbox
+    ) : LoggingWorker(context, params, Dispatchers.IO, aapsLogger, fabricPrivacy) {
+
+        override suspend fun doWorkAndLog(): Result {
+            val bundles = dataInbox.drain(SmsInbox)
+            if (bundles.isEmpty()) return Result.success(workDataOf("Result" to "no data"))
+            var hadFailure = false
+            for (bundle in bundles) {
+                try {
+                    processBundle(bundle)
+                } catch (e: CancellationException) {
+                    // WorkManager stopped this run. The coroutine contract requires
+                    // CancellationException to propagate, otherwise the loop keeps fighting a
+                    // cancelled Job and spams failures for every remaining bundle. Unlike the CGM
+                    // workers we deliberately do NOT re-queue: SMS bundles carry non-idempotent
+                    // remote commands, so re-processing risks double-execution. A cancelled command
+                    // is dropped (the user re-sends) rather than re-run.
+                    throw e
+                } catch (e: Exception) {
+                    aapsLogger.error(LTag.SMS, "Failed processing SMS bundle", e)
+                    hadFailure = true
+                }
+            }
+            return if (hadFailure) Result.failure(workDataOf("Error" to "one or more bundles failed")) else Result.success()
+        }
+
+        private suspend fun processBundle(bundle: Bundle) {
+            val format = bundle.getString("format") ?: run {
+                aapsLogger.warn(LTag.SMS, "Skipping SMS bundle: missing format")
+                return
+            }
+            @Suppress("DEPRECATION") val pdus = bundle["pdus"] as Array<*>
+            for (pdu in pdus) {
+                val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
+                smsCommunicatorPlugin.processSms(smsFromMessage(message))
+            }
+        }
+
+        /** Metro builds the worker through this - WorkManager supplies context and params. */
+        @AssistedFactory
+        abstract class Factory : WorkerInstanceFactory<SmsCommunicatorWorker>()
+    }
+
+    private fun processSettings() {
+        val settings = preferences.get(StringKey.SmsAllowedNumbers)
+        allowedNumbers.clear()
+        val substrings = settings.split(";").toTypedArray()
+        for (number in substrings) {
+            val cleaned = number.replace("\\s+".toRegex(), "")
+            allowedNumbers.add(cleaned)
+            aapsLogger.debug(LTag.SMS, "Found allowed number: $cleaned")
+        }
+    }
+
+    fun isCommand(command: String, number: String): Boolean {
+        var found = false
+        commands.forEach { (k, _) ->
+            if (k == command) found = true
+        }
+        return found || messageToConfirm?.requester?.phoneNumber == number
+    }
+
+    fun isAllowedNumber(number: String): Boolean {
+        for (num in allowedNumbers) {
+            if (num == number) return true
+        }
+        return false
+    }
+
+    suspend fun processSms(receivedSms: Sms) {
+        if (!isEnabled()) {
+            aapsLogger.debug(LTag.SMS, "Ignoring SMS. Plugin disabled.")
+            return
+        }
+        if (!isAllowedNumber(receivedSms.phoneNumber)) {
+            aapsLogger.debug(LTag.SMS, "Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed")
+            receivedSms.ignored = true
+            messages.add(receivedSms)
+            notifyMessagesChanged()
+            return
+        }
+        messages.add(receivedSms)
+        aapsLogger.debug(LTag.SMS, receivedSms.toString())
+        val divided = receivedSms.text.trim().split(Regex("\\s+")).toTypedArray()
+        val remoteCommandsAllowed = preferences.get(BooleanKey.SmsAllowRemoteCommands)
+
+        val minDistance =
+            if (areMoreNumbers(preferences.get(StringKey.SmsAllowedNumbers)))
+                T.mins(preferences.get(IntKey.SmsRemoteBolusDistance).toLong()).msecs()
+            else Constants.REMOTE_BOLUS_MIN_DISTANCE
+
+        if (divided.isNotEmpty() && isCommand(divided[0].uppercase(Locale.getDefault()), receivedSms.phoneNumber)) {
+            when (divided[0].uppercase(Locale.getDefault())) {
+                "BG"       ->
+                    if (divided.size == 1) processBG(receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "LOOP"     ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 2 || divided.size == 3) processLOOP(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "PUMP"     ->
+                    if (!remoteCommandsAllowed && divided.size > 1) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size <= 3) processPUMP(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "PROFILE"  ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 2 || divided.size == 3) processPROFILE(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "BASAL"    ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 2 || divided.size == 3) processBASAL(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "EXTENDED" ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 2 || divided.size == 3) processEXTENDED(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "BOLUS"    ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (commandQueue.bolusInQueue()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_another_bolus_in_queue)))
+                    // Spacing guard applies to BOTH plain ("BOLUS x") and meal ("BOLUS x MEAL") forms;
+                    // the meal form (size 3) previously skipped it, allowing unbounded back-to-back stacking.
+                    else if ((divided.size == 2 || divided.size == 3) && dateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_bolus_not_allowed)))
+                    else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "CARBS"    ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 2 || divided.size == 3) processCARBS(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "CAL"      ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 2) processCAL(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "TARGET"   ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 2) processTARGET(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "SMS"      ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 2) processSMS(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "HELP"     ->
+                    if (divided.size == 1 || divided.size == 2) processHELP(divided, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                "RESTART"  ->
+                    if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_allowed)))
+                    else if (divided.size == 1) processRestart(receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+
+                else       ->
+                    if (messageToConfirm?.requester?.phoneNumber == receivedSms.phoneNumber) {
+                        val execute = messageToConfirm
+                        messageToConfirm = null
+                        execute?.action(divided[0])
+                    } else {
+                        messageToConfirm = null
+                        sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_unknown_command)))
+                    }
+            }
+        }
+        notifyMessagesChanged()
+    }
+
+    private suspend fun processBG(receivedSms: Sms) {
+        val actualBG = iobCobCalculator.ads.actualBg()
+        val lastBG = iobCobCalculator.ads.lastBg()
+        var reply = ""
+        val units = profileUtil.units
+        if (actualBG != null) {
+            reply = rh.gs(SyncStrings.sms_actual_bg) + " " + profileUtil.fromMgdlToStringInUnits(actualBG.recalculated) + ", "
+        } else if (lastBG != null) {
+            val agoMilliseconds = dateUtil.now() - lastBG.timestamp
+            val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
+            reply = rh.gs(SyncStrings.sms_last_bg) + " " + profileUtil.valueInCurrentUnitsDetect(lastBG.recalculated) + " " + rh.gs(SyncStrings.sms_min_ago, agoMin) + ", "
+        }
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
+        if (glucoseStatus != null) reply += rh.gs(SyncStrings.sms_delta) + " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta) + " " + units + ", "
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val cobInfo = iobCobCalculator.getCobInfo("SMS COB")
+        reply += (rh.gs(SyncStrings.sms_iob) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U, "
+            + rh.gs(CoreUiStrings.cob) + ": " + cobInfo.generateCOBString(decimalFormatter))
+        sendSMS(Sms(receivedSms.phoneNumber, reply))
+        receivedSms.processed = true
+    }
+
+    private suspend fun processLOOP(divided: Array<String>, receivedSms: Sms) {
+        val profile = profileFunction.getProfile() ?: return
+        when (divided[1].uppercase(Locale.getDefault())) {
+            "DISABLE", "STOP" -> {
+                if (loop.allowedNextModes().contains(RM.Mode.DISABLED_LOOP)) {
+                    val passCode = generatePassCode()
+                    val reply = rh.gs(SyncStrings.smscommunicator_loop_disable_reply_with_code, passCode)
+                    receivedSms.processed = true
+                    messageToConfirm = authRequest(
+                        receivedSms, reply, passCode,
+                        LoopDisableAction(
+                            receivedSms = receivedSms,
+                            profile = profile,
+                            loop = loop,
+                            rh = rh,
+                            smsCommunicator = this
+                        )
+                    )
+                } else
+                    sendSMS(Sms(receivedSms.phoneNumber, rh.gs(CoreUiStrings.loopisdisabled)))
+                receivedSms.processed = true
+            }
+
+            "STATUS"          -> {
+                val reply =
+                    when (loop.runningMode()) {
+                        RM.Mode.DISABLED_LOOP     -> rh.gs(CoreUiStrings.loopisdisabled)
+                        RM.Mode.OPEN_LOOP         -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.openloop)
+                        RM.Mode.CLOSED_LOOP       -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.closedloop)
+                        RM.Mode.CLOSED_LOOP_LGS   -> rh.gs(SyncStrings.smscommunicator_loop_is_enabled) + " - " + rh.gs(CoreUiStrings.lowglucosesuspend)
+                        RM.Mode.SUPER_BOLUS       -> rh.gs(CoreUiStrings.superbolus)
+                        RM.Mode.DISCONNECTED_PUMP -> rh.gs(InterfacesStrings.pump_disconnected)
+                        RM.Mode.SUSPENDED_BY_PUMP -> rh.gs(InterfacesStrings.pumpsuspended)
+                        RM.Mode.SUSPENDED_BY_DST  -> rh.gs(CoreUiStrings.loop_suspended_by_dst)
+                        RM.Mode.SUSPENDED_BY_USER -> rh.gs(SyncStrings.sms_loop_suspended_for, loop.minutesToEndOfSuspend())
+                        RM.Mode.RESUME            -> error("Invalid mode")
+                    }
+                sendSMS(Sms(receivedSms.phoneNumber, reply))
+                receivedSms.processed = true
+            }
+
+            "RESUME"          -> {
+                if (loop.allowedNextModes().contains(RM.Mode.RESUME)) {
+                    val profile = profileFunction.getProfile() ?: return
+                    val passCode = generatePassCode()
+                    val reply = rh.gs(SyncStrings.smscommunicator_loop_resume_reply_with_code, passCode)
+                    receivedSms.processed = true
+                    messageToConfirm = authRequest(
+                        receivedSms, reply, passCode,
+                        LoopResumeAction(
+                            receivedSms = receivedSms,
+                            profile = profile,
+                            loop = loop,
+                            rh = rh,
+                            sendSMSToAllNumbers = ::sendSMSToAllNumbers
+                        )
+                    )
+                } else {
+                    sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_possible)))
+                    return
+                }
+            }
+
+            "SUSPEND"         -> {
+                var duration = 0
+                if (divided.size == 3) duration = SafeParse.stringToInt(divided[2])
+                duration = max(0, duration)
+                duration = min(180, duration)
+                if (duration == 0) {
+                    receivedSms.processed = true
+                    sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_wrong_duration)))
+                    return
+                } else if (loop.allowedNextModes().contains(RM.Mode.SUSPENDED_BY_USER)) {
+                    val profile = profileFunction.getProfile() ?: return
+                    val passCode = generatePassCode()
+                    val reply = rh.gs(SyncStrings.smscommunicator_suspend_reply_with_code, duration, passCode)
+                    receivedSms.processed = true
+                    messageToConfirm = authRequest(
+                        receivedSms, reply, passCode,
+                        LoopSuspendAction(
+                            durationMinutes = duration,
+                            receivedSms = receivedSms,
+                            profile = profile,
+                            loop = loop,
+                            commandQueue = commandQueue,
+                            rh = rh,
+                            smsCommunicator = this,
+                            sendSMSToAllNumbers = ::sendSMSToAllNumbers,
+                            shortStatusBlocking = ::shortStatusBlocking
+                        )
+                    )
+                } else {
+                    sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_possible)))
+                    return
+                }
+            }
+
+            "LGS"             -> {
+                if (loop.allowedNextModes().contains(RM.Mode.CLOSED_LOOP_LGS)) {
+                    val passCode = generatePassCode()
+                    val reply = rh.gs(SyncStrings.smscommunicator_set_lgs_reply_with_code, passCode)
+                    receivedSms.processed = true
+                    messageToConfirm = authRequest(
+                        receivedSms, reply, passCode,
+                        LoopLgsAction(
+                            receivedSms = receivedSms,
+                            profile = profile,
+                            loop = loop,
+                            rh = rh,
+                            sendSMSToAllNumbers = ::sendSMSToAllNumbers
+                        )
+                    )
+                } else {
+                    sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_possible)))
+                    return
+                }
+            }
+
+            "CLOSED"          -> {
+                if (loop.allowedNextModes().contains(RM.Mode.CLOSED_LOOP)) {
+                    val passCode = generatePassCode()
+                    val reply = rh.gs(SyncStrings.smscommunicator_set_closed_loop_reply_with_code, passCode)
+                    receivedSms.processed = true
+                    messageToConfirm = authRequest(
+                        receivedSms, reply, passCode,
+                        LoopClosedAction(
+                            receivedSms = receivedSms,
+                            profile = profile,
+                            loop = loop,
+                            rh = rh,
+                            sendSMSToAllNumbers = ::sendSMSToAllNumbers
+                        )
+                    )
+                } else {
+                    sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_remote_command_not_possible)))
+                    return
+                }
+            }
+
+            else              -> sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+        }
+    }
+
+    private fun processHELP(divided: Array<String>, receivedSms: Sms) {
+        when {
+            divided.size == 1                                                             -> {
+                sendSMS(Sms(receivedSms.phoneNumber, commands.keys.toString().replace("[", "").replace("]", "")))
+                receivedSms.processed = true
+            }
+
+            isCommand(divided[1].uppercase(Locale.getDefault()), receivedSms.phoneNumber) -> {
+                commands[divided[1].uppercase(Locale.getDefault())]?.let {
+                    sendSMS(Sms(receivedSms.phoneNumber, it))
+                    receivedSms.processed = true
+                }
+            }
+
+            else                                                                          -> sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+        }
+    }
+
+    private fun processRestart(receivedSms: Sms) {
+        val passCode = generatePassCode()
+        val reply = rh.gs(SyncStrings.smscommunicator_restart_reply_with_code, passCode)
+        receivedSms.processed = true
+        messageToConfirm = authRequest(
+            receivedSms, reply, passCode,
+            RestartAction(
+                receivedSms = receivedSms,
+                rh = rh,
+                uel = uel,
+                configBuilder = configBuilder,
+                smsCommunicator = this
+            )
+        )
+    }
+
+    private suspend fun processPUMP(divided: Array<String>, receivedSms: Sms) {
+        if (divided.size == 1) {
+            val result = commandQueue.readStatus(rh.gs(CoreUiStrings.sms))
+            if (result.success) {
+                val reply = shortStatusBlocking()
+                sendSMS(Sms(receivedSms.phoneNumber, reply))
+            } else {
+                val reply = rh.gs(SyncStrings.sms_read_status_failed)
+                sendSMS(Sms(receivedSms.phoneNumber, reply))
+            }
+            receivedSms.processed = true
+        } else if ((divided.size == 2) && (divided[1].equals("CONNECT", ignoreCase = true))) {
+            if (loop.allowedNextModes().contains(RM.Mode.RESUME)) {
+                val passCode = generatePassCode()
+                val reply = rh.gs(SyncStrings.smscommunicator_pump_connect_with_code, passCode)
+                receivedSms.processed = true
+                messageToConfirm = authRequest(
+                    receivedSms, reply, passCode,
+                    PumpConnectAction(
+                        receivedSms = receivedSms,
+                        profileFunction = profileFunction,
+                        loop = loop,
+                        rh = rh,
+                        smsCommunicator = this
+                    )
+                )
+            } else {
+                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(InterfacesStrings.connected)))
+                return
+            }
+        } else if ((divided.size == 3) && (divided[1].equals("DISCONNECT", ignoreCase = true))) {
+            var duration = SafeParse.stringToInt(divided[2])
+            duration = max(0, duration)
+            duration = min(120, duration)
+            if (duration == 0) {
+                receivedSms.processed = true
+                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.smscommunicator_wrong_duration)))
+                return
+            } else {
+                val passCode = generatePassCode()
+                val reply = rh.gs(SyncStrings.smscommunicator_pump_disconnect_with_code, duration, passCode)
+                receivedSms.processed = true
+                messageToConfirm = authRequest(
+                    receivedSms, reply, passCode,
+                    PumpDisconnectAction(
+                        durationMinutes = duration,
+                        receivedSms = receivedSms,
+                        profileFunction = profileFunction,
+                        loop = loop,
+                        rh = rh,
+                        smsCommunicator = this
+                    )
+                )
+            }
+        } else {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+            return
+        }
+    }
+
+    private suspend fun processPROFILE(divided: Array<String>, receivedSms: Sms) { // load profiles
+        val store = profileRepository.profile.value
+        if (store == null) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(CoreUiStrings.notconfigured)))
+            receivedSms.processed = true
+            return
+        }
+        val profileName = profileFunction.getProfileName()
+        val list = store.getProfileList()
+        if (divided[1].uppercase(Locale.getDefault()) == "STATUS") {
+            sendSMS(Sms(receivedSms.phoneNumber, profileName))
+        } else if (divided[1].uppercase(Locale.getDefault()) == "LIST") {
+            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(CoreUiStrings.invalid_profile)))
+            else {
+                var reply = ""
+                for (i in list.indices) {
+                    if (i > 0) reply += "\n"
+                    reply += (i + 1).toString() + ". "
+                    reply += list[i]
+                }
+                sendSMS(Sms(receivedSms.phoneNumber, reply))
+            }
+        } else {
+            val pIndex = SafeParse.stringToInt(divided[1])
+            var percentage = 100
+            if (divided.size > 2) percentage = SafeParse.stringToInt(divided[2])
+            if (pIndex > list.size) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+            else if (percentage == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+            else if (pIndex == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+            else {
+                val profile = store.getSpecificProfile(list[pIndex - 1] as String)
+                if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(CoreUiStrings.noprofile)))
+                else {
+                    val passCode = generatePassCode()
+                    val reply = rh.gs(SyncStrings.smscommunicator_profile_reply_with_code, list[pIndex - 1], percentage, passCode)
+                    receivedSms.processed = true
+                    val finalPercentage = percentage
+                    messageToConfirm = authRequest(
+                        receivedSms, reply, passCode,
+                        ProfileSwitchAction(
+                            profileName = list[pIndex - 1] as String,
+                            percentage = finalPercentage,
+                            receivedSms = receivedSms,
+                            store = store,
+                            profileFunction = profileFunction,
+                            dateUtil = dateUtil,
+                            rh = rh,
+                            smsCommunicator = this
+                        )
+                    )
+                }
+            }
+        }
+        receivedSms.processed = true
+    }
+
+    private suspend fun processBASAL(divided: Array<String>, receivedSms: Sms) {
+        if (divided[1].uppercase(Locale.getDefault()) == "CANCEL" || divided[1].uppercase(Locale.getDefault()) == "STOP") {
+            val passCode = generatePassCode()
+            val reply = rh.gs(SyncStrings.smscommunicator_basal_stop_reply_with_code, passCode)
+            receivedSms.processed = true
+            messageToConfirm = authRequest(
+                receivedSms, reply, passCode,
+                BasalCancelAction(
+                    receivedSms = receivedSms,
+                    commandQueue = commandQueue,
+                    rh = rh,
+                    uel = uel,
+                    smsCommunicator = this,
+                    sendSMSToAllNumbers = ::sendSMSToAllNumbers,
+                    shortStatusBlocking = ::shortStatusBlocking
+                )
+            )
+        } else if (divided[1].endsWith("%")) {
+            var tempBasalPct = SafeParse.stringToInt(Strings.CS.removeEnd(divided[1], "%"))
+            val durationStep = activePlugin.activePump.model().tbrSettings()?.durationStep ?: 60
+            var duration = 30
+            if (divided.size > 2) duration = SafeParse.stringToInt(divided[2])
+            val profile = profileFunction.getProfile()
+            if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(CoreUiStrings.noprofile)))
+            else if (tempBasalPct == 0 && divided[1] != "0%") sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+            else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.sms_wrong_tbr_duration, durationStep)))
+            else {
+                tempBasalPct = constraintChecker.applyBasalPercentConstraints(ConstraintObject(tempBasalPct, aapsLogger), profile).value()
+                val gateKind = if (tempBasalPct == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO
+                else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
+                val gateReject = runningModeGuard.rejectionMessage(gateKind)
+                if (gateReject != null) {
+                    sendSMS(Sms(receivedSms.phoneNumber, gateReject))
+                    receivedSms.processed = true
+                    return
+                }
+                val passCode = generatePassCode()
+                val reply = rh.gs(SyncStrings.smscommunicator_basal_pct_reply_with_code, tempBasalPct, duration, passCode)
+                receivedSms.processed = true
+                messageToConfirm = authRequest(
+                    receivedSms, reply, passCode,
+                    TempBasalPercentAction(
+                        percent = tempBasalPct,
+                        durationMinutes = duration,
+                        receivedSms = receivedSms,
+                        profile = profile,
+                        commandQueue = commandQueue,
+                        rh = rh,
+                        uel = uel,
+                        smsCommunicator = this,
+                        sendSMSToAllNumbers = ::sendSMSToAllNumbers,
+                        shortStatusBlocking = ::shortStatusBlocking
+                    )
+                )
+            }
+        } else {
+            var tempBasal = SafeParse.stringToDouble(divided[1])
+            val durationStep = activePlugin.activePump.model().tbrSettings()?.durationStep ?: 60
+            var duration = 30
+            if (divided.size > 2) duration = SafeParse.stringToInt(divided[2])
+            val profile = profileFunction.getProfile()
+            if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(CoreUiStrings.noprofile)))
+            else if (tempBasal == 0.0 && divided[1] != "0") sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+            else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.sms_wrong_tbr_duration, durationStep)))
+            else {
+                tempBasal = constraintChecker.applyBasalConstraints(ConstraintObject(tempBasal, aapsLogger), profile).value()
+                val gateKind = if (tempBasal == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO
+                else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
+                val gateReject = runningModeGuard.rejectionMessage(gateKind)
+                if (gateReject != null) {
+                    sendSMS(Sms(receivedSms.phoneNumber, gateReject))
+                    receivedSms.processed = true
+                    return
+                }
+                val passCode = generatePassCode()
+                val reply = rh.gs(SyncStrings.smscommunicator_basal_reply_with_code, tempBasal, duration, passCode)
+                receivedSms.processed = true
+                messageToConfirm = authRequest(
+                    receivedSms, reply, passCode,
+                    TempBasalAbsoluteAction(
+                        rateUnitsPerHour = tempBasal,
+                        durationMinutes = duration,
+                        receivedSms = receivedSms,
+                        profile = profile,
+                        commandQueue = commandQueue,
+                        rh = rh,
+                        uel = uel,
+                        smsCommunicator = this,
+                        sendSMSToAllNumbers = ::sendSMSToAllNumbers,
+                        shortStatusBlocking = ::shortStatusBlocking
+                    )
+                )
+            }
+        }
+    }
+
+    private suspend fun processEXTENDED(divided: Array<String>, receivedSms: Sms) {
+        if (divided[1].uppercase(Locale.getDefault()) == "CANCEL" || divided[1].uppercase(Locale.getDefault()) == "STOP") {
+            val passCode = generatePassCode()
+            val reply = rh.gs(SyncStrings.smscommunicator_extended_stop_reply_with_code, passCode)
+            receivedSms.processed = true
+            messageToConfirm = authRequest(
+                receivedSms, reply, passCode,
+                ExtendedCancelAction(
+                    receivedSms = receivedSms,
+                    commandQueue = commandQueue,
+                    rh = rh,
+                    uel = uel,
+                    smsCommunicator = this,
+                    sendSMSToAllNumbers = ::sendSMSToAllNumbers,
+                    shortStatusBlocking = ::shortStatusBlocking
+                )
+            )
+        } else if (divided.size != 3) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+        } else {
+            var extended = SafeParse.stringToDouble(divided[1])
+            val duration = SafeParse.stringToInt(divided[2])
+            extended = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(extended, aapsLogger)).value()
+            if (extended == 0.0 || duration == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+            else {
+                val gateReject = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.EXTENDED_BOLUS)
+                if (gateReject != null) {
+                    sendSMS(Sms(receivedSms.phoneNumber, gateReject))
+                    receivedSms.processed = true
+                    return
+                }
+                val passCode = generatePassCode()
+                val reply = rh.gs(SyncStrings.smscommunicator_extended_reply_with_code, extended, duration, passCode)
+                receivedSms.processed = true
+                messageToConfirm = authRequest(
+                    receivedSms, reply, passCode,
+                    ExtendedSetAction(
+                        insulin = extended,
+                        durationMinutes = duration,
+                        receivedSms = receivedSms,
+                        commandQueue = commandQueue,
+                        config = config,
+                        rh = rh,
+                        uel = uel,
+                        smsCommunicator = this,
+                        sendSMSToAllNumbers = ::sendSMSToAllNumbers,
+                        shortStatusBlocking = ::shortStatusBlocking
+                    )
+                )
+            }
+        }
+    }
+
+    private suspend fun processBOLUS(divided: Array<String>, receivedSms: Sms) {
+        var bolus = SafeParse.stringToDouble(divided[1])
+        val isMeal = divided.size > 2 && divided[2].equals("MEAL", ignoreCase = true)
+        bolus = constraintChecker.applyBolusConstraints(ConstraintObject(bolus, aapsLogger)).value()
+        if (divided.size == 3 && !isMeal) {
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+        } else if (bolus > 0.0) {
+            val gateReject = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)
+            if (gateReject != null) {
+                sendSMS(Sms(receivedSms.phoneNumber, gateReject))
+                receivedSms.processed = true
+                return
+            }
+            val passCode = generatePassCode()
+            val reply = if (isMeal)
+                rh.gs(SyncStrings.smscommunicator_meal_bolus_reply_with_code, bolus, passCode)
+            else
+                rh.gs(SyncStrings.smscommunicator_bolus_reply_with_code, bolus, passCode)
+            receivedSms.processed = true
+            messageToConfirm = authRequest(
+                receivedSms, reply, passCode,
+                BolusAction(
+                    insulin = bolus,
+                    isMeal = isMeal,
+                    receivedSms = receivedSms,
+                    commandQueue = commandQueue,
+                    rh = rh,
+                    uel = uel,
+                    profileFunction = profileFunction,
+                    profileUtil = profileUtil,
+                    preferences = preferences,
+                    persistenceLayer = persistenceLayer,
+                    dateUtil = dateUtil,
+                    decimalFormatter = decimalFormatter,
+                    smsCommunicator = this,
+                    bolusProgressData = bolusProgressData,
+                    sendSMSToAllNumbers = ::sendSMSToAllNumbers,
+                    shortStatusBlocking = ::shortStatusBlocking,
+                    updateLastRemoteBolusTime = { lastRemoteBolusTime = it }
+                )
+            )
+        } else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+    }
+
+    private fun toTodayTime(hhColonMm: String): Long {
+        val p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)")
+        val m = p.matcher(hhColonMm)
+        var retVal: Long = 0
+        if (m.find()) {
+            var hours = SafeParse.stringToInt(m.group(1))
+            val minutes = SafeParse.stringToInt(m.group(2))
+            if ((m.group(3) == " a.m." || m.group(3) == " AM" || m.group(3) == "AM") && m.group(1) == "12") hours -= 12
+            if ((m.group(3) == " p.m." || m.group(3) == " PM" || m.group(3) == "PM") && m.group(1) != "12") hours += 12
+            val t = DateTime()
+                .withHourOfDay(hours)
+                .withMinuteOfHour(minutes)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0)
+            retVal = t.millis
+        }
+        return retVal
+    }
+
+    private fun processCARBS(divided: Array<String>, receivedSms: Sms) {
+        var grams = SafeParse.stringToInt(divided[1])
+        var time = dateUtil.now()
+        if (divided.size > 2) {
+            time = toTodayTime(divided[2].uppercase(Locale.getDefault()))
+            if (time == 0L) {
+                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+                return
+            }
+        }
+        grams = constraintChecker.applyCarbsConstraints(ConstraintObject(grams, aapsLogger)).value()
+        if (grams == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+        else {
+            val passCode = generatePassCode()
+            val reply = rh.gs(SyncStrings.smscommunicator_carbs_reply_with_code, grams, dateUtil.timeString(time), passCode)
+            receivedSms.processed = true
+            messageToConfirm = authRequest(
+                receivedSms, reply, passCode,
+                CarbsAction(
+                    grams = grams,
+                    timestamp = time,
+                    receivedSms = receivedSms,
+                    commandQueue = commandQueue,
+                    rh = rh,
+                    uel = uel,
+                    smsCommunicator = this,
+                    sendSMSToAllNumbers = ::sendSMSToAllNumbers,
+                    shortStatusBlocking = ::shortStatusBlocking
+                )
+            )
+        }
+    }
+
+    private fun processTARGET(divided: Array<String>, receivedSms: Sms) {
+        val isMeal = divided[1].equals("MEAL", ignoreCase = true)
+        val isActivity = divided[1].equals("ACTIVITY", ignoreCase = true)
+        val isHypo = divided[1].equals("HYPO", ignoreCase = true)
+        val isStop = divided[1].equals("STOP", ignoreCase = true) || divided[1].equals("CANCEL", ignoreCase = true)
+        if (isMeal || isActivity || isHypo) {
+            val passCode = generatePassCode()
+            val reply = rh.gs(SyncStrings.smscommunicator_temptarget_with_code, divided[1].uppercase(Locale.getDefault()), passCode)
+            receivedSms.processed = true
+            val reason = when {
+                isMeal     -> TT.Reason.EATING_SOON
+                isActivity -> TT.Reason.ACTIVITY
+                isHypo     -> TT.Reason.HYPOGLYCEMIA
+                else       -> TT.Reason.EATING_SOON
+            }
+            messageToConfirm = authRequest(
+                receivedSms, reply, passCode,
+                TempTargetSetAction(
+                    reason = reason,
+                    receivedSms = receivedSms,
+                    preferences = preferences,
+                    persistenceLayer = persistenceLayer,
+                    profileUtil = profileUtil,
+                    decimalFormatter = decimalFormatter,
+                    dateUtil = dateUtil,
+                    rh = rh,
+                    sendSMSToAllNumbers = ::sendSMSToAllNumbers
+                )
+            )
+        } else if (isStop) {
+            val passCode = generatePassCode()
+            val reply = rh.gs(SyncStrings.smscommunicator_temptarget_cancel, passCode)
+            receivedSms.processed = true
+            messageToConfirm = authRequest(
+                receivedSms, reply, passCode,
+                TempTargetCancelAction(
+                    receivedSms = receivedSms,
+                    persistenceLayer = persistenceLayer,
+                    dateUtil = dateUtil,
+                    rh = rh,
+                    uel = uel,
+                    appScope = appScope,
+                    sendSMSToAllNumbers = ::sendSMSToAllNumbers
+                )
+            )
+        } else
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+    }
+
+    private fun processSMS(divided: Array<String>, receivedSms: Sms) {
+        val isStop = (divided[1].equals("STOP", ignoreCase = true)
+            || divided[1].equals("DISABLE", ignoreCase = true))
+        if (isStop) {
+            val passCode = generatePassCode()
+            val reply = rh.gs(SyncStrings.smscommunicator_stops_ns_with_code, passCode)
+            receivedSms.processed = true
+            messageToConfirm = authRequest(
+                receivedSms, reply, passCode,
+                SmsDisableAction(
+                    receivedSms = receivedSms,
+                    preferences = preferences,
+                    rh = rh,
+                    uel = uel,
+                    sendSMSToAllNumbers = ::sendSMSToAllNumbers
+                )
+            )
+        } else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+    }
+
+    private fun processCAL(divided: Array<String>, receivedSms: Sms) {
+        val cal = SafeParse.stringToDouble(divided[1])
+        if (cal > 0.0) {
+            val passCode = generatePassCode()
+            val reply = rh.gs(SyncStrings.smscommunicator_calibration_reply_with_code, cal, passCode)
+            receivedSms.processed = true
+            messageToConfirm = authRequest(
+                receivedSms, reply, passCode,
+                CalibrationAction(
+                    value = cal,
+                    receivedSms = receivedSms,
+                    xDripBroadcast = xDripBroadcast,
+                    rh = rh,
+                    uel = uel,
+                    sendSMSToAllNumbers = ::sendSMSToAllNumbers
+                )
+            )
+        } else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+    }
+
+    override fun sendNotificationToAllNumbers(text: String): Boolean {
+        var result = true
+        for (i in allowedNumbers.indices) {
+            val sms = Sms(allowedNumbers[i], text)
+            result = result && sendSMS(sms)
+        }
+        return result
+    }
+
+    private fun sendSMSToAllNumbers(sms: Sms) {
+        for (number in allowedNumbers) {
+            sendSMS(Sms(sms, number))
+        }
+    }
+
+    override fun sendSMS(sms: Sms): Boolean {
+        sms.text = stripAccents(sms.text)
+
+        try {
+            aapsLogger.debug(LTag.SMS, "Sending SMS to " + sms.phoneNumber + ": " + sms.text)
+            if (sms.text.toByteArray().size <= 140) smsManager?.sendTextMessage(sms.phoneNumber, null, sms.text, null, null)
+            else {
+                val parts = smsManager?.divideMessage(sms.text)
+                smsManager?.sendMultipartTextMessage(
+                    sms.phoneNumber, null, parts,
+                    null, null
+                )
+            }
+            messages.add(sms)
+        } catch (e: IllegalArgumentException) {
+            return if (e.message == "Invalid message body") {
+                notificationManager.post(NotificationId.INVALID_MESSAGE_BODY, SyncStrings.smscommunicator_message_body)
+                false
+            } else {
+                notificationManager.post(NotificationId.INVALID_PHONE_NUMBER, SyncStrings.smscommunicator_invalid_phone_number)
+                false
+            }
+        } catch (_: SecurityException) {
+            // This should open Permissions bottom sheet when permission is missing
+            return false
+        }
+        notifyMessagesChanged()
+        return true
+    }
+
+    private fun generatePassCode(): String =
+        rh.gs(SyncStrings.smscommunicator_code_from_authenticator_for, otp.name())
+
+    private fun stripAccents(str: String): String {
+        var s = str
+        s = Normalizer.normalize(s, Normalizer.Form.NFD)
+        s = s.replace("\\p{InCombiningDiacriticalMarks}".toRegex(), "")
+        s = s.replace("ł", "l") // hack for Polish language (bug in libs)
+        return s
+    }
+
+    private fun areMoreNumbers(allowedNumbers: String?): Boolean {
+        return allowedNumbers?.let {
+            val knownNumbers = HashSet<String>()
+            val substrings = it.split(";").toTypedArray()
+            for (number in substrings) {
+                var cleaned = number.replace(Regex("\\s+"), "")
+                if (cleaned.length < 4) continue
+                cleaned = cleaned.replace("+", "")
+                cleaned = cleaned.replace("-", "")
+                if (!cleaned.matches(Regex("[0-9]+"))) continue
+                knownNumbers.add(cleaned)
+            }
+            knownNumbers.size > 1
+        } == true
+    }
+
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "smscommunicator_settings",
+        title = SyncStrings.smscommunicator,
+        items = listOf(
+            StringKey.SmsAllowedNumbers,
+            BooleanKey.SmsAllowRemoteCommands,
+            IntKey.SmsRemoteBolusDistance,
+            StringKey.SmsOtpPassword,
+            SmsIntentKey.OtpSetup.withCompose(
+                ComposeScreenContent { onBack ->
+                    SmsCommunicatorOtpScreen(
+                        otp = otp,
+                        onReset = {
+                            uel.log(Action.OTP_RESET, Sources.SMS)
+                            otp.ensureKey(true)
+                        },
+                        onBack = onBack
+                    )
+                }
+            ),
+            BooleanKey.SmsReportPumpUnreachable
+
+        ),
+        icon = pluginDescription.icon
+    )
+}
+
+object SmsInbox : Inbox<Bundle>("sms-received", SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)

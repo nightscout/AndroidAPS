@@ -14,7 +14,7 @@ import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.utils.CRC
 import org.apache.commons.lang3.NotImplementedException
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Created by geoff on 5/30/16.

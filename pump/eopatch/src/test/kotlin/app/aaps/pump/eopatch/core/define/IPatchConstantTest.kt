@@ -2,7 +2,7 @@ package app.aaps.pump.eopatch.core.define
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.hours
 
 class IPatchConstantTest {
 
@@ -23,12 +23,12 @@ class IPatchConstantTest {
 
     @Test
     fun `WARRANTY_OPERATING_LIFE_MILLI should be 84 hours`() {
-        assertThat(IPatchConstant.WARRANTY_OPERATING_LIFE_MILLI).isEqualTo(TimeUnit.HOURS.toMillis(84))
+        assertThat(IPatchConstant.WARRANTY_OPERATING_LIFE_MILLI).isEqualTo(84.hours.inWholeMilliseconds)
     }
 
     @Test
     fun `SERVICE_TIME_MILLI should be 12 hours`() {
-        assertThat(IPatchConstant.SERVICE_TIME_MILLI).isEqualTo(TimeUnit.HOURS.toMillis(12))
+        assertThat(IPatchConstant.SERVICE_TIME_MILLI).isEqualTo(12.hours.inWholeMilliseconds)
     }
 
     @Test

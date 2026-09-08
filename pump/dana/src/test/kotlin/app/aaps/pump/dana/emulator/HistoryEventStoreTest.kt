@@ -1,13 +1,14 @@
 package app.aaps.pump.dana.emulator
 
+// java.util.TimeZone is what setDefault takes; kotlinx.datetime.TimeZone stays qualified below,
+// since importing both simple names would collide.
+import app.aaps.pump.dana.emulator.HistoryEventStoreTest.Companion.OFFSET_HOURS
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toInstant
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-// java.util.TimeZone is what setDefault takes; kotlinx.datetime.TimeZone stays qualified below,
-// since importing both simple names would collide.
 import java.util.TimeZone
 
 /**

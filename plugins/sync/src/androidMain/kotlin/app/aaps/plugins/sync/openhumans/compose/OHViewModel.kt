@@ -1,0 +1,49 @@
+package app.aaps.plugins.sync.openhumans.compose
+
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import app.aaps.plugins.sync.di.OpenHumansScope
+import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+@Immutable
+internal data class OHUiState(
+    val isLoggedIn: Boolean = false,
+    val projectMemberId: String? = null
+)
+
+@Stable
+// Contributed to OpenHumansScope, not AppScope: this class is internal to the module, and a
+// contribution to AppScope would have to be nameable from `:app` where the root graph is generated.
+@ContributesIntoMap(OpenHumansScope::class, binding = binding<ViewModel>())
+@ViewModelKey
+internal class OHViewModel @Inject constructor(
+    private val stateDelegate: OHStateDelegate
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(OHUiState())
+    val uiState: StateFlow<OHUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            stateDelegate.stateFlow.collect { state ->
+                _uiState.update {
+                    OHUiState(
+                        isLoggedIn = state != null,
+                        projectMemberId = state?.projectMemberId
+                    )
+                }
+            }
+        }
+    }
+}

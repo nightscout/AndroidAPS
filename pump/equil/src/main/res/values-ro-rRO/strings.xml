@@ -39,6 +39,7 @@
     <string name="equil_record_basal_temp">Rată bazală temporară %1$s U/h</string>
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Durata TBR trebuie să fie mai mare decât zero și un multiplu de %1$s minute.</string>
+    <string name="equil_basal_exceeds_max">Rata bazală a profilului %1$s U/h depășește valoarea maximă bazală a pompei %2$s U/h. Creșteți setarea valorii maxime a bazalei, apoi reconectați pompa.</string>
     <string name="equil_not_enough_insulin">Nu a rămas suficientă insulină în rezervor</string>
     <string name="equil_low_battery">Nivel scăzut al bateriei</string>
     <string name="equil_low_insulin">Nu a rămas suficientă insulină în rezervor</string>
@@ -114,27 +115,8 @@
     <string name="equil_history_item18">Infuzie anormală oprită</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspendați</string>
     <string name="equil_common_overview_button_resume_delivery">Reluați administrarea</string>
-    <string name="equil_common_moments_ago">Momente în urmă</string>
-    <string name="equil_common_less_than_a_minute_ago">Mai puțin de un minut în urmă</string>
-    <string name="equil_common_time_ago">%1$s în urmă</string>
-    <string name="equil_common_composite_time">%1$s și %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Nu ați finalizat încă toți pașii. Sigur vreți să ieșiți?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Ieșire</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minut</item>
-        <item quantity="few">%1$d minute</item>
-        <item quantity="other">%1$d minute</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d oră</item>
-        <item quantity="few">%1$d ore</item>
-        <item quantity="other">%1$d ore</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d zi</item>
-        <item quantity="few">%1$d zile</item>
-        <item quantity="other">%1$d zile</item>
-    </plurals>
     <string name="equil_support_error">Versiunea firmware este prea veche. Nu este acceptată</string>
     <string name="equil_password_tips">Opțional setați o parolă pentru asocierea cu pompa Equil v5.3. Această parolă va fi folosită și pentru dezasocierea în viitor, așa că vă rugăm să vă amintiți de ea. Regulă parolă: trebuie să aibă 4 caractere, aleasă din ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Setați parolă asociere</string>

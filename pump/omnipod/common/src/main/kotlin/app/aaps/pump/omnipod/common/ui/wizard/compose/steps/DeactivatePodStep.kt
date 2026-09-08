@@ -15,10 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.ExcludeFromJacocoGeneratedReport
 import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.pump.WizardButton
@@ -74,6 +72,11 @@ fun DeactivatePodStep(
     )
 }
 
+/**
+ * @see PreviewDeactivating
+ * @see PreviewDeactivateSuccess
+ * @see PreviewDeactivateError
+ */
 @Composable
 internal fun DeactivatePodStepContent(
     actionState: ActionState,
@@ -126,44 +129,5 @@ internal fun DeactivatePodStepContent(
                 ErrorBanner(message = actionState.message)
             }
         }
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Deactivate - In Progress")
-@Composable
-private fun PreviewDeactivating() {
-    MaterialTheme {
-        DeactivatePodStepContent(
-            actionState = ActionState.Executing,
-            text = "Deactivating pod...",
-            onNext = {}, onDiscard = {}, onCancel = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Deactivate - Success")
-@Composable
-private fun PreviewDeactivateSuccess() {
-    MaterialTheme {
-        DeactivatePodStepContent(
-            actionState = ActionState.Idle, // Idle used as stand-in for Success in preview
-            text = "Pod deactivated successfully.",
-            onNext = {}, onDiscard = {}, onCancel = {}
-        )
-    }
-}
-
-@ExcludeFromJacocoGeneratedReport
-@Preview(showBackground = true, name = "Deactivate - Error with Discard")
-@Composable
-private fun PreviewDeactivateError() {
-    MaterialTheme {
-        DeactivatePodStepContent(
-            actionState = ActionState.Error("Communication failed. Pod may need to be discarded."),
-            text = "Deactivating pod...",
-            onNext = {}, onDiscard = {}, onCancel = {}
-        )
     }
 }
