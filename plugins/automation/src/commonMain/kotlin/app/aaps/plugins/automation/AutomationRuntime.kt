@@ -656,6 +656,7 @@ class AutomationRuntime @Inject constructor(
             actionFactory.actionProfileSwitch(),
             actionFactory.actionSendSMS(),
             actionFactory.actionSMBChange(),
+            actionFactory.actionSmoothingChange(),
             actionFactory.actionRunScene(),
             actionFactory.actionEnableScene(),
             actionFactory.actionDisableScene()
