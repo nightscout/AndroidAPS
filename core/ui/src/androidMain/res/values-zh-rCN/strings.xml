@@ -1003,7 +1003,74 @@
     <string name="import_wrong_password">密码错误</string>
     <string name="import_btn">导入</string>
     <string name="import_anyway_btn">仍然导入</string>
+    <string name="import_source_local">本地</string>
+    <string name="import_source_cloud">云</string>
+    <string name="import_load_more">加载更多</string>
+    <string name="import_no_files">找不到设置文件</string>
+    <string name="import_decrypt_ok">解密成功。准备导入。</string>
+    <string name="import_decrypt_warn">解密成功，但有警告。</string>
+    <string name="import_decrypt_error">解密成功，但无法导入。</string>
+    <string name="reset_aps_results">重置 APS 结果</string>
+    <string name="database_cleanup">数据库清理</string>
+    <string name="nav_resetdb">重置数据库</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">查找泵</string>
+    <string name="ble_scan_scanning">正在扫描设备…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">添加图表</string>
+    <string name="graph_new">新图表</string>
+    <string name="graph_number">图表 %1$d</string>
+    <string name="graph_bg">血糖图表</string>
+    <string name="graph_height">图表高度 [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">预测</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <string name="units_days">天</string>
+    <string name="units_format_days">%1$d 天</string>
+    <string name="units_format_days_range">%1$d 天 (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours">%1$d 小时</string>
+    <string name="units_format_hours_double">%1$.0f 小时</string>
+    <string name="units_format_hours_double_range">%1$.0f 小时(%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_range">%1$d 小时(%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d 分</string>
+    <string name="units_format_min_range">%1$d 分(%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d 秒</string>
+    <string name="units_format_sec_range">%1$d 秒(%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">小时</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_min">分</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">秒</string>
+    <string name="units_years">年</string>
+    <string name="prefs_range_title">可视化范围</string>
 </resources>
