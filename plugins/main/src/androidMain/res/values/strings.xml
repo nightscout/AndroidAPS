@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="nav_history_browser">History browser</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="pb_label">Pump battery</string>
+    <string name="cannula">Cannula</string>
+    <string name="patch_pump">Patch pump</string>
+
+    <!-- Overview -->
+
+    <!-- overview moved to core:ui module -->
+
+
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
+
+
+    <!--    Iob-->
+    <string name="iob_cob_calculator" translatable="false">IobCobCalculator</string>
+
+    <!--    PersistentNotification-->
+    <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
+    <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
+    <string name="old_data">OLD DATA</string>
+    <string name="notification_iob_short">%1$.1fU</string>
+
+</resources>
