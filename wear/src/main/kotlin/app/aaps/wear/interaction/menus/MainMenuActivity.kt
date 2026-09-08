@@ -21,8 +21,8 @@ import app.aaps.wear.interaction.activities.BgGraphActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
 import app.aaps.wear.watchfaces.WatchFacePushHelper
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class MainMenuActivity : MenuListActivity() {
 

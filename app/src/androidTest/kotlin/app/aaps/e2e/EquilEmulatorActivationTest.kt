@@ -6,6 +6,8 @@ import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -26,6 +28,7 @@ import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -36,10 +39,14 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.extensions.singleBlock
+import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.equil.EquilPumpPlugin
+import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.compose.EquilHistoryViewModel
 import app.aaps.pump.equil.compose.EquilOverviewViewModel
 import app.aaps.pump.equil.compose.EquilWizardStep
@@ -51,30 +58,24 @@ import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.EquilHistoryEntryGroup
 import app.aaps.pump.equil.emulator.EquilEmulatorBleTransport
-import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Drives the **real Equil activation wizard** against the in-tree Equil emulator, headlessly (no
  * Compose UI): the genuine `EquilWizardViewModel` → `CommandQueue` → `EquilPumpPlugin` →
  * `EquilManager` → `EquilBLE` → [EquilEmulatorBleTransport], with no Bluetooth hardware and no pod.
- *
  * ## What this covers that the JVM tests don't
  * `:pump:equil-emulator`'s own `EquilPumpEmulatorTest` exercises the emulator's command handling with
  * a hand-built protocol and no plugin. It cannot cover the driver above it: the `EquilManager`
@@ -83,58 +84,44 @@ import javax.inject.Inject
  * ~11-command PAIR activation chain (`CmdDevicesOldGet` → `CmdPair` → `CmdSettingSet` → fill/air →
  * `CmdAlarmSet`/`CmdBasalSet`/`CmdTimeSet`/`CmdDevicesGet` → `CmdInsulinGet`/`CmdModelSet` → final
  * `CmdSettingSet` → `saveActivation`). This is the first test of that whole stack.
- *
- * ## Why the wizard is driven at the ViewModel level (not through the UI)
- * The `EquilWizardViewModel` is a `@HiltViewModel` with an `@Inject constructor` whose dependencies
- * are all themselves injectable, so the test constructs the *real* ViewModel from injected singletons
- * and calls its public step-advance functions (`startDeviceScan`/`onDeviceSelected`/`startPairing`/
- * `startFill`/`startAirRemoval`/`startConfirm`) in the same order the Compose screens' buttons do —
- * exercising the identical command chain without the flakier uiautomator navigation. The through-UI
- * wizard is a later increment. Each ViewModel call is dispatched on the main thread (its coroutines
- * run on `viewModelScope` = `Dispatchers.Main`); the test thread then polls the exposed StateFlows to
- * await each async step.
- *
  * The emulator is selected purely by the `EMULATE_EQUIL` option — see [EmulatedOptions] for why a
  * test reports that rather than dropping the production marker file. It must be set before
- * `hiltRule.inject()` because `EquilBleTransport` is a `@Singleton` the graph binds once.
+ * the graph is built because `EquilBleTransport` is scoped - the graph binds it once.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class EquilEmulatorActivationTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
     // ViewModel dependencies — injected here and passed to a manually-constructed EquilWizardViewModel.
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
-    @Inject lateinit var equilManager: EquilManager
-    @Inject lateinit var pumpSync: PumpSync
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
-    @Inject lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var constraintsChecker: ConstraintsChecker
-    @Inject lateinit var ch: ConcentrationHelper
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var insulinManager: InsulinManager
-    @Inject lateinit var bleTransport: EquilBleTransport
-    @Inject lateinit var hardLimits: HardLimits
+    private val rh get() = testGraphs.resourceHelper
+    private val aapsLogger get() = testGraphs.aapsLogger
+    private val preferences get() = testGraphs.preferences
+    private val commandQueue get() = testGraphs.commandQueue
+    private val equilPumpPlugin get() = testGraphs.pumps.equilPumpPlugin
+    private val equilManager get() = testGraphs.pumps.equilManager
+    private val pumpSync get() = testGraphs.pumpSync
+    private val persistenceLayer get() = testGraphs.persistenceLayer
+    private val equilHistoryRecordDao get() = testGraphs.pumps.equilHistoryRecordDao
+    private val equilHistoryPumpDao get() = testGraphs.pumps.equilHistoryPumpDao
+    private val profileUtil get() = testGraphs.profileUtil
+    private val constraintsChecker get() = testGraphs.constraintsChecker
+    private val ch get() = testGraphs.concentrationHelper
+    private val profileFunction get() = testGraphs.profileFunction
+    private val profileRepository get() = testGraphs.profileRepository
+    private val rxBus get() = testGraphs.rxBus
+    private val insulinManager get() = testGraphs.insulinManager
+    private val bleTransport get() = testGraphs.pumps.equilBleTransport
+    private val hardLimits get() = testGraphs.hardLimits
 
     // Test-harness singletons (active-pump selection, profile activation, teardown).
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var config: Config
-    @Inject lateinit var dateUtil: DateUtil
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    private val pluginStore get() = testGraphs.pluginStore
+    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    private val configBuilder get() = testGraphs.configBuilder
+    private val config get() = testGraphs.config
+    private val dateUtil get() = testGraphs.dateUtil
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val appContext: Context get() = instrumentation.targetContext.applicationContext
@@ -144,11 +131,10 @@ class EquilEmulatorActivationTest {
 
     private fun bringUp() {
         // A prior activation persists the pod state (EquilStringKey.State) to SharedPreferences, which
-        // outlives the per-test Hilt component — so clear it before inject(), or the freshly-built
+        // outlives the per-test graph — so clear it before inject(), or the freshly-built
         // EquilManager reads back a COMPLETED pod and the test starts already-activated.
         clearAllSharedPrefs()
         EmulatedOptions.enabled = setOf(ExternalOptions.EMULATE_EQUIL)
-        hiltRule.inject()
 
         instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_CONNECT)
         runCatching { instrumentation.uiAutomation.grantRuntimePermission(PKG, Manifest.permission.BLUETOOTH_SCAN) }
@@ -173,12 +159,14 @@ class EquilEmulatorActivationTest {
 
         // EquilManager is @Singleton, so its in-memory equilState survives across @Test methods: a pod
         // activated by a prior method leaves activationProgress = COMPLETED behind. Reset it explicitly and
-        // synchronously here. Use clearPodState() (write-through) NOT loadPodState() (read-only): the plugin's
-        // real onStart runs loadPodState() on a background worker, and a lingering storePodState() from the
-        // prior test can re-persist the still-COMPLETED singleton to prefs AFTER clearAllSharedPrefs() — a
-        // read-only reset then reads that COMPLETED back, and so does the racing background onStart, flaking
-        // activatePod()'s isActivationCompleted()==false precondition under CI load (shard C, #5040). Writing
-        // an empty state to prefs makes every subsequent (racing) loadPodState() read clean.
+        // synchronously here. Use clearPodState() (write-through) NOT loadPodState() (read-only), so the
+        // reset reaches preferences as well as memory.
+        //
+        // This used to be the whole story and it was not enough: the plugin's real onStart runs on a
+        // background coroutine and called loadPodState() again, which raced this reset and flaked shard C
+        // both ways - a stale COMPLETED surviving, or a finished activation being reset so the wizard
+        // waited forever (#5040). That is fixed in EquilManager itself now: the state is read once per
+        // process and published in a single assignment. See EquilManagerStateTest.
         equilManager.clearPodState()
 
         // A profile must be active before activation: setProfile() programs the basal schedule from it,
@@ -223,13 +211,11 @@ class EquilEmulatorActivationTest {
     /**
      * Activates the pod through the whole PAIR wizard, then delivers through it — bolus, temp basal
      * and extended bolus — asserting each on the emulator's own `PumpState`, the true far side.
-     *
      * Each `startXxx` launches a `viewModelScope` coroutine that submits its command(s) through the
      * command queue and advances the wizard state on success; the test awaits the resulting state
      * transition before driving the next step. The final `CmdSettingSet` in [startConfirm] is a
      * pair-step — the command whose `executeCmd` wait can lose its wakeup against the fast emulator —
      * so the completion timeout is generous; increment work will tighten it once the race is fixed.
-     *
      * The delivery leg reuses the pod this activation just paired: only a real pairing establishes the
      * shared keys `EquilManager.executeCmd` encrypts with, so a seeded-activated pod could not deliver.
      * Driven directly on the plugin (as a queue worker would), asserted on the emulator, not the
@@ -407,6 +393,24 @@ class EquilEmulatorActivationTest {
         android.util.Log.i(TAG, "activation finished=$activated in ${SystemClock.uptimeMillis() - start}ms")
         assertThat(activated).isTrue()
         assertThat(equilManager.getActivationProgress()).isEqualTo(ActivationProgress.COMPLETED)
+        awaitQueueIdle()
+    }
+
+    /**
+     * Waits for the command queue to drain.
+     *
+     * [activatePod] finishes when `isActivationCompleted()` flips, and that flag is set by one of the
+     * commands in the confirm step rather than by the queue going quiet - so the queue can still be
+     * finishing work when the flag is already true. A test that sends the next command into that
+     * window gets it rejected, and reads as a failure of whatever it sent rather than of its own
+     * timing. This is the suspected cause of `activatedPod_readsCancelsAndTogglesMode` failing one CI
+     * shard and passing the reruns.
+     */
+    private fun awaitQueueIdle(timeoutMs: Long = STEP_TIMEOUT) {
+        val idle = awaitTrue(timeoutMs) {
+            commandQueue.size() == 0 && !commandQueue.isRunning(Command.CommandType.CUSTOM_COMMAND)
+        }
+        if (!idle) error("Command queue never went idle (${commandQueue.size()} queued)")
     }
 
     /**
@@ -462,14 +466,13 @@ class EquilEmulatorActivationTest {
     }
 
     private fun seedLocalProfile() {
-        val profile = profileRepository.newDraft().apply {
-            mgdl = true
-            ic = JSONArray(singleValue(10.0))
-            isf = JSONArray(singleValue(50.0))
-            basal = JSONArray(singleValue(0.5))
-            targetLow = JSONArray(singleValue(100.0))
-            targetHigh = JSONArray(singleValue(110.0))
-        }
+        val profile = profileRepository.newDraft().copy(
+            mgdl = true,
+            ic = singleBlock(10.0),
+            isf = singleBlock(50.0),
+            basal = singleBlock(0.5),
+            target = singleTargetBlock(100.0, 110.0)
+        )
         runBlocking { profileRepository.add(profile) }.getOrThrow()
     }
 
@@ -504,9 +507,6 @@ class EquilEmulatorActivationTest {
         }
         return null
     }
-
-    private fun singleValue(value: Double) =
-        """[{"time":"00:00","timeAsSeconds":0,"value":$value}]"""
 
     private fun clearAllSharedPrefs() {
         val ctx = instrumentation.targetContext

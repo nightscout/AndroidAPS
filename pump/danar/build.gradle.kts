@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -19,14 +20,8 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":pump:dana"))
-
-    implementation(libs.androidx.hilt.navigation.compose)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":core:objects"))
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
 }

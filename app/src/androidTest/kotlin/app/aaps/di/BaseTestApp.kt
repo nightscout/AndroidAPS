@@ -1,89 +1,135 @@
 package app.aaps.di
 
+import app.aaps.di.GeneratedStringOwners
 import android.app.Application
 import android.content.Context
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
+import app.aaps.di.metro.MetroGraphs
+import app.aaps.database.di.DatabaseConfig
+import app.aaps.plugins.aps.ApsStringIds
+import app.aaps.plugins.automation.AutomationStringIds
+import app.aaps.plugins.calibration.CalibrationStringIds
+import app.aaps.plugins.configuration.ConfigurationStringIds
+import app.aaps.plugins.constraints.ConstraintsStringIds
+import app.aaps.plugins.main.MainStringIds
+import app.aaps.plugins.sensitivity.SensitivityStringIds
+import app.aaps.plugins.sync.SyncStringIds
+import app.aaps.plugins.source.SourceStringIds
+import app.aaps.plugins.smoothing.SmoothingStringIds
+import app.aaps.pump.virtual.VirtualStringIds
+import app.aaps.ui.UiStringIds
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.testing.CustomTestApplication
-import dagger.hilt.components.SingletonComponent
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 
 /**
- * Base application for instrumented tests. Mirrors [app.aaps.MainApp]'s dagger-android bridge so that
- * production code resolving `(applicationContext as HasAndroidInjector).androidInjector()` keeps working
- * under Hilt. [CustomTestApplication] generates the Hilt-enabled `HiltTestApplication_Application`
- * (named after the annotated interface) used by the test runner.
+ * Base application for instrumented tests. Mirrors [app.aaps.MainApp]: both build the one Metro root
+ * themselves and act as its member injector.
  *
- * Under Hilt instrumented tests the singleton component is created per test by `HiltAndroidRule`, so it
- * does not exist in [onCreate]. Therefore this app does no graph access at startup — the plugin/config
- * initialization that MainApp does in onCreate is performed instead in [app.aaps.HiltInstrumentedTest]
- * after the rule has built the component. [androidInjector] resolves the injector freshly per call (no
- * caching) so it always targets the current test's component.
+ * `AapsTestRunner` installs this class, and the graph lives for the whole process, so [onCreate] can
+ * use it.
  */
-open class BaseTestApp : Application(), HasAndroidInjector {
+open class BaseTestApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner {
+
+    /**
+     * The Metro root for the test process, built here exactly as `MainApp` builds its own.
+     *
+     * The two arguments are the whole of how a test graph differs from the real one.
+     */
+    @Volatile private var metroGraphsOrNull: MetroGraphs? = null
+
+    private val metroGraphs: MetroGraphs
+        get() = metroGraphsOrNull ?: newGraph().also { metroGraphsOrNull = it }
+
+    private fun newGraph() = MetroGraphs(
+        context = this,
+        memberInjector = this,
+        databaseConfig = DatabaseConfig.IN_MEMORY,
+        externalOptionsOverride = ExternalOptionsOverride { EmulatedOptions.enabled }
+    )
+
+    /**
+     * Throw the graph away so the next read builds a fresh one. Called between tests by [ResetGraphRule].
+     *
+     * **This is not a tidiness measure.** Each test method needs its own instances. Some
+     * objects read `config.isEnabled` exactly once, when they are constructed: `RfcommTransport` and
+     * `BleTransport` pick the emulator or the real transport there and never look again. The Dana tests
+     * select a different pump variant per test method, so without a fresh graph every test after the
+     * first would silently drive the *first* test's transport.
+     *
+     * There is no Android Test Orchestrator here, so the whole run shares one process and one
+     * application - the graph would otherwise live for every test in the run.
+     */
+    fun resetGraph() {
+        metroGraphsOrNull = null
+    }
 
     override fun onCreate() {
         super.onCreate()
+        // The same owners MainApp registers. This application replaces MainApp for instrumented tests,
+        // so without this every TextRef.Named has no id to resolve to and the screens render blank
+        // text - which fails as "the text is not displayed", a long way from the cause.
+        // Every owner, including `coreUi` and `implementation`, which used to be listed separately
+        // here because ResourceHelperImpl registers them from its own start().
+        GeneratedStringOwners.registerAll()
         // Instrumented tests run under the production applicationId with Firebase auto-initialized (via
         // FirebaseInitProvider, before onCreate), so a crash on a CI emulator — e.g. an activity launched
-        // outside a HiltAndroidRule scope whose graph access then fails (RequestDexcomPermissionActivity /
+        // outside a test scope whose graph access then fails (RequestDexcomPermissionActivity /
         // "The component was not created") — would be reported to the PRODUCTION Crashlytics dashboard.
         // FabricPrivacyImpl normally gates collection, but it only runs once injected, which is too late
         // for (and unrelated to) test crashes. Disable collection here so test noise never reaches the dashboard.
         FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = false
+        // Analytics has exactly the same exposure and was missed above: it is on by default after the
+        // auto-init, and the only thing that ever turns it off is FabricPrivacyImpl's init - which runs
+        // when that class is injected, far too late here and often not at all. Every CI run therefore
+        // registered the emulator as a real user of the production app id, which is why a dev build
+        // showed dozens of "users" in the console.
+        Firebase.analytics.setAnalyticsCollectionEnabled(false)
         // Production WorkManager init lives in MainApp (Configuration.Provider) + the default
-        // androidx.startup initializer is removed from the manifest. Neither applies under the Hilt
-        // test application, so initialize a test WorkManager here — otherwise building the Hilt graph
-        // (e.g. SyncModule.providesWorkManager → WorkManager.getInstance) throws "not initialized".
+        // androidx.startup initializer is removed from the manifest. Neither applies to this test
+        // application, so initialize a test WorkManager here - otherwise anything reaching
+        // WorkManager.getInstance throws "not initialized".
         //
-        // The factory must be the Hilt one: @HiltWorker workers (e.g. QueueWorker) are built via
-        // assisted injection and cannot be instantiated by WorkManager's default reflective factory
-        // ("Could not instantiate ... NoSuchMethodException"), which would leave queued commands
-        // (e.g. CommandSetProfile) forever unexecuted. The Hilt singleton component does not exist yet
-        // at onCreate (HiltAndroidRule builds it per test), so resolve HiltWorkerFactory lazily via an
-        // EntryPoint at worker-creation time — by then the graph is built. Returning its result (null
-        // for non-@HiltWorker workers) lets WorkManager's built-in reflective fallback handle legacy
-        // workers, exactly as MainApp's `setWorkerFactory(hiltWorkerFactory)` does in production.
+        // Every worker is built by assisted injection, so WorkManager's default reflective factory
+        // cannot instantiate any of them ("Could not instantiate ... NoSuchMethodException") - that
+        // would leave queued commands (e.g. CommandSetProfile) forever unexecuted. This mirrors
+        // production's `MetroWorkerFactory`.
         val configuration = Configuration.Builder()
             .setExecutor(SynchronousExecutor())
             .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker? =
-                    EntryPointAccessors.fromApplication(this@BaseTestApp, WorkerFactoryEntryPoint::class.java)
-                        .hiltWorkerFactory()
-                        .createWorker(appContext, workerClassName, workerParameters)
+                    metroGraphs.workerCreators()[workerClassName]?.create(appContext, workerParameters)
             })
             .build()
         WorkManagerTestInitHelper.initializeTestWorkManager(this, configuration)
     }
 
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface TestAppEntryPoint {
+    /** What a test reads its objects from. */
+    val graphs: MetroGraphs get() = metroGraphs
 
-        fun androidInjector(): DispatchingAndroidInjector<Any>
-    }
+    // Mirrors MainApp. Without these, anything Metro injects crashes the moment the system creates it
+    // outside a test - a started service or a broadcast receiver - because the application it looks at
+    // is this one, not MainApp. `DummyService` did exactly that and took the whole run down with it.
+    //
+    // This used to swallow an IllegalStateException, because between tests there was no graph
+    // and a broadcast could still arrive - MY_PACKAGE_REPLACED lands right after `adb install -r` and
+    // reached AutoStartReceiver. That cannot happen now: the application owns the graph, so it exists
+    // for the whole process and a missing binding fails loudly, which is the point of the check.
+    override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
 
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface WorkerFactoryEntryPoint {
+    override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs.viewModelFactory
 
-        fun hiltWorkerFactory(): HiltWorkerFactory
-    }
-
-    override fun androidInjector(): AndroidInjector<Any> =
-        EntryPointAccessors.fromApplication(this, TestAppEntryPoint::class.java).androidInjector()
+    /**
+     * Keep in step with `MainApp.registerStringOwners`. Each of these modules generates its own name
+     * to `R.string` id map, and the registry is what a `TextRef.Named` is resolved through.
+     */
 }
 
-@CustomTestApplication(BaseTestApp::class)
-interface HiltTestApplication

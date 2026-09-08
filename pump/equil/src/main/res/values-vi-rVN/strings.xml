@@ -114,21 +114,8 @@
     <string name="equil_history_item18">Đã dừng lại do dây truyền bất thường</string>
     <string name="equil_common_overview_button_suspend_delivery">Tạm dừng</string>
     <string name="equil_common_overview_button_resume_delivery">Tiếp tục bơm insulin</string>
-    <string name="equil_common_moments_ago">Cách đây ít phút</string>
-    <string name="equil_common_less_than_a_minute_ago">Chưa đầy một phút trước</string>
-    <string name="equil_common_time_ago">%1$s trước</string>
-    <string name="equil_common_composite_time">%1$s và %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Bạn chưa hoàn tất tất cả các bước. Bạn có chắc chắn muốn thoát không?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Thoát</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="other">%1$d phút</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="other">%1$d giờ</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="other">%1$d ngày</item>
-    </plurals>
     <string name="equil_support_error">Phiên bản firmware quá thấp. Không được hỗ trợ</string>
     <string name="equil_password_tips">Vui lòng đặt mật khẩu mới để ghép nối với bơm Equil v5.3. Mật khẩu này cũng sẽ được sử dụng để hủy ghép nối với bơm hiện tại trong dự kiến, vì vậy hãy chắc chắn ghi nhớ. Quy tắc mật khẩu: gồm 4 ký tự, chọn từ ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Đặt mật khẩu ghép nối</string>

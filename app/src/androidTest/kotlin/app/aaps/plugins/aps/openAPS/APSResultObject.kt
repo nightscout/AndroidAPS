@@ -1,10 +1,10 @@
 package app.aaps.plugins.aps.openAPS
 
-import android.text.Spanned
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -30,18 +30,22 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
-import app.aaps.core.utils.HtmlHelper
-import dagger.android.HasAndroidInjector
+import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
-import javax.inject.Inject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 import kotlin.math.max
 
 /**
  * Created by mike on 09.06.2016.
  */
-open class APSResultObject(protected val injector: HasAndroidInjector) : APSResult {
+// Built with `new` by the algorithm helpers, so it fills its own fields from `injector`. Open, so Metro
+// needs telling that subclasses are meant to be injected too.
+@HasMemberInjections
+open class APSResultObject(protected val injector: MetroMemberInjector) : APSResult {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -55,7 +59,9 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
     override fun with(result: RT): APSResult = this
 
     init {
-        injector.androidInjector().inject(this)
+        // Loud on the wrong injector: the app wide one returns false for a class it does not know, which
+        // would leave these lateinit fields unset and fail later somewhere unrelated.
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
     }
 
     override var date: Long = 0
@@ -123,35 +129,6 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
         } else rh.gs(R.string.nochangerequested)
     }
 
-    override suspend fun resultAsSpanned(): Spanned = HtmlHelper.fromHtml(resultAsHtmlString())
-    override suspend fun resultAsHtmlString(): String {
-        val pump = activePlugin.activePump
-        if (isChangeRequested()) {
-            // rate
-            var ret: String =
-                if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>"
-                else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>"
-                else if (usePercent) "<b>" + rh.gs(R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(percent.toDouble()) + "% " +
-                    "(" + decimalFormatter.to2Decimal(percent * ch.fromPump(pump.baseBasalRate) / 100.0) + " U/h)<br>" +
-                    "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
-                else "<b>" + rh.gs(R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(rate) + " U/h " +
-                    "(" + decimalFormatter.to2Decimal(rate / ch.fromPump(pump.baseBasalRate) * 100.0) + "%) <br>" +
-                    "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
-
-            // smb
-            if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep) + "<br>"
-            if (isCarbsRequired) {
-                ret += "$carbsRequiredText<br>"
-            }
-
-            // reason
-            ret += "<b>" + rh.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;")
-            return ret
-        }
-        return if (isCarbsRequired) carbsRequiredText
-        else rh.gs(R.string.nochangerequested)
-    }
-
     override fun newAndClone(): APSResult {
         val newResult = APSResultObject(injector)
         doClone(newResult)
@@ -178,14 +155,12 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
         newResult.targetBG = targetBG
     }
 
-    override fun json(): JSONObject? {
-        val json = JSONObject()
+    override fun json(): JsonObject? = buildJsonObject {
         if (runBlocking { isChangeRequested() }) {
-            json.put("rate", rate)
-            json.put("duration", duration)
-            json.put("reason", reason)
+            put("rate", rate)
+            put("duration", duration)
+            put("reason", reason)
         }
-        return json
     }
 
     override val predictionsAsGv: MutableList<GV>

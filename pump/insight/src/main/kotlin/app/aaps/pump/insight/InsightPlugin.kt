@@ -14,6 +14,7 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -22,6 +23,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
@@ -47,6 +49,7 @@ import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginInsight
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.insight.app_layer.Service
@@ -128,18 +131,25 @@ import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import android.app.NotificationManager as AndroidNotificationManager
+import app.aaps.core.interfaces.pump.comment
 
-@Singleton
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@IntKey(1050)
+@SingleIn(AppScope::class)
 class InsightPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,
@@ -148,7 +158,7 @@ class InsightPlugin @Inject constructor(
     private val insightDbHelper: InsightDbHelper,
     private val pumpSync: PumpSync,
     private val insightDatabase: InsightDatabase,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
     private val bolusProgressData: BolusProgressData,
@@ -158,29 +168,26 @@ class InsightPlugin @Inject constructor(
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .icon(IcPluginInsight)
-        .pluginName(R.string.insight_local)
-        .shortName(R.string.insightpump_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.insight_local))
+        .shortName(TextRef.AndroidRes(R.string.insightpump_shortname))
         .mainType(PluginType.PUMP)
-        .description(R.string.description_pump_insight_local)
+        .description(TextRef.AndroidRes(R.string.description_pump_insight_local))
         .composeContent { plugin ->
             InsightComposeContent(
                 insightPlugin = plugin as InsightPlugin,
+                aapsLogger = aapsLogger,
                 rh = rh,
                 rxBus = rxBus,
                 dateUtil = dateUtil,
                 commandQueue = commandQueue,
                 context = context,
-                aapsSchedulers = aapsSchedulers,
                 pumpSync = pumpSync,
                 blePreCheck = blePreCheck,
                 ch = ch,
                 appScope = appScope
             )
         },
-    ownPreferences = listOf(
-        InsightBooleanKey::class.java, InsightIntKey::class.java,
-        InsightLongNonKey::class.java, InsightDoubleNonKey::class.java,
-    ),
+    ownPreferences = InsightBooleanKey.entries + InsightIntKey.entries + InsightLongNonKey.entries + InsightDoubleNonKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Insight, PumpPluginConstraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 
@@ -354,7 +361,7 @@ class InsightPlugin @Inject constructor(
                 val setDateTimeMessage = SetDateTimeMessage()
                 setDateTimeMessage.pumpTime = pumpTime
                 connectionService?.requestMessage(setDateTimeMessage)?.await()
-                notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, app.aaps.core.ui.R.string.pump_time_updated, validMinutes = 60)
+                notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, TextRef.AndroidRes(app.aaps.core.ui.R.string.pump_time_updated), validMinutes = 60)
             }
         }
     }
@@ -445,7 +452,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val profileBlocks: MutableList<BasalProfileBlock> = ArrayList()
         for (i in profile.getBasalValues().indices) {
             val basalValue = profile.getBasalValues()[i]
@@ -534,7 +541,7 @@ class InsightPlugin @Inject constructor(
         if (detailedBolusInfo.insulin.equals(0.0) || detailedBolusInfo.carbs > 0) {
             throw IllegalArgumentException(detailedBolusInfo.toString(), Exception())
         }
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             val insulin = (detailedBolusInfo.insulin / 0.01).roundToInt() * 0.01
             if (insulin > 0) {
@@ -654,7 +661,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (activeBasalRate?.activeBasalRate == 0.0) return result
         activeBasalRate?.let { activeBasalRate ->
             val percent = 100.0 / activeBasalRate.activeBasalRate * absoluteRate
@@ -705,7 +712,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         var percentage = (percent.toDouble() / 10.0).roundToInt() * 10
         if (percentage == 100) return cancelTempBasal(true) else if (percentage > 250) percentage = 250
         try {
@@ -758,7 +765,7 @@ class InsightPlugin @Inject constructor(
     }
 
     fun setExtendedBolusOnly(insulin: Double, durationInMinutes: Int, disableVibration: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 val bolusMessage = DeliverBolusMessage()
@@ -791,7 +798,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         var cancelEBResult: PumpEnactResult? = null
         if (isFakingTempsByExtendedBoluses) cancelEBResult = cancelExtendedBolusOnly()
         val cancelTBRResult = cancelTempBasalOnly()
@@ -812,7 +819,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun cancelTempBasalOnly(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 alertService?.ignore(AlertType.WARNING_36)
@@ -856,7 +863,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun cancelExtendedBolusOnly(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 activeBoluses?.forEach { activeBolus ->
@@ -924,7 +931,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun stopPump(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 val operatingModeMessage = SetOperatingModeMessage()
@@ -948,7 +955,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun startPump(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         connectionService?.let { service ->
             try {
                 val operatingModeMessage = SetOperatingModeMessage()
@@ -972,7 +979,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun setTBROverNotification(enabled: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         tBROverNotificationBlock?.let { tBROverNotificationBlock ->
             val valueBefore = tBROverNotificationBlock.isEnabled
             tBROverNotificationBlock.isEnabled = enabled
@@ -1002,7 +1009,7 @@ class InsightPlugin @Inject constructor(
         get() = preferences.get(InsightBooleanKey.EnableTbrEmulation)
 
     override suspend fun loadTDDs(): PumpEnactResult =
-        pumpEnactResultProvider.get().success(true)
+        pumpEnactResultProvider().success(true)
 
     private fun readHistory() {
         connectionService?.let { service ->
@@ -1581,7 +1588,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun onTimeoutDuringHandshake() {
-        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, R.string.timeout_during_handshake, level = NotificationLevel.IMPORTANT)
+        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, TextRef.AndroidRes(R.string.timeout_during_handshake), level = NotificationLevel.IMPORTANT)
     }
 
     override fun canHandleDST(): Boolean {

@@ -13,13 +13,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [LongStatusFlippedComplication] and the shared [ModernBaseComplicationProviderService]
- * logic it inherits: [getPreviewData]/[getPreviewComplicationData] (sample data + tap intent →
- * build via [DisplayFormat]), the unsupported-type null branch and the action/name accessors.
- * Built via [Robolectric] so a Context is attached without running onCreate's Dagger injection;
- * the `@Inject` fields are set directly.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class LongStatusFlippedComplicationTest {

@@ -12,12 +12,13 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.wear.activity.ConfirmationActivity
 import androidx.wear.tiles.TileService
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -49,7 +50,6 @@ import app.aaps.wear.complications.TargetComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
-import androidx.wear.activity.ConfirmationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.ContactingMasterActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
@@ -61,21 +61,20 @@ import app.aaps.wear.tile.SceneTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.UserActionTileService
 import com.google.android.gms.wearable.WearableListenerService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.serialization.json.Json
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.serialization.json.Json
 
-@Singleton
+@SingleIn(AppScope::class)
 class DataHandlerWear @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
@@ -85,7 +84,6 @@ class DataHandlerWear @Inject constructor(
     // Coroutine scope for DataStore operations
     private val dataStoreScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val disposable = CompositeDisposable()
 
     init {
         setupBus()
@@ -103,10 +101,11 @@ class DataHandlerWear @Inject constructor(
         crossinline detail: (T) -> String = { "" },
         crossinline handler: (T) -> Unit
     ) {
-        disposable += rxBus
-            .toObservable(T::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { event ->
+        // dataStoreScope is Dispatchers.IO, matching observeOn(aapsSchedulers.io). UNDISPATCHED because
+        // these subscribe from setupBus() on a replay-0 bus: a scheduled collector could miss anything
+        // sent before it started.
+        rxBus.toFlow(T::class)
+            .collectResilient(dataStoreScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
                 aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}${detail(event)}")
                 handler(event)
             }

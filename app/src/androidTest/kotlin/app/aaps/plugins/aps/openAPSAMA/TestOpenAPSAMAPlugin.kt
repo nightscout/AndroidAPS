@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSAMA
 
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
@@ -34,27 +35,31 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
+import app.aaps.core.objects.extensions.with
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.utils.ScriptReader
-import dagger.android.HasAndroidInjector
+import kotlinx.serialization.json.put
 import org.json.JSONException
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import app.aaps.di.metro.AlgTestScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.floor
 
-@Singleton
+@SingleIn(AlgTestScope::class)
 class TestOpenAPSAMAPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
+    private val injector: StaticInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
@@ -73,10 +78,10 @@ class TestOpenAPSAMAPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
-        .pluginName(R.string.openapsama)
-        .shortName(R.string.oaps_shortname)
+        .pluginName(TextRef.AndroidRes(R.string.openapsama))
+        .shortName(TextRef.AndroidRes(R.string.oaps_shortname))
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_ama),
+        .description(TextRef.AndroidRes(R.string.description_ama)),
     aapsLogger, rh
 ), APS, PluginConstraints {
 
@@ -142,13 +147,13 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         var minBg =
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetLowMgdl(), 0.1),
-                app.aaps.core.ui.R.string.profile_low_target,
+                app.aaps.core.interfaces.R.string.profile_low_target,
                 HardLimits.LIMIT_MIN_BG
             )
         var maxBg =
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetHighMgdl(), 0.1),
-                app.aaps.core.ui.R.string.profile_high_target,
+                app.aaps.core.interfaces.R.string.profile_high_target,
                 HardLimits.LIMIT_MAX_BG
             )
         var targetBg =
@@ -176,14 +181,14 @@ class TestOpenAPSAMAPlugin @Inject constructor(
                     HardLimits.LIMIT_TEMP_TARGET_BG
                 )
         }
-        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.diaRange())) return
+        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.interfaces.R.string.profile_dia, hardLimits.diaRange())) return
         if (!hardLimits.checkHardLimits(
                 profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()),
-                app.aaps.core.ui.R.string.profile_carbs_ratio_value,
+                app.aaps.core.interfaces.R.string.profile_carbs_ratio_value,
                 hardLimits.icRange()
             )
         ) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.LIMIT_ISF)) return
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.interfaces.R.string.profile_sensitivity_value, HardLimits.LIMIT_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(ch.fromPump(pump.baseBasalRate), app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
@@ -229,13 +234,18 @@ class TestOpenAPSAMAPlugin @Inject constructor(
                 false
             //determineBasalResultAMA.iob = iobArray[0]
             val now = System.currentTimeMillis()
-            determineBasalResultAMA.json()?.put("timestamp", dateUtil.toISOString(now))
             determineBasalResultAMA.inputConstraints = inputConstraints
             //lastDetermineBasalAdapter = determineBasalAdapterAMAJS
             lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMAFromJS
             lastAPSRun = now
             if (config.isEnabled(ExternalOptions.UNFINISHED_MODE))
-                importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterAMAJS.json(), determineBasalResultAMA.json())
+                importExportPrefs.exportApsResult(
+                    this::class.simpleName,
+                    determineBasalAdapterAMAJS.json().toString(),
+                    // The timestamp used to be put into the stored document a few lines up. That document
+                    // is immutable now, so it goes on here, where it is actually used.
+                    determineBasalResultAMA.json()?.with { put("timestamp", dateUtil.toISOString(now)) }?.toString()
+                )
             rxBus.send(EventAPSCalculationFinished())
         }
         rxBus.send(EventOpenAPSUpdateGui())

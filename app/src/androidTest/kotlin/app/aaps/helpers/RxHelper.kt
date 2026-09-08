@@ -3,15 +3,18 @@ package app.aaps.helpers
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
+import kotlin.reflect.KClass
 
 /**
  * Allow waiting for RX event
@@ -21,15 +24,15 @@ import javax.inject.Inject
  */
 class RxHelper @Inject constructor(
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger
 ) {
 
-    private val hashMap = HashMap<Class<out Event>, AtomicBoolean>()
-    private val eventHashMap = HashMap<Class<out Event>, Event>()
-    private val disposable = CompositeDisposable()
+    private val hashMap = HashMap<KClass<out Event>, AtomicBoolean>()
+    private val eventHashMap = HashMap<KClass<out Event>, Event>()
+
+    // Lives as long as the helper; clear() cancels its collectors, like clearing the CompositeDisposable.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     /**
      * Register class for listening
@@ -37,18 +40,17 @@ class RxHelper @Inject constructor(
      * @param clazz Class to observe
      * @return AtomicBoolean trigger
      */
-    fun listen(clazz: Class<out Event>): AtomicBoolean =
+    fun listen(clazz: KClass<out Event>): AtomicBoolean =
         hashMap[clazz] ?: AtomicBoolean(false).also { ab ->
             hashMap[clazz] = ab
-            // Setup RxBus tracking
-            disposable += rxBus
-                .toObservable(clazz)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                               aapsLogger.info(LTag.EVENTS, "==>> ${clazz.simpleName} registered")
-                               ab.set(true)
-                               eventHashMap[clazz] = it
-                           }, fabricPrivacy::logException)
+            // Setup RxBus tracking. UNDISPATCHED because RxBus has no replay: a test that sends an
+            // event right after listen() returns must not race the collector starting.
+            rxBus.toFlow(clazz)
+                .collectResilient(scope, aapsLogger, LTag.EVENTS, start = CoroutineStart.UNDISPATCHED) {
+                    aapsLogger.info(LTag.EVENTS, "==>> ${clazz.simpleName} registered")
+                    ab.set(true)
+                    eventHashMap[clazz] = it
+                }
         }
 
     /**
@@ -57,7 +59,7 @@ class RxHelper @Inject constructor(
      * @param clazz Class to observe
      * @param maxSeconds max waiting time in seconds
      */
-    fun waitFor(clazz: Class<out Event>, maxSeconds: Long = 40, comment: String = ""): Pair<Boolean, Event?> {
+    fun waitFor(clazz: KClass<out Event>, maxSeconds: Long = 40, comment: String = ""): Pair<Boolean, Event?> {
         val watcher = hashMap[clazz] ?: error("Class not registered ${clazz.simpleName}")
         val start = dateUtil.now()
         while (!watcher.get()) {
@@ -78,7 +80,7 @@ class RxHelper @Inject constructor(
      *
      * @param clazz Class
      */
-    fun resetState(clazz: Class<out Event>) {
+    fun resetState(clazz: KClass<out Event>) {
         hashMap[clazz]?.set(false)
         eventHashMap.remove(clazz)
     }
@@ -105,6 +107,8 @@ class RxHelper @Inject constructor(
     }
 
     fun clear() {
-        disposable.clear()
+        // Cancels the running collectors but keeps the scope usable, the way CompositeDisposable.clear()
+        // left its container usable. A plain scope.cancel() would make every later listen() do nothing.
+        scope.coroutineContext.cancelChildren()
     }
 }

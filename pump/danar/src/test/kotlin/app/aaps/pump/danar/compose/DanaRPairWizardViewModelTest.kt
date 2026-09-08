@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.pump.rfcomm.RfcommDevice
 import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.keys.interfaces.Preferences
@@ -15,10 +14,9 @@ import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -34,10 +32,11 @@ import org.mockito.kotlin.whenever
 /**
  * Unit test for [DanaRPairWizardViewModel]. The pure state-mutating setters are asserted directly; the
  * pairing state machine (`pair()` → CONNECTING, then a pump-status update → COMPLETE / ERROR) is driven
- * by emitting onto the `rxBus` streams the view-model subscribes to in `init`, exactly as the on-device
- * handshake would. `aapsSchedulers.main` is the trampoline so those emissions deliver synchronously, and
- * `pair()`'s `viewModelScope.launch { readStatus(...) }` stays deferred under a StandardTestDispatcher, so
- * every assertion is deterministic and synchronous.
+ * by emitting onto the `rxBus` streams the view-model collects in `init`, exactly as the on-device
+ * handshake would. The collectors run on viewModelScope, which is Main, so `emitAndRun` hands the
+ * emission to the test dispatcher and then drains it. Without an emission the dispatcher stays idle,
+ * which keeps `pair()`'s `viewModelScope.launch { readStatus(...) }` deferred, so every assertion is
+ * deterministic.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DanaRPairWizardViewModelTest {
@@ -48,29 +47,35 @@ internal class DanaRPairWizardViewModelTest {
     private val commandQueue: CommandQueue = mock()
     private val pumpSync: PumpSync = mock()
     private val rxBus: RxBus = mock()
-    private val aapsSchedulers: AapsSchedulers = mock()
     private val rfcommTransport: RfcommTransport = mock()
     private val danaPump: DanaPump = mock()
 
-    // Real subjects so the two init collectors can be driven; the CONNECTING→COMPLETE/ERROR transition
+    // Real flows so the two init collectors can be driven; the CONNECTING→COMPLETE/ERROR transition
     // is only reachable by emitting a pump-status event (see onPumpStatusUpdate).
-    private val statusSubject: PublishSubject<EventDanaRNewStatus> = PublishSubject.create()
-    private val initSubject: PublishSubject<EventInitializationChanged> = PublishSubject.create()
+    private val statusFlow = MutableSharedFlow<EventDanaRNewStatus>(extraBufferCapacity = 1)
+    private val initFlow = MutableSharedFlow<EventInitializationChanged>(extraBufferCapacity = 1)
 
     private lateinit var sut: DanaRPairWizardViewModel
 
+    private val testDispatcher = StandardTestDispatcher()
+
+    /** Sends one event and runs the collector it wakes up, so the state change is visible right away. */
+    private fun <T> emitAndRun(flow: MutableSharedFlow<T>, event: T) {
+        assertThat(flow.tryEmit(event)).isTrue()
+        testDispatcher.scheduler.advanceUntilIdle()
+    }
+
     @BeforeEach
     fun setUp() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(testDispatcher)
         // init -> reset() reads these prefs synchronously (a mock String default is null -> NPE).
         whenever(preferences.get(DanaIntNonKey.Password)).thenReturn(0)
         whenever(preferences.get(DanaStringNonKey.RName)).thenReturn("")
         // init -> reset() -> refreshBondedDevices() reads the transport synchronously.
         whenever(rfcommTransport.getBondedDevices()).thenReturn(emptyList())
-        // init subscribes to these rx streams via aapsSchedulers.main.
-        whenever(rxBus.toObservable(EventDanaRNewStatus::class.java)).thenReturn(statusSubject)
-        whenever(rxBus.toObservable(EventInitializationChanged::class.java)).thenReturn(initSubject)
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
+        // init collects these two streams on viewModelScope (Main = the test dispatcher below).
+        whenever(rxBus.toFlow(EventDanaRNewStatus::class)).thenReturn(statusFlow)
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(initFlow)
         whenever(rh.gs(anyInt())).thenReturn("device changed")
 
         sut = buildViewModel()
@@ -80,7 +85,7 @@ internal class DanaRPairWizardViewModelTest {
     fun tearDown() = Dispatchers.resetMain()
 
     private fun buildViewModel() = DanaRPairWizardViewModel(
-        aapsLogger, rh, preferences, danaPump, commandQueue, pumpSync, rxBus, aapsSchedulers, rfcommTransport
+        aapsLogger, rh, preferences, danaPump, commandQueue, pumpSync, rxBus, rfcommTransport
     )
 
     /** Selects a device + password and calls `pair()`, leaving the wizard on the CONNECTING step. */
@@ -207,7 +212,7 @@ internal class DanaRPairWizardViewModelTest {
         moveToConnecting()
         whenever(danaPump.isPasswordOK).thenReturn(true)
 
-        statusSubject.onNext(EventDanaRNewStatus())
+        emitAndRun(statusFlow, EventDanaRNewStatus())
 
         val state = sut.uiState.value
         assertThat(state.step).isEqualTo(PairWizardStep.COMPLETE)
@@ -220,7 +225,7 @@ internal class DanaRPairWizardViewModelTest {
         moveToConnecting()
         whenever(danaPump.isPasswordOK).thenReturn(false)
 
-        statusSubject.onNext(EventDanaRNewStatus())
+        emitAndRun(statusFlow, EventDanaRNewStatus())
 
         val state = sut.uiState.value
         assertThat(state.step).isEqualTo(PairWizardStep.ERROR)
@@ -232,7 +237,7 @@ internal class DanaRPairWizardViewModelTest {
         moveToConnecting()
         whenever(danaPump.isPasswordOK).thenReturn(true)
 
-        initSubject.onNext(EventInitializationChanged())
+        emitAndRun(initFlow, EventInitializationChanged())
 
         assertThat(sut.uiState.value.step).isEqualTo(PairWizardStep.COMPLETE)
     }
@@ -241,7 +246,7 @@ internal class DanaRPairWizardViewModelTest {
     fun `a status update while still on CONFIGURE is ignored`() {
         whenever(danaPump.isPasswordOK).thenReturn(true)
 
-        statusSubject.onNext(EventDanaRNewStatus())
+        emitAndRun(statusFlow, EventDanaRNewStatus())
 
         assertThat(sut.uiState.value.step).isEqualTo(PairWizardStep.CONFIGURE)
     }

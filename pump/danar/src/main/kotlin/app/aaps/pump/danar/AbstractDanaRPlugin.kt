@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
@@ -22,16 +21,18 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
+import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round.roundTo
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginDanaI
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
@@ -43,9 +44,8 @@ import app.aaps.pump.dana.keys.DanaIntentKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.compose.DanaRComposeContent
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -53,7 +53,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -63,11 +62,10 @@ import kotlin.math.max
 abstract class AbstractDanaRPlugin protected constructor(
     protected var danaPump: DanaPump,
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     protected val config: Config,
     commandQueue: CommandQueue,
-    protected var aapsSchedulers: AapsSchedulers,
     protected var rxBus: RxBus,
     protected var activePlugin: ActivePlugin,
     protected var dateUtil: DateUtil,
@@ -75,7 +73,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     protected var notificationManager: NotificationManager,
     protected var danaHistoryDatabase: DanaHistoryDatabase,
     protected var decimalFormatter: DecimalFormatter,
-    protected var pumpEnactResultProvider: Provider<PumpEnactResult>
+    protected var pumpEnactResultProvider: () -> PumpEnactResult
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -86,28 +84,28 @@ abstract class AbstractDanaRPlugin protected constructor(
             )
         }
         .icon(IcPluginDanaI)
-        .pluginName(app.aaps.pump.dana.R.string.danarpump)
-        .shortName(app.aaps.pump.dana.R.string.danarpump_shortname)
-        .description(app.aaps.pump.dana.R.string.description_pump_dana_r),
-    ownPreferences = listOf(DanaStringNonKey::class.java, DanaIntKey::class.java, DanaIntNonKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java),
+        .pluginName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarpump))
+        .shortName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarpump_shortname))
+        .description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_r)),
+    ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaIntNonKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PumpPluginConstraints, OwnDatabasePlugin {
 
     protected var executionService: AbstractDanaRExecutionService? = null
-    protected var disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     override var pumpDescription = PumpDescription()
         protected set
 
     override suspend fun onStart() {
         super.onStart()
-        disposable += rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { danaPump.reset() }
-
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
+        // Same scope as the preference observer below: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss a change sent before it starts.
+        rxBus.toFlow(EventConfigBuilderChange::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { danaPump.reset() }
+
         preferences.observe(DanaStringNonKey.RName).drop(1).onEach {
             danaPump.reset()
             pumpSync.connectNewPump(true)
@@ -120,7 +118,6 @@ abstract class AbstractDanaRPlugin protected constructor(
         super.onStop()
         scope?.cancel()
         scope = null
-        disposable.clear()
     }
 
     override fun isSuspended(): Boolean {
@@ -131,7 +128,7 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     // Pump interface
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (executionService == null) {
             aapsLogger.error("setNewBasalProfile sExecutionService is null")
             // Service not bound yet — deferred, not a genuine error; re-pushed on reconnect. success=true keeps
@@ -192,7 +189,7 @@ abstract class AbstractDanaRPlugin protected constructor(
 
     override suspend fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         var percentReq = percent
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (percentReq < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("setTempBasalPercent: Invalid input")
@@ -241,7 +238,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         // round to the pump's native extended-bolus step (cU)
         var insulinReq = roundTo(insulin, pumpDescription.extendedBolusStep)
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinReq) < pumpDescription.extendedBolusStep) {
             result.enacted(false)
                 .success(true)
@@ -290,7 +287,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     }
 
     override suspend fun cancelExtendedBolus(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isExtendedInProgress) {
             executionService?.extendedBolusStop()
             if (!danaPump.isExtendedInProgress) {
@@ -345,7 +342,7 @@ abstract class AbstractDanaRPlugin protected constructor(
      * DanaR interface
      */
     override fun loadHistory(type: Byte): PumpEnactResult =
-        executionService?.loadHistory(type) ?: pumpEnactResultProvider.get()
+        executionService?.loadHistory(type) ?: pumpEnactResultProvider()
 
     /**
      * Constraint interface

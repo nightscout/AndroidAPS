@@ -98,7 +98,7 @@ jobs:
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
             -Dkotlin.daemon.jvm.options="-Xmx3g" \
             -Dorg.gradle.daemon=true \
-            compileFullDebugUnitTestSources \
+            compileFullDebugUnitTestSources compileDebugUnitTestSources \
             :app:assembleFullDebug :app:assembleFullDebugAndroidTest
 
       - run:
@@ -122,10 +122,24 @@ jobs:
           command: |
             APK=app/build/outputs/apk/full/debug/app-full-debug.apk
             TST=app/build/outputs/apk/androidTest/full/debug/app-full-debug-androidTest.apk
-            for s in emulator-5554 emulator-5556 emulator-5558; do adb -s $s install -r -d "$APK"; adb -s $s install -r -d "$TST"; done
+            PKG=info.nightscout.androidaps
+            # Two reasons this used to fail silently. `adb install` prints "Failure [...]" and still exits
+            # 0, and in a one-line for loop only the LAST command sets the step status - so a failed
+            # install on 5554 or 5556 was swallowed whole. The symptom appeared 15 minutes later as a
+            # shard reporting "Unable to find instrumentation info", which points nowhere near the cause.
+            # So check the output text, and then assert the postcondition the shards actually depend on.
+            for s in emulator-5554 emulator-5556 emulator-5558; do
+              for a in "$APK" "$TST"; do
+                out=$(adb -s $s install -r -d "$a" 2>&1)
+                echo "$s: $out"
+                case "$out" in *Success*) ;; *) echo "INSTALL FAILED on $s: $a"; exit 1 ;; esac
+              done
+              adb -s $s shell pm list instrumentation | grep -q "$PKG.test/app.aaps.runners.AapsTestRunner" \
+                || { echo "INSTRUMENTATION MISSING on $s after a reported-successful install"; exit 1; }
+            done
 
       # Each shard runs its am instrument with a PROCESS-LEVEL retry: if the run crashes the app process
-      # (SetupWizardE2EHiltTest intermittently dies in a Compose/ViewRootImpl traversal - a process death
+      # (SetupWizardE2ETest intermittently dies in a Compose/ViewRootImpl traversal - a process death
       # that the in-process RetryRule cannot catch) or yields no coverage, it re-runs once with a fresh
       # process, which self-heals. A genuine test failure (FAILURES!!! with coverage present) is NOT
       # retried - RetryRule already tried it in-process - so it fails fast. The step ends with `exit $RC`
@@ -141,7 +155,7 @@ jobs:
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
-              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # the concurrent unit+shards load — the documented SetupWizardE2ETest Compose/ViewRootImpl
               # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
               # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
               # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
@@ -157,7 +171,7 @@ jobs:
               fi
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardA \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-A.ec \
-                $PKG.test/app.aaps.runners.HiltTestRunner > shard-A-$attempt.txt 2>&1 || true
+                $PKG.test/app.aaps.runners.AapsTestRunner > shard-A-$attempt.txt 2>&1 || true
               tail -n 200 shard-A-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-A.ec > "$COVDIR/cov-A.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-A.ec" 2>/dev/null || echo 0)
@@ -182,7 +196,7 @@ jobs:
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
-              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # the concurrent unit+shards load — the documented SetupWizardE2ETest Compose/ViewRootImpl
               # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
               # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
               # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
@@ -198,7 +212,7 @@ jobs:
               fi
               adb -s $DEV shell am instrument -w -r -e annotation app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-B.ec \
-                $PKG.test/app.aaps.runners.HiltTestRunner > shard-B-$attempt.txt 2>&1 || true
+                $PKG.test/app.aaps.runners.AapsTestRunner > shard-B-$attempt.txt 2>&1 || true
               tail -n 200 shard-B-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-B.ec > "$COVDIR/cov-B.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-B.ec" 2>/dev/null || echo 0)
@@ -223,7 +237,7 @@ jobs:
             RC=1
             for attempt in 1 2 3; do
               # PRIMARY stability mechanism for the shards. A shard's app intermittently dies at startup under
-              # the concurrent unit+shards load — the documented SetupWizardE2EHiltTest Compose/ViewRootImpl
+              # the concurrent unit+shards load — the documented SetupWizardE2ETest Compose/ViewRootImpl
               # process death (it also hits the Dana shards). It is NOT host OOM (still occurs on the 64 GB box
               # with >5 GB free) and NOT catchable in-process; it lands on a random shard in most runs. So retry
               # — but first wait for the box to calm (1-min load < ncores/2 = the unit forks drained): the old
@@ -239,7 +253,7 @@ jobs:
               fi
               adb -s $DEV shell am instrument -w -r -e notAnnotation app.aaps.testcategories.ShardA,app.aaps.testcategories.ShardB \
                 -e coverage true -e coverageFile /data/data/$PKG/cov-C.ec \
-                $PKG.test/app.aaps.runners.HiltTestRunner > shard-C-$attempt.txt 2>&1 || true
+                $PKG.test/app.aaps.runners.AapsTestRunner > shard-C-$attempt.txt 2>&1 || true
               tail -n 200 shard-C-$attempt.txt
               adb -s $DEV exec-out run-as $PKG cat cov-C.ec > "$COVDIR/cov-C.ec" 2>/dev/null || true
               sz=$(wc -c < "$COVDIR/cov-C.ec" 2>/dev/null || echo 0)
@@ -264,7 +278,24 @@ jobs:
           command: |
             export ANDROID_SDK_ROOT=/usr/lib/android-sdk
             export ANDROID_HOME=/usr/lib/android-sdk
-            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest
+            # Four task names, because a module lands in exactly one of them and a missing name runs
+            # no tests instead of failing:
+            #  - testFullDebugUnitTest: the flavoured modules, which are only :app and the :wear ones.
+            #  - testDebugUnitTest: the Android libraries. Flavours live on the app modules only, so
+            #    a library has no "Full" variant and this is where its tests are.
+            #  - jvmTest and testAndroidHostTest: the multiplatform modules, which have no build
+            #    variants at all - which is what happened to :core:data and :core:nssdk, and showed
+            #    up as a Codecov drop the moment :core:keys converted too.
+            # The names are unqualified on purpose: Gradle runs them in whichever projects have them,
+            # so a module converting later is picked up without editing this file.
+            # `:desktop:shell:test` is the one exception and has to be named. It is a plain
+            # `kotlin("jvm")` module, so its task is called `test` - and an unqualified `test` would
+            # also match the AGP lifecycle task in every Android module and run every variant of
+            # each. Without this line its tests run on no machine at all: they are not in any of the
+            # four names above, and `runtests.sh` does not use them either.
+            # Deliberately not `allTests`: that would pull in the Kotlin/Native toolchain for the
+            # iOS targets, whose tests cannot run on a Linux box anyway.
+            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test
 
       - run:
           name: Non-app module androidTests (Gradle, emu-5554)
@@ -273,10 +304,32 @@ jobs:
             export ANDROID_HOME=/usr/lib/android-sdk
             export ANDROID_SERIAL=emulator-5554
             TASKS=""
+            # A directory on disk is not always a module: pump/omnipod/eros still has its sources but
+            # is no longer included, and naming its task made Gradle fail to configure - which the
+            # `|| echo` below turned into a green step that ran NO instrumented tests at all. Ask
+            # settings.gradle whether the module is in the build before naming a task on it.
             for m in $(find . -type d -name androidTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
-              [ "$m" = "app" ] && continue; TASKS="$TASKS :$m:connectedFullDebugAndroidTest"
+              [ "$m" = "app" ] && continue
+              grep -q "^include ':$m'" settings.gradle || { echo "skipping $m - not in settings.gradle"; continue; }
+              # No flavour in the task name: product flavours live on the app modules only, and :app
+              # is skipped above, so everything reaching here is an unflavoured library.
+              TASKS="$TASKS :$m:connectedDebugAndroidTest"
             done
-            [ -n "$TASKS" ] && $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS || echo "no non-app test modules"
+            # A multiplatform module has no flavours: its instrumented sources live in androidDeviceTest
+            # and the task is connectedAndroidDeviceTest.
+            for m in $(find . -type d -name androidDeviceTest -not -path "*/build/*" -printf "%h\n" | sed 's|/src$||; s|^\./||; s|/|:|g'); do
+              grep -q "^include ':$m'" settings.gradle || { echo "skipping $m - not in settings.gradle"; continue; }
+              TASKS="$TASKS :$m:connectedAndroidDeviceTest"
+            done
+            echo "running: $TASKS"
+            # if/else, not `cmd || echo`: the old form was meant for "there are no such modules" but
+            # swallowed every non-zero exit, so a failing suite - or a Gradle configuration error -
+            # left the step green. That is how these tests went unnoticed for months.
+            if [ -n "$TASKS" ]; then
+              $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=16 $TASKS
+            else
+              echo "no non-app test modules"
+            fi
 
       - run:
           name: Collect app shard results

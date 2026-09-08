@@ -10,13 +10,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [WallpaperGrayComplication] and the shared wallpaper logic it inherits from
- * [WallpaperComplication] / [ModernBaseComplicationProviderService]: the PHOTO_IMAGE branch that
- * loads the `watch_gray.jpg` asset into a [PhotoImageComplicationData], the else→null fallback and
- * the action/name accessors. Built via [Robolectric] so a Context (with assets) is attached without
- * running onCreate's Dagger injection; the `@Inject` fields are set directly.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class WallpaperGrayComplicationTest {

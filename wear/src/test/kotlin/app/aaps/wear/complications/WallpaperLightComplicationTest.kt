@@ -12,15 +12,6 @@ import org.robolectric.annotation.Config
 /**
  * Covers [WallpaperLightComplication] and the [WallpaperComplication]/
  * [ModernBaseComplicationProviderService] logic it inherits.
- *
- * The only supported type is [ComplicationType.PHOTO_IMAGE], whose builder reads the
- * `watch_light.jpg` asset and scales a bitmap using `WindowManager.currentWindowMetrics`;
- * that path is not exercised here because it touches real asset/bitmap/window-metrics code
- * (and only `IOException` is caught, so it is not safely reproducible under Robolectric).
- * Instead we verify the genuine `else -> null` branch of the preview pipeline plus the
- * overridden tap action ([ComplicationAction.NONE]) and provider canonical name.
- * Built via [Robolectric] so a Context is attached without running onCreate's Dagger
- * injection; the `@Inject` fields are set directly.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])

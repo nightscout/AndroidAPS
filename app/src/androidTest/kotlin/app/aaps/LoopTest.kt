@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.aaps.di.newIntegrationWaits
+import app.aaps.di.newRxHelper
+import app.aaps.di.testGraphs
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
@@ -32,32 +35,31 @@ import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class LoopTest : HiltInstrumentedTest() {
+class LoopTest : AapsInstrumentedTest() {
 
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var rxHelper: RxHelper
-    @Inject lateinit var l: L
-    @Inject lateinit var config: Config
-    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var pumpSync: PumpSync
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    private val loop get() = testGraphs.loop
+    private val profileFunction get() = testGraphs.profileFunction
+    private val nsIncomingDataProcessor get() = testGraphs.nsIncomingDataProcessor
+    private val profileRepository get() = testGraphs.profileRepository
+    private val dateUtil get() = testGraphs.dateUtil
+    private val rxHelper by lazy { newRxHelper() }
+    private val l get() = testGraphs.l
+    private val config get() = testGraphs.config
+    private val objectivesPlugin get() = testGraphs.objectivesPlugin
+    private val persistenceLayer get() = testGraphs.persistenceLayer
+    private val pumpSync get() = testGraphs.pumpSync
+    private val iobCobCalculator get() = testGraphs.iobCobCalculator
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
@@ -79,7 +81,7 @@ class LoopTest : HiltInstrumentedTest() {
         loop.lastRun = null
         objectivesPlugin.objectives.forEach { it.startedOn = 0 }
         (profileFunction as ProfileFunctionImpl).cache.clear()
-        persistenceLayer.clearDatabases()
+        runBlocking { persistenceLayer.clearDatabases() }
     }
 
     @Test
@@ -96,10 +98,10 @@ class LoopTest : HiltInstrumentedTest() {
             source = Sources.Aaps,
             listValues = listOf(ValueWithUnit.SimpleString("Migration"))
         )
-        rxHelper.listen(EventLoopSetLastRunGui::class.java)
-        rxHelper.listen(EventResetOpenAPSGui::class.java)
-        rxHelper.listen(EventOpenAPSUpdateGui::class.java)
-        rxHelper.listen(EventAPSCalculationFinished::class.java)
+        rxHelper.listen(EventLoopSetLastRunGui::class)
+        rxHelper.listen(EventResetOpenAPSGui::class)
+        rxHelper.listen(EventOpenAPSUpdateGui::class)
+        rxHelper.listen(EventAPSCalculationFinished::class)
         objectivesPlugin.onStart()
 
         // Enable event logging
@@ -110,7 +112,7 @@ class LoopTest : HiltInstrumentedTest() {
 
         // Loop should be limited by unfinished objectives
         loop.invoke("test1", allowNotification = false)
-        var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step1")
+        var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class, comment = "step1")
         assertThat(loopStatusEvent.first).isTrue()
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("Loop disabled by user")
 
@@ -120,12 +122,17 @@ class LoopTest : HiltInstrumentedTest() {
         // Now there should be missing profile
         (profileFunction as ProfileFunctionImpl).cache.clear()
         loop.invoke("test2", allowNotification = false)
-        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step2")
+        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class, comment = "step2")
         assertThat(loopStatusEvent.first).isTrue()
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO PROFILE SET")
 
         // Set Profile in ProfilePlugin
-        nsIncomingDataProcessor.processProfile(JSONObject(profileData), true)
+        // profileData holds two profile documents separated by a comma, the way a Nightscout profile
+        // collection returns them. JSONObject(String) read the first and threw the rest away without
+        // saying so; kotlinx refuses trailing content, so the first one is now picked explicitly.
+        // Same document as before - only the choice is written down now.
+        val firstProfile = Json.parseToJsonElement("[$profileData]").jsonArray.first().jsonObject
+        nsIncomingDataProcessor.processProfile(firstProfile, true)
         assertThat(profileRepository.profile.value).isNotNull()
 
         // Create a profile switch
@@ -156,13 +163,13 @@ class LoopTest : HiltInstrumentedTest() {
         assertThat(rxHelper.waitUntil("step3: pump profile set") { runBlocking { pumpSync.expectedPumpState() }.profile != null }).isTrue()
 
         // Loop should run — may get "NO APS SELECTED" (no glucose) or a real result (stale glucose cache)
-        rxHelper.listen(EventLoopUpdateGui::class.java)
+        rxHelper.listen(EventLoopUpdateGui::class)
         loop.invoke("test3", allowNotification = false)
         // Accept either: error event (no glucose) or update event (APS produced result from cached data)
         assertThat(
             rxHelper.waitUntil("step4: loop completed") {
-                rxHelper.waitFor(EventLoopSetLastRunGui::class.java, maxSeconds = 1, comment = "step4").first ||
-                    rxHelper.waitFor(EventLoopUpdateGui::class.java, maxSeconds = 1, comment = "step4").first
+                rxHelper.waitFor(EventLoopSetLastRunGui::class, maxSeconds = 1, comment = "step4").first ||
+                    rxHelper.waitFor(EventLoopUpdateGui::class, maxSeconds = 1, comment = "step4").first
             }
         ).isTrue()
 
@@ -180,7 +187,7 @@ class LoopTest : HiltInstrumentedTest() {
         // GV insertion triggers calculation via observeChanges(GV) → scheduleHistoryDataChange (5s debounce)
         // The IOB/COB autosens phase may exit early ("No bucketed data") so EventAutosensCalculationFinished
         // is not guaranteed. Wait for EventAPSCalculationFinished which fires when loop runs.
-        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, maxSeconds = 60, comment = "step6").first).isTrue()
+        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class, maxSeconds = 60, comment = "step6").first).isTrue()
         Thread.sleep(5000)
         assertThat(loop.lastRun).isNotNull()
     }

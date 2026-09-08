@@ -1,7 +1,5 @@
 package app.aaps.pump.eopatch.vo
 
-import java.util.ArrayList
-
 abstract class SegmentEntity<T : SegmentEntity<T>> {
 
     var startMinute = 0L

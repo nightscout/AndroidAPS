@@ -2,11 +2,12 @@ package app.aaps.pump.danarkorean.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.danar.comm.MessageBase
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgInitConnStatusBasicK(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {
@@ -29,12 +30,12 @@ class MsgInitConnStatusBasicK(
         aapsLogger.debug(LTag.PUMPCOMM, "easyUIMode: $easyUIMode")
         aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaPump.password)
         if (danaPump.isEasyModeEnabled) {
-            notificationManager.post(NotificationId.EASY_MODE_ENABLED, app.aaps.pump.dana.R.string.danar_disableeasymode)
+            notificationManager.post(NotificationId.EASY_MODE_ENABLED, TextRef.AndroidRes(app.aaps.pump.dana.R.string.danar_disableeasymode))
         } else {
             notificationManager.dismiss(NotificationId.EASY_MODE_ENABLED)
         }
         if (!danaPump.isPasswordOK) {
-            notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, app.aaps.pump.dana.R.string.wrongpumppassword)
+            notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, TextRef.AndroidRes(app.aaps.pump.dana.R.string.wrongpumppassword))
         } else {
             notificationManager.dismiss(NotificationId.WRONG_PUMP_PASSWORD)
         }

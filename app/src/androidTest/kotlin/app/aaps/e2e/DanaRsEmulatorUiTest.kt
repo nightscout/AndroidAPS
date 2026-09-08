@@ -2,6 +2,8 @@ package app.aaps.e2e
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
@@ -9,6 +11,8 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.e2e.DanaRsEmulatorUiTest.Companion.MAX_DAILY_UNITS
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.pump.dana.emulator.ReviewRecordCodes
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
@@ -16,15 +20,12 @@ import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardA
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
-import org.junit.rules.RuleChain
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.util.Base64
-import javax.inject.Inject
 
 /**
  * Drives the **Dana-i UI** against the in-tree pump emulator, with no Bluetooth hardware and no
@@ -38,7 +39,7 @@ import javax.inject.Inject
  *
  * The variant (which `EMULATE_DANA_*` handshake) is chosen per test in [bringUp], not `@Before`,
  * because `BleTransport` is a `@Singleton` the graph binds once — so the option has to be set before
- * `hiltRule.inject()`. The BLE5 test walks every screen; [danaInsulinDelivery_overV1Handshake] and
+ * the graph is built. The BLE5 test walks every screen; [danaInsulinDelivery_overV1Handshake] and
  * [danaInsulinDelivery_overV3Handshake] run only the insulin-delivery flow, which is pump-agnostic
  * (Manage → `CommandQueue` → active pump), so the *same* body proves each handshake — the reuse that
  * makes an E2E worth more than a per-plugin unit test. `DanaRsEmulatorPumpTest` covers the same
@@ -49,7 +50,7 @@ import javax.inject.Inject
  * (RS) wiring — the pairing seed, the emulator-state reads, and the RS-only screen legs.
  *
  * ## Why this is seeded rather than wizard-driven
- * `SetupWizardE2EHiltTest` walks the whole setup wizard because that is what it tests; it costs
+ * `SetupWizardE2ETest` walks the whole setup wizard because that is what it tests; it costs
  * ~140s and ends on **Virtual Pump**, so no pump-driver UI is ever rendered. This test wants the
  * pump screens, not the wizard, so it seeds that end state directly — mg/dL units, the wizard marked
  * done, an active local profile, and a paired Dana-i as the active pump — in a few seconds instead
@@ -64,24 +65,21 @@ import javax.inject.Inject
  * button ([openDanaPlugin]), and the Dana overview's action list vanishes and returns while a status
  * read is in flight, so every interaction with it waits for [waitForQueueIdle] first.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardA
 class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky UI timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    @Inject lateinit var bleTransport: BleTransport
-    @Inject lateinit var danaRSPlugin: DanaRSPlugin
+    private val bleTransport get() = testGraphs.pumps.bleTransport
+    private val danaRSPlugin get() = testGraphs.pumps.danaRSPlugin
 
     private lateinit var emulator: EmulatorBleTransport
 
     // ---- pump-specific hooks --------------------------------------------------------------------
 
-    override fun injectHilt() = hiltRule.inject()
 
     override fun seedPairedPump(variant: ExternalOptions) {
         seedPairedDanaPump(variant)
@@ -94,7 +92,7 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         // (v1's pairing key most of all); sendResponse drops them once disconnected, and this makes
         // sure they are actually done before the next test seeds a fresh pump.
         runCatching { if (::emulator.isInitialized) emulator.awaitPendingCallbacks() }
-        // Unbind before the Hilt component dies, or the service crashes the process.
+        // Unbind before the graph dies, or the service crashes the process.
         runCatching { danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, false) }
     }
 

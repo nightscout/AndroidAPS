@@ -11,9 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import java.util.function.Supplier;
 
 import app.aaps.core.data.model.BS;
 import app.aaps.core.data.model.TE;
@@ -22,6 +20,7 @@ import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.insulin.ConcentrationHelper;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.notifications.AlarmSound;
 import app.aaps.core.interfaces.notifications.NotificationId;
 import app.aaps.core.interfaces.notifications.NotificationLevel;
 import app.aaps.core.interfaces.notifications.NotificationManager;
@@ -97,7 +96,7 @@ import io.reactivex.rxjava3.subjects.SingleSubject;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlinx.coroutines.BuildersKt;
 
-@Singleton
+
 public class AapsOmnipodErosManager {
 
     private final ErosPodStateManager podStateManager;
@@ -112,7 +111,7 @@ public class AapsOmnipodErosManager {
     private final PumpSync pumpSync;
     private final UiInteraction uiInteraction;
     private final NotificationManager notificationManager;
-    private final Provider<PumpEnactResult> pumpEnactResultProvider;
+    private final Supplier<PumpEnactResult> pumpEnactResultProvider;
     private final ConcentrationHelper ch;
     private final BolusProgressData bolusProgressData;
     private boolean basalBeepsEnabled;
@@ -130,13 +129,12 @@ public class AapsOmnipodErosManager {
     private boolean showRileyLinkBatteryLevel;
     private boolean batteryChangeLoggingEnabled;
 
-    @Inject
-    public AapsOmnipodErosManager(@NonNull OmnipodRileyLinkCommunicationManager communicationService,
+
+    public AapsOmnipodErosManager(@NonNull OmnipodManager delegate,
                                   @NonNull ErosPodStateManager podStateManager,
                                   ErosHistory erosHistory,
                                   AapsOmnipodUtil aapsOmnipodUtil,
                                   AAPSLogger aapsLogger,
-                                  AapsSchedulers aapsSchedulers,
                                   RxBus rxBus,
                                   Preferences preferences,
                                   ResourceHelper rh,
@@ -144,7 +142,7 @@ public class AapsOmnipodErosManager {
                                   PumpSync pumpSync,
                                   UiInteraction uiInteraction,
                                   NotificationManager notificationManager,
-                                  Provider<PumpEnactResult> pumpEnactResultProvider,
+                                  Supplier<PumpEnactResult> pumpEnactResultProvider,
                                   ConcentrationHelper ch,
                                   BolusProgressData bolusProgressData
     ) {
@@ -164,7 +162,9 @@ public class AapsOmnipodErosManager {
         this.ch = ch;
         this.bolusProgressData = bolusProgressData;
 
-        delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
+        // Injected rather than built here. `communicationService` and `aapsSchedulers` were constructor
+        // parameters used for nothing else, so both are gone; see `app.aaps.di.pump.OmnipodErosModule`.
+        this.delegate = delegate;
 
         reloadSettings();
     }
@@ -214,7 +214,7 @@ public class AapsOmnipodErosManager {
             result.success(res).enacted(res);
 
             if (!res) {
-                result.comment(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_initialize_pod);
+                result.comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_initialize_pod));
             }
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));
@@ -241,7 +241,7 @@ public class AapsOmnipodErosManager {
 
             result.success(res).enacted(res);
             if (!res) {
-                result.comment(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_insert_cannula);
+                result.comment(rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_error_failed_to_insert_cannula));
             }
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));
@@ -396,7 +396,7 @@ public class AapsOmnipodErosManager {
 
         Date bolusStarted;
         try {
-            bolusCommandResult = executeCommand(() -> delegate.bolus(PumpTypeExtensionKt.determineCorrectBolusSize(PumpType.OMNIPOD_EROS, detailedBolusInfo.insulin), beepsEnabled, beepsEnabled,
+            bolusCommandResult = executeCommand(() -> delegate.bolus(PumpTypeExtensionKt.determineCorrectBolusSize(PumpType.OMNIPOD_EROS, detailedBolusInfo.getInsulin()), beepsEnabled, beepsEnabled,
                     detailedBolusInfo.getBolusType() == BS.Type.SMB ? null :
                             (estimatedUnitsDelivered, percentage) -> {
                                 bolusProgressData.updateProgress(new PumpInsulin(estimatedUnitsDelivered));
@@ -412,13 +412,13 @@ public class AapsOmnipodErosManager {
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
             if (detailedBolusInfo.getBolusType() == BS.Type.SMB) {
-                showNotification(NotificationId.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), NotificationLevel.IMPORTANT, isNotificationUncertainSmbSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
+                showNotification(NotificationId.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain_smb, detailedBolusInfo.getInsulin()), NotificationLevel.IMPORTANT, isNotificationUncertainSmbSoundEnabled() ? AlarmSound.BOLUS_ERROR : null);
             } else {
-                showErrorDialog(getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : 0);
+                showErrorDialog(getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? AlarmSound.BOLUS_ERROR : null);
             }
         }
 
-        detailedBolusInfo.timestamp = bolusStarted.getTime();
+        detailedBolusInfo.setTimestamp(bolusStarted.getTime());
         detailedBolusInfo.setPumpType(PumpType.OMNIPOD_EROS);
         detailedBolusInfo.setPumpSerial(serialNumber());
 
@@ -455,13 +455,13 @@ public class AapsOmnipodErosManager {
         OmnipodManager.BolusDeliveryResult bolusDeliveryResult =
                 bolusCommandResult.getDeliveryResultSubject().blockingGet();
 
-        detailedBolusInfo.insulin = bolusDeliveryResult.getUnitsDelivered();
+        detailedBolusInfo.setInsulin(bolusDeliveryResult.getUnitsDelivered());
 
         addBolusToHistory(detailedBolusInfo);
 
         preferences.remove(ErosStringNonPreferenceKey.ActiveBolus);
 
-        return pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
+        return pumpEnactResultProvider.get().success(true).enacted(true).bolusDelivered(detailedBolusInfo.getInsulin());
     }
 
     public PumpEnactResult cancelBolus() {
@@ -516,7 +516,7 @@ public class AapsOmnipodErosManager {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
-            showNotification(NotificationId.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled), NotificationLevel.IMPORTANT, isNotificationUncertainTbrSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
+            showNotification(NotificationId.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled), NotificationLevel.IMPORTANT, isNotificationUncertainTbrSoundEnabled() ? AlarmSound.BOLUS_ERROR : null);
 
             splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
 
@@ -526,7 +526,7 @@ public class AapsOmnipodErosManager {
             long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
             if (!OmnipodManager.isCertainFailure(ex)) {
-                showNotification(NotificationId.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), NotificationLevel.IMPORTANT, isNotificationUncertainTbrSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
+                showNotification(NotificationId.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), NotificationLevel.IMPORTANT, isNotificationUncertainTbrSoundEnabled() ? AlarmSound.BOLUS_ERROR : null);
 
                 // Assume that setting the temp basal succeeded here, because in case it didn't succeed,
                 // The next StatusResponse that we receive will allow us to recover from the wrong state
@@ -558,7 +558,7 @@ public class AapsOmnipodErosManager {
             executeCommand(() -> delegate.cancelTemporaryBasal(isTbrBeepsEnabled()));
         } catch (Exception ex) {
             if (OmnipodManager.isCertainFailure(ex)) {
-                showNotification(NotificationId.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_cancel_temp_basal_failed_uncertain), NotificationLevel.IMPORTANT, isNotificationUncertainTbrSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
+                showNotification(NotificationId.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_cancel_temp_basal_failed_uncertain), NotificationLevel.IMPORTANT, isNotificationUncertainTbrSoundEnabled() ? AlarmSound.BOLUS_ERROR : null);
             } else {
                 splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
             }
@@ -623,21 +623,21 @@ public class AapsOmnipodErosManager {
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             createSuspendedFakeTbrIfNotExists();
             if (showNotifications) {
-                showNotification(NotificationId.PUMP_TIMEZONE_UPDATE_FAILED, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_suspended), NotificationLevel.IMPORTANT, app.aaps.core.ui.R.raw.boluserror);
+                showNotification(NotificationId.PUMP_TIMEZONE_UPDATE_FAILED, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_suspended), NotificationLevel.IMPORTANT, AlarmSound.BOLUS_ERROR);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return pumpEnactResultProvider.get().success(false).enacted(false).comment(errorMessage);
         } catch (PrecedingCommandFailedUncertainlyException ex) {
             if (showNotifications) {
-                showNotification(NotificationId.PUMP_TIMEZONE_UPDATE_FAILED, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), NotificationLevel.IMPORTANT, app.aaps.core.ui.R.raw.boluserror);
+                showNotification(NotificationId.PUMP_TIMEZONE_UPDATE_FAILED, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), NotificationLevel.IMPORTANT, AlarmSound.BOLUS_ERROR);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return pumpEnactResultProvider.get().success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
             if (showNotifications) {
-                showNotification(NotificationId.PUMP_TIMEZONE_UPDATE_FAILED, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), NotificationLevel.IMPORTANT, app.aaps.core.ui.R.raw.boluserror);
+                showNotification(NotificationId.PUMP_TIMEZONE_UPDATE_FAILED, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), NotificationLevel.IMPORTANT, AlarmSound.BOLUS_ERROR);
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
@@ -725,17 +725,17 @@ public class AapsOmnipodErosManager {
     public void addBolusToHistory(DetailedBolusInfo originalDetailedBolusInfo) {
         DetailedBolusInfo detailedBolusInfo = originalDetailedBolusInfo.copy();
 
-        detailedBolusInfo.setBolusTimestamp(detailedBolusInfo.timestamp);
+        detailedBolusInfo.setBolusTimestamp(detailedBolusInfo.getTimestamp());
         detailedBolusInfo.setPumpType(PumpType.OMNIPOD_EROS);
         detailedBolusInfo.setPumpSerial(serialNumber());
-        detailedBolusInfo.setBolusPumpId(addSuccessToHistory(detailedBolusInfo.timestamp, PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs));
+        detailedBolusInfo.setBolusPumpId(addSuccessToHistory(detailedBolusInfo.getTimestamp(), PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.getInsulin() + ";" + detailedBolusInfo.getCarbs()));
 
-        if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.getCarbsTimestamp() != null) {
+        if (detailedBolusInfo.getCarbs() > 0 && detailedBolusInfo.getCarbsTimestamp() != null) {
             // split out a separate carbs record without a pumpId
             runSuspend(
                     (scope, continuation) -> pumpSync.syncCarbsWithTimestamp(
                             detailedBolusInfo.getCarbsTimestamp(),
-                            detailedBolusInfo.carbs,
+                            detailedBolusInfo.getCarbs(),
                             null,
                             PumpType.USER,
                             serialNumber(),
@@ -745,12 +745,12 @@ public class AapsOmnipodErosManager {
 
             // remove carbs from bolusInfo to not trigger any unwanted code paths in
             // TreatmentsPlugin.addToHistoryTreatment() method
-            detailedBolusInfo.carbs = 0;
+            detailedBolusInfo.setCarbs(0);
         }
         runSuspend(
                 (scope, continuation) -> pumpSync.syncBolusWithPumpId(
-                        detailedBolusInfo.timestamp,
-                        new PumpInsulin(detailedBolusInfo.insulin),
+                        detailedBolusInfo.getTimestamp(),
+                        new PumpInsulin(detailedBolusInfo.getInsulin()),
                         detailedBolusInfo.getBolusType(),
                         detailedBolusInfo.getBolusPumpId(),
                         detailedBolusInfo.getPumpType(),
@@ -1020,19 +1020,19 @@ public class AapsOmnipodErosManager {
         rxBus.send(event);
     }
 
-    private void showErrorDialog(@NonNull String message, Integer sound) {
+    private void showErrorDialog(@NonNull String message, AlarmSound sound) {
         uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {
-        showPodFaultNotification(faultEventCode, app.aaps.core.ui.R.raw.boluserror);
+        showPodFaultNotification(faultEventCode, AlarmSound.BOLUS_ERROR);
     }
 
-    private void showPodFaultNotification(FaultEventCode faultEventCode, Integer sound) {
+    private void showPodFaultNotification(FaultEventCode faultEventCode, AlarmSound sound) {
         notificationManager.post(NotificationId.OMNIPOD_POD_FAULT, createPodFaultErrorMessage(faultEventCode), NotificationLevel.IMPORTANT, 0, sound, java.util.Collections.emptyList(), null);
     }
 
-    private void showNotification(NotificationId id, String message, NotificationLevel level, Integer sound) {
+    private void showNotification(NotificationId id, String message, NotificationLevel level, AlarmSound sound) {
         notificationManager.post(id, message, level, 0, sound, java.util.Collections.emptyList(), null);
     }
 

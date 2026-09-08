@@ -4,9 +4,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 open class DanaRSPacketBolusSetStepBolusStop @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -36,7 +37,7 @@ open class DanaRSPacketBolusSetStepBolusStop @Inject constructor(
             bolusProgressData.updateProgress(100)
         } else {
             val currentPercent = bolusProgressData.state.value?.percent ?: 0
-            bolusProgressData.updateProgress(currentPercent, rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped))
+            bolusProgressData.updateProgress(currentPercent, TextRef.AndroidRes(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped))
         }
     }
 

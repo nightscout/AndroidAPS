@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.PAIRING_PIN_SIZE
 import info.nightscout.comboctl.base.PairingPIN
@@ -20,7 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 enum class PairWizardPhase {
     /** Driver not yet initialized — Bluetooth unavailable. */
@@ -55,7 +58,10 @@ sealed class PairWizardEvent {
     data object Finish : PairWizardEvent()
 }
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class ComboV2PairWizardViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

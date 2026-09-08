@@ -1,0 +1,179 @@
+package app.aaps.plugins.source
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.Uri
+import android.os.Handler
+import android.os.HandlerThread
+import androidx.annotation.VisibleForTesting
+import androidx.core.net.toUri
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.icons.IcPluginGlunovo
+import app.aaps.plugins.source.compose.BgSourceComposeContent
+import app.aaps.plugins.source.keys.GlunovoLongKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.coroutines.runBlocking
+
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(480)
+@SingleIn(AppScope::class)
+class GlunovoPlugin @Inject constructor(
+    resourceHelper: ResourceHelper,
+    aapsLogger: AAPSLogger,
+    preferences: Preferences,
+    config: Config,
+    private val context: Context,
+    private val persistenceLayer: PersistenceLayer,
+    private val dateUtil: DateUtil,
+    private val fabricPrivacy: FabricPrivacy,
+) : AbstractBgSourcePlugin(
+    PluginDescription()
+        .mainType(PluginType.BGSOURCE)
+        .composeContent { plugin ->
+            BgSourceComposeContent(
+                title = resourceHelper.gs(R.string.glunovo)
+            )
+        }
+        .icon(IcPluginGlunovo)
+        .pluginName(TextRef.AndroidRes(R.string.glunovo))
+        .shortName(TextRef.AndroidRes(R.string.glunovo))
+        .preferencesVisibleInSimpleMode(false)
+        .description(TextRef.AndroidRes(R.string.description_source_glunovo)),
+    ownPreferences = GlunovoLongKey.entries,
+    aapsLogger, resourceHelper, preferences, config
+), BgSource {
+
+    @VisibleForTesting
+    var handler: Handler? = null
+
+    @VisibleForTesting
+    var refreshLoop: Runnable
+
+    private val contentUri: Uri = "content://$AUTHORITY/$TABLE_NAME".toUri()
+
+    init {
+        refreshLoop = Runnable {
+            try {
+                handleNewData()
+            } catch (e: Exception) {
+                fabricPrivacy.logException(e)
+                aapsLogger.error("Error while processing data", e)
+            }
+            val lastReadTimestamp = preferences.get(GlunovoLongKey.LastProcessedTimestamp)
+            val differenceToNow = INTERVAL - (dateUtil.now() - lastReadTimestamp) % INTERVAL + T.secs(10).msecs()
+            handler?.postDelayed(refreshLoop, differenceToNow)
+        }
+    }
+
+    private val disposable = CompositeDisposable()
+
+    override suspend fun onStart() {
+        super.onStart()
+        handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
+        handler?.postDelayed(refreshLoop, T.secs(30).msecs()) // do not start immediately, app may be still starting
+    }
+
+    override suspend fun onStop() {
+        super.onStop()
+        handler?.removeCallbacksAndMessages(null)
+        handler?.looper?.quit()
+        handler = null
+        disposable.clear()
+    }
+
+    @SuppressLint("CheckResult")
+    @VisibleForTesting
+    fun handleNewData() {
+        if (!isEnabled()) return
+
+        try {
+            context.contentResolver.query(contentUri, null, null, null, null)?.let { cr ->
+                val glucoseValues = mutableListOf<GV>()
+                val calibrations = mutableListOf<PersistenceLayer.Calibration>()
+                cr.moveToFirst()
+
+                while (!cr.isAfterLast) {
+                    val timestamp = cr.getLong(0)
+                    val value = cr.getDouble(1) //value in mmol/l...
+                    val curr = cr.getDouble(2)
+
+                    // bypass already processed
+                    if (timestamp < preferences.get(GlunovoLongKey.LastProcessedTimestamp)) {
+                        cr.moveToNext()
+                        continue
+                    }
+
+                    if (timestamp > dateUtil.now() || timestamp == 0L) {
+                        aapsLogger.error(LTag.BGSOURCE, "Error in received data date/time $timestamp")
+                        cr.moveToNext()
+                        continue
+                    }
+
+                    if (value !in 2.0..25.0) {
+                        aapsLogger.error(LTag.BGSOURCE, "Error in received data value (value out of bounds) $value")
+                        cr.moveToNext()
+                        continue
+                    }
+
+                    if (curr != 0.0)
+                        glucoseValues += GV(
+                            timestamp = timestamp,
+                            value = value * Constants.MMOLL_TO_MGDL,
+                            raw = 0.0,
+                            noise = null,
+                            trendArrow = TrendArrow.NONE,
+                            sourceSensor = SourceSensor.GLUNOVO_NATIVE
+                        )
+                    else
+                        calibrations.add(
+                            PersistenceLayer.Calibration(
+                                timestamp = timestamp,
+                                value = value,
+                                glucoseUnit = GlucoseUnit.MMOL
+                            )
+                        )
+                    preferences.put(GlunovoLongKey.LastProcessedTimestamp, timestamp)
+                    cr.moveToNext()
+                }
+                cr.close()
+
+                if (glucoseValues.isNotEmpty() || calibrations.isNotEmpty())
+                    runBlocking { persistenceLayer.insertCgmSourceData(Sources.Glunovo, glucoseValues, calibrations, null) }
+            }
+        } catch (e: SecurityException) {
+            aapsLogger.error(LTag.CORE, "Exception", e)
+        }
+    }
+
+    companion object {
+
+        const val AUTHORITY = "alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider/"
+        const val TABLE_NAME = "CgmReading"
+        const val INTERVAL = 180000L // 3 min
+    }
+}

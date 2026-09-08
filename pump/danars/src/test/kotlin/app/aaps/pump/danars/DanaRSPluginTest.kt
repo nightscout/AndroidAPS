@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.dana.DanaPump
-import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import com.google.common.truth.Truth.assertThat
@@ -282,8 +282,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
         danaRSPlugin =
             DanaRSPlugin(
-                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, danaPump, detailedBolusInfoStorage, temporaryBasalStorage,
-                fabricPrivacy, dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData
+                aapsLogger, rh, preferences, commandQueue, rxBus, context, danaPump, detailedBolusInfoStorage, temporaryBasalStorage,
+                dateUtil, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider, blePreCheck, bolusProgressData
             )
     }
 
