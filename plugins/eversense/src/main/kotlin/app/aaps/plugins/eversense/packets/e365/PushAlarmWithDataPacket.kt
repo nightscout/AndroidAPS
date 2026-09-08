@@ -10,11 +10,13 @@ import app.aaps.plugins.eversense.packets.e365.utils.toUnix
 /**
  * Push notification packet for alarms with data payload.
  *
- * Packet format:
+ * Packet format (empirically confirmed against real device logs - alarm code at [2] correctly
+ * decoded real alarms like HIGH_GLUCOSE across multiple live captures; [3] was observed to be
+ * constant/always 0, i.e. it's the reserved byte, not the code):
  * [0] = 0x44 (NotificationResponseId)
  * [1] = 0x03 (AlarmWithData)
- * [2] = reserved
- * [3] = alarm code
+ * [2] = alarm code
+ * [3] = reserved
  * [4..11] = alarm datetime (Unix2000)
  * [12..] = alarm data
  */
@@ -31,7 +33,7 @@ class PushAlarmWithDataPacket : EversenseBasePacket() {
     override fun parseResponse(): Response? {
         if (receivedData.size < 12) return null
 
-        val alarmCode = receivedData[3].toInt() and 0xFF
+        val alarmCode = receivedData[2].toInt() and 0xFF
         val alarm = EversenseAlarm.from(alarmCode)
         val datetime = receivedData.copyOfRange(4, 12).toUnix()
 

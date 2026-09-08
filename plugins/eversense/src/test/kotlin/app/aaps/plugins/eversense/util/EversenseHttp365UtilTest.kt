@@ -150,7 +150,9 @@ class EversenseHttp365UtilTest {
 
         val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX-12345", "1.2.3")
 
-        assertTrue(result, "Expected upload to return true on HTTP 200")
+        assertTrue(result.success, "Expected upload to succeed on HTTP 200")
+        assertEquals(1, result.sentCount, "Expected the reading to be counted as actually sent")
+        assertEquals(200, result.httpStatus)
         assertEquals(1, mockWebServer.requestCount)
         val request = mockWebServer.takeRequest()
         assertEquals("/api/v1.0/DiagnosticLog/PostEssentialLogs", request.path)
@@ -221,6 +223,55 @@ class EversenseHttp365UtilTest {
         assertEquals(0, mockWebServer.requestCount)
     }
 
+    /**
+     * The case that made missing DMS readings look like healthy uploads: a reading carrying no
+     * raw BLE data is filtered out before the POST, nothing reaches the server, and this used to
+     * return success — so the caller logged "1 reading(s) sent" for an upload that never left the
+     * phone. It must report failure and say how many were skipped.
+     */
+    @Test
+    fun `uploadGlucoseReadings reports a skip, not a success, when no reading carries raw BLE data`() {
+        val futureExpiry = System.currentTimeMillis() + 600_000L
+        whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
+        whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
+
+        val readings = listOf(
+            EversenseCGMResult(
+                glucoseInMgDl = 120,
+                datetime = 1700000000000L,
+                trend = EversenseTrendArrow.FLAT,
+                sensorId = "sensor_001",
+                rawResponseHex = ""
+            )
+        )
+
+        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+
+        assertFalse(result.success, "Sending nothing is not a successful upload")
+        assertEquals(0, result.sentCount)
+        assertEquals(1, result.skippedNoRawData)
+        assertEquals(0, mockWebServer.requestCount, "Nothing should have been POSTed")
+    }
+
+    @Test
+    fun `uploadGlucoseReadings counts only readings that carry raw BLE data as sent`() {
+        val futureExpiry = System.currentTimeMillis() + 600_000L
+        whenever(prefs.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)).thenReturn(futureExpiry)
+        whenever(prefs.getString(StorageKeys.ACCESS_TOKEN, null)).thenReturn("token")
+        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody("[]"))
+
+        val readings = listOf(
+            EversenseCGMResult(120, 1700000000000L, EversenseTrendArrow.FLAT, "sensor_001", "deadbeef"),
+            EversenseCGMResult(121, 1700000300000L, EversenseTrendArrow.FLAT, "sensor_001", "")
+        )
+
+        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+
+        assertTrue(result.success)
+        assertEquals(1, result.sentCount, "Only the reading with raw data was sent")
+        assertEquals(1, result.skippedNoRawData, "The other must be reported as skipped, not sent")
+    }
+
     @Test
     fun `uploadGlucoseReadings does not throw on 4xx server error`() {
         val futureExpiry = System.currentTimeMillis() + 600_000L
@@ -236,7 +287,9 @@ class EversenseHttp365UtilTest {
         // Should not throw — errors are logged internally, returns false
         val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
 
-        assertFalse(result, "Expected upload to return false on HTTP 400")
+        assertFalse(result.success, "Expected upload to fail on HTTP 400")
+        assertEquals(0, result.sentCount, "A rejected request must not report readings as sent")
+        assertEquals(400, result.httpStatus)
         assertEquals(1, mockWebServer.requestCount)
     }
 
@@ -254,7 +307,9 @@ class EversenseHttp365UtilTest {
 
         val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
 
-        assertFalse(result, "Expected upload to return false on HTTP 500")
+        assertFalse(result.success, "Expected upload to fail on HTTP 500")
+        assertEquals(0, result.sentCount, "A rejected request must not report readings as sent")
+        assertEquals(500, result.httpStatus)
         assertEquals(1, mockWebServer.requestCount)
     }
 

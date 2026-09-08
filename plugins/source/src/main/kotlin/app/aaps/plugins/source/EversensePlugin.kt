@@ -17,6 +17,9 @@ import androidx.core.content.edit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.plugins.eversense.models.ActiveAlarm
 import app.aaps.core.data.model.GV
@@ -50,6 +53,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
@@ -77,7 +81,8 @@ class EversensePlugin @Inject constructor(
     preferences: Preferences,
     config: Config,
     private val notificationManager: NotificationManager,
-    private val eversense: EversenseCGMPlugin
+    private val eversense: EversenseCGMPlugin,
+    private val iobCobCalculator: IobCobCalculator
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -93,6 +98,16 @@ class EversensePlugin @Inject constructor(
     ownPreferences = emptyList(),
     aapsLogger, rh, preferences, config
 ), BgSource, EversenseWatcher, EversenseCalibrationSource {
+
+    companion object {
+
+        // See onAlarmReceived()'s isSpuriousPostExitUnknown comment: the transmitter's unrecognized
+        // post-exit status push arrives ~1-2s after exitPositioningMode() per device logs; this is a
+        // generous margin over that without being wide enough to risk masking an unrelated
+        // genuinely-unrecognized alarm that happens to follow shortly after someone closes the
+        // placement guide.
+        private const val POST_EXIT_UNKNOWN_ALARM_SUPPRESS_WINDOW_MS = 5000L
+    }
 
     @Inject lateinit var persistenceLayer: PersistenceLayer
 
@@ -497,6 +512,18 @@ class EversensePlugin @Inject constructor(
         } else {
             alarm.code.title
         }
+        // The transmitter pushes an alarm code with no EversenseAlarm mapping (-> UNKNOWN) within
+        // ~1-2s of us exiting diagnostic/positioning mode (confirmed from device logs: signal/
+        // battery/calibration all healthy at the time - this is a mode-transition status push, not
+        // a real fault). Only suppress within that narrow window, so a genuinely unrecognized alarm
+        // arriving at any other time still surfaces as "Unknown Error" rather than being silently
+        // dropped.
+        val isSpuriousPostExitUnknown = alarm.code == EversenseAlarm.UNKNOWN &&
+            System.currentTimeMillis() - eversense.lastPositioningModeExitAt <= POST_EXIT_UNKNOWN_ALARM_SUPPRESS_WINDOW_MS
+        if (isSpuriousPostExitUnknown) {
+            aapsLogger.info(LTag.BGSOURCE, "Suppressing unrecognized alarm (code ${alarm.codeRaw}) received shortly after exiting positioning mode")
+            return
+        }
         val level = when {
             alarm.code.isWarning -> NotificationLevel.NORMAL
             alarm.code.isInfo -> NotificationLevel.INFO
@@ -512,6 +539,22 @@ class EversensePlugin @Inject constructor(
     }
 
     override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {
+        // Log what the BLE layer actually produced, per reading, before anything downstream can
+        // filter or reshape it. The DMS uploader drops readings with no rawResponseHex and keys
+        // the portal record on sensorId, and neither field is visible anywhere else in an exported
+        // log - the Eversense packet classes log through EversenseLogger, which only reaches
+        // logcat. Without this, a reading that never makes it to the portal cannot be told apart
+        // from one the server discarded.
+        //
+        // Backfill readings are the ones to watch: GlucoseHistoryItem carries no sensorId at all,
+        // so anything reconstructed from the transmitter's log arrives here with sensorId empty.
+        readings.forEach { r ->
+            aapsLogger.info(
+                LTag.BGSOURCE,
+                "Eversense CGM read: ts=${r.datetime} glucose=${r.glucoseInMgDl} " +
+                    "rawHexBytes=${r.rawResponseHex.length / 2} sensorId=${if (r.sensorId.isEmpty()) "EMPTY" else r.sensorId}"
+            )
+        }
         val glucoseValues = readings.map { reading ->
             GV(
                 timestamp = reading.datetime,
@@ -572,7 +615,7 @@ class EversensePlugin @Inject constructor(
 
                 if (type == EversenseType.EVERSENSE_365) {
                     // E365 US upload
-                    val uploadOk = try {
+                    val outcome = try {
                         app.aaps.plugins.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
                             preferences = prefs,
                             readings = readings,
@@ -581,20 +624,31 @@ class EversensePlugin @Inject constructor(
                         )
                     } catch (e: Exception) {
                         aapsLogger.error(LTag.BGSOURCE, "Eversense uploadGlucoseReadings EXCEPTION: ", e)
-                        false
+                        app.aaps.plugins.eversense.util.EversenseHttp365Util.UploadOutcome(success = false, error = e.toString())
                     }
+                    val uploadOk = outcome.success
+                    // Report what was actually sent, not how many readings were handed in - the two
+                    // differ whenever a reading carries no raw BLE data, and reporting the input
+                    // count made silently-dropped readings look like successful uploads. The HTTP
+                    // status and server reply ride along because EversenseLogger's output never
+                    // reaches the exported log file, only logcat.
                     val msg365 = if (uploadOk)
-                        "Eversense cloud upload: ✅ ${readings.size} reading(s) sent"
+                        "Eversense cloud upload: ✅ ${outcome.describe()}"
                     else
-                        "Eversense cloud upload: ❌ failed — check credentials and internet"
+                        "Eversense cloud upload: ❌ failed — ${outcome.describe()}"
                     aapsLogger.info(LTag.BGSOURCE, msg365)
                     // Cloud-upload failures are logged only, not toasted - a routine BLE hiccup
                     // (e.g. a disconnect mid-sync) retries within seconds, and toasting every
                     // failed attempt was spamming the user during sustained connection trouble.
 
+                    // Both calls below report the server's status and reply for the same reason the
+                    // glucose upload does: "✅ ok" said nothing about what the server did with the
+                    // request. putCurrentValues in particular is what drives "Last Sync Date" on
+                    // the portal, so a silent failure there is visible to the user before anything
+                    // in the log explains it.
                     val latest = readings.firstOrNull { it.rawResponseHex.isNotEmpty() } ?: readings.firstOrNull()
                     if (latest != null) {
-                        val portalOk = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
+                        val portalOutcome = app.aaps.plugins.eversense.util.EversenseHttp365Util.putCurrentValues(
                             preferences = prefs,
                             glucose = latest.glucoseInMgDl,
                             timestamp = latest.datetime,
@@ -602,19 +656,25 @@ class EversensePlugin @Inject constructor(
                             signalStrength = state.sensorSignalStrength,
                             batteryPercentage = state.batteryPercentage
                         )
-                        aapsLogger.info(LTag.BGSOURCE, "Eversense portal sync: ${if (portalOk) "✅ ok" else "❌ failed"}")
+                        aapsLogger.info(
+                            LTag.BGSOURCE,
+                            "Eversense portal sync: ${if (portalOutcome.success) "✅" else "❌ failed —"} ${portalOutcome.describe()}"
+                        )
                     }
 
                     val uploadableReadings = readings.filter { it.rawResponseHex.isNotEmpty() }
                     if (uploadableReadings.isNotEmpty()) {
-                        val eventsOk = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
+                        val eventsOutcome = app.aaps.plugins.eversense.util.EversenseHttp365Util.putDeviceEvents(
                             preferences = prefs,
                             readings = uploadableReadings,
                             transmitterSerialNumber = state.transmitterSerialNumber,
                             calibrations = state.calibrationHistory.filter { it.datetime == state.lastCalibrationDate },
                             alerts = state.activeAlarms
                         )
-                        aapsLogger.info(LTag.BGSOURCE, "Eversense device events: ${if (eventsOk) "✅ ok" else "❌ failed"}")
+                        aapsLogger.info(
+                            LTag.BGSOURCE,
+                            "Eversense device events: ${if (eventsOutcome.success) "✅" else "❌ failed —"} ${eventsOutcome.describe()}"
+                        )
                     }
                 } else {
                     // E3 EU/OUS upload

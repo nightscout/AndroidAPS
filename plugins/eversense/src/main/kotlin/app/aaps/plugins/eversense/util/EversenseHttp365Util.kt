@@ -22,15 +22,54 @@ import java.util.Locale
 import java.util.TimeZone
 
 class EversenseHttp365Util {
+
+    /**
+     * Outcome of an upload attempt, detailed enough to diagnose from an exported AAPS log.
+     *
+     * Declared on the class rather than inside [Companion] so callers can name it as
+     * `EversenseHttp365Util.UploadOutcome`.
+     *
+     * [EversenseLogger] output never reaches the exported log file - it uses arbitrary string
+     * tags while the file appender only captures AAPS's LTag loggers - so everything needed to
+     * diagnose a missing reading has to travel back to the caller, which logs through
+     * aapsLogger.
+     */
+    data class UploadOutcome(
+        val success: Boolean,
+        /** Readings actually serialized and POSTed. Zero is not a success. */
+        val sentCount: Int = 0,
+        /** Readings dropped before sending because they carried no raw BLE data. */
+        val skippedNoRawData: Int = 0,
+        val httpStatus: Int? = null,
+        /**
+         * Readings POSTed with an empty SensorId. The portal indexes records by that field, so a
+         * reading sent without one can be accepted and still never appear. Backfill readings are
+         * the known source - GlucoseHistoryItem has no sensorId to carry.
+         */
+        val sentWithEmptySensorId: Int = 0,
+        /** Server reply, truncated - this is what identifies a silent server-side reject. */
+        val responseBody: String = "",
+        val error: String? = null
+    ) {
+
+        /** One line, safe for the log: no token, no credentials, body clipped. */
+        fun describe(): String =
+            "sent=$sentCount skippedNoRawData=$skippedNoRawData emptySensorId=$sentWithEmptySensorId " +
+                "status=${httpStatus ?: "-"}" +
+                (error?.let { " error=$it" } ?: "") +
+                (if (responseBody.isNotBlank()) " body=${responseBody.take(RESPONSE_BODY_LOG_LIMIT)}" else "")
+
+        private companion object {
+
+            const val RESPONSE_BODY_LOG_LIMIT = 300
+        }
+    }
+
     companion object {
         private val TAG = "EversenseHttp365Util"
         private val JSON = Json { ignoreUnknownKeys = true }
 
-        // OAuth2 client credentials embedded in the official Eversense Android app (publicly
-        // extractable from the APK). Not a personal secret — same value ships to all users.
-        @Suppress("kotlin:S6418") // Public OAuth2 client ID from official Eversense APK — not a personal secret
         private val CLIENT_ID = "eversenseMMAAndroid"
-        @Suppress("kotlin:S6418") // Public OAuth2 client secret from official Eversense APK — not a personal secret
         private val CLIENT_SECRET = "6ksPx#]~wQ3U"
         private val CLIENT_NO = 2
         private val CLIENT_TYPE = 128
@@ -205,18 +244,23 @@ class EversenseHttp365Util {
 
         /**
          * Upload glucose readings to the Eversense DMS cloud.
-         * Returns true if the server accepted the upload (HTTP 2xx), false on any error.
+         *
+         * Returns an [UploadOutcome] rather than a Boolean, because a Boolean hid the two things
+         * that matter when readings go missing from the DMS portal: how many readings were really
+         * sent (as opposed to how many were handed in), and what the server said. Both response
+         * bodies used to be read and then discarded, so a server that accepted the request and
+         * silently dropped the reading looked identical to a genuine success.
          */
         fun uploadGlucoseReadings(
             preferences: SharedPreferences,
             readings: List<EversenseCGMResult>,
             transmitterSerialNumber: String,
             firmwareVersion: String
-        ): Boolean {
-            if (readings.isEmpty()) return true
+        ): UploadOutcome {
+            if (readings.isEmpty()) return UploadOutcome(success = true)
             val token = getOrRefreshToken(preferences) ?: run {
                 EversenseLogger.error(TAG, "Cannot upload glucose — no valid access token")
-                return false
+                return UploadOutcome(success = false, error = "no valid access token")
             }
             val state = getState(preferences)
 
@@ -225,10 +269,21 @@ class EversenseHttp365Util {
                 val uploadable = readings.filter { it.rawResponseHex.isNotEmpty() }
                 if (uploadable.isEmpty()) {
                     EversenseLogger.info(TAG, "No readings with raw BLE data to upload — skipping")
-                    return true
+                    // Deliberately not success: nothing reached the server, and reporting this as a
+                    // send is what made dropped readings look like healthy uploads in the log.
+                    return UploadOutcome(
+                        success = false,
+                        skippedNoRawData = readings.size,
+                        error = "no readings carried raw BLE data"
+                    )
                 }
 
                 EversenseLogger.info(TAG, "Uploading ${uploadable.size} reading(s) — TransmitterId='$transmitterSerialNumber'")
+
+                // Counted, not filtered: a reading with no sensorId is still sent, because dropping
+                // it would trade one silent loss for another. Reported so a portal gap can be tied
+                // to the empty index key rather than guessed at.
+                val emptySensorIds = uploadable.count { it.sensorId.isEmpty() }
 
                 // SensorId: the official app stores the first 8 bytes of the raw sensor ID in reversed
                 // byte order, uppercase — matching what the DMS portal indexes readings by.
@@ -263,16 +318,32 @@ class EversenseHttp365Util {
                 val responseCode = conn.responseCode
                 if (responseCode >= 400) {
                     val error = try { conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: "" } catch (e: Exception) { "" }
-                    EversenseLogger.error(TAG, "Glucose upload failed — status: $responseCode")
-                    false
+                    EversenseLogger.error(TAG, "Glucose upload failed — status: $responseCode, body: $error")
+                    UploadOutcome(
+                        success = false,
+                        sentCount = 0,
+                        skippedNoRawData = readings.size - uploadable.size,
+                        httpStatus = responseCode,
+                        sentWithEmptySensorId = emptySensorIds,
+                        responseBody = error
+                    )
                 } else {
                     val responseBody = try { conn.inputStream.readBytes().toString(Charsets.UTF_8) } catch (e: Exception) { "" }
-                    EversenseLogger.info(TAG, "Glucose upload success — status: $responseCode, readings: ${uploadable.size}")
-                    true
+                    EversenseLogger.info(TAG, "Glucose upload success — status: $responseCode, readings: ${uploadable.size}, body: $responseBody")
+                    // Carried out, but the body is what tells us whether the server actually kept
+                    // the reading - a 2xx alone has proven not to mean it landed in the portal.
+                    UploadOutcome(
+                        success = true,
+                        sentCount = uploadable.size,
+                        skippedNoRawData = readings.size - uploadable.size,
+                        httpStatus = responseCode,
+                        sentWithEmptySensorId = emptySensorIds,
+                        responseBody = responseBody
+                    )
                 }
             } catch (e: Exception) {
                 EversenseLogger.error(TAG, "Glucose upload exception: $e")
-                false
+                UploadOutcome(success = false, error = e.toString())
             }
         }
 
@@ -288,10 +359,10 @@ class EversenseHttp365Util {
             trend: EversenseTrendArrow,
             signalStrength: Int,
             batteryPercentage: Int
-        ): Boolean {
+        ): UploadOutcome {
             val token = getOrRefreshToken(preferences) ?: run {
                 EversenseLogger.error(TAG, "Cannot post current values — no valid access token")
-                return false
+                return UploadOutcome(success = false, error = "no valid access token")
             }
             return try {
                 val ts = dateFormatter.get().format(Date(timestamp))
@@ -311,16 +382,16 @@ class EversenseHttp365Util {
                 val responseCode = conn.responseCode
                 if (responseCode >= 400) {
                     val error = try { conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: "" } catch (e: Exception) { "" }
-                    EversenseLogger.error(TAG, "PutCurrentValues failed — status: $responseCode")
-                    false
+                    EversenseLogger.error(TAG, "PutCurrentValues failed — status: $responseCode, body: $error")
+                    UploadOutcome(success = false, httpStatus = responseCode, responseBody = error)
                 } else {
                     val responseBody = try { conn.inputStream.readBytes().toString(Charsets.UTF_8) } catch (e: Exception) { "" }
-                    EversenseLogger.info(TAG, "PutCurrentValues success — status: $responseCode, glucose=$glucose")
-                    true
+                    EversenseLogger.info(TAG, "PutCurrentValues success — status: $responseCode, glucose=$glucose, body: $responseBody")
+                    UploadOutcome(success = true, sentCount = 1, httpStatus = responseCode, responseBody = responseBody)
                 }
             } catch (e: Exception) {
                 EversenseLogger.error(TAG, "PutCurrentValues exception: $e")
-                false
+                UploadOutcome(success = false, error = e.toString())
             }
         }
 
@@ -338,11 +409,11 @@ class EversenseHttp365Util {
             transmitterSerialNumber: String,
             calibrations: List<CalibrationHistoryItem> = emptyList(),
             alerts: List<app.aaps.plugins.eversense.models.ActiveAlarm> = emptyList()
-        ): Boolean {
-            if (readings.isEmpty()) return true
+        ): UploadOutcome {
+            if (readings.isEmpty()) return UploadOutcome(success = true)
             val token = getOrRefreshToken(preferences) ?: run {
                 EversenseLogger.error(TAG, "Cannot post device events — no valid access token")
-                return false
+                return UploadOutcome(success = false, error = "no valid access token")
             }
             return try {
                 val sensorId = readings.firstOrNull { it.sensorId.isNotEmpty() }?.sensorId ?: ""
@@ -371,16 +442,22 @@ class EversenseHttp365Util {
                 val responseCode = conn.responseCode
                 if (responseCode >= 400) {
                     val error = try { conn.errorStream?.readBytes()?.toString(Charsets.UTF_8) ?: "" } catch (e: Exception) { "" }
-                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode")
-                    false
+                    EversenseLogger.error(TAG, "PutDeviceEvents failed — status: $responseCode, body: $error")
+                    UploadOutcome(success = false, httpStatus = responseCode, responseBody = error)
                 } else {
                     val responseBody = try { conn.inputStream.readBytes().toString(Charsets.UTF_8) } catch (e: Exception) { "" }
-                    EversenseLogger.info(TAG, "PutDeviceEvents success — status: $responseCode, readings: ${readings.size}")
-                    true
+                    EversenseLogger.info(TAG, "PutDeviceEvents success — status: $responseCode, readings: ${readings.size}, body: $responseBody")
+                    UploadOutcome(
+                        success = true,
+                        sentCount = readings.size,
+                        sentWithEmptySensorId = readings.count { it.sensorId.isEmpty() },
+                        httpStatus = responseCode,
+                        responseBody = responseBody
+                    )
                 }
             } catch (e: Exception) {
                 EversenseLogger.error(TAG, "PutDeviceEvents exception: $e")
-                false
+                UploadOutcome(success = false, error = e.toString())
             }
         }
 
