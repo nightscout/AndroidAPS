@@ -540,7 +540,10 @@
     <string name="aaps_directory">תיקיית AAPS</string>
     <string name="import_setting">ייבוא הגדרות</string>
     <!-- Import settings screen -->
+    <string name="database_cleanup">ניקיון מסד הנתונים</string>
+    <string name="nav_resetdb">איפוס מסדי נתונים</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">טווח להצגה</string>
 </resources>
