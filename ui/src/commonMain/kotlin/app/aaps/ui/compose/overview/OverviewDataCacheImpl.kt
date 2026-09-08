@@ -110,6 +110,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * Implementation of OverviewDataCache using MutableStateFlow.
@@ -914,7 +916,23 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         _targetLineFlow.value = TargetLineData(targets)
     }
 
-    private suspend fun rebuildBasalGraph() {
+    /**
+     * Serialises basal rebuilds, and is the reason [graphTimeRange] is read *inside* it.
+     *
+     * Four separate collectors call [rebuildBasalGraph] - the time-range shift, profile changes,
+     * `TB` changes and `EB` changes - each on its own coroutine. Without this they could run at the
+     * same time, and since the function captures its `toTime` at the top and writes the flow at the
+     * bottom, **the last writer won rather than the newest**: a rebuild that started earlier, with an
+     * older `toTime`, could finish after a fresher one and overwrite it. The graph then ended before
+     * "now" until something triggered another rebuild, which is exactly the reported symptom.
+     *
+     * Holding the lock across the read makes "finished last" and "started last" the same rebuild, so
+     * the freshest range always wins. Reading the range before taking the lock would leave the bug
+     * in place.
+     */
+    private val basalRebuildMutex = Mutex()
+
+    private suspend fun rebuildBasalGraph() = basalRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val profileBasal = mutableListOf<GraphDataPoint>()
         val actualBasal = mutableListOf<GraphDataPoint>()
@@ -922,9 +940,25 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         var lastActualBasal = -1.0
         var maxBasal = 0.0
 
+        // One query instead of one per minute. `profileFunction.getProfile(time)` caches on a
+        // second-granularity key and clears the whole cache at 30,000 entries, and a miss is a
+        // `getEffectiveProfileSwitchActiveAt` database read - so a cold cache used to mean about
+        // 1,500 round trips for a single rebuild. The profile can only change where an effective
+        // profile switch starts, so it is fetched there and reused in between; the per-minute
+        // resolution of the basal values themselves is unchanged.
+        val boundaries = profileBoundariesIn(
+            persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(fromTime, toTime, true),
+            fromTime
+        )
+        var nextBoundary = 0
+        var profile = profileFunction.getProfile(fromTime)
+
         var time = fromTime
         while (time < toTime) {
-            val profile = profileFunction.getProfile(time)
+            while (nextBoundary < boundaries.size && boundaries[nextBoundary] <= time) {
+                profile = profileFunction.getProfile(time)
+                nextBoundary++
+            }
             if (profile == null) {
                 time += 60 * 1000L
                 continue
@@ -1105,3 +1139,19 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         _calcProgressFlow.value = 100
     }
 }
+/**
+ * The times inside a graph window where the effective profile can change.
+ *
+ * Kept apart from `rebuildBasalGraph` because it is the part with a decision in it, and the rebuild
+ * itself needs six collaborators before it can be run at all. Two rules, and both matter:
+ *
+ * - A switch **at or before** [fromTime] is not a boundary. It is the profile the window opens with,
+ *   already fetched before the loop starts, so re-fetching at it would be a wasted query - and one
+ *   that lands on the wrong minute, because the loop steps in whole minutes and a switch does not.
+ * - The result is **sorted ascending**, because the caller walks it with a single moving index. Out
+ *   of order, a later boundary would be consumed early and the profile would be read at the wrong
+ *   time for the rest of the window. `getEffectiveProfileSwitchesFromTimeToTime` is asked for
+ *   ascending order, but sorting here means this does not depend on that.
+ */
+internal fun profileBoundariesIn(switches: List<EPS>, fromTime: Long): List<Long> =
+    switches.map { it.timestamp }.filter { it > fromTime }.sorted()
