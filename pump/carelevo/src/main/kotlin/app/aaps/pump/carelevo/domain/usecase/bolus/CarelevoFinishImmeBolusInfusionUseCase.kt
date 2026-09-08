@@ -9,7 +9,7 @@ import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class CarelevoFinishImmeBolusInfusionUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,

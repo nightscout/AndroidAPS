@@ -49,11 +49,14 @@ import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.abs
 import kotlin.math.min
 
+@SingleIn(AppScope::class)
 class CarelevoPatch @Inject constructor(
     private val transport: CarelevoBleTransport,
     private val aapsSchedulers: AapsSchedulers,

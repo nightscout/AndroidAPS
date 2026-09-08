@@ -4,9 +4,10 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
+import dev.zacsweers.metro.Inject
 import org.joda.time.DateTime
 
-class AlarmClearPatchDiscardUseCase(
+class AlarmClearPatchDiscardUseCase @Inject constructor(
     private val alarmRepository: CarelevoAlarmInfoRepository,
     private val patchInfoRepository: CarelevoPatchInfoRepository,
     private val userSettingInfoRepository: CarelevoUserSettingInfoRepository,

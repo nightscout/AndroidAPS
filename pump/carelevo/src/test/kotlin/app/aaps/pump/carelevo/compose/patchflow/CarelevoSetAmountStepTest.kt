@@ -32,7 +32,7 @@ import org.robolectric.annotation.GraphicsMode
  * Robolectric Compose tests for [CarelevoSetAmountStep] — the wizard step that picks the insulin
  * fill amount on a wheel picker built from [FillConfig] (50..300 step 10).
  *
- * **ViewModel:** [CarelevoPatchConnectionFlowViewModel] is a final Hilt VM, but the step touches
+ * **ViewModel:** [CarelevoPatchConnectionFlowViewModel] is a final ViewModel class, but the step touches
  * exactly three of its members — `inputInsulin` (read once to seed the wheel), `confirmAmount` and
  * `exitWizard`. It is therefore mocked outright (Mockito 5's inline mock maker is the default, and
  * this module already mocks the final `CarelevoPatch` the same way). Mocking rather than

@@ -2,11 +2,11 @@ package app.aaps.pump.carelevo.presentation.viewmodel
 
 import android.os.Handler
 import android.os.Looper
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.common.CarelevoAlarmActionHandler
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
@@ -191,7 +191,7 @@ class CarelevoAlarmViewModelTest {
     fun `triggerEvent ClearAlarm neither sounds the alarm nor schedules a re-arm`() {
         sut.triggerEvent(AlarmEvent.ClearAlarm(alarm()))
 
-        verify(uiInteraction, never()).runAlarm(any<String>(), any<String>(), any<Int>())
+        verify(uiInteraction, never()).runAlarm(any<String>(), any<String>(), any<AlarmSound>())
         verify(handler, never()).postDelayed(any<Runnable>(), any<Long>())
     }
 
@@ -212,7 +212,7 @@ class CarelevoAlarmViewModelTest {
         sut.triggerEvent(AlarmEvent.Mute)
 
         verify(uiInteraction).stopAlarm("Mute Click")
-        verify(uiInteraction, never()).runAlarm(any<String>(), any<String>(), any<Int>())
+        verify(uiInteraction, never()).runAlarm(any<String>(), any<String>(), any<AlarmSound>())
         verify(alarmActionHandler, never()).triggerEvent(any())
         verify(handler, never()).postDelayed(any<Runnable>(), any<Long>())
     }
@@ -242,7 +242,7 @@ class CarelevoAlarmViewModelTest {
         sut.triggerEvent(AlarmEvent.Mute5min)
 
         // The re-arm is a delayed post; until that Runnable runs, nothing may sound.
-        verify(uiInteraction, never()).runAlarm(any<String>(), any<String>(), any<Int>())
+        verify(uiInteraction, never()).runAlarm(any<String>(), any<String>(), any<AlarmSound>())
     }
 
     @Test
@@ -253,7 +253,7 @@ class CarelevoAlarmViewModelTest {
         capturePostedReArm().run()
 
         // alarmInfo is null -> status falls back to the app title.
-        verify(uiInteraction).runAlarm(eq("Carelevo"), eq("Carelevo"), eq(CoreUiR.raw.error))
+        verify(uiInteraction).runAlarm(eq("Carelevo"), eq("Carelevo"), eq(AlarmSound.ERROR))
     }
 
     @Test
@@ -265,7 +265,7 @@ class CarelevoAlarmViewModelTest {
 
         capturePostedReArm().run()
 
-        verify(uiInteraction).runAlarm(eq("LGS Started"), eq("Carelevo"), eq(CoreUiR.raw.error))
+        verify(uiInteraction).runAlarm(eq("LGS Started"), eq("Carelevo"), eq(AlarmSound.ERROR))
     }
 
     // ---- triggerEvent: StartAlarm -------------------------------------------------------------
@@ -276,7 +276,7 @@ class CarelevoAlarmViewModelTest {
 
         sut.triggerEvent(AlarmEvent.StartAlarm)
 
-        verify(uiInteraction).runAlarm(eq("Carelevo"), eq("Carelevo"), eq(CoreUiR.raw.error))
+        verify(uiInteraction).runAlarm(eq("Carelevo"), eq("Carelevo"), eq(AlarmSound.ERROR))
     }
 
     @Test
@@ -287,7 +287,7 @@ class CarelevoAlarmViewModelTest {
 
         sut.triggerEvent(AlarmEvent.StartAlarm)
 
-        verify(uiInteraction).runAlarm(eq("LGS Started"), eq("Carelevo"), eq(CoreUiR.raw.error))
+        verify(uiInteraction).runAlarm(eq("LGS Started"), eq("Carelevo"), eq(AlarmSound.ERROR))
     }
 
     @Test
@@ -298,7 +298,7 @@ class CarelevoAlarmViewModelTest {
 
         sut.triggerEvent(AlarmEvent.StartAlarm)
 
-        verify(uiInteraction).runAlarm(eq("Infusion clogged"), eq("Carelevo"), eq(CoreUiR.raw.error))
+        verify(uiInteraction).runAlarm(eq("Infusion clogged"), eq("Carelevo"), eq(AlarmSound.ERROR))
     }
 
     @Test
@@ -368,7 +368,7 @@ class CarelevoAlarmViewModelTest {
         // Without this the HandlerThread leaks and the delayed re-arm could sound against a cleared VM.
         verify(handler).removeCallbacksAndMessages(null)
         verify(looper).quitSafely()
-        verify(uiInteraction, never()).runAlarm(any<String>(), any<String>(), any<Int>())
+        verify(uiInteraction, never()).runAlarm(any<String>(), any<String>(), any<AlarmSound>())
     }
 
     @Test

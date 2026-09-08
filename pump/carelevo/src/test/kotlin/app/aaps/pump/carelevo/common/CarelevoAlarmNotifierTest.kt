@@ -4,6 +4,7 @@ import android.app.NotificationManager as AndroidNotificationManager
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
@@ -11,7 +12,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -125,7 +125,7 @@ class CarelevoAlarmNotifierTest {
         if (critical) {
             verify(notificationManager, times(count)).post(
                 eq(NotificationId.CARELEVO_PATCH_ALERT), any<String>(), eq(level),
-                any<Long>(), any<Long>(), eq(CoreUiR.raw.error), any<List<NotificationAction>>(), anyOrNull()
+                any<Long>(), any<Long>(), eq(AlarmSound.ERROR), any<List<NotificationAction>>(), anyOrNull()
             )
         } else {
             verify(notificationManager, times(count)).post(

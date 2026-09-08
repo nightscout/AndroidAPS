@@ -9,12 +9,9 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
@@ -38,6 +35,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.siteRotation.BodyType
@@ -61,6 +59,9 @@ import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlow
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchNeedleInsertionViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchSafetyCheckViewModel
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
+import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -91,26 +92,19 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import org.robolectric.annotation.Implementation
-import org.robolectric.annotation.Implements
 import java.util.Optional
+import kotlin.reflect.KClass
 
 /**
  * Compose render tests for the activation wizard host [CarelevoPatchFlowScreen]: step routing, the
  * exit/discard event plumbing and the Loading scrim.
  *
- * **How the four ViewModels are injected.** The screen resolves them with a bare `hiltViewModel()`,
- * so there is no parameter to pass a double through. `hiltViewModel()` reads
- * `LocalViewModelStoreOwner`, wraps that owner's default factory in
- * `androidx.hilt.lifecycle.viewmodel.HiltViewModelFactory(context, delegate)` and hands the result to
- * `viewModel()`. That wrapper walks up to the hosting Activity and pulls the Hilt
- * `ActivityCreatorEntryPoint` off it — which blows up under the plain `ComponentActivity` that
- * `createComposeRule()` launches, since it is not an `@AndroidEntryPoint`. [ShadowHiltViewModelFactory]
- * replaces that one static wrapper with an identity function, so the delegate factory is used verbatim;
- * [TestViewModelStoreOwner] then serves the real ViewModels (built here with mocked collaborators, the
- * same way `CarelevoPatchConnectionFlowViewModelTest` does) straight out of its store. Only the
- * `HiltViewModelFactory` class itself is instrumented — see `instrumentedPackages`, which is a
- * `startsWith` match, not a package match.
+ * **How the four ViewModels are injected.** The screen resolves them with a bare `metroViewModel()`,
+ * so there is no parameter to pass a double through. `metroViewModel()` takes its factory from
+ * `LocalMetroViewModelFactory` and falls back to the `Application` only when that local is not set —
+ * which is what the test uses: [TestMetroViewModelFactory] hands out the real ViewModels (built here
+ * with mocked collaborators, the same way `CarelevoPatchConnectionFlowViewModelTest` does), so no
+ * Metro graph and no application of our own are needed.
  *
  * **Coroutines.** `viewModelScope` dispatches on `Dispatchers.Main`, replaced here by an
  * [UnconfinedTestDispatcher] so a ViewModel call made from a test body has already settled by the time
@@ -125,11 +119,7 @@ import java.util.Optional
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(
-    sdk = [35],
-    shadows = [ShadowHiltViewModelFactory::class],
-    instrumentedPackages = ["androidx.hilt.lifecycle.viewmodel.HiltViewModelFactory"]
-)
+@Config(sdk = [35])
 class CarelevoPatchFlowScreenTest {
 
     @get:Rule
@@ -163,7 +153,10 @@ class CarelevoPatchFlowScreenTest {
     private lateinit var connectViewModel: CarelevoPatchConnectViewModel
     private lateinit var needleViewModel: CarelevoPatchNeedleInsertionViewModel
     private lateinit var safetyCheckViewModel: CarelevoPatchSafetyCheckViewModel
-    private lateinit var viewModelStoreOwner: TestViewModelStoreOwner
+    private lateinit var viewModelFactory: TestMetroViewModelFactory
+    private val viewModelStoreOwner = object : ViewModelStoreOwner {
+        override val viewModelStore: ViewModelStore = ViewModelStore()
+    }
 
     private val snackbarHostState = SnackbarHostState()
     private var toolbar: ToolbarConfig? = null
@@ -259,12 +252,12 @@ class CarelevoPatchFlowScreenTest {
             activationExecutor = activationExecutor,
             patchForceDiscardUseCase = patchForceDiscardUseCase
         )
-        viewModelStoreOwner = TestViewModelStoreOwner(
+        viewModelFactory = TestMetroViewModelFactory(
             mapOf(
-                CarelevoPatchConnectionFlowViewModel::class.java to flowViewModel,
-                CarelevoPatchConnectViewModel::class.java to connectViewModel,
-                CarelevoPatchNeedleInsertionViewModel::class.java to needleViewModel,
-                CarelevoPatchSafetyCheckViewModel::class.java to safetyCheckViewModel
+                CarelevoPatchConnectionFlowViewModel::class to { flowViewModel },
+                CarelevoPatchConnectViewModel::class to { connectViewModel },
+                CarelevoPatchNeedleInsertionViewModel::class to { needleViewModel },
+                CarelevoPatchSafetyCheckViewModel::class to { safetyCheckViewModel }
             )
         )
     }
@@ -281,6 +274,7 @@ class CarelevoPatchFlowScreenTest {
         compose.setContent {
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
+                LocalMetroViewModelFactory provides viewModelFactory,
                 LocalViewModelStoreOwner provides viewModelStoreOwner
             ) {
                 AapsTheme {
@@ -642,40 +636,16 @@ class CarelevoPatchFlowScreenTest {
 }
 
 /**
- * Test double registry for `hiltViewModel()`. Implementing [HasDefaultViewModelProviderFactory] is what
- * makes `hiltViewModel()` pick this factory up as its delegate; [ShadowHiltViewModelFactory] then keeps
- * that delegate intact instead of wrapping it in Hilt's activity-bound factory.
+ * Test double registry for `metroViewModel()`. In production the app's `AapsViewModelFactory` fills
+ * [viewModelProviders] from the Metro graph; here the map is written by hand, so the screen gets the
+ * ViewModels this test built. The wizard has no assisted ViewModels, so the other two maps stay empty.
  */
-private class TestViewModelStoreOwner(
-    private val viewModels: Map<Class<out ViewModel>, ViewModel>
-) : ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
+private class TestMetroViewModelFactory(
+    override val viewModelProviders: Map<KClass<out ViewModel>, () -> ViewModel>
+) : MetroViewModelFactory() {
 
-    override val viewModelStore: ViewModelStore = ViewModelStore()
+    override val assistedFactoryProviders: Map<KClass<out ViewModel>, () -> ViewModelAssistedFactory> = emptyMap()
 
-    override val defaultViewModelProviderFactory: ViewModelProvider.Factory =
-        object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T =
-                viewModels[modelClass] as? T ?: error("No test double registered for $modelClass")
-        }
-}
-
-/**
- * Neutralises `androidx.hilt.lifecycle.viewmodel.HiltViewModelFactory(context, delegateFactory)` — the
- * static wrapper `hiltViewModel()` always routes through. The real one resolves Hilt's
- * `ActivityCreatorEntryPoint` off the hosting Activity, which only exists on an `@AndroidEntryPoint`
- * Activity; the test host is a plain `ComponentActivity`. Returning the delegate verbatim is exactly
- * what the real factory does for any ViewModel outside `@HiltViewModelMap`, so the production lookup
- * path (`viewModel(owner, key, factory)` -> the owner's store) is preserved.
- */
-@Implements(className = "androidx.hilt.lifecycle.viewmodel.HiltViewModelFactory", isInAndroidSdk = false)
-class ShadowHiltViewModelFactory {
-
-    companion object {
-
-        @JvmStatic
-        @Implementation
-        fun create(context: Context, delegateFactory: ViewModelProvider.Factory): ViewModelProvider.Factory =
-            delegateFactory
-    }
+    override val manualAssistedFactoryProviders:
+        Map<KClass<out ManualViewModelAssistedFactory>, () -> ManualViewModelAssistedFactory> = emptyMap()
 }

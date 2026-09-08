@@ -5,7 +5,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
 
 class CarelevoInfusionInfoMonitorUseCase @Inject constructor(

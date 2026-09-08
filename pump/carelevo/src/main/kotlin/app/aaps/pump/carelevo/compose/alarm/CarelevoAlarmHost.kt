@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -39,7 +39,7 @@ internal fun CarelevoAlarmHost(
     snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
-    val viewModel: CarelevoAlarmViewModel = hiltViewModel()
+    val viewModel: CarelevoAlarmViewModel = metroViewModel()
     val notifierAlarms = carelevoAlarmNotifier.alarms.collectAsStateWithLifecycle().value
     val alarmQueue = viewModel.alarmQueue.collectAsStateWithLifecycle().value
     var dismissedAlarmId by remember { mutableStateOf<String?>(null) }

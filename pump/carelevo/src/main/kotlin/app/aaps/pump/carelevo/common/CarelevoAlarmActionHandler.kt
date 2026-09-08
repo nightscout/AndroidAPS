@@ -23,8 +23,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * SINGLE owner of the in-memory active-alarm queue and of the per-cause alarm-clear state machine,
@@ -36,7 +37,7 @@ import javax.inject.Singleton
  * store ([CarelevoAlarmInfoUseCase.acknowledgeAlarm]) as well as from [alarmQueue] — otherwise it
  * resurrects on the next cold load or foreground refresh.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoAlarmActionHandler @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
@@ -45,7 +46,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
     private val alarmClearCoordinator: CarelevoAlarmClearCoordinator
 ) {
 
-    // App-lifetime scope (this is a @Singleton): drives the suspend queue-routed alarm-clear ops.
+    // App-lifetime scope (this is an app-scoped singleton): drives the suspend queue-routed alarm-clear ops.
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val _alarmQueue = MutableStateFlow<List<CarelevoAlarmInfo>>(emptyList())

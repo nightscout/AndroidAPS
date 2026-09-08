@@ -1,12 +1,14 @@
 package app.aaps.pump.carelevo.common.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.R
 
 enum class CarelevoBooleanPreferenceKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val titleResId: Int = 0,
+    /** 0 for the internal flags, which are never shown on a preference screen. */
+    private val titleResId: Int = 0,
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -21,4 +23,7 @@ enum class CarelevoBooleanPreferenceKey(
 
     CARELEVO_BUZZER_REMINDER(key = "CARELEVO_BUZZER_REMINDER", defaultValue = false, titleResId = R.string.carelevo_patch_buzzer_alarm_title),
     CARELEVO_CAGE_DEFAULT_APPLIED(key = "carelevo_cage_default_applied", defaultValue = false, titleResId = 0),
+    ;
+
+    override val title: TextRef = if (titleResId == 0) TextRef.Literal("") else TextRef.AndroidRes(titleResId)
 }

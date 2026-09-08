@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsSpacing
@@ -58,10 +58,10 @@ private fun CarelevoPatchConnectionFlowScreen(
     snackbarHostState: SnackbarHostState,
     onExitFlow: () -> Unit
 ) {
-    val viewModel: CarelevoPatchConnectionFlowViewModel = hiltViewModel()
-    val connectViewModel: CarelevoPatchConnectViewModel = hiltViewModel()
-    val needleInsertionViewModel: CarelevoPatchNeedleInsertionViewModel = hiltViewModel()
-    val safetyCheckViewModel: CarelevoPatchSafetyCheckViewModel = hiltViewModel()
+    val viewModel: CarelevoPatchConnectionFlowViewModel = metroViewModel()
+    val connectViewModel: CarelevoPatchConnectViewModel = metroViewModel()
+    val needleInsertionViewModel: CarelevoPatchNeedleInsertionViewModel = metroViewModel()
+    val safetyCheckViewModel: CarelevoPatchSafetyCheckViewModel = metroViewModel()
     val page by viewModel.page.collectAsStateWithLifecycle()
     val totalSteps by viewModel.totalSteps.collectAsStateWithLifecycle()
     val currentStepIndex by viewModel.currentStepIndex.collectAsStateWithLifecycle()

@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.BolusCancelResponse
@@ -76,7 +77,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.Optional
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -314,7 +315,7 @@ abstract class CarelevoPumpPluginTestBase {
         override fun success(success: Boolean): PumpEnactResult = apply { this.success = success }
         override fun enacted(enacted: Boolean): PumpEnactResult = apply { this.enacted = enacted }
         override fun comment(comment: String): PumpEnactResult = apply { this.comment = comment }
-        override fun comment(comment: Int): PumpEnactResult = apply { this.comment = comment.toString() }
+        override fun comment(ref: TextRef): PumpEnactResult = apply { this.comment = ref.toString() }
         override fun duration(duration: Int): PumpEnactResult = apply { this.duration = duration }
         override fun absolute(absolute: Double): PumpEnactResult = apply { this.absolute = absolute }
         override fun percent(percent: Int): PumpEnactResult = apply { this.percent = percent }

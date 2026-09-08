@@ -36,8 +36,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Production [CarelevoBleTransport] over Android's `BluetoothGatt`.
@@ -53,7 +54,7 @@ import javax.inject.Singleton
  * notify char (tx) `e1b40003`, CCCD `2902`. Notifications (not indications), no MTU negotiation.
  */
 @SuppressLint("MissingPermission")
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoBleTransportImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger
@@ -143,7 +144,7 @@ class CarelevoBleTransportImpl @Inject constructor(
     override fun setListener(listener: BleTransportListener?) {
         val existing = this.listener
         if (existing != null && listener != null && existing !== listener) {
-            // This @Singleton holds a single listener slot; a new adapter registering before the
+            // This app-scoped singleton holds a single listener slot; a new adapter registering before the
             // previous one closed would silently orphan it (its in-flight ops would hang). This is a
             // defensive guard against that overlap.
             aapsLogger.warn(LTag.PUMPBTCOMM, "setListener overwriting an active listener; previous connection not closed?")

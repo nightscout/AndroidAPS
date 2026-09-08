@@ -8,9 +8,14 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import jakarta.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.util.Optional
 
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class CarelevoAlarmInfoDaoImpl @Inject constructor(
     private val prefManager: SP
 ) : CarelevoAlarmInfoDao {

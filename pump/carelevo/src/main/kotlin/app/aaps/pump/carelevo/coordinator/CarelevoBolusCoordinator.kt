@@ -4,6 +4,7 @@ import android.os.SystemClock
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -16,6 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
@@ -40,14 +42,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoBolusCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
@@ -108,7 +111,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!carelevoPatch.isBluetoothEnabled()) {
             return result
         }
@@ -149,7 +152,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         // produce speed=Infinity, silently mangled into wire bytes.
         require(insulin > 0.0) { "extended bolus insulin must be > 0, got $insulin" }
         require(durationInMinutes > 0) { "extended bolus duration must be > 0 min, got $durationInMinutes" }
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!carelevoPatch.isBluetoothEnabled()) return result
         return setExtendedBolusInternal(insulin, durationInMinutes, serialNumber)
     }
@@ -158,7 +161,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit
     ): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!carelevoPatch.isBluetoothEnabled()) return result
         return cancelExtendedBolusInternal(serialNumber, onLastDataUpdated)
     }
@@ -174,7 +177,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         durationInMinutes: Int,
         serialNumber: String
     ): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         val hour = durationInMinutes / 60
@@ -225,7 +228,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit
     ): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -376,7 +379,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                         val infusedAmount = response.infusedAmount
                         bolusProgressData.updateProgress(
                             bolusProgressData.state.value?.percent ?: 100,
-                            rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, infusedAmount.toFloat()),
+                            InterfacesStrings.bolus_delivered_successfully.withArgs(infusedAmount.toFloat()),
                             PumpInsulin(infusedAmount)
                         )
                         val persisted = cancelImmeBolusInfusionUseCase.persistImmeBolusCancelled()
@@ -462,10 +465,7 @@ class CarelevoBolusCoordinator @Inject constructor(
             if (step == totalSteps) {
                 bolusProgressData.updateProgress(
                     100,
-                    rh.gs(
-                        app.aaps.core.interfaces.R.string.bolus_delivered_successfully,
-                        detailedInfo.insulin.toFloat()
-                    ),
+                    InterfacesStrings.bolus_delivered_successfully.withArgs(detailedInfo.insulin.toFloat()),
                     PumpInsulin(detailedInfo.insulin)
                 )
                 runBlocking {
@@ -495,7 +495,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 val percent = if (totalInsulin <= 0.0) 0 else ((delivering / totalInsulin) * 100).toInt()
                 bolusProgressData.updateProgress(
                     percent,
-                    rh.gs(app.aaps.core.interfaces.R.string.bolus_delivering, delivering),
+                    InterfacesStrings.bolus_delivering.withArgs(delivering),
                     PumpInsulin(delivering)
                 )
             }

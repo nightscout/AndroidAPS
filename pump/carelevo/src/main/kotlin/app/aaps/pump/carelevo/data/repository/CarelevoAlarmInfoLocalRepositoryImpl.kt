@@ -9,8 +9,11 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import java.util.Optional
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 
+@ContributesBinding(AppScope::class)
 class CarelevoAlarmInfoLocalRepositoryImpl @Inject constructor(
     private val dataSource: CarelevoAlarmInfoLocalDataSource
 ) : CarelevoAlarmInfoRepository {

@@ -10,7 +10,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import org.joda.time.DateTime
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class CarelevoSetBasalProgramUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,

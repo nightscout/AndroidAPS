@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("compose-test-module-dependencies")
@@ -32,10 +32,4 @@ dependencies {
     implementation(libs.com.polidea.rxandroidble3)
     implementation(libs.com.jakewharton.rx3.replaying.share)
     implementation(libs.com.google.android.material)
-
-    implementation(libs.com.google.dagger.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
 }

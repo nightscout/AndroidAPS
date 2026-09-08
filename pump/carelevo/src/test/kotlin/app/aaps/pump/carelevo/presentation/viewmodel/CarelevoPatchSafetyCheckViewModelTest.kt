@@ -741,7 +741,7 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
         sut.retryAdditionalPriming()
 
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
-        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.DiscardFailed)
+        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.SafetyCheckFailed)
     }
 
     // ---- isSafetyCheckPassed ------------------------------------------------------------------

@@ -6,8 +6,14 @@ import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoConnectNewPatch
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
+// App-scoped: a view model injects this, and ViewModelOwnershipTest requires every concrete class
+// a view model injects to have one owner. It is a stateless view over the app-scoped DAOs, so one
+// instance is also the only sensible number.
+@SingleIn(AppScope::class)
 class CarelevoConnectNewPatchUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,
 ) {

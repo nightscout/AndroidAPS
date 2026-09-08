@@ -13,15 +13,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType.Companion.isCritical
@@ -31,8 +32,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Presentation half of the alarm pipeline: observes the persisted active-alarm set (via
@@ -43,7 +45,7 @@ import javax.inject.Singleton
  * emission which surface a given alarm set takes; [alarmHostActive] tells it whether the in-app
  * host is mounted.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoAlarmNotifier @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
@@ -118,7 +120,7 @@ class CarelevoAlarmNotifier @Inject constructor(
             val desc = buildDescription(descRes, descArgs)
             aapsLogger.debug(LTag.PUMPCOMM, "showTopNotification titleRes=$titleRes descArgs=$descArgs desc=$desc")
             // Critical tiers get the id's declared URGENT level + alarm sound (the shared
-            // NotificationManagerImpl gates its ramping alarm on URGENT && soundRes != null) and do
+            // NotificationManagerImpl gates its ramping alarm on URGENT && sound != null) and do
             // not auto-expire — an unhandled critical alarm must not disappear on its own.
             // Non-critical notices stay NORMAL/silent and also persist until handled.
             val critical = newAlarm.alarmType.isCritical()
@@ -127,12 +129,12 @@ class CarelevoAlarmNotifier @Inject constructor(
                 text = context.getString(titleRes) + "\n" + HtmlCompat.fromHtml(desc, HtmlCompat.FROM_HTML_MODE_LEGACY),
                 level = if (critical) NotificationLevel.URGENT else NotificationLevel.NORMAL,
                 actions = listOf(
-                    NotificationAction(btnRes) {
+                    NotificationAction(TextRef.AndroidRes(btnRes)) {
                         alarmActionHandler.triggerEvent(AlarmEvent.ClearAlarm(info = newAlarm))
                     }
                 ),
                 date = dateUtil.now(),
-                soundRes = if (critical) CoreUiR.raw.error else null,
+                sound = if (critical) AlarmSound.ERROR else null,
                 validityCheck = null,
             )
         }

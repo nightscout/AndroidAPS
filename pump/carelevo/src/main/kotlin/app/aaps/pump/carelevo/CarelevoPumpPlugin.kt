@@ -14,8 +14,11 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -41,6 +44,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.icons.IcPluginCarelevo
@@ -97,16 +101,24 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 import kotlin.jvm.optionals.getOrNull
 
-@Singleton
+// Pump plugin registration — @MetroIntKey range 1000–1200, see AppRootGraph for the overview
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1190)
+@SingleIn(AppScope::class)
 class CarelevoPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
@@ -143,10 +155,10 @@ class CarelevoPumpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginCarelevo)
-        .pluginName(R.string.carelevo)
-        .shortName(R.string.carelevo_shortname)
-        .description(R.string.carelevo_description),
-    ownPreferences = listOf(CarelevoBooleanPreferenceKey::class.java, CarelevoIntPreferenceKey::class.java),
+        .pluginName(TextRef.AndroidRes(R.string.carelevo))
+        .shortName(TextRef.AndroidRes(R.string.carelevo_shortname))
+        .description(TextRef.AndroidRes(R.string.carelevo_description)),
+    ownPreferences = CarelevoBooleanPreferenceKey.entries + CarelevoIntPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue
 ), Pump {
 
@@ -480,7 +492,7 @@ class CarelevoPumpPlugin @Inject constructor(
                 uiInteraction.runAlarm(
                     status = rh.gs(first.cause.transformNotificationStringResources().first),
                     title = rh.gs(R.string.carelevo),
-                    soundId = CoreUiR.raw.error
+                    sound = AlarmSound.ERROR
                 )
             }
         } else {
@@ -492,11 +504,13 @@ class CarelevoPumpPlugin @Inject constructor(
         key = "carelevo_settings",
         titleResId = R.string.carelevo,
         items = listOf(
+            // Labels come from the translated unit format templates. Building them as "$it U" or
+            // "$it h" in code would put text where no translator can reach it.
             CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.withEntries(
-                (20..50 step 5).associateWith { "$it U" }
+                (20..50 step 5).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_insulin_int, listOf(it)) }
             ),
             CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.withEntries(
-                (24..167 step 1).associateWith { "$it ${rh.gs(app.aaps.core.interfaces.R.string.hours)}" }
+                (24..167 step 1).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_hours, listOf(it)) }
             ),
             CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER
         ),
@@ -594,7 +608,7 @@ class CarelevoPumpPlugin @Inject constructor(
                 // not an actual change, so enacted=false (no PROFILE_SET_OK); success=true keeps the
                 // not-ready case out of the failure alarm (matches the other queue-managed pumps).
                 carelevoPatch.setProfile(profile)
-                pumpEnactResultProvider.get().success(true).enacted(false)
+                pumpEnactResultProvider().success(true).enacted(false)
             }
 
             else                                 -> {
@@ -740,7 +754,7 @@ class CarelevoPumpPlugin @Inject constructor(
         get() = false
 
     override suspend fun loadTDDs(): PumpEnactResult {
-        return pumpEnactResultProvider.get()
+        return pumpEnactResultProvider()
     }
 
     override fun canHandleDST(): Boolean {

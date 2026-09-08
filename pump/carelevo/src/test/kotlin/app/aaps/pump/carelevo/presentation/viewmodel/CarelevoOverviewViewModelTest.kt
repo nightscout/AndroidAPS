@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
@@ -276,8 +277,8 @@ class CarelevoOverviewViewModelTest {
         whenever(dateUtil.now()).thenReturn(nowMillis)
 
         // PumpCommunicationStatus subscribes to both in its init; empty flows keep banner/queue null.
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
 
         whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
         whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
@@ -314,8 +315,7 @@ class CarelevoOverviewViewModelTest {
             aapsSchedulers = aapsSchedulers,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
             carelevoDeleteInfusionInfoUseCase = deleteInfusionInfoUseCase,
-            rxBus = rxBus,
-            context = context
+            rxBus = rxBus
         )
 
         collectorScope = CoroutineScope(Dispatchers.Unconfined)
@@ -1276,7 +1276,7 @@ class CarelevoOverviewViewModelTest {
         patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
 
         val banner = sut.overviewUiState.value.statusBanner
-        assertThat(banner?.text).isEqualTo(s(CoreUiR.string.pumpsuspended))
+        assertThat(banner?.text).isEqualTo(s(InterfacesR.string.pumpsuspended))
         assertThat(banner?.level).isEqualTo(StatusLevel.WARNING)
     }
 

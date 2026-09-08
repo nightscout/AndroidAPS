@@ -12,8 +12,14 @@ import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusi
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
+// App-scoped: a view model injects this, and ViewModelOwnershipTest requires every concrete class
+// a view model injects to have one owner. It is a stateless view over the app-scoped DAOs, so one
+// instance is also the only sensible number.
+@SingleIn(AppScope::class)
 class CarelevoDeleteInfusionInfoUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,
     private val infusionInfoRepository: CarelevoInfusionInfoRepository

@@ -4,7 +4,7 @@ import app.aaps.pump.carelevo.domain.model.infusion.derivePatchMode
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class CarelevoCancelImmeBolusInfusionUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,

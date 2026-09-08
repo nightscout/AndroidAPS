@@ -36,9 +36,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -51,7 +52,7 @@ import kotlin.jvm.optionals.getOrNull
  * The safety check streams progress (`Progress` → `Success`/`Error`); since a custom command returns a
  * single result, that progress is republished on [safetyProgress] so the wizard can drive its countdown.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoActivationExecutor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
@@ -110,7 +111,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * infusion-info persist. Activation-only op.
      */
     private fun runSetBasal(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val profile = carelevoPatch.profile.value?.getOrNull()
             ?: return result.success(false).enacted(false).comment("profile not set")
         val address = carelevoPatch.getPatchInfoAddress()
@@ -135,7 +136,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * (`resultCode == 0`) persist the suspended state (`pumpStopUseCase.persistStopped`).
      */
     private fun runPumpStop(durationMin: Int): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -156,7 +157,7 @@ class CarelevoActivationExecutor @Inject constructor(
     }
 
     private fun runPumpResume(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -181,7 +182,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * the source of truth).
      */
     private fun runUpdateBuzzer(on: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -204,7 +205,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * persisted with the sync flag set so the deferred-sync re-pushes on reconnect.
      */
     private fun runUpdateMaxBolus(value: Double): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (updateMaxBolusDoseUseCase.isBolusRunning()) {
             val persisted = updateMaxBolusDoseUseCase.persistMaxBolusDose(value, synced = false)
             aapsLogger.info(LTag.PUMPCOMM, "newBle.maxBolus bolus-running → deferred persisted=$persisted")
@@ -234,7 +235,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * persisted deferred for the next reconnect.
      */
     private fun runUpdateLowInsulinNotice(hours: Int): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -258,7 +259,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * so this is a pure BLE write like the buzzer; arrival of the 0x75 frame (fabricated result 0) = success.
      */
     private fun runUpdateExpiredThreshold(hours: Int): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -280,7 +281,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * Runs on the queue worker (blocked inside the command).
      */
     private fun runSingleWrite(label: String, command: () -> BleCommand<SimpleResultResponse>): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -297,7 +298,7 @@ class CarelevoActivationExecutor @Inject constructor(
     }
 
     private fun runAdditionalPriming(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -321,7 +322,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * the fallback for when the patch cannot be reached at all.
      */
     private fun runDiscard(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         val stopped = try {
@@ -344,7 +345,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * use case. Activation-only op.
      */
     private fun runNeedleCheck(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -369,7 +370,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * terminal is an Error. Activation-only op.
      */
     private fun runSafetyCheck(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         var success = false
@@ -412,7 +413,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * and on `resultCode == 0` reuse the use case's remove-alarm persist.
      */
     private fun runAlarmClear(command: CmdAlarmClear): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
@@ -438,7 +439,7 @@ class CarelevoActivationExecutor @Inject constructor(
      * NOT unbond (no `discardTeardown`).
      */
     private fun runAlarmClearPatchDiscard(command: CmdAlarmClearPatchDiscard): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {

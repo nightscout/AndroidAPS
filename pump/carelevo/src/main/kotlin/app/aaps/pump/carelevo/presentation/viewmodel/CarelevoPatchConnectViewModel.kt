@@ -25,7 +25,10 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoConnectNewPatchUseCas
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoConnectNewPatchRequestModel
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectPrepareEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CancellationException
@@ -37,11 +40,12 @@ import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Duration.Companion.milliseconds
 
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class CarelevoPatchConnectViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,

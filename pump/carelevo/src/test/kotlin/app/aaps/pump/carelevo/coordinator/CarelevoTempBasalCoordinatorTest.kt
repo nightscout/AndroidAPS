@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo.coordinator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
@@ -27,7 +28,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * DIRECT unit tests of [CarelevoTempBasalCoordinator] — exercises the coordinator without going through
@@ -379,7 +380,7 @@ internal class CarelevoTempBasalCoordinatorTest {
         override fun success(success: Boolean): PumpEnactResult = apply { this.success = success }
         override fun enacted(enacted: Boolean): PumpEnactResult = apply { this.enacted = enacted }
         override fun comment(comment: String): PumpEnactResult = apply { this.comment = comment }
-        override fun comment(comment: Int): PumpEnactResult = apply { this.comment = comment.toString() }
+        override fun comment(ref: TextRef): PumpEnactResult = apply { this.comment = ref.toString() }
         override fun duration(duration: Int): PumpEnactResult = apply { this.duration = duration }
         override fun absolute(absolute: Double): PumpEnactResult = apply { this.absolute = absolute }
         override fun percent(percent: Int): PumpEnactResult = apply { this.percent = percent }

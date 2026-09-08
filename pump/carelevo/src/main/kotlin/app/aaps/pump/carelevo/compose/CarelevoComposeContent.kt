@@ -14,7 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -56,7 +56,7 @@ class CarelevoComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: CarelevoOverviewViewModel = hiltViewModel()
+        val overviewViewModel: CarelevoOverviewViewModel = metroViewModel()
         // Single place this module reads the app-provided CompositionLocal — children get it as an
         // explicit parameter (preferred pattern; do not add new .current consumers below).
         val snackbarHostState = LocalSnackbarHostState.current

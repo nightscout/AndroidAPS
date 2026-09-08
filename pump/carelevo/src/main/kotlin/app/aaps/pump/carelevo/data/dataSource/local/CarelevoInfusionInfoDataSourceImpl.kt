@@ -8,8 +8,11 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoTempBasalInfusionInfoEntity
 import io.reactivex.rxjava3.core.Observable
 import java.util.Optional
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 
+@ContributesBinding(AppScope::class)
 class CarelevoInfusionInfoDataSourceImpl @Inject constructor(
     private val infusionInfoDao: CarelevoInfusionInfoDao
 ) : CarelevoInfusionInfoDataSource {

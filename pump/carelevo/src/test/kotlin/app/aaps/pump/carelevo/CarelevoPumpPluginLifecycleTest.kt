@@ -24,6 +24,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -32,7 +34,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.BondingState
@@ -108,7 +109,7 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import java.util.Optional
-import javax.inject.Provider
+import dev.zacsweers.metro.Provider
 
 /**
  * Robolectric unit tests for the LIFECYCLE half of [CarelevoPumpPlugin] — everything `onStart()`
@@ -151,7 +152,7 @@ class CarelevoPumpPluginLifecycleTest {
     private lateinit var commandQueue: CommandQueue
     private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var sp: SP
-    private lateinit var spEditor: SP.Editor
+    private lateinit var spEditor: KeyValueStore.Editor
     private lateinit var fabricPrivacy: FabricPrivacy
     private lateinit var profileFunction: ProfileFunction
     private lateinit var protectionCheck: ProtectionCheck
@@ -252,7 +253,7 @@ class CarelevoPumpPluginLifecycleTest {
         // sp.edit { … } returns Unit -> stub with doAnswer and run the block against a mock Editor.
         doAnswer { invocation ->
             @Suppress("UNCHECKED_CAST")
-            (invocation.getArgument<Any>(1) as SP.Editor.() -> Unit).invoke(spEditor)
+            (invocation.getArgument<Any>(1) as KeyValueStore.Editor.() -> Unit).invoke(spEditor)
             Unit
         }.whenever(sp).edit(any(), any())
 
@@ -841,7 +842,7 @@ class CarelevoPumpPluginLifecycleTest {
 
         alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_WARNING_PUMP_CLOGGED)))
 
-        verify(uiInteraction).runAlarm(any(), any(), eq(CoreUiR.raw.error))
+        verify(uiInteraction).runAlarm(any(), any(), eq(AlarmSound.ERROR))
     }
 
     @Test
@@ -851,7 +852,7 @@ class CarelevoPumpPluginLifecycleTest {
 
         alarmHandler().invoke(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
 
-        verify(uiInteraction).runAlarm(any(), any(), eq(CoreUiR.raw.error))
+        verify(uiInteraction).runAlarm(any(), any(), eq(AlarmSound.ERROR))
     }
 
     @Test

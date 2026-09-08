@@ -7,9 +7,14 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.Optional
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 class CarelevoUserSettingInfoDaoImpl @Inject constructor(
     private val prefManager: SP
 ) : CarelevoUserSettingInfoDao {

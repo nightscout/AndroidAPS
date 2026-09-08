@@ -5,11 +5,6 @@ import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.io.Serializable
 
 /**
  * Unit tests for the Carelevo activation [CustomCommand] marker classes in
@@ -17,21 +12,10 @@ import java.io.Serializable
  *
  * These are pure, dependency-free marker commands routed through the AAPS CommandQueue: no
  * executor delegation happens inside them, so the tests assert their public contract —
- * [CustomCommand.statusDescription], stored constructor arguments, the [CustomCommand] / [Serializable]
- * type contract, and Java-serialization round-trips (they are queued, therefore must serialize cleanly).
+ * [CustomCommand.statusDescription], stored constructor arguments and the [CustomCommand] type
+ * contract. The commands are queued in memory only, so there is nothing to serialize.
  */
 internal class CarelevoActivationCommandsTest {
-
-    /** Round-trip an object through Java serialization (the mechanism the CommandQueue relies on). */
-    private fun <T : Serializable> roundTrip(value: T): T {
-        val bytes = ByteArrayOutputStream().also { bos ->
-            ObjectOutputStream(bos).use { it.writeObject(value) }
-        }.toByteArray()
-        ObjectInputStream(ByteArrayInputStream(bytes)).use {
-            @Suppress("UNCHECKED_CAST")
-            return it.readObject() as T
-        }
-    }
 
     // region statusDescription — no-arg markers
 
@@ -173,79 +157,4 @@ internal class CarelevoActivationCommandsTest {
         commands.forEach { assertThat(it).isInstanceOf(CustomCommand::class.java) }
     }
 
-    @Test
-    fun `every activation command is Serializable`() {
-        val commands: List<CustomCommand> = listOf(
-            CmdNeedleCheck(),
-            CmdSetBasal(),
-            CmdAdditionalPriming(),
-            CmdDiscard(),
-            CmdPumpStop(30),
-            CmdPumpResume(),
-            CmdTimeZoneUpdate(1),
-            CmdUpdateMaxBolus(1.0),
-            CmdUpdateLowInsulinNotice(1),
-            CmdUpdateExpiredThreshold(1),
-            CmdUpdateBuzzer(true),
-            CmdAlarmClear("a", AlarmType.ALERT, AlarmCause.ALARM_ALERT_OUT_OF_INSULIN),
-            CmdAlarmClearPatchDiscard("a", AlarmType.WARNING, AlarmCause.ALARM_WARNING_PUMP_CLOGGED),
-            CmdSafetyCheck()
-        )
-        commands.forEach { assertThat(it).isInstanceOf(Serializable::class.java) }
-    }
-
-    // endregion
-
-    // region serialization round-trips (queued commands must survive it)
-
-    @Test
-    fun `CmdPumpStop survives a serialization round-trip preserving durationMin and status`() {
-        val restored = roundTrip(CmdPumpStop(durationMin = 45))
-        assertThat(restored.durationMin).isEqualTo(45)
-        assertThat(restored.statusDescription).isEqualTo("PUMP STOP")
-    }
-
-    @Test
-    fun `CmdUpdateMaxBolus survives a serialization round-trip preserving maxBolusDose`() {
-        val restored = roundTrip(CmdUpdateMaxBolus(maxBolusDose = 9.5))
-        assertThat(restored.maxBolusDose).isEqualTo(9.5)
-    }
-
-    @Test
-    fun `CmdUpdateBuzzer survives a serialization round-trip preserving on`() {
-        assertThat(roundTrip(CmdUpdateBuzzer(on = true)).on).isTrue()
-        assertThat(roundTrip(CmdUpdateBuzzer(on = false)).on).isFalse()
-    }
-
-    @Test
-    fun `CmdAlarmClear survives a serialization round-trip preserving all fields`() {
-        val restored = roundTrip(
-            CmdAlarmClear(
-                alarmId = "alarm-77",
-                alarmType = AlarmType.ALERT,
-                alarmCause = AlarmCause.ALARM_ALERT_PATCH_EXPIRED_PHASE_2
-            )
-        )
-        assertThat(restored.alarmId).isEqualTo("alarm-77")
-        assertThat(restored.alarmType).isEqualTo(AlarmType.ALERT)
-        assertThat(restored.alarmCause).isEqualTo(AlarmCause.ALARM_ALERT_PATCH_EXPIRED_PHASE_2)
-        assertThat(restored.statusDescription).isEqualTo("ALARM CLEAR")
-    }
-
-    @Test
-    fun `CmdAlarmClearPatchDiscard survives a serialization round-trip preserving all fields`() {
-        val restored = roundTrip(
-            CmdAlarmClearPatchDiscard(
-                alarmId = "alarm-88",
-                alarmType = AlarmType.WARNING,
-                alarmCause = AlarmCause.ALARM_WARNING_PATCH_ERROR
-            )
-        )
-        assertThat(restored.alarmId).isEqualTo("alarm-88")
-        assertThat(restored.alarmType).isEqualTo(AlarmType.WARNING)
-        assertThat(restored.alarmCause).isEqualTo(AlarmCause.ALARM_WARNING_PATCH_ERROR)
-        assertThat(restored.statusDescription).isEqualTo("ALARM CLEAR PATCH DISCARD")
-    }
-
-    // endregion
 }

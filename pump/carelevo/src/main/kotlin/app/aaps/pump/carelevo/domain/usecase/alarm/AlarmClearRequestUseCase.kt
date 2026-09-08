@@ -3,8 +3,9 @@ package app.aaps.pump.carelevo.domain.usecase.alarm
 import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
+import dev.zacsweers.metro.Inject
 
-class AlarmClearRequestUseCase(
+class AlarmClearRequestUseCase @Inject constructor(
     private val alarmRepository: CarelevoAlarmInfoRepository
 ) {
 

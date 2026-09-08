@@ -14,8 +14,9 @@ import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -26,7 +27,7 @@ import kotlin.jvm.optionals.getOrNull
  * write would silently no-op, and the callers' old `isPatchConnected()` gate would otherwise fall to the
  * destructive force-quit path. Each caller keeps its own alarm-cause branching, alarm-queue state and UI.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoAlarmClearCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val commandQueue: CommandQueue,
@@ -36,7 +37,7 @@ class CarelevoAlarmClearCoordinator @Inject constructor(
     private val dateUtil: DateUtil
 ) {
 
-    // Serialize the queue ops across BOTH surfaces (this is a @Singleton): CommandQueue.customCommand dedups
+    // Serialize the queue ops across BOTH surfaces (this is an app-scoped singleton): CommandQueue.customCommand dedups
     // by command CLASS and returns success=false if one of the same class is already in-flight, so two
     // concurrent clears (notification + in-app, or two different alarms) would make the second misread as a
     // clear-failure and locally dismiss its alarm without ever clearing it on the patch. The mutex is held

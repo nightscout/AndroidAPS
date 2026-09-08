@@ -1,6 +1,5 @@
 package app.aaps.pump.carelevo.presentation.viewmodel
 
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
@@ -50,8 +49,10 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseC
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewUiModel
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -77,11 +78,13 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class CarelevoOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val pumpSync: PumpSync,
@@ -93,8 +96,7 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val carelevoDeleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase,
-    private val rxBus: RxBus,
-    @ApplicationContext private val context: Context
+    private val rxBus: RxBus
 ) : ViewModel() {
 
     private val _patchState = MutableLiveData<PatchState>(PatchState.NotConnectedNotBooting)
@@ -141,7 +143,7 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val _basalRateFlow = MutableStateFlow(0.0)
     private val _tempBasalRateFlow = MutableStateFlow<Double?>(null)
 
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, viewModelScope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, viewModelScope)
 
     private val connectionInfo = combine(
         bleSession.connected,
@@ -717,7 +719,7 @@ class CarelevoOverviewViewModel @Inject constructor(
 
             // Suspended outranks the (idle) connection status — delivery is paused (matches Medtrum).
             overviewData.isPumpStopped                      -> StatusBanner(
-                text = rh.gs(CoreUiR.string.pumpsuspended),
+                text = rh.gs(InterfacesR.string.pumpsuspended),
                 level = StatusLevel.WARNING
             )
 

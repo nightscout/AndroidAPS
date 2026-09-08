@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -52,7 +53,7 @@ import app.aaps.core.ui.R as CoreUiR
  * [app.aaps.core.ui.compose.pump.PumpOverviewScreen]: the one-shot event router (snackbars, the three
  * dialogs, the connection-flow hand-off) and the blocking progress overlay.
  *
- * The screen takes its [CarelevoOverviewViewModel] as an explicit parameter (no `hiltViewModel()`
+ * The screen takes its [CarelevoOverviewViewModel] as an explicit parameter (no `metroViewModel()`
  * default), so a Mockito mock backed by real `MutableStateFlow`s / a real `MutableEventFlow` drives
  * every branch without any of the pump's BLE collaborators. The rendering of the state itself
  * (banner/rows/buttons) is covered at its home in `:core:ui` by `PumpOverviewScreenTest`; here we
@@ -172,7 +173,7 @@ class CarelevoOverviewScreenTest {
         // Banner and row values are deliberately distinct strings: onNodeWithText fails on 2 matches.
         overviewState.value = PumpOverviewUiState(
             statusBanner = StatusBanner(text = "Patch connected", level = StatusLevel.NORMAL),
-            queueStatus = "Reading status",
+            queueStatus = AnnotatedString("Reading status"),
             infoRows = listOf(
                 PumpInfoRow(label = context.getString(R.string.carelevo_bluetooth_state_key), value = "Connected"),
                 PumpInfoRow(label = context.getString(R.string.carelevo_serial_number_key), value = "04:CD:15:D0:10:05")

@@ -28,15 +28,11 @@ import org.robolectric.annotation.GraphicsMode
  *
  * ## What is NOT covered, and why
  * The [CarelevoAlarmHost] composable body itself is NOT rendered here. It resolves its ViewModel
- * with a hard-coded `hiltViewModel()` call and takes no ViewModel parameter, so there is no seam to
- * inject a test double through. That call is not defeatable from a plain Robolectric test:
- * `hiltViewModel()` (androidx.hilt 1.4.0) unconditionally builds a `HiltViewModelFactory` from
- * `LocalContext` *before* it consults the ViewModelStore, and that factory walks the context chain
- * to a `ComponentActivity` and demands an `@AndroidEntryPoint` entry point on it. The plain
- * `ComponentActivity` behind `createComposeRule()` is not one, so composing the host throws
- * regardless of what `LocalViewModelStoreOwner` provides. Rendering it would need the full Hilt test
- * graph (`HiltTestApplication` + a Hilt runner + every real collaborator of `CarelevoAlarmViewModel`)
- * — a build-level change, not a test-level one.
+ * with a hard-coded `metroViewModel()` call and takes no ViewModel parameter, so there is no seam in
+ * the signature to inject a test double through. Since the move to Metro there IS a seam in the
+ * composition — `metroViewModel()` reads `LocalMetroViewModelFactory` before falling back to the
+ * `Application` — so rendering the host is now possible the way
+ * `CarelevoPatchFlowScreenTest` does it. Nobody has written that coverage yet.
  *
  * So the host's effect wiring (the `alarmHostActive` `DisposableEffect`, the notifier→
  * `loadActiveAlarms` bridge, the event/snackbar/StartAlarm `LaunchedEffect`s and the dismissed-id

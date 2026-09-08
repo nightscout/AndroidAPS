@@ -3,7 +3,7 @@ package app.aaps.pump.carelevo.domain.usecase.userSetting
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class CarelevoUpdateMaxBolusDoseUseCase @Inject constructor(
     private val infusionInfoRepository: CarelevoInfusionInfoRepository,

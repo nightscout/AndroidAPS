@@ -2,7 +2,7 @@ package app.aaps.pump.carelevo.domain.usecase.userSetting
 
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class CarelevoUpdateLowInsulinNoticeAmountUseCase @Inject constructor(
     private val userSettingInfoRepository: CarelevoUserSettingInfoRepository

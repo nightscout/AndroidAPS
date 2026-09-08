@@ -16,11 +16,12 @@ import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoCancelTempBasalInfusi
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoStartTempBasalInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.model.StartTempBasalInfusionRequestModel
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoTempBasalCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
@@ -57,7 +58,7 @@ class CarelevoTempBasalCoordinator @Inject constructor(
         // otherwise be silently mangled into wire bytes.
         require(absoluteRate >= 0.0) { "TBR absolute rate must be >= 0, got $absoluteRate" }
         require(durationInMinutes > 0) { "TBR duration must be > 0 min, got $durationInMinutes" }
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!carelevoPatch.isBluetoothEnabled()) {
             aapsLogger.info(LTag.PUMPCOMM, "setTempBasalAbsolute.skip reason=bluetoothDisabled")
             return result
@@ -118,7 +119,7 @@ class CarelevoTempBasalCoordinator @Inject constructor(
     ): PumpEnactResult {
         require(percent >= 0) { "TBR percent must be >= 0, got $percent" }
         require(durationInMinutes > 0) { "TBR duration must be > 0 min, got $durationInMinutes" }
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalPercent.start percent=$percent durationInMinutes=$durationInMinutes")
         if (!carelevoPatch.isBluetoothEnabled()) {
             aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalPercent.skip reason=bluetoothDisabled")
@@ -176,7 +177,7 @@ class CarelevoTempBasalCoordinator @Inject constructor(
         serialNumber: String,
         onLastDataUpdated: () -> Unit
     ): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal.start")
         if (!carelevoPatch.isBluetoothEnabled()) {
             aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal.skip reason=bluetoothDisabled")

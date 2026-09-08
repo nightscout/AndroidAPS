@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.isSelectable
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -59,24 +60,22 @@ import app.aaps.core.ui.R as CoreUiR
 /**
  * Tests for [CarelevoComposeContent] — the module's `ComposablePluginContent` entry point.
  *
- * **Scope caveat (read before extending this file).** `CarelevoComposeContent.Render` cannot be
- * rendered by a plain Robolectric Compose test: it resolves its ViewModel with a bare
- * `hiltViewModel()` call in the composable body (no parameter to override), and so do the children
- * it routes to (`CarelevoAlarmHost`, and four more inside `CarelevoPatchFlowScreen`). Since
- * androidx.hilt 1.4 `hiltViewModel()` unconditionally builds a `HiltViewModelFactory` from
- * `LocalContext`, which requires an `@AndroidEntryPoint` activity and throws otherwise — there is no
- * injection seam, and no amount of `LocalViewModelStoreOwner` seeding avoids it. Covering `Render`
- * itself needs a Hilt Robolectric harness (hilt-android-testing + kspTest + `HiltTestApplication` +
- * a Hilt test activity), which this module does not have.
+ * **Scope caveat (read before extending this file).** `CarelevoComposeContent.Render` resolves its
+ * ViewModel with a bare `metroViewModel()` call in the composable body (no parameter to override),
+ * and so do the children it routes to (`CarelevoAlarmHost`, and four more inside
+ * `CarelevoPatchFlowScreen`). Since the move to Metro that is no longer a hard block:
+ * `metroViewModel()` reads `LocalMetroViewModelFactory` before falling back to the `Application`, so
+ * a test can hand it the doubles — see `CarelevoPatchFlowScreenTest`. Nobody has written that
+ * coverage for `Render` yet.
  *
- * What is covered here instead:
+ * What is covered here:
  * - Construction of the entry point (the only non-composable code in the class).
- * - The one route whose content *is* injectable: the `activeWorkflowScreen == null` branch, i.e.
- *   [CarelevoOverviewScreen], which takes its ViewModel as an explicit parameter. This includes the
+ * - The one route whose content takes its ViewModel as an explicit parameter: the
+ *   `activeWorkflowScreen == null` branch, i.e. [CarelevoOverviewScreen]. This includes the
  *   `onStartWorkflow(CONNECTION_FLOW_START)` handshake that `Render`'s `startWorkflow` consumes.
  *
  * Not covered: the `CONNECTION_FLOW_START` and `else` routes (both delegate to
- * `CarelevoPatchFlowScreen`, which hard-calls `hiltViewModel()` four times), and `CarelevoAlarmHost`.
+ * `CarelevoPatchFlowScreen`) and `CarelevoAlarmHost`.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -174,7 +173,7 @@ class CarelevoComposeContentTest {
     fun overviewRoute_rendersBanner_queueStatus_infoRows_andActions() {
         overviewState.value = PumpOverviewUiState(
             statusBanner = StatusBanner(text = "Patch connected", level = StatusLevel.NORMAL),
-            queueStatus = "Reading status",
+            queueStatus = AnnotatedString("Reading status"),
             infoRows = listOf(
                 PumpInfoRow(label = "Serial number", value = "04:CD:15:D0:10:05"),
                 PumpInfoRow(label = "Reservoir", value = "298.0 U", level = StatusLevel.WARNING),

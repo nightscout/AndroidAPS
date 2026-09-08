@@ -17,12 +17,13 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
@@ -49,7 +50,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
     ): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "execute.start profile=$profile")
 
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val now = System.currentTimeMillis()
         if (now - lastProfileUpdateAttemptMs < 30_000) {
             // Benign debounce: a repeated profile-set within 30s is skipped, not a real failure.
@@ -177,7 +178,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
                 }
                 .doOnError { aapsLogger.error(LTag.PUMPCOMM, "cancelExtendedBolus.error", it) }
         } else {
-            Single.just(pumpEnactResultProvider.get().success(true).enacted(false))
+            Single.just(pumpEnactResultProvider().success(true).enacted(false))
         }
     }
 
@@ -197,7 +198,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
                 }
                 .doOnError { aapsLogger.error(LTag.PUMPCOMM, "cancelTempBasal.error", it) }
         } else {
-            Single.just(pumpEnactResultProvider.get().success(true).enacted(false))
+            Single.just(pumpEnactResultProvider().success(true).enacted(false))
         }
     }
 }

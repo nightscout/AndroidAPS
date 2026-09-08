@@ -2,6 +2,7 @@ package app.aaps.pump.carelevo.common.keys
 
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -28,7 +29,7 @@ internal class CarelevoIntPreferenceKeyTest {
         val k = CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS
         assertThat(k.key).isEqualTo("CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS")
         assertThat(k.defaultValue).isEqualTo(116)
-        assertThat(k.titleResId).isEqualTo(R.string.carelevo_patch_expiration_reminders_title_value)
+        assertThat(k.title).isEqualTo(TextRef.AndroidRes(R.string.carelevo_patch_expiration_reminders_title_value))
         assertThat(k.preferenceType).isEqualTo(PreferenceType.LIST)
     }
 
@@ -37,7 +38,7 @@ internal class CarelevoIntPreferenceKeyTest {
         val k = CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS
         assertThat(k.key).isEqualTo("CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS")
         assertThat(k.defaultValue).isEqualTo(30)
-        assertThat(k.titleResId).isEqualTo(R.string.carelevo_low_reservoir_reminders_title_value)
+        assertThat(k.title).isEqualTo(TextRef.AndroidRes(R.string.carelevo_low_reservoir_reminders_title_value))
         assertThat(k.preferenceType).isEqualTo(PreferenceType.LIST)
     }
 

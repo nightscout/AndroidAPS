@@ -5,6 +5,7 @@ import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.command.CmdPumpResume
 import app.aaps.pump.carelevo.command.CmdTimeZoneUpdate
 import app.aaps.pump.carelevo.common.keys.CarelevoBooleanPreferenceKey
@@ -290,7 +291,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
         val screen = plugin.getPreferenceScreenContent()
 
         assertThat(screen.key).isEqualTo("carelevo_settings")
-        assertThat(screen.titleResId).isEqualTo(R.string.carelevo)
+        assertThat(screen.title).isEqualTo(TextRef.AndroidRes(R.string.carelevo))
         assertThat(screen.items).hasSize(3)
         assertThat((screen.items[0] as IntPreferenceKey).key)
             .isEqualTo(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key)

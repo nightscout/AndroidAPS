@@ -44,9 +44,11 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import org.joda.time.DateTime
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Named
-import javax.inject.Singleton
+import app.aaps.pump.carelevo.di.CarelevoRxCharacteristic
+import app.aaps.pump.carelevo.di.CarelevoTxCharacteristic
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -69,15 +71,15 @@ import kotlin.time.Duration.Companion.milliseconds
  * session must not run concurrently with any other link to the patch. The caller (a customCommand)
  * is responsible for ensuring no other link is active before invoking a session.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoBleSession @Inject constructor(
     private val transport: CarelevoBleTransport,
-    @Named("characterRx") private val writeUuid: UUID,
-    @Named("characterTx") private val notifyUuid: UUID,
+    @CarelevoRxCharacteristic private val writeUuid: UUID,
+    @CarelevoTxCharacteristic private val notifyUuid: UUID,
     private val aapsLogger: AAPSLogger
 ) {
 
-    // The new transport is a @Singleton with a SINGLE GATT + single listener slot, so two sessions can
+    // The new transport is app-scoped with a SINGLE GATT + single listener slot, so two sessions can
     // never physically overlap. This mutex enforces that at the API level: every session serializes, so an
     // out-of-band caller (e.g. a bolus cancel fired off the queue worker by cancelAllBoluses) waits for the
     // in-flight session to close and release before it opens — never a two-GATT status-133 collision.

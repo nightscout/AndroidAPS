@@ -1,6 +1,7 @@
 package app.aaps.pump.carelevo.common.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -27,7 +28,7 @@ internal class CarelevoBooleanPreferenceKeyTest {
         val k = CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER
         assertThat(k.key).isEqualTo("CARELEVO_BUZZER_REMINDER")
         assertThat(k.defaultValue).isFalse()
-        assertThat(k.titleResId).isEqualTo(R.string.carelevo_patch_buzzer_alarm_title)
+        assertThat(k.title).isEqualTo(TextRef.AndroidRes(R.string.carelevo_patch_buzzer_alarm_title))
     }
 
     @Test
@@ -35,7 +36,7 @@ internal class CarelevoBooleanPreferenceKeyTest {
         val k = CarelevoBooleanPreferenceKey.CARELEVO_CAGE_DEFAULT_APPLIED
         assertThat(k.key).isEqualTo("carelevo_cage_default_applied")
         assertThat(k.defaultValue).isFalse()
-        assertThat(k.titleResId).isEqualTo(0)
+        assertThat(k.title).isEqualTo(TextRef.Literal(""))
     }
 
     @Test

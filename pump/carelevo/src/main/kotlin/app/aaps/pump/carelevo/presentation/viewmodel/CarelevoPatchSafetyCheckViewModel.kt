@@ -21,7 +21,10 @@ import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -30,10 +33,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
 
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class CarelevoPatchSafetyCheckViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val aapsLogger: AAPSLogger,

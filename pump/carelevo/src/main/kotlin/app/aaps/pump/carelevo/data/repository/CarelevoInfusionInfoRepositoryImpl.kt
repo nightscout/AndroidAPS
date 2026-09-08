@@ -14,9 +14,12 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInf
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import io.reactivex.rxjava3.core.Observable
 import java.util.Optional
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
 
+@ContributesBinding(AppScope::class)
 class CarelevoInfusionInfoRepositoryImpl @Inject constructor(
     private val infusionInfoDataSource: CarelevoInfusionInfoDataSource
 ) : CarelevoInfusionInfoRepository {

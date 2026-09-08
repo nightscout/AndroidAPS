@@ -6,16 +6,19 @@ import androidx.lifecycle.ViewModel
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.common.CarelevoAlarmActionHandler
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.ext.transformNotificationStringResources
 import app.aaps.pump.carelevo.presentation.model.AlarmEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.Inject
 
 /**
  * UI shell over [CarelevoAlarmActionHandler] for the in-app full-screen alarm: owns ONLY the sound
@@ -24,7 +27,8 @@ import javax.inject.Inject
  * failure toast) are the handler's — exposed here unchanged so the Compose host has one ViewModel
  * to talk to.
  */
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 class CarelevoAlarmViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val uiInteraction: UiInteraction,
@@ -39,11 +43,10 @@ class CarelevoAlarmViewModel @Inject constructor(
     /** The alarm the host is currently presenting; used for the alarm-dialog status text. */
     var alarmInfo: CarelevoAlarmInfo? = null
 
-    private val sound = CoreUiR.raw.error
+    private val sound = AlarmSound.ERROR
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private fun startAlarm(reason: String) {
-        if (sound == 0) return
         val title = rh.gs(R.string.carelevo)
         val status = alarmInfo?.let { rh.gs(it.cause.transformNotificationStringResources().first) } ?: title
         aapsLogger.debug(LTag.PUMPCOMM, "startAlarm reason=$reason status=$status")

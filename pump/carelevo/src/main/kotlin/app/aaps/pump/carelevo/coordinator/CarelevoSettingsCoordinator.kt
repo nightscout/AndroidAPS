@@ -8,15 +8,16 @@ import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSetti
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * The preference-driven patch settings (max bolus, reminders, buzzer) are routed through the AAPS
  * CommandQueue as custom commands ([app.aaps.pump.carelevo.command.CarelevoActivationExecutor]); this
  * coordinator now only owns the shutdown-time settings clear.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoSettingsCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,

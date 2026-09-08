@@ -6,7 +6,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.basal.model.StartTempBasalInfusionRequestModel
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class CarelevoStartTempBasalInfusionUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,

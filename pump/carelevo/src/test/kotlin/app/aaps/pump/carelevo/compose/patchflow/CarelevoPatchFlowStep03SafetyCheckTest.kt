@@ -41,10 +41,10 @@ import org.robolectric.annotation.GraphicsMode
  * ~100-210 s safety check streams its countdown and the discard escape hatch is gated.
  *
  * ## How the ViewModels are injected
- * The composable takes both VMs as plain parameters (the `hiltViewModel()` defaults live in
+ * The composable takes both VMs as plain parameters (the `metroViewModel()` defaults live in
  * `CarelevoPatchFlowScreen`, not here), so both are Mockito doubles - the module already mocks final
  * Kotlin classes (see `CarelevoPatchSafetyCheckViewModelTest`, which mocks `CarelevoActivationExecutor`),
- * so the inline mock maker covers these final `@HiltViewModel` classes too. The two StateFlows the
+ * so the inline mock maker covers these final ViewModel classes too. The two StateFlows the
  * screen collects are stubbed with real [MutableStateFlow]s and the one-shot event stream with a real
  * production [MutableEventFlow] - so the collect/consume semantics under test are the real ones, and
  * the test drives every UI state by emitting the same events the VM would.

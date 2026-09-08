@@ -4,8 +4,9 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -15,7 +16,7 @@ import kotlin.jvm.optionals.getOrNull
  * is forced true so the queue never dials a missing/unactivated device. [isInitialized] stays
  * activation-based. See `_docs/CARELEVO_QUEUE_OWNED_LINK.md`.
  */
-@Singleton
+@SingleIn(AppScope::class)
 class CarelevoConnectionCoordinator @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val carelevoPatch: CarelevoPatch,

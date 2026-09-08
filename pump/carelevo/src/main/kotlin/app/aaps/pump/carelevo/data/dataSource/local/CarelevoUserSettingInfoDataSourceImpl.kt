@@ -4,8 +4,11 @@ import app.aaps.pump.carelevo.data.dao.CarelevoUserSettingInfoDao
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import io.reactivex.rxjava3.core.Observable
 import java.util.Optional
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 
+@ContributesBinding(AppScope::class)
 class CarelevoUserSettingInfoDataSourceImpl @Inject constructor(
     private val userSettingInfoDao: CarelevoUserSettingInfoDao
 ) : CarelevoUserSettingInfoDataSource {
