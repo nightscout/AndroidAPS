@@ -181,15 +181,126 @@
     <string name="remove_label">Odstrániť</string>
     <string name="active_profile_indicator">AKTÍVNY</string>
     <string name="confirm_remove_profile">Odstrániť profil %1$s?</string>
+    <string name="confirm_clone_profile">Klonovať profil %1$s?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">Typ profilu</string>
+    <string name="profile_parameters">Parametre profilu</string>
+    <string name="active_profile">Aktívny profil</string>
+    <string name="available_profiles">Dostupné profily</string>
+    <string name="profile_switches">Prepnutia profilu</string>
+    <string name="basal_pct_from_tdd_label">% bazálu</string>
+    <string name="selected_profile">Vybrané:</string>
+    <string name="comparation">Porovnanie</string>
+    <string name="profile_tab_1">Profil 1</string>
+    <string name="profile_tab_2">Profil 2</string>
+    <string name="motol_default_profile">Predvolený profil</string>
+    <string name="current_profile">Aktuálny profil</string>
+    <string name="available_profile">Dostupný profil</string>
+    <string name="format_with_tdd">Vek: %1$.0f CDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Vek: %1$d CDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Vek: %1$.0f Hmotnosť: %2$.0f kg</string>
+    <string name="dpv_default_profile">Predvolený DPV profil</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Text tlačidla</string>
+    <string name="quick_wizard_mode_wizard">Sprievodca</string>
+    <string name="quick_wizard_mode_insulin">Inzulín</string>
+    <string name="quick_wizard_mode_carbs">Sacharidy</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Iba kladný IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <!--    History browser-->
+    <string name="history_now">Teraz</string>
+    <string name="a11y_history_previous_window">Predchádzajúce okno</string>
+    <string name="a11y_history_next_window">Nasledujúce okno</string>
+    <string name="additional_ecarbs">Pridať eSacharidy</string>
+    <string name="calculator_options">Nastavenia Kalkulačky</string>
+    <string name="use_bg">Použi Glykémiu</string>
+    <string name="use_cob">Použi COB</string>
+    <string name="use_iob">Použi IOB</string>
+    <string name="use_trend">Použi trend</string>
+    <string name="trend_all">Všetko</string>
+    <string name="trend_positive_only">Iba kladné</string>
+    <string name="trend_negative_only">Iba záporné</string>
+    <string name="use_temp_target">Použi dočasný cieľ</string>
+    <string name="use_alarm">Použi alarm</string>
+    <string name="device_selection">Voľba zariadenia</string>
+    <string name="show_on_phone">Zobraziť na telefóne</string>
+    <string name="show_on_watch">Zobraziť na hodinkách</string>
+    <string name="ecarbs_additional">Prídavné sacharidy</string>
+    <string name="valid_from_to">Platný časový rozsah</string>
+    <string name="carb_time">Čas jedla</string>
+    <string name="save_changes_question">Uložiť zmeny v tomto zázname?</string>
+    <string name="wizard_no_insulin_required">Nie je požadovaný žiadny inzulín</string>
+    <string name="carbs_constraint_violation">Sacharidy limitované obmedzeniami</string>
+    <string name="insulin_constraint_violation">Inzulín limitovaný obmedzeniami</string>
+    <string name="confirm_treatment">Prosím potvrďte ošetrenie</string>
+    <string name="recalculate">Prepočítať</string>
     <!--    Widget-->
+    <string name="use_black_color">Použiť čiernu farbu</string>
+    <string name="widget_configuration">Konfiguráciu widgetu</string>
+    <string name="until_changed">Dokiaľ sa nezmení</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Požadované povolenie</string>
+    <string name="permission_sheet_subtitle">Sú potrebné určité povolenia na korektný chod aplikácie</string>
+    <string name="permission_grant">Povoliť</string>
+    <string name="permission_change">Zmeniť</string>
+    <string name="permission_denied_go_to_settings">Permanentné povolenie odmietnuté. Prosím povoľte to v nastaveniach aplikácie.</string>
+    <string name="permission_open_settings">Nastavenia</string>
+    <string name="permission_directory_picker_error">Nepodarilo sa spustiť výber adresára. Zvyčajne ide o problém OS Android, alebo službou Family Link.</string>
+    <string name="permission_nav_label">Povolenia</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Posun cyklu</string>
+    <string name="raw_tdd">Celková denná dávka (CDD)</string>
+    <string name="cleaned_tdd">Celková denná dávka (CDD) - vyčistená</string>
+    <string name="cleaned_tdd_explanation">CDD mínus inzulín na sacharidy.</string>
+    <string name="cycle_lines_legend">Jednotlivé cykly</string>
+    <string name="cycles_found">%1$d cyklov (%2$d dní)</string>
+    <string name="cycle_day1_date">Deň 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Prepočítavam... %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Nedostatok dát (potrebujem aspoň 56 dní pre 2 cykly)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Oba</item>
+        <item>Iba kladné</item>
+        <item>Iba záporné</item>
+    </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Zvolené akcie</string>
+    <string name="quick_launch_no_dynamic_items">Žiadne položky nie sú dostupné</string>
+    <string name="quick_launch_category_treatment">Ošetrenie</string>
+    <string name="quick_launch_category_care">Portál starostlivosti</string>
+    <string name="quick_launch_category_profile">Profil</string>
+    <string name="quick_launch_category_temp_target">Predvoľby dočasného bazálu</string>
+    <string name="quick_launch_category_quick_wizard">Rýchly sprievodca</string>
+    <string name="quick_launch_category_automation">Automatizácia</string>
+    <string name="quick_launch_all_selected">Všetky položky označené</string>
+    <string name="quick_launch_no_quick_wizard">Pridajte položky Rýchleho sprievodca, aby ste ich tu mohli použiť</string>
+    <string name="quick_launch_no_automation">Vytvorte užívateľské akcie Automatizácie, aby ste ich tu mohli použiť</string>
+    <string name="quick_launch_no_tt_presets">Vytvorte predvoľby dočasného cieľa, aby ste ich tu mohli použiť</string>
+    <string name="quick_launch_no_profiles">Vytvorte profily v Lokálnom profile, aby ste ich tu mohli použiť</string>
+    <string name="quick_launch_edit_profile_preset">Upraviť predvoľby profilu</string>
+    <string name="quick_launch_profile_permanent">Permanentné</string>
+    <string name="select_arrow">Zvoľ šípku</string>
+    <string name="loop_accept_nav_label">Uzavretý okruh</string>
+    <string name="loop_accept_set_basal_question">Povoliť nový dočasný bazál:</string>
+    <string name="loop_accept_perform">Vykonať</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Vypnutý</string>
+    <string name="widget_rm_suspended">Pozastavený</string>
+    <string name="widget_rm_resume">Obnoviť</string>
     <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Kalibrácia nebola uložená: glykémia sa mení príliš rýchlo (Δ %1$s %3$s za 5 minút, limit %2$s). Skúste to znovu, keď je glykémia stabilná.</string>
+    <string name="cal_reject_no_pair">Kalibrácia nebola uložená: 10 minút späť nenájdená žiadna glykémia.</string>
+    <string name="cal_reject_warmup">Kalibrácia nebola uložená: senzor je stále v dvojhodinovom zahrievacom okne.</string>
+    <string name="cal_reject_no_session">Kalibrácia nebola uložená: nie je aktívna žiadna relácia. Zaznamenajte najskôr výmenu senzora.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Senzor sa stále zahrieva. Kalibrácia dostupná o %1$s.</string>
+    <string name="cal_precheck_no_session">Nie je aktívna žiadna relácia senzora.</string>
+    <string name="cal_precheck_no_pair">Žiadna hodnota CGM za posledných 10 minút. Skontrolujte pripojenie senzora.</string>
+    <string name="cal_precheck_delta_too_high">Glykémia sa mení príliš rýchlo (Δ %1$s %3$s za 5 minút, limit %2$s). Čakajte na stabilitu.</string>
+    <string name="cal_precheck_mark_sensor_change">Zaznamenať výmenu senzora</string>
 </resources>
