@@ -6,7 +6,6 @@
     <!--    Autotune   -->
     <!--    Loop -->
     <!-- Autotune -->
-    <string name="autotune_shortname">AT</string>
     <string name="autotune_default_tune_days_title">Кількість днів даних</string>
     <string name="autotune_tunedprofile_name">Налаштувано</string>
     <string name="autotune_profile">Профіль :</string>
@@ -21,7 +20,6 @@
     <string name="autotune_partial_result">Частковий результат дня %1$d / %2$d</string>
     <string name="autotune_result">Результат: %1$s</string>
     <string name="autotune_param">Парам</string>
-    <string name="autotune_percent">%</string>
     <string name="autotune_missing">Відсутні</string>
     <string name="autotune_run">Запустити Автотюн</string>
     <string name="autotune_check_input_profile_button">Перевірити вхідний профіль</string>
