@@ -47,6 +47,24 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 90
 
+    strategy:
+      # Both clients, because a tester running two of them needs both updated together - an old
+      # AAPSClient2 against a new AAPSClient is a combination nobody built or tried.
+      #
+      # `fail-fast: false` so a failure on one still uploads the other: they are separate apps in App
+      # Store Connect, and half an upload is better than none when the other half already worked.
+      #
+      # Not serialised. The build number comes from the clock and two jobs may well take the same
+      # one, which is fine - a build number only has to increase *within one app*, and these are two
+      # bundle ids. The `concurrency` group above is about two runs of the same app racing.
+      fail-fast: false
+      matrix:
+        include:
+          - scheme: AAPSClient
+            bundle: app.aaps.client
+          - scheme: AAPSClient2
+            bundle: app.aaps.client2
+
     # Holds the four secrets. Give it required reviewers and restrict it to the `ios` branch: in a
     # public repository that approval is the thing standing between a workflow edit and the signing
     # key.
@@ -58,6 +76,32 @@ jobs:
           # The About dialog's build stamp comes from `git describe`; a depth 1 clone has no tags to
           # describe against.
           fetch-depth: 0
+
+      # First, before the tests and the Kotlin/Native build, because everything after this needs the
+      # credentials and none of it says so. The first run of this workflow spent 114 minutes building
+      # and then failed inside `xcodebuild` with a bare "exit code 64" - a usage error, because an
+      # empty `-authenticationKeyID` is a malformed argument rather than a missing secret. Nothing
+      # before it complained: writing an empty key file and an empty team id both succeed.
+      #
+      # Only emptiness is checked, never a value, so nothing about a secret can reach the log.
+      - name: Check the signing secrets are present
+        env:
+          KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          missing=""
+          [ -n "$KEY" ]           || missing="$missing APP_STORE_CONNECT_PRIVATE_KEY"
+          [ -n "$KEY_ID" ]        || missing="$missing APP_STORE_CONNECT_KEY_ID"
+          [ -n "$ISSUER_ID" ]     || missing="$missing APP_STORE_CONNECT_ISSUER_ID"
+          [ -n "$APPLE_TEAM_ID" ] || missing="$missing APPLE_TEAM_ID"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing secrets in the 'testflight' environment:$missing"
+            echo "Set them on the environment, not the repository, or this job cannot see them."
+            exit 1
+          fi
+          echo "All four signing secrets are present."
 
       - name: Load jdk version
         run: |
@@ -130,10 +174,10 @@ jobs:
           # -allowProvisioningUpdates lets Xcode create the distribution certificate and profile
           # from the API key, so no .p12 or profile has to be stored as a secret.
           xcodebuild -project ios/app/AAPSClient.xcodeproj \
-            -scheme AAPSClient \
+            -scheme ${{ matrix.scheme }} \
             -configuration Release \
             -destination 'generic/platform=iOS' \
-            -archivePath "$RUNNER_TEMP/AAPSClient.xcarchive" \
+            -archivePath "$RUNNER_TEMP/${{ matrix.scheme }}.xcarchive" \
             -allowProvisioningUpdates \
             -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${KEY_ID}.p8" \
             -authenticationKeyID "$KEY_ID" \
@@ -162,7 +206,7 @@ jobs:
           </plist>
           PLIST
           xcodebuild -exportArchive \
-            -archivePath "$RUNNER_TEMP/AAPSClient.xcarchive" \
+            -archivePath "$RUNNER_TEMP/${{ matrix.scheme }}.xcarchive" \
             -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
             -exportPath "$RUNNER_TEMP/export" \
             -allowProvisioningUpdates \
