@@ -133,7 +133,7 @@
     <string name="setting_pump_settings">Cài đặt các tùy chọn cá nhân</string>
     <!-- bolus-->
     <string name="bolus_error_reason_user">Liều Bolus bị hủy bởi người dùng</string>
-    <string name="bolus_error_reason_not_connected">Bơm đã ngắt kết nối</string>
+    <string name="bolus_error_reason_not_connected">Bơm chưa được kết nối</string>
     <string name="bolus_error_reason_already_in_progress">Đang thực hiện liều Bolus</string>
     <string name="bolus_error_reason_unable_to_send_command">Không thể gửi lệnh bolus</string>
     <string name="bolus_error_reason_communication_lost">Hết thời gian chờ khi lấy trạng thái bolus</string>
