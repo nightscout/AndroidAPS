@@ -67,6 +67,7 @@ class ActionFactory @Inject constructor(
         actionAlarm(), actionCarePortalEvent(), actionDisableScene(), actionEnableScene(),
         actionNotification(), actionProfileSwitch(), actionProfileSwitchPercent(), actionRunAutotune(),
         actionRunScene(), actionSendSMS(), actionSettingsExport(), actionSMBChange(), actionSmoothingChange(),
+        actionSMBMaxMinutesChange(), actionUAMSMBMaxMinutesChange(),
         actionStartTempTarget(), actionStopProcessing(), actionStopTempTarget()
     )
 
@@ -90,6 +91,8 @@ class ActionFactory @Inject constructor(
 
     fun actionSMBChange() = ActionSMBChange(aapsLogger, rh, pumpEnactResultProvider, dateUtil, preferences)
     fun actionSmoothingChange() = ActionSmoothingChange(aapsLogger, rh, pumpEnactResultProvider, activePlugin, configBuilder, triggerDeps)
+    fun actionSMBMaxMinutesChange() = ActionSMBMaxMinutesChange(aapsLogger, rh, pumpEnactResultProvider, preferences)
+    fun actionUAMSMBMaxMinutesChange() = ActionUAMSMBMaxMinutesChange(aapsLogger, rh, pumpEnactResultProvider, preferences)
     fun actionStartTempTarget() = ActionStartTempTarget(aapsLogger, rh, pumpEnactResultProvider, activePlugin, persistenceLayer, profileFunction, dateUtil, profileUtil, triggerDeps)
     fun actionStopProcessing() = ActionStopProcessing(aapsLogger, rh, pumpEnactResultProvider)
     fun actionStopTempTarget() = ActionStopTempTarget(aapsLogger, rh, pumpEnactResultProvider, persistenceLayer, dateUtil)
@@ -108,6 +111,8 @@ class ActionFactory @Inject constructor(
             ActionEnableScene::class.simpleName          -> actionEnableScene()
             ActionSMBChange::class.simpleName            -> actionSMBChange()
             ActionSmoothingChange::class.simpleName      -> actionSmoothingChange()
+            ActionSMBMaxMinutesChange::class.simpleName  -> actionSMBMaxMinutesChange()
+            ActionUAMSMBMaxMinutesChange::class.simpleName -> actionUAMSMBMaxMinutesChange()
             ActionNotification::class.simpleName         -> actionNotification()
             ActionProfileSwitch::class.simpleName        -> actionProfileSwitch()
             ActionProfileSwitchPercent::class.simpleName -> actionProfileSwitchPercent()
