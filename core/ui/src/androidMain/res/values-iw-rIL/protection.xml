@@ -23,6 +23,7 @@
     <string name="password_not_changed">הסיסמה לא השתנתה</string>
     <string name="pin_not_changed">ה-PIN לא שונה</string>
     <string name="pin_cleared">ה-PIN נמחק!</string>
+    <string name="current_master_password">סיסמה ראשית נוכחית</string>
     <string name="master_password_not_set">הסיסמה הראשית לא הוגדרה</string>
     <string name="aaps_directory_not_selected">לא נבחרה תיקיית AAPS</string>
 </resources>
