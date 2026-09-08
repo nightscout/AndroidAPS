@@ -108,6 +108,7 @@
     <!--    Maintenance-->
     <string name="import_setting">Uvezi podešavanja</string>
     <!-- Import settings screen -->
+    <string name="nav_resetdb">Poništite baze podataka</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
