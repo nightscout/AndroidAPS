@@ -41,7 +41,6 @@
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="edit_site">Upravit</string>
     <string name="record_site_location">Místo aplikace: %1$s</string>
     <string name="record_site_arrow">Šipka místa aplikace: %1$s</string>
     <string name="record_site_note">Poznámka: %1$s</string>
@@ -151,9 +150,8 @@
     <string name="cannot_delete_last_insulin">Nelze odstranit poslední inzulín</string>
     <string name="cannot_delete_active_insulin">Nelze odstranit aktivní inzulín</string>
     <string name="reuse_profile_pct_hours">Znovu použít %1$d%% %2$dh</string>
-    <string name="percentage_label">% změna</string>
+    <string name="percentage_label">Procenta</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Odpojit pumpu</string>
     <string name="resume">Uvolnit</string>
     <string name="reconnect">Znovu připojit pumpu</string>
     <string name="duration15m">15 minut</string>
@@ -172,15 +170,15 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="carbs_and_bolus">Sacharidy a bolusy</string>
     <string name="show_invalidated">Zobrazit zneplatněné</string>
-    <string name="hide_invalidated">Skrýt zneplatněné</string>
+    <string name="hide_invalidated">Skrýt neplatné</string>
     <string name="careportal_remove_started_events">Odebrat záznamy spuštěné AAPS</string>
-    <string name="user_entry">Uživatelská položka</string>
+    <string name="user_entry">Uživatelský záznam</string>
     <string name="clone_label">Klonovat</string>
     <string name="add_new_profile">Přidat nový profil</string>
     <string name="edit_label">Upravit</string>
     <string name="activate_label">Aktivovat</string>
     <string name="activate_profile">Aktivovat profil</string>
-    <string name="remove_label">Odstranit</string>
+    <string name="remove_label">Odebrat</string>
     <string name="active_profile_indicator">AKTIVNÍ</string>
     <string name="confirm_remove_profile">Odstranit profil \"%1$s\"?</string>
     <string name="confirm_clone_profile">Klonovat profil \"%1$s\"?</string>
@@ -237,7 +235,7 @@
     <string name="valid_from_to">Platné časové rozmezí</string>
     <string name="carb_time">Čas sacharidů</string>
     <string name="save_changes_question">Uložit změny této položky?</string>
-    <string name="wizard_no_insulin_required">Není potřeba žádný inzulín</string>
+    <string name="wizard_no_insulin_required">Inzulín není potřeba</string>
     <string name="carbs_constraint_violation">Sacharidy omezeny omezeními</string>
     <string name="insulin_constraint_violation">Inzulín omezen omezeními</string>
     <string name="confirm_treatment">Potvrďte prosím záznam</string>
