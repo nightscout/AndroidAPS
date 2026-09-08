@@ -23,4 +23,5 @@
     <string name="password_not_changed">Senha não foi alterada</string>
     <string name="pin_not_changed">PIN não alterado</string>
     <string name="pin_cleared">PIN apagado!</string>
+    <string name="current_master_password">Senha mestra atual</string>
 </resources>
