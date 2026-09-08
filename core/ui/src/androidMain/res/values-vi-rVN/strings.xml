@@ -48,7 +48,7 @@
     <string name="snooze_30m">Hoãn 30 phút</string>
     <string name="snooze_60m">Hoãn 60 phút</string>
     <string name="virtual_pump">Bơm mô phỏng</string>
-    <string name="constraints">Điều kiện ràng buộc</string>
+    <string name="constraints">Yếu tố hạn chế</string>
     <string name="superbolus">Superbolus</string>
     <string name="pump_paused">Bơm đã tạm dừng</string>
     <string name="and">Và</string>
@@ -68,7 +68,6 @@
     <string name="confirm_pin_hint">Xác nhận mã PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Đèn báo trạng thái</string>
-    <string name="copy_existing_values">Sao chép cài đặt NS (nếu có)?</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_bgsource">Nguồn Đường huyết</string>
     <string name="configbuilder_smoothing">Làm mượt</string>
@@ -258,7 +257,6 @@
     <string name="pin_dont_match">Mã PIN không khớp</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Bắt đầu cấu hình %1$d%% trong %2$d phút</string>
     <!--    APSResult-->
     <string name="cancel_temp">Huỷ liều liều nền tạm thời</string>
     <string name="let_temp_basal_run">Cho liều nền tạm thời tiếp tục</string>
@@ -295,7 +293,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Thông tin điều trị</string>
     <string name="careportal_bgcheck">Kiểm tra BG</string>
     <string name="careportal_mbg">Đường huyết nhập tay hoặc hiệu chuẩn</string>
     <string name="careportal_announcement">Thông báo</string>
@@ -346,7 +343,6 @@
     <string name="scene_conflict_active_running_mode">Chế độ đang hoạt động sẽ được thay thế</string>
     <string name="scene_conflict_active_scene">Ngữ cảnh đang hoạt động “%1$s” sẽ được kết thúc trước</string>
     <string name="scene_action_tt">Mục tiêu tạm thời: %1$s</string>
-    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Cấu hình: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Cấu hình: %1$d%%</string>
     <string name="scene_action_smb_on">Kích hoạt SMB</string>
     <string name="scene_action_smb_off">Vô hiệu hóa SMBs</string>
@@ -467,7 +463,7 @@
     <string name="hypo">Hypo</string>
     <string name="activity">Hoạt động</string>
     <string name="wear">Wear</string>
-    <string name="automation">Tự động hóa</string>
+    <string name="automation">Tự động</string>
     <string name="automation_management_desc">Tạo quy tắc để tự động thực hiện các hành động dựa trên các điều kiện kích hoạt</string>
     <string name="settingsexport">Xuất cài đặt</string>
     <string name="custom">Tuỳ chỉnh</string>
@@ -620,7 +616,6 @@
     <string name="ue_string">Chuỗi</string>
     <string name="ue_source">Nguồn</string>
     <string name="ue_utc_offset">UTC Offset</string>
-    <string name="ue_action">Action</string>
     <string name="ue_timestamp">Mốc thời gian</string>
     <string name="ue_none">Không có đơn vị</string>
     <string name="uel_loop_change">VÒNG LẶP ĐÃ THAY ĐỔI</string>
@@ -637,7 +632,6 @@
     <string name="uel_scene_deactivated">ĐÃ TẮT NGỮ CẢNH</string>
     <string name="uel_remote_config_changed">CẤU HÌNH TỪ XA ĐÃ THAY ĐỔI</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Giá trị thấp của mục tiêu tạm thời</string>
     <string name="temp_target_high_target">Giá trị cao của mục tiêu tạm thời</string>
     <string name="temp_target_value">Giá trị mục tiêu tạm thời</string>
     <string name="insulin_dia">Thời gian tác dụng của insulin</string>
@@ -713,7 +707,7 @@
     <string name="carb_time_now">Bây giờ</string>
     <string name="change">Thay đổi</string>
     <string name="grant">Cấp quyền</string>
-    <string name="set">Thiết lập</string>
+    <string name="set">Cài đặt</string>
     <string name="wizard_set_alarm">Đặt báo thức</string>
     <string name="wizard_use_percentage">Sử dụng phần trăm</string>
     <string name="wizard_include_bg">Bao gồm BG</string>
@@ -748,13 +742,13 @@
     <!--    Pumps -->
     <string name="battery_label">Pin</string>
     <string name="reservoir_label">Bình chứa</string>
-    <string name="last_connection_label">Kết nối lần cuối</string>
+    <string name="last_connection_label">Kết nối gần nhất</string>
     <string name="last_bolus_label">Liều bolus gần nhất</string>
-    <string name="base_basal_rate_label">Tỷ lệ liều nền cơ bản</string>
+    <string name="base_basal_rate_label">Liều nền cơ bản</string>
     <string name="tempbasal_label">Liều nền tạm thời</string>
     <string name="extended_bolus_label">Liều Bolus kéo dài</string>
     <string name="serial_number">Số sê-ri</string>
-    <string name="disconnected">Ngắt kết nối</string>
+    <string name="disconnected">Đã ngắt kết nối</string>
     <string name="connecting">Đang kết nối</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Đã nhấn kết nối với Bơm</string>
     <string name="daily_units">Đơn vị hàng ngày</string>
@@ -861,9 +855,8 @@
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">Ứng dụng yêu cầu quyền Bluetooth</string>
     <!--    Combo-->
-    <string name="user_request" comment="26 characters max for translation">Yêu cầu người dùng</string>
+    <string name="user_request" comment="26 characters max for translation">Yêu cầu của người dùng</string>
     <!--    Pump pair/unpair (shared) -->
-    <string name="pump_pair">Ghép nối</string>
     <string name="pump_unpair">Hủy ghép nối</string>
     <string name="pump_unpair_confirm_title">Hủy ghép nối bơm?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
@@ -884,7 +877,6 @@
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Cấu hình</string>
-    <string name="nav_setupwizard">Cài đặt nhanh</string>
     <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
     <string name="statistics">Thống kê</string>
     <string name="statistics_desc">Xem thống kê và báo cáo</string>
@@ -957,14 +949,13 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS phát âm thanh"</string>
     <!-- ProfileEditor -->
-    <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
     <string name="profile_name">Tên cấu hình:</string>
     <string name="edit_profile_name">Sửa tên cấu hình</string>
     <string name="units_colon">Đơn vị:</string>
     <string name="unsaved_changes">Chưa lưu thay đổi</string>
     <string name="unsaved_changes_message">Có thay đổi chưa lưu. Bạn muốn làm gì?</string>
-    <string name="discard">Bỏ qua</string>
+    <string name="discard">Loại bỏ</string>
     <string name="ic_dynamic_label_warning">Thuật toán của bạn có thể tính toán IC động. Các giá trị bên dưới chỉ được dùng làm dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
     <string name="isf_dynamic_label_warning">Thuật toán của bạn có thể tính toán ISF động. Các giá trị bên dưới chỉ được dùng làm dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
     <string name="add_time_block">Thêm thời gian</string>
@@ -1019,8 +1010,6 @@
     <string name="import_wrong_password">Sai mật khẩu</string>
     <string name="import_btn">Nhập</string>
     <string name="import_anyway_btn">Vẫn nhập</string>
-    <string name="import_restart_title">Đã nhập cài đặt</string>
-    <string name="import_restart_message">Cài đặt đã được nhập. Ứng dụng cần khởi động lại.</string>
     <string name="import_source_local">Cục bộ</string>
     <string name="import_source_cloud">Đám mây</string>
     <string name="import_load_more">Tải thêm</string>
@@ -1033,7 +1022,6 @@
     <string name="nav_resetdb">Đặt lại cơ sở dữ liệu</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Tìm bơm</string>
-    <string name="ble_scan_select_pump">Chọn bơm của bạn từ danh sách bên dưới</string>
     <string name="ble_scan_scanning">Đang quét các thiết bị…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Thêm biểu đồ</string>
@@ -1062,8 +1050,6 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_grams">%1$d g</string>
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
     <string name="units_format_hours_double">%1$.0f h</string>
     <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
