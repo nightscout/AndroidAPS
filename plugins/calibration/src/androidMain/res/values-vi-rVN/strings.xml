@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="calibration_shortname">CAL</string>
+    <string name="no_calibration_name">Không hiệu chuẩn</string>
+    <string name="description_no_calibration">"Không áp dụng hiệu chỉnh ghi đè. Giá trị cảm biến được sử dụng nguyên trạng. Sử dụng tùy chọn này khi cảm biến đã được hiệu chỉnh tại nhà máy và cho kết quả chính xác."</string>
+    <string name="linear_calibration_name">Hiệu chuẩn tuyến tính</string>
+    <string name="description_linear_calibration">"Ghi đè hiệu chuẩn tuyến tính cho từng cảm biến (hệ số góc và độ lệch) được tính toán từ các giá trị đường huyết đo bằng máy đo. Các giá trị đo gần đây được tính trọng số cao hơn. Ghi đè được áp dụng sau khi phiên cảm biến hiện tại bắt đầu; 2 giờ đầu tiên được bỏ qua để làm thời gian khởi động."</string>
+    <string name="sensor_change_detected_text">Phát hiện có thể đã thay cảm biến lúc %1$s. Đánh dấu là cảm biến mới?</string>
     <!-- Calibration management screen -->
 </resources>
