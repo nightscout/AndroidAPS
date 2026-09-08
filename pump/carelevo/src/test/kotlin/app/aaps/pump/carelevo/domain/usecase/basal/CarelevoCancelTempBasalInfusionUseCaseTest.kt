@@ -9,7 +9,7 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -31,7 +31,7 @@ internal class CarelevoCancelTempBasalInfusionUseCaseTest {
     private val sut = CarelevoCancelTempBasalInfusionUseCase(patchInfoRepository, infusionInfoRepository)
 
     private fun patchInfo(): CarelevoPatchInfoDomainModel =
-        CarelevoPatchInfoDomainModel(address = "AA:BB:CC:DD:EE:FF", createdAt = DateTime.now(), updatedAt = DateTime.now(), mode = 2)
+        CarelevoPatchInfoDomainModel(address = "AA:BB:CC:DD:EE:FF", createdAt = Clock.System.now(), updatedAt = Clock.System.now(), mode = 2)
 
     private fun basalInfusion(isStop: Boolean): CarelevoBasalInfusionInfoDomainModel =
         CarelevoBasalInfusionInfoDomainModel(infusionId = "b", address = "AA", mode = 1, segments = emptyList(), isStop = isStop)

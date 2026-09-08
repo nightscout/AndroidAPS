@@ -8,7 +8,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
 
 class CarelevoFinishImmeBolusInfusionUseCase @Inject constructor(
@@ -33,7 +33,7 @@ class CarelevoFinishImmeBolusInfusionUseCase @Inject constructor(
                     ?: throw NullPointerException("infusion info must be not null")
 
                 val updatePatchInfoResult = patchInfoRepository.updatePatchInfo(
-                    patchInfo.copy(updatedAt = DateTime.now(), mode = mode)
+                    patchInfo.copy(updatedAt = Clock.System.now(), mode = mode)
                 )
                 if (!updatePatchInfoResult) {
                     throw IllegalStateException("update patch info is failed")

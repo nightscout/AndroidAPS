@@ -19,6 +19,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
@@ -69,14 +71,18 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import java.math.RoundingMode
-import java.time.Instant
+import java.time.Instant as JavaInstant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
@@ -96,7 +102,8 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val carelevoDeleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val decimalFormatter: DecimalFormatter
 ) : ViewModel() {
 
     private val _patchState = MutableLiveData<PatchState>(PatchState.NotConnectedNotBooting)
@@ -204,11 +211,11 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    val secondTick: Flow<DateTime> = flow {
+    val secondTick: Flow<Instant> = flow {
         while (currentCoroutineContext().isActive) {
-            val now = DateTime.now()
+            val now = Clock.System.now()
             emit(now)
-            delay((1000 - now.millisOfSecond).coerceIn(1, 1000).toLong())
+            delay((1000 - now.toEpochMilliseconds() % 1000).coerceIn(1, 1000))
         }
     }.flowOn(Dispatchers.Default)
 
@@ -273,7 +280,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         _expirationTime.value = ui.expirationTime
         //_infusionStatus.value = ui.infusionStatus
         _insulinRemains.value = ui.insulinRemainText
-        _totalInsulinAmount.value = String.format(Locale.US, "%.2f", ui.totalBasal + ui.totalBolus).toDouble()
+        _totalInsulinAmount.value = Round.roundTo(ui.totalBasal + ui.totalBolus, 0.01)
         _isPumpStop.value = ui.isPumpStopped
         _runningRemainMinutes.value = ui.runningRemainMinutes
     }
@@ -363,24 +370,24 @@ class CarelevoOverviewViewModel @Inject constructor(
         val immeBolusInfusionInfo = infusionInfo.immeBolusInfusionInfo
         val extendBolusInfusionInfo = infusionInfo.extendBolusInfusionInfo
 
-        val now = DateTime.now()
+        val now = Clock.System.now()
 
         val tempBasal = tempBasalInfusionInfo?.takeIf { infusion ->
             val duration = infusion.infusionDurationMin ?: return@takeIf true
-            val endTime = infusion.createdAt.plusMinutes(duration)
-            endTime.isAfter(now)
+            val endTime = infusion.createdAt + duration.minutes
+            endTime > now
         }
 
         val immeBolus = immeBolusInfusionInfo?.takeIf { infusion ->
             val duration = infusion.infusionDurationSeconds ?: return@takeIf true
-            val endTime = infusion.createdAt.plusSeconds(duration)
-            endTime.isAfter(now)
+            val endTime = infusion.createdAt + duration.seconds
+            endTime > now
         }
 
         val extendBolus = extendBolusInfusionInfo?.takeIf { infusion ->
             val duration = infusion.infusionDurationMin ?: return@takeIf true
-            val endTime = infusion.createdAt.plusMinutes(duration)
-            endTime.isAfter(now)
+            val endTime = infusion.createdAt + duration.minutes
+            endTime > now
         }
 
         val deleteTemp = (infusionInfo.tempBasalInfusionInfo != null && tempBasal == null)
@@ -666,7 +673,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
 
         return runCatching {
-            LocalDateTime.ofInstant(Instant.ofEpochMilli(utcMillis), ZoneId.systemDefault())
+            LocalDateTime.ofInstant(JavaInstant.ofEpochMilli(utcMillis), ZoneId.systemDefault())
         }.getOrNull()
     }
 
@@ -798,7 +805,7 @@ class CarelevoOverviewViewModel @Inject constructor(
                             label = rh.gs(R.string.carelevo_total_insulin_key),
                             value = rh.gs(
                                 R.string.common_label_unit_value_dose_with_space,
-                                String.format(Locale.US, "%.2f", overviewData.totalBasal + overviewData.totalBolus)
+                                decimalFormatter.to2Decimal(overviewData.totalBasal + overviewData.totalBolus)
                             )
                         )
                     )
@@ -877,7 +884,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         return if (days > 0) {
             rh.gs(R.string.common_unit_value_day_hour_min, days, hours, minutes)
         } else {
-            String.format(Locale.getDefault(), "%02d:%02d", hours, minutes)
+            rh.gs(R.string.common_unit_value_hour_min, hours, minutes)
         }
     }
 
@@ -894,14 +901,14 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     /** Canonical clock for the expiry countdown — [dateUtil] so tests can inject a fake time. */
     private fun nowLocal(): LocalDateTime =
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(dateUtil.now()), ZoneId.systemDefault())
+        LocalDateTime.ofInstant(JavaInstant.ofEpochMilli(dateUtil.now()), ZoneId.systemDefault())
 
     private fun getRemainMin(createdAt: LocalDateTime): Int {
         val endAt = createdAt.plusDays(7)
         val now = nowLocal()
         var remainMin = ChronoUnit.MINUTES.between(now, endAt)
 
-        if (now.isAfter(endAt)) {
+        if (now > endAt) {
             remainMin = ChronoUnit.MINUTES.between(endAt, now)
         }
 
@@ -912,7 +919,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         val now = nowLocal()
         val baseEnd = createdAt.plusDays(7)
 
-        val expireAt = if (now.isAfter(baseEnd)) {
+        val expireAt = if (now > baseEnd) {
             baseEnd.plusHours(12)
         } else {
             baseEnd

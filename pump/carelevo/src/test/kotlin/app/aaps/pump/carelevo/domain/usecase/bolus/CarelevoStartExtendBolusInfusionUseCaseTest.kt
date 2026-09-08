@@ -5,7 +5,8 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -29,7 +30,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
     private val sut = CarelevoStartExtendBolusInfusionUseCase(patchInfoRepository, infusionInfoRepository)
 
     private fun patchInfo(address: String = "AA:BB:CC:DD:EE:FF"): CarelevoPatchInfoDomainModel =
-        CarelevoPatchInfoDomainModel(address = address, createdAt = DateTime.now(), updatedAt = DateTime.now(), mode = 1)
+        CarelevoPatchInfoDomainModel(address = address, createdAt = Clock.System.now(), updatedAt = Clock.System.now(), mode = 1)
 
     private fun capturedInfusion(): CarelevoExtendBolusInfusionInfoDomainModel {
         val captor = argumentCaptor<CarelevoExtendBolusInfusionInfoDomainModel>()
@@ -110,7 +111,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
 
     @Test
     fun `success stamps patch mode 5 and leaves bolus action seq untouched`() {
-        val original = patchInfo().copy(bolusActionSeq = 4, updatedAt = DateTime.now().minusHours(1))
+        val original = patchInfo().copy(bolusActionSeq = 4, updatedAt = Clock.System.now() - 1.hours)
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(original)
         whenever(infusionInfoRepository.updateExtendBolusInfusionInfo(any())).thenReturn(true)
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
@@ -121,7 +122,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
         assertThat(persisted.mode).isEqualTo(5)
         // the extend-bolus start does NOT allocate an action seq (unlike the imme-bolus start)
         assertThat(persisted.bolusActionSeq).isEqualTo(4)
-        assertThat(persisted.updatedAt.millis).isGreaterThan(original.updatedAt.millis)
+        assertThat(persisted.updatedAt.toEpochMilliseconds()).isGreaterThan(original.updatedAt.toEpochMilliseconds())
     }
 
     @Test

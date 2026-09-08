@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.runBlocking
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.AppScope
@@ -92,7 +92,7 @@ class CarelevoActivationExecutor @Inject constructor(
         is CmdPumpStop               -> runPumpStop(command.durationMin)
         is CmdPumpResume             -> runPumpResume()
         is CmdTimeZoneUpdate         -> runSingleWrite("timeZoneUpdate") {
-            SetTimeCommand(subId = TIMEZONE_SUB_ID, volume = command.insulinAmount, aidMode = TIMEZONE_AID_MODE, dateTime = DateTime.now())
+            SetTimeCommand(subId = TIMEZONE_SUB_ID, volume = command.insulinAmount, aidMode = TIMEZONE_AID_MODE, dateTime = Clock.System.now())
         }
 
         is CmdUpdateMaxBolus         -> runUpdateMaxBolus(command.maxBolusDose)

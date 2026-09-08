@@ -7,7 +7,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusionRequestModel
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -23,7 +23,7 @@ internal class CarelevoDeleteInfusionInfoUseCaseTest {
     fun execute_returns_success_when_delete_and_patch_update_succeed() {
         whenever(infusionInfoRepository.deleteTempBasalInfusionInfo()).thenReturn(true)
         whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel())
-        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(CarelevoPatchInfoDomainModel("AA:BB", DateTime.now(), DateTime.now(), mode = 1))
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(CarelevoPatchInfoDomainModel("AA:BB", Clock.System.now(), Clock.System.now(), mode = 1))
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
         val result = sut.execute(

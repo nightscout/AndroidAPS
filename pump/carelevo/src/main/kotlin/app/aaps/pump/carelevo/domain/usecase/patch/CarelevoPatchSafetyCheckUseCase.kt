@@ -1,7 +1,7 @@
 package app.aaps.pump.carelevo.domain.usecase.patch
 
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
 
 class CarelevoPatchSafetyCheckUseCase @Inject constructor(
@@ -14,6 +14,6 @@ class CarelevoPatchSafetyCheckUseCase @Inject constructor(
      */
     fun persistSafetyChecked(): Boolean {
         val patchInfo = patchInfoRepository.getPatchInfoBySync() ?: return false
-        return patchInfoRepository.updatePatchInfo(patchInfo.copy(checkSafety = true, updatedAt = DateTime.now()))
+        return patchInfoRepository.updatePatchInfo(patchInfo.copy(checkSafety = true, updatedAt = Clock.System.now()))
     }
 }

@@ -48,7 +48,8 @@ import java.time.LocalDateTime
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -56,6 +57,7 @@ import kotlin.jvm.optionals.getOrNull
 import kotlin.math.abs
 import kotlin.math.min
 
+@OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 class CarelevoPatch @Inject constructor(
     private val transport: CarelevoBleTransport,
@@ -316,7 +318,7 @@ class CarelevoPatch @Inject constructor(
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "discardTeardown release error", e)
         } finally {
-            discardInProgress.set(false)
+            discardInProgress.store(false)
         }
     }
 

@@ -42,7 +42,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import java.util.UUID
 import app.aaps.pump.carelevo.di.CarelevoRxCharacteristic
 import app.aaps.pump.carelevo.di.CarelevoTxCharacteristic
@@ -212,7 +212,7 @@ class CarelevoBleSession @Inject constructor(
             var patchInfo: PatchInfoResponse? = null
             for (round in 1..PATCH_INFO_ROUND_RETRY_COUNT) {
                 val info = withTimeoutOrNull(PATCH_INFO_ROUND_TIMEOUT_MS.milliseconds) {
-                    client.requestMultiple(SetTimeForPatchInfoCommand(subId = 0, volume = spec.volume, aidMode = 0, dateTime = DateTime.now()))
+                    client.requestMultiple(SetTimeForPatchInfoCommand(subId = 0, volume = spec.volume, aidMode = 0, dateTime = Clock.System.now()))
                 }
                 if (info != null && info.serialResultCode == RESULT_SUCCESS && info.serialNumber.trim().isNotEmpty() && info.detailResultCode == RESULT_SUCCESS) {
                     patchInfo = info

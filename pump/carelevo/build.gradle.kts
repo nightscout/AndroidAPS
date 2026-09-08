@@ -26,10 +26,5 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    implementation(libs.com.google.guava)
     implementation(libs.androidx.lifecycle.process)
-    implementation(libs.io.reactivex.rxjava3.rxandroid)
-    implementation(libs.com.polidea.rxandroidble3)
-    implementation(libs.com.jakewharton.rx3.replaying.share)
-    implementation(libs.com.google.android.material)
 }

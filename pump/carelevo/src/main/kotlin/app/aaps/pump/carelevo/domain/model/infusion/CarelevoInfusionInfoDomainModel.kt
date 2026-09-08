@@ -1,7 +1,8 @@
 package app.aaps.pump.carelevo.domain.model.infusion
 
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 data class CarelevoInfusionInfoDomainModel(
     val basalInfusionInfo: CarelevoBasalInfusionInfoDomainModel? = null,
@@ -39,8 +40,8 @@ fun CarelevoInfusionInfoDomainModel.derivePatchMode(): Int? = when {
 }
 
 data class CarelevoBasalSegmentInfusionInfoDomainModel(
-    val createdAt: DateTime = DateTime.now(),
-    val updatedAt: DateTime = DateTime.now(),
+    val createdAt: Instant = Clock.System.now(),
+    val updatedAt: Instant = Clock.System.now(),
     val startTime: Int,
     val endTime: Int,
     val speed: Double
@@ -50,8 +51,8 @@ data class CarelevoBasalInfusionInfoDomainModel(
     val infusionId: String,
     val address: String,
     val mode: Int,
-    val createdAt: DateTime = DateTime.now(),
-    val updatedAt: DateTime = DateTime.now(),
+    val createdAt: Instant = Clock.System.now(),
+    val updatedAt: Instant = Clock.System.now(),
     val segments: List<CarelevoBasalSegmentInfusionInfoDomainModel>,
     val isStop: Boolean
 )
@@ -60,8 +61,8 @@ data class CarelevoTempBasalInfusionInfoDomainModel(
     val infusionId: String,
     val address: String,
     val mode: Int,
-    val createdAt: DateTime = DateTime.now(),
-    val updatedAt: DateTime = DateTime.now(),
+    val createdAt: Instant = Clock.System.now(),
+    val updatedAt: Instant = Clock.System.now(),
     val percent: Int? = null,
     val speed: Double? = null,
     val infusionDurationMin: Int? = null
@@ -71,8 +72,8 @@ data class CarelevoImmeBolusInfusionInfoDomainModel(
     val infusionId: String,
     val address: String,
     val mode: Int,
-    val createdAt: DateTime = DateTime.now(),
-    val updatedAt: DateTime = DateTime.now(),
+    val createdAt: Instant = Clock.System.now(),
+    val updatedAt: Instant = Clock.System.now(),
     val volume: Double? = null,
     val infusionDurationSeconds: Int? = null
 )
@@ -81,8 +82,8 @@ data class CarelevoExtendBolusInfusionInfoDomainModel(
     val infusionId: String,
     val address: String,
     val mode: Int,
-    val createdAt: DateTime = DateTime.now(),
-    val updatedAt: DateTime = DateTime.now(),
+    val createdAt: Instant = Clock.System.now(),
+    val updatedAt: Instant = Clock.System.now(),
     val volume: Double? = null,
     val speed: Double? = null,
     val infusionDurationMin: Int? = null

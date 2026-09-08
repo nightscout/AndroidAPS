@@ -1,7 +1,6 @@
 package app.aaps.pump.carelevo.ext
 
 import java.math.BigInteger
-import java.util.Locale
 import kotlin.experimental.xor
 
 internal fun ByteArray.convertBytesToHex(): String {
@@ -19,7 +18,7 @@ internal fun String.convertHexToByteArray(): ByteArray {
     val str = toString().replace(" ", "")
     var hex = str.replace("0x", "")
 
-    hex = hex.uppercase(Locale.getDefault())
+    hex = hex.uppercase()
 
     val intCount = (hex.length % 2) == 0
     if (intCount) {

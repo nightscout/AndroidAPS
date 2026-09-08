@@ -1,15 +1,16 @@
 package app.aaps.pump.carelevo.data.mapper
 
+import app.aaps.pump.carelevo.ext.parseIsoInstant
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Instant
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
 internal class CarelevoUserSettingInfoMapperTest {
 
-    // Canonical ISO-8601 strings (Joda DateTime.toString() form) so the entity round-trip is exact.
+    // Canonical ISO-8601 strings (Joda Instant.toString() form) so the entity round-trip is exact.
     private val createdAtStr = "2024-03-10T12:00:00.000+02:00"
     private val updatedAtStr = "2024-03-11T18:45:15.250+02:00"
 
@@ -25,8 +26,8 @@ internal class CarelevoUserSettingInfoMapperTest {
     )
 
     private fun fullDomain() = CarelevoUserSettingInfoDomainModel(
-        createdAt = DateTime.parse(createdAtStr),
-        updatedAt = DateTime.parse(updatedAtStr),
+        createdAt = parseIsoInstant(createdAtStr),
+        updatedAt = parseIsoInstant(updatedAtStr),
         lowInsulinNoticeAmount = 30,
         maxBasalSpeed = 2.5,
         maxBolusDose = 15.0,
@@ -51,9 +52,9 @@ internal class CarelevoUserSettingInfoMapperTest {
     @Test
     fun `entity to domain parses createdAt and updatedAt strings`() {
         val d = fullEntity().transformToCarelevoUserSettingInfoDomainModel()
-        assertThat(d.createdAt).isEqualTo(DateTime.parse(createdAtStr))
-        assertThat(d.updatedAt).isEqualTo(DateTime.parse(updatedAtStr))
-        assertThat(d.updatedAt.isEqual(DateTime.parse(updatedAtStr))).isTrue()
+        assertThat(d.createdAt).isEqualTo(parseIsoInstant(createdAtStr))
+        assertThat(d.updatedAt).isEqualTo(parseIsoInstant(updatedAtStr))
+        assertThat(d.updatedAt).isEqualTo(parseIsoInstant(updatedAtStr))
     }
 
     @Test
@@ -99,15 +100,17 @@ internal class CarelevoUserSettingInfoMapperTest {
         val e = domain.transformToCarelevoUserSettingInfoEntity()
         assertThat(e.createdAt).isEqualTo(domain.createdAt.toString())
         assertThat(e.updatedAt).isEqualTo(domain.updatedAt.toString())
-        assertThat(e.createdAt).isEqualTo(createdAtStr)
-        assertThat(e.updatedAt).isEqualTo(updatedAtStr)
+        // Instant writes UTC, so a value stored with a local offset comes back normalised - the text
+        // changes, the instant does not. Compare the instant, which is what the round trip must keep.
+        assertThat(parseIsoInstant(e.createdAt)).isEqualTo(parseIsoInstant(createdAtStr))
+        assertThat(parseIsoInstant(e.updatedAt)).isEqualTo(parseIsoInstant(updatedAtStr))
     }
 
     @Test
     fun `domain to entity preserves null optionals and default false flags`() {
         val minimal = CarelevoUserSettingInfoDomainModel(
-            createdAt = DateTime.parse(createdAtStr),
-            updatedAt = DateTime.parse(updatedAtStr)
+            createdAt = parseIsoInstant(createdAtStr),
+            updatedAt = parseIsoInstant(updatedAtStr)
         )
         val e = minimal.transformToCarelevoUserSettingInfoEntity()
         assertThat(e.lowInsulinNoticeAmount).isNull()
@@ -124,16 +127,21 @@ internal class CarelevoUserSettingInfoMapperTest {
     fun `round trip domain to entity to domain preserves values`() {
         val original = fullDomain()
         val result = original.transformToCarelevoUserSettingInfoEntity().transformToCarelevoUserSettingInfoDomainModel()
-        assertThat(result.createdAt.isEqual(original.createdAt)).isTrue()
-        assertThat(result.updatedAt.isEqual(original.updatedAt)).isTrue()
+        assertThat(result.createdAt).isEqualTo(original.createdAt)
+        assertThat(result.updatedAt).isEqualTo(original.updatedAt)
         assertThat(result.copy(createdAt = original.createdAt, updatedAt = original.updatedAt)).isEqualTo(original)
     }
 
     @Test
-    fun `round trip entity to domain to entity preserves canonical strings and values`() {
+    fun `round trip entity to domain to entity preserves instants and values`() {
         val original = fullEntity()
         val result = original.transformToCarelevoUserSettingInfoDomainModel().transformToCarelevoUserSettingInfoEntity()
-        assertThat(result).isEqualTo(original)
+        // Every non-date field survives the cycle byte for byte.
+        assertThat(result.copy(createdAt = original.createdAt, updatedAt = original.updatedAt)).isEqualTo(original)
+        // The dates survive as instants. The text is rewritten to UTC because that is what
+        // Instant.toString does, so an entity stored with a local offset does not come back verbatim.
+        assertThat(parseIsoInstant(result.createdAt)).isEqualTo(parseIsoInstant(original.createdAt))
+        assertThat(parseIsoInstant(result.updatedAt)).isEqualTo(parseIsoInstant(original.updatedAt))
     }
 
     @Test

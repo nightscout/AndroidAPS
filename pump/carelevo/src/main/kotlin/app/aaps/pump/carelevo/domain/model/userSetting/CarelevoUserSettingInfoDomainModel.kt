@@ -1,11 +1,12 @@
 package app.aaps.pump.carelevo.domain.model.userSetting
 
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 data class CarelevoUserSettingInfoDomainModel(
-    val createdAt: DateTime = DateTime.now(),
-    val updatedAt: DateTime = DateTime.now(),
+    val createdAt: Instant = Clock.System.now(),
+    val updatedAt: Instant = Clock.System.now(),
     val lowInsulinNoticeAmount: Int? = null,
     val maxBasalSpeed: Double? = null,
     val maxBolusDose: Double? = null,

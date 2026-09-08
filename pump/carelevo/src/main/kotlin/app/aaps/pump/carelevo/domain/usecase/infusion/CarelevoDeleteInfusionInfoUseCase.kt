@@ -11,7 +11,7 @@ import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusionRequestModel
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -53,7 +53,7 @@ class CarelevoDeleteInfusionInfoUseCase @Inject constructor(
                 // back to BASAL_STOPPED (the mid-therapy persists treat the same case as an error).
                 val mode = infusionInfo.derivePatchMode() ?: CarelevoPatchMode.BASAL_STOPPED
 
-                val now = DateTime.now()
+                val now = Clock.System.now()
                 val patchInfo = patchInfoRepository.getPatchInfoBySync()
                     ?: error("Patch info must not be null")
 

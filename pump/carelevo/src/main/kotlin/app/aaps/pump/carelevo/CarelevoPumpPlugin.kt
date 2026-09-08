@@ -318,7 +318,7 @@ class CarelevoPumpPlugin @Inject constructor(
         // Durable stop-start anchor: basalInfusionInfo.updatedAt is set at persistStopped, survives an app
         // restart (persisted), and is not moved by 0x91 status reads (which only rewrite patchInfo). Skip
         // until infusion info is loaded.
-        val stopStartedAt = carelevoPatch.infusionInfo.value?.getOrNull()?.basalInfusionInfo?.updatedAt?.millis ?: return
+        val stopStartedAt = carelevoPatch.infusionInfo.value?.getOrNull()?.basalInfusionInfo?.updatedAt?.toEpochMilliseconds() ?: return
         val elapsedMs = System.currentTimeMillis() - stopStartedAt
         if (elapsedMs < stopMinutes * 60_000L + autoResumeMarginMs) return
         aapsLogger.info(LTag.PUMPCOMM, "auto-resume: ${stopMinutes}min stop elapsed (${elapsedMs / 1000}s) -> reconcile")

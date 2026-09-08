@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.data.mapper
 
+import app.aaps.pump.carelevo.ext.parseIsoInstant
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalSegmentInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInfoEntity
@@ -12,11 +13,10 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionI
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
-import org.joda.time.DateTime
 
 internal fun CarelevoBasalSegmentInfusionInfoEntity.transformToCarelevoBasalSegmentInfusionInfoDomainModel() = CarelevoBasalSegmentInfusionInfoDomainModel(
-    createdAt = DateTime.parse(createdAt),
-    updatedAt = DateTime.parse(updatedAt),
+    createdAt = parseIsoInstant(createdAt),
+    updatedAt = parseIsoInstant(updatedAt),
     startTime = startTime,
     endTime = endTime,
     speed = speed
@@ -34,8 +34,8 @@ internal fun CarelevoBasalInfusionInfoEntity.transformToCarelevoBasalInfusionInf
     infusionId = infusionId,
     address = address,
     mode = mode,
-    createdAt = DateTime.parse(createdAt),
-    updatedAt = DateTime.parse(updatedAt),
+    createdAt = parseIsoInstant(createdAt),
+    updatedAt = parseIsoInstant(updatedAt),
     segments = segments.map { it.transformToCarelevoBasalSegmentInfusionInfoDomainModel() },
     isStop = isStop
 )
@@ -54,8 +54,8 @@ internal fun CarelevoTempBasalInfusionInfoEntity.transformToCarelevoTempBasalInf
     infusionId = infusionId,
     address = address,
     mode = mode,
-    createdAt = DateTime.parse(createdAt),
-    updatedAt = DateTime.parse(updatedAt),
+    createdAt = parseIsoInstant(createdAt),
+    updatedAt = parseIsoInstant(updatedAt),
     percent = percent,
     speed = speed,
     infusionDurationMin = infusionDurationMin
@@ -76,8 +76,8 @@ internal fun CarelevoImmeBolusInfusionInfoEntity.transformToCarelevoImmeBolusInf
     infusionId = infusionId,
     address = address,
     mode = mode,
-    createdAt = DateTime.parse(createdAt),
-    updatedAt = DateTime.parse(updatedAt),
+    createdAt = parseIsoInstant(createdAt),
+    updatedAt = parseIsoInstant(updatedAt),
     volume = volume,
     infusionDurationSeconds = infusionDurationSeconds
 )
@@ -96,8 +96,8 @@ internal fun CarelevoExtendBolusInfusionInfoEntity.transformToCarelevoExtendBolu
     infusionId = infusionId,
     address = address,
     mode = mode,
-    createdAt = DateTime.parse(createdAt),
-    updatedAt = DateTime.parse(updatedAt),
+    createdAt = parseIsoInstant(createdAt),
+    updatedAt = parseIsoInstant(updatedAt),
     volume = volume,
     speed = speed,
     infusionDurationMin = infusionDurationMin

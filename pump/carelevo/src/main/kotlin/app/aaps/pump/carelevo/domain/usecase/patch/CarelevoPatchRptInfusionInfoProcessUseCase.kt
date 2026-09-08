@@ -9,7 +9,7 @@ import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusio
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoRequestModel
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
 
 class CarelevoPatchRptInfusionInfoProcessUseCase @Inject constructor(
@@ -35,7 +35,7 @@ class CarelevoPatchRptInfusionInfoProcessUseCase @Inject constructor(
                             infusedTotalBasalAmount = request.infusedTotalBasalAmount,
                             infusedTotalBolusAmount = request.infusedTotalBolusAmount,
                             pumpState = request.pumpState,
-                            updatedAt = DateTime.now()
+                            updatedAt = Clock.System.now()
                         )
                     } else if (request is CarelevoPatchRptInfusionInfoDefaultRequestModel) {
                         patchInfo.copy(

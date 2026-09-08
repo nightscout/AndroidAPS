@@ -8,7 +8,7 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDom
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalSegmentInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import java.util.concurrent.TimeUnit
 import dev.zacsweers.metro.Inject
 
@@ -46,7 +46,7 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
     fun persistBasalProgram(segments: List<CarelevoBasalSegmentDomainModel>): Boolean = runCatching {
         val patchInfo = patchInfoRepository.getPatchInfoBySync()
             ?: throw NullPointerException("patch info must be not null")
-        require(patchInfoRepository.updatePatchInfo(patchInfo.copy(updatedAt = DateTime.now(), mode = 1))) { "update patch info is failed" }
+        require(patchInfoRepository.updatePatchInfo(patchInfo.copy(updatedAt = Clock.System.now(), mode = 1))) { "update patch info is failed" }
         require(
             infusionInfoRepository.updateBasalInfusionInfo(
                 CarelevoBasalInfusionInfoDomainModel(

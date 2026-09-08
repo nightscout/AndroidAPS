@@ -5,7 +5,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import dev.zacsweers.metro.Inject
-import org.joda.time.DateTime
+import kotlin.time.Clock
 
 class AlarmClearPatchDiscardUseCase @Inject constructor(
     private val alarmRepository: CarelevoAlarmInfoRepository,
@@ -26,7 +26,7 @@ class AlarmClearPatchDiscardUseCase @Inject constructor(
             ?: throw NullPointerException("user setting info must be not null")
         require(
             userSettingInfoRepository.updateUserSettingInfo(
-                userSettingInfo.copy(updatedAt = DateTime.now(), needMaxBolusDoseSyncPatch = false, needMaxBasalSpeedSyncPatch = false, needLowInsulinNoticeAmountSyncPatch = false)
+                userSettingInfo.copy(updatedAt = Clock.System.now(), needMaxBolusDoseSyncPatch = false, needMaxBasalSpeedSyncPatch = false, needLowInsulinNoticeAmountSyncPatch = false)
             )
         ) { "update user setting info is failed" }
         require(infusionInfoRepository.deleteInfusionInfo()) { "delete infusion info is failed" }

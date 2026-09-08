@@ -5,7 +5,8 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Observable
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -20,8 +21,8 @@ internal class CarelevoPatchInfoMonitorUseCaseTest {
     fun execute_maps_repository_values_to_success() {
         val patchInfo = CarelevoPatchInfoDomainModel(
             address = "94:b2:16:1d:2f:6d",
-            createdAt = DateTime.now().minusHours(1),
-            updatedAt = DateTime.now()
+            createdAt = Clock.System.now() - 1.hours,
+            updatedAt = Clock.System.now()
         )
         whenever(patchInfoRepository.getPatchInfo())
             .thenReturn(Observable.just(Optional.of(patchInfo)))

@@ -64,7 +64,8 @@ import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSetti
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -287,8 +288,8 @@ abstract class CarelevoPumpPluginTestBase {
     ): CarelevoPatchInfoDomainModel =
         CarelevoPatchInfoDomainModel(
             address = address,
-            createdAt = DateTime.now().minusHours(1),
-            updatedAt = DateTime.now(),
+            createdAt = Clock.System.now() - 1.hours,
+            updatedAt = Clock.System.now(),
             manufactureNumber = manufactureNumber,
             insulinRemain = insulinRemain,
             bolusActionSeq = bolusActionSeq,

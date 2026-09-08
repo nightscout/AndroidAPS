@@ -7,7 +7,9 @@ import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseRequest
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoDefaultRequestModel
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoRequestModel
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -70,8 +72,8 @@ internal class CarelevoPatchRptInfusionInfoProcessUseCaseTest {
     private fun samplePatchInfo(): CarelevoPatchInfoDomainModel {
         return CarelevoPatchInfoDomainModel(
             address = "94:b2:16:1d:2f:6d",
-            createdAt = DateTime.now().minusHours(1),
-            updatedAt = DateTime.now().minusMinutes(1)
+            createdAt = Clock.System.now() - 1.hours,
+            updatedAt = Clock.System.now() - 1.minutes
         )
     }
 }

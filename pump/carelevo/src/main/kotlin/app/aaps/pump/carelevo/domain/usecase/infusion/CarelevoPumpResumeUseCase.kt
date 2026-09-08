@@ -2,7 +2,7 @@ package app.aaps.pump.carelevo.domain.usecase.infusion
 
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
 
 class CarelevoPumpResumeUseCase @Inject constructor(
@@ -17,7 +17,7 @@ class CarelevoPumpResumeUseCase @Inject constructor(
      */
     fun persistResumed(): Boolean {
         val basalInfusionInfo = infusionInfoRepository.getInfusionInfoBySync()?.basalInfusionInfo ?: return false
-        if (!infusionInfoRepository.updateBasalInfusionInfo(basalInfusionInfo.copy(updatedAt = DateTime.now(), mode = 1, isStop = false))) return false
+        if (!infusionInfoRepository.updateBasalInfusionInfo(basalInfusionInfo.copy(updatedAt = Clock.System.now(), mode = 1, isStop = false))) return false
         val patchInfo = patchInfoRepository.getPatchInfoBySync() ?: return false
         return patchInfoRepository.updatePatchInfo(
             patchInfo.copy(isStopped = false, stopMinutes = null, stopMode = null, isForceStopped = null, mode = 1)

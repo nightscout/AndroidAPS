@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.StatusLevel
@@ -61,7 +62,10 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -79,7 +83,7 @@ import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import java.time.Instant
+import java.time.Instant as JavaInstant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -140,6 +144,7 @@ class CarelevoOverviewViewModelTest {
     private lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
     private lateinit var deleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase
     private lateinit var rxBus: RxBus
+    private lateinit var decimalFormatter: DecimalFormatter
     private lateinit var bleSession: CarelevoBleSession
 
     private lateinit var sut: CarelevoOverviewViewModel
@@ -168,7 +173,7 @@ class CarelevoOverviewViewModelTest {
     private fun s(id: Int, vararg args: Any?): String = "S$id(${args.joinToString(",")})"
 
     private fun local(millis: Long): LocalDateTime =
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault())
+        LocalDateTime.ofInstant(JavaInstant.ofEpochMilli(millis), ZoneId.systemDefault())
 
     private fun uiFormat(ldt: LocalDateTime): String = ldt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
@@ -206,7 +211,7 @@ class CarelevoOverviewViewModelTest {
     private fun tempBasal(
         speed: Double? = 1.2,
         durationMin: Int? = null,
-        createdAt: DateTime = DateTime.now()
+        createdAt: Instant = Clock.System.now()
     ) = CarelevoTempBasalInfusionInfoDomainModel(
         infusionId = "temp", address = "A", mode = 2, createdAt = createdAt,
         speed = speed, infusionDurationMin = durationMin
@@ -214,7 +219,7 @@ class CarelevoOverviewViewModelTest {
 
     private fun immeBolus(
         durationSeconds: Int? = null,
-        createdAt: DateTime = DateTime.now()
+        createdAt: Instant = Clock.System.now()
     ) = CarelevoImmeBolusInfusionInfoDomainModel(
         infusionId = "imme", address = "A", mode = 3, createdAt = createdAt,
         volume = 1.0, infusionDurationSeconds = durationSeconds
@@ -222,7 +227,7 @@ class CarelevoOverviewViewModelTest {
 
     private fun extendBolus(
         durationMin: Int? = null,
-        createdAt: DateTime = DateTime.now()
+        createdAt: Instant = Clock.System.now()
     ) = CarelevoExtendBolusInfusionInfoDomainModel(
         infusionId = "extend", address = "A", mode = 5, createdAt = createdAt,
         volume = 2.0, speed = 0.5, infusionDurationMin = durationMin
@@ -264,6 +269,9 @@ class CarelevoOverviewViewModelTest {
         patchForceDiscardUseCase = mock()
         deleteInfusionInfoUseCase = mock()
         rxBus = mock()
+        decimalFormatter = mock()
+        // Deterministic, locale-independent 2-decimal text (the real impl is locale aware).
+        whenever(decimalFormatter.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
         bleSession = mock()
 
         // Main must be a test dispatcher BEFORE construction: viewModelScope resolves it on creation.
@@ -315,7 +323,8 @@ class CarelevoOverviewViewModelTest {
             aapsSchedulers = aapsSchedulers,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
             carelevoDeleteInfusionInfoUseCase = deleteInfusionInfoUseCase,
-            rxBus = rxBus
+            rxBus = rxBus,
+            decimalFormatter = decimalFormatter
         )
 
         collectorScope = CoroutineScope(Dispatchers.Unconfined)
@@ -784,7 +793,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `the second tick deletes every infusion whose window has elapsed`() {
-        val past = DateTime.now().minusHours(2)
+        val past = Clock.System.now() - 2.hours
         infusionSubject.onNext(
             Optional.of(
                 CarelevoInfusionInfoDomainModel(
@@ -810,7 +819,7 @@ class CarelevoOverviewViewModelTest {
                     // No duration → open-ended, never expires.
                     tempBasalInfusionInfo = tempBasal(durationMin = null),
                     // Ends in the future.
-                    extendBolusInfusionInfo = extendBolus(durationMin = 120, createdAt = DateTime.now())
+                    extendBolusInfusionInfo = extendBolus(durationMin = 120, createdAt = Clock.System.now())
                 )
             )
         )
@@ -1353,8 +1362,10 @@ class CarelevoOverviewViewModelTest {
         assertThat(total).isEqualTo(expected)
         assertThat(total).isGreaterThan(0)
         assertThat(total).isLessThan(1440)
+        // The hh:mm text comes from a format resource now, so assert the resource and its arguments
+        // rather than a formatted literal - the padding is the translator's, not the VM's.
         assertThat(infoRows()[6].value)
-            .isEqualTo(String.format(Locale.getDefault(), "%02d:%02d", total / 60, total % 60))
+            .isEqualTo(s(R.string.common_unit_value_hour_min, total / 60, total % 60))
     }
 
     @Test

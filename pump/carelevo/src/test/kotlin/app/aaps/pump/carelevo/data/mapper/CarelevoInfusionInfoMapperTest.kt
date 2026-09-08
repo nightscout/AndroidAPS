@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.data.mapper
 
+import app.aaps.pump.carelevo.ext.parseIsoInstant
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalSegmentInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInfoEntity
@@ -13,23 +14,22 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInf
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
+import kotlin.time.Instant
 import org.junit.jupiter.api.Test
 
 /**
  * Pure-logic unit tests for the entity <-> domain mappers in `CarelevoInfusionInfoMapper.kt`.
  *
  * Timestamp handling: entity strings are canonical ISO-8601 in UTC so that a
- * `String -> DateTime.parse -> DateTime.toString -> String` round trip is stable and the produced
- * DateTime chronology matches a UTC-built DateTime (offset 0 resolves to DateTimeZone.UTC).
+ * `String -> Instant.parse -> Instant.toString -> String` round trip is stable and the produced
+ * Instant is an absolute point in time, so no zone is involved on either side of the mapping.
  */
 internal class CarelevoInfusionInfoMapperTest {
 
     private val createdStr = "2026-07-16T12:30:45.123Z"
     private val updatedStr = "2026-07-16T13:31:46.456Z"
-    private val createdDt = DateTime(2026, 7, 16, 12, 30, 45, 123, DateTimeZone.UTC)
-    private val updatedDt = DateTime(2026, 7, 16, 13, 31, 46, 456, DateTimeZone.UTC)
+    private val createdDt = Instant.parse(createdStr)
+    private val updatedDt = Instant.parse(updatedStr)
 
     // region BasalSegment
 
@@ -39,8 +39,8 @@ internal class CarelevoInfusionInfoMapperTest {
             createdAt = createdStr, updatedAt = updatedStr, startTime = 60, endTime = 120, speed = 1.25
         )
         val domain = entity.transformToCarelevoBasalSegmentInfusionInfoDomainModel()
-        assertThat(domain.createdAt).isEqualTo(DateTime.parse(createdStr))
-        assertThat(domain.updatedAt).isEqualTo(DateTime.parse(updatedStr))
+        assertThat(domain.createdAt).isEqualTo(parseIsoInstant(createdStr))
+        assertThat(domain.updatedAt).isEqualTo(parseIsoInstant(updatedStr))
         assertThat(domain.startTime).isEqualTo(60)
         assertThat(domain.endTime).isEqualTo(120)
         assertThat(domain.speed).isEqualTo(1.25)
@@ -86,8 +86,8 @@ internal class CarelevoInfusionInfoMapperTest {
         assertThat(domain.infusionId).isEqualTo("inf-1")
         assertThat(domain.address).isEqualTo("AA:BB")
         assertThat(domain.mode).isEqualTo(1)
-        assertThat(domain.createdAt).isEqualTo(DateTime.parse(createdStr))
-        assertThat(domain.updatedAt).isEqualTo(DateTime.parse(updatedStr))
+        assertThat(domain.createdAt).isEqualTo(parseIsoInstant(createdStr))
+        assertThat(domain.updatedAt).isEqualTo(parseIsoInstant(updatedStr))
         assertThat(domain.isStop).isFalse()
         assertThat(domain.segments).hasSize(2)
         assertThat(domain.segments[0].speed).isEqualTo(1.0)

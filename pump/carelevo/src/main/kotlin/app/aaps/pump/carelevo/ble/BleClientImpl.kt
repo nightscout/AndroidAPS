@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.UUID
-import java.util.concurrent.atomic.AtomicReference
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * Production implementation of [BleClient].
@@ -42,6 +43,7 @@ import java.util.concurrent.atomic.AtomicReference
  * [BleStreamCommand.decode]/[BleStreamCommand.isTerminal] are guarded, and the collect
  * body is wrapped so no unforeseen throw can permanently stop routing.
  */
+@OptIn(ExperimentalAtomicApi::class)
 class BleClientImpl(
     private val gatt: GattConnection,
     private val writeUuid: UUID,
@@ -213,7 +215,7 @@ class BleClientImpl(
                     // guarded above; this is a last-resort backstop — abort the active
                     // request so its caller fails fast rather than hanging on a response
                     // that will never route, and keep the collector alive.
-                    waiterRef.getAndSet(null)?.abort(t)
+                    waiterRef.exchange(null)?.abort(t)
                 }
             }
         }
@@ -227,7 +229,7 @@ class BleClientImpl(
                 if (evt.state == GattConnState.DISCONNECTED) {
                     // Atomically take-and-null so a late-arriving notification falls
                     // through to unsolicited rather than hitting an aborted waiter.
-                    waiterRef.getAndSet(null)?.abort(BleDisconnectedException())
+                    waiterRef.exchange(null)?.abort(BleDisconnectedException())
                 }
             }
 
@@ -239,7 +241,7 @@ class BleClientImpl(
     private fun routeNotification(payload: ByteArray) {
         if (payload.isEmpty()) return
         val opcode = payload[0]
-        if (waiterRef.get()?.offer(opcode, payload) == true) return
+        if (waiterRef.load()?.offer(opcode, payload) == true) return
         // tryEmit never suspends (DROP_OLDEST) so the collector can't be back-pressured.
         _unsolicitedEvents.tryEmit(UnsolicitedMessage(opcode, payload))
     }
@@ -260,7 +262,7 @@ class BleClientImpl(
         // Register the waiter BEFORE writing so a synchronous response from the
         // peripheral cannot race ahead of our subscription.
         val waiter = SingleWaiter(cmd.expectedResponseOpcode, cmd.correlationByte, deferred)
-        waiterRef.set(waiter)
+        waiterRef.store(waiter)
         var consumed = false
         try {
             gatt.writeCharacteristic(writeUuid, cmd.encode())
@@ -282,7 +284,7 @@ class BleClientImpl(
             }
             val deferred = CompletableDeferred<Map<Byte, ByteArray>>()
             val waiter = MultiWaiter(cmd.expectedResponseOpcodes.toMutableSet(), deferred)
-            waiterRef.set(waiter)
+            waiterRef.store(waiter)
             var consumed = false
             try {
                 gatt.writeCharacteristic(writeUuid, cmd.encode())
@@ -300,7 +302,7 @@ class BleClientImpl(
             val channel = Channel<R>(Channel.UNLIMITED)
             // Register BEFORE writing (same race-free ordering as request()).
             val waiter = StreamWaiter(cmd.expectedResponseOpcode, cmd::decode, cmd::isTerminal, channel)
-            waiterRef.set(waiter)
+            waiterRef.store(waiter)
             try {
                 gatt.writeCharacteristic(writeUuid, cmd.encode())
                 // Emits every decoded notification; the channel is closed by the

@@ -8,7 +8,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepositor
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -30,7 +30,7 @@ class CarelevoPatchForceDiscardUseCase @Inject constructor(
                     ?: throw NullPointerException("user setting info must be not null")
 
                 val updateUserSettingInfoResult = userSettingInfoRepository.updateUserSettingInfo(
-                    userSettingInfo.copy(updatedAt = DateTime.now(), needMaxBolusDoseSyncPatch = false, needMaxBasalSpeedSyncPatch = false, needLowInsulinNoticeAmountSyncPatch = false)
+                    userSettingInfo.copy(updatedAt = Clock.System.now(), needMaxBolusDoseSyncPatch = false, needMaxBasalSpeedSyncPatch = false, needLowInsulinNoticeAmountSyncPatch = false)
                 )
                 if (!updateUserSettingInfoResult) {
                     throw IllegalStateException("update user setting info is failed")

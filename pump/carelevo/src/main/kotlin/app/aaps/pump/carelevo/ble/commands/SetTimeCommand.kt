@@ -2,28 +2,42 @@ package app.aaps.pump.carelevo.ble.commands
 
 import app.aaps.pump.carelevo.ble.BleCommand
 import app.aaps.pump.carelevo.ble.BleMultiCommand
-import org.joda.time.DateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Shared `CMD_SET_TIME_REQ` (0x11) request encoding:
  * `[0] 0x11, [1] subId, [2..7] dateTime = [yy,MM,dd,HH,mm,ss], [8..9] volume = [vol/100, vol%100], [10] aidMode]`.
  *
- * [dateTime] is an explicit parameter (caller passes `DateTime.now()`) so `encode()` is deterministic and
+ * [dateTime] is an explicit parameter (caller passes `Clock.System.now()`) so `encode()` is deterministic and
  * unit-testable. Year = last two digits (`year % 100`); volume validated 0..300.
+ *
+ * The patch keeps a wall-clock, so the instant is read in [zone], which defaults to the phone's zone -
+ * the same local time joda's `DateTime.now()` used to give here.
  */
-internal fun encodeSetTime(subId: Int, volume: Int, aidMode: Int, dateTime: DateTime): ByteArray {
+internal fun encodeSetTime(
+    subId: Int,
+    volume: Int,
+    aidMode: Int,
+    dateTime: Instant,
+    zone: TimeZone = TimeZone.currentSystemDefault()
+): ByteArray {
     require(volume in VOLUME_RANGE) { "volume out of range $VOLUME_RANGE" }
+    val local = dateTime.toLocalDateTime(zone)
     // last two digits via arithmetic — can't throw on unusual years.
-    val yy = dateTime.year % 100
+    val yy = local.year % 100
     return byteArrayOf(
         SET_TIME_REQUEST_OPCODE,
         subId.toByte(),
         yy.toByte(),
-        dateTime.monthOfYear.toByte(),
-        dateTime.dayOfMonth.toByte(),
-        dateTime.hourOfDay.toByte(),
-        dateTime.minuteOfHour.toByte(),
-        dateTime.secondOfMinute.toByte(),
+        local.month.number.toByte(),
+        local.day.toByte(),
+        local.hour.toByte(),
+        local.minute.toByte(),
+        local.second.toByte(),
         (volume / HUNDRED).toByte(),
         (volume % HUNDRED).toByte(),
         aidMode.toByte()
@@ -45,7 +59,7 @@ class SetTimeCommand(
     private val subId: Int,
     private val volume: Int,
     private val aidMode: Int,
-    private val dateTime: DateTime
+    private val dateTime: Instant
 ) : BleCommand<SimpleResultResponse> {
 
     override val requestOpcode: Byte = SET_TIME_REQUEST_OPCODE
@@ -75,7 +89,7 @@ class SetTimeForPatchInfoCommand(
     private val subId: Int,
     private val volume: Int,
     private val aidMode: Int,
-    private val dateTime: DateTime
+    private val dateTime: Instant
 ) : BleMultiCommand<PatchInfoResponse> {
 
     override val requestOpcode: Byte = SET_TIME_REQUEST_OPCODE

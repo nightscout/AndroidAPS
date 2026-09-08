@@ -4,7 +4,7 @@ import app.aaps.pump.carelevo.domain.ext.generateUUID
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
 
 class CarelevoStartExtendBolusInfusionUseCase @Inject constructor(
@@ -32,6 +32,6 @@ class CarelevoStartExtendBolusInfusionUseCase @Inject constructor(
                 )
             )
         ) { "update infusion info is failed" }
-        require(patchInfoRepository.updatePatchInfo(patchInfo.copy(updatedAt = DateTime.now(), mode = 5))) { "update patch info is failed" }
+        require(patchInfoRepository.updatePatchInfo(patchInfo.copy(updatedAt = Clock.System.now(), mode = 5))) { "update patch info is failed" }
     }.isSuccess
 }

@@ -7,7 +7,8 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -31,8 +32,8 @@ internal class CarelevoSetBasalProgramUseCaseTest {
     private fun patchInfo(address: String = "AA:BB:CC:DD:EE:FF"): CarelevoPatchInfoDomainModel =
         CarelevoPatchInfoDomainModel(
             address = address,
-            createdAt = DateTime.now().minusHours(1),
-            updatedAt = DateTime.now(),
+            createdAt = Clock.System.now() - 1.hours,
+            updatedAt = Clock.System.now(),
             mode = 0
         )
 

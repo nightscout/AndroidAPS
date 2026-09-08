@@ -40,6 +40,7 @@
     <string name="carelevo_pump_stop_duration_label_4_hour">4 hours</string>
 
     <string name="common_unit_value_day_hour_min">%1$d days %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
     <string name="common_unit_remain_min_sec">%d min %02d sec remaining</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
 

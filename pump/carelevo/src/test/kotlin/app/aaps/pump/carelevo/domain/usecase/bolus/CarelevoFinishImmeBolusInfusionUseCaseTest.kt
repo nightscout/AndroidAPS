@@ -12,7 +12,9 @@ import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -45,7 +47,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
                 )
             )
         )
-        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(CarelevoPatchInfoDomainModel("AA:BB", DateTime.now(), DateTime.now(), mode = 1))
+        whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(CarelevoPatchInfoDomainModel("AA:BB", Clock.System.now(), Clock.System.now(), mode = 1))
         whenever(patchInfoRepository.updatePatchInfo(any())).thenReturn(true)
 
         val result = sut.execute().blockingGet()
@@ -56,7 +58,7 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
     // ---------- helpers ----------
 
     private fun patchInfo(address: String = "AA:BB"): CarelevoPatchInfoDomainModel =
-        CarelevoPatchInfoDomainModel(address, DateTime.now(), DateTime.now(), mode = 3)
+        CarelevoPatchInfoDomainModel(address, Clock.System.now(), Clock.System.now(), mode = 3)
 
     private fun basalInfusion(isStop: Boolean): CarelevoBasalInfusionInfoDomainModel =
         CarelevoBasalInfusionInfoDomainModel(
@@ -221,8 +223,8 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
     fun execute_success_preserves_the_patch_identity_and_only_rewrites_mode_and_updatedAt() {
         val original = CarelevoPatchInfoDomainModel(
             address = "11:22:33:44:55:66",
-            createdAt = DateTime.now().minusDays(1),
-            updatedAt = DateTime.now().minusHours(1),
+            createdAt = Clock.System.now() - 1.days,
+            updatedAt = Clock.System.now() - 1.hours,
             mode = 3,
             bolusActionSeq = 5,
             insulinRemain = 150.0
@@ -237,11 +239,11 @@ internal class CarelevoFinishImmeBolusInfusionUseCaseTest {
         val persisted = capturedPatch()
         assertThat(persisted.address).isEqualTo("11:22:33:44:55:66")
         assertThat(persisted.mode).isEqualTo(1)
-        assertThat(persisted.createdAt.millis).isEqualTo(original.createdAt.millis)
+        assertThat(persisted.createdAt.toEpochMilliseconds()).isEqualTo(original.createdAt.toEpochMilliseconds())
         // finishing a bolus does not clear the action seq
         assertThat(persisted.bolusActionSeq).isEqualTo(5)
         assertThat(persisted.insulinRemain).isEqualTo(150.0)
-        assertThat(persisted.updatedAt.millis).isGreaterThan(original.updatedAt.millis)
+        assertThat(persisted.updatedAt.toEpochMilliseconds()).isGreaterThan(original.updatedAt.toEpochMilliseconds())
     }
 
     @Test

@@ -4,7 +4,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableSharedFlow
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 interface EventFlow<out T> : Flow<T> {
     companion object {
@@ -42,8 +43,9 @@ private class EventFlowImpl<T>(
     }
 }
 
+@OptIn(ExperimentalAtomicApi::class)
 private class EventFlowSlot<T>(val value: T) {
 
     private val consumed: AtomicBoolean = AtomicBoolean(false)
-    fun markConsumed(): Boolean = consumed.getAndSet(true)
+    fun markConsumed(): Boolean = consumed.exchange(true)
 }

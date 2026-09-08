@@ -3,7 +3,7 @@ package app.aaps.pump.carelevo.domain.usecase.basal
 import app.aaps.pump.carelevo.domain.model.infusion.derivePatchMode
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
 
 class CarelevoCancelTempBasalInfusionUseCase @Inject constructor(
@@ -27,6 +27,6 @@ class CarelevoCancelTempBasalInfusionUseCase @Inject constructor(
 
         val patchInfo = patchInfoRepository.getPatchInfoBySync()
             ?: throw NullPointerException("patch info must be not null")
-        require(patchInfoRepository.updatePatchInfo(patchInfo.copy(updatedAt = DateTime.now(), mode = mode))) { "update patch info is failed" }
+        require(patchInfoRepository.updatePatchInfo(patchInfo.copy(updatedAt = Clock.System.now(), mode = mode))) { "update patch info is failed" }
     }.isSuccess
 }

@@ -7,7 +7,8 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Completable
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -39,8 +40,8 @@ internal class AlarmClearPatchDiscardUseCaseTest {
     private lateinit var sut: AlarmClearPatchDiscardUseCase
 
     private val storedUserSetting = CarelevoUserSettingInfoDomainModel(
-        createdAt = DateTime.parse("2026-03-01T08:00:00Z"),
-        updatedAt = DateTime.parse("2026-03-02T08:00:00Z"),
+        createdAt = Instant.parse("2026-03-01T08:00:00Z"),
+        updatedAt = Instant.parse("2026-03-02T08:00:00Z"),
         lowInsulinNoticeAmount = 20,
         maxBasalSpeed = 2.5,
         maxBolusDose = 10.0,
@@ -103,7 +104,7 @@ internal class AlarmClearPatchDiscardUseCaseTest {
 
     @Test
     fun persistAlarmDiscarded_preserves_user_setting_values_and_bumps_updatedAt() {
-        val before = DateTime.now()
+        val before = Clock.System.now()
 
         sut.persistAlarmDiscarded("alarm-1")
 
@@ -116,7 +117,7 @@ internal class AlarmClearPatchDiscardUseCaseTest {
             assertThat(maxBasalSpeed).isEqualTo(2.5)
             assertThat(maxBolusDose).isEqualTo(10.0)
             assertThat(createdAt).isEqualTo(storedUserSetting.createdAt)
-            assertThat(updatedAt.isBefore(before)).isFalse()
+            assertThat(updatedAt < before).isFalse()
         }
     }
 

@@ -1,7 +1,7 @@
 package app.aaps.pump.carelevo.domain.usecase.userSetting
 
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
-import org.joda.time.DateTime
+import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
 
 class CarelevoUpdateLowInsulinNoticeAmountUseCase @Inject constructor(
@@ -16,7 +16,7 @@ class CarelevoUpdateLowInsulinNoticeAmountUseCase @Inject constructor(
     fun persistLowInsulinNoticeAmount(value: Int, synced: Boolean): Boolean {
         val userSettingInfo = userSettingInfoRepository.getUserSettingInfoBySync() ?: return false
         return userSettingInfoRepository.updateUserSettingInfo(
-            userSettingInfo.copy(updatedAt = DateTime.now(), lowInsulinNoticeAmount = value, needLowInsulinNoticeAmountSyncPatch = !synced)
+            userSettingInfo.copy(updatedAt = Clock.System.now(), lowInsulinNoticeAmount = value, needLowInsulinNoticeAmountSyncPatch = !synced)
         )
     }
 }

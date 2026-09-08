@@ -44,7 +44,8 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -109,8 +110,8 @@ internal class CarelevoPatchMoreTest {
     private fun patchInfo(): CarelevoPatchInfoDomainModel =
         CarelevoPatchInfoDomainModel(
             address = "aa:bb:cc:dd:ee:ff",
-            createdAt = DateTime.now().minusHours(1),
-            updatedAt = DateTime.now(),
+            createdAt = Clock.System.now() - 1.hours,
+            updatedAt = Clock.System.now(),
             manufactureNumber = "CARELEVO-TEST-001",
             insulinRemain = 60.0,
             bolusActionSeq = 1,

@@ -28,7 +28,10 @@ import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
 import app.aaps.pump.carelevo.ble.commands.TempBasalCommand
 import app.aaps.pump.carelevo.ble.commands.ThresholdSetupCommand
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlin.time.Instant
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.experimental.xor
@@ -822,7 +825,7 @@ class CarelevoPumpEmulatorTest {
         /** Above 127 on purpose — proves the key survives the Int→Byte→unsigned round-trip. */
         const val MAC_KEY = 0xC3
 
-        val DATE_TIME: DateTime = DateTime(2026, 7, 16, 14, 30, 45)
+        val DATE_TIME: Instant = LocalDateTime(2026, 7, 16, 14, 30, 45).toInstant(TimeZone.currentSystemDefault())
 
         const val TOLERANCE = 1e-9
     }

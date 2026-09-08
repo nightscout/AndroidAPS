@@ -1,13 +1,16 @@
 package app.aaps.pump.carelevo.ble.commands
 
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlin.time.Instant
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
 internal class SetTimeCommandTest {
 
-    private val fixed = DateTime(2026, 7, 15, 8, 30, 45) // yy=26, MM=7, dd=15, HH=8, mm=30, ss=45
+    private val fixed = LocalDateTime(2026, 7, 15, 8, 30, 45).toInstant(TimeZone.currentSystemDefault()) // yy=26, MM=7, dd=15, HH=8, mm=30, ss=45
 
     @Test
     fun `encode packs opcode subId datetime volume aidMode`() {

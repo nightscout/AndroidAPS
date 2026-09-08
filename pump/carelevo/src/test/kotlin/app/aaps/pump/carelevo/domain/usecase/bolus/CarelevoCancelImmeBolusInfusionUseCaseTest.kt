@@ -9,7 +9,8 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -31,7 +32,7 @@ internal class CarelevoCancelImmeBolusInfusionUseCaseTest {
     private val sut = CarelevoCancelImmeBolusInfusionUseCase(patchInfoRepository, infusionInfoRepository)
 
     private fun patchInfo(address: String = "AA:BB:CC:DD:EE:FF"): CarelevoPatchInfoDomainModel =
-        CarelevoPatchInfoDomainModel(address = address, createdAt = DateTime.now(), updatedAt = DateTime.now(), mode = 3)
+        CarelevoPatchInfoDomainModel(address = address, createdAt = Clock.System.now(), updatedAt = Clock.System.now(), mode = 3)
 
     private fun basalInfusion(isStop: Boolean): CarelevoBasalInfusionInfoDomainModel =
         CarelevoBasalInfusionInfoDomainModel(infusionId = "b", address = "AA", mode = 1, segments = emptyList(), isStop = isStop)
@@ -173,7 +174,7 @@ internal class CarelevoCancelImmeBolusInfusionUseCaseTest {
 
     @Test
     fun `success preserves the patch identity and only rewrites mode and updatedAt`() {
-        val original = patchInfo("11:22:33:44:55:66").copy(bolusActionSeq = 7, insulinRemain = 120.0, updatedAt = DateTime.now().minusHours(1))
+        val original = patchInfo("11:22:33:44:55:66").copy(bolusActionSeq = 7, insulinRemain = 120.0, updatedAt = Clock.System.now() - 1.hours)
         whenever(infusionInfoRepository.deleteImmeBolusInfusionInfo()).thenReturn(true)
         whenever(infusionInfoRepository.getInfusionInfoBySync()).thenReturn(CarelevoInfusionInfoDomainModel(basalInfusionInfo = basalInfusion(isStop = false)))
         whenever(patchInfoRepository.getPatchInfoBySync()).thenReturn(original)
@@ -187,6 +188,6 @@ internal class CarelevoCancelImmeBolusInfusionUseCaseTest {
         // bolusActionSeq is deliberately NOT cleared by the cancel persist
         assertThat(persisted.bolusActionSeq).isEqualTo(7)
         assertThat(persisted.insulinRemain).isEqualTo(120.0)
-        assertThat(persisted.updatedAt.millis).isGreaterThan(original.updatedAt.millis)
+        assertThat(persisted.updatedAt.toEpochMilliseconds()).isGreaterThan(original.updatedAt.toEpochMilliseconds())
     }
 }

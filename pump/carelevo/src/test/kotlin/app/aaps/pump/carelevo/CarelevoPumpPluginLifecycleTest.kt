@@ -86,7 +86,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -354,8 +355,8 @@ class CarelevoPumpPluginLifecycleTest {
     private fun samplePatchInfo(insulinRemain: Double = 60.0): CarelevoPatchInfoDomainModel =
         CarelevoPatchInfoDomainModel(
             address = "AA:BB:CC:DD:EE:FF",
-            createdAt = DateTime.now().minusHours(1),
-            updatedAt = DateTime.now(),
+            createdAt = Clock.System.now() - 1.hours,
+            updatedAt = Clock.System.now(),
             manufactureNumber = "CARELEVO-TEST-001",
             insulinRemain = insulinRemain,
             bolusActionSeq = 1,

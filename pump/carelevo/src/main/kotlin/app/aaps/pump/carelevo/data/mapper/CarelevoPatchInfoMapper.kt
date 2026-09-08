@@ -1,13 +1,13 @@
 package app.aaps.pump.carelevo.data.mapper
 
+import app.aaps.pump.carelevo.ext.parseIsoInstant
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
-import org.joda.time.DateTime
 
 internal fun CarelevoPatchInfoEntity.transformToCarelevoPatchInfoDomainModel() = CarelevoPatchInfoDomainModel(
     address = address,
-    createdAt = DateTime.parse(createdAt),
-    updatedAt = DateTime.parse(updatedAt),
+    createdAt = parseIsoInstant(createdAt),
+    updatedAt = parseIsoInstant(updatedAt),
     manufactureNumber = manufactureNumber,
     firmwareVersion = firmwareVersion,
     bootDateTime = bootDateTime,

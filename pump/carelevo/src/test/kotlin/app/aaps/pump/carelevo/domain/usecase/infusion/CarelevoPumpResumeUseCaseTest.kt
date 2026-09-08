@@ -6,7 +6,8 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import org.joda.time.DateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -39,8 +40,8 @@ internal class CarelevoPumpResumeUseCaseTest {
     private fun patchInfo(): CarelevoPatchInfoDomainModel =
         CarelevoPatchInfoDomainModel(
             address = "AA:BB:CC:DD:EE:FF",
-            createdAt = DateTime.now().minusHours(1),
-            updatedAt = DateTime.now(),
+            createdAt = Clock.System.now() - 1.hours,
+            updatedAt = Clock.System.now(),
             isStopped = true,
             stopMinutes = 30,
             stopMode = 0,
