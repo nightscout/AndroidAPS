@@ -23,7 +23,7 @@
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="profile">Профиль</string>
     <string name="doprofileswitch">Переключить профиль</string>
-    <string name="exitwizard">Пропустить Мастер установки</string>
+    <string name="exitwizard">Пропустить Мастер настройки</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они отсортированы от старых к новым. Обычно, чем новее алгоритм, тем он мощнее. Не забудьте перед использованием прочитать документацию OpenAPS и сделать необходимые настройки.</string>
