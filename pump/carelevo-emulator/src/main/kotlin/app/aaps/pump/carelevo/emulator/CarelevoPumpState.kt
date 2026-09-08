@@ -1,5 +1,8 @@
 package app.aaps.pump.carelevo.emulator
 
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
+
 /**
  * Mutable state of the emulated CareLevo patch.
  *
@@ -105,6 +108,29 @@ class CarelevoPumpState {
     /** Terminal result of the safety-check stream. 0 = success; see `SafetyCheckCommand`. */
     var safetyCheckResult: Int = 0
 
+    // ---- Alarms -----------------------------------------------------------------------------
+
+    /**
+     * What the 0x43 active-alarm snapshot poll reports as currently active, **one independent set
+     * per tier** (0xA4 critical / 0xA5 advisory / 0xA6 notification) — set the tier a test actually
+     * wants to drive without also asserting flags for the other two. This matters because the same
+     * underlying condition (low battery, say) resolves to a *different* [app.aaps.pump.carelevo.domain.type.AlarmCause]
+     * severity depending which tier reports it — critical resolves to a WARNING cause (the driver
+     * auto-discards the patch on it), advisory to the ALERT cause of the same condition (a plain
+     * user-clearable alarm) — so tests distinguishing "patch got abandoned" from "just an alarm to
+     * clear" need to set only the one tier they mean.
+     */
+    var criticalAlarmFlags: ActiveAlarmSnapshotFlags = noActiveAlarms()
+    var advisoryAlarmFlags: ActiveAlarmSnapshotFlags = noActiveAlarms()
+    var notificationAlarmFlags: ActiveAlarmSnapshotFlags = noActiveAlarms()
+
+    /** The flags for [tier] — see [criticalAlarmFlags]/[advisoryAlarmFlags]/[notificationAlarmFlags]. */
+    fun activeAlarmFlags(tier: ActiveAlarmSnapshotTier): ActiveAlarmSnapshotFlags = when (tier) {
+        ActiveAlarmSnapshotTier.CRITICAL     -> criticalAlarmFlags
+        ActiveAlarmSnapshotTier.ADVISORY     -> advisoryAlarmFlags
+        ActiveAlarmSnapshotTier.NOTIFICATION -> notificationAlarmFlags
+    }
+
     // ---- Fault injection --------------------------------------------------------------------
 
     /** Opcodes the patch silently ignores, so a caller's timeout is the only way out. */
@@ -121,3 +147,20 @@ class CarelevoPumpState {
         const val RESULT_SUCCESS = 0
     }
 }
+
+/** All 13 active-alarm-snapshot flags off — the resting default for each of the three tiers. */
+private fun noActiveAlarms(): ActiveAlarmSnapshotFlags = ActiveAlarmSnapshotFlags(
+    outOfInsulin = false,
+    operatingLifeExpired = false,
+    lowBattery = false,
+    outOfRangeTemperature = false,
+    autoOff = false,
+    unconnectedBle = false,
+    patchAppIncomplete = false,
+    startInsulin = false,
+    selfDiagnosisFailed = false,
+    patchExpired = false,
+    patchError = false,
+    occlusionDetected = false,
+    userForcedTermination = false
+)

@@ -291,7 +291,7 @@ internal class CarelevoBolusCoordinatorTest {
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(null)
         var lastUpdated = false
 
-        sut.cancelImmediateBolus(serialNumber = serial) { lastUpdated = true }
+        sut.cancelImmediateBolus(serialNumber = serial, onLastDataUpdated = { lastUpdated = true })
 
         assertThat(lastUpdated).isFalse()
         verifyBlocking(bleSession, never()) { runSingle(any(), isA<BolusCancelCommand>(), any()) }
@@ -303,10 +303,16 @@ internal class CarelevoBolusCoordinatorTest {
         whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }
             .thenReturn(BolusCancelResponse(resultCode = 0, infusedAmount = 0.42))
         var lastUpdated = false
+        var statusRefreshRequested = false
 
-        sut.cancelImmediateBolus(serialNumber = serial) { lastUpdated = true }
+        sut.cancelImmediateBolus(
+            serialNumber = serial,
+            onLastDataUpdated = { lastUpdated = true },
+            onStatusRefreshRequested = { statusRefreshRequested = true }
+        )
 
         assertThat(lastUpdated).isTrue()
+        assertThat(statusRefreshRequested).isTrue()
         verifyBlocking(cancelImmeBolusInfusionUseCase) { persistImmeBolusCancelled() }
         verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
     }
@@ -317,7 +323,7 @@ internal class CarelevoBolusCoordinatorTest {
         whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }
             .thenReturn(BolusCancelResponse(resultCode = 0, infusedAmount = 0.42))
 
-        sut.cancelImmediateBolus(serialNumber = serial) {}
+        sut.cancelImmediateBolus(serialNumber = serial, onLastDataUpdated = {})
 
         verifyBlocking(pumpSync) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
     }
@@ -328,7 +334,7 @@ internal class CarelevoBolusCoordinatorTest {
             .thenReturn(BolusCancelResponse(resultCode = 1, infusedAmount = 0.0))
         var lastUpdated = false
 
-        sut.cancelImmediateBolus(serialNumber = serial) { lastUpdated = true }
+        sut.cancelImmediateBolus(serialNumber = serial, onLastDataUpdated = { lastUpdated = true })
 
         assertThat(lastUpdated).isFalse()
         verifyBlocking(cancelImmeBolusInfusionUseCase, never()) { persistImmeBolusCancelled() }
@@ -341,7 +347,7 @@ internal class CarelevoBolusCoordinatorTest {
         whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }
             .thenAnswer { throw IllegalStateException("connect refused") }
 
-        sut.cancelImmediateBolus(serialNumber = serial) {}
+        sut.cancelImmediateBolus(serialNumber = serial, onLastDataUpdated = {})
 
         verifyBlocking(bleSession, times(1)) { runSingle(any(), isA<BolusCancelCommand>(), any()) }
         verifyBlocking(pumpSync, never()) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
@@ -352,7 +358,7 @@ internal class CarelevoBolusCoordinatorTest {
         // bolusExpectMs defaults to 0 → calculateMaxRetry yields 0 → a single attempt only.
         whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }.thenAnswer { answerTimeout() }
 
-        sut.cancelImmediateBolus(serialNumber = serial) {}
+        sut.cancelImmediateBolus(serialNumber = serial, onLastDataUpdated = {})
 
         verifyBlocking(bleSession, times(1)) { runSingle(any(), isA<BolusCancelCommand>(), any()) }
         verifyBlocking(pumpSync, never()) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
@@ -363,7 +369,7 @@ internal class CarelevoBolusCoordinatorTest {
         seedBolusExpectMs(30_000L) // → maxRetry capped to 1 → two attempts total
         whenever { bleSession.runSingle(any(), isA<BolusCancelCommand>(), any()) }.thenAnswer { answerTimeout() }
 
-        sut.cancelImmediateBolus(serialNumber = serial) {}
+        sut.cancelImmediateBolus(serialNumber = serial, onLastDataUpdated = {})
 
         verifyBlocking(bleSession, times(2)) { runSingle(any(), isA<BolusCancelCommand>(), any()) }
         verifyBlocking(pumpSync, never()) { syncBolusWithPumpId(any(), any(), any(), any(), any(), any()) }
@@ -379,7 +385,7 @@ internal class CarelevoBolusCoordinatorTest {
         }
         var lastUpdated = false
 
-        sut.cancelImmediateBolus(serialNumber = serial) { lastUpdated = true }
+        sut.cancelImmediateBolus(serialNumber = serial, onLastDataUpdated = { lastUpdated = true })
 
         assertThat(lastUpdated).isTrue()
         verifyBlocking(bleSession, times(2)) { runSingle(any(), isA<BolusCancelCommand>(), any()) }

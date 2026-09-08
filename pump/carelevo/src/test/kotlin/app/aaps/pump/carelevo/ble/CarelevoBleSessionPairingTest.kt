@@ -421,6 +421,27 @@ internal class CarelevoBleSessionPairingTest {
     }
 
     @Test
+    fun `readActiveAlarmSnapshots timing out on the held link leaves it up for the next command`() = runTest {
+        useTestDispatcher()
+        session.requestConnect(ADDRESS, "queue")
+        advanceUntilIdle()
+        assertThat(session.connected.value).isTrue()
+
+        // Older firmware doesn't understand 0x43 at all — the fake has no branch for it, so it simply
+        // never answers (see respondTo's `when`). readActiveAlarmSnapshots swallows that itself (an
+        // inner withTimeoutOrNull, returning emptyList()) rather than letting a TimeoutCancellationException
+        // reach withSession — a real response is always 3 elements, so empty is unambiguous "no answer".
+        // Unlike every other op, this must NOT be treated as "the link is suspect": an old patch simply
+        // never answering 0x43 is expected, not a sign of a dead GATT.
+        assertThat(session.readActiveAlarmSnapshots(ADDRESS)).isEmpty()
+
+        assertThat(session.connected.value).isTrue()
+        // The SAME held link still works for the next command — no re-dial.
+        session.readInfusionInfo(ADDRESS)
+        assertThat(transport.connectAddresses).hasSize(1)
+    }
+
+    @Test
     fun `pairing while a held link is up tears the held link down first`() = runTest {
         useTestDispatcher()
         session.requestConnect(ADDRESS, "queue")

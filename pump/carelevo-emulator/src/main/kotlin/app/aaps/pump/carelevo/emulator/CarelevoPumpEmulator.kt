@@ -2,6 +2,9 @@ package app.aaps.pump.carelevo.emulator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotFlags
+import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
+import app.aaps.pump.carelevo.ble.commands.SnapshotAlarmFlag
 import kotlin.experimental.xor
 import kotlin.math.roundToInt
 
@@ -19,7 +22,8 @@ import kotlin.math.roundToInt
  *
  * Response opcodes are a hardcoded table, never computed. The rule is *mostly* `request + 0x60`
  * (arithmetic — `or 0x60` breaks every opcode from 0x21 up), but there are real exceptions: 0x19→0x7A
- * and 0x1A→0x79 are swapped, and 0x4B answers on 0xBB.
+ * and 0x1A→0x79 are swapped, 0x4B answers on 0xBB, and 0x43 answers on whichever of 0xA4/A5/A6 the
+ * request itself names (byte 1 of the request, not a fixed opcode).
  */
 class CarelevoPumpEmulator(
     val state: CarelevoPumpState = CarelevoPumpState(),
@@ -43,33 +47,34 @@ class CarelevoPumpEmulator(
     }
 
     private fun dispatch(opcode: Byte, request: ByteArray): List<ByteArray> = when (opcode) {
-        OP_SET_TIME            -> setTime(request)
-        OP_SAFETY_CHECK        -> safetyCheck()
-        OP_BASAL_SET           -> basalProgram(request, RESP_BASAL_SET)
-        OP_BASAL_UPDATE        -> basalProgram(request, RESP_BASAL_UPDATE)
-        OP_NOTICE_THRESHOLD    -> noticeThreshold(request)
-        OP_INFUSION_THRESHOLD  -> infusionThreshold(request)
-        OP_BUZZ_MODE           -> buzzMode(request)
-        OP_NEEDLE_ACK          -> needleAck(request)
-        OP_NEEDLE_STATUS       -> needleStatus()
-        OP_THRESHOLD_SETUP     -> thresholdSetup(request)
-        OP_ADDITIONAL_PRIMING  -> additionalPriming()
-        OP_TEMP_BASAL          -> tempBasal()
-        OP_IMMEDIATE_BOLUS     -> immediateBolus(request)
-        OP_EXTEND_BOLUS        -> extendBolus(request)
-        OP_PUMP_STOP           -> pumpStop(request)
-        OP_PUMP_RESUME         -> pumpResume(request)
-        OP_EXTEND_BOLUS_CANCEL -> extendBolusCancel()
-        OP_BOLUS_CANCEL        -> bolusCancel()
-        OP_TEMP_BASAL_CANCEL   -> tempBasalCancel()
-        OP_INFUSION_INFO       -> infusionInfo(request)
-        OP_PATCH_INFO          -> patchInfoFrames()
-        OP_PATCH_DISCARD       -> patchDiscard()
-        OP_MAC_ADDRESS         -> macAddress(request)
-        OP_ALARM_CLEAR         -> alarmClear(request)
-        OP_ALERT_ALARM_SET     -> alertAlarmSet(request)
-        OP_APP_AUTH            -> appAuth(request)
-        else                   -> {
+        OP_SET_TIME              -> setTime(request)
+        OP_SAFETY_CHECK          -> safetyCheck()
+        OP_BASAL_SET             -> basalProgram(request, RESP_BASAL_SET)
+        OP_BASAL_UPDATE          -> basalProgram(request, RESP_BASAL_UPDATE)
+        OP_NOTICE_THRESHOLD      -> noticeThreshold(request)
+        OP_INFUSION_THRESHOLD    -> infusionThreshold(request)
+        OP_BUZZ_MODE             -> buzzMode(request)
+        OP_NEEDLE_ACK            -> needleAck(request)
+        OP_NEEDLE_STATUS         -> needleStatus()
+        OP_THRESHOLD_SETUP       -> thresholdSetup(request)
+        OP_ADDITIONAL_PRIMING    -> additionalPriming()
+        OP_TEMP_BASAL            -> tempBasal()
+        OP_IMMEDIATE_BOLUS       -> immediateBolus(request)
+        OP_EXTEND_BOLUS          -> extendBolus(request)
+        OP_PUMP_STOP             -> pumpStop(request)
+        OP_PUMP_RESUME           -> pumpResume(request)
+        OP_EXTEND_BOLUS_CANCEL   -> extendBolusCancel()
+        OP_BOLUS_CANCEL          -> bolusCancel()
+        OP_TEMP_BASAL_CANCEL     -> tempBasalCancel()
+        OP_INFUSION_INFO         -> infusionInfo(request)
+        OP_PATCH_INFO            -> patchInfoFrames()
+        OP_PATCH_DISCARD         -> patchDiscard()
+        OP_MAC_ADDRESS           -> macAddress(request)
+        OP_ALARM_CLEAR           -> alarmClear(request)
+        OP_ALERT_ALARM_SET       -> alertAlarmSet(request)
+        OP_APP_AUTH              -> appAuth(request)
+        OP_ACTIVE_ALARM_SNAPSHOT -> activeAlarmSnapshot(request)
+        else                     -> {
             aapsLogger?.debug(LTag.PUMPEMULATOR, "emulator: unknown opcode 0x${hex(opcode)}")
             emptyList()
         }
@@ -234,11 +239,85 @@ class CarelevoPumpEmulator(
         return listOf(byteArrayOf(RESP_ALERT_ALARM_SET, result.toByte()))
     }
 
-    /** `[0xA7][subId][cause][result]` — result at index 3. */
+    /**
+     * `[0xA7][subId][cause][result]` — result at index 3.
+     *
+     * A real patch that accepts a clear stops reporting that condition — the emulator must too, or
+     * the very next 0x43 snapshot poll would report the same flag still active and the app would
+     * immediately re-raise the alarm the user just cleared. `alarmType` here is the wire byte
+     * [AlarmClearRequestUseCase][app.aaps.pump.carelevo.domain.usecase.alarm.AlarmClearRequestUseCase.commandAlarmType]
+     * builds the request with (161/162/163 = the WARNING/ALERT/NOTICE push-report opcodes), which maps
+     * 1:1 to the snapshot tier (CRITICAL/ADVISORY/NOTIFICATION) carrying that same condition.
+     */
     private fun alarmClear(request: ByteArray): List<ByteArray> {
         val alarmType = if (request.size > 1) request[1] else 0
         val cause = if (request.size > 2) request[2] else 0
-        return listOf(byteArrayOf(RESP_ALARM_CLEAR, alarmType, cause, state.resultFor(OP_ALARM_CLEAR).toByte()))
+        val result = state.resultFor(OP_ALARM_CLEAR)
+        // Unsigned: 161/162/163 (0xA1-0xA3) don't fit a signed byte, so a plain toInt() sign-extends
+        // them to negative values that would never match ALARM_TYPE_WARNING/ALERT/NOTICE below.
+        if (result == CarelevoPumpState.RESULT_SUCCESS) {
+            clearActiveAlarmFlag(alarmType.toUByte().toInt(), cause.toUByte().toInt())
+        }
+        return listOf(byteArrayOf(RESP_ALARM_CLEAR, alarmType, cause, result.toByte()))
+    }
+
+    private fun clearActiveAlarmFlag(alarmType: Int, causeCode: Int) {
+        val flag = SnapshotAlarmFlag.entries.firstOrNull { it.causeCode == causeCode } ?: return
+        when (alarmType) {
+            ALARM_TYPE_WARNING -> state.criticalAlarmFlags = state.criticalAlarmFlags.without(flag)
+            ALARM_TYPE_ALERT   -> state.advisoryAlarmFlags = state.advisoryAlarmFlags.without(flag)
+            ALARM_TYPE_NOTICE  -> state.notificationAlarmFlags = state.notificationAlarmFlags.without(flag)
+        }
+    }
+
+    private fun ActiveAlarmSnapshotFlags.without(flag: SnapshotAlarmFlag): ActiveAlarmSnapshotFlags = when (flag) {
+        SnapshotAlarmFlag.OUT_OF_INSULIN            -> copy(outOfInsulin = false)
+        SnapshotAlarmFlag.OPERATING_LIFE_EXPIRED    -> copy(operatingLifeExpired = false)
+        SnapshotAlarmFlag.LOW_BATTERY               -> copy(lowBattery = false)
+        SnapshotAlarmFlag.OUT_OF_RANGE_TEMPERATURE  -> copy(outOfRangeTemperature = false)
+        SnapshotAlarmFlag.AUTO_OFF                  -> copy(autoOff = false)
+        SnapshotAlarmFlag.UNCONNECTED_BLE           -> copy(unconnectedBle = false)
+        SnapshotAlarmFlag.PATCH_APP_INCOMPLETE      -> copy(patchAppIncomplete = false)
+        SnapshotAlarmFlag.START_INSULIN             -> copy(startInsulin = false)
+        SnapshotAlarmFlag.SELF_DIAGNOSIS_FAILED     -> copy(selfDiagnosisFailed = false)
+        SnapshotAlarmFlag.PATCH_EXPIRED             -> copy(patchExpired = false)
+        SnapshotAlarmFlag.PATCH_ERROR               -> copy(patchError = false)
+        SnapshotAlarmFlag.OCCLUSION_DETECTED        -> copy(occlusionDetected = false)
+        SnapshotAlarmFlag.USER_FORCED_TERMINATION   -> copy(userForcedTermination = false)
+    }
+
+    /**
+     * `[0x43][tier response opcode]` -> the matching 15-byte `[0xA4/A5/A6]` snapshot, built from
+     * [CarelevoPumpState.activeAlarmFlags] for the tier the request named. An unrecognized tier byte
+     * (or a request too short to carry one) answers with silence, the same as a real patch on an
+     * unsupported request — see [ActiveAlarmSnapshotCommand][app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotCommand].
+     *
+     * Every slot is written from that tier's flags regardless of whether the tier actually carries
+     * it — the command's own `decode()` masks a tier's unsupported slots back to `false`, so there
+     * is nothing to get wrong by leaving that masking to the reader, same as a real patch's
+     * undocumented `unused` bytes are not guaranteed zero either.
+     */
+    private fun activeAlarmSnapshot(request: ByteArray): List<ByteArray> {
+        val responseOpcode = if (request.size > 1) request[1] else return emptyList()
+        val tier = ActiveAlarmSnapshotTier.entries.firstOrNull { it.responseOpcode == responseOpcode } ?: return emptyList()
+        val flags = state.activeAlarmFlags(tier)
+        val frame = ByteArray(ACTIVE_ALARM_SNAPSHOT_LENGTH)
+        frame[0] = responseOpcode
+        frame[1] = (!state.stopped).toWireFlag()
+        frame[SnapshotAlarmFlag.OUT_OF_INSULIN.payloadIndex] = flags.outOfInsulin.toWireFlag()
+        frame[SnapshotAlarmFlag.OPERATING_LIFE_EXPIRED.payloadIndex] = flags.operatingLifeExpired.toWireFlag()
+        frame[SnapshotAlarmFlag.LOW_BATTERY.payloadIndex] = flags.lowBattery.toWireFlag()
+        frame[SnapshotAlarmFlag.OUT_OF_RANGE_TEMPERATURE.payloadIndex] = flags.outOfRangeTemperature.toWireFlag()
+        frame[SnapshotAlarmFlag.AUTO_OFF.payloadIndex] = flags.autoOff.toWireFlag()
+        frame[SnapshotAlarmFlag.UNCONNECTED_BLE.payloadIndex] = flags.unconnectedBle.toWireFlag()
+        frame[SnapshotAlarmFlag.PATCH_APP_INCOMPLETE.payloadIndex] = flags.patchAppIncomplete.toWireFlag()
+        frame[SnapshotAlarmFlag.START_INSULIN.payloadIndex] = flags.startInsulin.toWireFlag()
+        frame[SnapshotAlarmFlag.SELF_DIAGNOSIS_FAILED.payloadIndex] = flags.selfDiagnosisFailed.toWireFlag()
+        frame[SnapshotAlarmFlag.PATCH_EXPIRED.payloadIndex] = flags.patchExpired.toWireFlag()
+        frame[SnapshotAlarmFlag.PATCH_ERROR.payloadIndex] = flags.patchError.toWireFlag()
+        frame[SnapshotAlarmFlag.OCCLUSION_DETECTED.payloadIndex] = flags.occlusionDetected.toWireFlag()
+        frame[SnapshotAlarmFlag.USER_FORCED_TERMINATION.payloadIndex] = flags.userForcedTermination.toWireFlag()
+        return listOf(frame)
     }
 
     // ---- Needle and priming -----------------------------------------------------------------
@@ -439,6 +518,8 @@ class CarelevoPumpEmulator(
 
     private fun ByteArray.u(index: Int): Int = this[index].toUByte().toInt()
 
+    private fun Boolean.toWireFlag(): Byte = if (this) 1 else 0
+
     private fun hex(value: Byte): String = "%02X".format(value)
 
     @Suppress("unused")
@@ -471,6 +552,7 @@ class CarelevoPumpEmulator(
         const val OP_ALARM_CLEAR: Byte = 0x47
         const val OP_ALERT_ALARM_SET: Byte = 0x48
         const val OP_APP_AUTH: Byte = 0x4B
+        const val OP_ACTIVE_ALARM_SNAPSHOT: Byte = 0x43
 
         // Responses — hardcoded, never computed from the request.
         const val RESP_SET_TIME: Byte = 0x71
@@ -522,6 +604,13 @@ class CarelevoPumpEmulator(
         const val SET_TIME_LENGTH = 11
         const val THRESHOLD_SETUP_LENGTH = 8
         const val INFUSION_INFO_LENGTH = 20
+        const val ACTIVE_ALARM_SNAPSHOT_LENGTH = 15
+
+        // Wire alarmType byte an AlarmClearCommand (0x47) request carries — the WARNING/ALERT/NOTICE
+        // push-report opcodes (0xA1/0xA2/0xA3), matching AlarmClearRequestUseCase.commandAlarmType.
+        const val ALARM_TYPE_WARNING = 161
+        const val ALARM_TYPE_ALERT = 162
+        const val ALARM_TYPE_NOTICE = 163
         const val SERIAL_LENGTH = 13
         const val FIRMWARE_LENGTH = 4
         const val MODEL_LENGTH = 5

@@ -320,15 +320,43 @@ internal class CarelevoAlarmInfoDaoImplTest {
     }
 
     @Test
-    fun `upsertAlarm appends when the alarmType differs despite an identical cause`() {
-        // Same cause, but a deliberately mismatched alarmType exercises the alarmType leg of the match.
+    fun `upsertAlarm replaces an existing lower-tier alarm when the new alarm has the same canonical meaning`() {
+        seedStore(entity(alarmId = "notice", cause = AlarmCause.ALARM_NOTICE_LOW_INSULIN, alarmType = AlarmCause.ALARM_NOTICE_LOW_INSULIN.alarmType.code))
+        sut.getAlarms().blockingFirst()
+
+        sut.upsertAlarm(
+            entity(
+                alarmId = "alert",
+                cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN,
+                alarmType = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN.alarmType.code,
+                updatedAt = "2026-07-16T11:00:00"
+            )
+        ).blockingAwait()
+
+        val stored = sut.getAlarms().blockingFirst().get()
+        assertThat(stored).hasSize(1)
+        assertThat(stored.single().alarmId).isEqualTo("notice")
+        assertThat(stored.single().cause).isEqualTo(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)
+        assertThat(stored.single().alarmType).isEqualTo(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN.alarmType.code)
+        assertThat(stored.single().occurrenceCount).isEqualTo(2)
+        assertThat(stored.single().updatedAt).isEqualTo("2026-07-16T11:00:00")
+    }
+
+    @Test
+    fun `upsertAlarm merges on cause alone, even if the stored record's alarmType field disagrees`() {
+        // The match key is cause.canonicalKey() only (see the cross-tier merge test above) — a stored
+        // record's raw alarmType field is never part of the identity check, even if (e.g. corrupted or
+        // legacy data) it disagrees with what its own cause implies. This used to require an exact
+        // alarmType match too; that was deliberately dropped when canonicalKey-based merging replaced it.
         seedStore(entity(alarmId = "weird", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN, alarmType = 999))
         sut.getAlarms().blockingFirst()
 
         sut.upsertAlarm(entity(alarmId = "normal", cause = AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)).blockingAwait()
 
         val stored = sut.getAlarms().blockingFirst().get()
-        assertThat(stored).hasSize(2)
+        assertThat(stored).hasSize(1)
+        assertThat(stored.single().alarmId).isEqualTo("weird") // existing record kept, just bumped
+        assertThat(stored.single().occurrenceCount).isEqualTo(2)
     }
 
     @Test

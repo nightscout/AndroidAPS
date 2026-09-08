@@ -105,6 +105,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         detailedBolusInfo: DetailedBolusInfo,
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
+        onStatusRefreshRequested: () -> Unit = {},
         pluginDisposable: CompositeDisposable
     ): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "deliverTreatment.start bolusType=${detailedBolusInfo.bolusType}")
@@ -135,13 +136,26 @@ class CarelevoBolusCoordinator @Inject constructor(
         val actionId = (carelevoPatch.patchInfo.value?.getOrNull()?.bolusActionSeq ?: 0) + 1
         val normalizedActionId = if (actionId <= 0) 1 else ((actionId - 1) % 255) + 1
 
-        return deliverTreatmentInternal(detailedBolusInfo, normalizedActionId, result, serialNumber, onLastDataUpdated, pluginDisposable)
+        return deliverTreatmentInternal(
+            detailedBolusInfo = detailedBolusInfo,
+            actionId = normalizedActionId,
+            result = result,
+            serialNumber = serialNumber,
+            onLastDataUpdated = onLastDataUpdated,
+            onStatusRefreshRequested = onStatusRefreshRequested,
+            pluginDisposable = pluginDisposable
+        )
     }
 
     fun cancelImmediateBolus(
         serialNumber: String,
-        onLastDataUpdated: () -> Unit
-    ) = cancelImmediateBolusInternal(serialNumber, onLastDataUpdated)
+        onLastDataUpdated: () -> Unit,
+        onStatusRefreshRequested: () -> Unit = {}
+    ) = cancelImmediateBolusInternal(
+        serialNumber = serialNumber,
+        onLastDataUpdated = onLastDataUpdated,
+        onStatusRefreshRequested = onStatusRefreshRequested
+    )
 
     fun setExtendedBolus(
         insulin: Double,
@@ -279,6 +293,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         result: PumpEnactResult,
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
+        onStatusRefreshRequested: () -> Unit,
         pluginDisposable: CompositeDisposable
     ): PumpEnactResult {
         val address = carelevoPatch.getPatchInfoAddress()
@@ -313,6 +328,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 result,
                 serialNumber,
                 onLastDataUpdated,
+                onStatusRefreshRequested,
                 pluginDisposable
             )
             awaitImmeBolusCancelIfStopped()
@@ -361,7 +377,11 @@ class CarelevoBolusCoordinator @Inject constructor(
      * [immeBolusCancelInFlight] spans the whole call so the delivery worker's guard blocks until the
      * cancel's GATT is closed.
      */
-    private fun cancelImmediateBolusInternal(serialNumber: String, onLastDataUpdated: () -> Unit) {
+    private fun cancelImmediateBolusInternal(
+        serialNumber: String,
+        onLastDataUpdated: () -> Unit,
+        onStatusRefreshRequested: () -> Unit
+    ) {
         immeBolusCancelInFlight = true
         try {
             val address = carelevoPatch.getPatchInfoAddress()
@@ -394,6 +414,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                                 serialNumber
                             )
                         }
+                        onStatusRefreshRequested()
                         isImmeBolusStop = true
                         aapsLogger.info(LTag.PUMPCOMM, "newBle.cancelImmediateBolus infused=$infusedAmount")
                         return
@@ -424,6 +445,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         result: PumpEnactResult,
         serialNumber: String,
         onLastDataUpdated: () -> Unit,
+        onStatusRefreshRequested: () -> Unit,
         pluginDisposable: CompositeDisposable
     ) {
         if (response !is ResponseResult.Success) {
@@ -478,7 +500,11 @@ class CarelevoBolusCoordinator @Inject constructor(
                         serialNumber
                     )
                 }
-                handleFinishImmeBolus(onLastDataUpdated, pluginDisposable)
+                handleFinishImmeBolus(
+                    onLastDataUpdated = onLastDataUpdated,
+                    onStatusRefreshRequested = onStatusRefreshRequested,
+                    pluginDisposable = pluginDisposable
+                )
                 completed = true
             } else {
                 // Sleep the per-step delay in short slices so a mid-step stop is honored within
@@ -528,6 +554,7 @@ class CarelevoBolusCoordinator @Inject constructor(
 
     private fun handleFinishImmeBolus(
         onLastDataUpdated: () -> Unit,
+        onStatusRefreshRequested: () -> Unit,
         pluginDisposable: CompositeDisposable
     ) {
         pluginDisposable += finishImmeBolusInfusionUseCase.execute()
@@ -539,6 +566,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                     when (response) {
                         is ResponseResult.Success -> {
                             onLastDataUpdated()
+                            onStatusRefreshRequested()
                             aapsLogger.debug(LTag.PUMPCOMM, "finishImmeBolus.success")
                         }
 

@@ -83,8 +83,4 @@ sealed class AlarmEvent : Event {
     data class ShowToastMessage(
         @StringRes val messageRes: Int
     ) : AlarmEvent()
-
-    data object Mute : AlarmEvent()
-    data object Mute5min : AlarmEvent()
-    data object StartAlarm : AlarmEvent()
 }
