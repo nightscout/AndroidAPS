@@ -16,15 +16,26 @@
     <!-- Wear preferences -->
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
+    <string name="carb_increment_button_message">מספר פחמימות להוספה כאשר לוחצים על הלחצן</string>
+    <string name="deliver_part_of_boluswizard_reset_time">הוזרק 100% מהבולוס, אם ערך הסוכר בדם ישן </string>
     <!-- IntKey: Protection preferences -->
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="biometric">זיהוי ביומטרי</string>
+    <string name="custom_password">סיסמא מותאמת אישית</string>
+    <string name="custom_pin">PIN מותאם אישית</string>
     <!-- IntKey: Safety preferences -->
     <!-- IntKey: Loop preferences -->
+    <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="uam_smb_max_minutes">מקס\' דקות של SMB UAM</string>
+    <string name="carbs_req_threshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. קבעו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
+    <string name="openapsama_autosens_period_summary">מספר השעות אחורה לחישוב רגישות (זמן הספיגה של פחמימות אינו נכלל)</string>
     <!-- IntKey: Maintenance preferences -->
     <!-- IntKey: Alert preferences -->
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="autotune_default_tune_days_summary">ברירת המחדל של מספר ימי הנתונים לעיבוד על ידי הכיוונון האוטומטי (עד 30)</string>
     <!-- IntKey: SMS preferences -->
     <!-- IntKey: BG Source preferences -->
     <!-- IntKey: NS Client preferences -->
@@ -40,14 +51,33 @@
     <!-- StringKey: Maintenance preferences -->
     <!-- StringKey: Automation preferences -->
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">תוספת PIN חובה בסוף האסימון</string>
+    <string name="smscommunicator_otp_pin_summary">ספרות נוספות שיש לשנן ולהדביק בסוף כל אחת מהסיסמאות החד פעמיות</string>
     <!-- StringKey: Virtual pump preferences -->
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_secret_title">סיסמת נייטסקאוט (API SECRET)</string>
+    <string name="nsclient_token_title">אסימון גישה של נייטסקאוט</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="insulin_increment_button_message">כמות האינסולין להוספה כאשר לוחצים על הלחצן</string>
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
+    <string name="openapsma_max_basal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">ערך ברירת מחדל: 2\n מעכב בולוס מופעל אחרי שאתם מזריקים בולוס ארוחה, כך שהלולאה לא תפצה ע\"י בזאלי זמני נמוך אחרי הארוחה. הדוגמה כאן וברירת המחדל היא 2; כך שהגדרה של משך פעילות אינסולין של 3 שעות משמעה שהעיכוב יחלוף בהדרגה בתוך 1.5 שעות (3 ש\' לחלק ל-2).</string>
+    <string name="openapsama_min_5m_carb_impact_summary">ערך ברירת מחדל: 3.0 (AMA) או 8.0 (SMB). זוהי הגדרת ברירת מחדל להשפעת פחמימות על הסוכר בדם ב-5 דקות. ברירת המחדל היא 3mg/dL/5min. פעולה זו משפיעה על קצב הדעיכה של פחמ\' פעילות, ועל הנחת קצב ספיגת הפחמ\' בחישוב רמות סוכר עתידיות כשהן בירידה מהירה מהצפוי או עליה איטית מהצפוי.</string>
+    <string name="absorption_cutoff_summary">משך זמן בו כל ארוחה תחשב כנספגה. לא תהיה התחשבות בפחמימות שנותרו.</string>
+    <string name="absorption_max_time_summary">מספר השעות בהן צפוי שכל הפחמימות מארוחה ייספגו</string>
+    <string name="openapsama_autosens_min_summary">ערך ברירת מחדל: 0.7\nבצד השני של מגבלות הבטיחות של Autosens, ערך זה מגביל את יכולתו של autosens להוריד את הערכים הבזאליים ועד כמה יכול להעלות את יחס התיקון ואת ערכי מטרת הסוכר בדם.</string>
+    <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלת המכפיל של Autosens (ובקרוב Autotune) שמגדירה 20% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">ערך ברירת מחדל: 0.5 זוהי מגבלת בטיחות נוספת של OpenAPS המגדירה איזה חלק מסך האינסולין הנדרש יכול להינתן כ-SMB. מגבלה זו נועדה למנוע כפילות הזרקת SMB הנגרמת מפקודות מהמטפל המרוחק בנוסף למכשיר הראשי. יש להגדיל ערך ניסיוני זה בהדרגה ובזהירות.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">ערך ברירת מחדל: 0.5 זהו הקצה הנמוך של יחס שמתגבר באופן ליניארי ולא ערך קבוע כפי שמצוין לעיל.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="lgs_threshold_summary">ערך הסוכר שמתחתיו מושעה הזרקת אינסולין. ערך ברירת המחדל משתמש במודל מטרה סטנדרטי. המשתמש יכול להגדיר ערך בין 60 ל-100 מג\"\\ד\"ל. ערכים מתחת ל-65 מביאים לשימוש במודל ברירת המחדל</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
