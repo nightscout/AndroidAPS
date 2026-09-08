@@ -526,7 +526,10 @@
     <string name="delete_logs">로그 삭제하기</string>
     <string name="import_setting">설정 불러오기</string>
     <!-- Import settings screen -->
+    <string name="database_cleanup">데이터베이스 정리하기</string>
+    <string name="nav_resetdb">데이터베이스 초기화</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">차트 표시 범위</string>
 </resources>
