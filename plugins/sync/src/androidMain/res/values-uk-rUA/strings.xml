@@ -7,10 +7,14 @@
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_alarm_options">Параметри сповіщень</string>
     <!-- Tidepool -->
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
     <!--    Wear-->
+    <string name="units_short">Од</string>
+    <string name="hour_short">год</string>
+    <string name="today">Сьогодні</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
