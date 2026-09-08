@@ -55,6 +55,10 @@
     <string name="pref_single_target">Enkel streefdoel</string>
     <string name="pref_wizard_percentage">Calculator percentage</string>
     <string name="pref_complication_tap_action">Complicatie tik voor actie</string>
+    <string name="pref_complication_bg_graph_hours">BG grafiek tijdbereik</string>
+    <string name="duration_1_hour">1 uur</string>
+    <string name="duration_3_hours">3 uur</string>
+    <string name="duration_6_hours">6 uren</string>
     <string name="pref_unicode_in_complications">Unicode in complicaties</string>
     <string name="pref_version">Versie:</string>
     <string name="pref_moreWatchfaceSettings">Meer Watchface instellingen</string>
@@ -71,18 +75,28 @@
     <string name="menu_status">Status</string>
     <string name="menu_resync">Opnieuw synchroniseren</string>
     <string name="menu_prime_fill">Ontlucht/vul</string>
+    <string name="menu_install_watchface">Installeer de wijzerplaat</string>
+    <string name="menu_installing_watchface">Wijzerplaat installeren…</string>
+    <string name="watchface_installed_active">Wijzerplaat geïnstalleerd en ingesteld als actief</string>
+    <string name="watchface_installed_select">Wijzerplaat is geïnstalleerd, selecteer deze in de wijzerplaatkiezer</string>
+    <string name="watchface_install_failed">Installatie van de wijzerplaat is mislukt</string>
     <string name="menu_none">Geen</string>
     <string name="menu_default">Standaard</string>
     <string name="menu_menu">Menu</string>
     <string name="action_tempt_confirmation">Tijdelijk streefdoel aangevraagd</string>
     <string name="action_quick_wizard_confirmation">QuickWizard aangevraagd</string>
     <string name="action_user_action_confirmation">Gebruiker actie aangevraagd</string>
+    <string name="action_scene_confirmation">Gevraagde scène</string>
+    <string name="scene_end">Einde</string>
     <string name="action_treatment_confirmation">Behandeling aangevraagd</string>
     <string name="action_bolus_confirmation">Bolus aangevraagd</string>
     <string name="action_wizard_confirmation">Berekening aangevraagd</string>
     <string name="action_fill_confirmation">Vullen aangevraagd</string>
     <string name="action_ecarb_confirmation">Koolhydraten aangevraagd</string>
     <string name="action_profile_switch_confirmation">Profiel wisselen aangevraagd</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Streefdoel [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Laag [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Hoog [%s]</string>
     <string name="action_carbs">Koolhydraten</string>
     <string name="action_carbs_gram">Koolhydraten [g]</string>
     <string name="action_ecarbs">eCarbs</string>
