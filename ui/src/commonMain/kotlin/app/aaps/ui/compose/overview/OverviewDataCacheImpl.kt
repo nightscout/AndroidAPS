@@ -282,6 +282,22 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 }
         }
 
+        // Scope-agnostic: new predictions move the right edge of the axis, and the series that are
+        // drawn to that edge have to follow. `timeRangeFlow` alone is not enough - it only carries
+        // the horizon as `TimeRange.endTime`, which is clamped to two hours, and a `StateFlow` drops
+        // a value equal to the last one. So a prediction run that leaves `endTime` where it was
+        // emits nothing here, and the basal would keep the previous horizon while the axis has
+        // already taken the new one.
+        scope.launch {
+            predictionsFlow
+                .debounce(300)
+                .collect {
+                    rebuildRunningModeGraph()
+                    rebuildTargetLine()
+                    rebuildBasalGraph()
+                }
+        }
+
         if (observeDatabase) {
             // Load initial data from database.
             // Gated on app init: updateTbrFromDatabase -> iobCobCalculator.getBasalData ->
@@ -765,6 +781,17 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         return fromTime to toTime
     }
 
+    /**
+     * The current [graphEndTime], with the latest prediction time read from the last loop run.
+     *
+     * A history window has no horizon: it draws a fixed past range, and `loop.lastRun` holds a
+     * prediction time from *now*. Handing that in would stretch a history graph from its own range
+     * all the way to the live horizon - days of minute steps, each one a database read, for a right
+     * edge the reader never asked for. `observeDatabase` is what tells the two windows apart.
+     */
+    private fun graphEndTime(toTime: Long): Long =
+        graphEndTime(if (observeDatabase) loop.lastRun?.constraintsProcessed?.latestPredictionsTime else null, toTime)
+
     private suspend fun rebuildTreatmentGraph() {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
@@ -857,10 +884,12 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
     }
 
-    private suspend fun rebuildRunningModeGraph() {
+    /** Same last-writer-wins hazard as [basalRebuildMutex], across three triggers. */
+    private val runningModeRebuildMutex = Mutex()
+
+    private suspend fun rebuildRunningModeGraph() = runningModeRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
-        var endTime = toTime
-        loop.lastRun?.constraintsProcessed?.let { endTime = max(it.latestPredictionsTime, endTime) }
+        val endTime = graphEndTime(toTime)
 
         // Batch query all RM records in range (instead of per-slot getRunningModeActiveAt)
         val rmRecords = persistenceLayer.getRunningModesFromTimeToTime(fromTime, endTime, true)
@@ -888,11 +917,13 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         _runningModeGraphFlow.value = RunningModeGraphData(segments = segments)
     }
 
-    private suspend fun rebuildTargetLine() {
+    /** Same last-writer-wins hazard as [basalRebuildMutex], across four triggers. */
+    private val targetLineRebuildMutex = Mutex()
+
+    private suspend fun rebuildTargetLine() = targetLineRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val profile = profileFunction.getProfile() ?: return
-        var endTime = toTime
-        loop.lastRun?.constraintsProcessed?.let { endTime = max(it.latestPredictionsTime, endTime) }
+        val endTime = graphEndTime(toTime)
 
         val targets = mutableListOf<GraphDataPoint>()
         var lastTarget = -1.0
@@ -919,12 +950,15 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     /**
      * Serialises basal rebuilds, and is the reason [graphTimeRange] is read *inside* it.
      *
-     * Four separate collectors call [rebuildBasalGraph] - the time-range shift, profile changes,
-     * `TB` changes and `EB` changes - each on its own coroutine. Without this they could run at the
-     * same time, and since the function captures its `toTime` at the top and writes the flow at the
-     * bottom, **the last writer won rather than the newest**: a rebuild that started earlier, with an
-     * older `toTime`, could finish after a fresher one and overwrite it. The graph then ended before
-     * "now" until something triggered another rebuild, which is exactly the reported symptom.
+     * Five separate collectors call [rebuildBasalGraph] - the time-range shift, new predictions,
+     * profile changes, `TB` changes and `EB` changes - each on its own coroutine. Without this they
+     * could run at the same time, and since the function captures its `toTime` at the top and writes
+     * the flow at the bottom, **the last writer won rather than the newest**: a rebuild that started
+     * earlier, with an older `toTime`, could finish after a fresher one and overwrite it. The graph
+     * then ended before "now" until something triggered another rebuild.
+     *
+     * That race is not the only way the line can stop short - see [graphEndTime] for the other one,
+     * which needs no timing at all.
      *
      * Holding the lock across the read makes "finished last" and "started last" the same rebuild, so
      * the freshest range always wins. Reading the range before taking the lock would leave the bug
@@ -934,6 +968,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
     private suspend fun rebuildBasalGraph() = basalRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
+        val endTime = graphEndTime(toTime)
         val profileBasal = mutableListOf<GraphDataPoint>()
         val actualBasal = mutableListOf<GraphDataPoint>()
         var lastProfileBasal = -1.0
@@ -947,14 +982,14 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         // profile switch starts, so it is fetched there and reused in between; the per-minute
         // resolution of the basal values themselves is unchanged.
         val boundaries = profileBoundariesIn(
-            persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(fromTime, toTime, true),
+            persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(fromTime, endTime, true),
             fromTime
         )
         var nextBoundary = 0
         var profile = profileFunction.getProfile(fromTime)
 
         var time = fromTime
-        while (time < toTime) {
+        while (time < endTime) {
             while (nextBoundary < boundaries.size && boundaries[nextBoundary] <= time) {
                 profile = profileFunction.getProfile(time)
                 nextBoundary++
@@ -981,10 +1016,25 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         }
 
         // Final points
-        if (lastProfileBasal >= 0.0) profileBasal.add(GraphDataPoint(toTime, lastProfileBasal))
-        if (lastActualBasal >= 0.0) actualBasal.add(GraphDataPoint(toTime, lastActualBasal))
+        if (lastProfileBasal >= 0.0) profileBasal.add(GraphDataPoint(endTime, lastProfileBasal))
+        if (lastActualBasal >= 0.0) actualBasal.add(GraphDataPoint(endTime, lastActualBasal))
 
         _basalGraphFlow.value = BasalGraphData(profileBasal, actualBasal, maxBasal)
+
+        // Everything needed to see a short line for what it is, without a second run. The last
+        // point of each series is the end the user actually sees, so comparing it against `now`
+        // says how far short the line stopped, and comparing `rangeEnd` against `predictions`
+        // says which of the two put it there. `GraphViewModel` logs the axis end under the same
+        // tag, and the two lines together are the whole story.
+        aapsLogger.debug(LTag.UI) {
+            "Basal graph rebuilt: from=${dateUtil.dateAndTimeAndSecondsString(fromTime)} " +
+                "rangeEnd=${dateUtil.dateAndTimeAndSecondsString(toTime)} " +
+                "predictions=${loop.lastRun?.constraintsProcessed?.latestPredictionsTime?.let { dateUtil.dateAndTimeAndSecondsString(it) } ?: "none"} " +
+                "drawnTo=${dateUtil.dateAndTimeAndSecondsString(endTime)} " +
+                "now=${dateUtil.dateAndTimeAndSecondsString(dateUtil.now())} " +
+                "profile=${profileBasal.size} points ending ${profileBasal.lastOrNull()?.let { dateUtil.dateAndTimeAndSecondsString(it.timestamp) } ?: "nowhere"}, " +
+                "actual=${actualBasal.size} points ending ${actualBasal.lastOrNull()?.let { dateUtil.dateAndTimeAndSecondsString(it.timestamp) } ?: "nowhere"}"
+        }
     }
 
     // =========================================================================
@@ -1155,3 +1205,28 @@ class OverviewDataCacheImpl @AssistedInject constructor(
  */
 internal fun profileBoundariesIn(switches: List<EPS>, fromTime: Long): List<Long> =
     switches.map { it.timestamp }.filter { it > fromTime }.sorted()
+
+/**
+ * How far right to draw a series that is meant to reach the edge of the axis.
+ *
+ * `graphTimeRange` ends at `TimeRange.endTime`, and that is not always the right edge of the chart.
+ * The axis is `max(newest BG / bucketed / prediction point, endTime)` (see
+ * `GraphViewModel.derivedTimeRange`), and `endTime` is the shorter of the two in two ways:
+ *
+ * - `PostCalculationRunner` clamps the horizon to two hours while the predictions themselves are
+ *   not clamped, so the last prediction can sit past `endTime`.
+ * - `PrepareGraphDataRunner` collapses `endTime` back to `toTime` on every pass and
+ *   `PostCalculationRunner` restores it afterwards, so it stays short for as long as that second
+ *   pass does not run - after a failed or skipped loop run, indefinitely.
+ *
+ * A series that stops at `endTime` then ends before the axis does. On the basal graph that reads as
+ * the line simply stopping short of "now", because basal is the one series a reader expects to be
+ * continuous all the way to the right. The running mode band and the target line were each already
+ * extending to the latest prediction with their own copy of this line; this is the same rule in one
+ * place, so the three cannot drift apart again.
+ *
+ * [latestPredictionsTime] is null when no loop run is on record, which is not the same as zero: it
+ * means "no horizon known", and then the range's own end is all there is.
+ */
+internal fun graphEndTime(latestPredictionsTime: Long?, toTime: Long): Long =
+    max(latestPredictionsTime ?: 0L, toTime)
