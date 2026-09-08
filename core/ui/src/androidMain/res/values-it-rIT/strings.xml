@@ -66,7 +66,6 @@
     <string name="confirm_pin_hint">Conferma il PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Indicatori di stato</string>
-    <string name="copy_existing_values">Copiare impostazioni NS (se esiste)?</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_bgsource">Sorgente Glicemia</string>
     <string name="configbuilder_smoothing">Smoothing</string>
@@ -249,7 +248,6 @@
     <string name="pin_dont_match">I PIN non coincidono</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Cancella basale temporanea</string>
     <string name="let_temp_basal_run">Lascia eseguire la basale temporanea</string>
@@ -286,7 +284,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Portale</string>
     <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_mbg">BG manuale o Calibrazione</string>
     <string name="careportal_announcement">Avviso</string>
@@ -337,7 +334,6 @@
     <string name="scene_conflict_active_running_mode">La modalità di esecuzione attiva verrà sostituita</string>
     <string name="scene_conflict_active_scene">Scena attiva \"%1$s\" sarà terminata prima</string>
     <string name="scene_action_tt">Temp-Target %1$s</string>
-    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profilo: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profilo: %1$d%%</string>
     <string name="scene_action_smb_on">Abilita SMB</string>
     <string name="scene_action_smb_off">Disabilita SMB</string>
@@ -628,7 +624,6 @@
     <string name="uel_scene_deactivated">SCENA DISATTIVATA</string>
     <string name="uel_remote_config_changed">CONFIG REMOTA MODIFICATA</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Valore inferiore target temporaneo</string>
     <string name="temp_target_high_target">Valore superiore target temporaneo</string>
     <string name="temp_target_value">Valore target temporaneo</string>
     <string name="insulin_dia">Valore del DIA dell’insulina</string>
@@ -787,7 +782,6 @@
     <string name="close">Chiudi</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
-    <string name="export_ok">OK</string>
     <string name="export_warning">Avviso</string>
     <string name="export_expired">Scaduto</string>
     <string name="export_disabled">Disabilitato</string>
@@ -854,7 +848,6 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
     <!--    Pump pair/unpair (shared) -->
-    <string name="pump_pair">Accoppiamento</string>
     <string name="pump_unpair">Disaccoppia</string>
     <string name="pump_unpair_confirm_title">Disassocia micro?</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
@@ -945,7 +938,6 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS riproduce audio"</string>
     <!-- ProfileEditor -->
-    <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
     <string name="profile_name">Nome profilo:</string>
     <string name="edit_profile_name">Modifica nome profilo</string>
@@ -1007,8 +999,6 @@
     <string name="import_wrong_password">Password errata</string>
     <string name="import_btn">Importa</string>
     <string name="import_anyway_btn">Importa Comunque</string>
-    <string name="import_restart_title">Impostazioni importate</string>
-    <string name="import_restart_message">Le impostazioni sono state importate. L\'applicazione deve riavviarsi.</string>
     <string name="import_source_local">Locale</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Carica altro</string>
@@ -1021,7 +1011,6 @@
     <string name="nav_resetdb">Reset database</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Trova Micro</string>
-    <string name="ble_scan_select_pump">Seleziona il tuo micro dall\'elenco qui sotto</string>
     <string name="ble_scan_scanning">Ricerca dispositivi in corso...</string>
     <!-- Graph configuration -->
     <string name="graph_add">Aggiungi grafico</string>
@@ -1050,8 +1039,6 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_grams">%1$d g</string>
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
     <string name="units_format_hours_double">%1$.0f h</string>
     <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
