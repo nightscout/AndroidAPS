@@ -61,6 +61,10 @@
     <string name="pref_single_target">Jeden cieľ</string>
     <string name="pref_wizard_percentage">Percento kalkulačky</string>
     <string name="pref_complication_tap_action">Zadaj komplikáciu</string>
+    <string name="pref_complication_bg_graph_hours">Časový rozsah grafu glykémie</string>
+    <string name="duration_1_hour">1 hodina</string>
+    <string name="duration_3_hours">3 hodiny</string>
+    <string name="duration_6_hours">6 hodín</string>
     <string name="pref_unicode_in_complications">Unicode v komplikáciach</string>
     <string name="pref_version">Verzia:</string>
     <string name="pref_moreWatchfaceSettings">Ďalšie nastavenia ciferníka</string>
@@ -79,6 +83,11 @@
     <string name="menu_bg_graph">Graf glykémie</string>
     <string name="menu_resync">Opätovne synchronizovať</string>
     <string name="menu_prime_fill">Plnenie/Doplňovanie</string>
+    <string name="menu_install_watchface">Nainštalovať ciferník</string>
+    <string name="menu_installing_watchface">Inštalácia ciferníka…</string>
+    <string name="watchface_installed_active">Ciferník bol nainštalovaný a nastavený ako aktívny</string>
+    <string name="watchface_installed_select">Ciferník bol nainštalovaný, vyberte ho v zozname ciferníkov</string>
+    <string name="watchface_install_failed">Inštalácia ciferníka zlyhala</string>
     <string name="menu_none">Žiadny</string>
     <string name="menu_default">Štandardný</string>
     <string name="menu_menu">Ponuka</string>
@@ -98,6 +107,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Vysoká [%s]</string>
     <string name="action_carbs">Sacharidy</string>
     <string name="action_carbs_gram">Sacharidy [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Max. odstránenie: %1$d g (COB)</string>
     <string name="action_ecarbs">eSacharidy</string>
     <string name="action_percentage">Percento\n[%]</string>
     <string name="action_start_minutes">Spustiť\n[minúty]</string>
@@ -253,7 +263,9 @@
     <string name="contacting_master_unknown">Neznámy stav – skontrolujte telefón</string>
     <string name="tile_settings">Nastavenie dlaždice</string>
     <string name="loop_status_error">Nepodarilo sa načítať stav</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">zostáva %1$s</string>
     <string name="loop_status_tbr_continues">Dočasný bazál pokračuje</string>
     <string name="loop_status_tbr_cancel">Nastavujem normálny bazál</string>
     <string name="loop_status_smb">%1$.2f U</string>
