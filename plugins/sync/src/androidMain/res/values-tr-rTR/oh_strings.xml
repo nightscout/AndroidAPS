@@ -44,7 +44,7 @@
     <string name="login_open_humans">Open Humans için Giriş Yapın</string>
     <string name="final_touches">Son rötuşlar</string>
     <string name="uploading_proceed">Verilerinizi Open Humans\'a yüklemenize sadece bir adım kaldı. Devam etmek istiyor musunuz?</string>
-    <string name="cancel">İptal</string>
+    <string name="cancel">Vazgeç</string>
     <string name="proceed">Devam Edin</string>
     <string name="finishing">Bitiriliyor...</string>
     <string name="this_may_take_a_few_seconds">Bu işlem birkaç saniye sürebilir.</string>
