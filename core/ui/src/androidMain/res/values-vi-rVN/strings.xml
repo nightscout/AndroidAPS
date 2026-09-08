@@ -257,6 +257,7 @@
     <string name="pin_dont_match">Mã PIN không khớp</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Bắt đầu cấu hình %1$d%% trong %2$d phút</string>
     <!--    APSResult-->
     <string name="cancel_temp">Huỷ liều liều nền tạm thời</string>
     <string name="let_temp_basal_run">Cho liều nền tạm thời tiếp tục</string>
@@ -293,6 +294,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Thông tin điều trị</string>
     <string name="careportal_bgcheck">Kiểm tra BG</string>
     <string name="careportal_mbg">Đường huyết nhập tay hoặc hiệu chuẩn</string>
     <string name="careportal_announcement">Thông báo</string>
@@ -343,6 +345,7 @@
     <string name="scene_conflict_active_running_mode">Chế độ đang hoạt động sẽ được thay thế</string>
     <string name="scene_conflict_active_scene">Ngữ cảnh đang hoạt động “%1$s” sẽ được kết thúc trước</string>
     <string name="scene_action_tt">Mục tiêu tạm thời: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Cấu hình: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Cấu hình: %1$d%%</string>
     <string name="scene_action_smb_on">Kích hoạt SMB</string>
     <string name="scene_action_smb_off">Vô hiệu hóa SMBs</string>
@@ -616,6 +619,7 @@
     <string name="ue_string">Chuỗi</string>
     <string name="ue_source">Nguồn</string>
     <string name="ue_utc_offset">UTC Offset</string>
+    <string name="ue_action">Action</string>
     <string name="ue_timestamp">Mốc thời gian</string>
     <string name="ue_none">Không có đơn vị</string>
     <string name="uel_loop_change">VÒNG LẶP ĐÃ THAY ĐỔI</string>
@@ -632,6 +636,7 @@
     <string name="uel_scene_deactivated">ĐÃ TẮT NGỮ CẢNH</string>
     <string name="uel_remote_config_changed">CẤU HÌNH TỪ XA ĐÃ THAY ĐỔI</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Giá trị dưới của mục tiêu tạm thời</string>
     <string name="temp_target_high_target">Giá trị cao của mục tiêu tạm thời</string>
     <string name="temp_target_value">Giá trị mục tiêu tạm thời</string>
     <string name="insulin_dia">Thời gian tác dụng của insulin</string>
@@ -767,6 +772,7 @@
     <string name="initializing">Đang khởi chạy…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Cảnh báo</string>
+    <string name="alert" comment="Generic alert dialog title">Cảnh báo</string>
     <string name="retry" comment="Button label to retry a failed operation">Thử lại</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Kết thúc</string>
     <string name="firmware" comment="Pump firmware version label">Phần mềm</string>
@@ -857,6 +863,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Yêu cầu của người dùng</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Ghép nối</string>
     <string name="pump_unpair">Hủy ghép nối</string>
     <string name="pump_unpair_confirm_title">Hủy ghép nối bơm?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
@@ -877,6 +884,7 @@
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Cấu hình</string>
+    <string name="nav_setupwizard">Setup Wizard</string>
     <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
     <string name="statistics">Thống kê</string>
     <string name="statistics_desc">Xem thống kê và báo cáo</string>
@@ -949,6 +957,7 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS phát âm thanh"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
     <string name="profile_name">Tên cấu hình:</string>
     <string name="edit_profile_name">Sửa tên cấu hình</string>
@@ -1010,6 +1019,14 @@
     <string name="import_wrong_password">Sai mật khẩu</string>
     <string name="import_btn">Nhập</string>
     <string name="import_anyway_btn">Vẫn nhập</string>
+    <string name="import_apply_title">Đã nhập cài đặt</string>
+    <string name="import_apply_message">Các cài đặt đã nhập sẽ được áp dụng ngay bây giờ. Các plugin có thay đổi sẽ được khởi động lại.</string>
+    <string name="import_apply_waiting">Đang chờ phản hồi từ Bơm…</string>
+    <string name="import_apply_pump_busy">Bơm vẫn đang bận nên các cài đặt chưa được áp dụng.</string>
+    <string name="import_apply_retry_question">Thử lại ngay bây giờ?</string>
+    <string name="import_applied_title">Cài đặt đã áp dụng</string>
+    <string name="import_applied_message">Các cài đặt đã nhập hiện đang được sử dụng.</string>
+    <string name="import_apply_pump_changed">Đã hủy: bơm đã được thay đổi bởi quá trình nhập cài đặt</string>
     <string name="import_source_local">Cục bộ</string>
     <string name="import_source_cloud">Đám mây</string>
     <string name="import_load_more">Tải thêm</string>
@@ -1022,6 +1039,7 @@
     <string name="nav_resetdb">Đặt lại cơ sở dữ liệu</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Tìm bơm</string>
+    <string name="ble_scan_select_pump">Chọn bơm của bạn từ danh sách bên dưới</string>
     <string name="ble_scan_scanning">Đang quét các thiết bị…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Thêm biểu đồ</string>
@@ -1050,6 +1068,8 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
     <string name="units_format_hours_double">%1$.0f h</string>
     <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
