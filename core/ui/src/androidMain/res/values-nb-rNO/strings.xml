@@ -1055,6 +1055,8 @@
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours">%1$d t</string>
+    <string name="units_format_hours_double">%1$.1f t</string>
+    <string name="units_format_hours_double_range">%1$.1f t (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d t (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f E</string>
     <string name="units_format_insulin_int">%1$d E</string>
