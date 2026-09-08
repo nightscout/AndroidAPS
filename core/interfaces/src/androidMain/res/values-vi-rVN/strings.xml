@@ -9,7 +9,7 @@
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Thay trình điều khiển Bơm.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$dm ago</string>
+    <string name="minago">%1$dphút trước</string>
     <string name="secago">%1$ds ago</string>
     <string name="min_plus">(+%1$dm)</string>
     <string name="sec_plus">(+%1$ds)</string>
@@ -55,7 +55,7 @@
     <string name="handshaking">Đang bắt tay</string>
     <string name="connected">Đã kết nối</string>
     <string name="authorized">Đã ủy quyền</string>
-    <string name="disconnecting">Ngắt kết nối</string>
+    <string name="disconnecting">Đang ngắt kết nối</string>
     <string name="waiting_for_disconnection">Đang chờ ngắt kết nối</string>
     <!-- Custom Watchface -->
     <string name="metadata_label_watchface_created_at">Đã tạo lúc: %1$s</string>
@@ -68,8 +68,8 @@
     <string name="pref_show_iob">Hiển thị IOB</string>
     <string name="pref_show_detailed_iob">Hiển thị chi tiết IOB</string>
     <string name="pref_show_cob">Hiển thị COB</string>
-    <string name="pref_show_delta">Hiển thị độ lệch</string>
-    <string name="pref_show_detailed_delta">Hiển thị chi tiết độ lệch</string>
+    <string name="pref_show_delta">Hiển thị Delta</string>
+    <string name="pref_show_detailed_delta">Hiển thị chi tiết Delta</string>
     <string name="pref_show_avgdelta">Hiển thị AvgDelta</string>
     <string name="pref_show_tempTarget">Hiển thị mục tiêu tạm thời</string>
     <string name="pref_show_reservoir_level">Hiển thị mức bình chứa</string>
@@ -80,7 +80,7 @@
     <string name="pref_show_bg">Hiển thị đường huyết</string>
     <string name="pref_show_bgi">Hiển thị BGI</string>
     <string name="pref_show_direction_arrow">Hiển thị mũi tên xu hướng</string>
-    <string name="pref_show_ago">Hiển thị thời gian trước</string>
+    <string name="pref_show_ago">Hiển thị quá khứ</string>
     <string name="pref_show_week_number">Hiển thị số tuần</string>
     <string name="pref_show_date">Hiển thị ngày</string>
     <string name="pref_show_seconds">Hiển thị giây</string>

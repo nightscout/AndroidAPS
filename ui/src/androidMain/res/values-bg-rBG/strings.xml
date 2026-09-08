@@ -41,7 +41,6 @@
     <string name="bg_sensor">Сензор</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="edit_site">Редакция</string>
     <string name="record_site_location">Локация: %1$s</string>
     <string name="record_site_arrow">Локация стрелка: %1$s</string>
     <string name="record_site_note">Бележка: %1$s</string>
@@ -151,9 +150,8 @@
     <string name="cannot_delete_last_insulin">Не мога да изтрия последния инсулин</string>
     <string name="cannot_delete_active_insulin">Не мога да изтрия текущия инсулин</string>
     <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
-    <string name="percentage_label">% от профила</string>
+    <string name="percentage_label">Процент</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Изключване на помпата</string>
     <string name="resume">Възстанови</string>
     <string name="reconnect">Свържи помпа</string>
     <string name="duration15m">15 мин</string>
@@ -174,7 +172,7 @@
     <string name="show_invalidated">Покажи невалидните</string>
     <string name="hide_invalidated">Скрий невалидните</string>
     <string name="careportal_remove_started_events">Премахни започнатите от AAPS записи</string>
-    <string name="user_entry">Потербителска настройка</string>
+    <string name="user_entry">От потребител</string>
     <string name="clone_label">Клонирай</string>
     <string name="add_new_profile">Добавяне на нов профил</string>
     <string name="edit_label">Редакция</string>

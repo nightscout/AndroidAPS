@@ -26,7 +26,7 @@
     <string name="extended_boluses">Bolos extendidos</string>
     <string name="carbohydrates">Carbohidratos</string>
     <string name="careportal_events">Eventos del portal de cuidados (excepto notas)</string>
-    <string name="profile_switches">Cambios del perfil</string>
+    <string name="profile_switches">Cambios de perfil</string>
     <string name="total_daily_doses">Total de dosis diaria</string>
     <string name="temporary_basal_rates">Tasas basales temporales</string>
     <string name="temporary_targets">Objetivos temporales</string>

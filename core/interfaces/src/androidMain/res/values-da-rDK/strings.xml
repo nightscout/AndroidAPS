@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Bekræftelse</string>
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpe driver ændret.</string>
@@ -58,10 +59,15 @@
     <string name="pref_show_direction_arrow">Vis Retningspil</string>
     <string name="pref_show_ago">Vis alder</string>
     <string name="pref_show_week_number">Vis ugenummer</string>
+    <string name="pref_show_date">Vis dato</string>
     <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTÉR URSKIVE-knappen for at generere en skabelon</string>
     <string name="wear_default_watchface">Standard Urskive</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Spidstidspunkt [min]</string>
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
@@ -69,16 +75,13 @@
     <string name="alarminxmin">Kør alarm om %1$d min</string>
     <string name="pumpsuspended">Pumpe er afbrudt</string>
     <string name="loopsuspended">Loop suspenderet</string>
-    <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal dosis erstattet af maximal understøttet dosis: %1$s</string>
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
-    <string name="mins">%1$d min</string>
     <string name="record">Registrér</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">FORLÆNGET KH</string>
-    <string name="profile_low_target">Nedre målværdi for profilen</string>
     <string name="profile_high_target">Øvre målværdi for profilen</string>
     <string name="profile_dia">Profil DIA værdi</string>
     <string name="profile_sensitivity_value">Profil følsomhed værdi</string>

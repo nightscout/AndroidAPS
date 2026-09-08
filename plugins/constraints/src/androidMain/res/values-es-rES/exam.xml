@@ -45,7 +45,7 @@
     <string name="exerciseprofile_switchprofilebelow100">Cambie el perfil por un valor menor a 100%.</string>
     <string name="exerciseprofile_switchprofileabove100">Cambie el perfil por un valor mayor a 100%.</string>
     <string name="exerciseprofile_leaveat100">Dejar el perfil configurado al 100%.</string>
-    <string name="exerciseprofile_suspendloop">Suspender el lazo</string>
+    <string name="exerciseprofile_suspendloop">Suspender el bucle.</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="exercise_label">Ejercicios y objetivos temporales</string>
     <string name="exercise_whattodo">¿Cómo se puede usar el objetivo temporal de glucosa para ayudar al sistema durante los ejercicios aeróbicos?</string>
@@ -56,7 +56,7 @@
     <string name="exercise_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="basaltest_label">Pruebas para basales, I:C y FSI</string>
     <string name="basaltest_when">¿Cada cuándo se deben validar estos valores?</string>
-    <string name="basaltest_beforeloop">Antes de empezar el lazo</string>
+    <string name="basaltest_beforeloop">Antes de empezar cualquier bucle.</string>
     <string name="basaltest_havingregularhighlow">Cuando los valores de glucosa son muy altos o bajos de manera frecuente.</string>
     <string name="basaltest_weekly">Al menos una vez a la semana.</string>
     <string name="basaltest_fixed">Una vez establecidos y validados, estos valores no deberían cambiar a lo largo del tiempo.</string>

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
+    <string name="error_mustbe4hexadidits">ABCDEF043456789로 구성된 4자리 문자이어야 함</string>
     <!--    General-->
+    <string name="count_selected">%1$d 선택됨</string>
+    <string name="show_invalidated">무효화 표시</string>
+    <string name="hide_invalidated">무효화 숨기기</string>
     <string name="refresh">새로고침</string>
     <string name="error">에러</string>
     <string name="profile_set_ok">Basal 프로파일이 펌프에 업데이트 되었습니다</string>
@@ -27,11 +32,23 @@
     <string name="settings">설정</string>
     <string name="statuslights">상태 등</string>
     <string name="configbuilder_insulin">인슐린</string>
+    <string name="configbuilder_bgsource">혈당 출처</string>
+    <string name="configbuilder_smoothing">평탄화</string>
+    <string name="configbuilder_pump">펌프</string>
+    <string name="configbuilder_sensitivity">민감도 감지</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_general">일반</string>
+    <string name="protection">보안</string>
     <string name="value_unavailable_short">사용불가</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">사용자 항목 엑셀 파일로 내보내기 (csv)</string>
     <string name="confirm">확인</string>
     <string name="pump">펌프</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">업로더</string>
+    <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">혈당 읽기가 누락되었습니다.</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">5분 동안 음소거</string>
@@ -88,6 +105,7 @@
     <string name="wrong_pump_data">다른 펌프에서 전송된 데이터. 펌프 상태 재설정을 위해 펌프 드라이버를 바꾸세요.</string>
     <string name="bg_label">혈당</string>
     <string name="calibration">보정</string>
+    <string name="cgm">CGM</string>
     <string name="duration_label">기간</string>
     <string name="shortgramm">g</string>
     <string name="notconfigured">설정되지 않음</string>
@@ -107,6 +125,8 @@
     <string name="activate_profile">프로파일 활성화하기</string>
     <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
     <string name="profile">프로파일</string>
+    <string name="percentage_label">퍼센트</string>
+    <string name="timeshift_label">시간 이동</string>
     <string name="confirm_remove_multiple_items">정말로 %1$d 항목을 제거하시겠습니까?</string>
     <string name="overview_treatment_label">관리</string>
     <string name="copytolocalprofile">이 프로파일에서 새로운 프로파일을 생성하시겠습니까?</string>
@@ -114,6 +134,7 @@
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="invalid">유효하지 않음</string>
     <string name="login">로그인</string>
+    <string name="logout">로그아웃</string>
     <string name="prime_fill">프라임/채우기</string>
     <string name="overview_insulin_label">인슐린</string>
     <string name="stoptemptarget">임시 목표 중지</string>
@@ -129,6 +150,11 @@
     <string name="iob_label">활성 인슐린 (IOB)</string>
     <string name="loopstatus_targets">목표:</string>
     <string name="loopstatus_OAPS_result">OAPS 결과:</string>
+    <string name="nav_export">설정 저장하기</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
+    <string name="engineering_mode_enabled">전문가 모드 사용</string>
+    <string name="next">다음</string>
+    <string name="show_hide_records">Loop 기록 숨기기</string>
     <!--    Protection-->
     <string name="wrongpassword">잘못된 비밀번호</string>
     <string name="wrongpin">잘못된 PIN</string>
@@ -136,7 +162,6 @@
     <string name="pin_dont_match">PIN이 일치하지 않습니다</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">프로파일 %1$d%%을 %2$d 분 동안 시작</string>
     <!--    APSResult-->
     <string name="cancel_temp">임시 basal 취소하기</string>
     <string name="let_temp_basal_run">임시Basal 허용</string>
@@ -147,10 +172,20 @@
     <!--    Insulin / Concentration-->
     <!--       Stats -->
     <string name="average">평균</string>
+    <string name="below" comment="below &quot;in range&quot;">이하</string>
+    <string name="in_range">범위 내</string>
+    <string name="low" comment="3.1-3.9">저혈당</string>
+    <string name="high" comment="10.0-13.9">고혈당</string>
+    <string name="veryHigh" comment="above 13.9">매우 높음</string>
+    <string name="above" comment="above &quot;in range&quot;">초과</string>
+    <string name="detailed_14_days">상세 14일</string>
+    <string name="day_tir">일 TIR</string>
+    <string name="night_tir">밤 TIR</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">케어포털</string>
     <string name="careportal_bgcheck">혈당 체크</string>
     <string name="careportal_mbg">수동 BG 값 입력 또는 보정</string>
     <string name="careportal_announcement">알림</string>
@@ -180,6 +215,7 @@
     <string name="careportal_temporarytargetvalue">임시 목표 수치</string>
     <string name="careportal_temporarytargetcancel">임시 목표 취소</string>
     <string name="boluswizard">Bolus 마법사</string>
+    <string name="user_entry">사용자 항목</string>
     <string name="glucosetype_finger">채혈</string>
     <string name="glucosetype_sensor">센서</string>
     <string name="manual">수동</string>
@@ -294,7 +330,6 @@
     <string name="uel_loop_change">Loop 변경됨</string>
     <string name="uel_loop_removed">Loop 제거됨</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">임시 목표 최저값</string>
     <string name="temp_target_high_target">임시 목표 최고값</string>
     <string name="temp_target_value">임시 목표 수치</string>
     <string name="profile_max_daily_basal_value">프로파일의 최대 basal 값</string>
@@ -302,6 +337,14 @@
     <string name="valuelimitedto">%1$.2f은 %2$.2f까지 제한됨</string>
     <string name="valueoutofrange">»%1$s«이 \'고정된 한계값\'을 벗어났습니다.</string>
     <!-- Profile validation -->
+    <string name="missing_profile_name">프로파일 이름 없음</string>
+    <string name="error_in_ic_values">IC 값 오류</string>
+    <string name="error_in_isf_values">ISF 값 오류</string>
+    <string name="error_in_basal_values">Basal 값 오류</string>
+    <string name="error_in_target_values">목표 값 오류</string>
+    <string name="profile_name_contains_dot">일부 프로파일 이름에 점을 포함하고 있습니다.\nNS에서 지원하지 않습니다.\n프로파일은 NS에 업로드되지 않습니다.</string>
+    <string name="invalid_profile_not_accepted">NS에서 잘못된 프로파일 %1$s이 허용되지 않습니다</string>
+    <string name="errors">에러</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">탄수화물 %1$d g</string>
@@ -315,6 +358,8 @@
     <string name="set_profile">프로파일 설정하기</string>
     <string name="set_user_settings">사용자 설정 설정하기</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
+    <string name="start_pump">펌프 시작</string>
+    <string name="stop_pump">펌프 중지</string>
     <string name="temp_basal_absolute">임시 BASAL %1$.2f U/h %2$d 분</string>
     <string name="temp_basal_percent">임시 BASAL %1$d%% %2$d 분</string>
     <string name="insight_set_tbr_over_notification">알림에 대한 인식 설정 TBR</string>
@@ -341,6 +386,7 @@
     <string name="wizard_carbs_constraint">탄수화물 제한 위반!</string>
     <string name="wizard_constraint_bolus_size">인슐린 제약 위반!\n %1$.2fU을 전달할 수 없습니다</string>
     <string name="wizard_pump_not_available">이용가능한 펌프가 없습니다!</string>
+    <string name="quick_wizard_not_available">선택한 빠른 마법사를 더 이상 사용할 수 없습니다, 타일을 새로고침 하십시오</string>
     <!--    Preferences-->
     <string name="child">어린이</string>
     <string name="teenage">청소년</string>
@@ -371,6 +417,7 @@
     <string name="device_changed" comment="26 characters max for translation">장치가 교체되었습니다</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">임시Basal 주입 에러</string>
+    <string name="ebstopsloop">확장 Bolus 기능을 사용하는 동안에는 Closed Loop 모드가 중지됩니다. 정말 원하십니까?</string>
     <string name="pump_busy">펌프가 바쁩니다</string>
     <string name="connection_error">펌프 연결 에러</string>
     <string name="reading_pump_history">펌프 이력 읽기</string>
@@ -393,9 +440,13 @@
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
+    <string name="export_to">다음 위치에 설정을 저장하시겠습니까</string>
+    <string name="password_preferences_encrypt_prompt">내보낸 preferences 암호화 하기 위해 마스터 비밀번호가 필요합니다.</string>
+    <string name="preferences_export_canceled">내보내기 취소됩니다! 환경 설정을 내보내지 않았습니다!</string>
     <!-- <unattended_export result messages> -->
     <!-- Cloud export -->
     <!-- Export destination chip labels -->
+    <string name="data_choices">데이터선택</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
     <!-- datetime layout -->
@@ -413,8 +464,20 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">플러그인 설정</string>
     <!-- Navigation -->
+    <string name="nav_exit">종료</string>
+    <string name="open_navigation">메뉴 열기</string>
+    <string name="nav_history_browser">이력 브라우저</string>
+    <string name="nav_setupwizard">설정 마법사</string>
+    <string name="statistics">통계</string>
+    <string name="nav_profile_helper">프로파일 보조기</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="extended_bolus_button">확장 Bolus</string>
+    <string name="sensor_label">센서</string>
+    <string name="insulin_label">인슐린</string>
+    <string name="pb_label">펌프 배터리</string>
+    <string name="cannula">캐뉼라</string>
+    <string name="patch_pump">패치 펌프</string>
     <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">앱이 종료되지 않도록 해야합니다?</string>
@@ -433,6 +496,7 @@
     <string name="cleanup_db_confirm">데이터베이스를 정리하시겠습니까?\n3개월 이상 경과한 추적된 변경 내용 및 기록 데이터가 제거됩니다.</string>
     <string name="cleanup_db_confirm_sync">데이터베이스를 정리하시겠습니까?\n3개월 이상 경과한 추적된 변경 내용 및 기록 데이터가 제거됩니다.\n이 작업을 수행하면 전체 동기화 속도가 크게 향상됩니다.</string>
     <string name="cleared_entries">입력된 내용 제거됨</string>
+    <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">일</string>
     <string name="weekday_saturday_short">토</string>
@@ -445,12 +509,27 @@
     <string name="format_insulin_units1">%1$.1f U</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
+    <string name="target_short">TARG</string>
+    <string name="profile_name">프로파일명:</string>
+    <string name="units_colon">단위:</string>
+    <string name="discard">폐기</string>
     <!--    Search-->
     <!--    Food Management -->
+    <string name="category">분류</string>
+    <string name="subcategory">하위 분류</string>
     <!--    Log Settings-->
+    <string name="resettodefaults">기본값으로 초기화</string>
     <!--    Maintenance-->
+    <string name="maintenance">정비</string>
+    <string name="description_maintenance">정비를 위한 여러가지 기능을 제공합니다.(예, 로그 전송,로그 삭제 등)</string>
+    <string name="log_files">로그 파일</string>
+    <string name="delete_logs">로그 삭제하기</string>
+    <string name="import_setting">설정 불러오기</string>
     <!-- Import settings screen -->
+    <string name="database_cleanup">데이터베이스 정리하기</string>
+    <string name="nav_resetdb">데이터베이스 초기화</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">차트 표시 범위</string>
 </resources>

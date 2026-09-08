@@ -9,6 +9,7 @@
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktivitetsovervågning</string>
+    <string name="time_range">Tidsinterval</string>
     <string name="do_you_want_reset_stats">Ønsker du at nulstille aktivitetsstatistik?</string>
     <string name="calculation_in_progress">Beregning i gang</string>
     <string name="age">Alder</string>
@@ -32,7 +33,6 @@
     <string name="reuse_profile_pct_hours">Genbrug %1$d%% %2$dt</string>
     <string name="percentage_label">Procentdel</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Afbryd pumpe</string>
     <string name="resume">Genoptag</string>
     <string name="reconnect">Genforbind Pumpe</string>
     <string name="duration15m">15 minutter</string>
@@ -52,8 +52,10 @@
     <string name="careportal_remove_started_events">Fjern AAPS startede poster</string>
     <string name="user_entry">Bruger indtastning</string>
     <string name="clone_label">Klon</string>
+    <string name="activate_profile">Aktivér profil</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil type</string>
+    <string name="profile_switches">Profilskift</string>
     <string name="basal_pct_from_tdd_label">% af basal</string>
     <string name="selected_profile">Valgt:</string>
     <string name="motol_default_profile">Standard profil</string>

@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Vis akutte alarmer som Android-varsler</string>
     <string name="pref_title_alert_increase_volume">Øk varselvolumet gradvis</string>
     <string name="pref_title_alert_override_dnd">Overstyr ikke forstyrr-modus</string>
-    <string name="pref_summary_alert_override_dnd">Når aktivert spilles AAPS-alarmer av selv i lydløsmodus og ikke forstyrr (alarmkanal). Når deaktivert følger alarmer lydløsmodus/ikke forstyrr (varslingskanal).</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Last opp BS-data til NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Logg sensorskifte</string>
@@ -178,7 +177,6 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Beskyttelsestidsavbrudd</string>
     <string name="pref_title_protection_type_application">Nivå 0: Appbeskyttelse</string>
-    <string name="pref_summary_protection_type_application">Appstart. Uavhengig av andre nivåer</string>
     <string name="pref_title_protection_type_bolus">Nivå 1: Bolusbeskyttelse</string>
     <string name="pref_summary_protection_type_bolus">Behandlinger, profilaktivering. Krever nivå 2</string>
     <string name="pref_title_protection_type_settings">Nivå 2: Innstillingsbeskyttelse</string>
@@ -237,7 +235,6 @@
     <string name="pref_title_units">Enheter</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Språk</string>
     <string name="lang_default">Systemstandard</string>
     <string name="lang_en">Engelsk</string>
     <string name="lang_af">Afrikaans</string>

@@ -4,18 +4,17 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Nastavenie pripojenia</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="description_ns_client_v3">Synchronizuje vaše dáta s Nightscoutom pomocou v3 API</string>
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
     <string name="no_connectivity">Žiadne pripojenie</string>
     <string name="unsupported_ns_version">Nepodporovaná verzia Nighscoutu</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Autorizovaní klienti</string>
     <string name="authorized_clients_add">Pridať klienta</string>
     <string name="authorized_clients_comm_switch_title">Povoliť ovládanie klientom</string>
     <string name="authorized_clients_comm_switch_summary">Umožnite spárovaným klientom odosielať podpísané príkazy cez Nightscout. Vypnutím zastavíte komunikáciu bez ich odstránenia.</string>
+    <string name="authorized_clients_needs_websocket">Websockety sú vypnuté, takže príkazy od klientov nie je možné prijímať. Klienti budú tento master vnímať tak, že neprijíma príkazy, kým websockety nezapnete.</string>
     <string name="authorized_clients_state_active">Aktívny</string>
     <string name="authorized_clients_state_pending">Čakajúce</string>
     <string name="authorized_clients_last_seen">Naposledy videný %1$s</string>
@@ -77,6 +76,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Nahrávánie dát na Tidepool</string>
     <string name="upload_now">Nahrať teraz</string>
+    <string name="tidepool_purge_data">Zmazať všetky dáta</string>
+    <string name="tidepool_purge_data_confirm">VYMAZAŤ VŠETKY dáta, ktoré boli z AAPS nahraté do Tidepoolu? Túto akciu nie je možné vrátiť späť. Použite ju k odstráneniu dát poškodených použitím staršej verzie, potom spustite „Úplnú synchronizáciu\" a znovu ich nahrajte.</string>
     <string name="not_connected">Nepripojené</string>
     <string name="read_only">Iba na čítanie</string>
     <string name="working">Pracujem</string>
@@ -103,7 +104,7 @@
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
     <string name="pump_status">Stav pumpy</string>
-    <string name="loop_status">Stav uzavretého okruhu</string>
+    <string name="loop_status">Stav okruhu</string>
     <string name="user_action_not_available">Vybratá akcia užívateľa %1$s už viac nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="scene_not_available">Vybratá scéna %1$s nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Vzdialené príkazy pre inzulín sú v klientskom režime zakázané</string>
@@ -130,7 +131,6 @@
     <string name="disabled">Vypnuté</string>
     <string name="pump_fetching_data">pokus o načítanie dát z pumpy.</string>
     <string name="pump_old_data">CDD: Stále staré dáta! Nie je možné načítať z pumpy.</string>
-    <string name="units_short">U</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="target_only_aps_mode">Ciele sa použijú iba v režime APS!</string>

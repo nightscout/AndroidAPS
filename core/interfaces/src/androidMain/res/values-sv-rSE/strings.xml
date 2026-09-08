@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Bekräftelse</string>
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpdrivr. byttes.</string>
@@ -58,6 +59,7 @@
     <string name="pref_show_direction_arrow">Visa riktningspil</string>
     <string name="pref_show_ago">Visa tid sedan</string>
     <string name="pref_show_week_number">Visa veckonummer</string>
+    <string name="pref_show_date">Visa datum</string>
     <string name="default_custom_watchface_comment">Standard-urtavla - du kan klicka på EXPORTERA URTAVLA för att generera en mall</string>
     <string name="wear_default_watchface">Standard-urtavla</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
@@ -69,16 +71,13 @@
     <string name="alarminxmin">Larma om %1$d min</string>
     <string name="pumpsuspended">Pump pausad</string>
     <string name="loopsuspended">Loop pausad</string>
-    <string name="basalprofilenotaligned">Profilens basaler är inte satta på hel timme: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basalvärdet ersatt med det lägsta tillåtna: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basalvärdet ersatt med det högsta tillåtna: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
-    <string name="mins">%1$d min</string>
     <string name="record">Post</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">FÖRLÄNGDA KH</string>
-    <string name="profile_low_target">Nedre målvärde för profilen</string>
     <string name="profile_high_target">Övre målvärde för profilen</string>
     <string name="profile_dia">Profilens DIA</string>
     <string name="profile_sensitivity_value">Profilens insulinkänslighetsvärde</string>

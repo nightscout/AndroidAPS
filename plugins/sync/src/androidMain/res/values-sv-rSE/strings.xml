@@ -4,7 +4,6 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Anslutningsinställningar</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="description_ns_client_v3">Synkroniserar dina data med Nightscout genom v3 API</string>
     <string name="blocked_by_charging">Blockerad av laddningsinställningar</string>
     <string name="blocked_by_connectivity">Blockerad av anslutningsinställningar</string>
     <string name="unsupported_ns_version">Versionen av Nightscout stöds inte</string>
@@ -87,4 +86,7 @@
     <string name="today">Idag</string>
     <string name="weighted">viktad</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_wrong_duration">Fel duration</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">För att växla Loop-läge till Closed Loop svara med kod %1$s</string>
+    <string name="sms_wrong_tbr_duration">Durationen måste vara större än 0 och en multipel av %1$d minuter.</string>
 </resources>

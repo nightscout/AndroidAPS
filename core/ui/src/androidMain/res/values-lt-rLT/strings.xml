@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Laukas negali būti tuščias</string>
+    <string name="error_mustbe4hexadidits">Turi būti 4 simboliai iš ABCDEF0123456789</string>
     <!--    General-->
+    <string name="count_selected">%1$d pasirinkta</string>
+    <string name="delete">Ištrinti</string>
+    <string name="show_invalidated">Rodyti negaliojančius</string>
+    <string name="hide_invalidated">Slėpti negaliojančius</string>
     <string name="refresh">Atnaujinti</string>
     <string name="error">Klaida</string>
     <string name="profile_set_ok">Bazės profilis pompoje atnaujintas</string>
@@ -27,11 +33,23 @@
     <string name="settings">Parametrai</string>
     <string name="statuslights">Būklės indikatoriai</string>
     <string name="configbuilder_insulin">Insulinas</string>
+    <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
+    <string name="configbuilder_smoothing">Glodinimas</string>
+    <string name="configbuilder_pump">Pompa</string>
+    <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
+    <string name="configbuilder_aps">DKS</string>
+    <string name="configbuilder_loop">Ciklas</string>
+    <string name="configbuilder_general">Bendrieji</string>
+    <string name="protection">Apsauga</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Eksportuoti naudotojo įrašus į Excel (csv)</string>
     <string name="confirm">Patvirtinti</string>
     <string name="pump">Pompa</string>
+    <string name="openaps">AtviraDKS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">Siuntėjas</string>
+    <string name="uploader_short">Siunt</string>
     <string name="missed_bg_readings">Negauti glikemijos duomenys</string>
     <string name="treatments_iob_label_string">AIO:</string>
     <string name="mute5min">Nutildyti 5 minutėms</string>
@@ -89,6 +107,7 @@
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
     <string name="bg_label">Glikemija</string>
     <string name="calibration">Kalibravimas</string>
+    <string name="cgm">NGJ</string>
     <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą insulino kiekį ir įvestą angliavandenių skaičių</string>
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>
@@ -103,12 +122,13 @@
     <string name="a11y_arrow_double_up">greitai didėja</string>
     <string name="a11y_arrow_none">nėra</string>
     <string name="a11y_arrow_unknown">nežinoma</string>
-    <string name="a11y_high">aukštas</string>
     <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="profile">Profilis</string>
+    <string name="percentage_label">Procentais</string>
+    <string name="timeshift_label">Laiko perstūmimas</string>
     <string name="confirm_remove_multiple_items">Ar tikrai norite pašalinti %1$d elementus</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
@@ -116,6 +136,7 @@
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
     <string name="invalid">KLAIDA</string>
     <string name="login">Prisijungti</string>
+    <string name="logout">Atsijungti</string>
     <string name="prime_fill">Užpildymas</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="stoptemptarget">Sustabdyti laikiną tikslą</string>
@@ -139,6 +160,11 @@
     <string name="extended_bolus_medium">%1$.2f vv/h %2$s/%3$s\'</string>
     <string name="nav_export">Eksportuoti nustatymus</string>
     <string name="location_permission_not_granted">Vietos nustatymo leidimas nesuteiktas. Suteikite leidimą Android nustatymuose.</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout versija:</string>
+    <string name="not_available_full">Nepasiekiama</string>
+    <string name="engineering_mode_enabled">Inžinerinis režimas įjungtas</string>
+    <string name="next">Toliau</string>
+    <string name="show_hide_records">Slėpti ciklo įrašus</string>
     <!--    Protection-->
     <string name="wrongpassword">Neteisingas slaptažodis</string>
     <string name="wrongpin">Klaidingas PIN</string>
@@ -146,7 +172,6 @@
     <string name="pin_dont_match">PIN kodai nesutampa</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Pradėti profilį %1$d%% %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Atšaukti laikiną bazę</string>
     <string name="let_temp_basal_run">Paleisti laikinąją bazę</string>
@@ -157,10 +182,20 @@
     <!--    Insulin / Concentration-->
     <!--       Stats -->
     <string name="average">Vidurkis</string>
+    <string name="below" comment="below &quot;in range&quot;">Žemiau</string>
+    <string name="in_range">Ribose</string>
+    <string name="low" comment="3.1-3.9">Žema</string>
+    <string name="high" comment="10.0-13.9">Aukšta</string>
+    <string name="veryHigh" comment="above 13.9">Labai aukšta</string>
+    <string name="above" comment="above &quot;in range&quot;">Virš</string>
+    <string name="detailed_14_days">14 d. detaliai</string>
+    <string name="day_tir">Dienos LTR</string>
+    <string name="night_tir">Nakties LTR</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Priežiūra</string>
     <string name="careportal_bgcheck">Gliukomatis</string>
     <string name="careportal_mbg">Gliukomačio rodmenys</string>
     <string name="careportal_announcement">Pranešimas</string>
@@ -191,6 +226,7 @@
     <string name="careportal_temporarytargetvalue">Laikino tikslo reikšmė</string>
     <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
     <string name="boluswizard">Boluso patarėjas</string>
+    <string name="user_entry">Naudotojo įrašas</string>
     <string name="glucosetype_finger">Iš piršto</string>
     <string name="glucosetype_sensor">Sensorius</string>
     <string name="manual">Rankiniu būdu</string>
@@ -308,7 +344,6 @@
     <string name="uel_loop_change">CIKLAS PAKEISTAS</string>
     <string name="uel_loop_removed">CIKLAS PAŠALINTAS</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Laikino tikslo žemoji riba</string>
     <string name="temp_target_high_target">Laikino tikslo viršutinė riba</string>
     <string name="temp_target_value">Laikino tikslo reikšmė</string>
     <string name="profile_max_daily_basal_value">Maksimali profilio VB reikšmė</string>
@@ -316,6 +351,14 @@
     <string name="valuelimitedto">%1$.2f apribota iki %2$.2f</string>
     <string name="valueoutofrange">»%1$s« viršija griežtą limitą</string>
     <!-- Profile validation -->
+    <string name="missing_profile_name">Profilio pavadinimas nėra įrašytas</string>
+    <string name="error_in_ic_values">Insulino ir AV santykio (I:A) reikšmės klaida</string>
+    <string name="error_in_isf_values">JIF reikšmės klaida</string>
+    <string name="error_in_basal_values">Bazės reikšmių klaida</string>
+    <string name="error_in_target_values">Klaidinga glikemijos tikslo reikšmė</string>
+    <string name="profile_name_contains_dot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis nebus įkeltas į NS.</string>
+    <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
+    <string name="errors">Klaidos</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUSAS %1$.2f vv</string>
     <string name="carbs_g">AV %1$d g</string>
@@ -329,6 +372,8 @@
     <string name="set_profile">NUSTATYTI PROFILĮ</string>
     <string name="set_user_settings">PASIRINKTI NAUDOTOJO NUSTATYMUS</string>
     <string name="smb_bolus_u">SMB BOLUSAS %1$.2f vv</string>
+    <string name="start_pump">Paleisti pompą</string>
+    <string name="stop_pump">Sustabdyti pompą</string>
     <string name="temp_basal_absolute">LAIKINA BAZĖ %1$.2f vv/h %2$d min</string>
     <string name="temp_basal_percent">LAIKINA BAZĖ %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT NUSTATYTI LAIKINĄ BAZĘ PRANEŠIMU</string>
@@ -352,12 +397,14 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Boluso patarėjas</string>
     <string name="bolus_advisor_message">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
+    <string name="set">Nustatyti</string>
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
     <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="wizard_carbs_constraint">AV apribojimų pažeidimas!</string>
     <string name="wizard_constraint_bolus_size">Insulino apribojimų pažeidimas!\nNesuleista %1$.2fv</string>
     <string name="wizard_pump_not_available">Pompa nepasiekiama!</string>
+    <string name="quick_wizard_not_available">Pasirinktas greitasis patarėjas nebepasiekiamas, atnaujinkite valdiklį</string>
     <!--    Preferences-->
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
@@ -388,6 +435,7 @@
     <string name="device_changed" comment="26 characters max for translation">Įrenginys pakeistas</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolusas OK</string>
     <string name="temp_basal_delivery_error">Laikinos bazės suleidimo klaida</string>
+    <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
     <string name="pump_busy">Pompa šiuo metu veikia</string>
     <string name="connection_error">Pompos prisijungimo klaida</string>
     <string name="reading_pump_history">Skaitoma pompos istorija</string>
@@ -410,13 +458,15 @@
     <string name="close">Uždaryti</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
-    <string name="export_ok">OK</string>
     <string name="export_warning">Įspėjimas</string>
     <string name="export_expired">Galiojimo laikas baigėsi</string>
     <string name="export_disabled">Išjungta</string>
     <string name="export_failed">Nepavyko</string>
     <string name="export_alert">DĖMESIO</string>
     <!-- Export dialog strings -->
+    <string name="export_to">Eksportuoti nustatymus</string>
+    <string name="password_preferences_encrypt_prompt">Turėsite įrašyti slaptažodį, kuris bus naudojamas užšifruojant eksportuojamus nustatymus.</string>
+    <string name="preferences_export_canceled">Eksportas nutrauktas! Nustatymai NE eksportuoti!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Nustatymai eksportuoti</string>
     <string name="export_result_message_failed">Nustatymų eksportas NEPAVYKO!</string>
@@ -425,6 +475,8 @@
     <string name="export_result_message_disabled">Įspėjimas (automatizacija): Nustatymų eksportavimas neįjungtas!</string>
     <!-- Cloud export -->
     <!-- Export destination chip labels -->
+    <string name="data_choices">Duomenų pasirinkimas</string>
+    <string name="unattended_settings_export">Automatinis nustatymų eksportavimas</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
     <!-- datetime layout -->
@@ -442,8 +494,20 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Pradžios ekrano nustatymai</string>
     <!-- Navigation -->
+    <string name="nav_exit">Išeiti</string>
+    <string name="open_navigation">Atidaryti meniu</string>
+    <string name="nav_history_browser">Istorija</string>
+    <string name="nav_setupwizard">Sąrankos vedlys</string>
+    <string name="statistics">Statistika</string>
+    <string name="nav_profile_helper">Profilio pagalbininkas</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="extended_bolus_button">Ištęstas bolusas</string>
+    <string name="sensor_label">Sensorius</string>
+    <string name="insulin_label">Insulinas</string>
+    <string name="pb_label">Pompos baterija</string>
+    <string name="cannula">Kaniulė</string>
+    <string name="patch_pump">Patch pompa</string>
     <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
@@ -471,6 +535,8 @@
     <string name="cleanup_db_confirm">Ar tikrai norite išvalyti duombazę?\nIstoriniai duomenys ir pakeitimai, senesni nei 3 mėn., bus ištrinti.</string>
     <string name="cleanup_db_confirm_sync">Ar norite išvalyti duombazę?\nIstoriniai duomenys ir pakeitimai, senesni nei 3 mėn., bus ištrinti.\nSinchronizacija reikšmingai pagreitės.</string>
     <string name="cleared_entries">Ištrinti įrašai</string>
+    <string name="reset_db_confirm">Ar tikrai norite iš naujo nustatyti duomenų bazę?</string>
+    <string name="reset_aps_results_confirm">Ar tikrai norite iš naujo nustatyti išsaugotus APS rezultatus?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">S</string>
     <string name="weekday_saturday_short">Š</string>
@@ -487,12 +553,31 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f vv/val. (%2$.2f%%) <br><b>Trukmė</b>: %3$d min<br>]]></string>
     <!--    Playback-->
     <!-- ProfileEditor -->
+    <string name="target_short">TIKSLAS</string>
+    <string name="profile_name">Profilio pavadinimas:</string>
+    <string name="units_colon">Vienetai:</string>
+    <string name="discard">Išjungti</string>
+    <string name="ic_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti IA reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
+    <string name="isf_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti JIF reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
     <!--    Search-->
     <!--    Food Management -->
+    <string name="category">Kategorija</string>
+    <string name="subcategory">Subkategorija</string>
     <!--    Log Settings-->
+    <string name="resettodefaults">Atkurti numatytuosius</string>
     <!--    Maintenance-->
+    <string name="maintenance">Servisas</string>
+    <string name="description_maintenance">Pateikia keletą serviso funkcijų (pvz., žurnalo įrašų siuntimas ar ištrynimas).</string>
+    <string name="log_files">Žurnalo failai</string>
+    <string name="delete_logs">Ištrinti įrašus</string>
+    <string name="aaps_directory">AAPS katalogas</string>
+    <string name="import_setting">Importuoti nustatymus</string>
     <!-- Import settings screen -->
+    <string name="reset_aps_results">Iš naujo nustatyti APS rezultatus</string>
+    <string name="database_cleanup">Duomenų bazės valymas</string>
+    <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Vizualizacijos diapazonas</string>
 </resources>

@@ -49,7 +49,7 @@
     <string name="prefdecrypt_settings_secure">El archivo de configuración es seguro</string>
     <string name="prefdecrypt_settings_unencrypted">Utilizando un formato de ajustes no seguro y sin cifrar</string>
     <string name="prefdecrypt_wrong_json">Error de formato JSON, falta un campo obligatorio (formato, contenido, metadatos o seguridad)</string>
-    <string name="prefdecrypt_wrong_password">Error de descifrado, la contraseña proporcionada no puede descifrar el archivo</string>
+    <string name="prefdecrypt_wrong_password">Error de descifrado. La contraseña proporcionada no puede descifrar el archivo</string>
     <string name="prefdecrypt_issue_missing_file_hash">¡Falta la suma de comprobación (hash) del archivo, no se puede verificar la autenticidad de los ajustes!</string>
     <string name="prefdecrypt_issue_modified">¡El archivo fue modificado después de la exportación!</string>
     <string name="prefdecrypt_issue_parsing">¡Error de descifrado, falló el análisis de las preferencias!</string>
@@ -58,7 +58,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no compatible o no especificado!</string>
     <string name="metadata_label_format">Formato de archivo</string>
     <string name="metadata_label_created_at">Creado el</string>
-    <string name="metadata_label_aaps_version">Versión de AAPS</string>
     <string name="metadata_label_aaps_flavour">Variante de compilación</string>
     <string name="metadata_label_device_name">Nombre del paciente del dispositivo de exportación</string>
     <string name="metadata_label_device_model">Modelo del dispositivo de exportación</string>

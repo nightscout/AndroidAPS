@@ -23,4 +23,5 @@
     <string name="password_not_changed">Ο κωδικός δεν άλλαξε</string>
     <string name="pin_not_changed">Το PIN δεν άλλαξε</string>
     <string name="pin_cleared">Το PIN διαγράφηκε!</string>
+    <string name="current_master_password">Τρέχων κύριος κωδικός</string>
 </resources>

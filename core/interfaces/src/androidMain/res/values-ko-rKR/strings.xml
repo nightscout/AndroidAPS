@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">확인</string>
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">펌프 드라이버가 변경되었습니다.</string>
@@ -63,6 +64,10 @@
     <string name="wear_default_watchface">기본 워치페이스</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
+    <string name="free_peak_oref">사용자지정-피크 Oref</string>
+    <string name="fast_acting_insulin_comment">노보래피드, 노보로그, 휴마로그</string>
+    <string name="ultra_fast_acting_insulin_comment">피아스프</string>
+    <string name="insulin_peak_time">피크 시간 [min]</string>
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -70,16 +75,13 @@
     <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
     <string name="pumpsuspended">펌프 일시중지됨</string>
     <string name="loopsuspended">Loop 일시중지</string>
-    <string name="basalprofilenotaligned">Basal값이 시간단위로 설정되지 않았습니다: %1$s</string>
     <string name="minimalbasalvaluereplaced">지원되는 최대 값으로 Basal 값이 대체되었습니다: %1$s</string>
     <string name="maximumbasalvaluereplaced">지원되는 최대값으로 Basal값이 대체되었습니다:%1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
-    <string name="mins">%1$d 분</string>
     <string name="record">기록</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">확장 탄수화물</string>
-    <string name="profile_low_target">프로파일 저혈당 목표</string>
     <string name="profile_high_target">프로파일 고혈당 목표</string>
     <string name="profile_dia">프로파일 DIA 값</string>
     <string name="profile_sensitivity_value">프로파일 민감도 값</string>

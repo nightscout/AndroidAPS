@@ -9,6 +9,7 @@
     <string name="widget_description">AAPS Widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktivitätsmonitor</string>
+    <string name="time_range">Zeitraum</string>
     <string name="do_you_want_reset_stats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
     <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
     <string name="age">Alter</string>
@@ -32,7 +33,6 @@
     <string name="reuse_profile_pct_hours">Erneut verwenden %1$d%% %2$dh</string>
     <string name="percentage_label">Prozentsatz</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Pumpe trennen</string>
     <string name="resume">Fortsetzen</string>
     <string name="reconnect">Pumpe erneut verbinden</string>
     <string name="duration15m">15 Min.</string>
@@ -47,13 +47,12 @@
     <string name="no_records_available">Keine Datensätze verfügbar</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
-    <string name="show_invalidated">Zeige Ungültige</string>
-    <string name="hide_invalidated">Verstecke Ungültige</string>
     <string name="careportal_remove_started_events">AAPS gestartete Einträge entfernen</string>
-    <string name="user_entry">Benutzereingabe</string>
     <string name="clone_label">Klonen</string>
+    <string name="activate_profile">Aktiviere Profil</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil-Typ</string>
+    <string name="profile_switches">Profilwechsel</string>
     <string name="basal_pct_from_tdd_label">% der Basalrate</string>
     <string name="selected_profile">Ausgewählt:</string>
     <string name="motol_default_profile">Standard-Profil</string>

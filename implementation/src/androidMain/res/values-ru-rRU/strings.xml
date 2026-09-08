@@ -13,4 +13,60 @@
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="export_to_cloud_failed">Не удалось экспортировать в облачное хранилище</string>
+    <string name="csv_uploaded_to_cloud">Записи пользователя успешно загружены в облачное хранилище в формате CSV</string>
+    <string name="exported">Настройки экспортированы</string>
+    <string name="exported_failed">Не удалось экспортировать настройки!</string>
+    <string name="filenotfound">Файл не найден</string>
+    <string name="ue_exported">Записи пользователя экспортированы</string>
+    <string name="exported_at" comment="at placeholder we add export date">экспортировано в %1$s</string>
+    <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>
+    <string name="metadata_warning_different_flavour">Параметры были созданы с другим вариантом AAPS (%1$s) в то время как у вас: %2$s.\n\nНекоторые параметры могут отсутствать или быть недопустимы-после импорта проверьте и обновите параметры.</string>
+    <string name="metadata_warning_different_device">Параметры созданы на другом устройстве. Это нормально, если вы импортируете из старого/другого телефона, но убедитесь, что импортированные параметры - верные!</string>
+    <string name="metadata_warning_old_export">Импортируемым параметрам уже %1$s дней! Может быть у вас есть более актуальные параметры или вы выбрали неправильный файл? Не забудьте регулярно экспортировать параметры!</string>
+    <string name="metadata_warning_date_format">Недопустимый формат даты и времени!</string>
+    <string name="metadata_warning_different_version">Параметры из другой вспомогательной версии приложения. Если импортируете после обновления, это нормально но после импорта проверьте, все ли предпочтения по-прежнему верны!</string>
+    <string name="metadata_urgent_different_version">Параметры из другой основной версии приложения. Основные версии существенно различаются и могут иметь несовместимые настройки! После импорта убедитесь, что параметры все еще верны!</string>
+    <string name="prefdecrypt_settings_tampered">Файл параметров несанкционированно изменен</string>
+    <string name="prefdecrypt_settings_secure">Файл настроек безопасен</string>
+    <string name="prefdecrypt_settings_unencrypted">Применяется незащищенный, незашифрованный формат параметров</string>
+    <string name="prefdecrypt_wrong_json">Ошибка формата JSON, отсутствует обязательное поле (формат, содержимое, метаданные или защита)</string>
+    <string name="prefdecrypt_wrong_password">Ошибка расшифровки, указанный пароль не может расшифровать файл</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Отсутствует контрольная сумма файла (хэш), не удалось проверить подлинность параметров!</string>
+    <string name="prefdecrypt_issue_modified">Файл был изменен после экспорта!</string>
+    <string name="prefdecrypt_issue_parsing">Ошибка расшифровки, не удалось проанализировать настройки!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Ошибка расшифровки, указан недопустимый пароль или файл параметров изменен! Возможно, импортированный файл был экспортирован с использованием другого главного пароля.</string>
+    <string name="prefdecrypt_issue_wrong_format">Отсутствует конфигурация шифрования, формат параметров недопустим!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Неподдерживаемый или не прописанный алгоритм шифрования!</string>
+    <string name="metadata_label_created_at">Дата создания</string>
+    <string name="metadata_label_aaps_version">Версия AAPS</string>
+    <string name="metadata_label_aaps_flavour">Версия сборки</string>
+    <string name="metadata_label_device_name">Имя пациента экспортируемого устройства</string>
+    <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
+    <string name="metadata_label_encryption">Шифрование файла</string>
+    <string name="metadata_format_new">Новый зашифрованный формат</string>
+    <string name="metadata_format_other">Неизвестный формат экспорта</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Ошибка доступа к файловой системе. Выберите каталог AAPS правильно.</string>
+    <string name="storage_google_drive">Диск Google</string>
+    <string name="backup_to_google_drive">Резервное копирование на Google Диск</string>
+    <string name="csv_upload_failed">Не удалось загрузить файл CSV пользователя в облачное хранилище</string>
+    <string name="csv_upload_error">Произошла ошибка при загрузке CSV в облако</string>
+    <string name="uploading_to_cloud">Загрузка в облако...</string>
+    <string name="cloud_directory_path">Облачная директория: %1$s</string>
+    <string name="google_drive_token_refresh_error">Не удалось обновить ключ доступа Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">Проверка соединения с Google Drive не состоялась</string>
+    <string name="google_drive_connect_error">Не удалось подключиться к Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Не удалось получить список папок Google Drive</string>
+    <string name="google_drive_list_folders_error">Ошибка отображения папок: %1$s</string>
+    <string name="google_drive_upload_no_id">Загрузка завершена, но не вернулся идентификатор</string>
+    <string name="google_drive_upload_verify_failed">Ошибка подтверждения загрузки</string>
+    <string name="google_drive_upload_failed">Загрузка не состоялась: %1$s</string>
+    <string name="google_drive_upload_error">Ошибка загрузки файла: %1$s</string>
+    <string name="google_drive_folder_access_error">Невозможно создать или получить доступ к папке назначения: %1$s</string>
+    <string name="google_drive_list_settings_failed">Не удалось отобразить файлы настроек</string>
+    <string name="google_drive_list_settings_error">Ошибка при отображении файлов настроек: %1$s</string>
+    <string name="google_drive_download_failed">Не удалось скачать файл</string>
+    <string name="google_drive_download_error">Ошибка скачивания файла: %1$s</string>
+    <string name="google_drive_authorized">Google Drive авторизован</string>
+    <string name="google_drive_reauth_required">Очистите настройки и повторно авторизуйте Google Drive</string>
 </resources>

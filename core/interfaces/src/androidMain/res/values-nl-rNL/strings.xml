@@ -92,6 +92,7 @@
     <string name="forever">Voor altijd</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
+    <string name="free_peak_oref">Free-Peak Oref</string>
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
@@ -100,16 +101,13 @@
     <string name="pumpsuspended">Pomp onderbreken</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="pump_disconnected">Pomp niet verbonden</string>
-    <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
     <string name="minimalbasalvaluereplaced">Minimum basaalwaarde is vervangen door minimaal ondersteunde waarde: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basale waarde vervangen door maximale ondersteunde waarde: %1$s</string>
     <string name="profile_ins_units_per_hour">E/u</string>
     <string name="profile_carbs_per_unit">g/E</string>
-    <string name="mins">%1$d min</string>
     <string name="record">Opnemen</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">VERLENGDE KOOLHYDRATEN</string>
-    <string name="profile_low_target">Profiel laag doel</string>
     <string name="profile_high_target">Profiel hoog doel</string>
     <string name="profile_dia">Profiel DIA waarde</string>
     <string name="profile_sensitivity_value">Profiel gevoeligheidswaarde</string>

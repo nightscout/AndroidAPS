@@ -36,6 +36,16 @@
     <string name="setupwizard_profile_info">Vytvořte profil s vašimi bazálními dávkami, IC, ISF a cílovými hodnotami. Více profilů můžete přidat později.</string>
     <string name="setupwizard_permissions_info">AAPS potřebuje přístup k úložišti a oprávnění pro správnou funkci. Níže udělte požadovaná oprávnění.</string>
     <string name="setupwizard_pump_riley_link_status">Status RileyLink:</string>
+    <string name="setupwizard_client_control_title">Ovládání z klienta</string>
+    <string name="setupwizard_client_control_info">Spárujte klientská zařízení, aby mohla tomuto hlavnímu zařízení posílat podepsané příkazy přes Nightscout. Toto je nový doporučený způsob, jak dálkově ovládat AAPS.</string>
+    <string name="setupwizard_ns_receive_info">Příjem ošetření a dat přímo z Nightscoutu (méně bezpečný způsob ) je nyní ve výchozím nastavení vypnutý. Otevřete nastavení níže pouze v případě, že to stále potřebujete. Nezbytné, pokud potřebujete zadávat data prostřednictvím aplikací NS nebo třetích stran.</string>
+    <string name="setupwizard_open_ns_receive_settings">Přijímání dat z Nightscoutu</string>
+    <string name="setupwizard_pair_with_master_info">Spárujte tento klient s hlavní AAPS, aby mohl posílat příkazy přes zabezpečený kanál.</string>
+    <string name="setupwizard_pairing_ws_warning">Pro párování je nutné připojení k Nightscoutu přes WebSocket. Vraťte se zpět k předchozímu kroku a nejprve jej povolte.</string>
+    <string name="setupwizard_pairing_status_master">Spárovaní klienti: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Zatím nemáte žádné spárované klienty</string>
+    <string name="setupwizard_pairing_status_client_paired">Párovat s hlavním zařízením</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Dosud nespárováno</string>
     <string name="readstatus">Načíst status</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>

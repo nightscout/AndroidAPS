@@ -10,7 +10,6 @@
     <string name="openaps_no_as_data">Nu există date disponibile privind autosens</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="autoisf_shortname">AUTOISF</string>
-    <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice de %1$d elemente.\nValoarea curentă:</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">Starea algoritmului în 2017</string>

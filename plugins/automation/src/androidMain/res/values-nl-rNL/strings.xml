@@ -114,7 +114,6 @@
     <string name="changeSmbTo">Wijzig SMB naar %1$s</string>
     <string name="newSmbMode">Nieuwe SMB modus:</string>
     <string name="on">AAN</string>
-    <string name="off">UIT</string>
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>

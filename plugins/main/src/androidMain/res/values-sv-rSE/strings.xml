@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_history_browser">Historikläsare</string>
-    <string name="sensor_label">Sensor</string>
-    <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpbatteri</string>
     <string name="cannula">Kanyl</string>
     <string name="patch_pump">Slanglös pump</string>

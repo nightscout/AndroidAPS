@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Onay</string>
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompa sürücüsü değişti.</string>
@@ -43,7 +44,7 @@
     <string name="metadata_label_plugin_version">Eklenti sürümü: %1$s</string>
     <string name="metadata_label_watchface_name_version">İsim: %1$s (%2$s)</string>
     <string name="metadata_label_watchface_infos">Bilgi: %1$s</string>
-    <string name="pref_show_iob">AİNS Göster</string>
+    <string name="pref_show_iob">AİNS göster</string>
     <string name="pref_show_detailed_iob">Detalı AİNS göster</string>
     <string name="pref_show_cob">AKRB göster</string>
     <string name="pref_show_delta">Deltayı göster</string>
@@ -60,7 +61,7 @@
     <string name="pref_show_direction_arrow">Ok yönünü Göster</string>
     <string name="pref_show_ago">Önce Göster</string>
     <string name="pref_show_week_number">Hafta sayısını göster</string>
-    <string name="pref_show_date">Tarihi Göster</string>
+    <string name="pref_show_date">Tarihi göster</string>
     <string name="pref_show_seconds">Saniyeyi göster</string>
     <string name="default_custom_watchface_comment">Varsayılan saat arayüzü; bir şablon oluşturmak için SAAT ARAYÜZÜNÜ DIŞA AKTAR butonuna tıklayabilirsiniz</string>
     <string name="default_custom_watchface_external_comment">Takipçiler için harici görünümler içeren varsayılan saat arayüzü, bir şablon oluşturmak için SAAT ARAYÜZÜNÜ DIŞA AKTAR düğmesine tıklayabilirsiniz</string>
@@ -71,6 +72,10 @@
     <string name="temp_basal_extended_bolus">E %1$.2f Ü/s @%2$s %3$d/%4$d dk</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
+    <string name="free_peak_oref">Serbest tepe Oref</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Tepe zamanı [min]</string>
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
     <string name="format_carbs">%1$d g</string>
@@ -79,16 +84,13 @@
     <string name="pumpsuspended">Pompa Durduruldu</string>
     <string name="loopsuspended">Döngü duraklatıldı</string>
     <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
-    <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
     <string name="minimalbasalvaluereplaced">Desteklenen minimum değerle değiştirilen bazal değer: %1$s</string>
     <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %1$s</string>
     <string name="profile_ins_units_per_hour">Ü/s</string>
     <string name="profile_carbs_per_unit">g/Ü</string>
-    <string name="mins">%1$d dak</string>
     <string name="record">Kayıt</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">YAYMA KARBONHİDRAT</string>
-    <string name="profile_low_target">Düşük hedef profili</string>
     <string name="profile_high_target">Yüksek hedef profili</string>
     <string name="profile_dia">Profil DIA değeri</string>
     <string name="profile_sensitivity_value">Profil duyarlılık değeri</string>

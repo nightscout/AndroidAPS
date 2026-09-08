@@ -50,7 +50,6 @@
     <string name="cwf_comment_direction">Flecha de dirección</string>
     <string name="cwf_comment_timestamp">Minutos atrás del último valor de glucosa recibido</string>
     <string name="cwf_comment_sgv">Valor de glucosa</string>
-    <string name="cwf_comment_cover_plate">Imagen de portada delante del texto (diales...)</string>
     <string name="cwf_comment_hour_hand">Imagen de la aguja horaria (reloj analógico)</string>
     <string name="cwf_comment_minute_hand">Imagen del minutero (reloj analógico)</string>
     <string name="cwf_comment_second_hand">Imagen del segundero (reloj analógico)</string>

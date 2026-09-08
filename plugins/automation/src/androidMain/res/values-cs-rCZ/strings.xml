@@ -83,7 +83,7 @@
     <string name="location_outside">Když se nacházíte mimo oblast</string>
     <string name="location_going_in">Když vstoupíte do oblasti s názvem</string>
     <string name="location_going_out">Když opustíte oblast s názvem</string>
-    <string name="time_range">Časový rozsah</string>
+    <string name="time_range">Časové rozmezí</string>
     <string name="timerange_value">Čas je mezi %1$s a %2$s</string>
     <string name="add_short">PŘIDAT</string>
     <string name="temptargetcompared">Dočasný cíl %1$s</string>

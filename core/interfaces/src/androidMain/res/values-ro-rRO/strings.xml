@@ -128,16 +128,13 @@
     <string name="pumpsuspended">Pompă suspendată</string>
     <string name="loopsuspended">Buclă suspendată</string>
     <string name="pump_disconnected">Pompă deconectată</string>
-    <string name="basalprofilenotaligned">Valori bazale nesincronizate cu ora: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea minimă posibilă: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea maximă posibilă: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
-    <string name="mins">%1$d min</string>
-    <string name="record">Înregistrare</string>
+    <string name="record">Înregistrați</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">CARBOHIDRAȚI EXTINȘI</string>
-    <string name="profile_low_target">Profil ținta joasă</string>
     <string name="profile_high_target">Profil țintă ridicată</string>
     <string name="profile_dia">Valoare profil DIA</string>
     <string name="profile_sensitivity_value">Valoare sensibilitate profil</string>

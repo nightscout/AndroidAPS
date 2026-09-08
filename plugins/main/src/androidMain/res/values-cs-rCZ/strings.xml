@@ -5,7 +5,7 @@
     <string name="insulin_label">Inzulín</string>
     <string name="pb_label">Baterie pumpy</string>
     <string name="cannula">Kanyla</string>
-    <string name="patch_pump">Náplasťová pumpa</string>
+    <string name="patch_pump">Patch pumpa</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->

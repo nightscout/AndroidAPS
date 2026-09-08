@@ -42,6 +42,7 @@
     <!-- StringKey: SMS preferences -->
     <!-- StringKey: Virtual pump preferences -->
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <!-- DoubleKey: Overview preferences -->
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->

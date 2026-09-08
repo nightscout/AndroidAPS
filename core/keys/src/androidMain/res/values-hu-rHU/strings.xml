@@ -42,10 +42,12 @@
     <!-- StringKey: SMS preferences -->
     <!-- StringKey: Virtual pump preferences -->
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <!-- DoubleKey: Overview preferences -->
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
+    <string name="openapsama_min_5m_carb_impact_summary">Alapértelmezett érték: 3.0 (AMA) vagy 8.0 (SMB). Ez az alapértelmezett szénhidrát-felszívódás hatás 5 percenkénti beállítása. Az alapértelmezett érték 3 mg/dl/5 perc. Ez befolyásolja, hogy milyen gyorsan csökken a COB, és mekkora szénhidrát-felszívódást feltételezünk a jövőbeni előre jelzett vércukorszint kiszámításakor, amikor a BG a vártnál jobban esik, vagy nem úgy emelkedik, ahogy vártuk.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
     <!-- IntentKey preferences -->

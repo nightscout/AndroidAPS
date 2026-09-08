@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Emitir alarmas urgentes como notificaciones de Android</string>
     <string name="pref_title_alert_increase_volume">Aumentar gradualmente el volumen de las notificaciones</string>
     <string name="pref_title_alert_override_dnd">Anular el modo \"No molestar\"</string>
-    <string name="pref_summary_alert_override_dnd">Si se activa, las alarmas de AAPS sonarán aunque el móvil esté en silencio o en modo \"No molestar\". Si se desactiva, las alarmas se silenciarán según la configuración del teléfono</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Subir datos de glucemia a Nightscout</string>
     <string name="pref_title_bg_source_create_sensor_change">Registrar cambio de sensor</string>
@@ -178,7 +177,6 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Tiempo de espera de protección</string>
     <string name="pref_title_protection_type_application">Nivel 0: Protección de la aplicación</string>
-    <string name="pref_summary_protection_type_application">Inicio de la aplicación. Independiente de otros niveles</string>
     <string name="pref_title_protection_type_bolus">Nivel 1: Protección de bolo</string>
     <string name="pref_summary_protection_type_bolus">Tratamientos, activación de perfil. Requiere Nivel 2</string>
     <string name="pref_title_protection_type_settings">Nivel 2: Protección de ajustes</string>
@@ -237,7 +235,6 @@
     <string name="pref_title_units">Unidades</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Idioma</string>
     <string name="lang_default">Predeterminado del sistema</string>
     <string name="lang_en">Inglés</string>
     <string name="lang_af">Afrikáans</string>

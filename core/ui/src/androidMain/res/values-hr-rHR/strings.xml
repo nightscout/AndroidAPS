@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="count_selected">%1$d odabrano</string>
+    <string name="show_invalidated">Prikaži poništen</string>
+    <string name="hide_invalidated">Sakrij poništeno</string>
     <string name="refresh">Osvježi</string>
     <string name="error">Greška</string>
     <string name="profile_set_ok">Ažuriran bazalni profil u pumpi</string>
@@ -19,6 +22,10 @@
     <string name="result">Rezultat</string>
     <string name="settings">Postavke</string>
     <string name="configbuilder_insulin">Inzulin</string>
+    <string name="configbuilder_pump">Pumpa</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_general">Općenito</string>
+    <string name="protection">Zaštita</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Izvoz korisničkih unosa u Excel (csv)</string>
@@ -85,6 +92,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="nav_export">Izvezi postavke</string>
+    <string name="next">Sljedeći</string>
+    <string name="show_hide_records">Sakrij zapise petlje</string>
     <!--    Protection-->
     <string name="wrongpassword">Pogrešna lozinka</string>
     <string name="wrongpin">Pogrešan PIN</string>
@@ -92,7 +102,6 @@
     <string name="pin_dont_match">PIN-ovi se ne podudaraju</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Pokrenite profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
     <string name="let_temp_basal_run">Pustite privremeni bazal da radi</string>
     <string name="rate">Stopa</string>
@@ -101,12 +110,21 @@
     <!--    Insulin / Concentration-->
     <!--       Stats -->
     <string name="average">Prosječno</string>
+    <string name="low" comment="3.1-3.9">Nisko</string>
+    <string name="high" comment="10.0-13.9">Visoko</string>
+    <string name="veryHigh" comment="above 13.9">Vrlo visoko</string>
+    <string name="detailed_14_days">Detaljno 14 dana</string>
+    <string name="day_tir">Dnevni TIR</string>
+    <string name="night_tir">Noćni TIR</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
     <string name="careportal_profileswitch">Zamjena profila</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="user_entry">Unos korisnika</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="wear">Wear</string>
     <!--    Command-->
@@ -161,12 +179,18 @@
     <string name="uel_loop_change">PETLJA PROMIJENJENA</string>
     <string name="uel_loop_removed">PETLJA UKLONJENA</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Privremena ciljana donja vrijednost</string>
     <string name="temp_target_high_target">Privremena ciljna gornja vrijednost</string>
     <string name="temp_target_value">Privremena ciljna vrijednost</string>
     <string name="profile_max_daily_basal_value">Maksimalna bazalna vrijednost profila</string>
     <string name="current_basal_value">Trenutna bazalna vrijednost</string>
     <!-- Profile validation -->
+    <string name="missing_profile_name">Nedostaje naziv profila</string>
+    <string name="error_in_ic_values">Pogreška u IC vrijednostima</string>
+    <string name="error_in_isf_values">Pogreška u ISF vrijednostima</string>
+    <string name="error_in_basal_values">Pogreška u bazalnim vrijednostima</string>
+    <string name="error_in_target_values">Pogreška u ciljanim vrijednostima</string>
+    <string name="invalid_profile_not_accepted">Nevažeći profil %1$s nije prihvaćen od NS-a</string>
+    <string name="errors">Greške</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="formatPercent">%1$.0f%%</string>
     <!-- Autotune -->
@@ -223,8 +247,11 @@
     <string name="ble_not_enabled">Bluetooth nije omogućen.</string>
     <!--    Preferences -->
     <!-- Navigation -->
+    <string name="nav_exit">Izlaz</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Inzulin</string>
     <!-- Site Rotation -->
     <!-- About -->
     <plurals name="days">
@@ -233,15 +260,24 @@
         <item quantity="other">%1$d dana</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="reset_db_confirm">Stvarno želiš resetirati bazu?</string>
     <!--    Weekday-->
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
     <!-- ProfileEditor -->
+    <string name="target_short">CILJ</string>
+    <string name="profile_name">Ime profila:</string>
+    <string name="units_colon">Jedinice:</string>
     <!--    Search-->
     <!--    Food Management -->
+    <string name="category">Kategorija</string>
+    <string name="subcategory">Podkategorija</string>
     <!--    Log Settings-->
     <!--    Maintenance-->
+    <string name="import_setting">Uvezi postavke</string>
     <!-- Import settings screen -->
+    <string name="database_cleanup">Čišćenje baze podataka</string>
+    <string name="nav_resetdb">Resetiraj bazu</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->

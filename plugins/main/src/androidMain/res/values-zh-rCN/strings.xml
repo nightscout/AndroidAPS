@@ -5,7 +5,7 @@
     <string name="insulin_label">胰岛素</string>
     <string name="pb_label">泵电池</string>
     <string name="cannula">输注导管</string>
-    <string name="patch_pump">Patch 泵</string>
+    <string name="patch_pump">贴片泵</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
