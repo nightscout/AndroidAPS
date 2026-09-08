@@ -4,18 +4,17 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Cài đặt kết nối</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="description_ns_client_v3">Đồng bộ dữ liệu của bạn với Nightscout bằng API v3</string>
     <string name="blocked_by_charging">Bị chặn bởi tùy chọn sạc pin</string>
     <string name="blocked_by_connectivity">Bị chặn bởi tùy chọn kết nối</string>
     <string name="no_connectivity">Không có kết nối</string>
     <string name="unsupported_ns_version">Phiên bản Nightscout này không được hỗ trợ</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Thiết bị được ủy quyền</string>
     <string name="authorized_clients_add">Thêm máy phụ</string>
     <string name="authorized_clients_comm_switch_title">Cho phép thiết bị phụ điều khiển</string>
     <string name="authorized_clients_comm_switch_summary">Cho phép các thiết bị phụ đã ghép đôi gửi các lệnh đã ký xác thực qua Nightscout. Tắt tùy chọn này để ngừng liên lạc mà không cần xóa các thiết bị đó.</string>
+    <string name="authorized_clients_needs_websocket">WebSocket đang bị tắt nên không thể nhận lệnh từ các thiết bị khách. Các thiết bị khách sẽ xem máy chủ này là không chấp nhận lệnh cho đến khi bạn bật WebSocket.</string>
     <string name="authorized_clients_state_active">Kích hoạt</string>
     <string name="authorized_clients_state_pending">Đang chờ xử lý</string>
     <string name="authorized_clients_last_seen">Lần cuối hoạt động: %1$s</string>
