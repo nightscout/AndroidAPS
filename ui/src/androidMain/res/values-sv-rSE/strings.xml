@@ -57,6 +57,13 @@
     <string name="profile_switches">Profilbyten</string>
     <string name="basal_pct_from_tdd_label">% av basal</string>
     <string name="selected_profile">Valt:</string>
+    <string name="motol_default_profile">Standardprofil</string>
+    <string name="current_profile">Nuvarande profil</string>
+    <string name="available_profile">Tillgänglig profil</string>
+    <string name="format_with_tdd">Ålder: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Ålder: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Ålder: %1$d Vikt: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV-standardprofil</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <!--    History browser-->
