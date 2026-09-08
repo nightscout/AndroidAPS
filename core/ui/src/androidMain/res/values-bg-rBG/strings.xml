@@ -1058,8 +1058,6 @@
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours">%1$d ч</string>
-    <string name="units_format_hours_double">%1$.0f ч</string>
-    <string name="units_format_hours_double_range">%1$.0f ч (%2$.0f - %3$.0f)</string>
     <string name="units_format_hours_range">%1$d ч (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f Ед</string>
     <string name="units_format_insulin_int">%1$d Ед</string>
