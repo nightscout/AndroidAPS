@@ -9,6 +9,7 @@
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Hiển thị thông báo liên tục với tóm tắt ngắn gọn về hoạt động của vòng lặp</string>
