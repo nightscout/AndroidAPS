@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
@@ -30,7 +29,6 @@
     <string name="description_source_patched_syai_tag_app">Otrzymuj glikemię z aplikacji Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
-    <string name="description_source_patched_si_app">Otrzymuj glikemię z patchowanej aplikacji Sibionic SI.</string>
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">Otrzymuj glikemię z patchowanej aplikacji Sino.</string>
