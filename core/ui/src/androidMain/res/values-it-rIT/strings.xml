@@ -59,6 +59,8 @@
     <string name="configbuilder_pick_one_hint">Sceglierne uno. Solo uno alla volta può essere attivo.</string>
     <string name="configbuilder_pick_many_hint">Scegli tutte le opzioni che si applicano.</string>
     <string name="configbuilder_no_selection_warning">Nessun plugin selezionato in questa categoria.</string>
+    <string name="configbuilder_switch_confirmation_title">Cambiare plugin?</string>
+    <string name="configbuilder_switch_confirmation">Questo disabiliterà %1$s e abiliterà %2$s.</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Contrai</string>
     <string name="no_compose_preferences">Nessuna preferenza disponibile per questo plugin</string>
@@ -99,6 +101,7 @@
     <string name="tdd_total">TDD totale</string>
     <string name="tdd_old_data">Dati vecchi</string>
     <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
+    <string name="carbs_not_saved_after_bolus">Bolo erogato, ma i carboidrati non possono essere salvati. Inserisci nuovamente i carboidrati.</string>
     <string name="androidaps_start">AAPS avviato</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
@@ -110,6 +113,12 @@
     <string name="stop_pressed">STOP PREMUTO</string>
     <string name="invalid_profile">Profilo non valido!</string>
     <string name="no_profile_set">NESSUN PROFILO IMPOSTATO</string>
+    <string name="profile_switch_no_insulin">Impossibile cambiare profilo: nessuna insulina è in uso, e nessuna è stata selezionata.</string>
+    <string name="profile_switch_select_insulin_hint">Non è ancora in uso insulina. Selezionare l\'insulina che si sta utilizzando, quindi questo pulsante del profilo potrà registrarla.</string>
+    <string name="insulin_activation_failed">L’insulina non è cambiata. L’insulina precedente è ancora in uso.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">L\'insulina non è stata cambiata: %1$s. La tua insulina precedente è ancora in uso.</string>
+    <string name="insulin_activation_unconfirmed">Il commutatore di insulina non può essere confermato. Controllare che l’insulina sia attiva nel profilo prima della somministrazione.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nAnche l\'insulina non è stata cambiata.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unità</string>
@@ -248,6 +257,7 @@
     <string name="pin_dont_match">I PIN non coincidono</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Cancella basale temporanea</string>
     <string name="let_temp_basal_run">Lascia eseguire la basale temporanea</string>
@@ -284,6 +294,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Careportale</string>
     <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_mbg">BG manuale o Calibrazione</string>
     <string name="careportal_announcement">Avviso</string>
@@ -334,6 +345,7 @@
     <string name="scene_conflict_active_running_mode">La modalità di esecuzione attiva verrà sostituita</string>
     <string name="scene_conflict_active_scene">Scena attiva \"%1$s\" sarà terminata prima</string>
     <string name="scene_action_tt">Temp-Target %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profilo: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profilo: %1$d%%</string>
     <string name="scene_action_smb_on">Abilita SMB</string>
     <string name="scene_action_smb_off">Disabilita SMB</string>
@@ -624,6 +636,7 @@
     <string name="uel_scene_deactivated">SCENA DISATTIVATA</string>
     <string name="uel_remote_config_changed">CONFIG REMOTA MODIFICATA</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Valore superiore target temporaneo</string>
     <string name="temp_target_high_target">Valore superiore target temporaneo</string>
     <string name="temp_target_value">Valore target temporaneo</string>
     <string name="insulin_dia">Valore del DIA dell’insulina</string>
@@ -759,6 +772,7 @@
     <string name="initializing">Inizializzazione…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Avviso</string>
+    <string name="alert" comment="Generic alert dialog title">Avviso</string>
     <string name="retry" comment="Button label to retry a failed operation">Riprova</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Termina</string>
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
@@ -782,6 +796,7 @@
     <string name="close">Chiudi</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <string name="export_warning">Avviso</string>
     <string name="export_expired">Scaduto</string>
     <string name="export_disabled">Disabilitato</string>
@@ -848,6 +863,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Accoppia</string>
     <string name="pump_unpair">Disaccoppia</string>
     <string name="pump_unpair_confirm_title">Disassocia micro?</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
@@ -884,6 +900,12 @@
     <string name="add">Aggiungi</string>
     <string name="remove">Rimuovi</string>
     <string name="reorder">Riordina</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Sposta prima</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Sposta dopo</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Mostra dettagli</string>
+    <string name="presets_changed_reorder_aborted">Preimpostazioni cambiate altrove. Il nuovo ordine non è stato salvato.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Posizione %1$d di %2$d</string>
     <string name="status">Stato</string>
     <string name="pump_actions">Azioni micro</string>
     <string name="tempbasal_button">Basale temporanea</string>
@@ -938,6 +960,7 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS riproduce audio"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
     <string name="profile_name">Nome profilo:</string>
     <string name="edit_profile_name">Modifica nome profilo</string>
@@ -999,6 +1022,14 @@
     <string name="import_wrong_password">Password errata</string>
     <string name="import_btn">Importa</string>
     <string name="import_anyway_btn">Importa Comunque</string>
+    <string name="import_apply_title">Impostazioni importate</string>
+    <string name="import_apply_message">Le impostazioni importate verranno ora applicate. I plugin modificati verranno riavviati.</string>
+    <string name="import_apply_waiting">In attesa del micro..</string>
+    <string name="import_apply_pump_busy">Il micro è ancora occupato, quindi le impostazioni non sono state applicate.</string>
+    <string name="import_apply_retry_question">Riprova adesso?</string>
+    <string name="import_applied_title">Impostazioni applicate</string>
+    <string name="import_applied_message">Le impostazioni importate sono ora in uso.</string>
+    <string name="import_apply_pump_changed">Annullato: il micro è stato modificato dall\'importazione delle impostazioni</string>
     <string name="import_source_local">Locale</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Carica altro</string>
@@ -1011,6 +1042,7 @@
     <string name="nav_resetdb">Reset database</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Trova Micro</string>
+    <string name="ble_scan_select_pump">Seleziona il tuo micro dall\'elenco qui sotto</string>
     <string name="ble_scan_scanning">Ricerca dispositivi in corso...</string>
     <!-- Graph configuration -->
     <string name="graph_add">Aggiungi grafico</string>
@@ -1039,6 +1071,8 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
     <string name="units_format_hours_double">%1$.0f h</string>
     <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
