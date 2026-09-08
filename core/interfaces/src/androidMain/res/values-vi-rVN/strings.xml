@@ -122,13 +122,16 @@
     <string name="pumpsuspended">Bơm đã tạm dừng</string>
     <string name="loopsuspended">Vòng lặp đã tạm dừng</string>
     <string name="pump_disconnected">Bơm đã ngắt kết nối</string>
+    <string name="basalprofilenotaligned">Giá trị liều nền không khớp với giờ: %1$s</string>
     <string name="minimalbasalvaluereplaced">Giá trị liều nền đã được thay bằng giá trị tối thiểu được hỗ trợ: %1$s</string>
     <string name="maximumbasalvaluereplaced">Giá trị liều nền đã được thay bằng giá trị tối đa được hỗ trợ: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d phút</string>
     <string name="record">Record</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">CARBS MỞ RỘNG</string>
+    <string name="profile_low_target">Cấu hình mục tiêu thấp</string>
     <string name="profile_high_target">Cấu hình mục tiêu cao</string>
     <string name="profile_dia">Cấu hình giá trị DIA</string>
     <string name="profile_sensitivity_value">Cấu hình giá trị độ nhạy</string>
