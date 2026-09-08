@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="executing_right_now">Komanda vykdoma</string>
+    <string name="basal_value_below_minimum">Valandinės bazės vertė mažesnė už minimalią. Profilis nenustatytas!</string>
     <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">AV</string>
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported">Nustatymai eksportuoti</string>
+    <string name="exported_failed">Nustatymų eksportavimas nepavyko!</string>
+    <string name="filenotfound">Failas nerastas</string>
+    <string name="ue_exported">Naudotojo įrašai eksportuoti</string>
+    <string name="exported_at" comment="at placeholder we add export date">eksportuota %1$s</string>
+    <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
+    <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), Jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
+    <string name="metadata_warning_different_device">Nustatymai buvo sukurti naudojant kitą prietaisą. Viskas gerai, jei importuojante iš senesnio/kito telefono, tačiau įsitikinkite, kad visi importuoti nustatymai yra teisingi!</string>
+    <string name="metadata_warning_old_export">Importuoti nustatymai yra %1$s d. senumo! Patikrinkite, gal pasirinkote neteisingą failą ir turite naujesnius? Nepamirškite reguliariai eksportuoti nustatymų!</string>
+    <string name="metadata_warning_date_format">Neteisingas datos ir laiko formatas!</string>
+    <string name="metadata_warning_different_version">Parametrai iš kitos palaikomosios programos versijos. Jei importuojate po atnaujinimo, tai yra normalu, bet po importavimo patikrinkite, ar visos nuostatos vis dar teisingos!</string>
+    <string name="metadata_urgent_different_version">Parametrai iš kitos pagrindinės programos versijos. Pagrindinės versijos labai skiriasi ir gali turėti nesuderinamų parametrų! Po importavimo įsitikinkite, kad parametrai vis dar teisingi!</string>
+    <string name="prefdecrypt_settings_tampered">Nustatymų failas sugadintas</string>
+    <string name="prefdecrypt_settings_secure">Nustatymų failas yra saugus</string>
+    <string name="prefdecrypt_settings_unencrypted">Naudojamas nesaugus, nešifruotas nustatymų formatas</string>
+    <string name="prefdecrypt_wrong_json">JSON formato klaida, neužpildyti reikalingi laukai (formatas, turinys, metaduomenys arba saugumas)</string>
+    <string name="prefdecrypt_wrong_password">Iššifravimo klaida, netinkamas slaptažodis</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Trūksta failo kontrolinės žymės, neįmanoma patikrinti autentiškumo!</string>
+    <string name="prefdecrypt_issue_modified">Failas pakeistas po eksportavimo!</string>
+    <string name="prefdecrypt_issue_parsing">Iššifravimo klaida, nustatymų analizė neįvyko!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Iššifravimas klaida, slaptažodis yra neteisingas arba nustatymų failas buvo pakeistas! Taip nutinka, jei importuotas failas buvo eksportuotas su kitu slaptažodžiu.</string>
+    <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
+    <string name="metadata_label_created_at">Sukurta</string>
+    <string name="metadata_label_aaps_version">AAPS versija</string>
+    <string name="metadata_label_aaps_flavour">Versijos variantas</string>
+    <string name="metadata_label_device_name">Eksportuojamas paciento vardas</string>
+    <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
+    <string name="metadata_label_encryption">Failo šifravimas</string>
+    <string name="metadata_format_new">Naujas šifruotas formatas</string>
+    <string name="metadata_format_other">Nežinomas eksporto formatas</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Klaida pasiekiant failų sistemą. Tinkamai pasirinkite AAPS katalogą.</string>
 </resources>
