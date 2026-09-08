@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Bestätigung</string>
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpentreiber geändert.</string>
@@ -10,7 +11,7 @@
     <string name="days_ago_round">vor %1$.0f Tagen</string>
     <string name="in_days">in %1$.0f Tagen</string>
     <string name="in_days_round">in %1$.0f Tagen</string>
-    <string name="shorthour">h</string>
+    <string name="shorthour">s</string>
     <string name="days">Tage</string>
     <string name="hours">Stunden</string>
     <string name="unit_second">Sekunde</string>
@@ -63,6 +64,10 @@
     <string name="wear_default_watchface">Standard-Watchface</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="fast_acting_insulin_comment">NovoRapid, NovoLog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Wirkungshoch [min]</string>
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
@@ -70,16 +75,13 @@
     <string name="alarminxmin">Alarm in %1$d Min.</string>
     <string name="pumpsuspended">Pumpe pausiert</string>
     <string name="loopsuspended">Loop pausiert</string>
-    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
     <string name="profile_ins_units_per_hour">IE/h</string>
     <string name="profile_carbs_per_unit">g/IE</string>
-    <string name="mins">%1$d min.</string>
     <string name="record">Eintrag</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">VERLÄNGERTE KOHLENHYDRATE</string>
-    <string name="profile_low_target">Profil unteres Ziel</string>
     <string name="profile_high_target">Profil oberes Ziel</string>
     <string name="profile_dia">Profil Insulinwirkdauer</string>
     <string name="profile_sensitivity_value">Profil Sensitivitätswert</string>
