@@ -131,13 +131,16 @@
     <string name="pumpsuspended">Pumpa pozastavená</string>
     <string name="loopsuspended">Uzavretý okruh pozastavený</string>
     <string name="pump_disconnected">Pumpa odpojená</string>
+    <string name="basalprofilenotaligned">Bazálne hodnoty nie sú zarovnané na celé hodiny: %1$s</string>
     <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou: %1$s</string>
     <string name="maximumbasalvaluereplaced">Hodnota bazálu nahradená maximálnou možnou: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Záznam</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">ROZLOŽENÉ SACHARIDY</string>
+    <string name="profile_low_target">Dolný cieľ profilu</string>
     <string name="profile_high_target">Horný cieľ profilu</string>
     <string name="profile_dia">Profilová hodnota DIA</string>
     <string name="profile_sensitivity_value">Profilová hodnota citlivosti</string>
