@@ -30,7 +30,6 @@
     <string name="description_source_patched_syai_tag_app">Přijímat glykémie z aplikace Syai/Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">Aplikace SI</string>
-    <string name="description_source_patched_si_app">Přijímat glykémie z upravené aplikace Sibionic SI.</string>
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Aplikace Sino</string>
     <string name="description_source_patched_sino_app">Přijímat glykémie z upravené aplikace Sino.</string>

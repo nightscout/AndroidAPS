@@ -21,7 +21,6 @@
     <string name="cwf_comment_hour">Sat (HH)</string>
     <string name="cwf_comment_minute">Minuta (MM)</string>
     <string name="cwf_comment_second">Sekunda (SS)</string>
-    <string name="cwf_comment_timePeriod">AM or PM</string>
     <string name="cwf_comment_day_name">Naziv dana u tjednu</string>
     <string name="cwf_comment_day">Dan (DD)</string>
     <string name="cwf_comment_month">Ime mjeseca (kratko)</string>

@@ -376,6 +376,32 @@ step. The behaviour is unchanged and still documented in the gaps section.
 
 ## Ready for Android: what the iOS side has built
 
+### Worth knowing: Google deprecates the loopback redirect for the Android and iOS client types
+
+Not a bug, not caused by any recent change, and not urgent - but all three platforms now depend on it,
+so it should be a known risk rather than a surprise.
+
+Google's native-app OAuth guide says the loopback redirect
+(`http://localhost:PORT`) is **deprecated for the Android, Chrome app and iOS OAuth client types**,
+and supported for **Desktop app** clients on macOS, Linux and Windows. The related out-of-band
+copy/paste flow is already discontinued outright.
+
+AAPS uses one client id on every platform against `http://localhost:8080/oauth/callback`. By
+elimination it must be registered as a **Desktop app** client: an Android client type cannot use
+loopback at all, and would be tied to a package name and signing certificate, which would make it
+unusable from iOS and the desktop. A Desktop-type client is accepted whatever device presents it,
+which is why Android has worked for years and why the iOS sign in succeeded.
+
+So nothing is broken. What is worth doing is confirming the registered client type in the Cloud
+console, because that single fact decides whether this is a non-issue or a thing to plan for. Nobody
+on either session can see it from the code.
+
+Google's error guide also settles the 403 question in the shared client's favour: 401 is invalid
+credentials and should be answered by refreshing first, while 403 is permission and quota
+(`rateLimitExceeded`, `storageQuotaExceeded`, `insufficientFilePermissions`) and is **not** token
+expiry. `GoogleDriveManager` used to treat 403 as a dead sign in, so a full Drive or a rate limit
+signed the user out; the shared client does not.
+
 ### Two things the Windows session found in the Drive merge
 
 Written back for the macOS session. Both are fixed; neither was visible from your side.

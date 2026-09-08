@@ -75,7 +75,7 @@
     <string name="pref_show_detailed_delta">Показвай подробна делта</string>
     <string name="pref_show_avgdelta">Покажи средна делта</string>
     <string name="pref_show_tempTarget">Покажи временна цел</string>
-    <string name="pref_show_reservoir_level">Покажи ниво на резервоар</string>
+    <string name="pref_show_reservoir_level">Покажи ниво на инсулин</string>
     <string name="pref_show_phone_battery">Покажи батерия на телефон</string>
     <string name="pref_show_rig_battery">Покажи батерия на устройство</string>
     <string name="pref_show_basal_rate">Покажи базал</string>
@@ -125,16 +125,13 @@
     <string name="pumpsuspended">Помпата е спряна</string>
     <string name="loopsuspended">Loop изключен</string>
     <string name="pump_disconnected">Няма връзка с помпата</string>
-    <string name="basalprofilenotaligned">Базалните стойности не са за кръгли часове: %1$s</string>
     <string name="minimalbasalvaluereplaced">Базалната стойност е заместена от минимално поддържаната стойност: %1$s</string>
     <string name="maximumbasalvaluereplaced">Базалната стойност е заместена от максимално поддържаната стойност %1$s</string>
     <string name="profile_ins_units_per_hour">Е/ч</string>
     <string name="profile_carbs_per_unit">гр/Е</string>
-    <string name="mins">%1$d мин</string>
     <string name="record">Запиши</string>
     <string name="bolus">Болус</string>
     <string name="uel_extended_carbs">УДЪЛЖЕН БОЛУС</string>
-    <string name="profile_low_target">Профил ниска цел</string>
     <string name="profile_high_target">Профил висока цел</string>
     <string name="profile_dia">Профил време на действие на инсулин</string>
     <string name="profile_sensitivity_value">Профил чувствителност</string>

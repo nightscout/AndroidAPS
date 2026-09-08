@@ -27,7 +27,7 @@ nothing is silently half-done:
 |---|---|
 | `DesktopAutotune` | Blocked: the algorithm itself is Android-only |
 | `DesktopBgQualityCheck` | Not started |
-| `DesktopMaintenance` | Partly - log export missing |
+| `DesktopMaintenance` | Partly - `deleteLogs` works, `executeSendLogs` needs a product decision |
 | `DesktopCloudDirectoryManager` | **Mostly unblocked - see below** |
 | `DesktopHistoryScope` | Not started |
 
@@ -143,6 +143,30 @@ run; a different client is unaffected, because its lock lives in its own directo
 (`ic_yellowowl`, `ic_blueowl`, `ic_greenowl`), but `nativeDistributions` sets no `iconFile` at all,
 so every packaged build carries the jpackage default. It needs `.ico` for Windows and `.icns` for
 macOS; only `.png` exists today.
+
+## The log, which desktop used to throw away
+
+`AAPSLoggerDesktop` **rotates** now - past 5 MB `aaps.log` moves to `aaps.log.1` and a new one
+starts, keeping one previous file, the same promise `AAPSLoggerIos` makes. It used to truncate:
+`file.writeText("")`, which discarded the entire history the moment the bound was crossed.
+
+That was the wrong half to lose. A user is asked for logs *after* something went wrong, and the run
+that went wrong is the run that filled the file - so the evidence was reliably deleted by the act of
+producing it. The bound on disk is now about twice 5 MB instead of exactly 5.
+
+With rotation there is finally something to prune, so `DesktopMaintenance.deleteLogs` is real rather
+than a refusal. That matters beyond tidiness: `PeriodicMaintenance` calls it every cycle, and it used
+to answer `notOnDesktopYet`, which logs at **error** - a desktop left running produced an hourly
+error about a feature nobody had asked for, which is how people learn to scroll past errors.
+
+Two details worth keeping if this is ever changed. `.1` is the *newest* rotated file, because
+rotation moves the live log onto it - so "keep the newest" means keep the lowest numbers, the
+opposite of a name sort. And the old `.1` is deleted before the rename, because `File.renameTo` will
+not replace an existing file on Windows.
+
+`executeSendLogs` still refuses, and deliberately: zipping a folder is not the hard part, but the
+Android version ends in an email intent, and where a desktop should send a log - a mail client, a
+save dialog, a folder it opens - is a product question rather than a porting one.
 
 ## Where desktop cannot follow, and that is fine
 

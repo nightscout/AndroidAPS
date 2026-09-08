@@ -41,7 +41,6 @@
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="edit_site">Rediger</string>
     <string name="record_site_location">Infusjonssted: %1$s</string>
     <string name="record_site_arrow">Områdepil: %1$s</string>
     <string name="record_site_note">Notat: %1$s</string>
@@ -134,7 +133,6 @@
     <string name="insulin_activation_applied">Insulinaktivering utført</string>
     <!-- Client→master round-trip pending dialog -->
     <string name="clientcontrol_pending_working_title">Utfører…</string>
-    <string name="clientcontrol_pending_working_text">Venter på bekreftelse fra hovedenhet…</string>
     <string name="clientcontrol_pending_rejected_title">Ikke utført</string>
     <string name="clientcontrol_pending_failed_format">%1$s kunne ikke utføres.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
@@ -151,9 +149,8 @@
     <string name="cannot_delete_last_insulin">Kan ikke slette siste insulin</string>
     <string name="cannot_delete_active_insulin">Kan ikke slette aktivt insulin</string>
     <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
-    <string name="percentage_label">Prosent</string>
+    <string name="percentage_label">Percentage</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Koble fra pumpen</string>
     <string name="resume">Gjenoppta</string>
     <string name="reconnect">Koble til pumpen</string>
     <string name="duration15m">15 min</string>

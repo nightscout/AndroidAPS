@@ -9,6 +9,7 @@
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Παρακολούθηση δραστηριότητας</string>
+    <string name="time_range">Εύρος χρόνου</string>
     <string name="do_you_want_reset_stats">Θέλετε να επαναφέρετε τα στατιστικά δραστηριότητας;</string>
     <string name="calculation_in_progress">Υπολογισμός σε εξέλιξη</string>
     <string name="age">Ηλικία</string>
@@ -32,7 +33,6 @@
     <string name="reuse_profile_pct_hours">Επαναχρησιμοποίηση %1$d%% %2$dh</string>
     <string name="percentage_label">Ποσοστό</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Αποσυνδέστε την αντλία</string>
     <string name="resume">Επαναφορά</string>
     <string name="reconnect">Επανασύνδεση αντλίας</string>
     <string name="duration15m">15 λεπτά</string>
@@ -52,8 +52,10 @@
     <string name="careportal_remove_started_events">Αφαίρεση καταχωρήσεων έναρξης AAPS</string>
     <string name="user_entry">Καταχώρηση χρήστη</string>
     <string name="clone_label">Κλώνος</string>
+    <string name="activate_profile">Ενεργοποίηση προφίλ</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Τύπος προφίλ</string>
+    <string name="profile_switches">Αλλαγές Προφίλ</string>
     <string name="basal_pct_from_tdd_label">% Ποσοστό βασικού ρυθμού basal</string>
     <string name="selected_profile">Επιλεγμένο:</string>
     <string name="motol_default_profile">Προεπιλεγμένο προφίλ</string>

@@ -9,6 +9,7 @@
     <string name="widget_description">Widget do AAPS</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor de atividade</string>
+    <string name="time_range">Intervalo de tempo</string>
     <string name="do_you_want_reset_stats">Quer reiniciar as estatísticas de atividade?</string>
     <string name="calculation_in_progress">Cálculo em andamento</string>
     <string name="age">Idade</string>
@@ -32,7 +33,6 @@
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="percentage_label">Porcentagem</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Bomba Desconectada</string>
     <string name="resume">Continuar</string>
     <string name="reconnect">Reconectar Bomba</string>
     <string name="duration15m">15 min</string>
@@ -52,8 +52,10 @@
     <string name="careportal_remove_started_events">Remover entradas do AAPS iniciadas</string>
     <string name="user_entry">Entrada do usuário</string>
     <string name="clone_label">Clonar</string>
+    <string name="activate_profile">Ativar perfil</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tipo de perfil</string>
+    <string name="profile_switches">Troca de Perfil</string>
     <string name="basal_pct_from_tdd_label">% da basal</string>
     <string name="selected_profile">Seleccionado:</string>
     <string name="motol_default_profile">Perfil padrão</string>

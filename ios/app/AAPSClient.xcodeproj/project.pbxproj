@@ -287,7 +287,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = AAPSClient;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_UIFileSharingEnabled = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
@@ -331,7 +330,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = AAPSClient2;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_UIFileSharingEnabled = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
@@ -396,7 +394,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = AAPSClient;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_UIFileSharingEnabled = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				// iPhone stays portrait. iPad must declare all four or the App Store rejects the
@@ -440,7 +437,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = AAPSClient2;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_UIFileSharingEnabled = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				// iPhone stays portrait. iPad must declare all four or the App Store rejects the

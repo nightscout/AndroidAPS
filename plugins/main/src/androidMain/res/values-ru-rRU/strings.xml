@@ -13,6 +13,6 @@
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
-    <string name="old_data">старые данные</string>
+    <string name="old_data">СТАРЫЕ ДАННЫЕ</string>
     <string name="notification_iob_short">%1$.1f ед</string>
 </resources>

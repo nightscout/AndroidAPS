@@ -30,7 +30,6 @@
     <string name="description_source_patched_syai_tag_app">Motta blodsukkerverdier fra Syai/Ottai App.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI app</string>
-    <string name="description_source_patched_si_app">Motta BS-verdier fra den patchede appen Sibionic SI.</string>
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino app</string>
     <string name="description_source_patched_sino_app">Motta BS-verdier fra den patchede appen Sino.</string>

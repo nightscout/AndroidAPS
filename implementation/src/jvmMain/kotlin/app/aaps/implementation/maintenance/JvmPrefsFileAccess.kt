@@ -111,6 +111,15 @@ object DesktopFolders {
      */
     val data: File get() = File(System.getProperty("user.home") ?: ".", if (client == 1) ".aaps" else ".aaps$client")
 
+    /**
+     * The live log file, `aaps.log`, inside [data].
+     *
+     * Stated here because two places need it and they must agree: `AAPSLoggerDesktop` writes it and
+     * rotates it to `aaps.log.1`, and `DesktopMaintenance.deleteLogs` finds the rotated ones by that
+     * name. Two literals is how the export folder went wrong, and there is no reason to repeat it.
+     */
+    val log: File get() = File(data, "aaps.log")
+
     /** Settings exports, matching Android's `newPreferenceFile`, which writes to `AAPS/preferences`. */
     val preferences: File get() = File(root, "preferences")
 

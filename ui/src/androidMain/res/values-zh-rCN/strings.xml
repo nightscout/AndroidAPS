@@ -41,7 +41,6 @@
     <string name="bg_sensor">传感器</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="edit_site">编辑</string>
     <string name="record_site_location">部位位置：%1$s</string>
     <string name="record_site_arrow">部位箭头: %1$s</string>
     <string name="record_site_note">备注： %1$s</string>
@@ -153,7 +152,6 @@
     <string name="reuse_profile_pct_hours">重新使用%1$d%% %2$d小时</string>
     <string name="percentage_label">百分比</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">断开泵连接</string>
     <string name="resume">恢复</string>
     <string name="reconnect">重新连接泵</string>
     <string name="duration15m">15 分钟</string>
@@ -172,7 +170,7 @@
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
     <string name="carbs_and_bolus">碳水与大剂量</string>
     <string name="show_invalidated">显示无效项</string>
-    <string name="hide_invalidated">隐藏失效项</string>
+    <string name="hide_invalidated">隐藏无效项</string>
     <string name="careportal_remove_started_events">删除 AAPS 启动的条目</string>
     <string name="user_entry">用户条目</string>
     <string name="clone_label">克隆</string>

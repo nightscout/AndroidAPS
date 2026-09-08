@@ -66,6 +66,8 @@ import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.search.SearchableItem
+import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.core.ui.compose.siteRotation.SiteLocationPickerScreen
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
@@ -173,7 +175,6 @@ fun NavGraphBuilder.appNavGraph(
     onExecuteQuickWizard: (guid: String) -> Unit,
     onRequestDirectoryAccess: () -> Unit,
     onRequestPermission: (PermissionGroup) -> Unit,
-    findScreenDef: (key: String) -> PreferenceSubScreenDef?,
     /**
      * The overview, which is the app home screen.
      *
@@ -186,6 +187,11 @@ fun NavGraphBuilder.appNavGraph(
      */
     overview: (@Composable () -> Unit)? = null,
 ) {
+    // Walked once, here, rather than on every navigation: this builder runs once when the graph is
+    // assembled, which is where the Android implementation's `by lazy` field effectively put it.
+    val pluginScreenDefs = activePlugin.getPluginsList()
+        .mapNotNull { it.getPreferenceScreenContent() as? PreferenceSubScreenDef }
+
     overview?.let { content ->
         composable(AppRoute.Main.route) { content() }
     }
@@ -682,7 +688,7 @@ fun NavGraphBuilder.appNavGraph(
     composable(AppRoute.PreferenceScreen.route) { backStackEntry ->
         val screenKey = backStackEntry.stringArg("screenKey")
         val highlightKey = backStackEntry.stringArg("highlightKey")
-        val screenDef = screenKey?.let { key -> findScreenDef(key) }
+        val screenDef = screenKey?.let { key -> findPreferenceScreen(key, builtInSearchables, pluginScreenDefs) }
         if (screenDef != null) {
             PreferenceScreenView(
                 screenDef = screenDef,
@@ -953,3 +959,57 @@ private fun NavBackStackEntry.intArg(key: String, default: Int): Int =
 /** Null when the argument is absent, for routes that cannot render without it. */
 private fun NavBackStackEntry.intArgOrNull(key: String): Int? =
     arguments?.read { if (contains(key)) getInt(key) else null }
+
+/**
+ * The preference screen registered under [key], or null when nothing claims it.
+ *
+ * This used to be a parameter of [appNavGraph], implemented in `ComposeMainActivity` and passed as
+ * `findScreenDef = { null }` by **both** the iOS and the desktop shells. Every `PreferenceScreen`
+ * route therefore fell through to the navigation-error fallback on those two platforms - "Screen
+ * could not be opened (not available in this configuration)" - which is what a user saw when they
+ * pressed *Set* for the master password in the setup wizard. Nothing about it was to do with
+ * passwords: `onSetMasterPassword` is an ordinary navigation to `PreferenceScreen("protection")`, so
+ * every jump to a preference screen failed the same way, from search results and element navigation
+ * as well as from the wizard.
+ *
+ * It is computed here rather than passed in because `appNavGraph` already receives both things it
+ * needs, so the parameter could only ever be wrong. Nothing in it is platform specific:
+ * [BuiltInSearchables] and [ActivePlugin] are on all three graphs, and `PreferenceSubScreenDef` and
+ * `SearchableItem` are both in `core/ui` commonMain.
+ *
+ * Built-in screens are searched before plugin ones, matching the order the Android implementation
+ * used - `"protection"` is a built-in, declared in `BuiltInSearchables`.
+ */
+internal fun findPreferenceScreen(
+    key: String,
+    builtInSearchables: SearchableProvider,
+    pluginScreenDefs: List<PreferenceSubScreenDef>
+): PreferenceSubScreenDef? {
+    builtInSearchables.getSearchableItems().forEach { item ->
+        if (item is SearchableItem.Category) {
+            if (item.screenDef.key == key) return item.screenDef
+            findNestedPreferenceScreen(item.screenDef, key)?.let { return it }
+        }
+    }
+    for (content in pluginScreenDefs) {
+        if (content.key == key) return content
+        findNestedPreferenceScreen(content, key)?.let { return it }
+    }
+    return null
+}
+
+/**
+ * A sub-screen of [screen], at any depth.
+ *
+ * Preference screens nest, and a key may name a screen several levels down - so matching only the
+ * top level would report a screen that exists as missing.
+ */
+internal fun findNestedPreferenceScreen(screen: PreferenceSubScreenDef, key: String): PreferenceSubScreenDef? {
+    for (item in screen.items) {
+        if (item is PreferenceSubScreenDef) {
+            if (item.key == key) return item
+            findNestedPreferenceScreen(item, key)?.let { return it }
+        }
+    }
+    return null
+}

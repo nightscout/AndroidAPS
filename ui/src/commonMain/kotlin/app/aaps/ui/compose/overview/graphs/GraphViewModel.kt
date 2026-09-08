@@ -176,7 +176,7 @@ class GraphViewModel @AssistedInject constructor(
         // not the extent of what happens to be in it. Without this a day whose readings start in the
         // evening gets an axis only as wide as those readings, and zooming out to the whole day then
         // leaves the readings squashed into a corner instead of filling the day.
-        if (allTimestamps.isEmpty() || fullWindow) {
+        val range = if (allTimestamps.isEmpty() || fullWindow) {
             cacheTimeRange?.let {
                 val upper = if (showPredictions) it.endTime else it.toTime
                 Pair(it.fromTime, upper)
@@ -193,6 +193,21 @@ class GraphViewModel @AssistedInject constructor(
             val effectiveMax = if (cacheUpper != null) maxOf(maxTime, cacheUpper) else maxTime
             Pair(minTime, effectiveMax)
         }
+        // The right edge every series is measured against. A series that stops before this is drawn
+        // short of the axis, which is what a basal line ending before "now" looks like. `by` names
+        // which input won, because the cure differs: `data` means a reading or a prediction reaches
+        // past the cached range, `range` means the cached range is the wider of the two.
+        aapsLogger.debug(LTag.UI) {
+            val cacheUpper = cacheTimeRange?.let { if (showPredictions) it.endTime else it.toTime }
+            val dataMax = allTimestamps.maxOrNull()
+            "Graph axis: to=${dateUtil.dateAndTimeAndSecondsString(range.second)} " +
+                "by=${if (!fullWindow && cacheUpper != null && dataMax != null && dataMax > cacheUpper) "data" else "range"} " +
+                "data=${dataMax?.let { dateUtil.dateAndTimeAndSecondsString(it) } ?: "none"} " +
+                "range=${cacheUpper?.let { dateUtil.dateAndTimeAndSecondsString(it) } ?: "none"} " +
+                "now=${dateUtil.dateAndTimeAndSecondsString(dateUtil.now())} " +
+                "predictions=${if (showPredictions) "on" else "off"}"
+        }
+        range
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

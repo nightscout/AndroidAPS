@@ -31,10 +31,16 @@ data class DriveFilePage(val files: List<DriveFile>, val nextPageToken: String?)
 /** Why a Drive call did not work, when the difference changes what the user should be told. */
 sealed interface DriveFailure {
 
-    /** The sign in is finished - revoked, or the password changed. Signing in again fixes it. */
+    /**
+     * The sign in is finished - revoked, or the password changed. Signing in again fixes it.
+     *
+     * Reached only by a 401 that survived a forced token refresh. The caller throws the stored
+     * credentials away on this, so widening what produces it signs users out: 403 must not, because
+     * Google uses it for quota and permission rather than for expiry.
+     */
     data object SignInExpired : DriveFailure
 
-    /** The network, or Google, or us. Trying again later may work. */
+    /** The network, or Google, or us - a full Drive and a rate limit land here. Trying again later may work. */
     data class Failed(val message: String) : DriveFailure
 }
 
@@ -52,12 +58,25 @@ sealed interface DriveFailure {
  * someone's Drive, and asking for more would be asking for permission over documents that have
  * nothing to do with it.
  *
- * ## Failures are told apart
+ * ## Failures are told apart, and 403 is not one of them
  *
  * A 401 that survives a forced token refresh means the sign in is finished and the user has to do
  * something; anything else may be temporary and should be tried again. Collapsing the two produces
  * either a screen that nags a user whose connection dropped, or one that silently retries a sign in
  * that will never work again.
+ *
+ * **403 is deliberately not treated as expiry.** Google's error guide is explicit that 401 is
+ * invalid credentials while 403 is permission and quota - `rateLimitExceeded`,
+ * `userRateLimitExceeded`, `storageQuotaExceeded`, `insufficientFilePermissions` - and that quota
+ * errors want a retry rather than a new sign in. The Android `GoogleDriveManager` this replaced did
+ * treat 403 as a dead sign in, so a user whose Drive was full, or who hit a rate limit, was signed
+ * out of their own backup.
+ *
+ * Note this differs from `NsAuth` in `:core:nssdk`, which *does* refresh on 403. That is not an
+ * inconsistency: Nightscout answers 403 for an expired token where Google does not, and NsAuth
+ * refreshes rather than clearing anything. Read each against the server it talks to.
+ *
+ * See https://developers.google.com/workspace/drive/api/guides/handle-errors
  */
 class GoogleDriveApi(
     private val http: HttpClient,
@@ -207,6 +226,13 @@ class GoogleDriveApi(
         }
     }
 
+    /**
+     * 401 and nothing else.
+     *
+     * Adding 403 here would be the obvious-looking change and is wrong - see the class KDoc. Every
+     * other status, 403 included, becomes [DriveFailure.Failed], which the caller keeps the sign in
+     * through.
+     */
     private fun failureFor(response: HttpResponse, body: String): DriveFailure =
         if (response.status.value == UNAUTHORIZED) DriveFailure.SignInExpired
         else DriveFailure.Failed("Drive refused the request (${response.status.value})${body.take(200).ifEmpty { "" }}")

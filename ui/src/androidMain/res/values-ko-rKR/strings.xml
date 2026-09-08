@@ -9,6 +9,7 @@
     <string name="widget_description">AAPS 위젯</string>
     <!--     Activities-->
     <string name="activity_monitor">활동 모니터</string>
+    <string name="time_range">시간 범위</string>
     <string name="do_you_want_reset_stats">활동 통계를 초기화하시겠습니까?</string>
     <string name="calculation_in_progress">계산 진행 중</string>
     <string name="age">나이</string>
@@ -32,7 +33,6 @@
     <string name="reuse_profile_pct_hours">%1$d%%를 %2$dh 동안 재사용하기</string>
     <string name="percentage_label">퍼센트</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">펌프 일시중지</string>
     <string name="resume">재실행</string>
     <string name="reconnect">펌프 재연결</string>
     <string name="duration15m">15분</string>
@@ -52,8 +52,10 @@
     <string name="careportal_remove_started_events">AAPS 시작 입력 제거</string>
     <string name="user_entry">사용자 항목</string>
     <string name="clone_label">복사</string>
+    <string name="activate_profile">프로파일 활성화하기</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">프로파일 종류</string>
+    <string name="profile_switches">프로파일 변경</string>
     <string name="basal_pct_from_tdd_label">% basal</string>
     <string name="selected_profile">선택:</string>
     <string name="motol_default_profile">기본 프로파일</string>

@@ -46,6 +46,7 @@ import kotlinx.coroutines.CoroutineScope
 import app.aaps.database.AppRepository
 import app.aaps.database.di.JvmAppDatabaseBuilder
 import app.aaps.implementation.maintenance.DesktopFolders
+import app.aaps.implementation.maintenance.cloud.AuthBrowser
 import java.io.File
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
@@ -137,6 +138,9 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val commandQueue: CommandQueue
     val pumpCommunicationStatus: PumpCommunicationStatus
     val urlOpener: UrlOpener
+
+    /** Where a Google sign in is shown. Not [urlOpener] - see `AuthBrowser` for why they differ. */
+    val authBrowser: AuthBrowser
     val dexcomBoyda: DexcomBoyda
 
     /**

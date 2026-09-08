@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="count_selected">%1$d izabrano</string>
     <string name="constraint_applied">Primenjeno ograničenje!</string>
     <string name="tt_label">TT</string>
     <string name="save">Sačuvaj</string>
@@ -8,6 +9,11 @@
     <string name="constraints">Ograničenja</string>
     <string name="result">Rezultat</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <string name="configbuilder_bgsource">GUK Izvor</string>
+    <string name="configbuilder_pump">Pumpa</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_general">Uopšteno</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="pump">Pumpa</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -25,6 +31,7 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Niska Glukoza Obustavi</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout verzija:</string>
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -54,6 +61,8 @@
     <!-- Autotune -->
     <!-- Alerts -->
     <!-- BolusWizard -->
+    <string name="set">Postavi</string>
+    <string name="quick_wizard_not_available">Izabrani brzi čarobnjak više nije dostupan, molimo osvežite svoju pločicu</string>
     <!--    Preferences-->
     <!--    Protection-->
     <!--    Pumps -->
@@ -62,6 +71,9 @@
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
+    <string name="export_to">Izvezi podešavanja u</string>
+    <string name="password_preferences_encrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za šifrovanje izvezenih postavki.</string>
+    <string name="preferences_export_canceled">Izvoz je otkazan! Postavke NISU izvezene!</string>
     <!-- <unattended_export result messages> -->
     <!-- Cloud export -->
     <!-- Export destination chip labels -->
@@ -74,11 +86,18 @@
     <!--    BlePreCheck-->
     <!--    Preferences -->
     <!-- Navigation -->
+    <string name="nav_exit">Izađi</string>
+    <string name="open_navigation">Otvori navigaciju</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="extended_bolus_button">Produženi Bolus</string>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="cannula">Kanila</string>
     <!-- Site Rotation -->
     <!-- About -->
     <!--    Maintenance-->
+    <string name="reset_db_confirm">Da li zaista želite da poništite baze podataka?</string>
     <!--    Weekday-->
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
@@ -87,7 +106,9 @@
     <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
+    <string name="import_setting">Uvezi podešavanja</string>
     <!-- Import settings screen -->
+    <string name="nav_resetdb">Poništite baze podataka</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->

@@ -8,4 +8,34 @@
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported">Preferências exportadas</string>
+    <string name="filenotfound">Arquivo não encontrado</string>
+    <string name="ue_exported">Entradas do usuário exportadas</string>
+    <string name="exported_at" comment="at placeholder we add export date">exportado em %1$s</string>
+    <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
+    <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas configurações podem estar ausentes ou inválidas - após a importação, por favor verifique e atualize suas preferências.</string>
+    <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
+    <string name="metadata_warning_old_export">As preferências importadas já têm %1$s dias de idade! Talvez você tenha preferências mais atualizadas ou escolha o arquivo errado? Lembre-se de exportar preferências regularmente!</string>
+    <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
+    <string name="metadata_warning_different_version">Preferências de diferentes versões secundárias da aplicação. Está OK se você está importando após a atualização, mas verifique após a importação se as preferências ainda estão corretas!</string>
+    <string name="metadata_urgent_different_version">Preferências de diferentes versões principais do aplicativo. Versões principais diferem significativamente e podem ter preferências incompatíveis! Certifique-se que depois de importar as preferências ainda estão corretas!</string>
+    <string name="prefdecrypt_settings_tampered">Arquivo de configurações adulterado</string>
+    <string name="prefdecrypt_settings_secure">Arquivo de configurações é seguro</string>
+    <string name="prefdecrypt_settings_unencrypted">A usar um formato de configurações não seguro e não encriptado</string>
+    <string name="prefdecrypt_wrong_json">Erro de formato JSON, campo necessário ausente (formato, conteúdo, metadados ou segurança)</string>
+    <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a senha inserida não pode desencriptar o arquivo</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Arquivo de verificação (hash) em falta, não é possível verificar a autenticidade de configurações!</string>
+    <string name="prefdecrypt_issue_modified">Arquivo foi modificado após exportação!</string>
+    <string name="prefdecrypt_issue_parsing">Erro desencriptação, a análise de preferências falhou!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Erro de desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o arquivo importado foi exportado com uma senha mestre diferente.</string>
+    <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de configurações é inválido!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
+    <string name="metadata_label_created_at">Criado em</string>
+    <string name="metadata_label_aaps_version">Versão AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
+    <string name="metadata_label_device_name">Exportando nome do paciente do dispositivo</string>
+    <string name="metadata_label_device_model">Exportando modelo do dispositivo</string>
+    <string name="metadata_label_encryption">Criptografia do arquivo</string>
+    <string name="metadata_format_new">Novo formato de encriptação</string>
+    <string name="metadata_format_other">Formato de exportação desconhecido</string>
 </resources>

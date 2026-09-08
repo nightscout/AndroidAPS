@@ -4,7 +4,7 @@
     <string name="sensor_label">Сензор</string>
     <string name="insulin_label">Инсулин</string>
     <string name="pb_label">Батерия на помпата</string>
-    <string name="cannula">Канюла</string>
+    <string name="cannula">Игла</string>
     <string name="patch_pump">Пач помпа</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->

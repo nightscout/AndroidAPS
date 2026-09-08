@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Aquest camp no pot estar buit</string>
+    <string name="error_mustbe4hexadidits">Han de ser 4 caràcters d\'entre ABCDEF0123456789</string>
     <!--    General-->
     <string name="refresh">Actualitzar</string>
     <string name="error">Error</string>
@@ -27,11 +29,21 @@
     <string name="settings">Configuració</string>
     <string name="statuslights">Llums d\'estat</string>
     <string name="configbuilder_insulin">Insulina</string>
+    <string name="configbuilder_bgsource">Origen glucèmia</string>
+    <string name="configbuilder_pump">Bomba</string>
+    <string name="configbuilder_sensitivity">Detecció de sensibilitat</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Llaços</string>
+    <string name="configbuilder_general">General</string>
     <string name="value_unavailable_short">n/d</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Exportar entrades d\'usuari a Excel (csv)</string>
     <string name="confirm">Confirmar</string>
     <string name="pump">Bomba</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">Carregador de dades</string>
+    <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Falten lectures de glucèmia</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Silenciar 5 minuts</string>
@@ -79,6 +91,7 @@
     <string name="wrong_pump_data">Dades procedents d\'una altra bomba. Canvieu el driver de la bomba per restablir el seu estat.</string>
     <string name="bg_label">Glucèmia</string>
     <string name="calibration">Calibració</string>
+    <string name="cgm">CGM</string>
     <string name="duration_label">Durada</string>
     <string name="shortgramm">g</string>
     <string name="notconfigured">No configurat</string>
@@ -90,12 +103,15 @@
     <string name="activate_profile">Activar perfil</string>
     <string name="profileswitch_ismissing">Falta canvi de perfil. Si us plau feu un canvi de perfil o cliqueu \"Activar perfil\" al perfil local.</string>
     <string name="profile">Perfil</string>
+    <string name="percentage_label">Percentatge</string>
+    <string name="timeshift_label">Decalatge horari</string>
     <string name="overview_treatment_label">Tractament</string>
     <string name="copytolocalprofile">Crear nou perfil local a partir d\'aquest perfil?</string>
     <string name="bolus_iob_label">IOB Bolus</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
     <string name="invalid">NO VÀLID</string>
     <string name="login">Iniciar sessió</string>
+    <string name="logout">Tancar sessió</string>
     <string name="stoptemptarget">Aturar objectiu temporal</string>
     <string name="closedloop">Llaç tancat</string>
     <string name="openloop">Llaç obert</string>
@@ -104,12 +120,16 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="iob_label">Insulina \"a bord\" (IOB)</string>
+    <string name="nav_export">Exportar configuració</string>
+    <string name="configbuilder_nightscoutversion_label">Versió de Nightscout:</string>
+    <string name="not_available_full">No disponible</string>
+    <string name="engineering_mode_enabled">Mode enginyeria actiu</string>
+    <string name="next">Següent</string>
     <!--    Protection-->
     <string name="wrongpassword">Contrasenya incorrecta</string>
     <string name="passwords_dont_match">Les contrasenyes no coincideixen</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Iniciar perfil %1$d%% durant %2$d min</string>
     <!--    APSResult-->
     <string name="let_temp_basal_run">Deixar executar basal temporal</string>
     <string name="rate">Dosi</string>
@@ -119,10 +139,11 @@
     <!--    Insulin / Concentration-->
     <!--       Stats -->
     <string name="average">Mitja</string>
+    <string name="low" comment="3.1-3.9">Baix</string>
+    <string name="high" comment="10.0-13.9">Alt</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Portal de cures</string>
     <string name="careportal_bgcheck">Control glucèmia</string>
     <string name="careportal_mbg">Glucèmia manual o calibració</string>
     <string name="careportal_announcement">Avís</string>
@@ -148,6 +169,7 @@
     <string name="careportal_temporarytargetvalue">Valor objectiu temporal</string>
     <string name="careportal_temporarytargetcancel">Cancel·lar objectiu temporal</string>
     <string name="boluswizard">Calculadora de bolus</string>
+    <string name="user_entry">Entrada d\'usuari</string>
     <string name="glucosetype_finger">Dit</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
@@ -260,7 +282,6 @@
     <string name="uel_loop_change">LLAÇ MODIFICAT</string>
     <string name="uel_loop_removed">LLAÇ ELIMINAT</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Valor mínim d\'objectiu temporal</string>
     <string name="temp_target_high_target">Valor màxim d\'objectiu temporal</string>
     <string name="temp_target_value">Valor objectiu temporal</string>
     <string name="profile_max_daily_basal_value">Valor basal màxima del perfil</string>
@@ -268,6 +289,13 @@
     <string name="valuelimitedto">%1$.2f limitat a %2$.2f</string>
     <string name="valueoutofrange">»%1$s« supera els límits</string>
     <!-- Profile validation -->
+    <string name="missing_profile_name">Falta el nom del perfil</string>
+    <string name="error_in_ic_values">Error en els valors de IC</string>
+    <string name="error_in_isf_values">Error en els valors de ISF</string>
+    <string name="error_in_basal_values">Error en els valors de basal</string>
+    <string name="error_in_target_values">Error en els valors de l\'objectiu </string>
+    <string name="invalid_profile_not_accepted">Perfil invàlid %1$s no acceptat de NS</string>
+    <string name="errors">Errors</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">HIDRATS DE CARBONI %1$d g</string>
@@ -277,6 +305,8 @@
     <string name="load_tdds">CARREGAR TDDs</string>
     <string name="set_profile">ESTABLIR PERFIL</string>
     <string name="set_user_settings">ESTABLIR CONFIGURACIÓ DE L\'USUARI</string>
+    <string name="start_pump">Iniciar bomba</string>
+    <string name="stop_pump">Aturar bomba</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
@@ -306,6 +336,7 @@
     <string name="daily_units">Unitats diàries</string>
     <string name="pump_history">Historial de la bomba</string>
     <string name="temp_basal_delivery_error">Error en lliurar basal temporal</string>
+    <string name="ebstopsloop">L\'ús d\'un bolus estès aturarà el mode llaç tancat mentre duri el bolus. Esteu segurs que voleu això?</string>
     <string name="pump_busy">Bomba ocupada</string>
     <string name="connection_error">Error de connexió de la bomba</string>
     <string name="reading_pump_history">Llegint històric bomba</string>
@@ -327,9 +358,13 @@
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
+    <string name="export_to">Exportar configuració a</string>
+    <string name="password_preferences_encrypt_prompt">Se us demanarà una clau mestra, es farà servir per encriptar la configuració exportada.</string>
+    <string name="preferences_export_canceled">Exportació cancel·lada! Configuració NO exportada!</string>
     <!-- <unattended_export result messages> -->
     <!-- Cloud export -->
     <!-- Export destination chip labels -->
+    <string name="data_choices">Opcions de dades</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
     <!-- datetime layout -->
@@ -345,8 +380,19 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Configuració plugin</string>
     <!-- Navigation -->
+    <string name="nav_exit">Sortir</string>
+    <string name="open_navigation">Obrir navegació</string>
+    <string name="nav_history_browser">Historial</string>
+    <string name="nav_setupwizard">Assistent de configuració</string>
+    <string name="statistics">Estadístiques</string>
+    <string name="nav_profile_helper">Assistent de perfil</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="extended_bolus_button">Bolus estès</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulina</string>
+    <string name="pb_label">Pila de la bomba</string>
+    <string name="cannula">Cànula</string>
     <!-- Site Rotation -->
     <!-- About -->
     <string name="fabric_upload_disabled">Enviament de logs d\'error desactivat!</string>
@@ -363,6 +409,7 @@
         <item quantity="other">%1$d minuts</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="reset_db_confirm">Esteu segurs que voleu restablir les bases de dades?</string>
     <!--    Weekday-->
     <string name="weekday_saturday_short">Ds</string>
     <string name="weekday_friday_short">Dv</string>
@@ -373,12 +420,24 @@
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
     <!-- ProfileEditor -->
+    <string name="target_short">OBJ</string>
+    <string name="profile_name">Nom del perfil:</string>
+    <string name="units_colon">Unitats:</string>
     <!--    Search-->
     <!--    Food Management -->
+    <string name="category">Categoria</string>
+    <string name="subcategory">Subcategoria</string>
     <!--    Log Settings-->
+    <string name="resettodefaults">Restablir valors per defecte</string>
     <!--    Maintenance-->
+    <string name="maintenance">Manteniment</string>
+    <string name="description_maintenance">Proporciona diverses funcions de manteniment (p. ex. enviar logs, eliminar logs).</string>
+    <string name="delete_logs">Eliminar logs</string>
+    <string name="import_setting">Importar configuració</string>
     <!-- Import settings screen -->
+    <string name="nav_resetdb">Restablir bases de dades</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Rang de visualització</string>
 </resources>

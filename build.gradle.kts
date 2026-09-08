@@ -35,7 +35,6 @@ allprojects {
         mavenCentral()
         google()
         maven("https://jitpack.io")
-        maven("https://central.sonatype.com/repository/maven-snapshots/")
     }
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {

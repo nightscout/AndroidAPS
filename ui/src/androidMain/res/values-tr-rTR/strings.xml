@@ -9,6 +9,7 @@
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktivite monitörü</string>
+    <string name="time_range">Zaman aralığı</string>
     <string name="do_you_want_reset_stats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
     <string name="do_you_want_recalculate_tdd_stats">GTD istatistiklerini tekrar hesaplamak istiyor musunuz?</string>
     <string name="calculation_in_progress">Hesaplanıyor</string>
@@ -33,7 +34,6 @@
     <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
     <string name="percentage_label">Yüzde</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Pompayı ayırın</string>
     <string name="resume">Devam et</string>
     <string name="reconnect">Pompayı tekrar bağla</string>
     <string name="duration15m">15 dk</string>
@@ -53,8 +53,10 @@
     <string name="careportal_remove_started_events">AAPS tarafından başlatılmış girdileri kaldırın</string>
     <string name="user_entry">Kullanıcı girişi</string>
     <string name="clone_label">Klon</string>
+    <string name="activate_profile">Profil etkinleştir</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil tipi</string>
+    <string name="profile_switches">Profil Değişimleri</string>
     <string name="basal_pct_from_tdd_label">% bazalın</string>
     <string name="selected_profile">Seçildi:</string>
     <string name="motol_default_profile">Varsayılan profil</string>

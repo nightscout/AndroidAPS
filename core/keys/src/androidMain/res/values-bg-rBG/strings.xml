@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Пускай аларми като нотификации в Андроид</string>
     <string name="pref_title_alert_increase_volume">Постепенно увеличаване на звука за нотификации</string>
     <string name="pref_title_alert_override_dnd">Прескочи DND режима</string>
-    <string name="pref_summary_alert_override_dnd">Когато е пуснато, AAPS ще алармира дори когато телефона е в тих режим или DND режим.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Kaчвай данните за КЗ в NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Проследяване на смяна на сензор</string>
@@ -178,7 +177,6 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Таймаут за Защита</string>
     <string name="pref_title_protection_type_application">Ниво 0: Защита на приложението</string>
-    <string name="pref_summary_protection_type_application">Стартиране на приложението. Независимо от другите нива</string>
     <string name="pref_title_protection_type_bolus">Ниво 1: Защита при болус</string>
     <string name="pref_summary_protection_type_bolus">Лечения, смяна на профил. Иска ниво 2.</string>
     <string name="pref_title_protection_type_settings">Ниво 2: Защита на настройките</string>
@@ -237,7 +235,6 @@
     <string name="pref_title_units">Единици</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Език</string>
     <string name="lang_default">Системния</string>
     <string name="lang_en">English</string>
     <string name="lang_af">Afrikaans</string>

@@ -30,7 +30,6 @@
     <string name="description_source_patched_syai_tag_app">从 Syai/欧态 App 接收血糖数据。</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">SI App</string>
-    <string name="description_source_patched_si_app">从补丁 Sibionic SI 应用接收血糖数据。</string>
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">从补丁 Sino App 应用接收血糖数据。</string>

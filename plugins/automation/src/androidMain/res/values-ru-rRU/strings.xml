@@ -48,7 +48,6 @@
     <string name="location_outside">Когда вы вне зоны</string>
     <string name="location_going_in">Когда вы входите в названную зону</string>
     <string name="location_going_out">Когда вы покидаете названную зону</string>
-    <string name="time_range">Диапазон времени</string>
     <string name="timerange_value">Время между %1$s и %2$s</string>
     <string name="add_short">ДОБАВИТЬ</string>
     <string name="temptargetcompared">Врем цель %1$s</string>

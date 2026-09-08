@@ -148,7 +148,7 @@
     <string name="changeSmbState">啟用/停用 SMB</string>
     <string name="changeSmbTo">更改 SMB 為 %1$s</string>
     <string name="newSmbMode">新 SMB 模式：</string>
-    <string name="on">開</string>
+    <string name="on">ON</string>
     <string name="off">關</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">從地圖選取</string>

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">שדה זה לא יכול להיות ריק</string>
+    <string name="error_mustbe4hexadidits">חייב להיות באורך 4 תוים, מהתוים הבאים: ABCDEF0123456789</string>
     <!--    General-->
+    <string name="count_selected">%1$d נבחרו</string>
+    <string name="show_invalidated">הצג פסולים</string>
+    <string name="hide_invalidated">הסתר פסולים</string>
     <string name="refresh">רענן</string>
-    <string name="error">שגיאה</string>
     <string name="profile_set_ok">הפרופיל הבזאלי עודכן במשאבה</string>
     <string name="invalid_input">קלט לא חוקי</string>
     <string name="constraint_applied">מגבלה הוחלה!</string>
@@ -27,11 +31,23 @@
     <string name="settings">הגדרות</string>
     <string name="statuslights">אורות חיווי</string>
     <string name="configbuilder_insulin">אינסולין</string>
+    <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
+    <string name="configbuilder_smoothing">החלקה</string>
+    <string name="configbuilder_pump">משאבה</string>
+    <string name="configbuilder_sensitivity">זיהוי רגישות</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">לולאה</string>
+    <string name="configbuilder_general">כללי</string>
+    <string name="protection">הגנה בסיסמאות</string>
     <string name="value_unavailable_short">לא זמין</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">יצוא ערכי משתמש לאקסל (csv)</string>
     <string name="confirm">אישור</string>
     <string name="pump">משאבה</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">מעלה</string>
+    <string name="uploader_short">מעלה</string>
     <string name="missed_bg_readings">לא התקבלו קריאות סוכר</string>
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
     <string name="mute5min">השתקה ל-5 דקות</string>
@@ -88,6 +104,7 @@
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">כיול</string>
+    <string name="cgm">סנסור</string>
     <string name="duration_label">משך</string>
     <string name="shortgramm">גר\'</string>
     <string name="notconfigured">לא מוגדר</string>
@@ -107,6 +124,8 @@
     <string name="activate_profile">הפעלת פרופיל</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
     <string name="profile">פרופיל</string>
+    <string name="percentage_label">אחוזים</string>
+    <string name="timeshift_label">היסט זמן</string>
     <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
@@ -131,6 +150,11 @@
     <string name="loopstatus_targets">ערכי מטרה:</string>
     <string name="loopstatus_OAPS_result">תוצאות OAPS:</string>
     <string name="nav_export">ייצוא הגדרות</string>
+    <string name="configbuilder_nightscoutversion_label">גירסת נייטסקאוט:</string>
+    <string name="not_available_full">לא זמין</string>
+    <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
+    <string name="next">הבא</string>
+    <string name="show_hide_records">החבא רשומות לולאה</string>
     <!--    Protection-->
     <string name="wrongpassword">סיסמה שגויה</string>
     <string name="wrongpin">קוד PIN שגוי</string>
@@ -138,7 +162,6 @@
     <string name="pin_dont_match">קודי PIN אינם תואמים</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <!--    APSResult-->
     <string name="cancel_temp">ביטול בזאלי זמני</string>
     <string name="let_temp_basal_run">אפשר לבזאלי זמני לרוץ</string>
@@ -149,10 +172,20 @@
     <!--    Insulin / Concentration-->
     <!--       Stats -->
     <string name="average">ממוצע</string>
+    <string name="below" comment="below &quot;in range&quot;">מתחת</string>
+    <string name="in_range">בטווח</string>
+    <string name="low" comment="3.1-3.9">נמוך</string>
+    <string name="high" comment="10.0-13.9">גבוה</string>
+    <string name="veryHigh" comment="above 13.9">גבוה מאוד</string>
+    <string name="above" comment="above &quot;in range&quot;">מעל</string>
+    <string name="detailed_14_days">פירוט 14 יום</string>
+    <string name="day_tir">זמן בטווח ביום</string>
+    <string name="night_tir">זמן בטווח בלילה</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">סטיית תקן: %1$s</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">פורטל הטיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
     <string name="careportal_announcement">הכרזה</string>
@@ -182,6 +215,7 @@
     <string name="careportal_temporarytargetvalue">ערך המטרה הזמני</string>
     <string name="careportal_temporarytargetcancel">ביטול ערך מטרה זמני</string>
     <string name="boluswizard">אשף בולוס</string>
+    <string name="user_entry">קלט המשתמש</string>
     <string name="glucosetype_finger">אצבע</string>
     <string name="glucosetype_sensor">חיישן</string>
     <string name="manual">ידני</string>
@@ -298,7 +332,6 @@
     <string name="uel_loop_change">הלולאה שונתה</string>
     <string name="uel_loop_removed">הלולאה הוסרה</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">ערך תחתון של המטרה הזמנית</string>
     <string name="temp_target_high_target">ערך עליון של המטרה הזמנית</string>
     <string name="temp_target_value">ערך המטרה הזמני</string>
     <string name="profile_max_daily_basal_value">מינון בזאלי מרבי של הפרופיל</string>
@@ -306,6 +339,14 @@
     <string name="valuelimitedto">%1$.2f מוגבל ל- %2$.2f</string>
     <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <!-- Profile validation -->
+    <string name="missing_profile_name">חסר שם לפרופיל</string>
+    <string name="error_in_ic_values">שגיאה בערכי יחס הפחמימות</string>
+    <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
+    <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
+    <string name="error_in_target_values">שגיאה בערכי המטרה</string>
+    <string name="profile_name_contains_dot">ישנם שמות פרופיל המכילים נקודות.\nשמות כאלו אינם נתמכים ע\"י Nightscout \n הפרופילים לא הועלו ל-Nightscout.</string>
+    <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
+    <string name="errors">שגיאות</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">בולוס %1$.2f יח\'</string>
     <string name="carbs_g">פחמימות %1$d גרם</string>
@@ -319,6 +360,8 @@
     <string name="set_profile">הגדר פרופיל</string>
     <string name="set_user_settings">הגדר הגדרות משתמש</string>
     <string name="smb_bolus_u">בולוס SMB %1$.2f יח\'</string>
+    <string name="start_pump">הפעל משאבה</string>
+    <string name="stop_pump">עצור משאבה</string>
     <string name="temp_basal_absolute">בזאלי זמני %1$.2f יח\' לשעה %2$d דק\'</string>
     <string name="temp_basal_percent">בזאלי זמני %1$d%% %2$d דק\'</string>
     <string name="insight_set_tbr_over_notification">אינסייט הגדר התראת הבזאלי הזמני הסתיים</string>
@@ -342,12 +385,14 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">יועץ הבולוסים</string>
     <string name="bolus_advisor_message">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
+    <string name="set">הגדר</string>
     <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
     <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
     <string name="wizard_constraint_bolus_size">הופעלה מגבלת אינסולין!\nלא ניתן להזריק %1$.2f יח\'</string>
     <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
+    <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
     <!--    Preferences-->
     <string name="child">ילד\\ה צעיר\\ה</string>
     <string name="teenage">מתבגר\\ת</string>
@@ -378,6 +423,7 @@
     <string name="device_changed" comment="26 characters max for translation">התקן שונה</string>
     <string name="bolus_ok" comment="26 characters max for translation">בולוס OK</string>
     <string name="temp_basal_delivery_error">שגיאת אספקה של בזאלי זמני</string>
+    <string name="ebstopsloop">שימוש בבולוס ממושך יפסיק את מצב הלולאה הסגורה לזמן פעילות הבולוס. אתם בטוחים שאתם רוצים להמשיך?</string>
     <string name="pump_busy">המשאבה אינה פנויה</string>
     <string name="connection_error">שגיאה בחיבור המשאבה</string>
     <string name="reading_pump_history">קורא היסטוריית משאבה</string>
@@ -391,7 +437,6 @@
     <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
     <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
     <!--    Dialogs-->
-    <string name="confirmation">אישור</string>
     <string name="message">הודעה</string>
     <string name="ok">אישור</string>
     <string name="cancel">ביטול</string>
@@ -401,11 +446,15 @@
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
+    <string name="export_to">ייצא הגדרות ל-</string>
+    <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
+    <string name="preferences_export_canceled">ייצוא בוטל! ההגדרות לא יוצאו!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">הגדרות יוצאו</string>
     <string name="export_result_message_failed">יצוא ההגדרות נכשל!</string>
     <!-- Cloud export -->
     <!-- Export destination chip labels -->
+    <string name="data_choices">אפשרויות נתונים</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
     <string name="cloud_revoke_incomplete">הגדרות הענן נמחקו מהמכשיר הזה, אך לא ניתן היה להגיע לחשבון כדי לבטל את הגישה באופן מלא. מומלץ להסיר אותה ידנית בהגדרות החשבון שלכם.</string>
@@ -420,12 +469,23 @@
     <!--    BlePreCheck-->
     <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>
     <string name="ble_not_supported_or_not_paired">בלוטות\' באנרגיה נמוכה (BLE) לא נתמך או שהמכשיר אינו מצומד.</string>
-    <string name="ble_not_enabled">בלוטות\' כבוי.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">העדפות תוסף</string>
     <!-- Navigation -->
+    <string name="nav_exit">יציאה</string>
+    <string name="open_navigation">פתח ניווט</string>
+    <string name="nav_history_browser">דפדפן היסטוריה</string>
+    <string name="nav_setupwizard">אשף ההתקנה</string>
+    <string name="statistics">סטטיסטיקה</string>
+    <string name="nav_profile_helper">עוזר הפרופילים</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="extended_bolus_button">בולוס ממושך</string>
+    <string name="sensor_label">חיישן</string>
+    <string name="insulin_label">אינסולין</string>
+    <string name="pb_label">סוללת המשאבה</string>
+    <string name="cannula">צינורית</string>
+    <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
@@ -434,25 +494,23 @@
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
-        <item quantity="many">%1$d ימים</item>
         <item quantity="other">%1$d ימים</item>
     </plurals>
     <plurals name="hours">
         <item quantity="one">%1$d שעה</item>
         <item quantity="two">%1$d שעות</item>
-        <item quantity="many">%1$d שעות</item>
         <item quantity="other">%1$d שעות</item>
     </plurals>
     <plurals name="minutes">
         <item quantity="one">%1$d דקה</item>
         <item quantity="two">%1$d דקות</item>
-        <item quantity="many">%1$d דקות</item>
         <item quantity="other">%1$d דקות</item>
     </plurals>
     <!--    Maintenance-->
     <string name="cleanup_db_confirm">אתם בטוחים שברצונכם לנקות את מסד הנתונים? \nפעולה זו תמחק את הנתונים הישנים מ-3 החודשים האחרונים.</string>
     <string name="cleanup_db_confirm_sync">האם ברצונכם לנקות את מסד הנתונים?\nשינויים הנמצאים במעקב ונתונים היסטוריים הישנים מ-3 חודשים יימחקו.\nפעולה זו תזרז משמעותית את מהירות הסינכרון המלא.</string>
     <string name="cleared_entries">רשומות שנמחקו</string>
+    <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">א׳</string>
     <string name="weekday_saturday_short">ש\'</string>
@@ -465,12 +523,27 @@
     <string name="format_insulin_units1">%1$.1f יח\'</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
+    <string name="target_short">ע\' מטרה</string>
+    <string name="profile_name">שם הפרופיל:</string>
+    <string name="units_colon">יחידות:</string>
     <!--    Search-->
     <!--    Food Management -->
+    <string name="category">קטגוריה</string>
+    <string name="subcategory">תת קטגוריה</string>
     <!--    Log Settings-->
+    <string name="resettodefaults">אפס לברירת המחדל</string>
     <!--    Maintenance-->
+    <string name="maintenance">תחזוקה</string>
+    <string name="description_maintenance">מספק מספר פונקציות של תחזוקה (כגון משלוח יומן, מחיקת יומן).</string>
+    <string name="log_files">קבצי יומן</string>
+    <string name="delete_logs">מחק רישומים</string>
+    <string name="aaps_directory">תיקיית AAPS</string>
+    <string name="import_setting">ייבוא הגדרות</string>
     <!-- Import settings screen -->
+    <string name="database_cleanup">ניקיון מסד הנתונים</string>
+    <string name="nav_resetdb">איפוס מסדי נתונים</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">טווח להצגה</string>
 </resources>

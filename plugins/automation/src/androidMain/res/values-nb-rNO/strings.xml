@@ -83,7 +83,7 @@
     <string name="location_outside">Når du er utenfor området</string>
     <string name="location_going_in">Når du går inn i området som heter</string>
     <string name="location_going_out">Når du forlater området som heter</string>
-    <string name="time_range">Tidsintervall</string>
+    <string name="time_range">Tidsrom</string>
     <string name="timerange_value">Tid er mellom %1$s og %2$s</string>
     <string name="add_short">LEGG TIL</string>
     <string name="temptargetcompared">Midlertidig mål %1$s</string>

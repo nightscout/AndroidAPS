@@ -16,6 +16,7 @@
     <string name="authorized_clients_add">新增用戶端</string>
     <string name="authorized_clients_comm_switch_title">允許用戶端控制</string>
     <string name="authorized_clients_comm_switch_summary">允許已配對的用戶端透過 Nightscout 傳送簽章的指令。關閉可在不移除的情況下停止通訊。</string>
+    <string name="authorized_clients_needs_websocket">WebSockets 已關閉，因此無法接收來自用戶端的指令。在您開啟 WebSockets 之前，用戶端會將此主機端顯示為不接受指令。</string>
     <string name="authorized_clients_state_active">啟用中</string>
     <string name="authorized_clients_state_pending">等待中</string>
     <string name="authorized_clients_last_seen">上次連線於 %1$s</string>
@@ -106,7 +107,7 @@
     <string name="description_wear">使用您的 WearOS 手錶監控和控制 AAPS。</string>
     <string name="no_watch_connected">（無手錶連線）</string>
     <string name="pump_status">幫浦狀態</string>
-    <string name="loop_status">循環狀態</string>
+    <string name="loop_status"> 循環狀態</string>
     <string name="user_action_not_available">選定的用戶操作 %1$s 已不再可用，請重新整理您的面版</string>
     <string name="scene_not_available">情境 %1$s 已無法使用，請重新整理您的圖塊</string>
     <string name="wear_remote_insulin_not_allowed_in_client">遠端胰島素指令在用戶端模式中已停用</string>
@@ -134,7 +135,7 @@
     <string name="pump_fetching_data">嘗試從幫浦獲取資料。</string>
     <string name="pump_old_data">TDD: 資料仍然是舊的！無法從幫浦載入。</string>
     <string name="units_short">U</string>
-    <string name="hour_short">h</string>
+    <string name="hour_short">時</string>
     <string name="no_active_profile">沒有活動的設定檔切換！</string>
     <string name="target_only_aps_mode">目標僅適用於 APS 模式！</string>
     <string name="no_history">無歷史資料！</string>

@@ -3,7 +3,6 @@
     <string name="dia_whatmeansdia">Какво е вярно за DIA(Продължителност на Действие на Инсулина)?</string>
     <string name="dia_label_exam">Продължителност на действие на инсулина (DIA)</string>
     <string name="dia_profile">Трябва да настроите DIA във конфигурацията на инсулина.</string>
-    <string name="dia_minimumis5h">Минималната стойност е 5 часа.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Ако сте били доволни от зададената стойност за DIA, която е използвалa вашата помпа, преди да започнете да ползвате AndroidAPS, няма нужда да я променяте, когато затворите цикъла.</string>
     <string name="dia_valuemustbedetermined">Вие трябва да установите за себе си правилната стойност за DIA.</string>

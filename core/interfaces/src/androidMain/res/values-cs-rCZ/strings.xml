@@ -14,7 +14,6 @@
     <string name="min_plus">(+%1$dm)</string>
     <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">před %1$d minutamí</string>
-    <string name="hoursago">před %1$.1fh</string>
     <string name="days_ago">Před %1$.1f dny</string>
     <string name="days_ago_round">Před %1$.0f dny</string>
     <plurals name="plurals_day_hour_ago">
@@ -27,7 +26,7 @@
         <item quantity="one">před %1$s hodinou</item>
         <item quantity="few">před %1$s hodinami</item>
         <item quantity="many">Před %1$s hodinami</item>
-        <item quantity="other">před %1$s hodinami</item>
+        <item quantity="other">Před %1$s hodinami</item>
     </plurals>
     <plurals name="plurals_minute_ago">
         <item quantity="one">před pár okamžiky</item>
@@ -81,7 +80,7 @@
     <string name="pref_show_detailed_delta">Zobrazit detailní deltu</string>
     <string name="pref_show_avgdelta">Zobrazit průměrnou deltu</string>
     <string name="pref_show_tempTarget">Zobrazit Dočasný cíl</string>
-    <string name="pref_show_reservoir_level">Zobrazit úroveň zásobníku</string>
+    <string name="pref_show_reservoir_level">Zobrazit stav zásobníku</string>
     <string name="pref_show_phone_battery">Zobrazit stav baterie telefonu</string>
     <string name="pref_show_rig_battery">Zobrazit stav baterie dalších zařízení</string>
     <string name="pref_show_basal_rate">Zobrazit bazál</string>
@@ -131,16 +130,13 @@
     <string name="pumpsuspended">Pumpa pozastavena</string>
     <string name="loopsuspended">Smyčka pozastavena</string>
     <string name="pump_disconnected">Pumpa odpojena</string>
-    <string name="basalprofilenotaligned">Hodnoty bazálů nejsou zarovnané na celé hodiny: %1$s</string>
     <string name="minimalbasalvaluereplaced">Hodnota bazálu byla nahrazena minimální možnou: %1$s</string>
     <string name="maximumbasalvaluereplaced">Hodnota bazálu nahrazena maximální možnou: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
-    <string name="mins">%1$d min</string>
     <string name="record">Záznam</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">ROZLOŽENÉ SACHARIDY</string>
-    <string name="profile_low_target">Dolní cíl profilu</string>
     <string name="profile_high_target">Horní cíl profilu</string>
     <string name="profile_dia">Hodnota DIA profilu</string>
     <string name="profile_sensitivity_value">Hodnota citlivosti profilu</string>

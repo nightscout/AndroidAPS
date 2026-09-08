@@ -6,8 +6,11 @@ import app.aaps.core.interfaces.maintenance.CloudFile
 import app.aaps.core.interfaces.maintenance.CloudFileListResult
 import app.aaps.core.interfaces.maintenance.CloudFolder
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.objects.crypto.platformCryptoPrimitives
 import app.aaps.core.ui.compose.icons.IcGoogleDrive
@@ -17,10 +20,10 @@ import io.ktor.client.HttpClient
 /**
  * Google Drive as a place to keep settings exports, written to work on every platform.
  *
- * iOS and the desktop both run this - `IosGoogleDriveProvider` and `DesktopGoogleDriveProvider` are
- * the two lines of engine choice around [googleDriveProvider] below. Android is the last one still
- * on its own `GoogleDriveManager`, so a change here reaches two of the three platforms and does not
- * touch a phone.
+ * `AndroidGoogleDriveProvider`, `IosGoogleDriveProvider` and `DesktopGoogleDriveProvider` are an
+ * engine choice each around [googleDriveProvider] below, so all three run this one class. Android
+ * came last, and what it left behind - `GoogleDriveManager`, 1,445 lines of hand-written OkHttp -
+ * is deleted.
  *
  * Composed rather than written: [GoogleAuthRequest] builds the sign in, [AuthRedirectListener]
  * catches the answer, [GoogleTokenClient] turns it into tokens and keeps them fresh, and
@@ -52,6 +55,7 @@ class GoogleDriveProvider(
     override val icon: ImageVector,
     override val authorizedText: TextRef,
     override val reAuthRequiredText: TextRef,
+    private val notificationManager: NotificationManager,
     private val clientId: String,
     private val redirectPort: Int = REDIRECT_PORT
 ) : CloudStorageProvider {
@@ -217,6 +221,17 @@ class GoogleDriveProvider(
      *
      * The difference is what the user is shown: one of them has to send them back through a sign in,
      * the other should say that Drive could not be reached and leave the sign in alone.
+     *
+     * ## Why this notifies
+     *
+     * A backup that has stopped working is the definition of a thing nobody notices. Nothing opens
+     * the maintenance screen on a schedule, so without a notification the first sign is a user
+     * needing a backup that was never written. Android's `GoogleDriveManager` has raised one for
+     * years and it is the one behaviour a straight swap to the shared client would have dropped -
+     * so it lives here now, and iOS and the desktop gain it rather than Android losing it.
+     *
+     * One notification id and a sixty minute validity, matching what Android already posts: a
+     * failing sync retries often, and each attempt must not leave its own card behind.
      */
     private fun noteFailure(error: Throwable) {
         val expired = (error as? DriveException)?.failure is DriveFailure.SignInExpired ||
@@ -224,8 +239,19 @@ class GoogleDriveProvider(
         if (expired) {
             aapsLogger.warn(LTag.CORE, "$TAG the Google sign in is no longer valid, it has been cleared")
             tokens.clear()
+            // The only one the user can act on, and the wording says what to do.
+            notificationManager.post(
+                id = NotificationId.GOOGLE_DRIVE_ERROR,
+                textRef = ImplementationStrings.google_drive_reauth_required,
+                validMinutes = ERROR_NOTIFICATION_MINUTES
+            )
         } else {
             aapsLogger.error(LTag.CORE, "$TAG Drive could not be reached: ${error.message}")
+            notificationManager.post(
+                id = NotificationId.GOOGLE_DRIVE_ERROR,
+                textRef = ImplementationStrings.google_drive_connect_error.withArgs(error.message ?: ""),
+                validMinutes = ERROR_NOTIFICATION_MINUTES
+            )
         }
         storeConnectionError(true)
     }
@@ -263,6 +289,9 @@ class GoogleDriveProvider(
         private const val SELECTED_FOLDER = "google_drive_folder_id"
         private const val COUNT_PAGE_SIZE = 100
 
+        /** The same hour Android has always used, so a retrying sync does not stack up cards. */
+        private const val ERROR_NOTIFICATION_MINUTES = 60
+
         /** Every export is json; Drive is asked not to return anything else. */
         private const val SETTINGS_MIME = "application/json"
     }
@@ -285,6 +314,7 @@ fun googleDriveProvider(
     aapsLogger: AAPSLogger,
     store: KeyValueStore,
     listener: AuthRedirectListener,
+    notificationManager: NotificationManager,
     http: HttpClient,
     now: () -> Long
 ): GoogleDriveProvider {
@@ -310,6 +340,7 @@ fun googleDriveProvider(
         icon = IcGoogleDrive,
         authorizedText = ImplementationStrings.google_drive_authorized,
         reAuthRequiredText = ImplementationStrings.google_drive_reauth_required,
+        notificationManager = notificationManager,
         clientId = GoogleDriveProvider.CLIENT_ID
     )
 }

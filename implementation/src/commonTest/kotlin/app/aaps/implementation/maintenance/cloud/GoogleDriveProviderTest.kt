@@ -35,6 +35,7 @@ class GoogleDriveProviderTest {
     private val store = FakeKeyValueStore()
     private val tokens = GoogleTokenStore(store)
     private val listener = FakeRedirectListener()
+    private val notifications = RecordingNotificationManager()
     private var clock = 1_000_000L
 
     private fun providerReplying(vararg replies: Pair<HttpStatusCode, String>): GoogleDriveProvider {
@@ -58,6 +59,7 @@ class GoogleDriveProviderTest {
             icon = Icons.Default.Cloud,
             authorizedText = TextRef.Literal("authorized"),
             reAuthRequiredText = TextRef.Literal("sign in again"),
+            notificationManager = notifications,
             clientId = "the-client"
         )
     }

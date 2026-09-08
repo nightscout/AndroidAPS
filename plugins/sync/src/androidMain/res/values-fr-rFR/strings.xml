@@ -4,18 +4,17 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Paramètres de connexion</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="description_ns_client_v3">Synchronise vos données avec Nightscout en utilisant l\'API v3</string>
     <string name="blocked_by_charging">Bloqué par les options de recharge</string>
     <string name="blocked_by_connectivity">Bloqué par les options de connectivité</string>
     <string name="no_connectivity">Aucune connectivité</string>
     <string name="unsupported_ns_version">Version de Nightscout non supportée</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Clients autorisés</string>
     <string name="authorized_clients_add">Ajouter un client</string>
     <string name="authorized_clients_comm_switch_title">Autoriser le contrôle par un client</string>
     <string name="authorized_clients_comm_switch_summary">Autorise les clients associés à envoyer des commandes signées sur Nightscout. Désactivez pour arrêter le contrôle sans supprimer les clients.</string>
+    <string name="authorized_clients_needs_websocket">Les websockets sont désactivés, donc les commandes des clients ne peuvent pas être reçues. Les clients voient ce maître comme n\'acceptant pas les commandes tant que vous n\'activez pas les websockets.</string>
     <string name="authorized_clients_state_active">Actif</string>
     <string name="authorized_clients_state_pending">En cours</string>
     <string name="authorized_clients_last_seen">Dernière fois vu %1$s</string>

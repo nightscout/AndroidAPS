@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Patvirtinimas</string>
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
@@ -71,23 +72,25 @@
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
+    <string name="free_peak_oref">Oref be piko</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Piko laikas [min]</string>
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
-    <string name="format_carbs">%1$dg</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="carbs">Angliavandeniai</string>
     <string name="alarminxmin">Pranešti po %1$d min</string>
     <string name="pumpsuspended">Pompa sustabdyta</string>
     <string name="loopsuspended">Ciklas sustabdytas</string>
-    <string name="basalprofilenotaligned">Bazės reikšmės nesuderintos su valandomis: %1$s</string>
+    <string name="pump_disconnected">Pompa atjungta</string>
     <string name="minimalbasalvaluereplaced">Nustatyta mažiausia galima valandinės bazės vertė: %1$s</string>
     <string name="maximumbasalvaluereplaced">Nustatyta didžiausia galima valandinės bazės vertė: %1$s</string>
     <string name="profile_ins_units_per_hour">v/val</string>
     <string name="profile_carbs_per_unit">g/v</string>
-    <string name="mins">%1$d min.</string>
     <string name="record">Įrašas</string>
     <string name="bolus">Bolusas</string>
     <string name="uel_extended_carbs">IŠTĘSTI AV</string>
-    <string name="profile_low_target">Profilio tikslo žemoji riba</string>
     <string name="profile_high_target">Profilio tikslo aukštoji riba</string>
     <string name="profile_dia">Profilio IVT reikšmė</string>
     <string name="profile_sensitivity_value">Profilio JIF reikšmė</string>

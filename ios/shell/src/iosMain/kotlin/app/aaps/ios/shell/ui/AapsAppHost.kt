@@ -332,7 +332,6 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                         onExecuteQuickWizard = { guid -> logger.notWiredYet("quick wizard $guid") },
                         onRequestDirectoryAccess = { logger.notWiredYet("directory access - iOS needs a document picker") },
                         onRequestPermission = { group -> logger.notWiredYet("permission request $group") },
-                        findScreenDef = { null },
                         overview = {
                             OverviewScreen(
                                 mainViewModel = mainViewModel,

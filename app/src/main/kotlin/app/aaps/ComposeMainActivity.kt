@@ -88,11 +88,9 @@ import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.implementation.plugin.PluginPermissionsImpl
 import app.aaps.implementation.protection.BiometricCheck
@@ -482,7 +480,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                     }
                 },
                 onRequestPermission = { group -> permissionsViewModel.requestPermission(group) },
-                findScreenDef = { key -> findScreenDef(key) },
                 overview = {
                     OverviewScreen(
                         mainViewModel = mainViewModel,
@@ -576,41 +573,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         }
     }
 
-    private val pluginScreenDefsCache: List<PreferenceSubScreenDef> by lazy {
-        activePlugin.getPluginsList().mapNotNull { it.getPreferenceScreenContent() as? PreferenceSubScreenDef }
-    }
-
-    private fun findScreenDef(key: String): PreferenceSubScreenDef? {
-        // Check built-in screens from BuiltInSearchables (including nested subscreens)
-        builtInSearchables.getSearchableItems().forEach { item ->
-            if (item is SearchableItem.Category) {
-                if (item.screenDef.key == key) return item.screenDef
-                val nested = findNestedScreen(item.screenDef, key)
-                if (nested != null) return nested
-            }
-        }
-        // Check plugin screens (including nested subscreens) — cached to avoid walking all plugins on every lookup
-        for (content in pluginScreenDefsCache) {
-            if (content.key == key) return content
-            val nested = findNestedScreen(content, key)
-            if (nested != null) return nested
-        }
-        return null
-    }
-
-    private fun findNestedScreen(
-        screen: PreferenceSubScreenDef,
-        key: String
-    ): PreferenceSubScreenDef? {
-        for (item in screen.items) {
-            if (item is PreferenceSubScreenDef) {
-                if (item.key == key) return item
-                val nested = findNestedScreen(item, key)
-                if (nested != null) return nested
-            }
-        }
-        return null
-    }
 
     private var isProtectionCheckActive = false
 

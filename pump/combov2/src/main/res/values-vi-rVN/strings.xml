@@ -22,7 +22,7 @@
     <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Ghép nối với bơm</string>
     <string name="combov2_unpair_pump_title">Hủy ghép nối bơm</string>
-    <string name="combov2_driver_state_label">Trạng thái trình điều khiển</string>
+    <string name="combov2_driver_state_label">Trạng thái điều khiển</string>
     <string name="bluetooth_address">Địa chỉ Bluetooth</string>
     <string name="combov2_start_pairing">Bắt đầu ghép nối</string>
     <string name="combov2_pairing_in_progress">Đang ghép nối Combo</string>
@@ -53,7 +53,7 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_pairing_pump_requests_pin">Bơm yêu cầu mã PIN 10 chữ số</string>
     <string name="combov2_pairing_finishing">Đang hoàn thành ghép nối</string>
     <string name="combov2_no_connection_for_n_mins">Mất kết nối %1$d phút</string>
-    <string name="combov2_less_than_one_minute_ago">Chưa đến một phút trước</string>
+    <string name="combov2_less_than_one_minute_ago">Chưa đầy 1 phút trước</string>
     <string name="combov2_setting_current_pump_time">Đặt giờ hiện tại cho bơm</string>
     <string name="combov2_setting_current_pump_date">Đặt ngày hiện tại cho bơm</string>
     <string name="combov2_not_initialized">Chưa khởi tạo</string>
@@ -85,7 +85,7 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_incorrect_active_basal_profile">Cấu hình liều nền đang hoạt động không đúng; Cấu hình 1 phải là cấu hình đang kích hoạt, không phải cấu hình %1$d</string>
     <string name="combov2_unrecognized_alert">Cảnh báo Combo không được nhận dạng</string>
     <string name="combov2_combo_alert">Cảnh báo Combo</string>
-    <string name="combov2_current_tbr">%1$d%% (%2$d phút còn lại)</string>
+    <string name="combov2_current_tbr">%1$d%% (còn lại %2$d phút)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (còn dưới 1 phút)</string>
     <string name="combov2_load_tdds_cancelled">Việc tải tổng liều insulin hằng ngày (TDD) bị hủy</string>
     <string name="combov2_retrieving_tdds_failed">Không lấy được TDD</string>

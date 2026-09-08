@@ -5,4 +5,5 @@
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Nem biztonságos visszalépés</string>
     <string name="unsecure_fallback_descriotion_biometric">A hatályba lépéshez a biometrikus védelemhez tartalék jelszót kell beállítani.\n\nKérjük, állítson be egy fő jelszót!</string>
+    <string name="current_master_password">Jelenlegi mesterjelszó</string>
 </resources>

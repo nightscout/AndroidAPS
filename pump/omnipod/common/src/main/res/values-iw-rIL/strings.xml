@@ -139,25 +139,21 @@
     <plurals name="omnipod_common_minutes">
         <item quantity="one">דקה אחת</item>
         <item quantity="two">שתי דקות</item>
-        <item quantity="many">%1$d דקות</item>
         <item quantity="other">%1$d דקות</item>
     </plurals>
     <plurals name="omnipod_common_hours">
         <item quantity="one">שעה אחת</item>
         <item quantity="two">שעתיים</item>
-        <item quantity="many">%1$d שעות</item>
         <item quantity="other">%1$d שעות</item>
     </plurals>
     <plurals name="omnipod_common_days">
         <item quantity="one">יום אחד</item>
         <item quantity="two">יומיים</item>
-        <item quantity="many">%1$d ימים</item>
         <item quantity="other">%1$d ימים</item>
     </plurals>
     <plurals name="omnipod_common_pod_alerts">
         <item quantity="one">התראת פוד: %1$s</item>
         <item quantity="two">התראות פוד: %1$s</item>
-        <item quantity="many">התראות פוד: %1$s</item>
         <item quantity="other">התראות פוד: %1$s</item>
     </plurals>
 </resources>

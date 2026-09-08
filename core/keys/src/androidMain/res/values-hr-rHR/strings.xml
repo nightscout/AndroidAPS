@@ -18,6 +18,7 @@
     <!-- IntKey: Overview preferences -->
     <!-- IntKey: Protection preferences -->
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="master_password">Glavna lozinka</string>
     <!-- IntKey: Safety preferences -->
     <!-- IntKey: Loop preferences -->
     <!-- IntKey: APS preferences -->
@@ -25,6 +26,7 @@
     <!-- IntKey: Alert preferences -->
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="autotune_default_tune_days_summary">Zadani broj dana podataka koje će obraditi Autotune (do 30)</string>
     <!-- IntKey: SMS preferences -->
     <!-- IntKey: BG Source preferences -->
     <!-- IntKey: NS Client preferences -->

@@ -3,7 +3,7 @@
     <string name="open_humans">Проект Open Humans</string>
     <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans позволяет загружать данные о диабете и вносить их в научные проекты.</string>
-    <string name="logout">Выход</string>
+    <string name="logout">Выход из системы</string>
     <string name="setup">Настройки</string>
     <string name="setup_completed_info">Open Humans настроен. Чтобы прекратить передачу данных, нажмите \'Выйти\'.</string>
     <string name="not_setup_info">Open Humans неактивна. Чтобы начать загрузку данных, нажмите \'Setup\'.</string>
@@ -26,7 +26,6 @@
     <string name="extended_boluses">Пролонгированные болюсы</string>
     <string name="carbohydrates">Углеводы</string>
     <string name="careportal_events">События портала терапии (кроме примечаний)</string>
-    <string name="profile_switches">Переключения профиля</string>
     <string name="total_daily_doses">Суммарные суточные дозы</string>
     <string name="temporary_basal_rates">Временные базальные скорости</string>
     <string name="temporary_targets">Временные целевые значения</string>

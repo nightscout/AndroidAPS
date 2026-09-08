@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="count_selected">%1$d محدد</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <!--    Protection-->
     <!--    Profile-->

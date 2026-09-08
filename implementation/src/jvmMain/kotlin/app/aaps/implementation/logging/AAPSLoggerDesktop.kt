@@ -10,16 +10,16 @@ import java.time.Instant
 /**
  * The desktop logger: the console for now, and a rotating file for afterwards.
  *
- * The counterpart of `AAPSLoggerIos`, and deliberately the same shape. It is a first pass: a single
- * file that is truncated once it grows past [maxBytes], and no dated history, which the Android side
- * does keep - that belongs with whatever ends up sharing logs off the machine, and there is no such
- * path on desktop yet.
+ * The counterpart of `AAPSLoggerIos`, and deliberately the same shape: once it grows past [maxBytes]
+ * the file is moved to `aaps.log.1` and a new one is started, so exactly one previous log is kept.
+ * No dated history, which the Android side does keep - that belongs with whatever ends up sharing
+ * logs off the machine, and there is no such path on desktop yet.
  *
  * The file sits beside the database and the preferences, so everything the app writes is in one
  * folder a user can find.
  */
 class AAPSLoggerDesktop(
-    private val file: File = File(DesktopFolders.data, "aaps.log"),
+    private val file: File = DesktopFolders.log,
     private val maxBytes: Long = 5L * 1024 * 1024,
     /** Reads the stored per-tag switches. Null before the graph can supply one - see [enabled]. */
     private val logConfig: (() -> L)? = null
@@ -96,12 +96,42 @@ class AAPSLoggerDesktop(
     private fun appendToFile(line: String) {
         runCatching {
             file.parentFile?.mkdirs()
-            // Truncate rather than rotate: keeping the newest lines matters, keeping the oldest does
-            // not, and a real rotation belongs with a log-sharing path that does not exist yet.
-            if (file.length() > maxBytes) file.writeText("")
+            if (file.length() > maxBytes) rotate()
             file.appendText(line + "\n")
         }
         // A logger that throws would take down whatever it was reporting on, which is never the right
         // trade. The console line above has already been written either way.
+    }
+
+    /**
+     * Moves the full log aside and starts a new one, keeping exactly one previous file.
+     *
+     * This used to truncate - `file.writeText("")` - which threw the **whole** history away the
+     * moment it reached [maxBytes]. That is the wrong half to lose: a user is asked for logs after
+     * something went wrong, and the run that went wrong is the run that filled the file. Now the
+     * worst case is that the incident is in `aaps.log.1` rather than gone.
+     *
+     * One previous file, the same as `AAPSLoggerIos`, so the two behave alike and the bound on disk
+     * stays about twice [maxBytes]. Android keeps a dated history instead, which needs a directory
+     * and a naming scheme; this is the smaller promise both non-Android platforms make.
+     *
+     * The old `.1` is deleted first because `renameTo` will not replace an existing file on Windows.
+     * A failure here is swallowed by the caller's `runCatching` and the next append simply tries
+     * again, which is the right trade for a logger.
+     */
+    private fun rotate() {
+        val previous = File(file.parentFile, file.name + ROTATED_SUFFIX)
+        if (previous.exists()) previous.delete()
+        if (!file.renameTo(previous)) {
+            // Renaming can fail while something else holds the file open. Falling back to the old
+            // behaviour keeps the log bounded, which matters more than keeping the history.
+            file.writeText("")
+        }
+    }
+
+    companion object {
+
+        /** `aaps.log.1`, the name `DesktopMaintenance.deleteLogs` looks for. */
+        const val ROTATED_SUFFIX = ".1"
     }
 }

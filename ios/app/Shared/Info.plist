@@ -11,6 +11,18 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<!--
+	  Shows the app's Documents folder in the Files app, as "On My iPhone > AAPSClient". That is how
+	  a person reaches an export to copy it off the phone, drops one in to import, and creates
+	  `extra/engineering_mode` by hand - the whole user-facing file story rests on this one key.
+
+	  Here rather than as INFOPLIST_KEY_UIFileSharingEnabled for the reason given above: it is not on
+	  Xcode's known list, so the build setting is accepted, ignored, and produces no key at all. It
+	  was set that way and the folder would never have appeared, which nothing would have reported -
+	  a missing plist key and a user who has not looked yet are indistinguishable.
+	-->
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<!--
 	  Required before Core Location may be asked for anything. iOS terminates an app that requests
 	  location without a usage description, so this has to exist before IosLastKnownLocation runs -
 	  which it does the first time an automation location trigger is evaluated.
