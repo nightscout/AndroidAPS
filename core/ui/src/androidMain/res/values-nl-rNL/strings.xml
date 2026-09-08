@@ -602,7 +602,11 @@
     <string name="aaps_directory">AAPS map</string>
     <string name="import_setting">Importeer instellingen</string>
     <!-- Import settings screen -->
+    <string name="reset_aps_results">Reset APS resultaten</string>
+    <string name="database_cleanup">Database opschonen</string>
+    <string name="nav_resetdb">Reset database</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Bereik voor visualisatie</string>
 </resources>
