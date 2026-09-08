@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="start_activity_tt">Započni aktivnost TT</string>
+    <string name="start_eating_soon_tt">Započnite uskoro počnite jesti TT</string>
+    <string name="start_hypo_tt">Pokrenite Hypo TT</string>
+    <string name="time_offset">Vremenski odmak</string>
     <!--    Widget-->
+    <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
+    <string name="weight_label">Težina</string>
+    <string name="glucose_type">Vrsta glukoze</string>
+    <string name="bg_other">Ostalo</string>
+    <string name="bg_meter">Aparatić</string>
+    <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
@@ -14,7 +24,18 @@
     <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
+    <string name="no_records_available">Nema dostupnih zapisa</string>
+    <string name="treatments_iob_label_string">Aktivni inzulin:</string>
+    <string name="carbs_and_bolus">Ugljikohidrati i bolus</string>
+    <string name="show_invalidated">Prikaži poništen</string>
+    <string name="hide_invalidated">Sakrij poništeno</string>
+    <string name="careportal_remove_started_events">Uklonite započete unose AAPS-a</string>
+    <string name="user_entry">Unos korisnika</string>
+    <string name="clone_label">Kloniraj</string>
+    <string name="activate_profile">Aktiviraj profil</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_switches">Prekidači profila</string>
+    <string name="selected_profile">Odabrano:</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <!--    History browser-->
