@@ -7,6 +7,7 @@
     <!--    Widget-->
     <!--     Activities-->
     <string name="activity_monitor">Monitor d\'activitat</string>
+    <string name="time_range">Interval de temps</string>
     <string name="do_you_want_reset_stats">Voleu restablir les estadístiques d\'activitat?</string>
     <string name="calculation_in_progress">Càlculs en procés</string>
     <string name="age">Edat</string>
@@ -30,7 +31,6 @@
     <string name="reuse_profile_pct_hours">Reutilitzar %1$d%% %2$dh</string>
     <string name="percentage_label">Percentatge</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Desconnectar bomba</string>
     <string name="resume">Reprendre</string>
     <string name="reconnect">Reconnectar bomba</string>
     <string name="duration15m">15 min</string>
@@ -45,6 +45,7 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="user_entry">Entrada d\'usuari</string>
     <string name="clone_label">Duplicar</string>
+    <string name="activate_profile">Activar perfil</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tipus de perfil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
