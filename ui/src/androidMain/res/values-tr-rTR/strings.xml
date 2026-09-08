@@ -72,9 +72,20 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Yalnızca pozitif AİNS</string>
     <string name="overview_edit_quickwizard_superbolus">Süperbolus</string>
     <!--    History browser-->
+    <string name="additional_ecarbs">yKarb ekle</string>
+    <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
+    <string name="recalculate">Tekrar Hesapla</string>
     <!--    Widget-->
+    <string name="use_black_color">Siyah renk kullanın</string>
+    <string name="widget_configuration">Araç yapılandırması</string>
+    <string name="until_changed">Değiştirilene kadar</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>İkisi de</item>
+        <item>Sadece pozitif</item>
+        <item>Sadece negatif</item>
+    </string-array>
     <!-- Toolbar configuration -->
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
     <!-- Calibration entry rejection reasons -->
