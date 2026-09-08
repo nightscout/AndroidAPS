@@ -397,7 +397,6 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                     onExecuteQuickWizard = { guid -> mainViewModel.executeQuickWizard(guid) },
                     onRequestDirectoryAccess = { logger.debug(LTag.CORE, "Desktop reads its own folder; no access to request") },
                     onRequestPermission = { group -> logger.notWiredYet("permission request $group") },
-                    findScreenDef = { null },
                     overview = {
                         OverviewScreen(
                             mainViewModel = mainViewModel,
