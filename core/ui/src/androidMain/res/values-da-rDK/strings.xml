@@ -528,7 +528,10 @@
     <string name="delete_logs">Slet logs</string>
     <string name="import_setting">Importer indstillinger</string>
     <!-- Import settings screen -->
+    <string name="database_cleanup">Database-oprydning</string>
+    <string name="nav_resetdb">Nulstil databaser</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Område for Visualisering</string>
 </resources>
