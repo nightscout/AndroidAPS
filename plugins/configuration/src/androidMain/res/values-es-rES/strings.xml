@@ -15,7 +15,6 @@
     <string name="high_mark">Valor de hiperglucemia</string>
     <string name="low_mark_comment">Valor de glucosa baja (sólo visualización)</string>
     <string name="high_mark_comment">Valor de glucosa alta (sólo visualización)</string>
-    <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
     <string name="master_password_summary">La contraseña maestra se utiliza para cifrar la copia de seguridad y para desbloquear la seguridad de la aplicación. Recuérdala o guárdala en un lugar seguro.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
