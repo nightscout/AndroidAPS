@@ -45,7 +45,6 @@
     <string name="metadata_warning_date_format">Format date et heure non valide !</string>
     <string name="metadata_warning_different_version">Préférences d\'une autre version mineure, différente de l\'application. C\'est OK si vous importez après la mise à jour, mais vérifiez après l\'importation si les préférences sont toujours correctes !</string>
     <string name="metadata_urgent_different_version">Préférences d\'une autre version majeure, différente de l\'application. Les versions majeures diffèrent significativement et peuvent avoir des préférences incompatibles ! Vérifiez bien après l\'import que les préférences sont toujours correctes !</string>
-    <string name="prefdecrypt_settings_tampered">Fichier paramètres altérés</string>
     <string name="prefdecrypt_settings_secure">Fichier paramètres sécurisé</string>
     <string name="prefdecrypt_settings_unencrypted">Utilisation de paramètres de format non sécurisés et non chiffrés</string>
     <string name="prefdecrypt_wrong_json">Erreur de format JSON, champs obligatoire manquants (format, contenu, métadonnées ou sécurité)</string>
