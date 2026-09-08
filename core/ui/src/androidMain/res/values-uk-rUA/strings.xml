@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="constraints">Обмеження</string>
+    <string name="settings">Налаштування</string>
     <!-- master_password moved to core/keys/strings.xml -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="profile">Профіль</string>
+    <string name="next">Далі</string>
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -13,6 +18,7 @@
     <!--    Translator-->
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="automation">Автоматизація</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
