@@ -6,5 +6,23 @@
     <string name="linear_calibration_name">Hiệu chuẩn tuyến tính</string>
     <string name="description_linear_calibration">"Ghi đè hiệu chuẩn tuyến tính cho từng cảm biến (hệ số góc và độ lệch) được tính toán từ các giá trị đường huyết đo bằng máy đo. Các giá trị đo gần đây được tính trọng số cao hơn. Ghi đè được áp dụng sau khi phiên cảm biến hiện tại bắt đầu; 2 giờ đầu tiên được bỏ qua để làm thời gian khởi động."</string>
     <string name="sensor_change_detected_text">Phát hiện có thể đã thay cảm biến lúc %1$s. Đánh dấu là cảm biến mới?</string>
+    <string name="sensor_change_detected_action">Đánh dấu thay cảm biến</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Ghi nhận thay cảm biến để bật tính năng hiệu chuẩn.</string>
+    <string name="cal_status_warmup">Cảm biến đang khởi động — hiệu chuẩn sẽ được kích hoạt sau %1$s.</string>
+    <string name="cal_status_need_more_entries">Cần ít nhất 2 giá trị đường huyết đo bằng máy đo (hiện có %1$d).</string>
+    <string name="cal_status_unsafe_fit">Độ khớp nằm ngoài phạm vi an toàn — không áp dụng hiệu chuẩn.</string>
+    <string name="cal_status_applied">Đã áp dụng hiệu chuẩn.</string>
+    <string name="cal_status_applied_offset_only">Đã áp dụng hiệu chuẩn chỉ dùng độ lệch — phạm vi cảm biến quá hẹp để xác định hệ số góc.</string>
+    <string name="cal_status_applied_slope_clamped">Đã áp dụng hiệu chuẩn — hệ số góc bị giới hạn trong phạm vi an toàn. Thêm các giá trị đo để nới lỏng giới hạn.</string>
+    <string name="cal_slope_offset">Hệ số góc %1$.2f, hiệu chỉnh vùng giữa %2$s</string>
+    <string name="cal_session_started">Phiên bắt đầu: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Ghi lại thay đổi cảm biến</string>
+    <string name="cal_add_calibration">Thêm hiệu chuẩn</string>
+    <string name="cal_entries_header">Các giá trị đo bằng máy (%1$d)</string>
+    <string name="cal_no_entries">Chưa có giá trị đo bằng máy.</string>
+    <string name="cal_entry_pair">Đo bằng máy %1$s → cảm biến %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Xóa mục?</string>
+    <string name="cal_remove_entry_message">Thao tác này sẽ vô hiệu hóa giá trị đo. Độ khớp sẽ được tính toán lại.</string>
+    <string name="cal_chart_entry_readout">Giá trị đo %1$d/%2$d · %3$s · cảm biến %4$s → đường huyết %5$s</string>
 </resources>
