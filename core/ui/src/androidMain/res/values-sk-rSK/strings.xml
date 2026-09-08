@@ -1018,7 +1018,74 @@
     <string name="import_wrong_password">Nesprávne heslo</string>
     <string name="import_btn">Importovať</string>
     <string name="import_anyway_btn">Importovať aj tak</string>
+    <string name="import_source_local">Lokálne</string>
+    <string name="import_source_cloud">Cloud</string>
+    <string name="import_load_more">Načítať viac</string>
+    <string name="import_no_files">Nenájdené žiadne súbory s nastaveniami</string>
+    <string name="import_decrypt_ok">Dešifrovanie úspešné. Pripravené na import.</string>
+    <string name="import_decrypt_warn">Dešifrovanie úspešné, ale sú tu upozornenia.</string>
+    <string name="import_decrypt_error">Dešifrovanie úspešné, ale import nie je možný.</string>
+    <string name="reset_aps_results">Resetovať výsledky APS</string>
+    <string name="database_cleanup">Vyčistenie databázy</string>
+    <string name="nav_resetdb">Reset databázy</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Vyhľadať pumpu</string>
+    <string name="ble_scan_scanning">Vyhľadávam zariadenia...</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Pridať graf</string>
+    <string name="graph_new">Nový graf</string>
+    <string name="graph_number">Graf %1$d</string>
+    <string name="graph_bg">Graf glykémie</string>
+    <string name="graph_height">Výška grafu [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAZ</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">AKCIA</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">TF</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">KROKY</string>
+    <string name="units_days">dní</string>
+    <string name="units_format_days">%1$d dní</string>
+    <string name="units_format_days_range">%1$d dní (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.0f h</string>
+    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d min</string>
+    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d sek</string>
+    <string name="units_format_sec_range">%1$d s (%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">h</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_min">min</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">sek</string>
+    <string name="units_years">r</string>
+    <string name="prefs_range_title">Rozsah pre zobrazenie</string>
 </resources>
