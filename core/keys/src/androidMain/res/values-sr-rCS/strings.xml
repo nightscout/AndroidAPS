@@ -40,12 +40,14 @@
     <!-- StringKey: Maintenance preferences -->
     <!-- StringKey: Automation preferences -->
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <!-- StringKey: Virtual pump preferences -->
     <!-- StringKey: NS Client preferences -->
     <!-- DoubleKey: Overview preferences -->
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
+    <string name="openapsma_max_basal_summary">Ova vrednost se naziva maksimalni bazal u OpenAPS kontekstu</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
     <!-- IntentKey preferences -->
