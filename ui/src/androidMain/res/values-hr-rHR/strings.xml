@@ -32,7 +32,9 @@
     <string name="careportal_remove_started_events">Uklonite započete unose AAPS-a</string>
     <string name="user_entry">Unos korisnika</string>
     <string name="clone_label">Kloniraj</string>
+    <string name="activate_profile">Aktiviraj profil</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_switches">Prekidači profila</string>
     <string name="selected_profile">Odabrano:</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
