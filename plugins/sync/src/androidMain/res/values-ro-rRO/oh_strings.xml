@@ -13,7 +13,7 @@
     <string name="uploading_to_open_humans">AAPS încarcă datele în Open Humans. Poate dura ceva timp.</string>
     <string name="you_have_been_signed_out_of_open_humans">Ați fost deconectat de la Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Atingeți aici pentru a vă conecta din nou, dacă a fost din greșeală.</string>
-    <string name="next">Următor</string>
+    <string name="next">Înainte</string>
     <string name="welcome_to_open_humans">Bine ați venit la Open Humans</string>
     <string name="setup_data_upload">Pentru a configura modul de încărcare a datelor, apăsați \'Pasul următor\'.</string>
     <string name="consent">Consimțământ</string>
