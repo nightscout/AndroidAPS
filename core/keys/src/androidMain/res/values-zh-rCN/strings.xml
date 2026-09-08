@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">紧急警报以安卓通知形式提醒</string>
     <string name="pref_title_alert_increase_volume">逐步提高通知音量</string>
     <string name="pref_title_alert_override_dnd">覆盖勿扰模式</string>
-    <string name="pref_summary_alert_override_dnd">启用后，AAPS 警报会在静音模式和勿扰模式下播放（使用警报流）。禁用后，警报会遵循静音/勿扰模式（使用通知流）。</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">上传血糖数据到 NS</string>
     <string name="pref_title_bg_source_create_sensor_change">记录传感器更换</string>
@@ -178,7 +177,6 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">保护超时</string>
     <string name="pref_title_protection_type_application">0 级：应用保护</string>
-    <string name="pref_summary_protection_type_application">应用启动，独立于其他级别</string>
     <string name="pref_title_protection_type_bolus">1 级：大剂量保护</string>
     <string name="pref_summary_protection_type_bolus">治疗操作、配置文件激活。需要 2 级权限</string>
     <string name="pref_title_protection_type_settings">2 级：设置保护</string>
@@ -237,7 +235,6 @@
     <string name="pref_title_units">单位</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">语言</string>
     <string name="lang_default">系统默认</string>
     <string name="lang_en">英语</string>
     <string name="lang_af">南非语</string>
