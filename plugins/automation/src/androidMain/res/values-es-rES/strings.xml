@@ -83,7 +83,7 @@
     <string name="location_outside">Cuando estés fuera de la zona</string>
     <string name="location_going_in">Cuando entres en el área llamada</string>
     <string name="location_going_out">Cuando dejes el área llamada</string>
-    <string name="time_range">Intervalo de tiempo</string>
+    <string name="time_range">Rango de tiempo</string>
     <string name="timerange_value">El tiempo está entre %1$s y %2$s</string>
     <string name="add_short">AÑADIR</string>
     <string name="temptargetcompared">Objetivo temporal %1$s</string>
