@@ -525,7 +525,10 @@
     <string name="delete_logs">Eliminar registos</string>
     <string name="import_setting">Importar configurações</string>
     <!-- Import settings screen -->
+    <string name="database_cleanup">Limpeza de banco de dados</string>
+    <string name="nav_resetdb">Redefinir banco de dados</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Intervalo para visualização</string>
 </resources>
