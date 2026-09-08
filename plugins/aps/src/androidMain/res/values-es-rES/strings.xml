@@ -44,7 +44,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Un bolo ha sido entregado en los últimos 3 minutos, omitiendo SMB</string>
     <string name="pump_not_initialized">Bomba no inicializada</string>
-    <string name="loop_shortname">LAZO</string>
+    <string name="loop_shortname">BUCLE</string>
     <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo</string>
     <string name="no_aps_selected">NO APS Seleccionado o resultado entregado</string>
     <string name="ignore5m">Ignorar 5m</string>
