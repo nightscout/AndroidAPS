@@ -573,7 +573,11 @@
     <string name="aaps_directory">AAPS katalogas</string>
     <string name="import_setting">Importuoti nustatymus</string>
     <!-- Import settings screen -->
+    <string name="reset_aps_results">Iš naujo nustatyti APS rezultatus</string>
+    <string name="database_cleanup">Duomenų bazės valymas</string>
+    <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Vizualizacijos diapazonas</string>
 </resources>
