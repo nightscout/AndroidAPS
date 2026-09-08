@@ -615,7 +615,11 @@
     <string name="aaps_directory">Папка AAPS</string>
     <string name="import_setting">Импортировать настройки</string>
     <!-- Import settings screen -->
+    <string name="reset_aps_results">Сбросить результаты APS</string>
+    <string name="database_cleanup">Очистка базы данных</string>
+    <string name="nav_resetdb">Обнулить базы</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Диапазон для визуализации</string>
 </resources>
