@@ -46,8 +46,48 @@
     <string name="location_outside">Når du er uden for området</string>
     <string name="location_going_in">Når du går ind i området ved navn</string>
     <string name="location_going_out">Når du forlader området ved navn</string>
+    <string name="time_range">Tidsinterval</string>
+    <string name="timerange_value">Tid er mellem%1$s og %2$s</string>
+    <string name="add_short">TILFØJ</string>
+    <string name="temptargetcompared">Midlertidig mål %1$s</string>
+    <string name="btdevicecompared">Bluetooth-forbindelse til enheden %1$s %2$s</string>
+    <string name="btdevice">Forbindelse til Bluetooth-enhed </string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="autosenscompared">Autosens %1$s %2$s %%</string>
+    <string name="autosenslabel">Autosens %</string>
+    <string name="deltacompared">%3$s %1$s %2$s</string>
+    <string name="deltalabel">BS forskel</string>
+    <string name="currentlocation">Nuværende placering</string>
+    <string name="location">Lokation</string>
+    <string name="lastboluslabel">Sidste bolus</string>
+    <string name="lastboluscompared">Sidste bolus tid %1$s %2$s min siden</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Puls</string>
+    <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
+    <string name="recurringTime">Tilbagevendende tid</string>
+    <string name="every">Hver</string>
+    <string name="never">Aldrig</string>
+    <string name="condition">Betingelse:</string>
+    <string name="action">Handling:</string>
+    <string name="taskname">Opgavenavn</string>
+    <string name="edit_short">REDIGER</string>
+    <string name="preconditions">Forudsætninger:</string>
+    <string name="user_action">Brugerhandling</string>
+    <string name="system_automation">System automatisering</string>
+    <string name="run_automations">Kør automatisering</string>
+    <string name="add_automation">Tilføj regel</string>
+    <string name="stop_processing">Stop afvikling</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Tid til at spise!\nBrug Bolusguiden og beregn igen.</string>
+    <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
+    <string name="error_setting_reminder">Fejl under indstilling af fremtidig alarm</string>
     <!--    Autotune-->
+    <string name="autotune_run">Kør Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune kørt uden profilskift</string>
+    <string name="autotune_run_with_autoswitch">Autotune kørte og profilen blev automatisk skiftet</string>
+    <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
+    <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <!--    Steps count-->
     <!--    SMB mode-->
     <!--    Map Picker (OpenStreetMap)-->
