@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="profile">Профіль</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <!--    ConfigBuilder-->
     <!--ImportExport-->
