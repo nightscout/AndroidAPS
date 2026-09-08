@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Alza gli avvisi urgenti come notifiche Android</string>
     <string name="pref_title_alert_increase_volume">Aumenta gradualmente il volume delle notifiche</string>
     <string name="pref_title_alert_override_dnd">Ignora la modalità Non Disturbare</string>
+    <string name="pref_summary_alert_override_dnd">Quando abilitato, gli allarmi AAPS suonano anche se il telefono è silenziato o in Non Disturbare. Quando disabilitato, gli allarmi rimangono tranquilli in quelle modalità.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Carica dati BG su NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Registra cambio sensore</string>
@@ -177,6 +178,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Timeout protezione</string>
     <string name="pref_title_protection_type_application">Livello 0: Protezione dell\'applicazione</string>
+    <string name="pref_summary_protection_type_application">Avvio dell\'app e quando torna all\'app. Indipendente da altri livelli</string>
     <string name="pref_title_protection_type_bolus">Livello 1: Protezione bolo</string>
     <string name="pref_summary_protection_type_bolus">Trattamenti, attivazione profilo. Richiede Livello 2</string>
     <string name="pref_title_protection_type_settings">Livello 2: Protezione impostazioni</string>
@@ -235,6 +237,7 @@
     <string name="pref_title_units">Unità</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Lingua</string>
     <string name="lang_default">Predefinito di sistema</string>
     <string name="lang_en">English</string>
     <string name="lang_af">Afrikaans</string>
