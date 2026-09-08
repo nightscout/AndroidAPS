@@ -17,7 +17,7 @@
     <string name="pref_interface_settings">介面</string>
     <string name="pref_tile_settings">面板</string>
     <string name="pref_others_settings">其他</string>
-    <string name="pref_complication_settings">複雜功能</string>
+    <string name="pref_complication_settings">小工具功能</string>
     <string name="pref_show_date">顯示日期</string>
     <string name="pref_show_iob">顯示 IOB</string>
     <string name="pref_show_detailed_iob">顯示詳細 IOB</string>
@@ -60,12 +60,12 @@
     <string name="pref_prime_in_menu">選單中的預填充</string>
     <string name="pref_single_target">單一目標</string>
     <string name="pref_wizard_percentage">計算機百分比</string>
-    <string name="pref_complication_tap_action">複雜功能點擊動作</string>
+    <string name="pref_complication_tap_action">輕觸錶面小工具時執行的動作</string>
     <string name="pref_complication_bg_graph_hours">血糖圖表時間範圍</string>
     <string name="duration_1_hour">1 小時</string>
     <string name="duration_3_hours">3 小時</string>
     <string name="duration_6_hours">6 小時</string>
-    <string name="pref_unicode_in_complications">複雜功能中的 Unicode</string>
+    <string name="pref_unicode_in_complications">小工具功能中的 Unicode</string>
     <string name="pref_version">版本：</string>
     <string name="pref_moreWatchfaceSettings">更多錶盤設定</string>
     <string name="pref_lookInYourWatchfaceConfiguration">請查看錶盤設定。</string>
