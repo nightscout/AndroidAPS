@@ -45,6 +45,7 @@
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
 
     <string name="carelevo_btn_insulin_guide">Insulin Guide</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
     <string name="carelevo_btn_patch_expiration">Deactivate Patch</string>
     <string name="carelevo_btn_input_search_patch">Search Patch</string>
     <string name="carelevo_btn_retry">Retry</string>

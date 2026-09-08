@@ -8,11 +8,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -49,9 +51,8 @@ import org.robolectric.annotation.GraphicsMode
  *
  * Labels are read back through `getString` so the assertions track the resources, not hardcoded
  * English. A phone-sized qualifier is forced so the pinned action row and the collapsed content fit on
- * screen; the twelve expanded refill steps are far taller than any display, so those are asserted with
- * `assertExists` (the guide is a plain scrolling `Column`, so every entry is composed) rather than
- * `assertIsDisplayed`.
+ * screen. The guide opens as a dialog containing a pager, so only the current step is composed —
+ * assertions name one step at a time and drive the arrows to move between them.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -67,6 +68,8 @@ class CarelevoPatchFlowStep01StartTest {
     private lateinit var title: String
     private lateinit var notice: String
     private lateinit var guideLabel: String
+    private lateinit var backLabel: String
+    private lateinit var closeLabel: String
     private lateinit var nextLabel: String
     private lateinit var cancelLabel: String
     private lateinit var refillSteps: List<String>
@@ -77,6 +80,8 @@ class CarelevoPatchFlowStep01StartTest {
         title = app.getString(R.string.carelevo_title_fill_insulin)
         notice = app.getString(R.string.carelevo_notice_fill_insulin_amount, FillConfig.FILL_MIN_UNITS, FillConfig.FILL_MAX_UNITS)
         guideLabel = app.getString(R.string.carelevo_btn_insulin_guide)
+        backLabel = app.getString(CoreUiR.string.back)
+        closeLabel = app.getString(CoreUiR.string.close)
         nextLabel = app.getString(CoreUiR.string.next)
         cancelLabel = app.getString(CoreUiR.string.cancel)
         refillSteps = listOf(
@@ -123,6 +128,11 @@ class CarelevoPatchFlowStep01StartTest {
 
     /** The collapsed guide's trigger: the only node carrying the guide label *and* a click action. */
     private fun guideButton() = compose.onNode(hasText(guideLabel) and hasClickAction())
+
+    /** The "n / 12" indicator as the guide renders it for [step] (1-based). */
+    private fun stepPosition(step: Int) =
+        RuntimeEnvironment.getApplication()
+            .getString(R.string.carelevo_insulin_refill_step_position, step, refillSteps.size)
 
     @Test
     fun initialState_showsTitleNoticeAndBothActions() {
@@ -174,52 +184,70 @@ class CarelevoPatchFlowStep01StartTest {
         assertThat(viewModel.page.value).isEqualTo(CarelevoPatchStep.PATCH_START)
     }
 
+    /** Paged, so opening composes the first step only — not all twelve. */
     @Test
-    fun guideButton_whenClicked_expandsAndRendersAllTwelveRefillSteps() {
+    fun guideButton_whenClicked_opensTheGuideOnTheFirstRefillStep() {
         setStep()
 
         guideButton().performClick()
 
-        refillSteps.forEach { step ->
-            compose.onNodeWithText(step).assertExists()
-        }
+        compose.onNodeWithText(refillSteps.first()).assertIsDisplayed()
+        compose.onNodeWithText(refillSteps.last()).assertDoesNotExist()
     }
 
     @Test
-    fun guideButton_whenExpanded_isReplacedByAPlainHeading() {
+    fun openGuide_showsItsPositionAndAdvancesOnNext() {
+        setStep()
+        guideButton().performClick()
+
+        compose.onNodeWithText(stepPosition(1)).assertIsDisplayed()
+
+        compose.onNodeWithContentDescription(nextLabel).performClick()
+
+        compose.onNodeWithText(refillSteps[1]).assertIsDisplayed()
+        compose.onNodeWithText(stepPosition(2)).assertIsDisplayed()
+    }
+
+    @Test
+    fun openGuide_backIsDisabledOnTheFirstStep() {
+        setStep()
+        guideButton().performClick()
+
+        compose.onNodeWithContentDescription(backLabel).assertIsNotEnabled()
+        compose.onNodeWithContentDescription(nextLabel).assertIsEnabled()
+    }
+
+    /** The trigger stays, so the label is on both it and the dialog title. */
+    @Test
+    fun openGuide_keepsItsTriggerAndTitlesTheDialogWithTheSameLabel() {
         setStep()
 
         guideButton().performClick()
 
-        // The label survives as the section heading, but the clickable trigger is gone.
-        guideButton().assertDoesNotExist()
-        compose.onAllNodesWithText(guideLabel).assertCountEquals(1)
-        compose.onNodeWithText(guideLabel).assertExists()
+        compose.onAllNodesWithText(guideLabel).assertCountEquals(2)
     }
 
     @Test
-    fun guideExpansion_doesNotDisturbTheStepContentOrActions() {
+    fun openGuide_closeReturnsToTheStepWithTheGuideGone() {
+        setStep()
+        guideButton().performClick()
+
+        compose.onNodeWithText(closeLabel).performClick()
+
+        compose.onNodeWithText(refillSteps.first()).assertDoesNotExist()
+        guideButton().assertIsDisplayed().assertIsEnabled()
+    }
+
+    @Test
+    fun openGuide_doesNotDisturbTheStepContentOrActions() {
         setStep()
 
         guideButton().performClick()
 
         compose.onNodeWithText(title).assertExists()
         compose.onNodeWithText(notice).assertExists()
-        compose.onNodeWithText(nextLabel).assertIsDisplayed().assertIsEnabled()
-        compose.onNodeWithText(cancelLabel).assertIsDisplayed().assertIsEnabled()
-    }
-
-    @Test
-    fun expandedGuide_survivesRecomposition_andNextStillAdvances() {
-        setStep()
-
-        guideButton().performClick()
-        compose.onNodeWithText(nextLabel).performClick()
-
-        assertThat(viewModel.page.value).isEqualTo(CarelevoPatchStep.SET_AMOUNT)
-        // The remembered expansion is unaffected by the click that recomposed the step.
-        compose.onNodeWithText(refillSteps.first()).assertExists()
-        guideButton().assertDoesNotExist()
+        compose.onNodeWithText(nextLabel).assertExists()
+        compose.onNodeWithText(cancelLabel).assertExists()
     }
 
     @Test
