@@ -18,6 +18,7 @@ import app.aaps.wear.complications.IobDetailedComplication
 import app.aaps.wear.complications.IobIconComplication
 import app.aaps.wear.complications.LongStatusComplication
 import app.aaps.wear.complications.LongStatusFlippedComplication
+import app.aaps.wear.complications.RunningModeComplication
 import app.aaps.wear.complications.SgvComplication
 import app.aaps.wear.complications.SgvComplicationExt1
 import app.aaps.wear.complications.SgvComplicationExt2
@@ -36,6 +37,7 @@ import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.FillActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
 import app.aaps.wear.interaction.actions.QuickSnoozeActivity
+import app.aaps.wear.interaction.actions.RunningModePickerActivity
 import app.aaps.wear.interaction.actions.RunningModeTimedActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
@@ -330,6 +332,12 @@ object WearMemberInjectors {
     @Provides
     @FeatureMemberInjectors
     @IntoMap
+    @ClassKey(RunningModePickerActivity::class)
+    fun bindRunningModePickerActivity(injector: MembersInjector<RunningModePickerActivity>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
     @ClassKey(SceneTileService::class)
     fun bindSceneTileService(injector: MembersInjector<SceneTileService>): MembersInjector<*> = injector
 
@@ -416,6 +424,12 @@ object WearMemberInjectors {
     @IntoMap
     @ClassKey(UploaderBatteryComplication::class)
     fun bindUploaderBatteryComplication(injector: MembersInjector<UploaderBatteryComplication>): MembersInjector<*> = injector
+
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(RunningModeComplication::class)
+    fun bindRunningModeComplication(injector: MembersInjector<RunningModeComplication>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors
