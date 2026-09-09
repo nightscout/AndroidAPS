@@ -74,7 +74,7 @@ Before any chain runs — whether triggered by a physical scan or the "▶ Play"
 - **TECH_DISCOVERED / TAG_DISCOVERED**: Fallback for unregistered/blank tags or finished sensors whose UID is manually registered.
 
 ### Intent Filter Configuration
-The plugin requires `nfc_tech_filter.xml` (`app/src/main/res/xml/`) to declare which tag technologies trigger `TAG_DISCOVERED`/`TECH_DISCOVERED`. It currently declares only `android.nfc.tech.NfcV`; extend it if support for other tag technologies is added.
+The plugin requires `nfc_tech_filter.xml` (`plugins/sync/src/androidMain/res/xml/`) to declare which tag technologies trigger `TAG_DISCOVERED`/`TECH_DISCOVERED`. It currently declares only `android.nfc.tech.NfcV`; extend it if support for other tag technologies is added.
 
 ### Cooldowns & Safety Guards
 - **Rewrite cooldown**: After a write, the tag's UID is flagged "just written" for 5 seconds (`NfcTagStore.markJustWritten`/`isJustWritten`) so the reader doesn't immediately re-process its own write as a scan.
