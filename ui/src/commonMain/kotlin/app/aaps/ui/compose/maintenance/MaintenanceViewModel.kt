@@ -37,6 +37,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -144,10 +145,53 @@ class MaintenanceViewModel @Inject constructor(
         l.resetToDefaults()
     }
 
+    /**
+     * Runs one maintenance action and makes sure the user hears about it when it does not work.
+     *
+     * Every button on this sheet used to swallow its own failure into the log, so a tap that did
+     * nothing looked exactly like a tap that worked. Two failures are worth telling apart:
+     *
+     * - The platform has no answer for the action at all. iOS has no mail composer to send logs
+     *   with, so [Maintenance.executeSendLogs] throws rather than pretend. That is not a fault the
+     *   user can do anything about, and it deserves a plain "not ready here" instead of "error".
+     * - Anything else really went wrong, and gets the generic error message.
+     *
+     * [NotImplementedError] is an `Error`, not an `Exception`, so the usual `catch (e: Exception)`
+     * let it straight past and took the app down - which is what the send logs button did on iOS.
+     * [CancellationException] is rethrown, or a screen closed mid action would report a failure.
+     *
+     * [onError] is for the extra reporting one action does on top of the message.
+     */
+    private fun maintenanceAction(
+        what: String,
+        onError: (Exception) -> Unit = {},
+        action: suspend () -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                action()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: NotImplementedError) {
+                reportFailure(what, e, CoreUiStrings.not_implemented_yet)
+            } catch (e: UnsupportedOperationException) {
+                reportFailure(what, e, CoreUiStrings.not_implemented_yet)
+            } catch (e: Exception) {
+                onError(e)
+                reportFailure(what, e, CoreUiStrings.error)
+            }
+        }
+    }
+
+    private suspend fun reportFailure(what: String, e: Throwable, message: TextRef) {
+        aapsLogger.error("Error while $what", e)
+        _events.emit(MaintenanceEvent.Error(rh.gs(message)))
+    }
+
     // Log actions
 
     fun sendLogs() {
-        viewModelScope.launch {
+        maintenanceAction("sending logs") {
             val result = withContext(aapsIoDispatcher) {
                 maintenance.executeSendLogs()
             }
@@ -161,68 +205,51 @@ class MaintenanceViewModel @Inject constructor(
     }
 
     fun deleteLogs() {
-        viewModelScope.launch(aapsIoDispatcher) {
-            try {
-                maintenance.deleteLogs(5)
-                uel.log(Action.DELETE_LOGS, Sources.Maintenance)
-                _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiStrings.logs_deleted)))
-            } catch (e: Exception) {
-                aapsLogger.error("Error deleting logs", e)
-                fabricPrivacy.logException(e)
-            }
+        maintenanceAction("deleting logs", onError = { e -> fabricPrivacy.logException(e) }) {
+            withContext(aapsIoDispatcher) { maintenance.deleteLogs(5) }
+            uel.log(Action.DELETE_LOGS, Sources.Maintenance)
+            _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiStrings.logs_deleted)))
         }
     }
 
     // Database actions
 
     fun resetApsResults() {
-        viewModelScope.launch(aapsIoDispatcher) {
-            try {
-                persistenceLayer.clearApsResults()
-                aapsLogger.debug("Aps results cleared")
-            } catch (e: Exception) {
-                aapsLogger.error("Error clearing aps results", e)
-            }
+        maintenanceAction("clearing aps results") {
+            withContext(aapsIoDispatcher) { persistenceLayer.clearApsResults() }
+            aapsLogger.debug("Aps results cleared")
         }
         uel.log(Action.RESET_APS_RESULTS, Sources.Maintenance)
     }
 
     fun cleanupDatabases() {
-        viewModelScope.launch {
-            try {
-                val result = withContext(aapsIoDispatcher) {
-                    persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true)
-                }
-                if (result.isNotEmpty()) {
-                    _events.emit(MaintenanceEvent.CleanupResult(result))
-                }
-                aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
-            } catch (e: Exception) {
-                aapsLogger.error("Error cleaning up databases", e)
+        maintenanceAction("cleaning up databases") {
+            val result = withContext(aapsIoDispatcher) {
+                persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true)
             }
+            if (result.isNotEmpty()) {
+                _events.emit(MaintenanceEvent.CleanupResult(result))
+            }
+            aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
         }
         uel.log(Action.CLEANUP_DATABASES, Sources.Maintenance)
     }
 
     fun resetDatabases() {
-        viewModelScope.launch {
-            try {
-                withContext(aapsIoDispatcher) {
-                    persistenceLayer.clearDatabases()
-                    for (plugin in activePlugin.getSpecificPluginsListByInterface(OwnDatabasePlugin::class)) {
-                        (plugin as OwnDatabasePlugin).clearAllTables()
-                    }
-                    nsClient.dataSyncSelector.resetToNextFullSync()
-                    dataSyncSelectorXdrip.resetToNextFullSync()
-                    pumpSync.connectNewPump()
-                    overviewDataCache.reset()
-                    iobCobCalculator.ads.reset()
-                    iobCobCalculator.clearCache()
+        maintenanceAction("clearing databases") {
+            withContext(aapsIoDispatcher) {
+                persistenceLayer.clearDatabases()
+                for (plugin in activePlugin.getSpecificPluginsListByInterface(OwnDatabasePlugin::class)) {
+                    (plugin as OwnDatabasePlugin).clearAllTables()
                 }
-                _events.emit(MaintenanceEvent.RecreateActivity)
-            } catch (e: Exception) {
-                aapsLogger.error("Error clearing databases", e)
+                nsClient.dataSyncSelector.resetToNextFullSync()
+                dataSyncSelectorXdrip.resetToNextFullSync()
+                pumpSync.connectNewPump()
+                overviewDataCache.reset()
+                iobCobCalculator.ads.reset()
+                iobCobCalculator.clearCache()
             }
+            _events.emit(MaintenanceEvent.RecreateActivity)
         }
         uel.log(Action.RESET_DATABASES, Sources.Maintenance)
     }
@@ -241,7 +268,7 @@ class MaintenanceViewModel @Inject constructor(
 
     fun exportCsv() {
         uel.log(Action.EXPORT_CSV, Sources.Maintenance)
-        viewModelScope.launch {
+        maintenanceAction("exporting csv") {
             val result = withContext(aapsIoDispatcher) {
                 importExportPrefs.executeCsvExport()
             }
