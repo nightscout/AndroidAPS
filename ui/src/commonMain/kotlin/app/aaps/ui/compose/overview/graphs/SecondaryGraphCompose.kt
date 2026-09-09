@@ -353,12 +353,12 @@ fun SecondaryGraphCompose(
     // Uses negative Y values so area fill goes upward to y=0 (the top of the basal layer).
     val processedBasalProfile = remember(basalData, stableTimeRange) {
         if (!hasRealTimeRange || basalData == null) return@remember emptyList()
-        val pts = processPoints(basalData.profileBasal, minTimestamp, minX, maxX)
+        val pts = processStepPoints(basalData.profileBasal, minTimestamp, minX, maxX)
         pts.map { (x, y) -> x to -y } // negate: y=0 at top, -maxBasal at bottom
     }
     val processedBasalActual = remember(basalData, stableTimeRange) {
         if (!hasRealTimeRange || basalData == null) return@remember emptyList()
-        val pts = processPoints(basalData.actualBasal, minTimestamp, minX, maxX)
+        val pts = processStepPoints(basalData.actualBasal, minTimestamp, minX, maxX)
         pts.map { (x, y) -> x to -y }
     }
 
@@ -1013,6 +1013,33 @@ internal fun windowedPrimaryY(
 private fun processPoints(points: List<GraphDataPoint>, minTimestamp: Long, minX: Double, maxX: Double): List<Pair<Double, Double>> {
     val pts = points.map { timestampToX(it.timestamp, minTimestamp) to it.value }
     return filterToRange(pts, minX, maxX)
+}
+
+/**
+ * [processPoints] for a step series that has to reach the right edge of the axis.
+ *
+ * A step series stores a point only where the value changes (see `rebuildBasalGraph`), plus one
+ * closing point at the end of the range it was built for. That closing point is the only thing that
+ * carries the line from the last change to the edge, and it is regularly **outside** [maxX]:
+ * `OverviewDataCacheImpl.graphEndTime` ends the basal at the newest prediction time, while the axis
+ * ends at `TimeRange.toTime` whenever the predictions overlay is off. [filterToRange] then drops it
+ * and the line simply stops at the last change - up to an hour short of the edge, because
+ * `OverviewData.toTime` is the current time rounded **up** to a whole hour.
+ *
+ * So the last point is clamped to [maxX] instead of dropped, carrying the value that
+ * [stepValueAt] says is in effect there. That is correct however far the producer overshoots, and
+ * it cannot fall out of step with the axis again: the producer's end is always at or past [maxX]
+ * (equal to it when predictions are on), never before it.
+ *
+ * Only for step series. On a sampled line (IOB, COB, activity) the same clamp would invent a
+ * reading that was never taken.
+ */
+internal fun processStepPoints(points: List<GraphDataPoint>, minTimestamp: Long, minX: Double, maxX: Double): List<Pair<Double, Double>> {
+    val pts = points.map { timestampToX(it.timestamp, minTimestamp) to it.value }.sortedBy { it.first }
+    val inRange = filterToRange(pts, minX, maxX)
+    if (inRange.isEmpty() || inRange.last().first >= maxX) return inRange
+    val edgeValue = stepValueAt(pts, maxX) ?: return inRange
+    return inRange + (maxX to edgeValue)
 }
 
 /** Process IOB treatment overlays: split SMBs by size, extract boluses and extended boluses */

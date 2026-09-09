@@ -44,6 +44,7 @@ import app.aaps.core.interfaces.overview.graph.DevSlopeGraphData
 import app.aaps.core.interfaces.overview.graph.DeviationsGraphData
 import app.aaps.core.interfaces.overview.graph.EpsGraphPoint
 import app.aaps.core.interfaces.overview.graph.ExtendedBolusGraphPoint
+import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.HeartRateGraphData
 import app.aaps.core.interfaces.overview.graph.IobGraphData
@@ -53,6 +54,7 @@ import app.aaps.core.interfaces.overview.graph.RatioGraphData
 import app.aaps.core.interfaces.overview.graph.RunningModeDisplayData
 import app.aaps.core.interfaces.overview.graph.RunningModeGraphData
 import app.aaps.core.interfaces.overview.graph.RunningModeSegment
+import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.StepsGraphData
 import app.aaps.core.interfaces.overview.graph.TargetLineData
 import app.aaps.core.interfaces.overview.graph.TbrDisplayData
@@ -105,6 +107,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -146,6 +149,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     private val profileUtil: ProfileUtil,
     private val profileFunction: ProfileFunction,
     private val preferences: Preferences,
+    private val graphConfigRepository: GraphConfigRepository,
     private val dateUtil: DateUtil,
     private val trendCalculator: TrendCalculator,
     @Assisted val iobCobCalculatorProvider: () -> IobCobCalculator,
@@ -291,6 +295,22 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         scope.launch {
             predictionsFlow
                 .debounce(300)
+                .collect {
+                    rebuildRunningModeGraph()
+                    rebuildTargetLine()
+                    rebuildBasalGraph()
+                }
+        }
+
+        // Scope-agnostic: switching the predictions overlay moves the right edge of the axis by
+        // hours in one step (see `graphEndTime`), and nothing else emits when it is toggled. Only
+        // changes matter, so the value the repository already holds is dropped - the first rebuild
+        // has taken it into account anyway.
+        scope.launch {
+            graphConfigRepository.graphConfigFlow
+                .map { SeriesType.PREDICTIONS in it.bgOverlays }
+                .distinctUntilChanged()
+                .drop(1)
                 .collect {
                     rebuildRunningModeGraph()
                     rebuildTargetLine()
@@ -781,16 +801,32 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         return fromTime to toTime
     }
 
+    /** Whether the reader has the predictions overlay switched on. */
+    private val showPredictions: Boolean
+        get() = SeriesType.PREDICTIONS in graphConfigRepository.graphConfigFlow.value.bgOverlays
+
     /**
-     * The current [graphEndTime], with the latest prediction time read from the last loop run.
+     * The right edge of the axis, which is where the series that reach it have to stop.
+     *
+     * It mirrors `GraphViewModel.derivedTimeRange`, and the predictions overlay is what decides:
+     *
+     * - **Overlay on**, the axis stretches to the newest prediction point, so [graphEndTime] with
+     *   the prediction time from the last loop run gives the same edge.
+     * - **Overlay off**, the axis stops at `TimeRange.toTime`. That is *earlier* than the [toTime]
+     *   handed in, which is `TimeRange.endTime` - the query window, up to two hours wider. Walking
+     *   to the wider one was about four hours of minute steps per rebuild, every one of them
+     *   clipped away again before anything was drawn.
      *
      * A history window has no horizon: it draws a fixed past range, and `loop.lastRun` holds a
      * prediction time from *now*. Handing that in would stretch a history graph from its own range
      * all the way to the live horizon - days of minute steps, each one a database read, for a right
      * edge the reader never asked for. `observeDatabase` is what tells the two windows apart.
      */
-    private fun graphEndTime(toTime: Long): Long =
-        graphEndTime(if (observeDatabase) loop.lastRun?.constraintsProcessed?.latestPredictionsTime else null, toTime)
+    private fun graphEndTime(toTime: Long): Long = when {
+        !observeDatabase -> toTime
+        showPredictions  -> graphEndTime(loop.lastRun?.constraintsProcessed?.latestPredictionsTime, toTime)
+        else             -> timeRangeFlow.value?.toTime ?: toTime
+    }
 
     private suspend fun rebuildTreatmentGraph() {
         val (fromTime, toTime) = graphTimeRange() ?: return
@@ -1207,7 +1243,9 @@ internal fun profileBoundariesIn(switches: List<EPS>, fromTime: Long): List<Long
     switches.map { it.timestamp }.filter { it > fromTime }.sorted()
 
 /**
- * How far right to draw a series that is meant to reach the edge of the axis.
+ * How far right to draw a series that is meant to reach the edge of the axis, **while the
+ * predictions overlay is on**. With it off the axis stops at `TimeRange.toTime` and the caller uses
+ * that instead - see the member `graphEndTime`, which picks between the two.
  *
  * `graphTimeRange` ends at `TimeRange.endTime`, and that is not always the right edge of the chart.
  * The axis is `max(newest BG / bucketed / prediction point, endTime)` (see

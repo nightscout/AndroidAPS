@@ -12,6 +12,10 @@ import kotlin.test.assertEquals
  * horizon has not run. A series that stops there ends before the axis does, and on the basal graph
  * that looks like the line simply stopping short of "now".
  *
+ * This is the edge for a reader who has the predictions overlay **on**. With it off the axis stops
+ * at `TimeRange.toTime` and `OverviewDataCacheImpl.graphEndTime` returns that instead, without
+ * reaching this function at all.
+ *
  * Small enough to read at a glance, and worth pinning anyway: it is one `max` that three callers
  * share, and the failure it prevents is silent - a graph that is merely a bit short still draws.
  */

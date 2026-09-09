@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.overview.graphs
 
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.graph.GraphConfig
@@ -13,7 +14,6 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +39,10 @@ class GraphConfigRepositoryImpl @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : GraphConfigRepository {
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    // Not the main dispatcher: all this scope does is parse a preference string into a StateFlow,
+    // which is safe from any thread, and reaching for `Dispatchers.Main` in a constructor makes the
+    // object graph unbuildable in a plain JVM unit test (no main looper).
+    private val scope = CoroutineScope(SupervisorJob() + aapsIoDispatcher)
     private val _graphConfigFlow = MutableStateFlow(load())
     override val graphConfigFlow: StateFlow<GraphConfig> = _graphConfigFlow.asStateFlow()
 

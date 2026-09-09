@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.overview.graphs
 
 import app.aaps.core.interfaces.overview.graph.DeviationType
+import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import com.google.common.truth.Truth.assertThat
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
@@ -68,6 +69,58 @@ internal class SecondaryGraphScaleHelpersTest {
         @Test
         fun `empty series has no value in effect`() {
             assertThat(stepValueAt(emptyList(), 10.0)).isNull()
+        }
+    }
+
+    @Nested
+    inner class ProcessStepPointsTest {
+
+        /** x is whole minutes from minTimestamp, so a minute count is the readable way to write one. */
+        private fun min(m: Long) = m * 60_000L
+
+        @Test
+        fun `a closing point past the right edge is clamped to the edge, not dropped`() {
+            // The reported "missing basal" bug. rebuildBasalGraph closes the series at the newest
+            // prediction time, which is hours past an axis that ends at TimeRange.toTime while the
+            // predictions overlay is off. Dropping that point left the line stopping at the last
+            // basal change instead of at the edge.
+            val points = listOf(
+                GraphDataPoint(min(0), 1.0),
+                GraphDataPoint(min(30), 2.0),
+                GraphDataPoint(min(300), 2.0) // closing point, far past the edge
+            )
+            val result = processStepPoints(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 1.0, 30.0 to 2.0, 60.0 to 2.0).inOrder()
+        }
+
+        @Test
+        fun `the clamped point carries the value in effect at the edge, not the last value overall`() {
+            val points = listOf(
+                GraphDataPoint(min(0), 1.0),
+                GraphDataPoint(min(30), 2.0),
+                GraphDataPoint(min(90), 3.0), // a change after the edge must not leak back into view
+                GraphDataPoint(min(300), 3.0)
+            )
+            val result = processStepPoints(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 1.0, 30.0 to 2.0, 60.0 to 2.0).inOrder()
+        }
+
+        @Test
+        fun `a series that already ends exactly at the edge is left alone`() {
+            val points = listOf(GraphDataPoint(min(0), 1.0), GraphDataPoint(min(60), 1.0))
+            val result = processStepPoints(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 1.0, 60.0 to 1.0).inOrder()
+        }
+
+        @Test
+        fun `an empty series stays empty`() {
+            assertThat(processStepPoints(emptyList(), minTimestamp = 0L, minX = 0.0, maxX = 60.0)).isEmpty()
+        }
+
+        @Test
+        fun `a series lying entirely past the edge contributes nothing`() {
+            val points = listOf(GraphDataPoint(min(90), 1.0), GraphDataPoint(min(120), 2.0))
+            assertThat(processStepPoints(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)).isEmpty()
         }
     }
 
