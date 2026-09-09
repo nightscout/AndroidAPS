@@ -245,6 +245,8 @@
     <string name="location_permission_not_granted">Permessi posizione non concessi. Consenti nelle impostazioni Android.</string>
     <string name="configbuilder_nightscoutversion_label">Versione Nightscout:</string>
     <string name="not_available_full">Non disponibile</string>
+    <string name="not_implemented_yet">Questa funzione non è ancora disponibile su questa piattaforma</string>
+    <string name="not_available_on_platform">Questa funzione non è disponibile su questa piattaforma</string>
     <string name="engineering_mode_enabled">Engineering mode abilitata</string>
     <string name="back">Indietro</string>
     <string name="next">Prossimo</string>
