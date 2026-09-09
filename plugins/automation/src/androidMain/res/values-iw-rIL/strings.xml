@@ -90,6 +90,7 @@
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה בוטלה</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>
