@@ -90,6 +90,7 @@
     <string name="autotune_run_cancelled">Autotune의 또 다른 실행이 감지되었습니다, 실행이 취소되었습니다</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>
