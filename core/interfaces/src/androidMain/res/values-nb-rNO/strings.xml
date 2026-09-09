@@ -78,6 +78,7 @@
     <string name="pref_show_reservoir_level">Vis reservoarnivå</string>
     <string name="pref_show_phone_battery">Vis telefonbatteri</string>
     <string name="pref_show_rig_battery">Vis riggens batteri</string>
+    <string name="pref_show_basal_rate">Vis basaldose</string>
     <string name="pref_show_loop_status">Vis loopstatus</string>
     <string name="pref_show_bg">Vis BS</string>
     <string name="pref_show_bgi">Vis BGI</string>
@@ -128,6 +129,7 @@
     <string name="maximumbasalvaluereplaced">Basalverdi erstattet med høyeste tillate verdi: %1$s</string>
     <string name="profile_ins_units_per_hour">E/t</string>
     <string name="profile_carbs_per_unit">g/E</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Registrer</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">FORLENGET KARBO</string>

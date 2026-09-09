@@ -293,6 +293,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Helseportal</string>
     <string name="careportal_bgcheck">BS-kontroll</string>
     <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
     <string name="careportal_announcement">Melding</string>
@@ -343,6 +344,7 @@
     <string name="scene_conflict_active_running_mode">Aktiv kjøremodus vil bli erstattet</string>
     <string name="scene_conflict_active_scene">Aktiv scene \"%1$s\" vil bli avsluttet først</string>
     <string name="scene_action_tt">Midlertidig mål: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">Aktiver SMB</string>
     <string name="scene_action_smb_off">Deaktiver SMB</string>
@@ -768,6 +770,7 @@
     <string name="initializing">Initialiserer…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Advarsel</string>
+    <string name="alert" comment="Generic alert dialog title">Varsel</string>
     <string name="retry" comment="Button label to retry a failed operation">Prøv på nytt</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Fullfør</string>
     <string name="firmware" comment="Pump firmware version label">Fastvare</string>
@@ -791,6 +794,7 @@
     <string name="close">Lukk</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <string name="export_warning">Advarsel</string>
     <string name="export_expired">Utløpt</string>
     <string name="export_disabled">Deaktivert</string>
@@ -1054,9 +1058,11 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d t</string>
-    <string name="units_format_hours_double">%1$.0f t</string>
-    <string name="units_format_hours_double_range">%1$.0f t (%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_double">%1$.1f t</string>
+    <string name="units_format_hours_double_range">%1$.1f t (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d t (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f E</string>
     <string name="units_format_insulin_int">%1$d E</string>

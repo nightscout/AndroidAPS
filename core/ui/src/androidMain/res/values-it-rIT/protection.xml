@@ -11,6 +11,7 @@
     <string name="application_pin">PIN applicazione</string>
     <string name="bolus_password">Password bolo</string>
     <string name="bolus_pin">PIN bolo</string>
+    <string name="protection_timeout_title">Tempo validità password e PIN [s]</string>
     <string name="protection_timeout_summary">Tempo per l\'inserimento di password o PIN</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Fallback non sicuro</string>

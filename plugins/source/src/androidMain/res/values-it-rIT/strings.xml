@@ -30,6 +30,7 @@
     <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Ottai.</string>
     <!-- Patched SI App -->
     <string name="patched_si_app">App SI</string>
+    <string name="description_source_patched_si_app">Ricevi i dati di glucosio dall\'app Sibionic SI Patched o dall\'app Sibionics.</string>
     <!-- Patched Sino App -->
     <string name="patched_sino_app">App Sino</string>
     <string name="description_source_patched_sino_app">Ricevi i dati di glucosio dall\'app Sino patchata.</string>

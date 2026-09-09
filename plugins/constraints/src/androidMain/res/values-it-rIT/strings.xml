@@ -20,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitazione bolo esteso a %1$.1f U a causa di: %2$s</string>
     <string name="limitingcarbs">Limitazione carboidrati a %1$d g a causa di: %2$s</string>
+    <string name="safety">Sicurezza</string>
     <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
     <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>
     <string name="closed_loop_disabled_with_eb">Loop chiuso disabilitato a causa dell\'esecuzione di un bolo esteso</string>
@@ -41,4 +42,5 @@
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
     <string name="objectives_button_unfinish">Reset stato completato</string>
     <string name="objectives_button_unstart">Reset stato avviato</string>
+    <string name="bg_doubled_lgs">Modalità LGS a causa di valori raddoppiati nella sorgente di glicemia</string>
 </resources>

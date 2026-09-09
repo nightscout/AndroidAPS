@@ -235,6 +235,7 @@
     <string name="pref_title_units">Enheter</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Språk</string>
     <string name="lang_default">Systemstandard</string>
     <string name="lang_en">Engelsk</string>
     <string name="lang_af">Afrikaans</string>
