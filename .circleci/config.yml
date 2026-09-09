@@ -94,12 +94,37 @@ jobs:
               COMPILE_PIN=""
             fi
             echo "export GRADLE_PIN=\"$GRADLE_PIN\"" >> "$BASH_ENV"
+            # -Xlog:gc is diagnostics only, the heap is deliberately left at 3g. Build 41233 died here
+            # with "GC overhead limit exceeded" inside the Compose IR transformer, and that error has
+            # two very different causes: a heap that genuinely filled, or ParallelGC (which the Kotlin
+            # daemon uses) starved of CPU by the three emulators booting alongside this step - it
+            # trips on a GC *time* ratio, not on occupancy. The same build cold, clean and under load
+            # peaks at ~540 MB locally, so occupancy is not the obvious answer. The GC log tells the
+            # two apart and costs nothing when the build passes.
             $COMPILE_PIN ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx3g" \
+            -Dkotlin.daemon.jvm.options="-Xmx3g -Xlog:gc:file=/tmp/kotlin-daemon-gc.log" \
             -Dorg.gradle.daemon=true \
             compileFullDebugUnitTestSources compileDebugUnitTestSources \
             :app:assembleFullDebug :app:assembleFullDebugAndroidTest
+
+      # `when: always`, because the failing case is the only one worth reading. The Kotlin daemon is a
+      # separate process whose output never reaches the Gradle log, so this is the only way to see its
+      # collections. Read the last lines: heap figures close to 3072M with little recovered means the
+      # heap really was full and it needs raising; small heaps with long pause times means the
+      # collector was starved and more heap would not have helped.
+      - run:
+          name: Kotlin daemon GC log
+          when: always
+          command: |
+            if [ -f /tmp/kotlin-daemon-gc.log ]; then
+              echo "--- last 200 GC lines ---"
+              tail -n 200 /tmp/kotlin-daemon-gc.log
+            else
+              echo "no GC log at /tmp/kotlin-daemon-gc.log"
+            fi
+            echo "--- kotlin daemon logs ---"
+            ls -la "$HOME"/.kotlin/daemon 2>/dev/null | tail -n 20 || true
 
       - run:
           name: Wait for all three emulators to boot
