@@ -44,7 +44,7 @@ class AutomationEventTest : TestBase() {
         ActionFactory(
             triggerDeps, aapsLogger, rh, pumpEnactResultProvider, mock(), dateUtil, mock(), mock(), mock(),
             profileFunction, mock(), mock(), mock(), mock(), mock(), preferences, mock(), mock(), mock(), mock(),
-            mock(), mock()
+            mock(), mock(), mock()
         )
     }
 
