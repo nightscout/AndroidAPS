@@ -94,12 +94,56 @@ jobs:
               COMPILE_PIN=""
             fi
             echo "export GRADLE_PIN=\"$GRADLE_PIN\"" >> "$BASH_ENV"
+            # 6g, and the GC log that earned the number. Build 41233 died here with "GC overhead limit
+            # exceeded"; at 3g build 41263 passed, but its GC log shows why that was luck:
+            #
+            #   GC(140) Pause Full (Ergonomics) 2423M->2401M(2734M) 719.304ms
+            #
+            # a full collection recovering 22 MB of 2423, one of 66 Full GCs and 42 s of GC in the last
+            # 200 events alone. The live set on this machine reaches 2.4 GB against a 3 GB cap - 1.3x,
+            # where a JVM wants 2-3x - so it thrashes and any extra pressure tips it over. Local builds
+            # peak near 540 MB and never show this, which is why the daemon has to be measured here
+            # rather than reasoned about. The runner has 64 GB with ~40 GB free at the failure, so the
+            # ceiling was ours. Keep -Xlog:gc: the daemon is invisible otherwise and it costs nothing.
+            # kotlin.daemon.jvm.options is COMMA separated. Space separated, the whole string is handed
+            # to -Xmx as one value, the daemon refuses to start ("Invalid maximum heap size"), and the
+            # build quietly falls back to compiling inside the Gradle JVM - which has 8g, so it passes
+            # and proves nothing. Build 41261 was lost that way. The guard below turns that silent
+            # degradation into a failure.
+            # Explicit, because the `| tee` below would otherwise report tee's exit code and a FAILED
+            # build would read as green. CircleCI already defaults to `bash -eo pipefail`; this does
+            # not rely on that staying true.
+            set -o pipefail
             $COMPILE_PIN ./gradlew \
-            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx3g" \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss4m" \
+            -Dkotlin.daemon.jvm.options="-Xmx6g,-Xlog:gc:file=/tmp/kotlin-daemon-gc.log" \
             -Dorg.gradle.daemon=true \
             compileFullDebugUnitTestSources compileDebugUnitTestSources \
-            :app:assembleFullDebug :app:assembleFullDebugAndroidTest
+            :app:assembleFullDebug :app:assembleFullDebugAndroidTest 2>&1 | tee /tmp/compile-step.log
+            if grep -q "Using fallback strategy: Compile without Kotlin daemon" /tmp/compile-step.log; then
+              echo "ERROR: the Kotlin compile daemon never started, so compilation ran inside the Gradle"
+              echo "JVM on its own heap. Whatever this build proves, it is not about the daemon settings."
+              grep -m3 -A2 "Failed to compile with Kotlin daemon" /tmp/compile-step.log || true
+              exit 1
+            fi
+
+      # `when: always`, because the failing case is the only one worth reading. The Kotlin daemon is a
+      # separate process whose output never reaches the Gradle log, so this is the only way to see its
+      # collections. Read the last lines: heap figures close to 3072M with little recovered means the
+      # heap really was full and it needs raising; small heaps with long pause times means the
+      # collector was starved and more heap would not have helped.
+      - run:
+          name: Kotlin daemon GC log
+          when: always
+          command: |
+            if [ -f /tmp/kotlin-daemon-gc.log ]; then
+              echo "--- last 200 GC lines ---"
+              tail -n 200 /tmp/kotlin-daemon-gc.log
+            else
+              echo "no GC log at /tmp/kotlin-daemon-gc.log"
+            fi
+            echo "--- kotlin daemon logs ---"
+            ls -la "$HOME"/.kotlin/daemon 2>/dev/null | tail -n 20 || true
 
       - run:
           name: Wait for all three emulators to boot
