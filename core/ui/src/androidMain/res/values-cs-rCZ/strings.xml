@@ -207,6 +207,7 @@
     <string name="login">Přihlášení</string>
     <string name="logout">Odhlásit</string>
     <string name="prime_fill">Plnění/doplňování</string>
+    <string name="site_rotation">Rotace míst aplikace</string>
     <string name="edit_site">Upravit</string>
     <string name="select_arrow">Vybrat šipku</string>
     <string name="site_filter_info">Vyberte typ terapeutické události, kterou chcete vidět: výměna kanyly a/nebo výměna senzoru</string>
@@ -244,6 +245,8 @@
     <string name="location_permission_not_granted">Oprávnění k přístupu k poloze zařízení nebylo uděleno. Povolte v nastavení systému Android.</string>
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
     <string name="not_available_full">Není k dispozici</string>
+    <string name="not_implemented_yet">Tato funkce zatím není na této platformě připravena</string>
+    <string name="not_available_on_platform">Tato funkce není na této platformě k dispozici</string>
     <string name="engineering_mode_enabled">Inženýrský režim povolen</string>
     <string name="back">Zpět</string>
     <string name="next">Další</string>
@@ -256,6 +259,7 @@
     <string name="pin_dont_match">PIN kódy se neshodují</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Zrušit dočasný bazál</string>
     <string name="let_temp_basal_run">Nechat běžet aktuální dočasný bazál</string>
@@ -292,6 +296,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Péče</string>
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ruční glykémie nebo kalibrace</string>
     <string name="careportal_announcement">Oznámení</string>
@@ -633,6 +638,7 @@
     <string name="uel_scene_deactivated">SCÉNA DEAKTIVOVÁNA</string>
     <string name="uel_remote_config_changed">VZDÁLENÁ KONFIGURACE ZMĚNĚNA</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Dolní hodnota dočasného cíle</string>
     <string name="temp_target_high_target">Horní hodnota dočasného cíle</string>
     <string name="temp_target_value">Hodnota dočasného cíle</string>
     <string name="insulin_dia">Hodnota DIA inzulínu</string>
@@ -768,6 +774,7 @@
     <string name="initializing">Inicializace…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Varování</string>
+    <string name="alert" comment="Generic alert dialog title">Výstraha</string>
     <string name="retry" comment="Button label to retry a failed operation">Opakovat</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Dokončit</string>
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
@@ -791,6 +798,7 @@
     <string name="close">Zavřít</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <string name="export_warning">Varování</string>
     <string name="export_expired">Vypršelo</string>
     <string name="export_disabled">Zakázáno</string>
@@ -823,6 +831,7 @@
     <string name="send_logs">Odeslat záznamy</string>
     <string name="file_management">Správa souborů</string>
     <string name="database_management">Správa databáze</string>
+    <string name="data_choices">Výběr dat</string>
     <string name="unattended_settings_export">Bezobslužný export nastavení</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Konfigurovat úrovně podrobnosti záznamů</string>
@@ -883,6 +892,7 @@
     <string name="statistics_desc">Zobrazit statistiky a reporty</string>
     <string name="tdd_cycle_pattern">Vzory CDD podle periody</string>
     <string name="tdd_cycle_pattern_desc">Překrýt denní součty inzulínu ve 28denních cyklech pro odhalení opakujících se vzorců</string>
+    <string name="nav_profile_helper">Pomocník s profilem</string>
     <string name="nav_profile_helper_desc">Sestavte profil podle hmotnosti nebo CDD</string>
     <string name="quick_launch_configure">Konfigurace Rychlého spuštění</string>
     <string name="quick_launch_configure_desc">Přizpůsobit tlačítka rychlých akcí v přehledu</string>
@@ -1020,6 +1030,14 @@
     <string name="import_wrong_password">Nesprávné heslo</string>
     <string name="import_btn">Importovat</string>
     <string name="import_anyway_btn">Přesto importovat</string>
+    <string name="import_apply_title">Nastavení importováno</string>
+    <string name="import_apply_message">Importovaná nastavení budou nyní použita. Zásuvné moduly, které byly změněny, budou restartovány.</string>
+    <string name="import_apply_waiting">Čekání na pumpu…</string>
+    <string name="import_apply_pump_busy">Pumpa je stále zaneprázdněná, takže nastavení nebylo použito.</string>
+    <string name="import_apply_retry_question">Opakovat nyní?</string>
+    <string name="import_applied_title">Nastavení byla použita</string>
+    <string name="import_applied_message">Importovaná nastavení jsou nyní používána.</string>
+    <string name="import_apply_pump_changed">Zrušeno: pumpa byla změněna importem nastavení</string>
     <string name="import_source_local">Lokální</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Načíst více</string>
@@ -1061,7 +1079,11 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$dg</string>
+    <string name="units_format_grams_range">%1$dg (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.1fh</string>
+    <string name="units_format_hours_double_range">%1$.1fh (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>
