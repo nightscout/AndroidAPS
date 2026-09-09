@@ -101,12 +101,27 @@ jobs:
             # trips on a GC *time* ratio, not on occupancy. The same build cold, clean and under load
             # peaks at ~540 MB locally, so occupancy is not the obvious answer. The GC log tells the
             # two apart and costs nothing when the build passes.
+            # kotlin.daemon.jvm.options is COMMA separated. Space separated, the whole string is handed
+            # to -Xmx as one value, the daemon refuses to start ("Invalid maximum heap size"), and the
+            # build quietly falls back to compiling inside the Gradle JVM - which has 8g, so it passes
+            # and proves nothing. Build 41261 was lost that way. The guard below turns that silent
+            # degradation into a failure.
+            # Explicit, because the `| tee` below would otherwise report tee's exit code and a FAILED
+            # build would read as green. CircleCI already defaults to `bash -eo pipefail`; this does
+            # not rely on that staying true.
+            set -o pipefail
             $COMPILE_PIN ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx3g -Xlog:gc:file=/tmp/kotlin-daemon-gc.log" \
+            -Dkotlin.daemon.jvm.options="-Xmx3g,-Xlog:gc:file=/tmp/kotlin-daemon-gc.log" \
             -Dorg.gradle.daemon=true \
             compileFullDebugUnitTestSources compileDebugUnitTestSources \
-            :app:assembleFullDebug :app:assembleFullDebugAndroidTest
+            :app:assembleFullDebug :app:assembleFullDebugAndroidTest 2>&1 | tee /tmp/compile-step.log
+            if grep -q "Using fallback strategy: Compile without Kotlin daemon" /tmp/compile-step.log; then
+              echo "ERROR: the Kotlin compile daemon never started, so compilation ran inside the Gradle"
+              echo "JVM on its own heap. Whatever this build proves, it is not about the daemon settings."
+              grep -m3 -A2 "Failed to compile with Kotlin daemon" /tmp/compile-step.log || true
+              exit 1
+            fi
 
       # `when: always`, because the failing case is the only one worth reading. The Kotlin daemon is a
       # separate process whose output never reaches the Gradle log, so this is the only way to see its
