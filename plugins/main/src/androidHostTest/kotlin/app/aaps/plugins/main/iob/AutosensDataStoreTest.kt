@@ -1542,4 +1542,42 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         ads.autosensDataTable = LongSparseArray<AutosensData>()
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtil)).isNull()
     }
+
+    @Test
+    fun cloneKeepsReferenceTime() {
+        val ads = AutosensDataStoreObject()
+        ads.referenceTime = T.mins(5).msecs()
+        ads.bgReadings = listOf(GV(timestamp = now, value = 100.0, raw = 0.0, trendArrow = TrendArrow.FLAT, noise = 0.0, sourceSensor = SourceSensor.UNKNOWN))
+        ads.autosensDataTable.append(now - 1, AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = now - 1 })
+
+        val clone = ads.clone() as AutosensDataStoreObject
+
+        // referenceTime anchors the 5 minute bucket grid, and the calculation publishes the clone back
+        // as the live store. A lost anchor re-anchors the grid to the newest BG on the next load and
+        // makes every cached autosensDataTable entry unreachable (issue #5066).
+        assertThat(clone.referenceTime).isEqualTo(T.mins(5).msecs())
+        assertThat(clone.bgReadings).hasSize(1)
+        assertThat(clone.autosensDataTable.size()).isEqualTo(1)
+    }
+
+    @Test
+    fun outOfPhaseReferenceTimeIsReAnchoredFor5minData() {
+        val ads = AutosensDataStoreObject()
+        // Anchor from an earlier sensor, 2 minutes out of phase with the readings below. Without the
+        // re-anchor the oldest reading is shifted by 2 minutes, the 90 second tolerance in
+        // createBucketedData5min trips, and every run falls back to the recalculated path.
+        ads.referenceTime = now - T.mins(55).msecs() + T.mins(2).msecs()
+        ads.bgReadings = (0..11).map { i ->
+            GV(
+                timestamp = now - T.mins(5L * i).msecs(), value = 100.0, raw = 0.0,
+                trendArrow = TrendArrow.FLAT, noise = 0.0, sourceSensor = SourceSensor.UNKNOWN
+            )
+        }
+
+        ads.createBucketedData(aapsLogger, dateUtil)
+
+        assertThat(ads.referenceTime).isEqualTo(now - T.mins(55).msecs())
+        // 5 minute path kept: bucketed data has one entry per reading, no interpolation
+        assertThat(ads.bucketedData).hasSize(12)
+    }
 }

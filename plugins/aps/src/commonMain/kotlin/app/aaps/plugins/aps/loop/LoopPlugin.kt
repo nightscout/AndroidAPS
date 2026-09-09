@@ -92,6 +92,7 @@ import app.aaps.core.objects.extensions.jsonObject
 import app.aaps.plugins.aps.loop.extensions.jsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
+import kotlin.concurrent.Volatile
 import kotlin.math.abs
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
@@ -147,7 +148,9 @@ class LoopPlugin @Inject constructor(
     aapsLogger, rh
 ), Loop, PluginConstraints {
 
-    override var lastBgTriggeredRun: Long = 0
+    // Volatile: this is now the only gate against a second automatic loop run for the same BG. It is
+    // written by the calculation worker thread and read by the next one, which may be a different one.
+    @Volatile override var lastBgTriggeredRun: Long = 0
     private var carbsSuggestionsSuspendedUntil: Long = 0
     private var prevCarbsreq = 0
     override var lastRun: LastRun? = null

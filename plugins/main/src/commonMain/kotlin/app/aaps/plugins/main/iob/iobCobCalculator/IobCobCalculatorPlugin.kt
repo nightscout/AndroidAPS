@@ -58,6 +58,7 @@ import app.aaps.core.objects.extensions.plus
 import app.aaps.core.objects.extensions.round
 import app.aaps.plugins.main.MainStrings
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
@@ -66,12 +67,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlin.math.max
 import kotlin.math.min
@@ -124,13 +125,17 @@ class IobCobCalculatorPlugin(
                 val invalidateFrom = dateUtil.now() - T.hours(24).msecs()
                 scheduleHistoryDataChange(invalidateFrom, reloadBgData = true, triggeredByNewBG = false)
             }
+        // The collectors below all use collectResilient. A plain onEach cancels its collection for good
+        // when the body throws, and with no CoroutineExceptionHandler in place the same throw also takes
+        // the process down. Either way the plugin stops reacting to database changes, and for the
+        // GlucoseValue collector that means no more BG triggered loop runs (issue #5066).
         // EffectiveProfileSwitch changes
         persistenceLayer.observeChanges(EPS::class)
-            .onEach { epsList ->
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { epsList ->
                 epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
                     newHistoryData(timestamp, bgDataReload = false, triggeredByNewBG = false)
                 }
-            }.launchIn(newScope)
+            }
         // Preference changes
         merge(
             preferences.observe(IntKey.AutosensPeriod).drop(1).map {},
@@ -141,35 +146,40 @@ class IobCobCalculatorPlugin(
             preferences.observe(DoubleKey.AbsorptionCutOff).drop(1).map {},
             preferences.observe(DoubleKey.AutosensMax).drop(1).map {},
             preferences.observe(DoubleKey.AutosensMin).drop(1).map {},
-        ).onEach { resetDataAndRunCalculation("onPreferenceChange") }.launchIn(newScope)
+        ).collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { resetDataAndRunCalculation("onPreferenceChange") }
         // GlucoseValue changes → reload BG data + trigger loop
         persistenceLayer.observeChanges(GV::class)
-            .onEach { gvList ->
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { gvList ->
                 gvList.minOfOrNull { it.timestamp }?.let { timestamp ->
                     scheduleHistoryDataChange(timestamp, reloadBgData = true, triggeredByNewBG = true)
                 }
-            }.launchIn(newScope)
+            }
         // Treatment changes → invalidate caches
         persistenceLayer.observeChanges(CA::class)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
-            .launchIn(newScope)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { list ->
+                list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) }
+            }
         persistenceLayer.observeChanges(BS::class)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
-            .launchIn(newScope)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { list ->
+                list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) }
+            }
         persistenceLayer.observeChanges(BCR::class)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
-            .launchIn(newScope)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { list ->
+                list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) }
+            }
         persistenceLayer.observeChanges(TB::class)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
-            .launchIn(newScope)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { list ->
+                list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) }
+            }
         persistenceLayer.observeChanges(EB::class)
-            .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
-            .launchIn(newScope)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { list ->
+                list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) }
+            }
         // Units change
         preferences.observe(StringKey.GeneralUnits).drop(1)
-            .onEach {
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) {
                 scheduleHistoryDataChange(0, reloadBgData = true)
-            }.launchIn(newScope)
+            }
         // EventAppInitialized fires once, early. UNDISPATCHED matters most here of the three: a
         // scheduled collector could miss it outright and the main calculation would never be kicked off.
         rxBus.toFlow(EventAppInitialized::class)
@@ -193,7 +203,13 @@ class IobCobCalculatorPlugin(
         // single thread executor and its shutdown are gone.
         scope?.cancel()
         scope = null
-        scheduledHistoryPost = null
+        // scheduledData has to go too. A cancel during the debounce delay leaves it set, and the guard
+        // in scheduleHistoryDataChange would then take the "newer timestamp" branch for every later
+        // change and never schedule anything again.
+        historyLock.withLock {
+            scheduledHistoryPost = null
+            scheduledData = null
+        }
         super.onStop()
     }
 
@@ -444,12 +460,18 @@ class IobCobCalculatorPlugin(
      * Guards [scheduledData] and [scheduledHistoryPost]. Held by both the scheduling call and the
      * debounced body, so a new request cannot land while a run is in progress.
      *
-     * A named lock rather than `@Synchronized` plus `synchronized(this)`: the pairing is then
-     * explicit, and it works off the JVM.
+     * A coroutine [Mutex], not an `AapsLock`: the debounced body holds this across [newHistoryData],
+     * which suspends (`stopCalculation` polls WorkManager with `delay`). A thread owned lock such as
+     * `ReentrantLock`, which is what `AapsLock` is on the JVM, would then be unlocked from whatever
+     * thread the coroutine resumed on. That throws `IllegalMonitorStateException`, leaves the lock held
+     * for good, and every later call here would block for the rest of the process lifetime. A `Mutex`
+     * belongs to the coroutine rather than to a thread, so resuming elsewhere is fine.
+     *
+     * A `Mutex` is not reentrant. Nothing inside the guarded region calls back into it.
      */
-    private val historyLock = AapsLock()
+    private val historyLock = Mutex()
 
-    fun scheduleHistoryDataChange(oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean = false) = historyLock.withLock {
+    suspend fun scheduleHistoryDataChange(oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean = false): Unit = historyLock.withLock {
         // if there is nothing scheduled or asking reload deeper to the past
         if (scheduledData == null || oldDataTimestamp < (scheduledData?.oldDataTimestamp ?: 0L)) {
             // cancel waiting task to prevent sending multiple posts
@@ -458,22 +480,49 @@ class IobCobCalculatorPlugin(
             val mergedReload = reloadBgData || (scheduledData?.reloadBgData ?: false)
             val mergedTriggeredByNewBG = triggeredByNewBG || (scheduledData?.triggeredByNewBG ?: false)
             val data = ScheduledHistoryData(oldDataTimestamp, mergedReload, mergedTriggeredByNewBG)
-            scheduledData = data
-            scheduledHistoryPost = scope?.launch {
+            val post = scope?.launch {
                 delay(HISTORY_DEBOUNCE_MS)
                 // Only the wait is cancellable. Without NonCancellable a late cancel could stop this
                 // half done, between clearing the TDD cache and rebuilding from it.
                 withContext(NonCancellable) {
                     historyLock.withLock {
-                        aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
-                        // Still blocking, and still inside the lock, so the ordering is what it was:
-                        // the cache is cleared before anything can schedule over the top of it.
-                        runBlocking { persistenceLayer.clearCachedTddData(MidnightTime.calc(data.oldDataTimestamp)) }
-                        newHistoryData(data.oldDataTimestamp, data.reloadBgData, data.triggeredByNewBG)
-                        scheduledData = null
-                        scheduledHistoryPost = null
+                        try {
+                            aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
+                            // Still blocking, and still inside the lock, so the ordering is what it was:
+                            // the cache is cleared before anything can schedule over the top of it.
+                            runBlocking { persistenceLayer.clearCachedTddData(MidnightTime.calc(data.oldDataTimestamp)) }
+                            newHistoryData(data.oldDataTimestamp, data.reloadBgData, data.triggeredByNewBG)
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (e: Exception) {
+                            // The invalidation did not finish, so the caches can still hold values built
+                            // from the old data. Throw them away instead of letting the loop dose from a
+                            // half invalidated cache. Nothing is started here: the next glucose value
+                            // rebuilds everything through the normal path.
+                            aapsLogger.error(LTag.AUTOSENS, "newHistoryData failed, dropping all cached data", e)
+                            clearCache()
+                            ads.reset()
+                        } finally {
+                            // Clear only what this run owns. A newer request can take the lock between
+                            // our delay running out and us getting the lock, and it has published its own
+                            // scheduledData and job by then. Every launched body reaches this line, so the
+                            // owner always clears its own state and the guard above can never stay stuck
+                            // on an entry with no job behind it (issue #5066).
+                            if (scheduledData === data) {
+                                scheduledData = null
+                                scheduledHistoryPost = null
+                            }
+                        }
                     }
                 }
+            }
+            // Publish only when something is really scheduled. With a stopped plugin scope is null, and
+            // a scheduledData with no runner behind it would wedge the guard above in the same way.
+            if (post == null) {
+                aapsLogger.error(LTag.AUTOSENS, "Plugin is stopped, history data change dropped")
+            } else {
+                scheduledData = data
+                scheduledHistoryPost = post
             }
         } else {
             // asked reload is newer -> adjust params only
