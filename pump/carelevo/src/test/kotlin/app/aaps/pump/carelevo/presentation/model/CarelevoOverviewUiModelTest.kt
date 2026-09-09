@@ -7,7 +7,6 @@ internal class CarelevoOverviewUiModelTest {
 
     private fun model(
         serialNumber: String = "SN-123",
-        lotNumber: String = "LOT-9",
         bootDateTimeUi: String = "2026-07-16 10:00",
         expirationTime: String = "72h",
         infusionStatus: Int? = 1,
@@ -18,7 +17,6 @@ internal class CarelevoOverviewUiModelTest {
         runningRemainMinutes: Int = 4320
     ) = CarelevoOverviewUiModel(
         serialNumber = serialNumber,
-        lotNumber = lotNumber,
         bootDateTimeUi = bootDateTimeUi,
         expirationTime = expirationTime,
         infusionStatus = infusionStatus,
@@ -33,7 +31,6 @@ internal class CarelevoOverviewUiModelTest {
     fun `constructor stores every field verbatim`() {
         val m = model()
         assertThat(m.serialNumber).isEqualTo("SN-123")
-        assertThat(m.lotNumber).isEqualTo("LOT-9")
         assertThat(m.bootDateTimeUi).isEqualTo("2026-07-16 10:00")
         assertThat(m.expirationTime).isEqualTo("72h")
         assertThat(m.infusionStatus).isEqualTo(1)
@@ -81,9 +78,8 @@ internal class CarelevoOverviewUiModelTest {
 
     @Test
     fun `destructuring returns components in declaration order`() {
-        val (sn, lot, boot, exp, status, remain, basal, bolus, stopped, mins) = model()
+        val (sn, boot, exp, status, remain, basal, bolus, stopped, mins) = model()
         assertThat(sn).isEqualTo("SN-123")
-        assertThat(lot).isEqualTo("LOT-9")
         assertThat(boot).isEqualTo("2026-07-16 10:00")
         assertThat(exp).isEqualTo("72h")
         assertThat(status).isEqualTo(1)

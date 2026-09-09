@@ -2,7 +2,6 @@ package app.aaps.pump.carelevo.presentation.model
 
 data class CarelevoOverviewUiModel(
     val serialNumber: String,
-    val lotNumber: String,
     val bootDateTimeUi: String,
     val expirationTime: String,
     val infusionStatus: Int?,

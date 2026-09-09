@@ -10,7 +10,6 @@
 
     <string name="carelevo_bluetooth_state_key">Bluetooth status</string>
     <string name="carelevo_serial_number_key">Serial No.</string>
-    <string name="carelevo_firmware_version_key">Firmware</string>
     <string name="carelevo_boot_date_time_key">Activation Time</string>
     <string name="carelevo_expiration_key">Expiration</string>
     <string name="carelevo_basal_rate_key">Basal Rate</string>
@@ -54,7 +53,7 @@
     <string name="carelevo_btn_cancel">Cancel</string>
     <string name="carelevo_btn_confirm">Confirm</string>
     <string name="carelevo_btn_research">Rescan</string>
-    <string name="carelevo_btn_needle_insert_check">Check Insertion</string>
+    <string name="carelevo_btn_needle_insert_check">Confirm Insertion</string>
 
     <string name="carelevo_state_none_value">No Active Patch</string>
     <string name="carelevo_state_disconnected_value">Disconnected</string>
@@ -62,6 +61,8 @@
 
     <string name="carelevo_overview_connect_btn_label">Activate Patch</string>
     <string name="carelevo_overview_pump_discard_btn_label">Discard Patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Suspend Infusion</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Resume Infusion</string>
 
     <string name="patch_prepare_dialog_title_insulin_amount">Select filled amount.</string>
     <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Range : %1$d ~ %2$d U</string>
