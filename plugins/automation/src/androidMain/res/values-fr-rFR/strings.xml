@@ -150,6 +150,7 @@
     <string name="newSmbMode">Nouveau mode SMB :</string>
     <string name="on">ACTIVÉ</string>
     <string name="off">DÉSACTIVÉ</string>
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Choisir depuis la carte</string>
     <string name="tap_to_select_location">Tapez sur la carte pour sélectionner un emplacement</string>
