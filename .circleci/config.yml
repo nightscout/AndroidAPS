@@ -94,13 +94,17 @@ jobs:
               COMPILE_PIN=""
             fi
             echo "export GRADLE_PIN=\"$GRADLE_PIN\"" >> "$BASH_ENV"
-            # -Xlog:gc is diagnostics only, the heap is deliberately left at 3g. Build 41233 died here
-            # with "GC overhead limit exceeded" inside the Compose IR transformer, and that error has
-            # two very different causes: a heap that genuinely filled, or ParallelGC (which the Kotlin
-            # daemon uses) starved of CPU by the three emulators booting alongside this step - it
-            # trips on a GC *time* ratio, not on occupancy. The same build cold, clean and under load
-            # peaks at ~540 MB locally, so occupancy is not the obvious answer. The GC log tells the
-            # two apart and costs nothing when the build passes.
+            # 6g, and the GC log that earned the number. Build 41233 died here with "GC overhead limit
+            # exceeded"; at 3g build 41263 passed, but its GC log shows why that was luck:
+            #
+            #   GC(140) Pause Full (Ergonomics) 2423M->2401M(2734M) 719.304ms
+            #
+            # a full collection recovering 22 MB of 2423, one of 66 Full GCs and 42 s of GC in the last
+            # 200 events alone. The live set on this machine reaches 2.4 GB against a 3 GB cap - 1.3x,
+            # where a JVM wants 2-3x - so it thrashes and any extra pressure tips it over. Local builds
+            # peak near 540 MB and never show this, which is why the daemon has to be measured here
+            # rather than reasoned about. The runner has 64 GB with ~40 GB free at the failure, so the
+            # ceiling was ours. Keep -Xlog:gc: the daemon is invisible otherwise and it costs nothing.
             # kotlin.daemon.jvm.options is COMMA separated. Space separated, the whole string is handed
             # to -Xmx as one value, the daemon refuses to start ("Invalid maximum heap size"), and the
             # build quietly falls back to compiling inside the Gradle JVM - which has 8g, so it passes
@@ -112,7 +116,7 @@ jobs:
             set -o pipefail
             $COMPILE_PIN ./gradlew \
             -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx3g,-Xlog:gc:file=/tmp/kotlin-daemon-gc.log" \
+            -Dkotlin.daemon.jvm.options="-Xmx6g,-Xlog:gc:file=/tmp/kotlin-daemon-gc.log" \
             -Dorg.gradle.daemon=true \
             compileFullDebugUnitTestSources compileDebugUnitTestSources \
             :app:assembleFullDebug :app:assembleFullDebugAndroidTest 2>&1 | tee /tmp/compile-step.log
