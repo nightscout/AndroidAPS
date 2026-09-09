@@ -250,7 +250,8 @@ class CarelevoPatchFlowScreenTest {
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
             activationExecutor = activationExecutor,
-            patchForceDiscardUseCase = patchForceDiscardUseCase
+            patchForceDiscardUseCase = patchForceDiscardUseCase,
+            carelevoAlarmInfoUseCase = mock()
         )
         viewModelFactory = TestMetroViewModelFactory(
             mapOf(

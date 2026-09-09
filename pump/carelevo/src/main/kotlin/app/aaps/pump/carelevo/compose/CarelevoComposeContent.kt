@@ -81,12 +81,20 @@ class CarelevoComposeContent(
 
         var manualWorkflowScreen by remember { mutableStateOf<CarelevoScreenType?>(null) }
         var latchedWorkflowScreen by remember { mutableStateOf<CarelevoScreenType?>(null) }
+        // checkScreen lags the flow by a patch-record round trip, so on exit it would drag the user
+        // straight back into the step they just left. This is the wizard's own "finished" signal.
+        var workflowDismissed by remember { mutableStateOf(false) }
         val checkScreen by overviewViewModel.isCheckScreen.collectAsStateWithLifecycle()
-        val activeWorkflowScreen = manualWorkflowScreen ?: latchedWorkflowScreen ?: checkScreen
+        val activeWorkflowScreen = manualWorkflowScreen ?: latchedWorkflowScreen ?: checkScreen.takeUnless { workflowDismissed }
         val pluginName = stringResource(R.string.carelevo)
+        val dismissWorkflow: () -> Unit = {
+            workflowDismissed = true
+            manualWorkflowScreen = null
+            latchedWorkflowScreen = null
+        }
 
         LaunchedEffect(checkScreen, manualWorkflowScreen) {
-            if (manualWorkflowScreen == null) {
+            if (manualWorkflowScreen == null && !workflowDismissed) {
                 when (checkScreen) {
                     CarelevoScreenType.SAFETY_CHECK,
                     CarelevoScreenType.NEEDLE_INSERTION -> latchedWorkflowScreen = checkScreen
@@ -95,6 +103,11 @@ class CarelevoComposeContent(
                     else                                -> latchedWorkflowScreen = null
                 }
             }
+        }
+
+        // Dismissal honoured once the patch record is gone; re-arm for the next patch.
+        LaunchedEffect(checkScreen) {
+            if (checkScreen == null) workflowDismissed = false
         }
 
         LaunchedEffect(activeWorkflowScreen, pluginName) {
@@ -114,11 +127,13 @@ class CarelevoComposeContent(
                 if (screenType == CarelevoScreenType.CONNECTION_FLOW_START) {
                     protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
                         if (result == ProtectionResult.GRANTED) {
+                            workflowDismissed = false
                             manualWorkflowScreen = screenType
                             latchedWorkflowScreen = null
                         }
                     }
                 } else {
+                    workflowDismissed = false
                     manualWorkflowScreen = screenType
                     latchedWorkflowScreen = null
                 }
@@ -146,10 +161,7 @@ class CarelevoComposeContent(
                         screenType = activeWorkflowScreen,
                         setToolbarConfig = setToolbarConfig,
                         snackbarHostState = snackbarHostState,
-                        onExitFlow = {
-                            manualWorkflowScreen = null
-                            latchedWorkflowScreen = null
-                        }
+                        onExitFlow = dismissWorkflow
                     )
                 }
 
@@ -158,10 +170,7 @@ class CarelevoComposeContent(
                         screenType = activeWorkflowScreen,
                         setToolbarConfig = setToolbarConfig,
                         snackbarHostState = snackbarHostState,
-                        onExitFlow = {
-                            manualWorkflowScreen = null
-                            latchedWorkflowScreen = null
-                        }
+                        onExitFlow = dismissWorkflow
                     )
                 }
             }

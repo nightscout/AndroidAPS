@@ -44,7 +44,10 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
     val remainSec by viewModel.remainSec.collectAsStateWithLifecycle()
     var showDiscardDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<Int?>(null) }
-    var safetyCheckState by remember(viewModel) {
+    // Keyed on the patch, not the ViewModel: the ViewModel outlives the wizard, so a new patch would
+    // otherwise inherit the last one's state.
+    val patchAddress = viewModel.patchAddress()
+    var safetyCheckState by remember(patchAddress) {
         mutableStateOf(
             if (viewModel.isSafetyCheckPassed()) {
                 SafetyCheckUiState.Success
@@ -54,7 +57,7 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
         )
     }
 
-    LaunchedEffect(viewModel) {
+    LaunchedEffect(patchAddress) {
         if (!viewModel.isCreated) {
             viewModel.setIsCreated(true)
         }
@@ -87,6 +90,16 @@ internal fun CarelevoPatchFlowStep03SafetyCheck(
                 CarelevoConnectSafetyCheckEvent.SafetyCheckFailed                 -> {
                     errorMessage = R.string.carelevo_toast_msg_safety_check_failed
                     safetyCheckState = SafetyCheckUiState.Ready
+                }
+
+                CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed           -> {
+                    errorMessage = R.string.carelevo_toast_msg_not_connected_waiting_retry
+                }
+
+                // Releases the latch; the alarm's discard tears the record down and the host then
+                // falls back to the overview. The alarm carries the message and the discard action.
+                CarelevoConnectSafetyCheckEvent.PrimingRetryLimitExceeded         -> {
+                    onExitFlow()
                 }
 
                 CarelevoConnectSafetyCheckEvent.DiscardComplete                   -> {
