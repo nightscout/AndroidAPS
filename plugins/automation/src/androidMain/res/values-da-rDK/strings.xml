@@ -90,6 +90,7 @@
     <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>
