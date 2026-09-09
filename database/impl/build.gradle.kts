@@ -122,6 +122,21 @@ kotlin {
             }
         }
 
+        // Desktop tests. They open a real database file with the bundled driver, and that is the
+        // point of them: `clearAllTablesBySql` is SQL, so it only means anything when a real SQLite
+        // runs it. The Apple targets run the same common code, and this target runs on either build
+        // machine, so the check does not depend on having a Mac.
+        getByName("jvmTest") {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                implementation(libs.com.google.truth)
+                implementation(libs.kotlinx.coroutines.test)
+                runtimeOnly(libs.org.junit.platform.launcher)
+            }
+        }
+
         getByName("androidDeviceTest") {
             dependencies {
                 implementation(libs.androidx.test.ext)
