@@ -1,0 +1,150 @@
+package app.aaps.workflow
+
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.concurrent.Volatile
+import kotlin.time.Duration.Companion.seconds
+
+/**
+ * Runs the calculation phases as coroutines, one run per job name.
+ *
+ * This is the executor for every platform that has no WorkManager. It is enough because nothing in
+ * this chain needs to outlive the process: a run recomputes from the database, so a run lost to a
+ * restart is simply started again by whatever asked for it.
+ *
+ * Replace semantics are the same as the Android one: starting a job cancels the run already holding
+ * that name. The generation check in [WorkflowChainData] still guards the case where a cancelled run
+ * gets one more step in before it notices.
+ */
+class CoroutineCalculationExecutor(
+    private val scope: CoroutineScope,
+    private val aapsLogger: AAPSLogger,
+    private val prepare: PrepareGraphDataRunner,
+    private val post: PostCalculationRunner
+) : CalculationExecutor {
+
+    private val mutex = Mutex()
+
+    /** The run holding each job name, and the prepare half of it, which callers can wait for. */
+    private val runs = mutableMapOf<String, Job>()
+    private val prepareRuns = mutableMapOf<String, Job>()
+
+    /**
+     * The "you have been replaced" flag handed to one run.
+     *
+     * A run cannot answer "am I still the active one?" from [runs] alone. Cancelling is cooperative,
+     * so a replaced run keeps going until its next check - and by then its replacement has installed
+     * itself under the same name. Asking "is there a live job called MAIN?" therefore answers **yes**
+     * to the very run that was just cancelled, and it carries on as though it were current.
+     *
+     * The consequences were two, and only the first was visible: both runs emitted progress into the
+     * same signals, so the bar jumped between their two positions instead of advancing; and the
+     * outgoing run went on doing full IOB passes over a dataset that was still growing, which is
+     * exactly the wrong moment to be doing work twice - it showed up during the first Nightscout
+     * sync, where new data arrives continuously and replacements are frequent.
+     *
+     * A token per start makes the question answerable: the run holds its own token and only ever
+     * reads that one field, so it learns it has been replaced even though its name is still busy.
+     *
+     * The flag is `@Volatile` and the run reads **the token object**, never [tokens]. Reading the map
+     * from the run would be the same bug in a new place: the map is written under [mutex] by
+     * `start` / `startPostOnly` / `stop` while the calculation coroutines run on other threads, so
+     * there would be no happens-before - a replaced run could keep seeing its own token indefinitely,
+     * and an unsynchronised read during a concurrent `put` is not safe on a plain map either.
+     */
+    private class RunToken {
+
+        @Volatile var stopped = false
+    }
+
+    private val tokens = mutableMapOf<String, RunToken>()
+
+    override fun start(job: String, generation: Long, runPost: Boolean) {
+        scope.launch {
+            mutex.withLock {
+                dropRun(job)
+                val stopped = claim(job)
+                val prepareJob = scope.launch {
+                    prepare.run(job, generation, isStopped = stopped)
+                }
+                prepareRuns[job] = prepareJob
+                runs[job] = scope.launch {
+                    prepareJob.join()
+                    if (runPost) post.run(job, generation, isStopped = stopped)
+                }
+            }
+        }
+    }
+
+    override fun startPostOnly(job: String, generation: Long) {
+        scope.launch {
+            mutex.withLock {
+                dropRun(job)
+                val stopped = claim(job)
+                runs[job] = scope.launch { post.run(job, generation, isStopped = stopped) }
+            }
+        }
+    }
+
+    override suspend fun stop(job: String, from: String) {
+        aapsLogger.debug(LTag.WORKER, "Stopping calculation: $from")
+        // Both halves, not just the outer job. The prepare phase is a sibling on [scope], not a child
+        // of the job in [runs], so cancelling that one leaves prepare running - and the join below
+        // would then report "stopped" while a full IOB pass was still in flight. The one caller that
+        // matters is `IobCobCalculatorPlugin.newHistoryData`, which uses this as the barrier before it
+        // invalidates the IOB and basal tables.
+        val running = mutex.withLock {
+            // The token goes first: a run that is mid-phase must see itself as stopped even while
+            // its job is still winding down.
+            tokens.remove(job)?.stopped = true
+            listOfNotNull(prepareRuns.remove(job), runs.remove(job))
+        }
+        if (running.isEmpty()) return
+        running.forEach { it.cancel() }
+        val finished = withTimeoutOrNull(STOP_WAIT) { running.joinAll() }
+        if (finished == null) aapsLogger.warn(LTag.WORKER, "Calculation did not stop within $STOP_WAIT: $from")
+        else aapsLogger.debug(LTag.WORKER, "Calculation stopped: $from")
+    }
+
+    override suspend fun waitForPrepare(job: String, reason: String) {
+        val prepareJob = mutex.withLock { prepareRuns[job] } ?: return
+        if (prepareJob.isCompleted) return
+        aapsLogger.debug(LTag.AUTOSENS, "Waiting for calculation to finish: $reason")
+        val finished = withTimeoutOrNull(STOP_WAIT) { prepareJob.join() }
+        if (finished == null) aapsLogger.warn(LTag.AUTOSENS, "Calculation did not finish within $STOP_WAIT: $reason")
+    }
+
+    /**
+     * Takes ownership of [job] for the run being started, and returns the check that run should use.
+     *
+     * Called while the mutex is held, so two starts cannot take the same token.
+     */
+    private fun claim(job: String): () -> Boolean {
+        val token = RunToken().also { tokens[job] = it }
+        return { token.stopped }
+    }
+
+    /**
+     * Lets go of [job] and cancels both halves of the run holding it. Call with the mutex held.
+     *
+     * The token is flagged as well as the jobs cancelled, because cancelling is cooperative: the
+     * outgoing run keeps going until its next check, and the flag is what that check reads.
+     */
+    private fun dropRun(job: String) {
+        tokens.remove(job)?.stopped = true
+        prepareRuns.remove(job)?.cancel()
+        runs.remove(job)?.cancel()
+    }
+
+    companion object {
+
+        private val STOP_WAIT = 5.seconds
+    }
+}

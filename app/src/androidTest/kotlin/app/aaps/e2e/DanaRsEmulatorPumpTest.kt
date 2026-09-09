@@ -5,9 +5,12 @@ import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
@@ -15,6 +18,7 @@ import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.di.EmulatedOptions
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.keys.DanaStringComposedKey
@@ -23,59 +27,42 @@ import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Rule
-import org.junit.rules.RuleChain
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.util.Base64
-import javax.inject.Inject
 
 /**
  * Drives the **real Dana-i driver** against the in-tree pump emulator, with no Bluetooth hardware:
  * `DanaRSPlugin` → `DanaRSService` → `BLEComm` → [EmulatorBleTransport].
- *
- * ## What this covers that the JVM tests don't
- * `:pump:danars-emulator`'s own `BLECommBLE5IntegrationTest` already drives `BLEComm` against the
- * emulator directly, with a mocked `Preferences` and no plugin. It cannot cover what sits above:
- * `DanaRSPlugin.connect` only works once `DanaRSService` is **bound** ([DanaRSPlugin] binds it in
- * `onStart` via `Context.bindService`), and `DanaRSService` is a dagger-android `DaggerService`
- * needing a real Android component + `HasAndroidInjector` — neither of which exists off-device.
- * So this is the first test of the plugin/service layer at all.
- *
  * ## All three RS handshakes
  * `connect_completes*HandshakeAgainstEmulator` covers each encryption the emulator speaks — BLE5
  * (Dana-i) with a stored key, v3 with negotiated keys, v1 by pairing from scratch. They differ only
  * below `BLEComm`, so the rest of the assertions here run on BLE5 alone rather than three times
  * over. The seeded values mirror the JVM `BLEComm*IntegrationTest`s, which pin both sides the same.
- *
  * The DanaR family (`EMULATE_DANA_R`/`_KOREAN`/`_V2`) is not here: those are different plugins over
  * `RfcommTransport`, not this one — see `DanaREmulatorPumpTest`.
- *
  * The emulator is selected purely by the `EMULATE_*` option — see [EmulatedOptions] for why a test
  * has to report that rather than drop the production marker file.
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @ShardB
 class DanaRsEmulatorPumpTest {
 
-    val hiltRule = HiltAndroidRule(this)
 
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
-    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(hiltRule)
+    @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var bleTransport: BleTransport
-    @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var pluginList: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var config: Config
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector
+    private val preferences get() = testGraphs.preferences
+    private val bleTransport get() = testGraphs.pumps.bleTransport
+    private val danaRSPlugin get() = testGraphs.pumps.danaRSPlugin
+    private val pluginStore get() = testGraphs.pluginStore
+    private val commandQueue get() = testGraphs.commandQueue
+    private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
+    private val config get() = testGraphs.config
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
 
@@ -84,15 +71,13 @@ class DanaRsEmulatorPumpTest {
 
     /**
      * Brings the driver up against the emulated [variant] and blocks until its service is bound.
-     *
      * Called from each test rather than `@Before` because the variant has to be chosen *before*
-     * `hiltRule.inject()` — `BleTransport` is `@Singleton`, so `DanaModules` reads
-     * `config.isEnabled` once, when the graph first constructs it. `HiltAndroidRule` builds a fresh
+     * the graph is built — `BleTransport` is scoped, so its provider reads
+     * `config.isEnabled` once, when the graph first constructs it. the test rule builds a fresh
      * component per test method, so each test gets its own pump.
      */
     private fun bringUpPump(variant: ExternalOptions) {
         EmulatedOptions.enabled = setOf(variant)
-        hiltRule.inject()
 
         // BLEComm.connect gates on BLUETOOTH_CONNECT before it ever reaches the transport, so an
         // emulated pump needs it granted just as a real one does — without it connect() only logs
@@ -112,7 +97,7 @@ class DanaRsEmulatorPumpTest {
         emulator.writeLatencyMs = 0
         seedPairingFor(variant)
 
-        // The plugin/config init MainApp.onCreate does, which the Hilt test app doesn't.
+        // The plugin/config init MainApp.onCreate does, which the test app doesn't.
         pluginStore.plugins = pluginList
         config.initCompleted()
 
@@ -123,9 +108,8 @@ class DanaRsEmulatorPumpTest {
         // Loads mDeviceAddress/mDeviceName from the preferences seeded above.
         danaRSPlugin.changePump()
 
-        // bindService is asynchronous: Android creates DanaRSService on the main looper. It is a
-        // dagger-android DaggerService, so its onCreate injects through BaseTestApp.androidInjector
-        // -> the *current test's* Hilt component. If the test method finished first, HiltAndroidRule
+        // bindService is asynchronous: Android creates DanaRSService on the main looper. Its onCreate
+        // injects through BaseTestApp, which routes to the *current test's* graph. If the test method finished first, the test rule
         // would already have torn that component down and the service would crash the process with
         // "The component was not created". So block here until the service is actually up, keeping
         // its whole lifetime inside the component's.
@@ -140,7 +124,6 @@ class DanaRsEmulatorPumpTest {
 
     /**
      * Whatever each handshake needs to complete without a human.
-     *
      * Mirrors the JVM-side `BLEComm*IntegrationTest`s, which pin the same values on both sides.
      * V1 is absent deliberately: with no stored pairing key `BLEComm` sends a pairing request, the
      * emulator confirms it and returns the key — so the pairing path itself gets exercised, which
@@ -183,7 +166,7 @@ class DanaRsEmulatorPumpTest {
         // changePump() fires commandQueue.readStatus when the pump is configured, which runs a real
         // connection through a QueueWorker. That work is not scoped to this test — left running it
         // keeps talking to the pump and posting notifications into whichever test comes next, whose
-        // UI then recomposes under uiautomator (SetupWizardE2EHiltTest died with a
+        // UI then recomposes under uiautomator (SetupWizardE2ETest died with a
         // StaleObjectException that way, CI build 40253). Drain it before anything else.
         runCatching { commandQueue.clear() }
         runCatching { WorkManager.getInstance(instrumentation.targetContext).cancelAllWork() }
@@ -195,7 +178,7 @@ class DanaRsEmulatorPumpTest {
         runCatching { if (::emulator.isInitialized) emulator.awaitPendingCallbacks() }
         // Unbind before the component dies — see the note in setUp. onStop calls unbindService.
         runCatching { danaRSPlugin.setPluginEnabledBlocking(PluginType.PUMP, false) }
-        // SharedPreferences outlive the Hilt component, so don't leave sibling instrumented tests
+        // SharedPreferences outlive the graph, so don't leave sibling instrumented tests
         // in this process believing a Dana pump is configured.
         runCatching {
             preferences.remove(DanaStringNonKey.RsName)
@@ -263,7 +246,6 @@ class DanaRsEmulatorPumpTest {
      * and a bolus — each through the real plugin/service/BLE path, asserting on the emulator's own
      * [PumpState]. Connecting alone left [DanaRSPlugin] and every command handler at a few percent;
      * this is what exercises them.
-     *
      * Sets, not cancels: a plugin `setX` sends the command and the emulator reflects it at once — a
      * clean full-stack assertion. The plugin `cancelX` methods first gate on
      * `danaPump.isTempBasalInProgress` / `isExtendedInProgress`, which are *not* read back from the
@@ -271,10 +253,8 @@ class DanaRsEmulatorPumpTest {
      * the app's own history-event record, on a ~4.5s async settle this test does not drive), so a
      * cancel here would just no-op. The emulator's cancel handlers are covered directly by
      * `PumpEmulatorTest` instead.
-     *
      * All on BLE5: commands sit above the encryption layer and do not vary by handshake, so the
      * three handshakes are covered by the connect tests and the commands once here.
-     *
      * `suspend` ops call the service synchronously (the emulator has zero latency), so `runBlocking`
      * on the test thread suffices — no queue or WorkManager. Assertions read the emulator, the true
      * far side, not the driver's cache of it.

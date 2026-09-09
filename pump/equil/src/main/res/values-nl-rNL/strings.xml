@@ -104,24 +104,8 @@
     <string name="equil_history_item18">Abnormale toediening gestopt</string>
     <string name="equil_common_overview_button_suspend_delivery">Onderbreken</string>
     <string name="equil_common_overview_button_resume_delivery">Insulinetoediening hervatten</string>
-    <string name="equil_common_moments_ago">Zojuist</string>
-    <string name="equil_common_less_than_a_minute_ago">Minder dan een minuut geleden</string>
-    <string name="equil_common_time_ago">%1$s geleden</string>
-    <string name="equil_common_composite_time">%1$s en %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Je hebt nog niet alle stappen voltooid. Weet je zeker dat je wilt afsluiten?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Afsluiten</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minuut</item>
-        <item quantity="other">%1$d minuten</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d uur</item>
-        <item quantity="other">%1$d uren</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dagen</item>
-    </plurals>
     <string name="equil_support_error">Firmware versie te laag. Niet ondersteund</string>
     <string name="equil_set_pair_password">Instellen koppelwachtwoord</string>
     <string name="equil_hint1">Na het installeren van de pomp op het basisplaat, selecteer of de lucht uit de binnenste naald moet worden verwijderd.</string>

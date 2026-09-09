@@ -15,7 +15,7 @@ package app.aaps.testcategories
  *  - **A** = the DanaRS suite (`DanaRsEmulatorUiTest`, `DanaRSPairWizardUiTest`, `DanaRsEmulatorPumpTest`,
  *    `DanaRsEmulatorTransportTest`)
  *  - **B** = the DanaR/RFCOMM family (`DanaREmulatorPumpTest`, `DanaRPairWizardUiTest`, `DanaREmulatorUiTest`)
- *  - **C** = `SetupWizardE2EHiltTest` (the ~284s long pole) + the non-Dana tests
+ *  - **C** = `SetupWizardE2ETest` (the ~284s long pole) + the non-Dana tests
  *
  * To rebalance: move a class between `@ShardA` / `@ShardB` / untagged. No CI change needed — only the
  * annotations move. Verify against the per-shard times in a CI run.

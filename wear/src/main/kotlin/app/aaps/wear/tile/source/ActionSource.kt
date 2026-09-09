@@ -13,10 +13,11 @@ import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 class ActionSource @Inject constructor(context: Context, sp: SP, aapsLogger: AAPSLogger) : StaticTileSource(context, sp, aapsLogger) {
 
     override val preferencePrefix = "tile_action_"

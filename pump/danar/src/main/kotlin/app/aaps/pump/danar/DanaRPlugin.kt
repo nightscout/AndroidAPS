@@ -6,10 +6,12 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -17,60 +19,63 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
+import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round.ceilTo
 import app.aaps.core.interfaces.utils.Round.floorTo
 import app.aaps.core.interfaces.utils.Round.roundTo
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.danar.services.DanaRExecutionService
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.IntKey as MetroIntKey
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.max
 
-@Singleton
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@MetroIntKey(1010)
+@SingleIn(AppScope::class)
 class DanaRPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     config: Config,
     commandQueue: CommandQueue,
-    aapsSchedulers: AapsSchedulers,
     rxBus: RxBus,
     private val context: Context,
     activePlugin: ActivePlugin,
     danaPump: DanaPump,
     dateUtil: DateUtil,
-    private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync,
     notificationManager: NotificationManager,
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
     private val bolusProgressData: BolusProgressData,
-    pumpEnactResultProvider: Provider<PumpEnactResult>
+    pumpEnactResultProvider: () -> PumpEnactResult
 ) : AbstractDanaRPlugin(
     danaPump,
     aapsLogger,
@@ -78,7 +83,6 @@ class DanaRPlugin @Inject constructor(
     preferences,
     config,
     commandQueue,
-    aapsSchedulers,
     rxBus,
     activePlugin,
     dateUtil,
@@ -118,10 +122,11 @@ class DanaRPlugin @Inject constructor(
                 executionService?.extendedBolusStop()
             }
         }.launchIn(newScope)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+        // Same scope as the preference observer above: IO, like the io scheduler used before, and
+        // cancelled in onStop like the CompositeDisposable was cleared. UNDISPATCHED because RxBus
+        // has no replay, so a scheduled collector could miss an exit sent before it starts.
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
         super.onStart()
     }
 
@@ -129,7 +134,6 @@ class DanaRPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
-        disposable.clear()
         super.onStop()
     }
 
@@ -158,7 +162,7 @@ class DanaRPlugin @Inject constructor(
         // Already constrained in IU (queue) and in cU (PumpWithConcentration boundary); no re-apply here.
         var resultOK = false
         if (detailedBolusInfo.insulin > 0) resultOK = executionService?.bolus(detailedBolusInfo) == true
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         result.success(resultOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped))
             .bolusDelivered(delivered.cU)
@@ -197,7 +201,7 @@ class DanaRPlugin @Inject constructor(
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
-        var result = pumpEnactResultProvider.get()
+        var result = pumpEnactResultProvider()
         var doTempOff = baseBasalRate.cU - absoluteRate == 0.0 && absoluteRate >= 0.10
         val doLowTemp = absoluteRate < baseBasalRate.cU || absoluteRate < 0.10
         val doHighTemp = absoluteRate > baseBasalRate.cU && !preferences.get(DanaBooleanKey.UseExtended)
@@ -312,7 +316,7 @@ class DanaRPlugin @Inject constructor(
         if (danaPump.isExtendedInProgress && preferences.get(DanaBooleanKey.UseExtended)) {
             return cancelExtendedBolus()
         }
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         result.success(true).enacted(false).comment(app.aaps.core.ui.R.string.ok).isTempCancel(true)
         return result
     }
@@ -322,7 +326,7 @@ class DanaRPlugin @Inject constructor(
     }
 
     private suspend fun cancelRealTempBasal(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (danaPump.isTempBasalInProgress) {
             executionService?.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
@@ -342,7 +346,7 @@ class DanaRPlugin @Inject constructor(
     }
 
     override fun loadEvents(): PumpEnactResult =
-        pumpEnactResultProvider.get() // no history, not needed
+        pumpEnactResultProvider() // no history, not needed
 
     override fun setUserOptions(): PumpEnactResult =
         executionService?.setUserOptions() ?: throw Exception("No execution service")

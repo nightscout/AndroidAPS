@@ -9,11 +9,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.compose.pump.PumpHistoryType
@@ -23,16 +23,23 @@ import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryRecord
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.events.EventDanaRSyncStatus
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-@HiltViewModel
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class DanaHistoryViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -74,13 +81,13 @@ class DanaHistoryViewModel @Inject constructor(
 
         _uiState.value = PumpHistoryUiState(availableTypes = types, selectedType = types.firstOrNull())
 
-        // Listen for sync status
-        disposable += rxBus
-            .toObservable(EventDanaRSyncStatus::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ event ->
-                           _uiState.update { it.copy(statusMessage = event.message) }
-                       }, { aapsLogger.error(LTag.PUMP, "Error", it) })
+        // Listen for sync status. viewModelScope is Main, like observeOn(aapsSchedulers.main), and
+        // dies with the view model like the CompositeDisposable did. UNDISPATCHED because RxBus has
+        // no replay, so a scheduled collector could miss a status sent before it starts.
+        rxBus.toFlow(EventDanaRSyncStatus::class)
+            .collectResilient(viewModelScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                _uiState.update { it.copy(statusMessage = event.message) }
+            }
 
         // Load initial data
         types.firstOrNull()?.let { loadRecords(it.type) }
@@ -118,13 +125,13 @@ class DanaHistoryViewModel @Inject constructor(
     }
 
     fun formatDailyTotal(record: DanaHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
 
     fun formatDailyBolus(record: DanaHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBolus)
 
     fun formatDailyBasal(record: DanaHistoryRecord): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBasal)
+        rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBasal)
 
     override fun onCleared() {
         super.onCleared()

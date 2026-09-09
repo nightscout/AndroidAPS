@@ -1,0 +1,164 @@
+package app.aaps.plugins.constraints.bgQualityCheck
+
+import app.aaps.plugins.constraints.ConstraintsStrings
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
+
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@IntKey(860)
+@SingleIn(AppScope::class)
+class BgQualityCheckPlugin @Inject constructor(
+    aapsLogger: AAPSLogger,
+    override val rh: ResourceHelper,
+    private val rxBus: RxBus,
+    private val iobCobCalculator: IobCobCalculator,
+    private val dateUtil: DateUtil
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.CONSTRAINTS)
+        .alwaysEnabled(true)
+        .showInList { false }
+        .pluginName(ConstraintsStrings.bg_quality),
+    aapsLogger, rh
+), PluginConstraints, BgQualityCheck {
+
+    private var scope: CoroutineScope? = null
+
+    override suspend fun onStart() {
+        super.onStart()
+        // Own scope on IO, matching observeOn(aapsSchedulers.io), cancelled in onStop like the
+        // CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay: a scheduled
+        // collector could miss data created before it starts.
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO).also { this.scope = it }
+        rxBus.toFlow(EventBucketedDataCreated::class)
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { processBgData() }
+    }
+
+    override suspend fun onStop() {
+        super.onStop()
+        scope?.cancel()
+        scope = null
+    }
+
+    private val _stateFlow = MutableStateFlow(BgQualityCheck.State.UNKNOWN)
+    override val stateFlow: StateFlow<BgQualityCheck.State> = _stateFlow.asStateFlow()
+    override var state: BgQualityCheck.State
+        get() = _stateFlow.value
+        set(value) {
+            _stateFlow.value = value
+        }
+    override var message: String = ""
+
+    // Fallback to LGS if BG values are doubled
+    override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
+        if (state == BgQualityCheck.State.DOUBLED)
+            maxIob.set(0.0, "Limiting max IOB to 0 U due to doubled values in BG Source", this)
+        else
+            maxIob
+
+    // Surface the doubled-BG maxIOB=0 fallback as LGS mode in the UI.
+    // The maxIOB clamp above still applies (e.g. in open loop); this additionally flips the
+    // running mode to CLOSED_LOOP_LGS via LoopPlugin.runningModePreCheck() when in closed loop.
+    override fun isLgsForced(value: Constraint<Boolean>): Constraint<Boolean> =
+        if (state == BgQualityCheck.State.DOUBLED)
+            value.set(true, rh.gs(ConstraintsStrings.bg_doubled_lgs), this)
+        else
+            value
+
+    fun processBgData() {
+        val readings = iobCobCalculator.ads.getBgReadingsDataTableCopy()
+        val lastBg = iobCobCalculator.ads.lastBg()
+        for (i in readings.indices)
+        // Deltas are calculated from last ~50 min. Detect RED state only on this interval
+            if (i < min(readings.size - 2, 10))
+                if (abs(readings[i].timestamp - readings[i + 1].timestamp) <= T.secs(20).msecs()) {
+                    state = BgQualityCheck.State.DOUBLED
+                    aapsLogger.debug(LTag.CORE, "BG similar. Turning on red state.\n${readings[i]}\n${readings[i + 1]}")
+                    message = rh.gs(ConstraintsStrings.bg_too_close, dateUtil.dateAndTimeAndSecondsString(readings[i].timestamp), dateUtil.dateAndTimeAndSecondsString(readings[i + 1].timestamp))
+                    return
+                }
+        if (lastBg?.sourceSensor?.isLibre1() == true && isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) {
+            state = BgQualityCheck.State.FLAT
+            message = rh.gs(ConstraintsStrings.a11y_bg_quality_flat)
+        } else if (iobCobCalculator.ads.lastUsed5minCalculation == true) {
+            state = BgQualityCheck.State.FIVE_MIN_DATA
+            message = "Data is clean"
+        } else if (iobCobCalculator.ads.lastUsed5minCalculation == false) {
+            state = BgQualityCheck.State.RECALCULATED
+            message = rh.gs(ConstraintsStrings.recalculated_data_used)
+        } else {
+            state = BgQualityCheck.State.UNKNOWN
+            message = ""
+        }
+    }
+
+    // inspired by @justmara
+    @Suppress("SpellCheckingInspection", "SameParameterValue")
+    private fun isBgFlatForInterval(minutes: Long, maxDelta: Double): Boolean? {
+        val data = iobCobCalculator.ads.getBgReadingsDataTableCopy()
+        val lastBg = iobCobCalculator.ads.lastBg()?.value
+        val now = dateUtil.now()
+        val offset = now - T.mins(minutes).msecs()
+        val sizeRecords = data.size
+
+        lastBg ?: return null
+        if (sizeRecords < 5) return null // not enough data
+        if (data[data.size - 1].timestamp > now - 45 * 60 * 1000L) return null // data too fresh to detect
+        if (data[0].timestamp < now - 7 * 60 * 1000L) return null // data is old
+
+        var bgmin: Double = lastBg
+        var bgmax: Double = bgmin
+        for (bg in data) {
+            if (bg.timestamp < offset) break
+            bgmin = min(bgmin, bg.value)
+            bgmax = max(bgmax, bg.value)
+            if (bgmax - bgmin > maxDelta) return false
+        }
+        return true
+    }
+
+    override fun stateDescription(): String =
+        when (state) {
+            BgQualityCheck.State.RECALCULATED -> rh.gs(ConstraintsStrings.a11y_bg_quality_recalculated)
+            BgQualityCheck.State.DOUBLED      -> rh.gs(ConstraintsStrings.a11y_bg_quality_doubles)
+            BgQualityCheck.State.FLAT         -> rh.gs(ConstraintsStrings.a11y_bg_quality_flat)
+            else                              -> ""
+        }
+
+    companion object {
+
+        const val staleBgCheckPeriodMinutes = 45L
+        const val staleBgMaxDeltaMgdl = 2.0
+    }
+}

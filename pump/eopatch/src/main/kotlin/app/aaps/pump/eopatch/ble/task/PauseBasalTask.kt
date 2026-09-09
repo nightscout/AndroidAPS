@@ -23,11 +23,12 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.minutes
 
-@Singleton
+@SingleIn(AppScope::class)
 class PauseBasalTask @Inject constructor(
     private val alarmRegistry: IAlarmRegistry,
     private val commandQueue: CommandQueue,

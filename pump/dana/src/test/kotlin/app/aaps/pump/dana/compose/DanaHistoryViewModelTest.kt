@@ -17,11 +17,11 @@ import app.aaps.pump.dana.database.DanaHistoryRecord
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.events.EventDanaRSyncStatus
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -77,7 +77,7 @@ internal class DanaHistoryViewModelTest {
         whenever(rh.gs(anyInt())).thenReturn("")
 
         // rx wiring touched at construction
-        whenever(rxBus.toObservable(EventDanaRSyncStatus::class.java)).thenReturn(Observable.empty())
+        whenever(rxBus.toFlow(EventDanaRSyncStatus::class)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
 

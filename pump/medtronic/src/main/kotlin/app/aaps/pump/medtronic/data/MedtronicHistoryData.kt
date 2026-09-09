@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.StringUtil
 import app.aaps.pump.common.sync.PumpDbEntry
@@ -44,8 +45,9 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 10/12/18.
@@ -56,7 +58,7 @@ import javax.inject.Singleton
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
 //
-@Singleton
+@SingleIn(AppScope::class)
 class MedtronicHistoryData @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
@@ -781,7 +783,7 @@ class MedtronicHistoryData @Inject constructor(
                         )
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
+                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, TextRef.AndroidRes(R.string.invalid_history_data), level = NotificationLevel.IMPORTANT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
                             val result = runBlocking {
@@ -825,7 +827,7 @@ class MedtronicHistoryData @Inject constructor(
                         )
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
+                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, TextRef.AndroidRes(R.string.invalid_history_data), level = NotificationLevel.IMPORTANT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
                             val result = runBlocking {
@@ -1097,7 +1099,7 @@ class MedtronicHistoryData @Inject constructor(
             )
 
             if (tempBasalProcess.durationAsSeconds <= 0) {
-                notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.IMPORTANT)
+                notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, TextRef.AndroidRes(R.string.invalid_history_data), level = NotificationLevel.IMPORTANT)
                 aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
             } else {
                 val result = runBlocking {

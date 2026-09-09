@@ -10,10 +10,8 @@ import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnect
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnectionFactory
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.session.Connection
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
 
-@Singleton
 class LegacyBleConnectionFactory @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,

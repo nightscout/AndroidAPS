@@ -34,13 +34,14 @@ import app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.util.concurrent.ConcurrentHashMap
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@SingleIn(AppScope::class)
 class PreferencesImpl @Inject constructor(
     private val sp: SP
 ) : Preferences {
@@ -50,21 +51,19 @@ class PreferencesImpl @Inject constructor(
     override val nsclientMode: Boolean = false
     override val pumpControlMode: Boolean = false
 
-    private val prefsList: MutableList<Class<out NonPreferenceKey>> =
-        mutableListOf(
-            BooleanKey::class.java,
-            BooleanNonKey::class.java,
-            IntKey::class.java,
-            IntNonKey::class.java,
-            IntComposedKey::class.java,
-            LongNonKey::class.java,
-            LongComposedKey::class.java,
-            DoubleKey::class.java,
-            UnitDoubleKey::class.java,
-            StringKey::class.java,
-            StringNonKey::class.java,
-            IntentKey::class.java,
-        )
+    private val prefsList: MutableSet<NonPreferenceKey> =
+        (BooleanKey.entries +
+            BooleanNonKey.entries +
+            IntKey.entries +
+            IntNonKey.entries +
+            IntComposedKey.entries +
+            LongNonKey.entries +
+            LongComposedKey.entries +
+            DoubleKey.entries +
+            UnitDoubleKey.entries +
+            StringKey.entries +
+            StringNonKey.entries +
+            IntentKey.entries).toCollection(LinkedHashSet())
 
     private val booleanFlows = ConcurrentHashMap<String, MutableStateFlow<Boolean>>()
     private val stringFlows = ConcurrentHashMap<String, MutableStateFlow<String>>()
@@ -218,18 +217,15 @@ class PreferencesImpl @Inject constructor(
 
     override fun isUnitDependent(key: String): Boolean =
         prefsList
-            .flatMap { it.enumConstants!!.asIterable() }
             .filterIsInstance<UnitDoublePreferenceKey>()
             .any { it.key == key }
 
     override fun get(key: String): NonPreferenceKey? =
         prefsList
-            .flatMap { it.enumConstants!!.asIterable() }
             .find { it.key == key }
 
     override fun getIfExists(key: String): NonPreferenceKey? =
         prefsList
-            .flatMap { it.enumConstants!!.asIterable() }
             .find { it.key == key }
 
     override fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean =
@@ -261,20 +257,8 @@ class PreferencesImpl @Inject constructor(
     override fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String> =
         stringFlows.getOrPut(key.composeKey(*arguments)) { MutableStateFlow(get(key, *arguments)) }
 
-    override fun getDependingOn(key: String): List<PreferenceKey> =
-        mutableListOf<PreferenceKey>().also { list ->
-            prefsList.forEach { clazz ->
-                if (PreferenceKey::class.java.isAssignableFrom(clazz))
-                    clazz.enumConstants!!.filter {
-                        (it as PreferenceKey).dependency != null && it.dependency!!.key == key || it.negativeDependency != null && it.negativeDependency!!.key == key
-                    }.forEach {
-                        list.add(it as PreferenceKey)
-                    }
-            }
-        }
-
-    override fun registerPreferences(clazz: Class<out NonPreferenceKey>) {
-        if (clazz !in prefsList) prefsList.add(clazz)
+    override fun registerPreferences(keys: List<NonPreferenceKey>) {
+        prefsList.addAll(keys)
     }
 
     override fun allMatchingStrings(key: ComposedKey): List<String> =
@@ -295,7 +279,6 @@ class PreferencesImpl @Inject constructor(
 
     override fun isExportableKey(key: String): Boolean {
         prefsList
-            .flatMap { it.enumConstants!!.asIterable() }
             .forEach {
                 if (it.key == key) return true
                 if (it is ComposedKey && key.startsWith(it.key)) return true
@@ -304,8 +287,5 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun getAllPreferenceKeys(): List<PreferenceKey> =
-        prefsList
-            .filter { PreferenceKey::class.java.isAssignableFrom(it) }
-            .flatMap { it.enumConstants!!.asIterable() }
-            .filterIsInstance<PreferenceKey>()
+        prefsList.filterIsInstance<PreferenceKey>()
 }

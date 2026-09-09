@@ -1,0 +1,334 @@
+package app.aaps.core.ui.compose
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import kotlin.math.roundToInt
+
+/**
+ * Composable that displays a numeric input as a TextField with +/- icon buttons.
+ *
+ * ```
+ * Label                    2h 10m       ← only when formatted differs from raw (e.g., duration)
+ * ┌─────────────────────────────┐
+ * │  (-)       130          (+) │
+ * └─────────────────────────────┘
+ * 0 — 300                               ← range, or error message
+ * ```
+ *
+ * @param labelRef Display label
+ * @param value Current numeric value
+ * @param onValueChange Callback invoked when value changes, receives new value as Double
+ * @param valueRange The range of values the input can represent
+ * @param step Step increment for +/- buttons
+ * @param unitLabel Unit label shown after the value
+ * @param asDuration Render the value as "Xh Ym" instead of a plain number
+ * @param valueFormat Resource ID for formatting value with unit (e.g., "%1$.1f U")
+ * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
+ * @param valueFormat Custom NumberFormat (overrides auto-created from decimalPlaces)
+ * @param decimalPlaces Number of decimal places for value display (0 = integer, default). Ignored if valueFormat is set.
+ * @param enabled Whether the input is interactive
+ * @param modifier Modifier for the root Column container
+ *
+ * @see NumberInputRowBasicPreview
+ * @see NumberInputRowWithUnitPreview
+ * @see NumberInputRowMinutesPreview
+ * @see NumberInputRowPercentPreview
+ * @see NumberInputRowMinutesDirectPreview
+ */
+@Composable
+fun NumberInputRow(
+    labelRef: TextRef?,
+    value: Double,
+    onValueChange: (Double) -> Unit,
+    valueRange: ClosedFloatingPointRange<Double>,
+    step: Double,
+    modifier: Modifier = Modifier,
+    unitLabel: TextRef? = null,
+    asDuration: Boolean = false,
+    valueFormatRef: TextRef? = null,
+    formatAsInt: Boolean = false,
+    valueFormat: NumberFormat? = null,
+    decimalPlaces: Int = 0,
+    enabled: Boolean = true,
+    compact: Boolean = false,
+    displayValue: String? = null,
+) {
+    val effectiveValueFormat = valueFormat ?: remember(decimalPlaces) {
+        NumberFormat.withDecimals(decimalPlaces)
+    }
+    val focusManager = LocalFocusManager.current
+    val label = labelRef?.let { stringResource(it) } ?: ""
+    // Track whether the field is focused for editing
+    var isFocused by remember { mutableStateOf(false) }
+    var textFieldValue by remember {
+        mutableStateOf(TextFieldValue(if (value == 0.0) "" else effectiveValueFormat.format(value)))
+    }
+    var isError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    // Sync text field when value changes externally (e.g., +/- buttons, quick-add buttons,
+    // ViewModel updates). Skip only when the field's current text already parses to `value` —
+    // that preserves mid-entry states like "2." which would otherwise be clobbered to "2".
+    LaunchedEffect(value) {
+        val parsed = textFieldValue.text.trim().replace(",", ".").toDoubleOrNull()
+        val emptyMatches = textFieldValue.text.isEmpty() && value == 0.0
+        if (parsed != value && !emptyMatches) {
+            val text = if (value == 0.0) "" else effectiveValueFormat.format(value)
+            textFieldValue = TextFieldValue(text, selection = TextRange(text.length))
+            isError = false
+        }
+    }
+
+    val resolvedUnitLabel = unitLabel?.let { stringResource(it) } ?: ""
+
+    // Formatted display text for special cases (duration)
+    val formattedDisplay = formatSliderDisplayValue(
+        value = value,
+        unitLabel = unitLabel,
+        valueFormatRef = valueFormatRef,
+        formatAsInt = formatAsInt,
+        valueFormat = effectiveValueFormat,
+        asDuration = asDuration
+    )
+    // Only show formatted display when it differs meaningfully from the raw number
+    val rawDisplay = effectiveValueFormat.format(value)
+    val showFormattedDisplay = formattedDisplay != rawDisplay &&
+        formattedDisplay != "$rawDisplay $resolvedUnitLabel".trim()
+
+    // Range text
+    val rangeText = "${effectiveValueFormat.format(valueRange.start)} — ${effectiveValueFormat.format(valueRange.endInclusive)}"
+
+    // Pre-resolve error strings for use in non-composable validateAndCommit
+    val errorInvalidNumber = stringResource(CoreUiStrings.invalid_number)
+
+    fun validateAndCommit(text: String) {
+        val cleaned = text.trim().replace(",", ".")
+        val parsed = if (cleaned.isEmpty()) 0.0 else cleaned.toDoubleOrNull()
+        if (parsed == null) {
+            isError = true
+            errorMessage = errorInvalidNumber
+        } else {
+            val coerced = parsed.coerceIn(valueRange)
+            isError = false
+            // Sync the field text when we coerce (e.g. user left an out-of-range value),
+            // so what's published and what's displayed agree.
+            val newText = if (coerced == 0.0) "" else effectiveValueFormat.format(coerced)
+            if (newText != textFieldValue.text) {
+                textFieldValue = TextFieldValue(newText)
+            }
+            onValueChange(coerced)
+        }
+    }
+
+    // Flush pending text when leaving composition (e.g., user presses back without
+    // tapping Done or shifting focus first — onFocusChanged might never fire).
+    val latestTextProvider by rememberUpdatedState({ textFieldValue.text })
+    val latestIsFocused by rememberUpdatedState(isFocused)
+    DisposableEffect(Unit) {
+        onDispose {
+            if (latestIsFocused) validateAndCommit(latestTextProvider())
+        }
+    }
+
+    fun stepValue(direction: Int) {
+        // Use the parsed text value when present so unflushed typing isn't overwritten by a
+        // stale `value` prop (the parent may not have recomposed yet after the last keystroke).
+        val cleaned = textFieldValue.text.trim().replace(",", ".")
+        val currentValue = cleaned.toDoubleOrNull()?.coerceIn(valueRange) ?: value
+        val newValue = roundToStep(currentValue + direction * step, step)
+            .coerceIn(valueRange)
+        val text = if (newValue == 0.0) "" else effectiveValueFormat.format(newValue)
+        textFieldValue = TextFieldValue(text)
+        isError = false
+        onValueChange(newValue)
+    }
+
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.fillMaxWidth()
+    ) {
+        // TextField + range text below it
+        Column(modifier = Modifier.weight(1f)) {
+            TextField(
+                value = textFieldValue,
+                onValueChange = { newValue ->
+                    textFieldValue = newValue
+                    val cleaned = newValue.text.trim().replace(",", ".")
+                    when {
+                        cleaned.isEmpty()                 -> {
+                            // Defer publishing until focus loss — avoids a transient 0 while the
+                            // user is mid-deletion and about to retype.
+                            isError = false
+                        }
+
+                        cleaned.toDoubleOrNull() == null  -> {
+                            isError = true
+                            errorMessage = errorInvalidNumber
+                        }
+
+                        cleaned.toDouble() !in valueRange -> {
+                            isError = true
+                            errorMessage = rangeText
+                        }
+
+                        else                              -> {
+                            isError = false
+                            onValueChange(cleaned.toDouble())
+                        }
+                    }
+                },
+                label = if (label.isNotEmpty()) ({ Text(label) }) else null,
+                singleLine = true,
+                enabled = enabled,
+                isError = isError,
+                // Use trailingIcon (not suffix) so the unit remains visible even when the field is
+                // empty and unfocused — suffix is hidden by M3 while the label is in its large state.
+                trailingIcon = if (resolvedUnitLabel.isNotEmpty()) {
+                    { Text(resolvedUnitLabel) }
+                } else null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = if (step != step.roundToInt().toDouble())
+                        KeyboardType.Decimal else KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        validateAndCommit(textFieldValue.text)
+                        focusManager.clearFocus()
+                    }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { focusState ->
+                        if (isFocused && !focusState.isFocused) {
+                            validateAndCommit(textFieldValue.text)
+                        }
+                        if (!isFocused && focusState.isFocused) {
+                            textFieldValue = textFieldValue.copy(
+                                selection = TextRange(0, textFieldValue.text.length)
+                            )
+                        }
+                        isFocused = focusState.isFocused
+                    }
+            )
+            // Range and formatted display — hidden in compact mode (e.g., when nested in a row).
+            // Errors still surface so the user isn't stuck.
+            if (!compact || isError) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = if (isError) errorMessage else rangeText,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (isError) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    val rightText = displayValue ?: formattedDisplay.takeIf { showFormattedDisplay }
+                    if (rightText != null && !isError) {
+                        Text(
+                            text = rightText,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+        }
+
+        // +/- filled buttons with long-press repeat
+        RepeatingIconButton(
+            onClick = { stepValue(-1) },
+            enabled = enabled && value > valueRange.start
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Remove,
+                contentDescription = "Decrease",
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        RepeatingIconButton(
+            onClick = { stepValue(1) },
+            enabled = enabled && value < valueRange.endInclusive
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = "Increase",
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+/**
+ * Convenience for the many call sites that name their own module's `CoreUiStrings.x`.
+ * The [TextRef] form above is the real one; this just wraps the id.
+ */
+@Composable
+fun NumberInputRow(
+    labelResId: Int,
+    value: Double,
+    onValueChange: (Double) -> Unit,
+    valueRange: ClosedFloatingPointRange<Double>,
+    step: Double,
+    modifier: Modifier = Modifier,
+    unitLabel: TextRef? = null,
+    asDuration: Boolean = false,
+    valueFormatRef: TextRef? = null,
+    formatAsInt: Boolean = false,
+    valueFormat: NumberFormat? = null,
+    decimalPlaces: Int = 0,
+    enabled: Boolean = true,
+    compact: Boolean = false,
+    displayValue: String? = null,
+) = NumberInputRow(
+    labelRef = if (labelResId != 0) TextRef.AndroidRes(labelResId) else null,
+    value = value,
+    onValueChange = onValueChange,
+    valueRange = valueRange,
+    step = step,
+    modifier = modifier,
+    unitLabel = unitLabel,
+    asDuration = asDuration,
+    valueFormatRef = valueFormatRef,
+    formatAsInt = formatAsInt,
+    valueFormat = valueFormat,
+    decimalPlaces = decimalPlaces,
+    enabled = enabled,
+    compact = compact,
+    displayValue = displayValue,
+)

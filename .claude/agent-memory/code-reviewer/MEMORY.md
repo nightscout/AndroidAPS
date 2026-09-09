@@ -11,18 +11,16 @@
 - `PluginBase.scope` is private; plugins must declare their own `CoroutineScope`.
 - Previews MUST use `MaterialTheme` wrapper (NOT `AapsTheme` — crashes in preview tool).
 
-## DI Patterns by Module
+## DI Patterns
 
-- **Medtrum + Equil**: Use Hilt (`@HiltViewModel`, `hiltViewModel()`). Build needs
-  `libs.plugins.hilt`,
-  `com.google.dagger.hilt.android`, `androidx.hilt.navigation.compose`, ksp hilt compiler.
-  App has `@HiltAndroidApp` on `MainApp`. This is the correct modern pattern.
-- **NSClient, Tidepool, Wear, SMS**: Use Dagger `ViewModelFactory` via
-  `@Binds @IntoMap @ViewModelKey`.
-  `ComposablePluginContent` receives `viewModelFactory` and calls
+- **One framework everywhere: Metro.** A view model is registered with
+  `@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())` + `@ViewModelKey`, and read
+  in Compose with `metroViewModel()`.
+- `ComposablePluginContent` receives `viewModelFactory` and calls
   `ViewModelProvider(viewModelStoreOwner, viewModelFactory)[...]`. Instantiating via `remember {}`
   is a latent lifecycle bug (viewModelScope never cancelled correctly).
 - **ComposeContent constructor**: Always constructed manually in the plugin, receives only
+  non-ViewModel deps (e.g., `protectionCheck`, `blePreCheck`) as constructor params.
   non-ViewModel deps (e.g., `protectionCheck`, `blePreCheck`) as constructor params.
 
 ## Recurring Bugs Across Pump Compose Migrations

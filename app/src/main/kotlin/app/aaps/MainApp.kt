@@ -1,5 +1,6 @@
 package app.aaps
 
+import app.aaps.di.GeneratedStringOwners
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
@@ -7,10 +8,8 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
-import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
@@ -33,6 +32,7 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -73,13 +73,20 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.core.utils.JsonHelper
 import app.aaps.database.AppRepository
+import app.aaps.di.metro.MetroGraphs
+import app.aaps.database.di.DatabaseConfig
+import app.aaps.di.ExternalOptionsOverride
+import app.aaps.di.metro.MetroWorkerFactory
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
+import app.aaps.implementation.resources.ResourceHelperImpl
+import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
@@ -89,8 +96,20 @@ import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.aps.ApsStringIds
+import app.aaps.plugins.automation.AutomationStringIds
+import app.aaps.plugins.calibration.CalibrationStringIds
+import app.aaps.plugins.configuration.ConfigurationStringIds
+import app.aaps.plugins.constraints.ConstraintsStringIds
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.main.MainStringIds
+import app.aaps.plugins.sensitivity.SensitivityStringIds
+import app.aaps.plugins.sync.SyncStringIds
+import app.aaps.plugins.source.SourceStringIds
+import app.aaps.plugins.smoothing.SmoothingStringIds
+import app.aaps.pump.virtual.VirtualStringIds
+import app.aaps.ui.UiStringIds
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
@@ -98,10 +117,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.remoteConfig
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import dagger.hilt.android.HiltAndroidApp
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
@@ -110,69 +126,88 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
 
-@HiltAndroidApp
-class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
+class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
 
-    @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
-    override fun androidInjector(): AndroidInjector<Any> = androidInjector
+    override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
 
-    // WorkManager on-demand initialization. HiltWorkerFactory constructs @HiltWorker workers via
-    // assisted injection; workers not yet migrated return null from it and fall back to WorkManager's
-    // default reflective factory (which self-injects through HasAndroidInjector). The default
-    // androidx.startup WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
-    @Inject lateinit var hiltWorkerFactory: HiltWorkerFactory
+    override val metroViewModelFactory: MetroViewModelFactory get() = metroGraphs.viewModelFactory
+
+    /**
+     * `by lazy` so nothing is resolved before `onCreate` runs - the graph reaches Android services, and
+     * an Application field initialiser runs before the framework is ready for that.
+     * The last two arguments are the only things an instrumented test does differently; see
+     * `AppRootGraph.Factory`. Production wants the real database and no forced options.
+     */
+    private val metroGraphs by lazy {
+        MetroGraphs(
+            context = this,
+            memberInjector = this,
+            databaseConfig = DatabaseConfig.PRODUCTION,
+            externalOptionsOverride = ExternalOptionsOverride.NONE
+        )
+    }
+    // WorkManager on-demand initialization. `MetroWorkerFactory` builds every worker in the app; what
+    // it does not know returns null and falls back to WorkManager's default reflective factory, which
+    // is what builds WorkManager's own internal workers. The default androidx.startup
+    // WorkManagerInitializer is removed in AndroidManifest.xml so this config wins.
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
-            .setWorkerFactory(hiltWorkerFactory)
+            .setWorkerFactory(MetroWorkerFactory(metroGraphs))
             .build()
 
-    @Inject lateinit var pluginStore: PluginStore
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var activityMonitor: ActivityMonitor
-    @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
-    @Inject lateinit var sp: SP
-    @Inject lateinit var preferences: Preferences
-    @Inject lateinit var config: Config
-    @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
-    @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var uiInteraction: UiInteraction
-    @Inject lateinit var processLifecycleListener: Provider<ProcessLifecycleListener>
-    @Inject lateinit var localAlertUtils: LocalAlertUtils
-    @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var rh: Provider<ResourceHelper>
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var repository: AppRepository
-    @Inject lateinit var hardLimits: HardLimits
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var profileRepository: ProfileRepository
-    @Inject lateinit var localInsulinManager: InsulinManager
-    @Inject lateinit var constraintChecker: ConstraintsChecker
-    @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
-    @Inject lateinit var fileListProvider: FileListProvider
-    @Inject lateinit var cryptoUtil: CryptoUtil
-    @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
-    @Inject lateinit var widgetUpdater: WidgetUpdater
-    @Inject lateinit var runningModeReconciler: RunningModeReconciler
-    @Inject lateinit var runningModeExpiryScheduler: RunningModeExpiryScheduler
-    @Inject lateinit var profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler
-    @Inject lateinit var automationRuntime: AutomationRuntime
-    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
+    private val pluginStore get() = metroGraphs.pluginStore
+    private val aapsLogger get() = metroGraphs.aapsLogger
+    private val activityMonitor get() = metroGraphs.activityMonitor
+    private val versionCheckersUtils get() = metroGraphs.versionCheckerUtils
+    private val sp get() = metroGraphs.sp
+    private val preferences get() = metroGraphs.preferences
+    private val config get() = metroGraphs.config
+    private val configBuilder get() = metroGraphs.configBuilder
+    private val plugins get() = metroGraphs.allPlugins(aapsLogger)
+    private val persistenceLayer get() = metroGraphs.persistenceLayer
+    private val dateUtil get() = metroGraphs.dateUtil
+    private val uiInteraction get() = metroGraphs.uiInteraction
+    private val processLifecycleListener get() = metroGraphs.processLifecycleListener
+    private val localAlertUtils get() = metroGraphs.localAlertUtils
+    private val notificationManager get() = metroGraphs.notificationManager
+    private val rh get() = metroGraphs.resourceHelper
+    private val loop get() = metroGraphs.loop
+    private val profileFunction get() = metroGraphs.profileFunction
+    private val profileUtil get() = metroGraphs.profileUtil
+    private val fabricPrivacy get() = metroGraphs.fabricPrivacy
+    // The concrete types, only so their start() can be called below. Both are @Singleton, so these are
+    // the same objects the interface bindings hand out. `rh` is a Provider already - kept that way here
+    // rather than risking the cycle that shape exists to avoid.
+    private val resourceHelperImpl get() = metroGraphs.resourceHelperImpl
+    private val fabricPrivacyImpl get() = metroGraphs.fabricPrivacyImpl
+    private val rxBus get() = metroGraphs.rxBus
+    private val repository get() = metroGraphs.appRepository
+    private val hardLimits get() = metroGraphs.hardLimits
+    private val activePlugin get() = metroGraphs.activePlugin
+    private val profileRepository get() = metroGraphs.profileRepository
+    private val localInsulinManager get() = metroGraphs.insulinManager
+    private val constraintChecker get() = metroGraphs.constraintsChecker
+    private val signatureVerifierPlugin get() = metroGraphs.signatureVerifier
+    private val fileListProvider get() = metroGraphs.fileListProvider
+    private val cryptoUtil get() = metroGraphs.cryptoUtil
+    private val exportPasswordDataStore get() = metroGraphs.exportPasswordDataStore
+    private val widgetUpdater get() = metroGraphs.widgetUpdater
+    private val runningModeReconciler get() = metroGraphs.runningModeReconciler
+    private val runningModeExpiryScheduler get() = metroGraphs.runningModeExpiryScheduler
+    private val profileSwitchExpiryScheduler get() = metroGraphs.profileSwitchExpiryScheduler
+    private val automationRuntime get() = metroGraphs.automationRuntime
+    private val appScope get() = metroGraphs.applicationScope
 
     private lateinit var insulinLabel: String
     private var insulinPeakTime: Long = 0L
@@ -185,9 +220,15 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
 
+        GeneratedStringOwners.registerAll()
+        resourceHelperImpl.start()
+        // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
+        // through fabricPrivacy.
+        fabricPrivacyImpl.start()
+
         // Here should be everything injected
         aapsLogger.debug("onCreate")
-        ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener.get())
+        ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
         // Background fallback for EventShowSnackbar: when no activity is STARTED
         // (app in background / process alive but UI offscreen), promote the
@@ -195,7 +236,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         // Visible activities host their own GlobalSnackbarHost that also
         // subscribes; those win while UI is present.
         appScope.launch {
-            rxBus.toFlow(EventShowSnackbar::class.java).collect { event ->
+            rxBus.toFlow(EventShowSnackbar::class).collect { event ->
                 val uiVisible = ProcessLifecycleOwner.get().lifecycle.currentState
                     .isAtLeast(Lifecycle.State.STARTED)
                 if (!uiVisible) {
@@ -285,7 +326,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (preferences.get(BooleanNonKey.VacuumInProgress)) {
             aapsLogger.error(LTag.CORE, "Previous startup VACUUM did not finish (likely native crash) — skipping for 30 days")
             // Report to Firebase so we get a fleet-wide count of users hit by a crashing startup VACUUM.
-            fabricPrivacy.logCustom("db_vacuum_crash_recovered", Bundle())
+            fabricPrivacy.logCustom("db_vacuum_crash_recovered")
             preferences.put(BooleanNonKey.VacuumInProgress, false)
             preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
             return
@@ -307,10 +348,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             if (info.availableBytes in 0 until info.dbSizeBytes * 2) {
                 val freeMb = info.availableBytes / 1_048_576
                 aapsLogger.warn(LTag.CORE, "Skipping startup VACUUM: free $freeMb MB < 2x DB $dbMb MB")
-                fabricPrivacy.logCustom("db_vacuum_skip_space", Bundle().apply {
-                    putLong("db_mb", dbMb)
-                    putLong("free_mb", freeMb)
-                })
+                fabricPrivacy.logCustom("db_vacuum_skip_space", mapOf("db_mb" to dbMb, "free_mb" to freeMb))
                 return
             }
             // Commit the marker synchronously BEFORE running: a plain put() uses apply() and may not
@@ -322,11 +360,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
             aapsLogger.debug(LTag.CORE, "Startup VACUUM done")
             // Fleet overview of DB size / cleanup backlog / change-row volume across users.
-            fabricPrivacy.logCustom("db_vacuum_ok", Bundle().apply {
-                putLong("db_mb", dbMb)
-                putLong("deletable", info.deletableRows)
-                putLong("changes", info.changeRows)
-            })
+            fabricPrivacy.logCustom("db_vacuum_ok", mapOf("db_mb" to dbMb, "deletable" to info.deletableRows, "changes" to info.changeRows))
         } catch (e: Throwable) {
             // Throwable, not just Exception: a JVM OutOfMemoryError here must not abort app init.
             aapsLogger.error(LTag.CORE, "Startup VACUUM failed", e)
@@ -374,7 +408,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                             therapyEvent = TE(
                                 timestamp = dateUtil.now(),
                                 type = TE.Type.NOTE,
-                                note = rh.get().gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                                note = rh.gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
                                 glucoseUnit = GlucoseUnit.MGDL
                             ),
                             action = Action.START_AAPS,
@@ -447,7 +481,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
             if (serialNumber != null) {
                 preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(serialNumber))
                 fh.delete()
-                exportPasswordDataStore.clearPasswordDataStore(this@MainApp)
+                exportPasswordDataStore.clearPasswordDataStore()
                 config.showInitSnackbar(getString(app.aaps.core.ui.R.string.password_set))
             } else {
                 aapsLogger.warn(LTag.CORE, "Password reset timed out waiting for pump serial number")
@@ -458,7 +492,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
     private fun exportPasswordResetCheck() {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("ExportPasswordReset")
         if (fh?.exists() == true) {
-            exportPasswordDataStore.clearPasswordDataStore(this@MainApp)
+            exportPasswordDataStore.clearPasswordDataStore()
             fh.delete()
             config.showInitSnackbar(getString(app.aaps.core.ui.R.string.datastore_password_cleared))
         }
@@ -469,27 +503,27 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         if (config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank())
             notificationManager.post(
                 id = NotificationId.IDENTIFICATION_NOT_SET,
-                R.string.identification_not_set,
+                TextRef.AndroidRes(R.string.identification_not_set),
                 level = NotificationLevel.INFO,
-                actions = listOf(NotificationAction(R.string.set) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.set)) {}),
                 validityCheck = { config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank() }
             )
         // Master password not set
         if (preferences.get(StringKey.ProtectionMasterPassword) == "")
             notificationManager.post(
                 id = NotificationId.MASTER_PASSWORD_NOT_SET,
-                app.aaps.core.ui.R.string.master_password_not_set,
+                TextRef.AndroidRes(app.aaps.core.ui.R.string.master_password_not_set),
                 level = NotificationLevel.NORMAL,
-                actions = listOf(NotificationAction(R.string.set) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.set)) {}),
                 validityCheck = { preferences.get(StringKey.ProtectionMasterPassword) == "" }
             )
         // AAPS directory not selected
         if (preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty())
             notificationManager.post(
                 id = NotificationId.AAPS_DIR_NOT_SELECTED,
-                app.aaps.core.ui.R.string.aaps_directory_not_selected,
+                TextRef.AndroidRes(app.aaps.core.ui.R.string.aaps_directory_not_selected),
                 level = NotificationLevel.LOW,
-                actions = listOf(NotificationAction(R.string.select) {}),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.select)) {}),
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
     }
@@ -709,7 +743,7 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         migrateTempTargetPresets()
 
         // Get Insulin plugin information for database migration
-        insulinLabel = rh.get().gs(
+        insulinLabel = rh.gs(
             when {
                 sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false)      -> InsulinType.OREF_RAPID_ACTING.label
                 sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) -> InsulinType.OREF_ULTRA_RAPID_ACTING.label
@@ -865,13 +899,13 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         val peak = runningICfg.insulinPeakTime
         val conc = runningICfg.concentration
 
-        config.updateInitProgress(rh.get().gs(R.string.migrating_profile_switches))
+        config.updateInitProgress(rh.gs(R.string.migrating_profile_switches))
         val migratedPs = repository.bulkMigrateProfileSwitchInsulinConfig(label, end, peak, conc)
 
-        config.updateInitProgress(rh.get().gs(R.string.migrating_effective_profile_switches))
+        config.updateInitProgress(rh.gs(R.string.migrating_effective_profile_switches))
         val migratedEps = repository.bulkMigrateEffectiveProfileSwitchInsulinConfig(label, end, peak, conc)
 
-        config.updateInitProgress(rh.get().gs(R.string.migrating_boluses))
+        config.updateInitProgress(rh.gs(R.string.migrating_boluses))
         val migratedBoluses = repository.bulkMigrateBolusInsulinConfig(label, end, peak, conc)
 
         val totalMigrated = migratedPs + migratedEps + migratedBoluses
@@ -897,7 +931,6 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
      * Insulin config stamped onto legacy records when neither legacy preferences nor a running profile
      * can tell us what was actually used: no active profile switch at first start, or — the case that
      * matters — a running profile whose own row still carries the v33 sentinel.
-     *
      * That second case is why this must not read the running profile unguarded. The SQL step of the
      * migration stamps `insulinEndTime = -1` onto every pre-ICfg row *including the active one*, so
      * reading it back yields a DIA of 0.0 and writes the sentinel straight back over itself. The rows stay
@@ -905,17 +938,16 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
      * cycle. [app.aaps.core.interfaces.profile.ProfileFunction.getRunningOrRequestedICfg] rejects an
      * unusable [ICfg] so that path lands here instead — and because the repair re-runs on every start and
      * still matches the sentinel rows, an install already broken this way heals on its next launch.
-     *
      * Ultra-rapid: an 8h DIA is the same across every [InsulinType] template, so the only real choice is
      * the peak. Concentration is 1.0 by construction, which is not a guess — these records predate
      * concentration entirely, so 1.0 is the identity that leaves historical doses unscaled.
      */
     private fun substituteICfgForMigration(): ICfg =
-        InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg(rh.get()).also {
+        InsulinType.OREF_ULTRA_RAPID_ACTING.getICfg(rh).also {
             aapsLogger.warn(LTag.CORE, "Migration to DB 33: no profile and no legacy DIA, substituting ${it.insulinLabel}")
             notificationManager.post(
                 id = NotificationId.INSULIN_MIGRATION_DEFAULT_USED,
-                rh.get().gs(R.string.insulin_migration_default_used, it.insulinLabel),
+                rh.gs(R.string.insulin_migration_default_used, it.insulinLabel),
                 level = NotificationLevel.IMPORTANT
             )
         }
@@ -973,8 +1005,15 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
                         @Suppress("UNCHECKED_CAST")
                         (versionCheckersUtils::class.declaredMemberProperties.find { it.name == "definition" } as KMutableProperty<Any>?)
                             ?.let {
-                                val merged = JsonHelper.merge(it.getter.call(versionCheckersUtils) as JSONObject, JSONObject(firebaseRemoteConfig.getString("defs")))
-                                it.setter.call(versionCheckersUtils, merged)
+                                // `definition` is read through reflection, so the cast below is unchecked and the
+                                // compiler cannot see it. It said JSONObject long after the property became a
+                                // kotlinx JsonObject, and the app crashed on start as soon as a remote config
+                                // fetch actually succeeded - which needs network and Play Services, so no test or
+                                // CI build ever reached it. Keep the two types here in step by hand.
+                                val current = it.getter.call(versionCheckersUtils) as JsonObject
+                                val remote = Json.parseToJsonElement(firebaseRemoteConfig.getString("defs")).jsonObject
+                                // Plus on the maps is a shallow merge with the remote keys winning.
+                                it.setter.call(versionCheckersUtils, JsonObject(current + remote))
                             }
                     } else aapsLogger.error("RemoteConfig fetch failed")
                 }
@@ -990,4 +1029,15 @@ class MainApp : Application(), HasAndroidInjector, Configuration.Provider {
         uiInteraction.stopAlarm("onTerminate")
         super.onTerminate()
     }
+
+    /**
+     * Teaches the resolvers which module owns which string names.
+     * A `TextRef.Named` carries an owner and a name, and both the Compose and the ResourceHelper
+     * paths need a way to turn that into an `R.string` id. `:core:keys`, `:core:interfaces` and
+     * `:core:ui` are resolved directly because `:core:ui` sits above them, but a plugin or pump
+     * module sits ABOVE `:core:ui`, so it can only be reached from here - `:app` is the one place
+     * that depends on all of them.
+     * Without this the lookup answers null and the raw name is drawn: `virtual_pump_shortname`
+     * instead of "Virtual Pump".
+     */
 }

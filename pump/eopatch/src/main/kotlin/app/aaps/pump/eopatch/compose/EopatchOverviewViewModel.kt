@@ -40,8 +40,6 @@ import app.aaps.pump.eopatch.extension.takeOne
 import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.TempBasalManager
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,11 +53,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
+import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class EopatchOverviewEvent {
@@ -72,7 +75,8 @@ sealed class EopatchOverviewEvent {
     data class ShowToast(val messageResId: Int, val isError: Boolean = false) : EopatchOverviewEvent()
 }
 
-@HiltViewModel
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
 @Stable
 class EopatchOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
@@ -89,12 +93,12 @@ class EopatchOverviewViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val rxBus: RxBus,
     private val ch: ConcentrationHelper,
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : ViewModel() {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val stateBuilder = PumpOverviewStateBuilder(rh)
-    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, context, scope)
+    private val communicationStatus = PumpCommunicationStatus(rxBus, commandQueue, rh, scope)
     private val disposables = CompositeDisposable()
 
     private val _events = MutableSharedFlow<EopatchOverviewEvent>(extraBufferCapacity = 5)
@@ -286,7 +290,7 @@ class EopatchOverviewViewModel @Inject constructor(
                     val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
                     val h = remainTimeMillis.milliseconds.inWholeHours
                     val m = (remainTimeMillis - h.hours.inWholeMilliseconds).milliseconds.inWholeMinutes
-                    "${rh.gs(CoreUiR.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
+                    "${rh.gs(InterfacesR.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
                 } else {
                     rh.gs(R.string.string_running)
                 }
@@ -376,7 +380,7 @@ class EopatchOverviewViewModel @Inject constructor(
 
     private fun buildStatusBanner(connState: BleConnectionState, isActivated: Boolean, isPaused: Boolean): StatusBanner? = when {
         !isActivated -> StatusBanner(text = rh.gs(R.string.eopatch_not_activated), level = StatusLevel.WARNING)
-        isPaused -> StatusBanner(text = rh.gs(CoreUiR.string.pumpsuspended), level = StatusLevel.WARNING)
+        isPaused -> StatusBanner(text = rh.gs(InterfacesR.string.pumpsuspended), level = StatusLevel.WARNING)
         connState == BleConnectionState.DISCONNECTED -> StatusBanner(text = rh.gs(CoreUiR.string.disconnected), level = StatusLevel.CRITICAL)
         connState != BleConnectionState.CONNECTED -> StatusBanner(text = rh.gs(CoreUiR.string.connecting), level = StatusLevel.UNSPECIFIED)
         else -> null // Connected, activated, running — no banner needed
