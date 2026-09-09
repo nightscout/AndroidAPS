@@ -16,6 +16,11 @@
 # this comment. They are not part of any build - src/main/res is not a source set for these
 # modules any more.
 #
+# A file that is not listed under `files:` is never uploaded, so an empty file alone changes
+# nothing in Crowdin. The four old paths at the end of this list are there only to force that
+# upload: Crowdin reads them, sees `<resources/>`, and drops the strings it still holds for the
+# old path. Remove those four entries (and the files) once Crowdin shows them as empty.
+#
 # The list is checkable rather than trusted. Every `src/androidMain/res/values/*.xml` source below
 # must have an empty counterpart at the same path with `androidMain` swapped for `main`:
 #
@@ -140,3 +145,13 @@ files:
     translation: /ui/src/androidMain/res/values-%android_code%/strings.xml
   - source: /wear/src/main/res/values/strings.xml
     translation: /wear/src/main/res/values-%android_code%/strings.xml
+  # TEMPORARY - old paths kept only so Crowdin uploads the empty <resources/> and clears them.
+  # Delete these four entries together with the files listed in the comment at the top.
+  - source: /core/ui/src/main/res/values/protection.xml
+    translation: /core/ui/src/main/res/values-%android_code%/protection.xml
+  - source: /core/ui/src/main/res/values/strings.xml
+    translation: /core/ui/src/main/res/values-%android_code%/strings.xml
+  - source: /core/ui/src/main/res/values/strings_scene_wizard.xml
+    translation: /core/ui/src/main/res/values-%android_code%/strings_scene_wizard.xml
+  - source: /ui/src/main/res/values/strings.xml
+    translation: /ui/src/main/res/values-%android_code%/strings.xml
