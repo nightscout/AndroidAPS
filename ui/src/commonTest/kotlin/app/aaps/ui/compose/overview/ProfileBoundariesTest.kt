@@ -41,7 +41,7 @@ class ProfileBoundariesTest {
     private val windowStart = 1_000_000L
 
     @Test
-    fun `no switches means the profile is read once, before the loop`() {
+    fun `no switches means the profile is read once before the loop`() {
         assertEquals(emptyList(), profileBoundariesIn(emptyList(), windowStart))
     }
 
