@@ -39,6 +39,23 @@ interface AutosensDataStore {
     fun createBucketedData(aapsLogger: AAPSLogger, dateUtil: DateUtil)
     fun slowAbsorptionPercentage(timeInMinutes: Int): Double
     fun newHistoryData(time: Long, aapsLogger: AAPSLogger, dateUtil: DateUtil)
+
+    /**
+     * Drops autosens entries older than [time], the counterpart of [newHistoryData] at the old end.
+     *
+     * Without it the table only ever grows, because nothing else removes an entry that has aged out of
+     * the window the calculation works on: about 288 entries a day, each holding an autosens result,
+     * kept for the whole life of the process (issue #5101).
+     *
+     * This is a memory bound, not a speed fix. Measured, the aged out head costs nothing worth naming:
+     * the sensitivity plugins only compare its timestamps and move on. What costs time is how many
+     * entries fall INSIDE the window, and that is bounded by the window itself once the bucket grid
+     * stops moving.
+     *
+     * [time] must be at or older than the oldest data any reader can still ask for. The caller that
+     * knows that is the one loading BG data, because the same window bounds the bucketed data.
+     */
+    fun pruneOlderThan(time: Long, aapsLogger: AAPSLogger, dateUtil: DateUtil)
     fun roundUpTime(time: Long): Long
     fun reset()
 }

@@ -1543,6 +1543,69 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtil)).isNull()
     }
 
+    private fun storeWithEntriesEvery5Min(count: Int, oldest: Long): AutosensDataStoreObject =
+        AutosensDataStoreObject().also { ads ->
+            for (i in 0 until count) {
+                val time = oldest + T.mins(5L * i).msecs()
+                ads.autosensDataTable.append(time, AutosensDataObject(aapsLogger, preferences, dateUtil).apply { this.time = time })
+            }
+        }
+
+    @Test
+    fun pruneOlderThanRemovesOnlyEntriesBeforeTheCut() {
+        val oldest = now - T.hours(40).msecs()
+        val ads = storeWithEntriesEvery5Min(count = 10, oldest = oldest)
+
+        // cut sits exactly on the 4th entry, so the first three go
+        ads.pruneOlderThan(oldest + T.mins(15).msecs(), aapsLogger, dateUtil)
+
+        assertThat(ads.autosensDataTable.size()).isEqualTo(7)
+        assertThat(ads.autosensDataTable.keyAt(0)).isEqualTo(oldest + T.mins(15).msecs())
+        assertThat(ads.autosensDataTable.keyAt(6)).isEqualTo(oldest + T.mins(45).msecs())
+    }
+
+    @Test
+    fun pruneOlderThanKeepsEveryRemainingEntry() {
+        // Deleting while walking up a LongSparseArray skips every second entry, because removeAt only
+        // marks the slot and the next size()/keyAt() compacts the array. This pins the whole key set.
+        val oldest = now - T.hours(40).msecs()
+        val ads = storeWithEntriesEvery5Min(count = 8, oldest = oldest)
+
+        ads.pruneOlderThan(oldest + T.mins(20).msecs(), aapsLogger, dateUtil)
+
+        val keys = (0 until ads.autosensDataTable.size()).map { ads.autosensDataTable.keyAt(it) }
+        assertThat(keys).containsExactly(
+            oldest + T.mins(20).msecs(),
+            oldest + T.mins(25).msecs(),
+            oldest + T.mins(30).msecs(),
+            oldest + T.mins(35).msecs()
+        ).inOrder()
+    }
+
+    @Test
+    fun pruneOlderThanIsNoOpWhenNothingIsOldEnough() {
+        val oldest = now - T.hours(2).msecs()
+        val ads = storeWithEntriesEvery5Min(count = 5, oldest = oldest)
+
+        ads.pruneOlderThan(oldest, aapsLogger, dateUtil)
+
+        assertThat(ads.autosensDataTable.size()).isEqualTo(5)
+    }
+
+    @Test
+    fun pruneOlderThanKeepsTheTableUsableAndDoesNotReplaceIt() {
+        val oldest = now - T.hours(40).msecs()
+        val ads = storeWithEntriesEvery5Min(count = 6, oldest = oldest)
+        // The calculation reads the table into a local once and writes new buckets through it, so the
+        // prune has to change this instance and not swap in a new one.
+        val tableBefore = ads.autosensDataTable
+
+        ads.pruneOlderThan(oldest + T.mins(10).msecs(), aapsLogger, dateUtil)
+
+        assertThat(ads.autosensDataTable).isSameInstanceAs(tableBefore)
+        assertThat(tableBefore.size()).isEqualTo(4)
+    }
+
     @Test
     fun cloneKeepsReferenceTime() {
         val ads = AutosensDataStoreObject()

@@ -150,6 +150,18 @@ class PrepareGraphDataRunner @Inject constructor(
             bgReadings = readings
             aapsLogger.debug(LTag.AUTOSENS) { "BG data loaded. Size: ${bgReadings.size} Start date: ${dateUtil.dateAndTimeString(start)} End date: ${dateUtil.dateAndTimeString(to)}" }
             createBucketedData(aapsLogger, dateUtil)
+            // Drop autosens entries that fell out of the window this run works on. Nothing can ask for
+            // them any more: every reader is bounded either by the bucketed data built above or by the
+            // detection start, and both live inside [start, to].
+            //
+            // The cut is `start`, so it follows this run's own `to` and never the wall clock. The
+            // history browser runs the same code on its own store with `to` in the past, and a cut
+            // taken from `now` would empty that store on every step.
+            //
+            // This runs on the LIVE store in phase 1, on purpose. Phase 4 works on a clone whose
+            // publish is skipped when the run is superseded, which is exactly the case where the table
+            // needs pruning most, and it mutates that clone's table outside this lock.
+            pruneOlderThan(start, aapsLogger, dateUtil)
         }
     }
 
