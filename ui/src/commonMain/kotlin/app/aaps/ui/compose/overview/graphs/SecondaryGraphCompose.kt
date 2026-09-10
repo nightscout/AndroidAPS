@@ -620,10 +620,19 @@ fun SecondaryGraphCompose(
     // deviation lines), windowed to the visible scroll/zoom range — computed once here since the
     // IOB+basal scale, the dual-axis alignment, the single-axis nice-scale dispatch, and the
     // generic auto-range fallback below all need the exact same union.
+    // Carb markers are in here because they are in the model. `hasPrimaryData` counts them, so a
+    // graph holding nothing but carb markers claims to have data - and if the range union left them
+    // out, every branch that needs a non-empty union (dual-axis alignment, the single-axis nice
+    // scale, the auto-range) returned null while the "no data" branch was skipped, so the axis fell
+    // through to Vico's raw auto-range over the model. That is reachable on a cold start: carbs come
+    // straight from the database, COB waits for the calculation workflow, and in between the axis was
+    // sized to the carb amounts alone. Measured on a Pixel with COB+ABS after a restart:
+    // `primaryY=[null..null] n=0` against `modelY=[0.0..43.0] slots=[CarbsMarker]`, giving an axis of
+    // 0..44 that a COB curve reaching 148 was drawn straight through.
     val primaryYValues = remember(
-        processedIob, processedCob, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
+        processedIob, processedCob, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, visibleMinX, visibleMaxX
     ) {
-        windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
+        windowedPrimaryY(visibleMinX, visibleMaxX, processedIob, processedCob.first, processedCarbs, processedSimpleSeries, processedDevSlopeMin, processedDeviationLines)
     }
 
     // IOB (with basal overlay active): zero-floor nice range — 0 if the visible window has no
@@ -977,6 +986,7 @@ internal fun windowedPrimaryY(
     visibleMaxX: Double?,
     processedIob: List<Pair<Double, Double>>,
     processedCobY: List<Pair<Double, Double>>,
+    processedCarbs: List<Pair<Double, Double>>,
     processedSimpleSeries: List<Pair<SeriesType, List<Pair<Double, Double>>>>,
     processedDevSlopeMin: List<Pair<Double, Double>>,
     processedDeviationLines: ProcessedDeviationLines?
@@ -994,6 +1004,7 @@ internal fun windowedPrimaryY(
     val windowed = buildList {
         addAll(processedIob.filter { inWindow(it.first) }.map { it.second })
         addAll(processedCobY.filter { inWindow(it.first) }.map { it.second })
+        addAll(processedCarbs.filter { inWindow(it.first) }.map { it.second })
         for ((_, pts) in processedSimpleSeries) addAll(pts.filter { inWindow(it.first) }.map { it.second })
         addAll(processedDevSlopeMin.filter { inWindow(it.first) }.map { it.second })
         addAll(deviationY(filterToWindow = true))
@@ -1002,6 +1013,7 @@ internal fun windowedPrimaryY(
         buildList {
             addAll(processedIob.map { it.second })
             addAll(processedCobY.map { it.second })
+            addAll(processedCarbs.map { it.second })
             for ((_, pts) in processedSimpleSeries) addAll(pts.map { it.second })
             addAll(processedDevSlopeMin.map { it.second })
             addAll(deviationY(filterToWindow = false))
