@@ -245,6 +245,8 @@
     <string name="location_permission_not_granted">Chưa cấp quyền vị trí. Hãy cho phép trong cài đặt Android.</string>
     <string name="configbuilder_nightscoutversion_label">Phiên bản Nightscout:</string>
     <string name="not_available_full">Không khả dụng</string>
+    <string name="not_implemented_yet">Chức năng này chưa khả dụng trên nền tảng này</string>
+    <string name="not_available_on_platform">Chức năng này không khả dụng trên nền tảng này</string>
     <string name="engineering_mode_enabled">Đã bật chế độ kỹ thuật</string>
     <string name="back">Quay lại</string>
     <string name="next">Tiếp theo</string>
@@ -1071,6 +1073,8 @@
     <string name="units_format_grams">%1$d g</string>
     <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.1f giờ</string>
+    <string name="units_format_hours_double_range">%1$.1f giờ (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>
