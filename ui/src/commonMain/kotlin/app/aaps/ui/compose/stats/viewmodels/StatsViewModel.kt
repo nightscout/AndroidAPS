@@ -6,6 +6,11 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -36,18 +41,35 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+/**
+ * How long the totals wait after a database change before recomputing.
+ *
+ * Five seconds, matching `IobCobCalculatorPlugin`'s own history debounce. A Nightscout sync writes
+ * treatments in many chunks and each one is a change, so a short window here would start a seven day
+ * recalculation over and over while the sync is still running.
+ */
+private const val TDD_RELOAD_DEBOUNCE_MS = 5_000L
 
 /**
  * ViewModel for StatsScreen managing statistics data loading and state.
  */
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
+@OptIn(FlowPreview::class)
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
@@ -79,7 +101,15 @@ class StatsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(StatsUiState())
     val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()
 
-    private var cycleLoadJob: kotlinx.coroutines.Job? = null
+    private var cycleLoadJob: Job? = null
+
+    /**
+     * Held so a reload can replace the one before it instead of racing it.
+     *
+     * `calculate(7)` walks seven days in five minute steps, so two of them running at once is both
+     * wasteful and a coin toss over which `_uiState` update lands last.
+     */
+    private var tddLoadJob: Job? = null
 
     init {
         val savedOffset = preferences.get(IntNonKey.TddCycleOffset)
@@ -99,11 +129,41 @@ class StatsViewModel @Inject constructor(
             )
         }
         loadAllStats()
+        observeTddInputs()
         // Cycle pattern data is loaded lazily; if the section was left expanded, load it now
         if (tddCycleExpanded) {
             _uiState.update { it.copy(tddCycleLoading = true, tddCycleProgress = 0f) }
             loadCyclePatternData()
         }
+    }
+
+    /**
+     * Reload the totals when the data they are made of changes.
+     *
+     * Without this the screen read the numbers once, on open, and never again - so a sync running
+     * underneath, or the loop rebuilding the cache, left whatever was on screen at the moment the
+     * screen opened. "Recalculate" was the only way to see current figures, and it clears the cache
+     * as well, which made a stale reading indistinguishable from a wrong one. The graphs never had
+     * this problem because they are driven by StateFlow and repaint on every database change.
+     *
+     * The same five types `IobCobCalculatorPlugin` invalidates its own caches on, because they are
+     * exactly the ones a total daily dose is computed from: boluses and extended boluses, carbs,
+     * temporary basals, and the effective profile switch that sets the basal rate underneath them.
+     *
+     * Debounced hard, and not for cosmetic reasons: a full sync writes in many chunks, and each one
+     * would otherwise start a seven day recalculation in five minute steps.
+     */
+    private fun observeTddInputs() {
+        merge(
+            persistenceLayer.observeChanges(BS::class).map {},
+            persistenceLayer.observeChanges(CA::class).map {},
+            persistenceLayer.observeChanges(TB::class).map {},
+            persistenceLayer.observeChanges(EB::class).map {},
+            persistenceLayer.observeChanges(EPS::class).map {}
+        )
+            .debounce(TDD_RELOAD_DEBOUNCE_MS)
+            .onEach { loadTddStats() }
+            .launchIn(viewModelScope)
     }
 
     fun loadAllStats() {
@@ -115,7 +175,8 @@ class StatsViewModel @Inject constructor(
     }
 
     private fun loadTddStats() {
-        viewModelScope.launch {
+        tddLoadJob?.cancel()
+        tddLoadJob = viewModelScope.launch {
             _uiState.update { it.copy(tddLoading = true) }
             val data = withContext(aapsIoDispatcher) {
                 val tdds = tddCalculator.calculate(7, allowMissingDays = true)
