@@ -17,7 +17,9 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -29,8 +31,10 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -45,9 +49,11 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -657,4 +663,55 @@ class LoopPluginTest : TestBaseWithProfile() {
 
 // endregion
 
+    /**
+     * Once the loop starts talking to the pump, cancelling the caller must not stop it - issue #5100.
+     *
+     * The pump command suspends here, the caller is cancelled while it is still running, and the
+     * result still has to be written back afterwards. Without the guard the cancel lands on the
+     * command queue's await, the pump is changed and the app never records it. For the accept path
+     * the caller is a screen, so this is what used to happen when the user left the screen after
+     * pressing the button.
+     */
+    @Test
+    fun `accepting a change still finishes after the caller is cancelled`() = runTest {
+        val commandStarted = CompletableDeferred<Unit>()
+        val releaseCommand = CompletableDeferred<Unit>()
+        val enacted = pumpEnactResultProvider().enacted(true).success(true)
+
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(virtualPumpPlugin.isInitialized()).thenReturn(true)
+        whenever(virtualPumpPlugin.isSuspended()).thenReturn(false)
+        whenever(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription().apply { basalStep = 0.05 })
+        whenever(virtualPumpPlugin.baseBasalRate).thenReturn(PumpRate(1.0))
+        whenever(ch.fromPump(any<PumpRate>())).thenReturn(1.0)
+        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
+
+        val request = mock<APSResult>()
+        whenever(request.isTempBasalRequested).thenReturn(true)
+        whenever(request.rate).thenReturn(2.0)
+        whenever(request.duration).thenReturn(30)
+        whenever(request.usePercent).thenReturn(false)
+        loopPlugin.lastRun = Loop.LastRun().apply {
+            this.constraintsProcessed = request
+            this.lastAPSRun = dateUtil.now()
+        }
+        // The pump command hangs until the test releases it, so the cancel below is guaranteed to
+        // arrive while it is still in flight.
+        commandQueue.stub {
+            onBlocking { tempBasalAbsolute(any(), any(), any(), any(), any()) } doSuspendableAnswer {
+                commandStarted.complete(Unit)
+                releaseCommand.await()
+                enacted
+            }
+        }
+
+        val accept = launch { loopPlugin.acceptChangeRequest() }
+        commandStarted.await()
+        accept.cancel()
+        releaseCommand.complete(Unit)
+        accept.join()
+
+        assertThat(loopPlugin.lastRun?.tbrSetByPump).isEqualTo(enacted)
+        assertThat(loopPlugin.lastRun?.lastOpenModeAccept).isNotEqualTo(0L)
+    }
 }
