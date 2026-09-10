@@ -70,7 +70,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -494,9 +493,10 @@ class IobCobCalculatorPlugin(
                     historyLock.withLock {
                         try {
                             aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
-                            // Still blocking, and still inside the lock, so the ordering is what it was:
-                            // the cache is cleared before anything can schedule over the top of it.
-                            runBlocking { persistenceLayer.clearCachedTddData(MidnightTime.calc(data.oldDataTimestamp)) }
+                            // The TDD cache clear moved inside newHistoryData, so it still happens here,
+                            // still before the recalculation and still inside this lock - and the
+                            // EffectiveProfileSwitch path, which calls newHistoryData directly, now gets
+                            // it too.
                             newHistoryData(data.oldDataTimestamp, data.reloadBgData, data.triggeredByNewBG)
                         } catch (e: CancellationException) {
                             throw e
@@ -542,6 +542,21 @@ class IobCobCalculatorPlugin(
     // When historical data is changed (coming from NS etc.) finished calculations after this date must be invalidated
     private suspend fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, triggeredByNewBG: Boolean) {
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, "onEventNewHistoryData")
+        // The persisted TDD cache is invalidated here rather than in the caller, because it is part of
+        // the same invalidation as the in-memory tables below and every path that reaches this function
+        // has just been told that history changed.
+        //
+        // It used to sit in `scheduleHistoryDataChange`, which six of the seven database observers go
+        // through - but `EffectiveProfileSwitch` calls this function directly and so cleared nothing.
+        // A TDD row holds a basal figure computed per five-minute slot from the profile in force, so a
+        // profile switch arriving after the row was cached leaves that row wrong with nothing to
+        // remove it. A full sync guarantees that order: the load chain runs TREATMENTS before
+        // PROFILE_STORE, so the treatments cache the day and the profiles land afterwards. Only
+        // "Recalculate" in the statistics screen fixed it, because that wipes the table outright.
+        //
+        // Midnight, not `oldDataTimestamp`: a TDD row is keyed on the start of its day, so anything
+        // later in that day has to take the whole day with it.
+        persistenceLayer.clearCachedTddData(MidnightTime.calc(oldDataTimestamp))
         dataLock.withLock {
 
             // clear up 5 min back for proper COB calculation
