@@ -102,6 +102,17 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
     }
 
+    override fun holdsSameData(gv: GV): Boolean {
+        dataLock.withLock {
+            val held = bgReadings.firstOrNull { it.id == gv.id } ?: return false
+            // Compare by copying the three fields every write touches from the incoming row, then using
+            // normal equality. A field list would have to be kept in step with what the calculation
+            // reads; this way a field added to GV later is compared without anyone remembering to, and
+            // the worst a mistake can do is one recalculation too many, never one too few.
+            return held.copy(version = gv.version, dateCreated = gv.dateCreated, ids = gv.ids) == gv
+        }
+    }
+
     override fun pruneOlderThan(time: Long, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
         dataLock.withLock {
             val table = autosensDataTable

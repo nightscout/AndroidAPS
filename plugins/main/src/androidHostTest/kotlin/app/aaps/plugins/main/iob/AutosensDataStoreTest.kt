@@ -2,6 +2,7 @@ package app.aaps.plugins.main.iob
 
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
@@ -1541,6 +1542,51 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         // empty table + stale stored fallback → null
         ads.autosensDataTable = LongSparseArray<AutosensData>()
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtil)).isNull()
+    }
+
+    // ---- holdsSameData --------------------------------------------------------------------------
+
+    private fun reading(id: Long, timestamp: Long, value: Double = 100.0, isValid: Boolean = true): GV =
+        GV(
+            id = id, timestamp = timestamp, value = value, isValid = isValid,
+            raw = 0.0, noise = 0.0, trendArrow = TrendArrow.FLAT, sourceSensor = SourceSensor.UNKNOWN
+        )
+
+    private fun storeHolding(vararg readings: GV): AutosensDataStoreObject =
+        AutosensDataStoreObject().also { it.bgReadings = readings.toList() }
+
+    @Test
+    fun holdsSameDataIsFalseWhenTheReadingIsNotHeld() {
+        val ads = storeHolding(reading(id = 1, timestamp = now))
+
+        // never seen this id, and the empty store case, must both ask for a recalculation
+        assertThat(ads.holdsSameData(reading(id = 2, timestamp = now + 60000))).isFalse()
+        assertThat(AutosensDataStoreObject().holdsSameData(reading(id = 1, timestamp = now))).isFalse()
+    }
+
+    @Test
+    fun holdsSameDataIsTrueForANightscoutIdOnlyUpdate() {
+        val held = reading(id = 1, timestamp = now)
+        val ads = storeHolding(held)
+        // what UpdateNsIdGlucoseValueTransaction writes back: same data, new id, bumped bookkeeping
+        val afterUpload = held.copy(version = held.version + 1, dateCreated = now + 5000, ids = IDs(nightscoutId = "abc123"))
+
+        assertThat(ads.holdsSameData(afterUpload)).isTrue()
+    }
+
+    @Test
+    fun holdsSameDataIsFalseForEveryChangeTheCalculationReads() {
+        val held = reading(id = 1, timestamp = now)
+        val ads = storeHolding(held)
+
+        // a corrected value
+        assertThat(ads.holdsSameData(held.copy(value = 123.0))).isFalse()
+        // an invalidated reading drops out of the load query (isValid = 1)
+        assertThat(ads.holdsSameData(held.copy(isValid = false))).isFalse()
+        // a soft delete drops out of it too (referenceId IS NULL)
+        assertThat(ads.holdsSameData(held.copy(referenceId = 7L))).isFalse()
+        // a corrected timestamp moves the reading to another bucket
+        assertThat(ads.holdsSameData(held.copy(timestamp = now - 60000))).isFalse()
     }
 
     private fun storeWithEntriesEvery5Min(count: Int, oldest: Long): AutosensDataStoreObject =

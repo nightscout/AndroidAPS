@@ -150,7 +150,13 @@ class IobCobCalculatorPlugin(
         // GlucoseValue changes → reload BG data + trigger loop
         persistenceLayer.observeChanges(GV::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS) { gvList ->
-                gvList.minOfOrNull { it.timestamp }?.let { timestamp ->
+                // Filter row by row, and before the reduction below. One change list can carry a new
+                // reading together with an id only update of an older row (CgmSourceTransaction does
+                // exactly that), and reducing first would hide the new reading behind the unchanged one.
+                val changed = gvList.filterNot { ads.holdsSameData(it) }
+                if (changed.size < gvList.size)
+                    aapsLogger.debug(LTag.AUTOSENS) { "Ignoring ${gvList.size - changed.size} of ${gvList.size} glucose changes, nothing the calculation reads is different" }
+                changed.minOfOrNull { it.timestamp }?.let { timestamp ->
                     scheduleHistoryDataChange(timestamp, reloadBgData = true, triggeredByNewBG = true)
                 }
             }
