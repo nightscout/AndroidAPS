@@ -1182,7 +1182,17 @@ class DetermineBasalSMB @Inject constructor(
                     durationReq = min(60, max(0, durationReq))
                 } else {
                     // if SMB durationReq is less than 30m, set a nonzero low temp
-                    smbLowTempReq = round(basal * durationReq / 30.0, 2)
+                    //
+                    // durationReq is how many minutes of basal we want to hold back. The pump gets a
+                    // 30 minute temp instead of a shorter zero temp, so the rate must deliver what is
+                    // left over: full basal for the other 30 - durationReq minutes, spread across the
+                    // whole 30.
+                    //
+                    // oref has this the other way round (basal * durationReq / 30). That gets it
+                    // backwards: asking to hold back 29 of 30 minutes produced 29/30 of the basal
+                    // rate, so almost nothing was held back, and asking to hold back 1 minute cut the
+                    // rate to 1/30. We deliberately differ from oref here. See issue #5082.
+                    smbLowTempReq = round(basal * (30 - durationReq) / 30.0, 2)
                     durationReq = 30
                 }
                 rT.reason.append(" insulinReq $insulinReq")
