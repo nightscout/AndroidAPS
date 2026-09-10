@@ -74,6 +74,65 @@ val desktopClient: Int = (project.findProperty("client") as String?)?.toIntOrNul
 
 require(desktopClient in 1..3) { "client must be 1, 2 or 3, but was $desktopClient" }
 
+/**
+ * The macOS launcher icon, built from the same PNG the window uses.
+ *
+ * jpackage will only take an `.icns` for a mac package, and without one the installed app wears the
+ * default JVM icon. The file is generated rather than checked in for the reason `copyDesktopAppIcon`
+ * gives: a committed `.icns` is a second copy of the artwork, and it drifts the first time somebody
+ * redraws the owl. `sips` and `iconutil` ship with macOS, so nothing needs installing.
+ *
+ * Which owl depends on the client, the same mapping `appIconResource` applies at runtime, so a
+ * follower's package does not wear the master's icon.
+ *
+ * Skipped off macOS: the tools do not exist there, and `macOS.iconFile` is only read when a mac
+ * package is being built anyway.
+ */
+val desktopIconName = when (desktopClient) {
+    2    -> "ic_blueowl"
+    3    -> "ic_greenowl"
+    else -> "ic_yellowowl"
+}
+
+/**
+ * The package name, used for the installer and for the icon file beside it.
+ *
+ * Numbered from the second, the way Android names AAPSClient2 and AAPSClient3, so two installed
+ * clients are told apart in the start menu rather than overwriting each other.
+ */
+val desktopPackageName = if (desktopClient == 1) "AAPSClient" else "AAPSClient$desktopClient"
+
+// Named after the package rather than a fixed "AAPSClient", so building client 2 cannot leave an
+// icon called AAPSClient.icns holding the blue owl, and two clients built in one tree do not
+// overwrite each other's icon.
+val icnsOutput = layout.buildDirectory.file("generated/icon/macos/$desktopPackageName.icns")
+val makeIcns = tasks.register<Exec>("makeDesktopIcns") {
+    description = "Builds the macOS .icns launcher icon from the phone artwork."
+    val source = rootProject.file("core/ui/src/androidMain/res/mipmap-xxxhdpi/$desktopIconName.png")
+    val target = icnsOutput.get().asFile
+    inputs.file(source)
+    outputs.file(target)
+    onlyIf { System.getProperty("os.name").startsWith("Mac") }
+    // iconutil wants a directory of named sizes rather than one image, so the sizes are rendered
+    // first. 16 to 512 with a @2x of each is what Apple asks for; a missing size makes iconutil
+    // fail rather than interpolate.
+    commandLine(
+        "bash", "-c",
+        """
+        set -e
+        iconset="$(mktemp -d)/AAPSClient.iconset"
+        mkdir -p "${'$'}iconset"
+        for size in 16 32 128 256 512; do
+          sips -z "${'$'}size" "${'$'}size" "${source.absolutePath}" --out "${'$'}iconset/icon_${'$'}{size}x${'$'}{size}.png" > /dev/null
+          double=${'$'}((size * 2))
+          sips -z "${'$'}double" "${'$'}double" "${source.absolutePath}" --out "${'$'}iconset/icon_${'$'}{size}x${'$'}{size}@2x.png" > /dev/null
+        done
+        mkdir -p "${target.parentFile.absolutePath}"
+        iconutil -c icns "${'$'}iconset" -o "${target.absolutePath}"
+        """.trimIndent()
+    )
+}
+
 val generateBuildInfo = tasks.register<GenerateBuildInfoTask>("generateDesktopBuildInfo") {
     version.set(Versions.appVersion)
     buildStamp.set(buildStamp())
@@ -178,10 +237,7 @@ compose.desktop {
             // on Android. Not just cosmetic: Windows takes the notification header from the
             // launcher this produces, so a package called "AAPS" would put the master name on a
             // follower every time a notification appeared.
-            //
-            // Numbered from the second, the way Android names AAPSClient2 and AAPSClient3, so two
-            // installed clients are told apart in the start menu rather than overwriting each other.
-            packageName = if (desktopClient == 1) "AAPSClient" else "AAPSClient$desktopClient"
+            packageName = desktopPackageName
             // jpackage demands a plain numeric version - an MSI rejects anything else - so the
             // `-dev-b-kmp` style suffix that Versions.appVersion carries is trimmed off here.
             packageVersion = Versions.appVersion.substringBefore('-')
@@ -191,6 +247,11 @@ compose.desktop {
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
             )
+            macOS {
+                // fileProvider rather than a plain path, so the packaging tasks know they have to
+                // run makeDesktopIcns first instead of failing on a file that is not there yet.
+                iconFile.fileProvider(makeIcns.map { icnsOutput.get().asFile })
+            }
         }
     }
 }
