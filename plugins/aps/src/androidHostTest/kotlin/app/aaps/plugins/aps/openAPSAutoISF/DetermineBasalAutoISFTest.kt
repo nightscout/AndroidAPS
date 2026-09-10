@@ -205,4 +205,59 @@ class DetermineBasalAutoISFTest : TestBaseWithProfile() {
         assertThat(result.duration).isEqualTo(30)
         assertThat(result.reason.toString()).contains("Setting neutral temp basal")
     }
+
+    /**
+     * The same rule as in `DetermineBasalSMBTest` - issue #5082. AutoISF carries its own copy of the
+     * low temp branch, so it needs its own guard: a fix applied to only one of the two files would
+     * otherwise go unnoticed here.
+     */
+    @Test
+    fun `a zero temp shorter than 30 minutes keeps only the basal that was not withheld`() {
+        val rT = runWithSmb()
+
+        assertThat(rT.reason.toString()).contains("30m low temp")
+
+        assertThat(rT.rate).isEqualTo(0.03)
+        assertThat(rT.duration).isEqualTo(30)
+    }
+
+    /** BG high and rising so a bolus is wanted, with enough insulin acting that the worst case lands below target. */
+    private fun runWithSmb(): RT {
+        val iobs = Array(48) { i ->
+            val time = currentTime + i * 5 * 60000L
+            IobTotal(
+                time = time,
+                iob = 1.3,
+                activity = 0.0105,
+                lastBolusTime = currentTime - 3600000L,
+                iobWithZeroTemp = IobTotal(time = time, iob = 1.3, activity = 0.0105)
+            )
+        }
+        return sut.determine_basal(
+            glucose_status = glucoseStatus(),
+            currenttemp = CurrentTemp(0, 0.0, null),
+            iob_data_array = iobs,
+            profile = profile().copy(enableSMB_always = true),
+            autosens_data = AutosensResult(ratio = 1.0),
+            meal_data = MealData(
+                carbs = 0.0,
+                mealCOB = 0.0,
+                slopeFromMaxDeviation = 0.0,
+                slopeFromMinDeviation = 0.0,
+                lastBolusTime = currentTime - 3600000L,
+                lastCarbTime = currentTime - 4 * 3600000L
+            ),
+            microBolusAllowed = true,
+            currentTime = currentTime,
+            flatBGsDetected = false,
+            autoIsfMode = false,
+            loop_wanted_smb = "AAPS",
+            profile_percentage = 100,
+            smb_ratio = 0.5,
+            smb_max_range_extension = 1.0,
+            iob_threshold_percent = 100,
+            auto_isf_consoleError = mutableListOf(),
+            auto_isf_consoleLog = mutableListOf()
+        )
+    }
 }
