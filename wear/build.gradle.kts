@@ -19,9 +19,11 @@ repositories {
     google()
 }
 
+// `--exclude=ios-testflight-*` for the same reason as in `:app` - the tag names one past iOS
+// submission, and `git describe` would otherwise report it however far away it is.
 fun generateGitBuild(): String {
     try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always")
+        val processBuilder = ProcessBuilder("git", "describe", "--always", "--exclude=ios-testflight-*")
         val output = File.createTempFile("git-build", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()
@@ -238,7 +240,7 @@ dependencies {
     implementation(libs.com.google.android.gms.playservices.wearable)
     implementation(files("${rootDir}/wear/libs/hellocharts-library-1.5.8.aar"))
 
-    // Declared here rather than inherited: :shared:impl used to export it, and stopped when it became
+    // Declared here rather than inherited: :shared:impl used to export it, and stopped when it became
 
     // Robolectric lets a few Android-coupled unit tests (Intent/Build) run on the JVM. It is a JUnit4
     // runner, so the vintage engine bridges those tests onto the JUnit Platform alongside the Jupiter tests.
