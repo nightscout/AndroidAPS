@@ -128,6 +128,10 @@
     <string name="carelevo_dialog_patch_needle_retry_count">%d retry attempt(s) left for needle insertion.</string>
     <string name="carelevo_dialog_patch_discard_message_title">Deactivate patch and start new patch?</string>
     <string name="carelevo_dialog_patch_discard_message_desc">Pressing the [OK] button will stop insulin.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Finish without starting delivery?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Pressing the [OK] button will make this patch unusable.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Cancel patch activation?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Pressing the [OK] button will discard what you entered.</string>
     <string name="carelevo_dialog_patch_connect_message_title">If the patch detected below is correct, please tap the Confirm button.</string>
 
     <string name="carelevo_dialog_patch_connect_needle_injected">Needle insertion complete and applicator removal</string>

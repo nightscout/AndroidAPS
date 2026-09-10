@@ -634,6 +634,16 @@ class CarelevoPatchFlowScreenTest {
         assertThat(snackbarHostState.currentSnackbarData).isNull()
         assertThat(flowViewModel.isCreated).isTrue()
     }
+
+    // The exit dialog reads this set to pick its wording, so a step added without classifying it
+    // would tell the user a patch is being thrown away when none is paired yet.
+    @Test
+    fun `every step up to the safety check counts as pre-patch`() {
+        val expected = CarelevoPatchStep.entries.takeWhile { it != CarelevoPatchStep.SAFETY_CHECK }
+
+        assertThat(expected).isNotEmpty()
+        assertThat(PRE_PATCH_STEPS).containsExactlyElementsIn(expected)
+    }
 }
 
 /**

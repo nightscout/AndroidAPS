@@ -31,7 +31,6 @@ internal fun CarelevoPatchFlowStep02Connect(
     sharedViewModel: CarelevoPatchConnectionFlowViewModel,
     onExitFlow: () -> Unit
 ) {
-    var showDiscardDialog by remember { mutableStateOf(false) }
     var showConnectDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<Int?>(null) }
 
@@ -72,33 +71,16 @@ internal fun CarelevoPatchFlowStep02Connect(
                 }
 
                 CarelevoConnectPrepareEvent.DiscardComplete                   -> {
-                    showDiscardDialog = false
                     onExitFlow()
                 }
 
                 CarelevoConnectPrepareEvent.DiscardFailed                     -> {
-                    showDiscardDialog = false
                     errorMessage = R.string.carelevo_toast_msg_discard_failed
                 }
 
                 CarelevoConnectPrepareEvent.NoAction                          -> Unit
             }
         }
-    }
-
-    if (showDiscardDialog) {
-        CarelevoActionDialog(
-            onDismissRequest = { showDiscardDialog = false },
-            title = stringResource(R.string.carelevo_dialog_patch_discard_message_title),
-            content = stringResource(R.string.carelevo_dialog_patch_discard_message_desc),
-            primaryText = stringResource(R.string.carelevo_btn_confirm),
-            onPrimaryClick = {
-                showDiscardDialog = false
-                viewModel.startPatchDiscardProcess()
-            },
-            secondaryText = stringResource(R.string.carelevo_btn_cancel),
-            onSecondaryClick = { showDiscardDialog = false }
-        )
     }
 
     if (showConnectDialog) {
@@ -121,7 +103,9 @@ internal fun CarelevoPatchFlowStep02Connect(
 
     CarelevoPatchConnectContent(
         errorMessage = errorMessage,
-        onDiscardClick = { showDiscardDialog = true },
+        // Nothing is paired yet, so leaving needs no confirmation - step 01 cancels the same way.
+        // The back gesture still confirms, since that one can be accidental.
+        onCancelClick = { viewModel.startPatchDiscardProcess() },
         onSearchClick = {
             errorMessage = null
             viewModel.startScan()
@@ -132,7 +116,7 @@ internal fun CarelevoPatchFlowStep02Connect(
 @Composable
 private fun CarelevoPatchConnectContent(
     errorMessage: Int?,
-    onDiscardClick: () -> Unit,
+    onCancelClick: () -> Unit,
     onSearchClick: () -> Unit
 ) {
     WizardStepLayout(
@@ -141,8 +125,8 @@ private fun CarelevoPatchConnectContent(
             onClick = onSearchClick
         ),
         secondaryButton = WizardButton(
-            text = stringResource(R.string.carelevo_btn_patch_expiration),
-            onClick = onDiscardClick
+            text = stringResource(R.string.carelevo_btn_cancel),
+            onClick = onCancelClick
         )
     ) {
         errorMessage?.let { ErrorBanner(message = stringResource(it)) }
@@ -190,7 +174,7 @@ private fun CarelevoPatchFlowStep02ConnectPreview() {
     MaterialTheme {
         CarelevoPatchConnectContent(
             errorMessage = null,
-            onDiscardClick = {},
+            onCancelClick = {},
             onSearchClick = {}
         )
     }

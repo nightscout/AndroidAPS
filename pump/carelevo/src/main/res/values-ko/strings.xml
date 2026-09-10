@@ -121,6 +121,10 @@
     <string name="carelevo_dialog_patch_needle_retry_count">바늘 삽입 재시도 횟수가 %d번 남았습니다.</string>
     <string name="carelevo_dialog_patch_discard_message_title">새 패치 사용을 위해 기존 패치를 사용 종료하시겠어요?</string>
     <string name="carelevo_dialog_patch_discard_message_desc">확인 버튼을 누르면 인슐린 주입이 중단됩니다.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">주입을 하지 않고 종료하시겠어요?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">확인 버튼을 누르면 이 패치를 다시 사용할 수 없습니다.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">패치 연결을 취소할까요?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">확인 버튼을 누르면 입력한 내용이 사라집니다.</string>
     <string name="carelevo_dialog_patch_connect_message_title">아래 검색된 패치가 있다면 확인 버튼을 눌러 주세요.</string>
 
     <string name="carelevo_dialog_patch_connect_needle_injected">바늘 삽입 완료 및 어플리케이터 분리</string>
