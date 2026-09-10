@@ -341,19 +341,75 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
         verifyBlocking(commandQueue) { customCommand(any<CmdSafetyCheck>()) }
     }
 
+    // A check that never started is dialled again, so these tests need a virtual clock for the wait.
     @Test
-    fun `startSafetyCheck fails without completing the progress bar when the queue reports failure`() {
+    fun `startSafetyCheck retries once when the check never started, then fails`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         stubCustomCommand(enactResult(false))
         val events = collectEvents()
 
         sut.startSafetyCheck()
+        advanceUntilIdle()
 
         assertThat(events).contains(CarelevoConnectSafetyCheckEvent.SafetyCheckFailed)
         assertThat(events).doesNotContain(CarelevoConnectSafetyCheckEvent.SafetyCheckComplete)
+        verifyBlocking(commandQueue, times(2)) { customCommand(any<CmdSafetyCheck>()) }
         // The failure branch must not fake a finished bar.
         assertThat(sut.progress.value).isNull()
         assertThat(sut.remainSec.value).isNull()
+    }
+
+    @Test
+    fun `startSafetyCheck clears the finished bar before the next check runs`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(enactResult(true))
+
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+        assertThat(sut.progress.value).isEqualTo(100)
+
+        sut.startSafetyCheck()
+
+        // Cleared synchronously, so the next patch never shows the previous one's full bar.
+        assertThat(sut.progress.value).isNull()
+        assertThat(sut.remainSec.value).isNull()
+    }
+
+    // The progress StateFlow keeps the finished 100 after a success, and the ViewModel outlives the
+    // wizard — so the next patch must not read that as "this check started".
+    @Test
+    fun `startSafetyCheck still retries after an earlier check finished successfully`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(enactResult(true))
+
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+        assertThat(sut.progress.value).isEqualTo(100)
+
+        stubCustomCommand(enactResult(false))
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+
+        // One attempt for the success, then two for the check that never started.
+        verifyBlocking(commandQueue, times(3)) { customCommand(any<CmdSafetyCheck>()) }
+    }
+
+    @Test
+    fun `startSafetyCheck does not retry a check that had already started`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommandEmittingProgress(enactResult(false))
+        val events = collectEvents()
+
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+
+        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.SafetyCheckFailed)
+        // A progress frame arrived, so the patch really did fail the check — one attempt only.
+        verifyBlocking(commandQueue, times(1)) { customCommand(any<CmdSafetyCheck>()) }
     }
 
     @Test

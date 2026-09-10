@@ -116,34 +116,52 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
             return
         }
 
-        // The ViewModel outlives the wizard; the previous patch's spent allowance must not carry over.
+        // The ViewModel outlives the wizard, so the previous patch's spent allowance and its finished
+        // bar must not carry over — without the reset the bar shows 100 until the first frame arrives.
         primingRetries = 0
+        _progress.value = null
+        _remainSec.value = null
 
         // Route through the CommandQueue: it reconnects if the link dropped, runs the check on the
         // queue thread, and returns a real success/fail result.
         triggerEvent(CarelevoConnectSafetyCheckEvent.SafetyCheckProgress)
         viewModelScope.launch {
-            val progressJob = launch {
-                activationExecutor.safetyProgress.collect { progress ->
-                    if (progress is SafetyProgress.Progress) {
-                        currentTimeoutSec = maxOf(1L, progress.timeoutSec)
-                        _progress.value = 0
-                        _remainSec.value = currentTimeoutSec
-                        startTicker(currentTimeoutSec)
+            repeat(SAFETY_CHECK_ATTEMPTS) { attempt ->
+                // Local, not the progress StateFlow: that still holds the previous patch's 100, since
+                // the ViewModel outlives the wizard.
+                var started = false
+                val progressJob = launch {
+                    activationExecutor.safetyProgress.collect { progress ->
+                        if (progress is SafetyProgress.Progress) {
+                            started = true
+                            currentTimeoutSec = maxOf(1L, progress.timeoutSec)
+                            _progress.value = 0
+                            _remainSec.value = currentTimeoutSec
+                            startTicker(currentTimeoutSec)
+                        }
                     }
                 }
-            }
-            val result = commandQueue.customCommand(CmdSafetyCheck())
-            progressJob.cancel()
-            stopTicker()
-            if (result.success) {
-                aapsLogger.debug(LTag.PUMPCOMM, "safety check success")
-                _progress.value = 100
-                _remainSec.value = 0
-                triggerEvent(CarelevoConnectSafetyCheckEvent.SafetyCheckComplete)
-            } else {
+                val result = commandQueue.customCommand(CmdSafetyCheck())
+                progressJob.cancel()
+                stopTicker()
+                if (result.success) {
+                    aapsLogger.debug(LTag.PUMPCOMM, "safety check success")
+                    _progress.value = 100
+                    _remainSec.value = 0
+                    triggerEvent(CarelevoConnectSafetyCheckEvent.SafetyCheckComplete)
+                    return@launch
+                }
+                // No progress arrived, so the check never started: the session lost the race with the
+                // previous one's teardown, which the stack can hold open for over a second. Dial again
+                // rather than blaming the patch. A check that did start and then failed is real.
+                if (!started && attempt < SAFETY_CHECK_ATTEMPTS - 1) {
+                    aapsLogger.debug(LTag.PUMPCOMM, "safety check did not start, retrying")
+                    delay(SAFETY_CHECK_RETRY_DELAY_MS)
+                    return@repeat
+                }
                 aapsLogger.error(LTag.PUMPCOMM, "safety check failed")
                 triggerEvent(CarelevoConnectSafetyCheckEvent.SafetyCheckFailed)
+                return@launch
             }
         }
     }
@@ -322,5 +340,9 @@ class CarelevoPatchSafetyCheckViewModel @Inject constructor(
         private const val PRIMING_BURST_INTERVAL_MS = 3_000L
         private const val MAX_PRIMING_RETRIES = 1
         private const val PULSE_ATTEMPTS = 2
+
+        // Wider than the ~1 s the stack was measured holding a closed link open.
+        private const val SAFETY_CHECK_ATTEMPTS = 2
+        private const val SAFETY_CHECK_RETRY_DELAY_MS = 2_000L
     }
 }
