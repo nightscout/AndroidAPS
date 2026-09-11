@@ -76,8 +76,12 @@ internal interface WatchFaceSettings {
      * caller - which only fetches it and hands it back. A watch face may leave out rows its current
      * configuration gives nothing to act on; one with a fixed layout can ignore the argument. Null
      * when nothing is stored or it could not be read.
+     *
+     * [systemEditor] is true when the screen being built is the system's watch face editor rather
+     * than the AAPS settings menu. Some rows can only be acted on there - assigning a complication
+     * slot needs an `EditorSession` - so a watch face may leave those out of the menu.
      */
-    fun settingRows(storedConfiguration: String?): List<WatchFaceSettingRow>
+    fun settingRows(storedConfiguration: String?, systemEditor: Boolean): List<WatchFaceSettingRow>
 
     /**
      * The rows behind the [WatchFaceSettingRow.SubScreen] with key [subScreenKey], or empty if this

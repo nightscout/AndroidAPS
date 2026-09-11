@@ -2,6 +2,7 @@ package app.aaps.wear.watchfaces
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorFilter
@@ -17,7 +18,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -59,8 +59,10 @@ import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import app.aaps.shared.impl.weardata.toDrawable
 import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
+import app.aaps.wear.complications.cwf.CwfRenderTarget
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
+import app.aaps.wear.watchfaces.utils.secondVisibility
 import app.aaps.wear.watchfaces.utils.ComplicationImageFit
 import app.aaps.wear.watchfaces.utils.ComplicationRender
 import app.aaps.wear.watchfaces.utils.ComplicationSlotInfo
@@ -76,14 +78,33 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
+import java.time.Instant
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.temporal.WeekFields
 import javax.inject.Inject
 import kotlin.collections.get
 import kotlin.math.floor
 
+/**
+ * The Custom watch face: a design described by a zip the wearer sends from the phone, drawn by this
+ * code.
+ *
+ * It serves two callers now. It is still the real watch face people wear, and it is also used as a
+ * renderer by the Watch Face Format port, which draws it into an image and publishes that image as a
+ * complication (see `CwfFramePipeline`).
+ *
+ * **That second caller must never change what the first one does.** Additions for the render path are
+ * fine - [styleId], [prepareLayout], [renderLayer], [setRenderInstant], [setRenderAmbient] exist only
+ * for it. Changing what the live face does is not, even to make the render path easier: someone is
+ * wearing this today.
+ *
+ * A fix to shared behaviour is allowed only when the result is provably the same in the live path,
+ * and the proof is written down - see "Two rules" in `_docs/CWF_WFF_Prompt.md`, which records the two
+ * that qualified and why.
+ */
 @SuppressLint("Deprecated")
-class CustomWatchface : BaseWatchFace() {
+class CustomWatchface : BaseWatchFace(), CwfRenderTarget {
 
     @Inject lateinit var context: Context
     private lateinit var binding: ActivityCustomBinding
@@ -157,6 +178,20 @@ class CustomWatchface : BaseWatchFace() {
     internal companion object : WatchFaceComplicationSlots, WatchFaceSettings {
 
         /**
+         * The instance that last initialised the shared enum state - see the note in
+         * [setWatchfaceStyle].
+         *
+         * Deliberately process-wide, because the state it guards is: `ViewMap`, `FontMap`,
+         * `TrendArrowMap` and `DynProvider` all hang their per-view state off enum entries, which are
+         * singletons for the whole process even though several `CustomWatchface` instances can exist
+         * at once.
+         *
+         * Only ever compared by identity, never dereferenced, so it keeps a dead instance
+         * recognisable without keeping it usable.
+         */
+        private var styleOwner: CustomWatchface? = null
+
+        /**
          * This watch face's half of the [WatchFaceComplicationSlots] contract: one data source picker
          * per slot, in screen order. Keeps [ViewMap] and the CWF json out of the settings screens.
          */
@@ -169,7 +204,7 @@ class CustomWatchface : BaseWatchFace() {
          * Which rows are relevant depends on the loaded CWF, and deciding that is this class's job -
          * only this class may read the CWF json.
          */
-        override fun settingRows(storedConfiguration: String?): List<WatchFaceSettingRow> {
+        override fun settingRows(storedConfiguration: String?, systemEditor: Boolean): List<WatchFaceSettingRow> {
             val json = storedConfiguration?.let {
                 try {
                     JSONObject(it)
@@ -187,26 +222,33 @@ class CustomWatchface : BaseWatchFace() {
                 // not on a PrefMap: no single preference gates them, they carry [ViewMap.external].
                 if (json == null || ViewMap.entries.any { it.external > 0 && it.isShownBy(json) })
                     add(WatchFaceSettingRow.Toggle(R.string.key_switch_external, R.string.pref_switch_external, false))
-                // Each slot the CWF draws contributes a pair: the toggle that shows it, then the
-                // picker that chooses what it shows, greyed while the toggle is off.
-                ComplicationMap.entries.filter { it.showPref.isUsedBy(json) }.forEach { slot ->
-                    slot.showPref.toggle()?.let { add(it) }
-                    add(WatchFaceSettingRow.Action(slot.preferenceKey, slot.preferenceTitle, dependencyKey = slot.showPref.prefKey))
-                }
-                // Never filtered: it configures the system's provider binding, not the template.
-                add(WatchFaceSettingRow.SubScreen(R.string.key_complication_type_priority_screen, R.string.pref_complication_type_priority))
-                // Never filtered either: one decides how data is presented, the other what an
-                // exported template contains, so no CWF can make them irrelevant.
-                add(
-                    WatchFaceSettingRow.Choice(
-                        key = R.string.key_simplify_ui,
-                        title = R.string.pref_simplify_ui,
-                        entries = R.array.watchface_simplify_ui_name,
-                        entryValues = R.array.watchface_simplify_ui_values,
-                        // The same literal SimpleUi.isEnabled() defaults to when the key is unset.
-                        defaultValue = "off"
+                // Complication slots and the simplified view belong to the code-based watch face, and
+                // only the system's editor can act on them: a slot is assigned through an
+                // `EditorSession`, and the Watch Face Format face has no slots for the wearer at all.
+                // Shown in the AAPS menu they would be settings with nothing behind them - the
+                // ambient and charging choices for that face live in the document's own settings,
+                // reached by long-pressing it.
+                if (systemEditor) {
+                    // Each slot the CWF draws contributes a pair: the toggle that shows it, then the
+                    // picker that chooses what it shows, greyed while the toggle is off.
+                    ComplicationMap.entries.filter { it.showPref.isUsedBy(json) }.forEach { slot ->
+                        slot.showPref.toggle()?.let { add(it) }
+                        add(WatchFaceSettingRow.Action(slot.preferenceKey, slot.preferenceTitle, dependencyKey = slot.showPref.prefKey))
+                    }
+                    // Never filtered by the json: it configures the system's provider binding, not
+                    // the template.
+                    add(WatchFaceSettingRow.SubScreen(R.string.key_complication_type_priority_screen, R.string.pref_complication_type_priority))
+                    add(
+                        WatchFaceSettingRow.Choice(
+                            key = R.string.key_simplify_ui,
+                            title = R.string.pref_simplify_ui,
+                            entries = R.array.watchface_simplify_ui_name,
+                            entryValues = R.array.watchface_simplify_ui_values,
+                            // The same literal SimpleUi.isEnabled() defaults to when the key is unset.
+                            defaultValue = "off"
+                        )
                     )
-                )
+                }
                 add(WatchFaceSettingRow.Toggle(R.string.key_include_external, R.string.pref_include_external, false))
             }
         }
@@ -548,8 +590,13 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
-        sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CUSTOM.ordinal)
-        rxBus.send(EventUpdateSelectedWatchface())
+        // Only a real watch face may claim to be the selected one. A render-only instance draws the
+        // same layout into a Bitmap for an image complication, so recording it as the user's
+        // selection - or telling the rest of the app that the selection changed - would be a lie.
+        if (!isRenderOnly) {
+            sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CUSTOM.ordinal)
+            rxBus.send(EventUpdateSelectedWatchface())
+        }
         binding = ActivityCustomBinding.inflate(inflater)
         // Resolved from the ViewMap entries that declare a slot id, so a new slot needs no change
         // here - only its entry and the matching FrameLayout in activity_custom.xml.
@@ -557,16 +604,29 @@ class CustomWatchface : BaseWatchFace() {
             .mapNotNull { view -> view.complication?.let { slot -> binding.root.findViewById<FrameLayout>(view.id)?.let { slot.id to it } } }
             .toMap()
         setDefaultColors()
-        runBlocking {
-            complicationDataRepository.storeCustomWatchface(
-                customWatchface = defaultWatchface(false).customWatchfaceData,
-                customWatchfaceFull = defaultWatchface(true).customWatchfaceData,
-                isDefault = true
-            )
-        }
-        val windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
-        val displayWidth = windowManager.currentWindowMetrics.bounds.width()
-        zoomFactor = displayWidth.toDouble() / TEMPLE_RESOLUTION.toDouble()
+        // The built-in default watch face has to be stored, or there is nothing to draw: the style
+        // pass reads it back and a missing one leaves every view at its raw layout value - no zoom,
+        // no colours from the zip, and a second hand shown even when seconds are switched off.
+        //
+        // This used to be left to the live watch face, on the assumption that it always runs first.
+        // That assumption fails exactly where this code matters: on Galaxy Watch 7 and later the
+        // code-based watch face cannot run at all, so nobody would ever store it. Reproduced on a
+        // Wear OS 6 emulator, where the face drew as an unstyled layout.
+        //
+        // A render-only instance still avoids rewriting the same values on every render - it only
+        // steps in when nothing is stored yet.
+        val defaultsMissing = runBlocking { complicationDataRepository.getCustomWatchface(true) } == null
+        if (!isRenderOnly || defaultsMissing)
+            runBlocking {
+                complicationDataRepository.storeCustomWatchface(
+                    customWatchface = defaultWatchface(false).customWatchfaceData,
+                    customWatchfaceFull = defaultWatchface(true).customWatchfaceData,
+                    isDefault = true
+                )
+            }
+        // The surface being drawn, not the screen: identical for a live watch face, but a render
+        // may target a bitmap of a different size and must scale to that instead.
+        zoomFactor = canvasWidth.toDouble() / TEMPLE_RESOLUTION.toDouble()
         return binding
     }
 
@@ -577,6 +637,136 @@ class CustomWatchface : BaseWatchFace() {
     // behind cover_chart and the analog hands instead of on top of them. background is not part of
     // mainLayout at all (see resolveBackgroundDrawable()/onDraw()), so it paints first.
     override fun deferMainLayoutDraw(): Boolean = true
+
+    /**
+     * The face cut into layers, at every point in paint order where the refresh rate changes.
+     *
+     * Grouping views by how often they change is not enough on its own: paint order decides what
+     * covers what, and a slow view can sit above a fast one. So the stack is cut wherever the class
+     * changes, and stacking the layers back in this order reproduces the design exactly.
+     *
+     * Cutting finely is affordable. Measured on a Galaxy Watch 4, blending one more full-screen layer
+     * costs about **1 ms**, while redrawing the views it replaces costs 3 to 31 ms for a hand and
+     * about 30 ms for a 400x400 image. So the rule is to cut wherever the class changes and stop
+     * counting layers - see `_docs/CWF_WFF_Prompt.md` section 10.6.
+     *
+     * [SECOND_HAND] being last is luck rather than design: nothing has to be blended above it.
+     */
+    enum class RenderLayer(val refresh: Refresh) {
+
+        /** Background, chart, complications and every value that follows the data, up to `status`. */
+        DATA_BASE(Refresh.DATA),
+
+        /** `time`, `hour`, `minute` and `second` - four text views, about 1 ms together. */
+        CLOCK_TEXT(Refresh.TICK),
+
+        /** The date run, the loop, the trend arrow, the age and the glucose, up to the cover plate. */
+        MIDDLE(Refresh.MINUTE),
+
+        /** The hour and minute hands, which move once a minute. */
+        HANDS(Refresh.MINUTE),
+
+        /** The second hand alone, on top of everything. */
+        SECOND_HAND(Refresh.TICK);
+
+        /** What makes a layer stale. A [TICK] layer is redrawn every frame and never cached. */
+        enum class Refresh { DATA, MINUTE, TICK }
+    }
+
+    /** The views each layer draws, in paint order, cut where the refresh rate changes. */
+    private fun layerViews(layer: RenderLayer): List<ViewMap> {
+        val all = ViewMap.entries
+        return when (layer) {
+            RenderLayer.DATA_BASE   -> all.takeWhile { it != ViewMap.TIME }
+            RenderLayer.CLOCK_TEXT  -> listOf(ViewMap.TIME, ViewMap.HOUR, ViewMap.MINUTE, ViewMap.SECOND)
+            RenderLayer.MIDDLE      -> all.dropWhile { it != ViewMap.TIMEPERIOD }.takeWhile { it != ViewMap.HOUR_HAND }
+            RenderLayer.HANDS       -> listOf(ViewMap.HOUR_HAND, ViewMap.MINUTE_HAND)
+            RenderLayer.SECOND_HAND -> listOf(ViewMap.SECOND_HAND)
+        }
+    }
+
+    /** Set only for the duration of a draw that must leave the background out; see [onDraw]. */
+    private var renderSkipBackground = false
+
+    /**
+     * Inflates the layout if it does not exist yet.
+     *
+     * Anything that reads or writes the views - the clock, the seconds' visibility - throws
+     * `UninitializedPropertyAccessException` before the first render, because `binding` is `lateinit`
+     * and only the first draw creates it. That used to be hidden: every path happened to draw
+     * something before touching a view. When one stopped doing so, **every frame failed for the first
+     * thirty seconds after an install** and the face showed nothing new in that time.
+     *
+     * So a caller that means to touch the views says so, instead of relying on having drawn first.
+     */
+    override fun prepareLayout(width: Int, height: Int) {
+        if (!::binding.isInitialized) renderToBitmap(width, height).recycle()
+    }
+
+    /**
+     * Draws one [layer] on its own at [width] x [height], transparent wherever its views do not paint.
+     *
+     * Only [RenderLayer.DATA_BASE] paints the background, which lives outside `mainLayout`. Every
+     * other layer leaves it out, so the layers beneath show through.
+     */
+    override fun renderLayer(width: Int, height: Int, layer: RenderLayer): Bitmap {
+        val drawn = layerViews(layer).toSet()
+        return renderHiding(width, height, ViewMap.entries - drawn, skipBackground = layer != RenderLayer.DATA_BASE)
+    }
+
+    /**
+     * Draws the face at [width] x [height] with every view in [toHide] left unpainted, and the
+     * background skipped when [skipBackground].
+     *
+     * Views are hidden with `INVISIBLE` rather than `GONE`: `GONE` would change the layout of
+     * everything around them, while `INVISIBLE` only skips the draw, so every layer is laid out
+     * exactly as the whole face would be and the pieces line up when stacked.
+     */
+    private fun renderHiding(width: Int, height: Int, toHide: Collection<ViewMap>, skipBackground: Boolean): Bitmap {
+        // The first render inflates the layout; hiding views needs them to exist already
+        if (!::binding.isInitialized) renderToBitmap(width, height)
+        val hidden = toHide.mapNotNull { view ->
+            binding.root.findViewById<View>(view.id)?.takeIf { it.visibility == View.VISIBLE }
+        }
+        hidden.forEach { it.visibility = View.INVISIBLE }
+        renderSkipBackground = skipBackground
+        try {
+            return renderToBitmap(width, height)
+        } finally {
+            renderSkipBackground = false
+            hidden.forEach { it.visibility = View.VISIBLE }
+        }
+    }
+
+    /**
+     * The instant the next render should depict, or null to use the current time.
+     *
+     * Frames are prepared before they are needed, so a frame must be drawn for the second it will be
+     * *shown* in rather than the second it is built in. Read by the two places that depict the clock:
+     * [setSecond] for the text and [updateClockHands] for the hands. Everything else that reads the
+     * time is a "minutes ago" figure, where a few seconds either way is invisible.
+     */
+    @Volatile private var renderInstant: Long? = null
+
+    override fun setRenderInstant(millis: Long?) {
+        renderInstant = millis
+    }
+
+    /**
+     * Which design the views currently carry, as a number that changes when the design does.
+     *
+     * A cache of drawn layers keeps the value it was built with and compares: different means the
+     * layers belong to the previous zip and must be redrawn. That comparison needs no event, no
+     * repository read and nobody noticing anything - which matters, because when a new zip arrived
+     * and nothing noticed, the wearer kept the old background behind the new watch face for minutes,
+     * with only the layers that happen to be rebuilt every minute following the change.
+     */
+    override val styleId: Int get() = styleGeneration
+
+    @Volatile private var styleGeneration = 0
+
+    /** The instant this render depicts. */
+    private fun renderNow(): Long = renderInstant ?: dateUtil.now()
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -591,9 +781,12 @@ class CustomWatchface : BaseWatchFace() {
         // about the pivot a parent would have used - View defaults pivotX/pivotY to its centre -
         // otherwise the json's ROTATION and DynProvider's rotationOffset are silently dropped for
         // background alone, while working on every other view.
-        canvas.withRotation(backgroundView.rotation, backgroundView.pivotX, backgroundView.pivotY) {
-            backgroundView.draw(this)
-        }
+        // Skipped entirely for the upper half of a split render, which must stay transparent behind
+        // its own views so the lower half shows through - see [renderBlock].
+        if (!renderSkipBackground)
+            canvas.withRotation(backgroundView.rotation, backgroundView.pivotX, backgroundView.pivotY) {
+                backgroundView.draw(this)
+            }
         // super.onDraw() has just laid out mainLayout, so the placeholders hold this frame's geometry
         // and the slots' declared bounds can follow it. Not in complicationRender(): that runs per
         // slot, while one pushed option covers every slot at once.
@@ -613,7 +806,9 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun updateClockHands() {
-        val now = LocalTime.now()
+        // From the render instant, not the wall clock, so a prepared frame carries the hands of the
+        // second it will be shown in - see [setRenderInstant].
+        val now = LocalTime.ofInstant(Instant.ofEpochMilli(renderNow()), ZoneId.systemDefault())
         binding.secondHand.rotation = now.second * 6f
         binding.minuteHand.rotation = now.minute * 6f + now.second * 0.1f
         binding.hourHand.rotation = now.hour * 30f + now.minute * 0.5f + now.second * (0.5f / 60f)
@@ -695,35 +890,79 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     override fun setSecond() {
+        // Every field from the same instant, so a render that straddles a second boundary cannot show
+        // one second in the text and another in the seconds field. See [setRenderInstant].
+        val now = renderNow()
         binding.time.text = if (showSecond)
-            getString(R.string.hour_minute_second, dateUtil.hourString(), dateUtil.minuteString(), dateUtil.secondString())
+            getString(R.string.hour_minute_second, dateUtil.hourString(now), dateUtil.minuteString(now), dateUtil.secondString(now))
         else
-            getString(R.string.hour_minute, dateUtil.hourString(), dateUtil.minuteString())
-        binding.second.text = dateUtil.secondString()
+            getString(R.string.hour_minute, dateUtil.hourString(now), dateUtil.minuteString(now))
+        binding.second.text = dateUtil.secondString(now)
         // Update analog clock hands for smooth movement
         updateClockHands()
     }
 
+    /**
+     * Shows or hides the seconds, from the zip's own declaration and the current mode.
+     *
+     * **Not** from what the views happen to show now. It used to read `binding.second.isVisible`,
+     * which made it a one-way latch: once hidden it could never restore anything, because the value
+     * it was reading was the one it had just written. That worked only by accident, because the live
+     * watch face always ran it just after the views had been rebuilt from the json. Called anywhere
+     * else - once a frame, say - it locked the second hand off and left the face missing most of the
+     * time on a Galaxy Watch 4.
+     *
+     * Asking [ViewMap] instead makes it idempotent: the same inputs always give the same answer, so
+     * it can be called as often as a frame needs without the result depending on the order of calls.
+     */
     override fun updateSecondVisibility() {
-        binding.second.visibility = (binding.second.isVisible && showSecond).toVisibility()
-        binding.secondHand.visibility = (binding.secondHand.isVisible && showSecond).toVisibility()
+        binding.second.visibility = secondVisibility(ViewMap.SECOND.visibility(this) == View.VISIBLE, showSecond)
+        binding.secondHand.visibility = secondVisibility(ViewMap.SECOND_HAND.visibility(this) == View.VISIBLE, showSecond)
     }
 
     private fun setWatchfaceStyle() {
         var customWatchfaceData = runBlocking {
             complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
         }
-        if (customWatchfaceData == null) { // if neither CWF nor Default CWF is found, then force reload of default Layout
-            super.onCreate()
+        if (customWatchfaceData == null) {
+            // Neither the user's watch face nor the default was stored yet, so store the default and
+            // read it back. This used to call super.onCreate(), which never did that job: onCreate
+            // re-runs injection and re-subscribes, and nothing in it writes a watch face. It was
+            // also fatal here - onCreate calls AndroidInjection.inject(this), which needs a started
+            // Service, and this class is also built as a plain object to render images for the Watch
+            // Face Format face. In that mode there is no application attached, so it threw a
+            // NullPointerException, the render never produced a frame, and the face stayed black for
+            // good. Reproduced on a Wear OS 6 emulator on a fresh install, where no watch face has
+            // been stored yet - the same state a new user is in.
+            runBlocking { complicationDataRepository.setDefaultWatchface() }
             customWatchfaceData = runBlocking { complicationDataRepository.getCustomWatchface(true) }
         }
         customWatchfaceData?.let {
             updatePref(it.metadata)
             try {
                 json = JSONObject(it.json)
+                // ViewMap, FontMap, TrendArrowMap and DynProvider keep their state on enum entries,
+                // which are process-wide, while several CustomWatchface instances can exist at once -
+                // the live watch face, the editor's headless instance, and the one a complication
+                // provider keeps warm to draw into a bitmap. Whoever initialised that state last owns
+                // it, and it reflects *their* preferences: a render-only instance reports complication
+                // slots as off (see prefBoolean), a live one does not.
+                //
+                // So an instance that finds it is not the owner cannot trust the cached state, however
+                // unchanged its own json looks. Clearing jsonString forces the full re-init below.
+                // Without this, switching between the code-based watch face and a WFF face leaves
+                // whichever renders next drawing with the other one's configuration.
+                if (styleOwner !== this) {
+                    jsonString = ""
+                    styleOwner = this
+                }
                 if (!resDataMap.isEquals(it.resData) || jsonString != it.json) {
                     resDataMap = it.resData
                     jsonString = it.json
+                    // The views now carry a different design. Anything holding pictures drawn from
+                    // the previous one can tell by comparing this, without having to be told - see
+                    // [styleId].
+                    styleGeneration++
                     DynProvider.init(this, json)
                     FontMap.init(this)
                     ViewMap.init(this)
@@ -798,7 +1037,14 @@ class CustomWatchface : BaseWatchFace() {
         cwfAuthorization?.let { authorization ->
             if (authorization) {
                 PrefMap.entries.forEach { pref ->
-                    metadata[pref.metadataKey]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
+                    metadata[pref.metadataKey]?.toBooleanStrictOrNull()?.let { wanted ->
+                        // Only when it actually changes. Writing a preference fires
+                        // EventWearPreferenceChange, which asks for a refresh, which re-applies the
+                        // style, which writes the preference again - a loop that produced 29
+                        // preference events and 20 full layer rebuilds in a few minutes on a watch.
+                        if (sp.getBoolean(pref.prefKey, pref.defaultValue as Boolean) != wanted)
+                            sp.putBoolean(pref.prefKey, wanted)
+                    }
                 }
             }
         }
@@ -897,6 +1143,40 @@ class CustomWatchface : BaseWatchFace() {
         reservoirUrgentColor = ContextCompat.getColor(this, R.color.dark_alarm)
         gridColor = Color.WHITE
     }
+
+    /**
+     * Reads a boolean watch preference, with one deliberate exception: a **render-only** instance
+     * always reports the "Show complication N" toggles as **off**.
+     *
+     * A render-only instance draws into a Bitmap for an image complication and therefore has no
+     * complication slots at all - the system only creates and feeds slots for a watch face it has
+     * bound (see `_docs/CWF_WFF_Prompt.md`, section 7f). Reporting the toggles as off is simply
+     * true for that instance, not a workaround.
+     *
+     * It matters far beyond hiding an empty box. The `complicationN` views in `activity_custom.xml`
+     * are empty placeholders whose **visibility is the bridge** into the CWF design: a watch face
+     * can use `dynPref` to show other views in the same place when a complication is switched off.
+     * So this must be the single answer every reader gets, or the two halves disagree - the box
+     * would vanish while its replacements stayed hidden, or the replacements would appear behind a
+     * box that is still there. The three readers are [ViewMap.prefVisibility], [buildDynPrefs] and
+     * [checkPref].
+     */
+    /**
+     * The zip's own picture of itself, as stored bytes, or null if none is loaded yet.
+     *
+     * Every valid zip has one: `ZipWatchfaceFormat.loadCustomWatchface` rejects a zip whose
+     * resources lack [ResFileMap.CUSTOM_WATCHFACE], because that is the image the phone's watch face
+     * list shows. It is therefore the natural preview for anything that needs to depict this watch
+     * face without drawing it - a complication picker, for instance, which must not trigger a render.
+     *
+     * Returned as encoded bytes rather than a decoded bitmap so the caller can hand them straight to
+     * `Icon.createWithData` and skip decoding entirely.
+     */
+    fun previewImageBytes(): ByteArray? = resDataMap[ResFileMap.CUSTOM_WATCHFACE.fileName]?.value
+
+    private fun prefBoolean(prefMap: PrefMap): Boolean =
+        if (isRenderOnly && ComplicationMap.entries.any { it.showPref == prefMap }) false
+        else sp.getBoolean(prefMap.prefKey, prefMap.defaultValue as Boolean)
 
     private fun setVisibility(visibility: String, pref: Boolean = true): Int = when (visibility) {
         JsonKeyValues.VISIBLE.key -> pref.toVisibility()
@@ -1235,7 +1515,7 @@ class CustomWatchface : BaseWatchFace() {
          */
         val visibilityPref: PrefMap? get() = pref ?: complication?.showPref
 
-        fun prefVisibility(cwf: CustomWatchface): Boolean = visibilityPref?.let { cwf.sp.getBoolean(it.prefKey, it.defaultValue as Boolean) } != false
+        fun prefVisibility(cwf: CustomWatchface): Boolean = visibilityPref?.let { cwf.prefBoolean(it) } != false
 
         fun textDrawable(cwf: CustomWatchface): Drawable? = textDrawable
             ?: cwf.resDataMap[viewJson?.optString(JsonKeys.BACKGROUND.key)]?.toDrawable(cwf.resources, width, height)?.also { textDrawable = it }
@@ -1887,7 +2167,7 @@ class CustomWatchface : BaseWatchFace() {
         val prefKey = json.optString(JsonKeys.PREFKEY.key)
         PrefMap.fromKey(prefKey)?.let { prefMap ->
             val value = valPref[prefMap.key]
-                ?: (if (prefMap.typeBool) sp.getBoolean(prefMap.prefKey, prefMap.defaultValue as Boolean).toString() else sp.getString(prefMap.prefKey, prefMap.defaultValue as String)).also {
+                ?: (if (prefMap.typeBool) prefBoolean(prefMap).toString() else sp.getString(prefMap.prefKey, prefMap.defaultValue as String)).also {
                     valPref[prefMap.key] = it
                 }
             json.optJSONObject(value)?.let { nextJson ->
@@ -1915,6 +2195,6 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun checkPref() = valPref.any { (prefMap, s) ->
-        s != PrefMap.fromKey(prefMap)?.let { if (it.typeBool) sp.getBoolean(it.prefKey, it.defaultValue as Boolean).toString() else sp.getString(it.prefKey, it.defaultValue as String) }
+        s != PrefMap.fromKey(prefMap)?.let { if (it.typeBool) prefBoolean(it).toString() else sp.getString(it.prefKey, it.defaultValue as String) }
     }
 }
