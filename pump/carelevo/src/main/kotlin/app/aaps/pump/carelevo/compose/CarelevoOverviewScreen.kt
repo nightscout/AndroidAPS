@@ -214,10 +214,6 @@ private fun CarelevoOverviewScreenConnectedPreview() {
                         value = "04:CD:15:D0:10:05"
                     ),
                     PumpInfoRow(
-                        label = stringResource(R.string.carelevo_firmware_version_key),
-                        value = "T165"
-                    ),
-                    PumpInfoRow(
                         label = stringResource(R.string.carelevo_boot_date_time_key),
                         value = "2026-04-13 09:00"
                     ),
@@ -257,7 +253,7 @@ private fun CarelevoOverviewScreenConnectedPreview() {
                         onClick = {}
                     ),
                     PumpAction(
-                        label = stringResource(CoreUiR.string.pump_suspend),
+                        label = stringResource(R.string.carelevo_overview_pump_suspend_btn_label),
                         icon = IcLoopPaused,
                         category = ActionCategory.MANAGEMENT,
                         enabled = true,

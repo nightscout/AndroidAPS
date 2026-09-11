@@ -130,8 +130,8 @@ class CarelevoPatchFlowStep05NeedleInsertionTest {
         detachedButton = context.getString(R.string.carelevo_dialog_connect_detached)
 
         deactivateButton = context.getString(R.string.carelevo_btn_patch_expiration)
-        dialogTitle = context.getString(R.string.carelevo_dialog_patch_discard_message_title)
-        dialogDesc = context.getString(R.string.carelevo_dialog_patch_discard_message_desc)
+        dialogTitle = context.getString(R.string.carelevo_dialog_patch_discard_unused_title)
+        dialogDesc = context.getString(R.string.carelevo_dialog_patch_discard_unused_desc)
         confirmButton = context.getString(R.string.carelevo_btn_confirm)
         cancelButton = context.getString(R.string.carelevo_btn_cancel)
 

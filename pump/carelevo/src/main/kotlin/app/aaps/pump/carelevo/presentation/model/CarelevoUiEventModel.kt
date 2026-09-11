@@ -56,6 +56,8 @@ sealed class CarelevoConnectSafetyCheckEvent : Event {
     data object SafetyCheckProgress : CarelevoConnectSafetyCheckEvent()
     data object SafetyCheckComplete : CarelevoConnectSafetyCheckEvent()
     data object SafetyCheckFailed : CarelevoConnectSafetyCheckEvent()
+    data object AdditionalPrimingFailed : CarelevoConnectSafetyCheckEvent()
+    data object PrimingRetryLimitExceeded : CarelevoConnectSafetyCheckEvent()
     data object DiscardComplete : CarelevoConnectSafetyCheckEvent()
     data object DiscardFailed : CarelevoConnectSafetyCheckEvent()
 

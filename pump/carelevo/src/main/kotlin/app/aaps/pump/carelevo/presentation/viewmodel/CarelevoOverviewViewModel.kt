@@ -112,9 +112,6 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val _serialNumber = MutableLiveData<String>()
     val serialNumber get() = _serialNumber
 
-    private val _lotNumber = MutableLiveData<String>()
-    val lotNumber get() = _lotNumber
-
     private val _bootDateTime = MutableLiveData<String>()
     val bootDateTime get() = _bootDateTime
 
@@ -275,7 +272,6 @@ class CarelevoOverviewViewModel @Inject constructor(
     private fun updateState(ui: CarelevoOverviewUiModel) {
         _overviewDataFlow.value = ui
         _serialNumber.value = ui.serialNumber
-        _lotNumber.value = ui.lotNumber
         _bootDateTime.value = ui.bootDateTimeUi
         _expirationTime.value = ui.expirationTime
         //_infusionStatus.value = ui.infusionStatus
@@ -300,7 +296,6 @@ class CarelevoOverviewViewModel @Inject constructor(
 
         return CarelevoOverviewUiModel(
             serialNumber = info.manufactureNumber.orEmpty(),
-            lotNumber = info.firmwareVersion.orEmpty(),
             bootDateTimeUi = bootUi,
             expirationTime = expireAt,
             infusionStatus = info.mode,
@@ -680,7 +675,6 @@ class CarelevoOverviewViewModel @Inject constructor(
     private fun onDisconnectValue() {
         _overviewDataFlow.value = defaultOverviewData()
         _serialNumber.value = ""
-        _lotNumber.value = ""
         _bootDateTime.value = ""
         _expirationTime.value = ""
         _insulinRemains.value = ""
@@ -695,7 +689,6 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     private fun defaultOverviewData(): CarelevoOverviewUiModel = CarelevoOverviewUiModel(
         serialNumber = "",
-        lotNumber = "",
         bootDateTimeUi = "",
         expirationTime = "",
         infusionStatus = null,
@@ -756,12 +749,6 @@ class CarelevoOverviewViewModel @Inject constructor(
                         PumpInfoRow(
                             label = rh.gs(R.string.carelevo_serial_number_key),
                             value = overviewData.serialNumber.ifBlank { "-" }
-                        )
-                    )
-                    add(
-                        PumpInfoRow(
-                            label = rh.gs(R.string.carelevo_firmware_version_key),
-                            value = overviewData.lotNumber.ifBlank { "-" }
                         )
                     )
                     add(
@@ -840,9 +827,9 @@ class CarelevoOverviewViewModel @Inject constructor(
                 ),
                 PumpAction(
                     label = if (overviewData.isPumpStopped) {
-                        rh.gs(CoreUiR.string.pump_resume)
+                        rh.gs(R.string.carelevo_overview_pump_resume_btn_label)
                     } else {
-                        rh.gs(CoreUiR.string.pump_suspend)
+                        rh.gs(R.string.carelevo_overview_pump_suspend_btn_label)
                     },
                     icon = if (overviewData.isPumpStopped) Icons.Filled.PlayArrow else IcLoopPaused,
                     category = ActionCategory.MANAGEMENT,
@@ -903,31 +890,17 @@ class CarelevoOverviewViewModel @Inject constructor(
     private fun nowLocal(): LocalDateTime =
         LocalDateTime.ofInstant(JavaInstant.ofEpochMilli(dateUtil.now()), ZoneId.systemDefault())
 
-    private fun getRemainMin(createdAt: LocalDateTime): Int {
-        val endAt = createdAt.plusDays(7)
-        val now = nowLocal()
-        var remainMin = ChronoUnit.MINUTES.between(now, endAt)
-
-        if (now > endAt) {
-            remainMin = ChronoUnit.MINUTES.between(endAt, now)
-        }
-
-        return remainMin.toInt()
-    }
-
-    private fun getExpireAtText(createdAt: LocalDateTime): String {
-        val now = nowLocal()
+    /** 7 days, plus the 12 hour grace the patch adds once they are up. Both overview rows read it. */
+    private fun endAt(createdAt: LocalDateTime): LocalDateTime {
         val baseEnd = createdAt.plusDays(7)
-
-        val expireAt = if (now > baseEnd) {
-            baseEnd.plusHours(12)
-        } else {
-            baseEnd
-        }
-
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        return expireAt.format(formatter)
+        return if (nowLocal() > baseEnd) baseEnd.plusHours(12) else baseEnd
     }
+
+    private fun getRemainMin(createdAt: LocalDateTime): Int =
+        ChronoUnit.MINUTES.between(nowLocal(), endAt(createdAt)).coerceAtLeast(0).toInt()
+
+    private fun getExpireAtText(createdAt: LocalDateTime): String =
+        endAt(createdAt).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
     fun refreshPatchInfusionInfo() {
         if (!carelevoPatch.isBluetoothEnabled()) {

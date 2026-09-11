@@ -433,7 +433,6 @@ class CarelevoOverviewViewModelTest {
         patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = bootMillis)))
 
         assertThat(sut.serialNumber.value).isEqualTo("SN-0001")
-        assertThat(sut.lotNumber.value).isEqualTo("T168")
         assertThat(sut.bootDateTime.value).isEqualTo(uiFormat(bootLdt))
         assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7)))
         // 1.234 + 2.345 rounded HALF_UP to 2dp each = 1.23 + 2.35 = 3.58
@@ -449,6 +448,19 @@ class CarelevoOverviewViewModelTest {
         val expectedRemain = ChronoUnit.MINUTES.between(local(nowMillis), bootLdt.plusDays(7)).toInt()
         assertThat(sut.runningRemainMinutes.value).isEqualTo(expectedRemain)
         assertThat(expectedRemain).isGreaterThan(0)
+    }
+
+    @Test
+    fun `the expiry shown moves to the grace end only once the seven days are up`() {
+        val bootMillis = nowMillis - 7 * dayMillis - 60 * 60 * 1000L
+        val bootLdt = local(bootMillis)
+        sut.observePatchInfo()
+
+        patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = bootMillis)))
+
+        assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7).plusHours(12)))
+        // One hour into the grace, so eleven of the twelve hours are left.
+        assertThat(sut.runningRemainMinutes.value).isEqualTo(11 * 60)
     }
 
     @Test
@@ -495,23 +507,19 @@ class CarelevoOverviewViewModelTest {
         )
 
         assertThat(sut.serialNumber.value).isEqualTo("")
-        assertThat(sut.lotNumber.value).isEqualTo("")
         assertThat(sut.totalInsulinAmount.value).isEqualTo(0.0)
         assertThat(sut.isPumpStop.value).isFalse()
     }
 
     @Test
-    fun `observePatchInfo reports a positive overdue countdown once the patch is past expiry`() {
+    fun `observePatchInfo stops the countdown at zero once the grace is spent`() {
         val bootMillis = nowMillis - 8 * dayMillis
         val bootLdt = local(bootMillis)
         sut.observePatchInfo()
 
         patchInfoSubject.onNext(Optional.of(patchInfo(bootDateTimeUtcMillis = bootMillis)))
 
-        // now is after boot+7d → the countdown flips to "time since expiry" and expiry gains 12 h.
-        val expectedRemain = ChronoUnit.MINUTES.between(bootLdt.plusDays(7), local(nowMillis)).toInt()
-        assertThat(sut.runningRemainMinutes.value).isEqualTo(expectedRemain)
-        assertThat(expectedRemain).isGreaterThan(0)
+        assertThat(sut.runningRemainMinutes.value).isEqualTo(0)
         assertThat(sut.expirationTime.value).isEqualTo(uiFormat(bootLdt.plusDays(7).plusHours(12)))
     }
 
@@ -646,7 +654,6 @@ class CarelevoOverviewViewModelTest {
 
         assertThat(sut.patchState.value).isEqualTo(PatchState.NotConnectedNotBooting)
         assertThat(sut.serialNumber.value).isEqualTo("")
-        assertThat(sut.lotNumber.value).isEqualTo("")
         assertThat(sut.bootDateTime.value).isEqualTo("")
         assertThat(sut.expirationTime.value).isEqualTo("")
         assertThat(sut.insulinRemains.value).isEqualTo("")
@@ -1230,24 +1237,23 @@ class CarelevoOverviewViewModelTest {
 
         // An activated patch surfaces the shared communication status instead of a warning banner.
         assertThat(state.statusBanner).isNull()
-        assertThat(rows).hasSize(11)
+        assertThat(rows).hasSize(10)
         assertThat(rows[0].value).isEqualTo(s(R.string.carelevo_state_connected_value))
         assertThat(rows[1].label).isEqualTo(s(CoreUiR.string.last_connection_label))
         assertThat(rows[2].label).isEqualTo(s(R.string.carelevo_serial_number_key))
         assertThat(rows[2].value).isEqualTo("SN-0001")
-        assertThat(rows[3].value).isEqualTo("T168")
-        assertThat(rows[4].value).isEqualTo(uiFormat(local(nowMillis - 2 * dayMillis)))
-        assertThat(rows[5].value).isEqualTo(uiFormat(local(nowMillis - 2 * dayMillis).plusDays(7)))
-        assertThat(rows[7].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 1.75))
-        assertThat(rows[8].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 2.5))
-        assertThat(rows[10].value).isEqualTo(
+        assertThat(rows[3].value).isEqualTo(uiFormat(local(nowMillis - 2 * dayMillis)))
+        assertThat(rows[4].value).isEqualTo(uiFormat(local(nowMillis - 2 * dayMillis).plusDays(7)))
+        assertThat(rows[6].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 1.75))
+        assertThat(rows[7].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 2.5))
+        assertThat(rows[9].value).isEqualTo(
             s(R.string.common_label_unit_value_dose_with_space, String.format(Locale.US, "%.2f", 3.58))
         )
         assertThat(state.primaryActions).isEmpty()
         assertThat(state.managementActions).hasSize(2)
         assertThat(state.managementActions[0].label).isEqualTo(s(R.string.carelevo_overview_pump_discard_btn_label))
         assertThat(state.managementActions[0].category).isEqualTo(ActionCategory.MANAGEMENT)
-        assertThat(state.managementActions[1].label).isEqualTo(s(CoreUiR.string.pump_suspend))
+        assertThat(state.managementActions[1].label).isEqualTo(s(R.string.carelevo_overview_pump_suspend_btn_label))
     }
 
     @Test
@@ -1261,7 +1267,7 @@ class CarelevoOverviewViewModelTest {
 
         // Idle-disconnect is normal (the queue reconnects on demand) → no warning banner.
         assertThat(state.statusBanner).isNull()
-        assertThat(infoRows()).hasSize(11)
+        assertThat(infoRows()).hasSize(10)
         assertThat(infoRows()[0].value).isEqualTo(s(R.string.carelevo_state_disconnected_value))
         assertThat(state.primaryActions).isEmpty()
         assertThat(state.managementActions).hasSize(2)
@@ -1274,7 +1280,7 @@ class CarelevoOverviewViewModelTest {
         patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = true)))
         patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
 
-        assertThat(sut.overviewUiState.value.managementActions[1].label).isEqualTo(s(CoreUiR.string.pump_resume))
+        assertThat(sut.overviewUiState.value.managementActions[1].label).isEqualTo(s(R.string.carelevo_overview_pump_resume_btn_label))
     }
 
     @Test
@@ -1328,10 +1334,9 @@ class CarelevoOverviewViewModelTest {
         assertThat(rows[2].value).isEqualTo("-")
         assertThat(rows[3].value).isEqualTo("-")
         assertThat(rows[4].value).isEqualTo("-")
-        assertThat(rows[5].value).isEqualTo("-")
         // runningRemainMinutes == 0 → nothing to count down.
-        assertThat(rows[6].value).isEqualTo("-")
-        assertThat(rows[9].value).isEqualTo("-")
+        assertThat(rows[5].value).isEqualTo("-")
+        assertThat(rows[8].value).isEqualTo("-")
     }
 
     @Test
@@ -1343,7 +1348,7 @@ class CarelevoOverviewViewModelTest {
 
         val total = sut.runningRemainMinutes.value!!
         val expected = s(R.string.common_unit_value_day_hour_min, total / 1440, (total % 1440) / 60, total % 60)
-        assertThat(infoRows()[6].value).isEqualTo(expected)
+        assertThat(infoRows()[5].value).isEqualTo(expected)
         assertThat(total / 1440).isGreaterThan(0)
     }
 
@@ -1364,7 +1369,7 @@ class CarelevoOverviewViewModelTest {
         assertThat(total).isLessThan(1440)
         // The hh:mm text comes from a format resource now, so assert the resource and its arguments
         // rather than a formatted literal - the padding is the translator's, not the VM's.
-        assertThat(infoRows()[6].value)
+        assertThat(infoRows()[5].value)
             .isEqualTo(s(R.string.common_unit_value_hour_min, total / 60, total % 60))
     }
 
@@ -1377,7 +1382,7 @@ class CarelevoOverviewViewModelTest {
         patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
         infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel()))
 
-        assertThat(infoRows()[8].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 0.0))
+        assertThat(infoRows()[7].value).isEqualTo(s(R.string.common_label_unit_value_dose_per_speed_with_space, 0.0))
     }
 
     @Test
