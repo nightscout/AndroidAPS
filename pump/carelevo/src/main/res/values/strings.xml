@@ -170,21 +170,6 @@
     <!-- Safety Check -->
     <string name="carelevo_toast_msg_safety_check_failed">Safety check failed.</string>
 
-    <string name="carelevo_comm_check_title">Communication Check</string>
-    <string name="carelevo_comm_check_description">Communication with the patch is not stable.\nIf you want to reconnect, tap Communication Check. If you want to stop using it, tap End Use.</string>
-    <string name="carelevo_comm_check_patch_address_invalid">Patch address is unavailable. Please reconnect the patch.</string>
-    <string name="carelevo_comm_check_failed">Communication check failed. Please try again.</string>
-
-
-    <string name="alarm_feat_label_warning">Critical</string>
-    <string name="alarm_feat_label_alert">Advisory</string>
-    <string name="alarm_feat_label_notice">Notification</string>
-    <string name="alarm_feat_label_unknown">Unknown</string>
-
-    <string name="alarm_feat_label_occurrence_time">Alarm Time</string>
-
-    <string name="alarm_feat_desc_helper">Unable to connect to patch\nTap the confirm button below to discard the patch.</string>
-
     <!-- Warning Titles -->
     <string name="alarm_feat_title_warning_low_insulin">Low Insulin</string>
     <string name="alarm_feat_title_warning_expired_patch">Patch Expired</string>
@@ -248,7 +233,6 @@
     <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Less than %s U insulin remaining.<br><b>Prepare to change the patch.</b>]]></string>
     <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Patch usage time is <b>%s days %s hours.</b>.<br>Keep in mind during use.]]></string>
     <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Time zone has changed from <b>%s(UTC %s) to %s(UTC %s)</b>.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone_same_country"><![CDATA[Time zone has changed from <b>%s/%s(UTC %s) to %s/%s(UTC %s)</b>.]]></string>
     <string name="alarm_feat_desc_notice_check_bg"><![CDATA[%s have passed since your bolus.<br>Please check your blood glucose.]]></string>
     <string name="alarm_feat_desc_notice_lgs_started">LGS started.</string>
     <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS ended due to patch/CGM disconnection.</string>
@@ -268,7 +252,6 @@
 
     <!-- General Messages -->
     <string name="alarm_feat_msg_check_patch_connect">Please check patch connection.</string>
-    <string name="alarm_feat_msg_fail_alarm_clear">Failed to confirm alarm/notification. Please try again.</string>
 
     <!--    notification -->
     <string name="alarm_notification_desc_warning_low_insulin">Less than 10 U insulin remaining; insulin delivery stopped. Tap the [Deactivate Patch] button and change patch now.</string>
@@ -295,7 +278,6 @@
     <string name="alarm_notification_desc_notice_low_insulin">Less than %s U insulin remaining. Prepare to change the patch.</string>
     <string name="alarm_notification_desc_notice_expired_patch">Patch usage time is %s days %s hours. Keep in mind during use.</string>
     <string name="alarm_notification_desc_notice_change_time_zone">Time zone has changed from %s(UTC %s) to %s(UTC %s).</string>
-    <string name="alarm_notification_desc_notice_change_time_zone_same_country">Time zone has changed from %s/%s(UTC %s) to %s/%s(UTC %s).</string>
     <string name="alarm_notification_desc_notice_check_bg">%s have passed since your bolus. Please check your blood glucose.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS started.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS ended due to patch/CGM disconnection.</string>
