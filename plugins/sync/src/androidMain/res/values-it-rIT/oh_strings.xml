@@ -3,7 +3,7 @@
     <string name="open_humans">Open Humans</string>
     <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans ti permette di caricare i tuoi dati sul diabete e donarli a progetti scientifici.</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Esci</string>
     <string name="setup">Configurazione</string>
     <string name="setup_completed_info">Open Humans è stato configurato. In caso tu voglia fermare il caricamento, fai click su \'Logout\'.</string>
     <string name="not_setup_info">Open Humans è attualmente inattivo. Per avviare il caricamento dei dati, fai click su \'Configurazione\'.</string>
@@ -13,7 +13,7 @@
     <string name="uploading_to_open_humans">AAPS sta caricando i dati su Open Humans. Potrebbe volerci un po\' di tempo.</string>
     <string name="you_have_been_signed_out_of_open_humans">Sei stato disconnesso da Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Fare click qui per accedere di nuovo.</string>
-    <string name="next">Avanti</string>
+    <string name="next">Prossimo</string>
     <string name="welcome_to_open_humans">Benvenuto in Open Humans</string>
     <string name="setup_data_upload">Per configurare il caricamento dei dati, fai click su \'Avanti\'.</string>
     <string name="consent">Consenso</string>

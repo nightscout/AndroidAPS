@@ -246,6 +246,8 @@
     <string name="location_permission_not_granted">Location permission not granted. Allow in android settings.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="not_available_full">Not available</string>
+    <string name="not_implemented_yet">This function is not ready on this platform yet</string>
+    <string name="not_available_on_platform">This function is not available on this platform</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
@@ -1144,8 +1146,8 @@
     <string name="units_format_grams">%1$d g</string>
     <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
-    <string name="units_format_hours_double">%1$.0f h</string>
-    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_double">%1$.1f h</string>
+    <string name="units_format_hours_double_range">%1$.1f h (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>

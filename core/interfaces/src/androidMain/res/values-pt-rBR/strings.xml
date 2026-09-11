@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Confirmação</string>
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Driver da bomba alterado.</string>
@@ -60,6 +61,10 @@
     <string name="wear_default_watchface">Watchface padrão</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
+    <string name="free_peak_oref">Oref Pico-Livre</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Tempo Pico [min]</string>
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -67,16 +72,13 @@
     <string name="alarminxmin">Disparar alarme em %1$d min</string>
     <string name="pumpsuspended">Bomba suspensa</string>
     <string name="loopsuspended">Loop suspenso</string>
-    <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
-    <string name="mins">%1$d min</string>
     <string name="record">Gravar</string>
     <string name="bolus">Bólus</string>
     <string name="uel_extended_carbs">CARBOIDRATOS ESTENDIDOS</string>
-    <string name="profile_low_target">Alvo de perfil de hipoglicemia</string>
     <string name="profile_high_target">Alvo de perfil de hiperglicemia</string>
     <string name="profile_dia">Valor do perfil da DAI</string>
     <string name="profile_sensitivity_value">Valor do perfil de sensibilidade</string>

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
-    <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
-    <string name="start_hypo_tt">Начать временную цель ТТ Гипо</string>
     <string name="time_offset">Смещение по времени</string>
     <!--    Widget-->
     <string name="configure">Настроить прозрачность</string>
@@ -20,7 +17,6 @@
     <string name="bg_sensor">Сенсор</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="edit_site">Редактировать</string>
     <string name="record_site_location">Место установки: %1$s</string>
     <string name="record_site_arrow">Стрелка места установки: %1$s</string>
     <string name="record_site_note">Примечание: %1$s</string>
@@ -38,7 +34,6 @@
     <string name="reuse_profile_pct_hours">Повторно использовать %1$d%%%2$dч</string>
     <string name="percentage_label">В процентах</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Отсоединить помпу</string>
     <string name="resume">Возобновить</string>
     <string name="reconnect">Возобновить соединение с помпой</string>
     <string name="duration15m">15 мин</string>
@@ -53,8 +48,6 @@
     <string name="no_records_available">Нет доступных записей</string>
     <string name="treatments_iob_label_string">IOB акт инс:</string>
     <string name="carbs_and_bolus">Углеводы и болюс</string>
-    <string name="show_invalidated">Показать недействительные</string>
-    <string name="hide_invalidated">Скрыть недействительные</string>
     <string name="careportal_remove_started_events">Удалить записи о начале работы AAPS</string>
     <string name="user_entry">Запись пользователя</string>
     <string name="clone_label">Клонировать</string>

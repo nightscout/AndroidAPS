@@ -41,7 +41,7 @@
     <string name="bg_sensor">Cảm biến</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="edit_site">Chỉnh sửa</string>
+    <string name="edit_site">Sửa</string>
     <string name="record_site_location">Vị trí: %1$s</string>
     <string name="record_site_arrow">Hướng vị trí: %1$s</string>
     <string name="record_site_note">Ghi chú: %1$s</string>
@@ -171,10 +171,10 @@
     <string name="no_records_available">Không có bản ghi nào</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="carbs_and_bolus">Carb và liều bolus</string>
-    <string name="show_invalidated">Hiện các bản ghi không hợp lệ</string>
-    <string name="hide_invalidated">Ẩn các bản ghi không hợp lệ</string>
+    <string name="show_invalidated">Hiển thị các mục không hợp lệ</string>
+    <string name="hide_invalidated">Ẩn các mục không hợp lệ</string>
     <string name="careportal_remove_started_events">Xóa các bản ghi đã bắt đầu bởi AAPS</string>
-    <string name="user_entry">Nhập liệu người dùng</string>
+    <string name="user_entry">Nhập liệu của người dùng</string>
     <string name="clone_label">Nhân bản</string>
     <string name="add_new_profile">Thêm cấu hình mới</string>
     <string name="edit_label">Sửa</string>

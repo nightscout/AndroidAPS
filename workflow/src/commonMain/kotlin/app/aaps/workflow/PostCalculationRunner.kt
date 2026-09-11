@@ -55,7 +55,7 @@ class PostCalculationRunner @Inject constructor(
         val data = workflowChainData.postFor(job, generation) ?: return WorkOutcome.StaleInput
 
         if (data.runLoopAndWidgetPhase) {
-            invokeLoop(data)
+            invokeLoop()
             if (isStopped()) return WorkOutcome.Stopped
             widgetUpdater.update("WorkFlow")
             if (isStopped()) return WorkOutcome.Stopped
@@ -69,11 +69,17 @@ class PostCalculationRunner @Inject constructor(
     }
 
     /*
-     * Triggered once autosens calculation has completed so the Loop has current data to work with.
-     * Autosens can be triggered by multiple sources but currently only a new BG should trigger a loop run.
+     * Runs after a completed MAIN calculation so the Loop has current data to work with.
+     *
+     * The loop is invoked when the newest BG has not been used for a loop run yet. The check is on
+     * purpose not tied to what started this chain: a chain started by a new BG can be cancelled and
+     * replaced by a chain started by another database change before it reaches this runner, and the
+     * replacement must not lose the pending BG trigger (issue #5066).
+     *
+     * [app.aaps.core.interfaces.aps.Loop.lastBgTriggeredRun] is written before the call and never
+     * reset, so each BG timestamp can drive at most one automatic loop run.
      */
-    private suspend fun invokeLoop(data: PostCalculationData) {
-        if (!data.triggeredByNewBG) return
+    private suspend fun invokeLoop() {
         val glucoseValue = iobCobCalculator.ads.actualBg() ?: return
         if (glucoseValue.timestamp <= loop.lastBgTriggeredRun) return
         loop.lastBgTriggeredRun = glucoseValue.timestamp

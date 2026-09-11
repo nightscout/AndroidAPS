@@ -173,12 +173,11 @@ Check the active state.</string>
     <string name="wizard_include_info">輕觸以在計算中納入/排除：\n• 血糖 — 血糖（起始為開啟）\n• 臨時目標 — 臨時目標（起始為開啟）\n• 趨勢 — 血糖趨勢（會記住上次狀態）\n• IOB — 活性胰島素（起始為開啟）\n• COB — 活性碳水化合物（會記住上次狀態）</string>
     <!-- Treatments -->
     <string name="no_records_available">無可用紀錄</string>
-    <string name="treatments_iob_label_string">IOB：</string>
     <string name="carbs_and_bolus">碳水化合物與注射</string>
-    <string name="show_invalidated">顯示無效</string>
-    <string name="hide_invalidated">隱藏無效</string>
+    <string name="show_invalidated">顯示已作廢</string>
+    <string name="hide_invalidated">隱藏已作廢</string>
     <string name="careportal_remove_started_events">移除 AAPS 已開始的條目</string>
-    <string name="user_entry">用戶入口</string>
+    <string name="user_entry">使用者輸入</string>
     <string name="clone_label">複製</string>
     <string name="add_new_profile">新增設定檔</string>
     <string name="edit_label">編輯</string>

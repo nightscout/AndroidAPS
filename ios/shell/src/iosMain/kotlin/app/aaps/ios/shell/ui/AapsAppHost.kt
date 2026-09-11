@@ -9,10 +9,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.key
 import app.aaps.core.keys.StringKey
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -49,13 +51,17 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.ios.shell.platform.IosLanguage
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.shared.clientbindings.ClientGraphBindings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.icons.IcAaps
 import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.implementation.lifecycle.IosProtectionLifecycle
 import app.aaps.ios.shell.IosAppStartup
 import app.aaps.ios.shell.PluginStoreRegistry
 import app.aaps.ios.shell.di.IosAppGraph
+import app.aaps.ios.shell.platform.notOnThisPlatform
 import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
@@ -228,6 +234,31 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 // the dialog, and on iOS it would also be in the app-switcher snapshot.
                 if (!unlocked) return@AapsAppRoot
 
+                // Everything the shared screens ask a platform for that iOS cannot answer ends up in
+                // one of these two. Until now they only wrote a line in the log, so from the user's
+                // side the button did nothing at all and there was no way to tell a missing feature
+                // from a broken one. Both still log; they now also say so on screen.
+                //
+                // The two are kept apart because the answers are not the same. `reportNotReady` is
+                // work still to do - a document picker, a quick wizard - and will go away one at a
+                // time, so it logs at error like the rest of the missing pieces. `reportNotAvailable`
+                // is what an iOS client is: there is no Dexcom app to open and no Android permission
+                // to grant, and no amount of work will change that. Promising "not ready yet" there
+                // would be a lie, and logging it at error would fill the log with correct behaviour -
+                // which is exactly the split `notOnThisPlatform` already draws.
+                val snackbarHostState = LocalSnackbarHostState.current
+                val uiScope = rememberCoroutineScope()
+                val notReadyMessage = stringResource(CoreUiStrings.not_implemented_yet)
+                val notHereMessage = stringResource(CoreUiStrings.not_available_on_platform)
+                val reportNotReady: (String) -> Unit = { what ->
+                    logger.notWiredYet(what)
+                    uiScope.launch { snackbarHostState.showSnackbar(notReadyMessage) }
+                }
+                val reportNotAvailable: (String) -> Unit = { what ->
+                    logger.notOnThisPlatform(what)
+                    uiScope.launch { snackbarHostState.showSnackbar(notHereMessage) }
+                }
+
                 // Resolved here rather than inside the NavHost: `appNavGraph` is a builder, not a
                 // composable, so a view model cannot be asked for from within it.
                 val insulinManagement = metroViewModel<InsulinManagementViewModel>()
@@ -262,11 +293,11 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                     configBuilder = graph.configBuilder,
                     dexcomBoyda = graph.dexcomBoyda,
                     // The Dexcom build is an Android app; an iOS client reads glucose from Nightscout.
-                    onOpenCgmApp = { pkg -> logger.notWiredYet("open CGM app $pkg") },
+                    onOpenCgmApp = { pkg -> reportNotAvailable("open CGM app $pkg") },
                     // iOS gives an app no way to quit itself, and Apple treats that as a crash.
-                    onExit = { logger.notWiredYet("exit from the menu") },
+                    onExit = { reportNotAvailable("exit from the menu") },
                     // Needs a UIDocumentPicker, which nothing on iOS has yet.
-                    onRequestDirectoryAccess = { logger.notWiredYet("directory access") },
+                    onRequestDirectoryAccess = { reportNotReady("directory access") },
                     onOpenUrl = { url -> graph.urlOpener.open(url) }
                 )
                 val chips: ChipsViewModel = viewModel(
@@ -328,11 +359,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                                 if (result.grantedLevel != null) onGranted()
                             }
                         },
-                        onRefreshPermissions = { logger.notWiredYet("permission refresh") },
-                        onExecuteQuickWizard = { guid -> logger.notWiredYet("quick wizard $guid") },
-                        onRequestDirectoryAccess = { logger.notWiredYet("directory access - iOS needs a document picker") },
-                        onRequestPermission = { group -> logger.notWiredYet("permission request $group") },
-                        findScreenDef = { null },
+                        onRefreshPermissions = { reportNotAvailable("permission refresh") },
+                        onExecuteQuickWizard = { guid -> reportNotReady("quick wizard $guid") },
+                        onRequestDirectoryAccess = { reportNotReady("directory access - iOS needs a document picker") },
+                        onRequestPermission = { group -> reportNotAvailable("permission request $group") },
                         overview = {
                             OverviewScreen(
                                 mainViewModel = mainViewModel,
@@ -368,7 +398,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                                 // shells make. It was a placeholder only while iOS had no importer.
                                 onImportSettingsNavigate = { source -> navController.navigate(AppRoute.ImportSettings.createRoute(source.name)) },
                                 // Needs a UIDocumentPicker, which nothing on iOS has yet.
-                                onDirectoryClick = { logger.notWiredYet("directory picker") },
+                                onDirectoryClick = { reportNotReady("directory picker") },
                                 // The Google sign in, and the only thing that reaches this callback.
                                 // Shown *over* AAPS rather than handed to Safari: switching to Safari
                                 // lets iOS suspend this app within seconds, and the loopback listener
@@ -389,7 +419,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                                 // destructive here.
                                 onBringToForeground = { graph.authBrowser.dismiss() },
                                 // No activity to recreate. A Compose scene is not restarted this way.
-                                onRecreateActivity = { logger.notWiredYet("recreate") },
+                                onRecreateActivity = { logger.debug(LTag.CORE, "Nothing to recreate on iOS after a database reset") },
                                 onAuthorizationFailed = { logger.error(LTag.CORE, "Authorization failed") },
                                 autoShowNotificationSheet = false,
                                 onAutoShowConsumed = {}

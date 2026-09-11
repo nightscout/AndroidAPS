@@ -16,6 +16,7 @@
     <string name="authorized_clients_add">Přidat klienta</string>
     <string name="authorized_clients_comm_switch_title">Povolit ovládání z klienta</string>
     <string name="authorized_clients_comm_switch_summary">Nechte spárované klienty odesílat podepsané příkazy přes Nightscout. Vypněte pro zastavení komunikace bez jejich odstranění.</string>
+    <string name="authorized_clients_needs_websocket">Websockety jsou vypnuty, takže příkazy od klientů nemohou být přijaty. Klienti vidí, že nepřijímají příkazy, dokud nespustíte websockety.</string>
     <string name="authorized_clients_state_active">Aktivní</string>
     <string name="authorized_clients_state_pending">Čekající</string>
     <string name="authorized_clients_last_seen">Naposledy spatřeno %1$s</string>
@@ -77,6 +78,8 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Nahrávání dat do Tidepoolu</string>
     <string name="upload_now">Nahrát nyní</string>
+    <string name="tidepool_purge_data">Smazat všechna data</string>
+    <string name="tidepool_purge_data_confirm">Odstranit VEŠKERÁ data, která byla z AAPS nahrána do Tidepoolu? Tuto akci nelze vrátit zpět. Použijte ji k odstranění dat poškozených použitím starší verze, poté spusťte „Plnou synchronizaci\" a znovu je nahrajte.</string>
     <string name="not_connected">Nepřipojeno</string>
     <string name="read_only">Jen pro čtení</string>
     <string name="working">Pracuji</string>

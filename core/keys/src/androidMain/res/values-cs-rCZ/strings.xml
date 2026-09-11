@@ -32,7 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Zobrazit naléhavé alarmy jako oznámení Androidu</string>
     <string name="pref_title_alert_increase_volume">Postupně zvyšovat hlasitost oznámení</string>
     <string name="pref_title_alert_override_dnd">Přebít režim Nerušit</string>
-    <string name="pref_summary_alert_override_dnd">Pokud je povoleno, AAPS přehrává alarmy v tichém režimu a režimu Nerušit (nastavení pro budík). Pokud je vypnuto, alarmy jsou tiché/DND (nastavení pro oznámení).</string>
+    <string name="pref_summary_alert_override_dnd">Pokud je povoleno, zvuk alarmu i v případě, že je telefon ztlumený nebo v režimu Nerušit. Pokud je vypnuto, alarmy zůstanou v těchto režimech tiché.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Nahrávat glykémie do NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Zaznamenávat výměnu senzoru</string>
@@ -178,7 +178,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Časový limit ochrany</string>
     <string name="pref_title_protection_type_application">Úroveň 0: Ochrana aplikace</string>
-    <string name="pref_summary_protection_type_application">Spuštění aplikace. Nezávislá na ostatních úrovních</string>
+    <string name="pref_summary_protection_type_application">Při spuštění aplikace a při návratu do aplikace. Nezávisle na jiných úrovních</string>
     <string name="pref_title_protection_type_bolus">Úroveň 1: Ochrana bolusu</string>
     <string name="pref_summary_protection_type_bolus">Ošetření, aktivace profilu. Vyžaduje úroveň 2</string>
     <string name="pref_title_protection_type_settings">Úroveň 2: Ochrana nastavení</string>
@@ -302,7 +302,7 @@
     <!-- StringKey: NS Client preferences -->
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_summary">Zadejte URL svého Nightscoutu (např. https://yoursitename.yourplatform.dom)</string>
-    <string name="ns_client_secret_title">Nightscout API Secret</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
     <string name="ns_client_secret_summary">Zadejte své API secret pro Nightscout (min. 12 znaků)</string>
     <string name="nsclient_token_title">Přístupový token Nightscoutu</string>
     <string name="nsclient_token_summary">Zadejte svůj přístupový token Nightscoutu (min. 17 znaků)</string>

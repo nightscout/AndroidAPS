@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="automation">Automatização</string>
+    <string name="automation">Automação</string>
     <string name="automation_missing_task_name">Insira um nome da tarefa.</string>
     <string name="automation_missing_trigger">Especifique pelo menos um gatilho.</string>
     <string name="automation_missing_action">Especifique pelo menos uma acção.</string>
@@ -90,6 +90,7 @@
     <string name="autotune_run_cancelled">Outra execução de Autotune foi detectada, execução cancelada</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>

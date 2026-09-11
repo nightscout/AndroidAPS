@@ -41,7 +41,6 @@
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
-    <string name="edit_site">Upraviť</string>
     <string name="record_site_location">Miesto aplikácie: %1$s</string>
     <string name="record_site_arrow">Šípka miesta aplikácie: %1$s</string>
     <string name="record_site_note">Poznámka: %1$s</string>
@@ -151,9 +150,8 @@
     <string name="cannot_delete_last_insulin">Nemôžem vymazať posledný inzulín</string>
     <string name="cannot_delete_active_insulin">Nemôžem vymazať aktívny inzulín</string>
     <string name="reuse_profile_pct_hours">Znovu použiť %1$d%% %2$dh</string>
-    <string name="percentage_label">% zmena</string>
+    <string name="percentage_label">Percento</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Odpojenie pumpy</string>
     <string name="resume">Pokračovať</string>
     <string name="reconnect">Znovu pripojiť pumpu</string>
     <string name="duration15m">15 minút</string>
@@ -184,7 +182,6 @@
     <string name="active_profile_indicator">AKTÍVNY</string>
     <string name="confirm_remove_profile">Odstrániť profil %1$s?</string>
     <string name="confirm_clone_profile">Klonovať profil %1$s?</string>
-    <string name="profile_no_longer_exists">Zoznam profilov sa medzičasom zmenil – prosím, vyskúšajte to znova</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>

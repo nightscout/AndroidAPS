@@ -46,6 +46,21 @@ allprojects {
             jvmTarget.set(Versions.jvmTarget)
         }
     }
+    // The build cache may replay compilation. It may not replay test results.
+    //
+    // A cached Test task does not run its tests - it restores the previous outcome and reports green.
+    // By Gradle's rules that is sound, same inputs give the same result, and in the log it is
+    // indistinguishable from a real run. This project has twice shipped tests that silently were not
+    // executing (JUnit 5 skipping expression-body tests; the non-app instrumented step running nothing
+    // for months), and both times the signal was a green build that proved nothing. For an app that
+    // doses insulin that is not a trade worth making for a few seconds.
+    //
+    // This disables cache *reuse* only. Up-to-date checks still skip genuinely unchanged tests on a
+    // local incremental build, and CI checks out fresh where nothing is up to date anyway. Compile
+    // tasks keep the cache, and they are where nearly all of the saving is.
+    tasks.withType<AbstractTestTask>().configureEach {
+        outputs.doNotCacheIf("tests must actually run, not be replayed from a previous build") { true }
+    }
     gradle.projectsEvaluated {
         tasks.withType<JavaCompile> {
             val compilerArgs = options.compilerArgs

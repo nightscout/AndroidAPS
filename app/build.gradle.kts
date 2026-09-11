@@ -22,9 +22,14 @@ repositories {
     google()
 }
 
+// `--exclude=ios-testflight-*`, because such a tag names one past iOS submission rather than this
+// build. `git describe` takes the nearest annotated tag whatever the distance, so a single TestFlight
+// tag made every later build announce itself as "ios-testflight-20260906-085036-44-g45d9d88" - in the
+// About dialog and in every log line. All four shells exclude it, iOS included: 53 commits past that
+// submission, calling yourself by its name is wrong there too.
 fun generateGitBuild(): String {
     try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always", "--abbrev=7")
+        val processBuilder = ProcessBuilder("git", "describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*")
         val output = File.createTempFile("git-build", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()

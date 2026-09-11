@@ -120,6 +120,7 @@ class GraphScopeStabilityTest {
             "glucoseStatusCalculatorAutoIsf",
             "glucoseStatusCalculatorSMB",
             "glucoseStatusProvider",
+            "graphConfigRepository",
             "hardLimits",
             "historyWindowFactory",
             "iconsProvider",
@@ -238,10 +239,15 @@ class GraphScopeStabilityTest {
         )
 
         /**
-         * Cannot be built in a plain-JVM test. All three are Android lookups: `bleTransport` reaches
-         * Bluetooth, `workManager` needs WorkManager initialised, `graphConfigRepository` opens a
-         * DataStore file. Pinned so a newly-throwing accessor cannot quietly shrink this test's reach.
+         * Cannot be built in a plain-JVM test. Both are Android lookups: `bleTransport` reaches
+         * Bluetooth and `workManager` needs WorkManager initialised. Pinned so a newly-throwing
+         * accessor cannot quietly shrink this test's reach.
+         *
+         * `graphConfigRepository` used to be here, blamed on its DataStore file. That was the wrong
+         * reason: the blocker was `Dispatchers.Main` in its constructor scope, so nothing could build
+         * it without a main looper. `cbe022ba1b` moved that scope to the IO dispatcher and it builds
+         * now, which is why it moved into [SINGLE_INSTANCE] - the list grew rather than shrank.
          */
-        val UNREADABLE = setOf("bleTransport", "graphConfigRepository", "workManager")
+        val UNREADABLE = setOf("bleTransport", "workManager")
     }
 }

@@ -68,7 +68,6 @@
     <string name="confirm_pin_hint">Confirmar PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Luces de estado</string>
-    <string name="copy_existing_values">¿Copiar configuración de Nightscout (si existe)?</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_bgsource">Fuente de glucosa</string>
     <string name="configbuilder_smoothing">Suavizado</string>
@@ -76,7 +75,7 @@
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_sensitivity">Detección de sensibilidad</string>
     <string name="configbuilder_aps">APS</string>
-    <string name="configbuilder_loop">Lazo</string>
+    <string name="configbuilder_loop">Bucle</string>
     <string name="configbuilder_sync">Comunicación</string>
     <string name="configbuilder_general">General</string>
     <string name="protection">Protección</string>
@@ -102,6 +101,7 @@
     <string name="tdd_total">Total TDD</string>
     <string name="tdd_old_data">Datos antiguos</string>
     <string name="goingtodeliver">Entregando %1$.2f U</string>
+    <string name="carbs_not_saved_after_bolus">Bolo administrado, pero no se han podido guardar los carbohidratos. Vuelve a introducirlos</string>
     <string name="androidaps_start">AAPS iniciado</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f h</string>
@@ -141,13 +141,13 @@
     <string name="pump_time_updated">Hora actualizada en la bomba</string>
     <string name="exit">Salir</string>
     <string name="removerecord">Eliminar registro</string>
-    <string name="loopisdisabled">Lazo desactivado</string>
+    <string name="loopisdisabled">Bucle desactivado</string>
     <string name="alarm">Alarma</string>
     <string name="exportsettings">Exportar ajustes</string>
-    <string name="disableloop">Desactivar lazo</string>
+    <string name="disableloop">Desactivar bucle</string>
     <string name="disabled_loop">Lazo deshabilitado</string>
-    <string name="resumeloop">Reanudar el lazo</string>
-    <string name="suspendloop">Suspender lazo</string>
+    <string name="resumeloop">Reanudar el bucle</string>
+    <string name="suspendloop">Suspender bucle</string>
     <string name="notification">Notificación</string>
     <string name="noprofile">Ningún perfil cargado desde Nightscout</string>
     <string name="exists">existe</string>
@@ -163,7 +163,7 @@
     <string name="initialization_failed">Error de inicialización</string>
     <string name="notes_label">Notas</string>
     <string name="wrong_pump_data">Los datos proceden de una bomba diferente. Cambia el controlador de la bomba para resetear su estado.</string>
-    <string name="bg_label">BG</string>
+    <string name="bg_label">Glucemia</string>
     <string name="calibration">Calibración</string>
     <string name="cgm">MCG</string>
     <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada y la cantidad de carbohidratos</string>
@@ -187,7 +187,7 @@
     <string name="a11y_inrange">en rango</string>
     <string name="a11y_low">bajo</string>
     <string name="remove_label">Eliminar</string>
-    <string name="activate_profile">ACTIVAR PERFIL</string>
+    <string name="activate_profile">Activar perfil</string>
     <string name="activate_insulin">Activar insulina</string>
     <string name="pump_wizard_profile_gate_title">Perfil requerido</string>
     <string name="pump_wizard_profile_gate_pick">Seleccione el perfil que se aplicará al activar</string>
@@ -218,8 +218,8 @@
     <string name="site_location">Ubicación de la zona</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Detener objetivo temporal</string>
-    <string name="closedloop">Lazo cerrado</string>
-    <string name="openloop">Lazo abierto</string>
+    <string name="closedloop">Bucle cerrado</string>
+    <string name="openloop">Bucle abierto</string>
     <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
     <string name="pump_suspended">Bomba suspendida</string>
     <string name="pump_suspend">Suspender bomba</string>
@@ -257,7 +257,6 @@
     <string name="pin_dont_match">Los códigos PIN no coinciden</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Iniciar perfil %1$d%% durante %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Cancelar basal temporal</string>
     <string name="let_temp_basal_run">Deja ejecutar basal temporal</string>
@@ -294,7 +293,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Portal de cuidados</string>
     <string name="careportal_bgcheck">Medir glucosa</string>
     <string name="careportal_mbg">Glucemia manual o calibración</string>
     <string name="careportal_announcement">Aviso</string>
@@ -345,7 +343,6 @@
     <string name="scene_conflict_active_running_mode">El modo de funcionamiento activo será reemplazado</string>
     <string name="scene_conflict_active_scene">La escena activa \"%1$s\" finalizará primero</string>
     <string name="scene_action_tt">Objetivo temporal: %1$s</string>
-    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Perfil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Perfil: %1$d%%</string>
     <string name="scene_action_smb_on">Habilitar SMB</string>
     <string name="scene_action_smb_off">Deshabilitar SMB</string>
@@ -474,7 +471,7 @@
     <string name="activation">Activación</string>
     <string name="temp_target_management">Objetivo temporal</string>
     <string name="revert_to_defaults">Restablecer valores predeterminados</string>
-    <string name="loop">Lazo</string>
+    <string name="loop">Bucle</string>
     <string name="ns">NS</string>
     <string name="location_front_right_upper_chest">Cadera derecha</string>
     <string name="location_front_left_upper_chest">Cadera izquierda</string>
@@ -543,10 +540,10 @@
     <string name="uel_store_profile">GUARDAR PERFIL</string>
     <string name="uel_profile_switch">CAMBIO DE PERFIL</string>
     <string name="uel_profile_switch_cloned">CAMBIO DE PERFIL CLONADO</string>
-    <string name="uel_closed_loop_mode">MODO LAZO CERRADO</string>
-    <string name="uel_lgs_loop_mode">MODO LAZO LGS</string>
-    <string name="uel_open_loop_mode">MODO LAZO ABIERTO</string>
-    <string name="uel_loop_disabled">LAZO DESACTIVADO</string>
+    <string name="uel_closed_loop_mode">MODO BUCLE CERRADO</string>
+    <string name="uel_lgs_loop_mode">MODO BUCLE LGS</string>
+    <string name="uel_open_loop_mode">MODO BUCLE ABIERTO</string>
+    <string name="uel_loop_disabled">BUCLE DESACTIVADO</string>
     <string name="uel_loop_resumed">LAZO REANUDADO</string>
     <string name="uel_pump_running">BOMBA FUNCIONANDO</string>
     <string name="uel_reconnect">RECONECTAR</string>
@@ -622,8 +619,8 @@
     <string name="ue_action">Acción</string>
     <string name="ue_timestamp">Fecha y hora</string>
     <string name="ue_none">Sin Unidad</string>
-    <string name="uel_loop_change">LAZO CAMBIADO</string>
-    <string name="uel_loop_removed">LAZO ELIMINADO</string>
+    <string name="uel_loop_change">BUCLE CAMBIADO</string>
+    <string name="uel_loop_removed">BUCLE ELIMINADO</string>
     <string name="uel_new_insulin">NUEVA INSULINA</string>
     <string name="uel_change_pump_insulin">CAMBIAR INSULINA DE LA BOMBA</string>
     <string name="uel_store_insulin">ALMACENAR INSULINA</string>
@@ -636,7 +633,6 @@
     <string name="uel_scene_deactivated">ESCENA DESACTIVADA</string>
     <string name="uel_remote_config_changed">CAMBIO EN CONFIGURACIÓN REMOTA</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Valor inferior objetivo temporal</string>
     <string name="temp_target_high_target">Valor superior objetivo temporal</string>
     <string name="temp_target_value">Valor objetivo temporal</string>
     <string name="insulin_dia">Valor de DIA de la insulina</string>
@@ -720,7 +716,7 @@
     <string name="wizard_include_trend">Incluir tendencia</string>
     <string name="wizard_include_iob">Incluir IOB</string>
     <string name="wizard_include_cob">Incluir COB</string>
-    <string name="wizard_calculation">Cálculos</string>
+    <string name="wizard_calculation">Cálculo</string>
     <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Eliminación máxima: %1$d g (carbohidratos activos)</string>
     <string name="wizard_no_insulin_required">No se requiere insulina</string>
@@ -760,7 +756,6 @@
     <string name="max_daily_units">Máximo de unidades diarias</string>
     <string name="pump_history">Historial de la bomba</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Cambio de controlador de la bomba</string>
-    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolo Correcto</string>
     <string name="temp_basal_delivery_error">Error en la entrega de la basal temporal</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de lazo cerrado (Closed Loop) mientras el bolo esté en curso. ¿Realmente quieres hacerlo?</string>
@@ -782,7 +777,6 @@
     <string name="limitingbasalratio">Limitando la basal máxima a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
     <string name="limitingpercentrate">Limitando el porcentaje máximo de la dosis a %1$d%% debido a %2$s</string>
-    <string name="itmustbepositivevalue">tiene que ser un valor positivo</string>
     <string name="limitingbolus">Limitando el bolo a %1$.1f U debido a %2$s</string>
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
@@ -795,7 +789,6 @@
     <string name="close">Cerrar</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
-    <string name="export_ok">OK</string>
     <string name="export_warning">Advertencia</string>
     <string name="export_expired">Expirado</string>
     <string name="export_disabled">Desactivado</string>
@@ -862,7 +855,6 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
     <!--    Pump pair/unpair (shared) -->
-    <string name="pump_pair">Emparejar</string>
     <string name="pump_unpair">Desemparejar</string>
     <string name="pump_unpair_confirm_title">¿Desvincular bomba?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
@@ -946,7 +938,7 @@
     <string name="weekday_saturday_short">Sab</string>
     <string name="weekday_friday_short">Vie</string>
     <string name="weekday_thursday_short">Jue</string>
-    <string name="weekday_wednesday_short">Mie</string>
+    <string name="weekday_wednesday_short">Mié</string>
     <string name="weekday_tuesday_short">Mar</string>
     <string name="weekday_monday_short">Lun</string>
     <!--    DecimalFormatterImpl -->
@@ -959,7 +951,6 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"Reproducir audio de AAPS"</string>
     <!-- ProfileEditor -->
-    <string name="basal_short">BAS</string>
     <string name="target_short">OBJ</string>
     <string name="profile_name">Nombre del perfil:</string>
     <string name="edit_profile_name">Editar nombre del perfil</string>
@@ -1021,8 +1012,6 @@
     <string name="import_wrong_password">Contraseña incorrecta</string>
     <string name="import_btn">Importar</string>
     <string name="import_anyway_btn">Importar de todos modos</string>
-    <string name="import_restart_title">Ajustes importados</string>
-    <string name="import_restart_message">Se han importado los ajustes. La aplicación debe reiniciarse.</string>
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Nube</string>
     <string name="import_load_more">Cargar más</string>
@@ -1035,7 +1024,6 @@
     <string name="nav_resetdb">Restablecer bases de datos</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Buscar bomba</string>
-    <string name="ble_scan_select_pump">Selecciona tu bomba de la lista de abajo</string>
     <string name="ble_scan_scanning">Buscando dispositivos…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Añadir gráfico</string>
@@ -1064,11 +1052,7 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_grams">%1$d g</string>
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
-    <string name="units_format_hours_double">%1$.0f h</string>
-    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>
@@ -1095,5 +1079,5 @@
     <string name="units_percent">%</string>
     <string name="units_sec">seg</string>
     <string name="units_years">a</string>
-    <string name="prefs_range_title">Rango para visualización</string>
+    <string name="prefs_range_title">Rango de visualización</string>
 </resources>

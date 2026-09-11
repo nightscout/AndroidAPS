@@ -125,16 +125,13 @@
     <string name="pumpsuspended">Pompe arrêtée</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="pump_disconnected">Pompe déconnectée</string>
-    <string name="basalprofilenotaligned">Valeurs des débits de basal non alignées sur des heures: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valeur de basal remplacée par la valeur minimale autorisée : %1$s</string>
     <string name="maximumbasalvaluereplaced">Valeur de basal remplacée par la valeur maximale autorisée : %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
-    <string name="mins">%1$d min</string>
     <string name="record">Enregistrement</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">GLUCIDES ÉTENDUS</string>
-    <string name="profile_low_target">Cible basse du profil</string>
     <string name="profile_high_target">Cible haute du profil</string>
     <string name="profile_dia">Valeur DAI du profil</string>
     <string name="profile_sensitivity_value">Valeur de sensibilité du profil</string>

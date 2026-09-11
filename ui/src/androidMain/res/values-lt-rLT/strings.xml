@@ -9,6 +9,7 @@
     <string name="widget_description">AAPS valdiklis</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktyvumo stebėjimas</string>
+    <string name="time_range">Laiko intervalas</string>
     <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
     <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
@@ -33,7 +34,6 @@
     <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
     <string name="percentage_label">Procentais</string>
     <!-- LoopDialog -->
-    <string name="disconnectpump">Atjungti pompą</string>
     <string name="resume">Atnaujinti</string>
     <string name="reconnect">Prijungti pompą</string>
     <string name="duration15m">15 min</string>
@@ -53,8 +53,10 @@
     <string name="careportal_remove_started_events">Ištrinti AAPS paleidimo žymas</string>
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="clone_label">Klonuoti</string>
+    <string name="activate_profile">Aktyvuoti profilį</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profilio tipas</string>
+    <string name="profile_switches">Profilio keitimai</string>
     <string name="basal_pct_from_tdd_label">% bazės</string>
     <string name="selected_profile">Parinkta:</string>
     <string name="motol_default_profile">Numatytasis profilis</string>

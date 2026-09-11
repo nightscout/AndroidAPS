@@ -48,7 +48,7 @@
     <string name="snooze_30m">Hoãn 30 phút</string>
     <string name="snooze_60m">Hoãn 60 phút</string>
     <string name="virtual_pump">Bơm mô phỏng</string>
-    <string name="constraints">Điều kiện ràng buộc</string>
+    <string name="constraints">Yếu tố hạn chế</string>
     <string name="superbolus">Superbolus</string>
     <string name="pump_paused">Bơm đã tạm dừng</string>
     <string name="and">Và</string>
@@ -68,7 +68,6 @@
     <string name="confirm_pin_hint">Xác nhận mã PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Đèn báo trạng thái</string>
-    <string name="copy_existing_values">Sao chép cài đặt NS (nếu có)?</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_bgsource">Nguồn Đường huyết</string>
     <string name="configbuilder_smoothing">Làm mượt</string>
@@ -467,7 +466,7 @@
     <string name="hypo">Hypo</string>
     <string name="activity">Hoạt động</string>
     <string name="wear">Wear</string>
-    <string name="automation">Tự động hóa</string>
+    <string name="automation">Tự động</string>
     <string name="automation_management_desc">Tạo quy tắc để tự động thực hiện các hành động dựa trên các điều kiện kích hoạt</string>
     <string name="settingsexport">Xuất cài đặt</string>
     <string name="custom">Tuỳ chỉnh</string>
@@ -637,7 +636,7 @@
     <string name="uel_scene_deactivated">ĐÃ TẮT NGỮ CẢNH</string>
     <string name="uel_remote_config_changed">CẤU HÌNH TỪ XA ĐÃ THAY ĐỔI</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Giá trị thấp của mục tiêu tạm thời</string>
+    <string name="temp_target_low_target">Giá trị dưới của mục tiêu tạm thời</string>
     <string name="temp_target_high_target">Giá trị cao của mục tiêu tạm thời</string>
     <string name="temp_target_value">Giá trị mục tiêu tạm thời</string>
     <string name="insulin_dia">Thời gian tác dụng của insulin</string>
@@ -713,7 +712,7 @@
     <string name="carb_time_now">Bây giờ</string>
     <string name="change">Thay đổi</string>
     <string name="grant">Cấp quyền</string>
-    <string name="set">Thiết lập</string>
+    <string name="set">Cài đặt</string>
     <string name="wizard_set_alarm">Đặt báo thức</string>
     <string name="wizard_use_percentage">Sử dụng phần trăm</string>
     <string name="wizard_include_bg">Bao gồm BG</string>
@@ -748,13 +747,13 @@
     <!--    Pumps -->
     <string name="battery_label">Pin</string>
     <string name="reservoir_label">Bình chứa</string>
-    <string name="last_connection_label">Kết nối lần cuối</string>
+    <string name="last_connection_label">Kết nối gần nhất</string>
     <string name="last_bolus_label">Liều bolus gần nhất</string>
-    <string name="base_basal_rate_label">Tỷ lệ liều nền cơ bản</string>
+    <string name="base_basal_rate_label">Liều nền cơ bản</string>
     <string name="tempbasal_label">Liều nền tạm thời</string>
     <string name="extended_bolus_label">Liều Bolus kéo dài</string>
     <string name="serial_number">Số sê-ri</string>
-    <string name="disconnected">Ngắt kết nối</string>
+    <string name="disconnected">Đã ngắt kết nối</string>
     <string name="connecting">Đang kết nối</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Đã nhấn kết nối với Bơm</string>
     <string name="daily_units">Đơn vị hàng ngày</string>
@@ -773,6 +772,7 @@
     <string name="initializing">Đang khởi chạy…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Cảnh báo</string>
+    <string name="alert" comment="Generic alert dialog title">Cảnh báo</string>
     <string name="retry" comment="Button label to retry a failed operation">Thử lại</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Kết thúc</string>
     <string name="firmware" comment="Pump firmware version label">Phần mềm</string>
@@ -861,7 +861,7 @@
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">Ứng dụng yêu cầu quyền Bluetooth</string>
     <!--    Combo-->
-    <string name="user_request" comment="26 characters max for translation">Yêu cầu người dùng</string>
+    <string name="user_request" comment="26 characters max for translation">Yêu cầu của người dùng</string>
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Ghép nối</string>
     <string name="pump_unpair">Hủy ghép nối</string>
@@ -884,7 +884,7 @@
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Cấu hình</string>
-    <string name="nav_setupwizard">Cài đặt nhanh</string>
+    <string name="nav_setupwizard">Setup Wizard</string>
     <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
     <string name="statistics">Thống kê</string>
     <string name="statistics_desc">Xem thống kê và báo cáo</string>
@@ -964,7 +964,7 @@
     <string name="units_colon">Đơn vị:</string>
     <string name="unsaved_changes">Chưa lưu thay đổi</string>
     <string name="unsaved_changes_message">Có thay đổi chưa lưu. Bạn muốn làm gì?</string>
-    <string name="discard">Bỏ qua</string>
+    <string name="discard">Loại bỏ</string>
     <string name="ic_dynamic_label_warning">Thuật toán của bạn có thể tính toán IC động. Các giá trị bên dưới chỉ được dùng làm dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
     <string name="isf_dynamic_label_warning">Thuật toán của bạn có thể tính toán ISF động. Các giá trị bên dưới chỉ được dùng làm dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
     <string name="add_time_block">Thêm thời gian</string>
@@ -1019,8 +1019,14 @@
     <string name="import_wrong_password">Sai mật khẩu</string>
     <string name="import_btn">Nhập</string>
     <string name="import_anyway_btn">Vẫn nhập</string>
-    <string name="import_restart_title">Đã nhập cài đặt</string>
-    <string name="import_restart_message">Cài đặt đã được nhập. Ứng dụng cần khởi động lại.</string>
+    <string name="import_apply_title">Đã nhập cài đặt</string>
+    <string name="import_apply_message">Các cài đặt đã nhập sẽ được áp dụng ngay bây giờ. Các plugin có thay đổi sẽ được khởi động lại.</string>
+    <string name="import_apply_waiting">Đang chờ phản hồi từ Bơm…</string>
+    <string name="import_apply_pump_busy">Bơm vẫn đang bận nên các cài đặt chưa được áp dụng.</string>
+    <string name="import_apply_retry_question">Thử lại ngay bây giờ?</string>
+    <string name="import_applied_title">Cài đặt đã áp dụng</string>
+    <string name="import_applied_message">Các cài đặt đã nhập hiện đang được sử dụng.</string>
+    <string name="import_apply_pump_changed">Đã hủy: bơm đã được thay đổi bởi quá trình nhập cài đặt</string>
     <string name="import_source_local">Cục bộ</string>
     <string name="import_source_cloud">Đám mây</string>
     <string name="import_load_more">Tải thêm</string>
@@ -1065,8 +1071,6 @@
     <string name="units_format_grams">%1$d g</string>
     <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
-    <string name="units_format_hours_double">%1$.0f h</string>
-    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>

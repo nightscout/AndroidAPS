@@ -20,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Prodloužený bolus omezen na %1$.1f U z důvodu %2$s</string>
     <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
+    <string name="safety">Bezpečnost</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
     <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu prodlouženému bolusu</string>
@@ -41,4 +42,5 @@
     <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
     <string name="objectives_button_unfinish">Resetovat dokončený stav</string>
     <string name="objectives_button_unstart">Resetovat zahájený stav</string>
+    <string name="bg_doubled_lgs">Režim LGS v důsledku duplicitních hodnot ve zdroji glykémie</string>
 </resources>

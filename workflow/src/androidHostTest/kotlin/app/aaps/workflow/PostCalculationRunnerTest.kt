@@ -44,14 +44,13 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
     // Nothing in these tests stops a run part way.
     private suspend fun run() = runner().run(job = "main", generation = 1L, isStopped = { false })
 
-    private fun dataWith(triggeredByNewBG: Boolean, runLoopAndWidgetPhase: Boolean): PostCalculationData {
+    private fun dataWith(runLoopAndWidgetPhase: Boolean): PostCalculationData {
         val cache = mock<OverviewDataCache>()
         whenever(cache.timeRangeFlow).thenReturn(MutableStateFlow(null))
         return PostCalculationData(
             overviewData = mock<OverviewData>(),
             cache = cache,
             signals = mock<CalculationSignalsEmitter>(),
-            triggeredByNewBG = triggeredByNewBG,
             runLoopAndWidgetPhase = runLoopAndWidgetPhase
         )
     }
@@ -71,7 +70,7 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
 
     @Test
     fun `predictions only phase returns success without loop or widget`() = runTest {
-        val data = dataWith(triggeredByNewBG = false, runLoopAndWidgetPhase = false)
+        val data = dataWith(runLoopAndWidgetPhase = false)
         whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
 
         val result = run()
@@ -89,13 +88,67 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
         whenever(iobCobCalculator.ads).thenReturn(ads)
         whenever(ads.actualBg()).thenReturn(bg)
         whenever(loop.lastBgTriggeredRun).thenReturn(0L)
-        val data = dataWith(triggeredByNewBG = true, runLoopAndWidgetPhase = true)
+        val data = dataWith(runLoopAndWidgetPhase = true)
         whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
 
         val result = run()
 
         Assertions.assertEquals(WorkOutcome.Success, result)
         verify(loop).invoke(any(), any(), any())
+        verify(widgetUpdater).update("WorkFlow")
+    }
+
+    // The chain that reaches this runner does not have to be the chain the new BG started - a BG chain
+    // can be cancelled and replaced by one started by another database change (issue #5066). The only
+    // gate left is lastBgTriggeredRun, so the two cases below are what keeps the loop from running twice.
+    @Test
+    fun `full phase invokes loop even when the chain was not started by a new bg`() = runTest {
+        val ads = mock<AutosensDataStore>()
+        val bg = mock<InMemoryGlucoseValue>()
+        whenever(bg.timestamp).thenReturn(5000L)
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(bg)
+        // A loop run happened for an older BG, the newest one was never used
+        whenever(loop.lastBgTriggeredRun).thenReturn(4000L)
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+
+        val result = run()
+
+        Assertions.assertEquals(WorkOutcome.Success, result)
+        verify(loop).invoke(any(), any(), any())
+    }
+
+    @Test
+    fun `full phase skips loop when newest bg was already used`() = runTest {
+        val ads = mock<AutosensDataStore>()
+        val bg = mock<InMemoryGlucoseValue>()
+        whenever(bg.timestamp).thenReturn(5000L)
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(bg)
+        whenever(loop.lastBgTriggeredRun).thenReturn(5000L)
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+
+        val result = run()
+
+        Assertions.assertEquals(WorkOutcome.Success, result)
+        verify(loop, never()).invoke(any(), any(), any())
+        verify(widgetUpdater).update("WorkFlow")
+    }
+
+    @Test
+    fun `full phase skips loop when no actual bg is available`() = runTest {
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(null)
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+
+        val result = run()
+
+        Assertions.assertEquals(WorkOutcome.Success, result)
+        verify(loop, never()).invoke(any(), any(), any())
         verify(widgetUpdater).update("WorkFlow")
     }
 }

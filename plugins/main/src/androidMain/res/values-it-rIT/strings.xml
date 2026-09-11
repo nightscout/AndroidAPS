@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_history_browser">Storico</string>
+    <string name="nav_history_browser">Navigatore della cronologia</string>
     <string name="sensor_label">Sensore</string>
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Batteria micro</string>

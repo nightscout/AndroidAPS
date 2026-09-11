@@ -11,6 +11,75 @@
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pomp niet geïnitialiseerd</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Batterij optimalisatie</string>
+    <string name="permission_battery_description">Toepassing moet worden uitgesloten van batterij optimalisatie om op de achtergrond betrouwbaar te kunnen werken</string>
+    <string name="permission_directory_title">AAPS map</string>
+    <string name="permission_directory_description">Selecteer een map voor applicatie-instellingen en log bestanden</string>
+    <string name="permission_notifications_title">Notificaties</string>
+    <string name="permission_notifications_description">Vereist voor het weergeven van waarschuwingen, alarmen en pomp status updates</string>
+    <string name="permission_fsi_title">Volledig scherm alarmen</string>
+    <string name="permission_fsi_description">Nodig zodat alarmen het scherm kunnen activeren en volledig scherm kunnen weergeven terwijl de telefoon vergrendeld is</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Instellingen succesvol geëxporteerd naar cloudopslag</string>
+    <string name="export_to_cloud_failed">Exporteren naar cloudopslag is mislukt</string>
+    <string name="csv_uploaded_to_cloud">Gebruiker invoer CSV succesvol geüpload naar cloud opslag</string>
+    <string name="exported">Instellingen geëxporteerd</string>
+    <string name="exported_failed">Export instellingen mislukt!</string>
+    <string name="filenotfound">Bestand niet gevonden</string>
+    <string name="ue_exported">Gebruikers invoer geëxporteerd</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s geleden geëxporteerd</string>
+    <string name="exported_at" comment="at placeholder we add export date">geëxporteerd op %1$s</string>
+    <string name="exported_less_than_hour_ago">minder dan uur geleden geëxporteerd</string>
+    <string name="metadata_warning_different_flavour">Instellingen zijn gemaakt met een andere variant van AAPS (%1$s) terwijl je nu: %2$s gebruikt.\n\nEr kunnen instellingen ontbreken of ongeldig zijn - controleer aub jouw instellingen na het importeren en corrigeer ze zonodig.</string>
+    <string name="metadata_warning_different_device">Instellingen zijn gemaakt op een ander apparaat. Het is OK als ze zijn geïmporteerd van een oude/andere telefoon, maar zorg ervoor dat de geïmporteerde instellingen correct zijn!</string>
+    <string name="metadata_warning_old_export">Geïmporteerde instellingen zijn al %1$s dagen oud! Misschien heb je een meer recente versie of heb je het verkeerde bestand gekozen? Vergeet niet om regelmatig jouw instellingen te exporteren!</string>
+    <string name="metadata_warning_date_format">Ongeldige notatie voor datum/tijd!</string>
+    <string name="metadata_warning_different_version">Instellingen zijn afkomstig van een vorige minor versie van de AAPS app. Het is OK als je deze importeert na een app upgrade, maar controleer na importeren dan wel of de instellingen nog steeds correct zijn!</string>
+    <string name="metadata_urgent_different_version">Instellingen van een andere major versie van de AAPS app. Deze versies kunnen aanzienlijk verschillen en kunnen instellingen hebben die incompatibel zijn! Zorg ervoor dat na het importeren alle instellingen nog steeds correct zijn!</string>
+    <string name="prefdecrypt_settings_tampered">Geknoeid met instellingenbestand</string>
+    <string name="prefdecrypt_settings_secure">Instellingenbestand is veilig</string>
+    <string name="prefdecrypt_settings_unencrypted">Gebruikt niet veilige, niet-versleutelde indeling voor instellingen</string>
+    <string name="prefdecrypt_wrong_json">JSON-indelingsfout, vereist veld ontbreekt (indeling, inhoud, metagegevens of beveiliging)</string>
+    <string name="prefdecrypt_wrong_password">Decryptie fout, het opgegeven wachtwoord kan het bestand niet ontsleutelen</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Bestand checksum (hash) ontbreekt, kan de authenticiteit van instellingen niet controleren!</string>
+    <string name="prefdecrypt_issue_modified">Bestand is gewijzigd na export!</string>
+    <string name="prefdecrypt_issue_parsing">Decoderingsfout, uitlezen van instellingen is mislukt!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Decoderingsfout, het opgegeven wachtwoord is ongeldig of het instellingenbestand is gewijzigd / mee geknoeid. Wellicht was het geïmporteerde bestand geëxporteerd met een ander masterwachtwoord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Ontbrekende versleutelingsconfiguratie, instellingen indeling is ongeldig!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Niet-ondersteund of niet opgegeven versleutelingsalgoritme!</string>
+    <string name="metadata_label_format">Bestandsformaat</string>
+    <string name="metadata_label_created_at">Gemaakt op</string>
+    <string name="metadata_label_aaps_version">AAPS versie</string>
+    <string name="metadata_label_aaps_flavour">Build variant</string>
+    <string name="metadata_label_device_name">Patiëntnaam van exporterend apparaat</string>
+    <string name="metadata_label_device_model">Modelnaam/nr van exporterend apparaat</string>
+    <string name="metadata_label_encryption">Bestandsversleuteling</string>
+    <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
+    <string name="metadata_format_other">Onbekende export indeling</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Fout bij toegang tot het bestandssysteem. Selecteer de juiste AAPS map.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Back-up maken naar Google Drive</string>
+    <string name="csv_upload_failed">Uploaden van gebruikersinvoer CSV naar cloud opslag mislukt</string>
+    <string name="csv_upload_error">Fout opgetreden tijdens het uploaden van CSV naar de cloud</string>
+    <string name="uploading_to_cloud">Uploaden naar cloud...</string>
+    <string name="cloud_directory_path">Cloud map: %1$s</string>
+    <string name="google_drive_token_refresh_error">Kan Google Drive toegangstoken niet vernieuwen: %1$s</string>
+    <string name="google_drive_connection_test_failed">Google Drive verbindingstest is mislukt</string>
+    <string name="google_drive_connect_error">Kan geen verbinding maken met Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Kon geen lijst van Google Drive mappen tonen</string>
+    <string name="google_drive_list_folders_error">Fout bij weergeven mappen: %1$s</string>
+    <string name="google_drive_upload_no_id">Upload geslaagd maar geen id geretourneerd</string>
+    <string name="google_drive_upload_verify_failed">Upload verificatie mislukt</string>
+    <string name="google_drive_upload_failed">Upload mislukt: %1$s</string>
+    <string name="google_drive_upload_error">Fout bij uploaden van bestand: %1$s</string>
+    <string name="google_drive_folder_access_error">Kan geen bestemmingsmap aanmaken of benaderen: %1$s</string>
+    <string name="google_drive_list_settings_failed">Kan instellingsbestanden niet tonen</string>
+    <string name="google_drive_list_settings_error">Fout bij weergeven van instellingsbestanden: %1$s</string>
+    <string name="google_drive_download_failed">Downloaden van bestand mislukt</string>
+    <string name="google_drive_download_error">Fout bij downloaden van bestand: %1$s</string>
+    <string name="google_drive_authorized">Google Drive geautoriseerd</string>
+    <string name="google_drive_reauth_required">Wis instellingen en autoriseer Google Drive opnieuw</string>
 </resources>

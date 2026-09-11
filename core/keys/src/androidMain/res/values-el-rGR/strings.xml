@@ -16,15 +16,26 @@
     <!-- Wear preferences -->
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
+    <string name="carb_increment_button_message">Αριθμός υδατανθράκων να προστεθεί όταν πατήσετε το πλήκτρο</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Χορήγησε το πλήρες bolus (100%) εάν η γλυκαιμία είναι παλαιότερη από</string>
     <!-- IntKey: Protection preferences -->
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="biometric">Βιομετρικά</string>
+    <string name="master_password">Κύριος κωδικός</string>
+    <string name="custom_password">Προσαρμοσμένος κωδικός</string>
+    <string name="custom_pin">Προσαρμοσμένο PIN</string>
     <!-- IntKey: Safety preferences -->
     <!-- IntKey: Loop preferences -->
+    <string name="loop_open_mode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν την τιμή σε %. Προεπιλεγμένη τιμή 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="uam_smb_max_minutes">Μέγιστη διάρκεια UAM SMB (λεπτά)</string>
+    <string name="carbs_req_threshold_summary">Ελάχιστα γραμμάρια υδατανθράκων για την εμφάνιση μιας ειδοποίησης πρότασης υδατανθράκων. Δε θα εμφανιστούν ειδοποιήσεις για προτάσεις υδατανθράκων κάτω από αυτόν τον αριθμό.</string>
+    <string name="openapsama_autosens_period_summary">Ποσότητα ωρών κατά το παρελθόν για ανίχνευση ευαισθησίας (εξαιρείται ο χρόνος απορρόφησης υδατανθράκων)</string>
     <!-- IntKey: Maintenance preferences -->
     <!-- IntKey: Alert preferences -->
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="autotune_default_tune_days_summary">Προεπιλεγμένος αριθμός ημερών δεδομένων προς επεξεργασία από το Autotune (έως 30)</string>
     <!-- IntKey: SMS preferences -->
     <!-- IntKey: BG Source preferences -->
     <!-- IntKey: NS Client preferences -->
@@ -40,14 +51,29 @@
     <!-- StringKey: Maintenance preferences -->
     <!-- StringKey: Automation preferences -->
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Πρόσθετο υποχρεωτικό PIN στο τέλος του token</string>
+    <string name="smscommunicator_otp_pin_summary">Πρόσθετα ψηφία που θα πρέπει να απομνημονεύονται και να τοποθετηθούν στο τέλος κάθε παραγόμενου κωδικού πρόσβασης μιας φοράς</string>
     <!-- StringKey: Virtual pump preferences -->
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="insulin_increment_button_message">Ποσότητα ινσουλίνης να προστεθεί όταν πατήσετε το πλήκτρο</string>
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
+    <string name="openapsma_max_basal_summary">Αυτή η τιμή ονομάζεται μέγιστο βασικού ρυθμού στο περιεχόμενο του OpenAPS</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Προεπιλεγμένη τιμή: 3 Αυτό είναι ένα κλειδί ασφαλείας του OpenAPS. Αυτό περιορίζει την αύξηση του βασικού x3 (σε αυτούς τους ανθρώους) από την μεγαλύτερη τιμή του. Συνήθως δεν χρειάζεται να το αλλάξετε, αλλά πρέπει να ξέρετε τι σημαίνει “3x μέγιστο ημερήσιο; 4x τρέχων” για λόγους ασφαλείας.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Προεπιλεγμένη τιμή: 4 Αυτό είναι το μισό του θέματος ασφαλείας του OpenAPS, και το άλλο μισό του «3 x μέγιστο ημέρας: 4 x τρέχων» των θεμάτων ασφαλείας. Αυτό σημαίνει ότι ο βασικός ρυθμός, ανεξάρτητα από την μέγιστη τιμή βασικού ρυθμού στην αντλία σας, δεν μπορεί να είναι υψηλότερος από το πολλαπλάσιο αυτού του αριθμού. Αυτό γίνεται για να αποτρέψει τους ανθρώπους από το να μπουν σε επικίνδυνες καταστάσεις θέτωντας υψηλό βασικό πριν κατανοήσουν πλήρως πώς λειτουργεί ο αλγόριθμος. Και πάλι, η προεπιλεγμένη τιμή είναι 4x: οι περισσότεροι άνθρωποι ποτέ δεν θα χρειαστεί να το προσαρμόσουν και αντίθετα είναι πιο πιθανό να χρειαστεί να προσαρμόσουν άλλες ρυθμίσεις αν αισθάνονται ότι κινούνται με ασφάλεια.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Προεπιλεγμένη τιμή: 2\nΗ αναβολή Bolus ενεργοποιείται αφού κάνετε ένα γευματικό bolus, έτσι το κύκλωμα δεν θα εξουδετερώσει με χαμηλό προσωρινό μόλις έχετε φάει. Το παράδειγμα εδώ και η προεπιλογή είναι 2: έτσι μια τρίωρη DIA σημαίνει ότι το bolus αναβολής θα είναι σταδιακά πάνω από 1,5 ώρα (3DIA/2).</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Προεπιλεγμένη τιμή: 3.0 (AMA) ή 8.0 (SMB). Αυτό είναι μια ρύθμιση για την επίπτωση της προεπιλεγμένης απορρόφησης υδατανθράκων ανά 5 λεπτά. Η προεπιλογή είναι μια αναμενόμενη 3mg/dl/5min. Αυτό επηρεάζει το πόσο γρήγορα το COB ελλατώνεται, και πόση απορρόφηση υδατανθράκων θα υποθέτει για τον υπολογισμό της μελλοντικής πρόβλεψης BG, όταν το BG πέφτει περισσότερο από το αναμενόμενο ή δεν αυξάνεται όσο το αναμενόμενο.</string>
+    <string name="absorption_cutoff_summary">Χρόνος κατά τον οποίο οποιοδήποτε γεύμα θεωρείται απορροφημένο. Οι υπόλοιποι υδατάνθρακες θα αποκοπούν.</string>
+    <string name="absorption_max_time_summary">Χρόνος σε ώρες που περιμένουμε να απορροφηθούν όλοι οι υδατάνθρακες ενός γεύματος</string>
+    <string name="openapsama_autosens_min_summary">Προεπιλεγμένη τιμή: 0.7\n H άλλη πλευρά από τα όρια ασφαλείας του autosens, θέτοντας ένα ανώτατο όριο στο πόσο χαμηλά to autosens μπορεί να προσαρμόσει τον βασικό ρυθμό και πόσο ψηλά μπορεί να ρυθμίσει τη ISF και τον στόχο του BG.</string>
+    <string name="openapsama_autosens_max_summary">Προεπιλεγμένη τιμή: 1.2\nΑυτός είναι ένας πολλαπλασιαστής για το autosens (και σύντομα autotune) για να ορίσετε ένα 20%% ανώτατο όριο στο πόσο ψηλά μπορεί να είναι ο λόγος autosens, που με τη σειρά του καθορίζει πόσο ψηλά το autosens μπορεί να ρυθμίσει τον βασικό ρυθμό, πόσο χαμηλά μπορεί να ρυθμίσει την ISF, και πόσο χαμηλά μπορεί να ορίσει το στόχο της BG.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="lgs_threshold_summary">Η τιμή BG κάτω από την οποία αναστέλλεται η ινσουλίνη. Η προεπιλεγμένη τιμή χρησιμοποιεί τυποποιημένο μοντέλο στόχου. Ο χρήστης μπορεί να ορίσει τιμή μεταξύ 60mg/dl (3. mmol/l) και 100mg/dl (5.5mmol/l). Τιμές κάτω των 65/3.6 έχουν ως αποτέλεσμα τη χρήση προκαθορισμένου μοντέλου</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>

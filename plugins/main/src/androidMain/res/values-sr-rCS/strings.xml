@@ -2,6 +2,7 @@
 <resources>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Insulin</string>
+    <string name="cannula">Kanila</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->

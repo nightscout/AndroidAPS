@@ -46,7 +46,6 @@
     <string name="location_outside">כשנמצאים מחוץ לאזור</string>
     <string name="location_going_in">כשנכנסים לאזור ששמו</string>
     <string name="location_going_out">כשעוזבים אזור ששמו</string>
-    <string name="time_range">טווח זמן</string>
     <string name="timerange_value">הזמן בין %1$s ו- %2$s</string>
     <string name="add_short">הוספה</string>
     <string name="temptargetcompared">ערך מטרה זמני %1$s</string>
@@ -84,13 +83,14 @@
     <string name="error_setting_reminder">חלה תקלה בעת הגדרת תזכורת</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">פרופיל אוטומטי %1$s</string>
-    <string name="autotune_run">הפעל Autotune</string>
+    <string name="autotune_run">הפעל כוונון אוטומטי</string>
     <string name="autotune_run_without_autoswitch">כוונון אוטומטי הופעל ללא החלפת פרופיל</string>
     <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה בוטלה</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>

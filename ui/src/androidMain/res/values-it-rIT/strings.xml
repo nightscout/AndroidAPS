@@ -174,7 +174,7 @@
     <string name="show_invalidated">Mostra invalidato</string>
     <string name="hide_invalidated">Nascondi invalidato</string>
     <string name="careportal_remove_started_events">Rimuovi le voci \"AAPS avviato\"</string>
-    <string name="user_entry">Inserimento utente</string>
+    <string name="user_entry">Voce utente</string>
     <string name="clone_label">Clona</string>
     <string name="add_new_profile">Aggiungi nuovo profilo</string>
     <string name="edit_label">Modifica</string>

@@ -8,6 +8,7 @@
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <!-- Pair with master (client side PIN entry) -->
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="clear_log">Napló törlése</string>
     <!-- Tidepool -->
@@ -34,4 +35,9 @@
     <string name="today">Ma</string>
     <string name="weighted">súlyozott</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="wrong_format">Hibás formátum</string>
+    <string name="sms_actual_bg">VC:</string>
+    <string name="sms_bolus">Bólus:</string>
+    <string name="sms_basal">Bázis:</string>
 </resources>

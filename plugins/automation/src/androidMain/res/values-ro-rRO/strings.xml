@@ -69,7 +69,6 @@
     <string name="temptargetcomparedmgdl">Ținta temporară %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Ținta temporară %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil %1$s %2$d</string>
-    <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Sau</string>
     <string name="xor">Sau exclusiv</string>
     <string name="atspecifiedtime">La %1$s</string>
@@ -98,8 +97,6 @@
     <string name="location">Localizare</string>
     <string name="lastboluslabel">Ultimul bolus</string>
     <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s minut</string>
-    <string name="triggercoblabel">COB</string>
-    <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Ritm cardiac</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="triggerSensorAgeLabel">Vechimea senzorului</string>
@@ -148,8 +145,9 @@
     <string name="changeSmbState">Activați/dezactivați SMB</string>
     <string name="changeSmbTo">Schimbați SMB la %1$s</string>
     <string name="newSmbMode">Noul mod SMB:</string>
-    <string name="on">PORNIT</string>
-    <string name="off">OPRIT</string>
+    <string name="on">Pornit</string>
+    <string name="off">Oprit</string>
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Alegeți de pe hartă</string>
     <string name="tap_to_select_location">Apăsați pe hartă pentru a selecta un loc</string>

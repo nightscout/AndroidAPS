@@ -48,7 +48,7 @@
     <string name="snooze_30m">延遲 30 分鐘</string>
     <string name="snooze_60m">延遲 60 分鐘</string>
     <string name="virtual_pump">虛擬幫浦</string>
-    <string name="constraints">限制</string>
+    <string name="constraints">約束條件</string>
     <string name="superbolus">超級注射</string>
     <string name="pump_paused">幫浦已暫停</string>
     <string name="and">和</string>
@@ -68,7 +68,6 @@
     <string name="confirm_pin_hint">確認 PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">狀態燈</string>
-    <string name="copy_existing_values">複製 NS 設定（若存在）？</string>
     <string name="configbuilder_insulin">胰島素</string>
     <string name="configbuilder_bgsource">血糖來源</string>
     <string name="configbuilder_smoothing">平滑處理</string>
@@ -91,7 +90,6 @@
     <string name="uploader">上傳器</string>
     <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">遺失血糖讀取值</string>
-    <string name="treatments_iob_label_string">IOB：</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
     <string name="success">成功</string>
@@ -164,7 +162,7 @@
     <string name="initialization_failed">初始化失敗</string>
     <string name="notes_label">備註</string>
     <string name="wrong_pump_data">資料來自不同的幫浦。更換幫浦驅動程式以重置幫浦狀態。</string>
-    <string name="bg_label">血糖</string>
+    <string name="bg_label">BG</string>
     <string name="calibration">校正</string>
     <string name="cgm">CGM</string>
     <string name="treatmentdeliveryerror">注射錯誤報告。請檢查實際注射的胰島素和碳水化合物量</string>
@@ -195,7 +193,7 @@
     <string name="pump_wizard_profile_gate_no_store">未建立任何設定檔。請開啟設定檔管理以建立一個，然後請再次開始啟用。</string>
     <string name="reset">重設</string>
     <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
-    <string name="profile">設定檔</string>
+    <string name="profile">檔案</string>
     <string name="percentage_label">百分比</string>
     <string name="timeshift_label">時間偏移</string>
     <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
@@ -258,7 +256,6 @@
     <string name="pin_dont_match">PIN 碼不一致</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">開始設定檔 %1$d%% 持續 %2$d 分鐘</string>
     <!--    APSResult-->
     <string name="cancel_temp">取消臨時基礎率</string>
     <string name="let_temp_basal_run">讓臨時基礎率運行</string>
@@ -295,7 +292,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">照護入口</string>
     <string name="careportal_bgcheck">血糖檢查</string>
     <string name="careportal_mbg">手動血糖或校正</string>
     <string name="careportal_announcement">公告</string>
@@ -639,7 +635,6 @@
     <string name="uel_scene_deactivated">場景已停用</string>
     <string name="uel_remote_config_changed">遠端設定已變更</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">臨時目標低值</string>
     <string name="temp_target_high_target">臨時目標高值</string>
     <string name="temp_target_value">臨時目標值</string>
     <string name="insulin_dia">胰島素作用時間數值</string>
@@ -915,7 +910,7 @@
     <string name="device_maintenance">裝置維護</string>
     <string name="from_label">從</string>
     <string name="to_label">到</string>
-    <string name="sensor_label">傳感器</string>
+    <string name="sensor_label">感測器</string>
     <string name="insulin_label">胰島素</string>
     <string name="pb_label">幫浦電池</string>
     <string name="cannula">套管</string>
@@ -966,7 +961,7 @@
     <string name="units_colon">單位：</string>
     <string name="unsaved_changes">未儲存的變更</string>
     <string name="unsaved_changes_message">你有未儲存的變更。要如何處理？</string>
-    <string name="discard">放棄</string>
+    <string name="discard">捨棄</string>
     <string name="ic_dynamic_label_warning">你的演算法可提供 IC 的動態計算。以下數值僅能在缺少資料時作為備援，或僅供參考</string>
     <string name="isf_dynamic_label_warning">你的演算法可提供 ISF 的動態計算。以下數值僅能在缺少資料時作為備援，或僅供參考</string>
     <string name="add_time_block">新增時段</string>
@@ -1021,8 +1016,6 @@
     <string name="import_wrong_password">密碼錯誤</string>
     <string name="import_btn">匯入</string>
     <string name="import_anyway_btn">仍要匯入</string>
-    <string name="import_restart_title">設定已匯入</string>
-    <string name="import_restart_message">設定已匯入，應用程式需要重新啟動。</string>
     <string name="import_source_local">本機</string>
     <string name="import_source_cloud">雲端</string>
     <string name="import_load_more">載入更多</string>
@@ -1064,11 +1057,9 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_grams">%1$d 克</string>
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d 小時</string>
-    <string name="units_format_hours_double">%1$.0f 小時</string>
-    <string name="units_format_hours_double_range">%1$.0f 小時 (%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_double">%1$.1f 小時</string>
+    <string name="units_format_hours_double_range">%1$.1f 小時 (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d 小時 (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>
@@ -1095,5 +1086,5 @@
     <string name="units_percent">%</string>
     <string name="units_sec">秒</string>
     <string name="units_years">年</string>
-    <string name="prefs_range_title">視覺化範圍</string>
+    <string name="prefs_range_title">可視化範圍</string>
 </resources>

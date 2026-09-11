@@ -80,6 +80,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
@@ -92,6 +93,7 @@ import app.aaps.core.objects.extensions.jsonObject
 import app.aaps.plugins.aps.loop.extensions.jsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
+import kotlin.concurrent.Volatile
 import kotlin.math.abs
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
@@ -147,7 +149,9 @@ class LoopPlugin @Inject constructor(
     aapsLogger, rh
 ), Loop, PluginConstraints {
 
-    override var lastBgTriggeredRun: Long = 0
+    // Volatile: this is now the only gate against a second automatic loop run for the same BG. It is
+    // written by the calculation worker thread and read by the next one, which may be a different one.
+    @Volatile override var lastBgTriggeredRun: Long = 0
     private var carbsSuggestionsSuspendedUntil: Long = 0
     private var prevCarbsreq = 0
     override var lastRun: LastRun? = null
@@ -621,28 +625,51 @@ class LoopPlugin @Inject constructor(
                         fabricPrivacy.logCustom("APSRequest")
                         // TBR request must be applied first to prevent situation where
                         // SMB was executed and zero TBR afterward failed
-                        val tbrResult = applyTBRRequest(resultAfterConstraints, profile)
-                        lastRun.tbrSetByPump = tbrResult
-                        lastRun.lastTBRRequest = lastRun.lastAPSRun
-                        if (tbrResult.enacted || tbrResult.success) {
-                            lastRun.lastTBREnact = dateUtil.now()
-                            // deliverAt is used to prevent executing too old SMB request (older than 1 min)
-                            // executing TBR may take some time thus give more time to SMB
-                            resultAfterConstraints.deliverAt = lastRun.lastTBREnact
-                            rxBus.send(EventLoopUpdateGui())
-                            if (resultAfterConstraints.isBolusRequested) {
-                                val smbResult = applySMBRequest(resultAfterConstraints)
-                                if (smbResult.enacted || smbResult.success) {
-                                    lastRun.smbSetByPump = smbResult
-                                    lastRun.lastSMBRequest = lastRun.lastAPSRun
-                                    lastRun.lastSMBEnact = dateUtil.now()
-                                    scheduleBuildAndStoreDeviceStatus("applySMBRequest")
+                        //
+                        // The temp basal and the SMB are one decision, so they are protected from
+                        // cancellation together. Issue #5100: applying the temp basal makes the pump
+                        // driver read the pump back and write the new temp basal into the database.
+                        // That raises the new history event, and five seconds later
+                        // IobCobCalculatorPlugin stops the calculation as a barrier before it
+                        // invalidates the IOB tables. The loop runs inside that calculation, so the
+                        // stop landed in the middle of the pump conversation: the temp basal was
+                        // already programmed, the SMB the same result asked for was never reached,
+                        // and nothing was logged. The requested bolus simply disappeared.
+                        //
+                        // Only the pump conversation is protected, never the decision above it.
+                        // `usedAPS.invoke` reads the IOB tables, and the barrier exists exactly so
+                        // that no calculation is running over them while they are being invalidated,
+                        // so that part has to stay cancellable.
+                        //
+                        // Protecting this part cannot act on stale data: the dose is already decided
+                        // here, and applySMBRequest reads nothing back from the IOB tables. It is
+                        // also short and self limiting - if the pump is slow enough that the SMB
+                        // would go out late, `CommandSMBBolus` refuses it once deliverAt is more
+                        // than a minute old.
+                        withContext(NonCancellable) {
+                            val tbrResult = applyTBRRequest(resultAfterConstraints, profile)
+                            lastRun.tbrSetByPump = tbrResult
+                            lastRun.lastTBRRequest = lastRun.lastAPSRun
+                            if (tbrResult.enacted || tbrResult.success) {
+                                lastRun.lastTBREnact = dateUtil.now()
+                                // deliverAt is used to prevent executing too old SMB request (older than 1 min)
+                                // executing TBR may take some time thus give more time to SMB
+                                resultAfterConstraints.deliverAt = lastRun.lastTBREnact
+                                rxBus.send(EventLoopUpdateGui())
+                                if (resultAfterConstraints.isBolusRequested) {
+                                    val smbResult = applySMBRequest(resultAfterConstraints)
+                                    if (smbResult.enacted || smbResult.success) {
+                                        lastRun.smbSetByPump = smbResult
+                                        lastRun.lastSMBRequest = lastRun.lastAPSRun
+                                        lastRun.lastSMBEnact = dateUtil.now()
+                                        scheduleBuildAndStoreDeviceStatus("applySMBRequest")
+                                    } else {
+                                        appScope.launch { delay(1000); invoke("tempBasalFallback", allowNotification, true) }
+                                    }
                                 } else {
-                                    appScope.launch { delay(1000); invoke("tempBasalFallback", allowNotification, true) }
+                                    aapsLogger.debug(LTag.APS, "No SMB requested")
+                                    scheduleBuildAndStoreDeviceStatus("applyTBRRequest")
                                 }
-                            } else {
-                                aapsLogger.debug(LTag.APS, "No SMB requested")
-                                scheduleBuildAndStoreDeviceStatus("applyTBRRequest")
                             }
                         }
                         rxBus.send(EventLoopUpdateGui())
@@ -701,16 +728,23 @@ class LoopPlugin @Inject constructor(
         val profile = profileFunction.getProfile() ?: return
         lastRun?.let { lastRun ->
             lastRun.constraintsProcessed?.let { constraintsProcessed ->
-                val result = applyTBRRequest(constraintsProcessed, profile)
-                if (result.enacted) {
-                    lastRun.tbrSetByPump = result
-                    lastRun.lastTBRRequest = lastRun.lastAPSRun
-                    lastRun.lastTBREnact = dateUtil.now()
-                    lastRun.lastOpenModeAccept = dateUtil.now()
-                    scheduleBuildAndStoreDeviceStatus("acceptChangeRequest")
-                    preferences.inc(IntNonKey.ObjectivesManualEnacts)
+                // Protected for the same reason as the enactment in `invoke`, and it matters more
+                // here: the callers run this on a screen scope, so leaving the screen during the
+                // pump conversation used to abort a dose the user had just pressed a button for.
+                // Nothing is decided in this block, the request was calculated earlier, so there is
+                // no calculation to keep out of the invalidation barrier.
+                withContext(NonCancellable) {
+                    val result = applyTBRRequest(constraintsProcessed, profile)
+                    if (result.enacted) {
+                        lastRun.tbrSetByPump = result
+                        lastRun.lastTBRRequest = lastRun.lastAPSRun
+                        lastRun.lastTBREnact = dateUtil.now()
+                        lastRun.lastOpenModeAccept = dateUtil.now()
+                        scheduleBuildAndStoreDeviceStatus("acceptChangeRequest")
+                        preferences.inc(IntNonKey.ObjectivesManualEnacts)
+                    }
+                    rxBus.send(EventAcceptOpenLoopChange())
                 }
-                rxBus.send(EventAcceptOpenLoopChange())
             }
         }
         fabricPrivacy.logCustom("AcceptTemp")

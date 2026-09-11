@@ -32,7 +32,6 @@
     <string name="pref_title_alert_urgent_as_android_notification">Ridicați alarmele urgente ca notificări Android</string>
     <string name="pref_title_alert_increase_volume">Creșteți treptat volumul notificărilor</string>
     <string name="pref_title_alert_override_dnd">Suprascrieți modul Nu Deranjați</string>
-    <string name="pref_summary_alert_override_dnd">Activat, alarmele AAPS sunt redate prin modurile silențios și Nu deranjați (flux de alarmă). Dezactivat, alarmele respectă modul silențios/Nu deranjați (flux de notificări).</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Încărcați datele de glicemie în NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Înregistrați schimbarea senzorului</string>
@@ -178,7 +177,6 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Timp de expirare a protecției</string>
     <string name="pref_title_protection_type_application">Nivelul 0: Protecția aplicației</string>
-    <string name="pref_summary_protection_type_application">Lansare aplicație. Independent de alte niveluri</string>
     <string name="pref_title_protection_type_bolus">Nivelul 1: Protecție bolus</string>
     <string name="pref_summary_protection_type_bolus">Tratamente, activare profil. Necesită nivelul 2</string>
     <string name="pref_title_protection_type_settings">Nivelul 2: Protecție setări</string>
@@ -237,7 +235,6 @@
     <string name="pref_title_units">Unități</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
-    <string name="pref_title_language">Limba</string>
     <string name="lang_default">Implicit sistem</string>
     <string name="lang_en">Engleză</string>
     <string name="lang_af">Afrikaans</string>

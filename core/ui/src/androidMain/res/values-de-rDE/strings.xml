@@ -107,6 +107,8 @@
     <string name="activate_profile">Aktiviere Profil</string>
     <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
     <string name="profile">Profil</string>
+    <string name="percentage_label">Prozentsatz</string>
+    <string name="timeshift_label">Zeitverschiebung</string>
     <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
@@ -136,7 +138,6 @@
     <string name="pin_dont_match">PINs stimmen nicht überein</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    APSResult-->
     <string name="cancel_temp">Temporäre Basalrate abbrechen</string>
     <string name="let_temp_basal_run">Temporäre Basalrate aktiv lassen</string>
@@ -150,7 +151,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BZ-Test</string>
     <string name="careportal_mbg">Manueller BZ oder Kalibrierung</string>
     <string name="careportal_announcement">Ankündigung</string>
@@ -294,7 +294,6 @@
     <string name="uel_loop_change">LOOP GEÄNDERT</string>
     <string name="uel_loop_removed">LOOP ENTFERNT</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Temp. Ziel unterer Wert</string>
     <string name="temp_target_high_target">Temp. Ziel oberer Wert</string>
     <string name="temp_target_value">Temp. Ziel Wert</string>
     <string name="profile_max_daily_basal_value">Profil max. Basalwert</string>
@@ -302,6 +301,14 @@
     <string name="valuelimitedto">%1$.2f limitiert auf %2$.2f</string>
     <string name="valueoutofrange">»%1$s« ist außerhalb der fest programmierten Grenzen</string>
     <!-- Profile validation -->
+    <string name="missing_profile_name">Fehlender Profilname</string>
+    <string name="error_in_ic_values">Fehler in IC-Werten</string>
+    <string name="error_in_isf_values">Fehler in ISF-Werten</string>
+    <string name="error_in_basal_values">Fehler in den Basalwerten</string>
+    <string name="error_in_target_values">Fehler in den Zielwerten</string>
+    <string name="profile_name_contains_dot">Einige Profilnamen enthalten Punkte.\nDies wird von NS nicht unterstützt.\nProfile werden nicht zu NS hochgeladen.</string>
+    <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="errors">Fehler</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f IE</string>
     <string name="carbs_g">KH %1$d g</string>
@@ -315,6 +322,8 @@
     <string name="set_profile">PROFIL SETZEN</string>
     <string name="set_user_settings">NUTZER-EINSTELLUNGEN SETZEN</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f IE</string>
+    <string name="start_pump">Pumpe starten</string>
+    <string name="stop_pump">Pumpe stoppen</string>
     <string name="temp_basal_absolute">TEMP BASAL %1$.2f IE/h %2$d min</string>
     <string name="temp_basal_percent">TEMP BASAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFICATION</string>
@@ -341,6 +350,7 @@
     <string name="wizard_carbs_constraint">Die Kohlenhydrateinschränkung wurde überschritten!</string>
     <string name="wizard_constraint_bolus_size">Verletzung der Bolusbeschränkung!\nKann %1$.2fU nicht abgeben</string>
     <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
+    <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
     <!--    Preferences-->
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
@@ -371,6 +381,7 @@
     <string name="device_changed" comment="26 characters max for translation">Gerät gewechselt</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">TBR Abgabe-Fehler</string>
+    <string name="ebstopsloop">Die Verwendung eines Verzögerungsbolus unterbricht dem Closed Loop Modus für die Dauer des Verzögerungsbolus. Willst Du das wirklich?</string>
     <string name="pump_busy">Pumpe ist beschäftigt</string>
     <string name="connection_error">Pumpen-Verbindungsfehler</string>
     <string name="reading_pump_history">Pumpen-Historie wird gelesen</string>
@@ -394,9 +405,13 @@
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
+    <string name="export_to">Einstellungen exportieren nach</string>
+    <string name="password_preferences_encrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die exportierten Einstellungen verschlüsselt.</string>
+    <string name="preferences_export_canceled">Export abgebrochen! Einstellungen wurden NICHT exportiert!</string>
     <!-- <unattended_export result messages> -->
     <!-- Cloud export -->
     <!-- Export destination chip labels -->
+    <string name="data_choices">Datenübermittlung</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
     <!-- datetime layout -->
@@ -414,8 +429,20 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
     <!-- Navigation -->
+    <string name="nav_exit">Schließen</string>
+    <string name="open_navigation">Menü öffnen</string>
+    <string name="nav_history_browser">Historie</string>
+    <string name="nav_setupwizard">Einrichtungsassistent</string>
+    <string name="statistics">Statistiken</string>
+    <string name="nav_profile_helper">Profil-Helfer</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
+    <string name="extended_bolus_button">Verzögerter Bolus</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="pb_label">Pumpenbatterie</string>
+    <string name="cannula">Kanüle</string>
+    <string name="patch_pump">Patch-Pumpe</string>
     <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Meine App nicht beenden?</string>
@@ -437,6 +464,7 @@
     <string name="cleanup_db_confirm">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.</string>
     <string name="cleanup_db_confirm_sync">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.\nDies beschleunigt die vollständige Synchronisierung dramatisch.</string>
     <string name="cleared_entries">Gelöschte Einträge</string>
+    <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">So</string>
     <string name="weekday_saturday_short">Sa</string>
@@ -449,12 +477,27 @@
     <string name="format_insulin_units1">%1$.1f IE</string>
     <!--    Playback-->
     <!-- ProfileEditor -->
+    <string name="target_short">ZIEL</string>
+    <string name="profile_name">Profilname:</string>
+    <string name="units_colon">Einheiten:</string>
+    <string name="discard">Verwerfen</string>
     <!--    Search-->
     <!--    Food Management -->
+    <string name="category">Kategorie</string>
+    <string name="subcategory">Unterkategorie</string>
     <!--    Log Settings-->
+    <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <!--    Maintenance-->
+    <string name="maintenance">Wartung</string>
+    <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Logs oder Löschen dieser)</string>
+    <string name="log_files">Log Dateien</string>
+    <string name="delete_logs">Logs löschen</string>
+    <string name="import_setting">Einstellungen importieren</string>
     <!-- Import settings screen -->
+    <string name="database_cleanup">Datenbankbereinigung</string>
+    <string name="nav_resetdb">Datenbanken zurücksetzen</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
 </resources>

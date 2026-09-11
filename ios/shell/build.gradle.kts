@@ -121,7 +121,12 @@ tasks.matching { it.name.startsWith("linkDebugFramework") }.configureEach { depe
 fun buildStamp(): String {
     val commit = try {
         val out = File.createTempFile("git-build", "")
-        ProcessBuilder("git", "describe", "--always", "--abbrev=7").redirectOutput(out).start().waitFor()
+        // `--exclude=ios-testflight-*` for the same reason as in `:app`. It is tempting to keep these
+        // on the iOS side, since the tag was made by this platform's own release - but the tag names
+        // one past submission, not this build. `git describe` reports the nearest one whatever the
+        // distance, so a build 53 commits later still called itself
+        // "ios-testflight-20260906-085036-53-g4dddae0", which reads as that TestFlight build and is not.
+        ProcessBuilder("git", "describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*").redirectOutput(out).start().waitFor()
         out.readText().trim()
     } catch (_: Exception) {
         "NoGitSystemAvailable"

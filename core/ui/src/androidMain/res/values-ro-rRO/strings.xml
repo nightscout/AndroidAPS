@@ -15,7 +15,7 @@
     <string name="count_selected">%1$d selectat</string>
     <string name="delete">Ștergeți</string>
     <string name="show_invalidated">Afișați invalidate</string>
-    <string name="hide_invalidated">Ascundeți invalidate</string>
+    <string name="hide_invalidated">Ascundeți invalidat</string>
     <string name="more_options">Mai multe opțiuni</string>
     <string name="refresh">Actualizați</string>
     <string name="no_history_records">Nu s-au găsit înregistrări</string>
@@ -68,7 +68,6 @@
     <string name="confirm_pin_hint">Confirmați codul PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Lumini de stare</string>
-    <string name="copy_existing_values">Copiați setările NS (dacă există)?</string>
     <string name="configbuilder_insulin">Insulină</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="configbuilder_smoothing">Netezire</string>
@@ -258,7 +257,6 @@
     <string name="pin_dont_match">PIN-urile nu se potrivesc</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Utilizați profilul %1$d%% pentru %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Anulare rată bazală temporară</string>
     <string name="let_temp_basal_run">Permiteți funcționarea bazalei temporare</string>
@@ -282,7 +280,7 @@
     <string name="in_range">În țintă</string>
     <string name="veryLow" comment="below 3.1">Foarte scăzută</string>
     <string name="low" comment="3.1-3.9">Scăzută</string>
-    <string name="high" comment="10.0-13.9">Mare</string>
+    <string name="high" comment="10.0-13.9">Ridicată</string>
     <string name="veryHigh" comment="above 13.9">Foarte mare</string>
     <string name="above" comment="above &quot;in range&quot;">Mai sus</string>
     <string name="detailed_14_days">Detaliere 14 zile</string>
@@ -295,7 +293,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Verificare glicemie</string>
     <string name="careportal_mbg">Test glicemie manual sau Calibrare</string>
     <string name="careportal_announcement">Anunț</string>
@@ -346,7 +343,6 @@
     <string name="scene_conflict_active_running_mode">Modul de funcționare activ va fi înlocuit</string>
     <string name="scene_conflict_active_scene">Scenariul activa \"%1$s\" se va încheia primul</string>
     <string name="scene_action_tt">Țintă temporară: %1$s</string>
-    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">Activați SMB</string>
     <string name="scene_action_smb_off">Dezactivați SMB</string>
@@ -637,7 +633,6 @@
     <string name="uel_scene_deactivated">SCENARIU DEZACTIVAT</string>
     <string name="uel_remote_config_changed">CONFIGURAȚIA PENTRU TELECOMANDĂ MODIFICATĂ</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Limita inferioară a țintei temporare</string>
     <string name="temp_target_high_target">Limita superioară a țintei temporare</string>
     <string name="temp_target_value">Valoare țintă temporară</string>
     <string name="insulin_dia">Valoarea DIA a insulinei</string>
@@ -796,7 +791,6 @@
     <string name="close">Închideți</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
-    <string name="export_ok">OK</string>
     <string name="export_warning">Atenție</string>
     <string name="export_expired">Expirat</string>
     <string name="export_disabled">Dezactivat</string>
@@ -863,7 +857,6 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Cerere utilizator</string>
     <!--    Pump pair/unpair (shared) -->
-    <string name="pump_pair">Asociați</string>
     <string name="pump_unpair">Dezasociați</string>
     <string name="pump_unpair_confirm_title">Dezasociați pompa?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompă asociată</string>
@@ -1025,8 +1018,6 @@
     <string name="import_wrong_password">Parolă greșită</string>
     <string name="import_btn">Importați</string>
     <string name="import_anyway_btn">Importați oricum</string>
-    <string name="import_restart_title">Setări importate</string>
-    <string name="import_restart_message">Setările au fost importate. Aplicația trebuie să repornească.</string>
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Încărcați mai multe</string>
@@ -1039,7 +1030,6 @@
     <string name="nav_resetdb">Resetați bazele de date</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Găsiți pompa</string>
-    <string name="ble_scan_select_pump">Selectați pompa din lista de mai jos</string>
     <string name="ble_scan_scanning">Se scanează pentru dispozitive…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Adăugați grafic</string>
@@ -1068,11 +1058,7 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_grams">%1$d g</string>
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
-    <string name="units_format_hours_double">%1$.0f h</string>
-    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>

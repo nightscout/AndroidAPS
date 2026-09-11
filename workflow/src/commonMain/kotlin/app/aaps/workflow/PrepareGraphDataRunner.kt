@@ -122,7 +122,10 @@ class PrepareGraphDataRunner @Inject constructor(
         if (isStopped()) return WorkOutcome.Stopped
 
         // ===== Phases 4 & 5: IOB/COB autosens + graph data prep (was IobCobOref* + PrepareIobAutosens) =====
-        if (activePlugin.activeSensitivity.isOref1) runIobCobOref1(data, isStopped) else runIobCobOref(data, isStopped)
+        // True once this run no longer owns the chain: it was stopped, or a newer generation took the
+        // slot. Asked again right before the result is published, see publishAds().
+        val superseded = { isStopped() || workflowChainData.prepareFor(job, generation) == null }
+        if (activePlugin.activeSensitivity.isOref1) runIobCobOref1(data, isStopped, superseded) else runIobCobOref(data, isStopped, superseded)
         if (isStopped()) return WorkOutcome.Stopped
         prepareIobAutosensGraphData(data, isStopped)
         if (isStopped()) return WorkOutcome.Stopped
@@ -147,6 +150,18 @@ class PrepareGraphDataRunner @Inject constructor(
             bgReadings = readings
             aapsLogger.debug(LTag.AUTOSENS) { "BG data loaded. Size: ${bgReadings.size} Start date: ${dateUtil.dateAndTimeString(start)} End date: ${dateUtil.dateAndTimeString(to)}" }
             createBucketedData(aapsLogger, dateUtil)
+            // Drop autosens entries that fell out of the window this run works on. Nothing can ask for
+            // them any more: every reader is bounded either by the bucketed data built above or by the
+            // detection start, and both live inside [start, to].
+            //
+            // The cut is `start`, so it follows this run's own `to` and never the wall clock. The
+            // history browser runs the same code on its own store with `to` in the past, and a cut
+            // taken from `now` would empty that store on every step.
+            //
+            // This runs on the LIVE store in phase 1, on purpose. Phase 4 works on a clone whose
+            // publish is skipped when the run is superseded, which is exactly the case where the table
+            // needs pruning most, and it mutates that clone's table outside this lock.
+            pruneOlderThan(start, aapsLogger, dateUtil)
         }
     }
 
@@ -229,7 +244,7 @@ class PrepareGraphDataRunner @Inject constructor(
 
     // ---------- Phase 4: IOB/COB oref1 (was IobCobOref1Worker) ----------
 
-    private suspend fun runIobCobOref1(data: PrepareGraphData, isStopped: () -> Boolean) {
+    private suspend fun runIobCobOref1(data: PrepareGraphData, isStopped: () -> Boolean, superseded: () -> Boolean) {
         val start = dateUtil.now()
         try {
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread started: ${data.reason}")
@@ -439,13 +454,7 @@ class PrepareGraphDataRunner @Inject constructor(
                 autosensData.autosensResult = sensitivity
                 aapsLogger.debug(LTag.AUTOSENS) { autosensData.toString() }
             }
-            data.iobCobCalculator.ads = ads
-            // On the app scope, not a bare Thread: same fire-and-forget timing as before, but plain
-            // Kotlin. NOTE this still outlives a superseded chain, exactly as the thread did.
-            scope.launch {
-                delay(1000)
-                rxBus.send(EventAutosensCalculationFinished(data.triggeredByNewBG))
-            }
+            publishAds(data, ads, superseded)
         } finally {
             data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100)
             aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA thread ended: ${data.reason}" }
@@ -455,7 +464,7 @@ class PrepareGraphDataRunner @Inject constructor(
 
     // ---------- Phase 4: IOB/COB oref (was IobCobOrefWorker) ----------
 
-    private suspend fun runIobCobOref(data: PrepareGraphData, isStopped: () -> Boolean) {
+    private suspend fun runIobCobOref(data: PrepareGraphData, isStopped: () -> Boolean, superseded: () -> Boolean) {
         val start = dateUtil.now()
         try {
             aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA thread started: ${data.reason}" }
@@ -625,17 +634,39 @@ class PrepareGraphDataRunner @Inject constructor(
                 autosensData.autosensResult = sensitivity
                 aapsLogger.debug(LTag.AUTOSENS, autosensData.toString())
             }
-            data.iobCobCalculator.ads = ads
-            // On the app scope, not a bare Thread: same fire-and-forget timing as before, but plain
-            // Kotlin. NOTE this still outlives a superseded chain, exactly as the thread did.
-            scope.launch {
-                delay(1000)
-                rxBus.send(EventAutosensCalculationFinished(data.triggeredByNewBG))
-            }
+            publishAds(data, ads, superseded)
         } finally {
             data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100)
             aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA thread ended: ${data.reason}" }
             profiler.log(LTag.AUTOSENS, "IobCobThread", start)
+        }
+    }
+
+    /**
+     * Puts the locally computed store back into the live calculator, but only while this run still
+     * owns the chain.
+     *
+     * The run works on a clone taken at the start of the phase. `stopCalculation()` returns as soon as
+     * WorkManager marks the work as no longer RUNNING, which happens before the running coroutine sees
+     * its own stop flag - the next check sits at the top of the bucket loop, up to one bucket away.
+     * The caller then invalidates the live store and starts a new chain while this run is still alive.
+     * Without the check below this run would write its clone, taken before that invalidation, over the
+     * state the new chain has already prepared: a lost update (issue #5066).
+     *
+     * The check makes the window small but cannot close it completely, because the caller invalidates
+     * the store before it registers the new generation.
+     *
+     * [EventAutosensCalculationFinished] is sent either way. It only asks its listeners to refresh, and
+     * the graph data in `data.cache` was written by this run whether or not the store was published.
+     */
+    private fun publishAds(data: PrepareGraphData, ads: AutosensDataStore, superseded: () -> Boolean) {
+        if (superseded()) aapsLogger.debug(LTag.AUTOSENS) { "Skipping ads publish (superseded): ${data.reason}" }
+        else data.iobCobCalculator.ads = ads
+        // On the app scope, not a bare Thread: same fire-and-forget timing as before, but plain
+        // Kotlin. NOTE this still outlives a superseded chain, exactly as the thread did.
+        scope.launch {
+            delay(1000)
+            rxBus.send(EventAutosensCalculationFinished(data.triggeredByNewBG))
         }
     }
 

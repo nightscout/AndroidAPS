@@ -84,7 +84,7 @@
     <string name="autotune_param">參數</string>
     <string name="autotune_percent">%</string>
     <string name="autotune_missing">缺少</string>
-    <string name="autotune_run">執行自動調整</string>
+    <string name="autotune_run">運行自動調整</string>
     <string name="autotune_check_input_profile_button">檢查輸入檔案</string>
     <string name="autotune_compare_profile">比較檔案</string>
     <string name="autotune_copy_localprofile_button">複製到本地檔案</string>

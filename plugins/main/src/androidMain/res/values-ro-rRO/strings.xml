@@ -4,7 +4,7 @@
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Insulină</string>
     <string name="pb_label">Baterie pompă</string>
-    <string name="cannula">Canula</string>
+    <string name="cannula">Canulă</string>
     <string name="patch_pump">Pompă fără fir</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->

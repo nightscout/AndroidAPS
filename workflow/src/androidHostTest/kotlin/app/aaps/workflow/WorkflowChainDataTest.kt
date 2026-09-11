@@ -43,7 +43,6 @@ class WorkflowChainDataTest : TestBase() {
         overviewData = mock(),
         cache = mock(),
         signals = mock(),
-        triggeredByNewBG = false,
         runLoopAndWidgetPhase = false
     )
 

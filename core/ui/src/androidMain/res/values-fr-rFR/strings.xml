@@ -68,7 +68,6 @@
     <string name="confirm_pin_hint">Confirmer le code PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s %2$s (%3$s – %4$s)</string>
     <string name="statuslights">Voyants d\'état</string>
-    <string name="copy_existing_values">Copier les paramètres NS (s\'ils existent) ?</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="configbuilder_bgsource">Source GLY</string>
     <string name="configbuilder_smoothing">Lissage</string>
@@ -174,7 +173,6 @@
     <string name="pump_running">Pompe en fonctionnement</string>
     <string name="notconfigured">Non configuré</string>
     <string name="loop_suspended_by_dst">Boucle suspendue par le changement d\'heure</string>
-    <string name="required">req</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
     <string name="a11y_arrow_single_down">en baisse</string>
     <string name="a11y_arrow_forty_five_down">en baisse lente</string>
@@ -258,7 +256,6 @@
     <string name="pin_dont_match">Les codes PIN ne correspondent pas</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Annuler Basal Temp</string>
     <string name="let_temp_basal_run">Laisser démarrer le Basal Temp</string>
@@ -286,7 +283,6 @@
     <string name="veryHigh" comment="above 13.9">Très haut</string>
     <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
     <string name="detailed_14_days">Détail de 14 jours</string>
-    <string name="day_tir">TIR Jour</string>
     <string name="night_tir">TIR Nuit</string>
     <string name="hba1c">HbA1c : </string>
     <string name="std_deviation">SD : %1$s</string>
@@ -295,7 +291,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_mbg">Gly manuelle/Calib.</string>
     <string name="careportal_announcement">Notification</string>
@@ -346,7 +341,6 @@
     <string name="scene_conflict_active_running_mode">Le mode actif sera remplacé</string>
     <string name="scene_conflict_active_scene">Le scénario actif «%1$s» sera terminée en premier</string>
     <string name="scene_action_tt">Cible Temp : %1$s</string>
-    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil : %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil : %1$d%%</string>
     <string name="scene_action_smb_on">Activer SMB</string>
     <string name="scene_action_smb_off">Désactiver SMB</string>
@@ -637,7 +631,6 @@
     <string name="uel_scene_deactivated">SCÉNARIO DÉSACTIVÉ</string>
     <string name="uel_remote_config_changed">CONFIG DISTANTE CHANGÉE</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Valeur basse de Cible Temp.</string>
     <string name="temp_target_high_target">Valeur haute de Cible Temp.</string>
     <string name="temp_target_value">Valeur de Cible Temporaire</string>
     <string name="insulin_dia">Valeur DAI de l\'insuline</string>
@@ -796,7 +789,6 @@
     <string name="close">Fermer</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
-    <string name="export_ok">OK</string>
     <string name="export_warning">Avertissement</string>
     <string name="export_expired">Expiré</string>
     <string name="export_disabled">Désactivé</string>
@@ -863,7 +855,6 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Demande utilisateur</string>
     <!--    Pump pair/unpair (shared) -->
-    <string name="pump_pair">Appairer</string>
     <string name="pump_unpair">Dissocier</string>
     <string name="pump_unpair_confirm_title">Désappairer la pompe ?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
@@ -1022,8 +1013,6 @@
     <string name="import_wrong_password">Mot de passe incorrect</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Importer quand même</string>
-    <string name="import_restart_title">Paramètres importés</string>
-    <string name="import_restart_message">Les paramètres ont été importés. L\'application doit être redémarrée.</string>
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Charger plus</string>
@@ -1036,7 +1025,6 @@
     <string name="nav_resetdb">Réinitialiser les Bases de Données</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Trouver la Pompe</string>
-    <string name="ble_scan_select_pump">Sélectionnez votre pompe dans la liste ci-dessous</string>
     <string name="ble_scan_scanning">Recherche d\'appareils…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Ajouter graphique</string>
@@ -1065,11 +1053,7 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_grams">%1$d g</string>
-    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
-    <string name="units_format_hours_double">%1$.0f h</string>
-    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>

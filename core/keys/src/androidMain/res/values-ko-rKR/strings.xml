@@ -16,15 +16,26 @@
     <!-- Wear preferences -->
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
+    <string name="carb_increment_button_message">버튼을 누를 때 추가되는 탄수화물 양</string>
+    <string name="deliver_part_of_boluswizard_reset_time">혈당증이 다음보다 오래된 경우 총 bolus (100%) 주입하기</string>
     <!-- IntKey: Protection preferences -->
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="biometric">생체 인식</string>
+    <string name="master_password">마스터 비밀번호</string>
+    <string name="custom_password">사용자 지정 비밀번호</string>
+    <string name="custom_pin">사용자 지정 PIN</string>
     <!-- IntKey: Safety preferences -->
     <!-- IntKey: Loop preferences -->
+    <string name="loop_open_mode_min_change_summary" formatted="false">변경 사항이 %의 값보다 큰 경우에만 열린 루프의 새 변경 요청을 팝업합니다. 기본값은 20%입니다.</string>
     <!-- IntKey: APS preferences -->
+    <string name="uam_smb_max_minutes">UAM SMB의 최대 기간 (분)</string>
+    <string name="carbs_req_threshold_summary">탄수화물 제안 알림을 보여주는 최소 탄수화물 g수. 이 양보다 적은 경우 탄수화물 제안 알림이 작동하지 않습니다.</string>
+    <string name="openapsama_autosens_period_summary">민감도를 감지하기 위해 계산될 총 시간 (탄수화물 흡수 시간은 제외됩니다.)</string>
     <!-- IntKey: Maintenance preferences -->
     <!-- IntKey: Alert preferences -->
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="autotune_default_tune_days_summary">Autotune 에서 처리할 기본 데이터 일수 (최대 30일)</string>
     <!-- IntKey: SMS preferences -->
     <!-- IntKey: BG Source preferences -->
     <!-- IntKey: NS Client preferences -->
@@ -40,14 +51,29 @@
     <!-- StringKey: Maintenance preferences -->
     <!-- StringKey: Automation preferences -->
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">암호 끝에 더해지는 자동형성 PIN</string>
+    <string name="smscommunicator_otp_pin_summary">부가적인 숫자를 생성되는 일회성 비밀번호 끝에 더하고 기억해야 함.</string>
     <!-- StringKey: Virtual pump preferences -->
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_wifi_ssids">와이파이 SSID</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="insulin_increment_button_message">버튼을 누를때 추가될 인슐린 양</string>
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
+    <string name="openapsma_max_basal_summary">이 값은 OpenAPS에서 Max Basal(최대 Basal)로 설정되는 값입니다</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대Basal보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 \"3x max daily; 4x current\"이 의미하는 바를 알고 있어야 합니다.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 \"3x max daily; 4x current\"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이것은, 펌프에 설정된 최대 Basal과는 관계없이, Basal이 설정된 현재시간의 Basal에 이 값을 곱한 양을 초과할 수 없다는 것을 의미합니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">기본값: 2\n식사주입 후 Bolus snooze가 수행되게 되고, 따라서 식사주입 직후엔 loop가 low temp에 대응하지 않게 됩니다. 기본값이 2일때 예제는 다음과 같습니다; DIA가 3시간일 경우  bolus snooz는 점차적으로 1.5시간에 걸쳐 단계적으로 사라지게 됩니다.(3DIA/2).</string>
+    <string name="openapsama_min_5m_carb_impact_summary">기본값: 3.0 (AMA) 또는 8.0 (SMB). 5분당 탄수화물이 얼만큼 흡수되었는지에 대한 기본값 설정입니다. 기본값은 3mg/dl / 5분 입니다. 이는 혈당이 예상보다 빨리 떨어지거나 혹은 예상보다 오르지 않을때, COB가 얼마나 빨리 사라지게 되는지에 영향을 주게 되고, 추정된 탄수화물 흡수량이 미래 혈당 예측 계산시에도 영향을 주게 됩니다.</string>
+    <string name="absorption_cutoff_summary">식사가 모두 흡수되었다고 간주되는 시간. 나머지 탄수화물은 모두 없어집니다.</string>
+    <string name="absorption_max_time_summary">식사로 섭취한 탄수화물이 모두 흡수될기까지 예상되는 시간</string>
+    <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 나머지 부분입니다. 이는 Basal을 얼마나 낮게 조절할 수 있는지, ISF와 혈당 목표범위를 얼마나 높게 설정할 수 있는지를 결정합니다.</string>
+    <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 옵션은 autosens의 최대 한계 값을 20%%로 제한하기 위해 autosens(곧 autotune)이 이용하는 승수값입니다. 이 값이 autosens에 대한 Basal의 최대 값, 인슐린 민감도(ISF)의 최소값 및 혈당 목표의 최소값을 결정케 합니다.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="lgs_threshold_summary">BG 값이 이하인 경우 인슐린 공급이 중단됩니다. 기본값은 표준 타겟 모델을 사용합니다. 사용자는 60mg/dl (3.3mmol/l)에서 100mg/dl(5.5mmol/l) 사이의 값을 설정할 수 있습니다. 65/3.6 이하의 값은 기본 모델을 사용하게 됩니다.</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>

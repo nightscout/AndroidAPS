@@ -68,7 +68,6 @@
     <string name="confirm_pin_hint">Потвърдете ПИН</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Индикатори</string>
-    <string name="copy_existing_values">Да копирам ли настройките от NS (ако има такива)?</string>
     <string name="configbuilder_insulin">Инсулин (ед.):</string>
     <string name="configbuilder_bgsource">Източник на КЗ</string>
     <string name="configbuilder_smoothing">Изглаждане</string>
@@ -83,7 +82,7 @@
     <string name="value_unavailable_short">---</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Експортиране на потребителски данни към Excel (csv)</string>
-    <string name="confirm">Потвърди</string>
+    <string name="confirm">Потвърждаване</string>
     <string name="pump">Помпа</string>
     <string name="pump_management">Помпа</string>
     <string name="openaps">OpenAPS</string>
@@ -157,7 +156,7 @@
     <string name="cob">СОВ</string>
     <string name="name_short">Име:</string>
     <string name="time">Време</string>
-    <string name="ns_wifi_ssids">WiFi име</string>
+    <string name="ns_wifi_ssids">WiFi SSID на мрежа</string>
     <string name="loading">Зареждане…</string>
     <string name="waiting_for_pump">Чакаме помпата…</string>
     <string name="initialization_failed">Грешка при инициализация</string>
@@ -186,8 +185,8 @@
     <string name="a11y_high">висока</string>
     <string name="a11y_inrange">в диапазон</string>
     <string name="a11y_low">ниска</string>
-    <string name="remove_label">Премахни</string>
-    <string name="activate_profile">Активирай профила</string>
+    <string name="remove_label">Изтрий</string>
+    <string name="activate_profile">Активирай профил</string>
     <string name="activate_insulin">Активирай инсулин</string>
     <string name="pump_wizard_profile_gate_title">Нужен е профил</string>
     <string name="pump_wizard_profile_gate_pick">Изберете профил за прилагане при активация.</string>
@@ -208,7 +207,7 @@
     <string name="logout">Изход</string>
     <string name="prime_fill">Смяна/Пълнене</string>
     <string name="site_rotation">Смяна на мястото</string>
-    <string name="edit_site">Редактиране</string>
+    <string name="edit_site">Редакция</string>
     <string name="select_arrow">Изберете стрелка</string>
     <string name="site_filter_info">Изберете какво да виждате: Възраст игла и/или Смяна на сензор</string>
     <string name="selected_location">Избрано: %1$s</string>
@@ -257,7 +256,6 @@
     <string name="pin_dont_match">ПИН кодовете не съвпадат</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
     <!--    APSResult-->
     <string name="cancel_temp">Откажи временен базал</string>
     <string name="let_temp_basal_run">Нека текущия временен базал продължи</string>
@@ -285,7 +283,7 @@
     <string name="veryHigh" comment="above 13.9">Много високи</string>
     <string name="above" comment="above &quot;in range&quot;">Над</string>
     <string name="detailed_14_days">Детайлно за 14 дни</string>
-    <string name="day_tir">Дневен TIR</string>
+    <string name="day_tir">Дневно в целта</string>
     <string name="night_tir">Нощен TIR</string>
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">Стд. откл.: %1$s</string>
@@ -294,7 +292,6 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
-    <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Проверка на КЗ</string>
     <string name="careportal_mbg">Калибрация или ръчна КЗ</string>
     <string name="careportal_announcement">Известие</string>
@@ -345,7 +342,6 @@
     <string name="scene_conflict_active_running_mode">Текущият режим ще бъде сменен</string>
     <string name="scene_conflict_active_scene">Активният сценарий \"%1$s\" ще бъде спрян</string>
     <string name="scene_action_tt">Временна цел: %1$s</string>
-    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Профил: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Профил: %1$d%%</string>
     <string name="scene_action_smb_on">Включи SMB</string>
     <string name="scene_action_smb_off">Изключи SMB</string>
@@ -636,7 +632,6 @@
     <string name="uel_scene_deactivated">СЦЕНАРИЙ ДЕАКТИВИРАН</string>
     <string name="uel_remote_config_changed">ОТДАЛЕЧЕНАТА КОНФИГУРАЦИЯ Е СМЕНЕНА</string>
     <!-- HardLimits -->
-    <string name="temp_target_low_target">Стойност цел минимум</string>
     <string name="temp_target_high_target">Стойност цел максимум</string>
     <string name="temp_target_value">Стойност временна цел</string>
     <string name="insulin_dia">Време на действие на инсулин DIA</string>
@@ -1021,8 +1016,6 @@
     <string name="import_wrong_password">Грешна парола</string>
     <string name="import_btn">Импорт</string>
     <string name="import_anyway_btn">Импортиране въпреки това</string>
-    <string name="import_restart_title">Настройките са импортирани</string>
-    <string name="import_restart_message">Настройките са импортирани. Трябва рестарт на приложението.</string>
     <string name="import_source_local">Локално</string>
     <string name="import_source_cloud">Клауд</string>
     <string name="import_load_more">Зареди още</string>
@@ -1064,11 +1057,9 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
-    <string name="units_format_grams">%1$d гр</string>
-    <string name="units_format_grams_range">%1$d гр (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d ч</string>
-    <string name="units_format_hours_double">%1$.0f ч</string>
-    <string name="units_format_hours_double_range">%1$.0f ч (%2$.0f - %3$.0f)</string>
+    <string name="units_format_hours_double">%1$.1f ч</string>
+    <string name="units_format_hours_double_range">%1$.1f ч (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d ч (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f Ед</string>
     <string name="units_format_insulin_int">%1$d Ед</string>
@@ -1095,5 +1086,5 @@
     <string name="units_percent">%</string>
     <string name="units_sec">сек</string>
     <string name="units_years">г</string>
-    <string name="prefs_range_title">Диапазон на визуализация</string>
+    <string name="prefs_range_title">Диапазон за визуализация</string>
 </resources>

@@ -24,6 +24,7 @@
     <string name="password_not_changed">Şifre değiştirilmedi</string>
     <string name="pin_not_changed">PIN değiştirilmedi</string>
     <string name="pin_cleared">PIN temizlendi!</string>
+    <string name="current_master_password">Geçerli ana parola</string>
     <string name="master_password_not_set">Ana parola ayarlanmadı</string>
     <string name="aaps_directory_not_selected">AAPS dizini seçilmedi</string>
 </resources>

@@ -109,8 +109,13 @@ fun main() {
     // Which icon and which name depend on what kind of build this is, so both are read after the
     // graph. A failed startup still gets a window, and that window still gets an icon and a title.
     val graph = startup.getOrNull()
-    val appIcon = loadAppIcon(graph?.let { appIconResource(it.config) } ?: DEFAULT_APP_ICON)
+    val iconPath = graph?.let { appIconResource(it.config) } ?: DEFAULT_APP_ICON
+    val appIcon = loadAppIcon(iconPath)
     val appName = graph?.let { it.textResolver.gs(it.config.appName) } ?: DEFAULT_APP_NAME
+
+    // Before the window, because macOS reads the Dock icon once as the app starts. Does nothing on
+    // the other platforms, where `Window(icon = ...)` below already covers the taskbar.
+    applyDockIcon(iconPath)
 
     application {
         Window(
@@ -397,7 +402,6 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
                     onExecuteQuickWizard = { guid -> mainViewModel.executeQuickWizard(guid) },
                     onRequestDirectoryAccess = { logger.debug(LTag.CORE, "Desktop reads its own folder; no access to request") },
                     onRequestPermission = { group -> logger.notWiredYet("permission request $group") },
-                    findScreenDef = { null },
                     overview = {
                         OverviewScreen(
                             mainViewModel = mainViewModel,

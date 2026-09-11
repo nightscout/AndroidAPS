@@ -36,6 +36,16 @@
     <string name="setupwizard_profile_info">Crea un profilo con i tuoi valori basali, IC, ISF e destinazione. Puoi aggiungere più profili in seguito.</string>
     <string name="setupwizard_permissions_info">AAPS ha bisogno di accesso all\'archivio e di autorizzazioni per funzionare correttamente. Si prega di concedere le autorizzazioni richieste qui sotto.</string>
     <string name="setupwizard_pump_riley_link_status">Stato RileyLink:</string>
+    <string name="setupwizard_client_control_title">Controllo client</string>
+    <string name="setupwizard_client_control_info">Associa i dispositivi client in modo che possano inviare comandi firmati a questo master su Nightscout. Questo è il nuovo modo consigliato per controllare AAPS da remoto.</string>
+    <string name="setupwizard_ns_receive_info">L\'accettazione dei trattamenti e dei dati direttamente da Nightscout (modo meno sicuro) è ora disattivata per impostazione predefinita. Aprire le impostazioni qui sotto solo se ne hai ancora bisogno. Necessario se è necessario inserire dati tramite applicazioni NS o di terze parti.</string>
+    <string name="setupwizard_open_ns_receive_settings">Accettazione dati Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Associa questo client con il tuo master AAPS in modo che possa inviare comandi su un canale sicuro.</string>
+    <string name="setupwizard_pairing_ws_warning">La connessione Nightscout WebSocket è necessaria per l\'accoppiamento. Torna al passaggio precedente e abilitala prima.</string>
+    <string name="setupwizard_pairing_status_master">Clienti accoppiati: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Nessun client ancora associato</string>
+    <string name="setupwizard_pairing_status_client_paired">Associato a un master</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Non ancora associato</string>
     <string name="readstatus">Lettura stato</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>

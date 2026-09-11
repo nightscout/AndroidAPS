@@ -106,6 +106,21 @@ class TddCalculatorImpl @Inject constructor(
                 midnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight
             }
         }
+        // Decide whether the result is usable *before* writing any of it. This used to cache first and
+        // judge afterwards, so a run that found 3 of 7 days stored all 3 and then returned null - the
+        // caller correctly threw the answer away and the database kept it.
+        //
+        // That is how a full sync produced wrong totals. Treatments arrive in chunks, oldest first.
+        // The first chunk invalidates the cache and then runs the calculation, the loop asks for
+        // `calculate(7, allowMissingDays = false)`, and the days it can see are built from the one
+        // chunk that has landed. Those rows outlive the mistake, because invalidation only ever
+        // deletes forward from a changed record and no later chunk reaches back that far. Only
+        // "Recalculate" in the statistics screen cleared them.
+        //
+        // Days genuinely without data are not the issue: `calculateInterval` returns null for those
+        // and they never enter `result`. The issue is a day computed from part of its data, which
+        // looks identical to a complete one from here.
+        if (result.size().toLong() != days && !allowMissingDays) return null
         for (i in 0 until result.size()) {
             val tdd = result.valueAt(i)
             if (tdd.ids.pumpType != PumpType.CACHE) {
@@ -115,8 +130,7 @@ class TddCalculatorImpl @Inject constructor(
                 aapsLogger.debug(LTag.APS, "Skipping storing TotalDailyDose for ${dateUtil.dateString(tdd.timestamp)}")
             }
         }
-        if (result.size().toLong() == days || allowMissingDays) return result
-        return null
+        return result
     }
 
     override suspend fun calculateToday(): TDD? {

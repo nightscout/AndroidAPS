@@ -4,18 +4,17 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Tilkoblingsinnstillinger</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="description_ns_client_v3">Synkroniserer dine data med Nightscout v3 API</string>
     <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
     <string name="no_connectivity">Ingen internettforbindelse</string>
     <string name="unsupported_ns_version">Versjonen av Nightscout støttes ikke</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSV3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Autoriserte klienter</string>
     <string name="authorized_clients_add">Legg til klient</string>
     <string name="authorized_clients_comm_switch_title">Tillat klientstyring</string>
     <string name="authorized_clients_comm_switch_summary">La tilkoblede klienter sende signerte kommandoer via Nightscout. Slå av for å stoppe kommunikasjonen uten å fjerne dem.</string>
+    <string name="authorized_clients_needs_websocket">Websockets er deaktivert, så kommandoer fra klienter kan ikke mottas. Klientene vil oppfatte denne hovedenheten som utilgjengelig for kommandoer til du aktiverer Websockets.</string>
     <string name="authorized_clients_state_active">Aktiv</string>
     <string name="authorized_clients_state_pending">Venter</string>
     <string name="authorized_clients_last_seen">Sist sett %1$s</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Potwierdzenie</string>
     <!--    Events-->
     <string name="bolus_delivering">Dostarczam %1$.2fU</string>
     <string name="bolus_delivered_successfully">Bolus %1$.2fU dostarczony prawidłowo</string>
@@ -22,7 +23,7 @@
     <plurals name="plurals_hour_ago">
         <item quantity="one">%1$s godzinę temu</item>
         <item quantity="few">%1$s godziny temu</item>
-        <item quantity="many">%1$s godzin temu</item>
+        <item quantity="many">%1$s godziny temu</item>
         <item quantity="other">%1$s godzin temu</item>
     </plurals>
     <plurals name="plurals_minute_ago">
@@ -97,6 +98,10 @@
     <string name="forever">Na zawsze</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
     <!-- Insulin -->
+    <string name="free_peak_oref">Swobodny-Pik Oref</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Czas piku [min]</string>
     <!-- Concentration -->
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -105,16 +110,13 @@
     <string name="pumpsuspended">Pompa wstrzymana</string>
     <string name="loopsuspended">Pętla wstrzymana</string>
     <string name="pump_disconnected">Pompa odłączona</string>
-    <string name="basalprofilenotaligned">Wartości bazy nie są ustawione w pełnych godzinach: %1$s</string>
     <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %1$s</string>
     <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
-    <string name="mins">%1$d min</string>
     <string name="record">Wpis</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">PRZEDŁUŻONE WĘGLOWODANY</string>
-    <string name="profile_low_target">Dolna granica celu profilu</string>
     <string name="profile_high_target">Górna granica celu profilu</string>
     <string name="profile_dia">Wartość DIA profilu</string>
     <string name="profile_sensitivity_value">Wartość wrażliwości profilu</string>
