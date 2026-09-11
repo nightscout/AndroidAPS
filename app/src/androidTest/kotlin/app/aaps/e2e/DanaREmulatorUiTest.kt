@@ -9,9 +9,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.Pump
-import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.keys.BooleanComposedKey
-import app.aaps.di.metro.MetroGraphs
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey

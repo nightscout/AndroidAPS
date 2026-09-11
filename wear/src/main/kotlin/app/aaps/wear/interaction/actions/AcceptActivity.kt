@@ -58,7 +58,6 @@ import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import app.aaps.wear.comm.IntentCancelNotification
 import app.aaps.wear.comm.IntentWearToMobile
-import app.aaps.wear.di.WearMetroActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay

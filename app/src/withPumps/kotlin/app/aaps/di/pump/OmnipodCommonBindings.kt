@@ -21,12 +21,12 @@ import dev.zacsweers.metro.SingleIn
 
 /**
  * Omnipod BLE and pod state, owned by Metro from `:app`.
- * Hand-written `@Provides` rather than annotations on the classes, because `:pump:omnipod:common` does
- * not apply the Metro plugin - there is no Kotlin IR for Metro to read an `@Inject` constructor from,
- * so it cannot generate a factory. It does not have to: a provider that calls the constructor itself
- * needs no factory, which is the same shape [ErosJavaBindings] uses for the Java eros classes. Adding
- * the plugin to `:pump:omnipod:common` would work too and is the tidier end state; this keeps the
- * change inside `:app`.
+ * Hand-written `@Provides` rather than `@ContributesBinding` on the classes, and deliberately kept that
+ * way. The four bindings and the scope that matters are one short file you can read at once, instead of
+ * eight annotations spread over four files in another module. Nothing tests the scoping either way -
+ * `ContributedBindingsTest` asserts by hand on graph accessors, so contributing these would not put
+ * them under a guard - and the failure the scope prevents is silent, so visibility is worth more here
+ * than the few lines it costs.
  * `@SingleIn(AppScope::class)` on every provider. These hold live connection and pod state - a second
  * `OmnipodDashPodStateManagerImpl` would mean the driver and the UI reading different pods - so the
  * scope is the point, not an optimisation.
