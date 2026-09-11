@@ -68,5 +68,10 @@ enum class StringNonKey(
     NsClientControlMasterInstallId(key = "nsclient_control_master_install_id", defaultValue = "", exportable = false),
     NsClientControlClientId(key = "nsclient_control_client_id", defaultValue = "", exportable = false),
     NsClientControlMasterSecretEnc(key = "nsclient_control_master_secret_enc", defaultValue = "", exportable = false),
+    // NFC Commands plugin: registered tags (uid, name, command chain) as one JSON array.
+    NfcCreatedTags(key = "nfccommunicator_created_tags_v1", defaultValue = "[]"),
+    // NFC Commands plugin: rolling interaction history (scan/write/manual log), not user configuration.
+    // Excluded from export: it is device-local activity history, not a setting to carry between devices.
+    NfcLog(key = "nfccommunicator_log_v1", defaultValue = "[]", exportable = false),
 
 }

@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.metro)
+    // The NFC command format uses @Serializable classes, so the compiler plugin is needed here.
+    id("kotlinx-serialization")
 }
 
 // Generates SyncStrings (commonMain) and SyncStringIds (androidMain) from this module's res/values,
