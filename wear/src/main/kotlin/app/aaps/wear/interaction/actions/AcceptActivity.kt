@@ -147,7 +147,7 @@ class AcceptActivity : AppCompatActivity() {
                 val correctionU = if (correctionSteps == 0) 0.0 else correctionSteps * (wizardDetail?.bolusStep ?: 0.0)
                 val adjustedTotal = wizardDetail?.let { (it.unclampedInsulin + correctionU).coerceAtLeast(0.0) }
                 // Swipe to confirm is only meaningful when there is insulin or carbs to deliver.
-                val canConfirm = adjustedTotal == null || adjustedTotal > 0.0 || (wizardDetail!!.carbs > 0)
+                val canConfirm = adjustedTotal == null || adjustedTotal > 0.0 || (wizardDetail.carbs > 0)
                 val pagerState = rememberPagerState(pageCount = { if (isError && !hasLines) 1 else if (canConfirm) 2 else 1 })
 
                 if (wizardDetail == null) LaunchedEffect(Unit) {
@@ -629,7 +629,7 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
                         val hasIob = totalIob != null && totalIob != 0.0
                         if (hasIob || correctionU != 0.0) {
                             WizardDetailDivider()
-                            if (hasIob) WizardDetailRow(stringResource(R.string.wizard_result_iob), -totalIob!!, fmt2)
+                            if (hasIob) WizardDetailRow(stringResource(R.string.wizard_result_iob), -totalIob, fmt2)
                             if (correctionU != 0.0) WizardDetailRow(stringResource(R.string.wizard_result_correction), correctionU, fmt2)
                         }
                         WizardDetailDivider()
