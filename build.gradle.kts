@@ -23,7 +23,6 @@ buildscript {
 }
 
 plugins {
-    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler) apply false
     id(libs.plugins.android.test.get().pluginId) apply false
     // Aggregates the per-module coverage into one report.
