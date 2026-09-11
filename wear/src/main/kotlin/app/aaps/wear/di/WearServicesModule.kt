@@ -2,6 +2,11 @@ package app.aaps.wear.di
 
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import app.aaps.wear.complications.BgGraphComplication
+import app.aaps.wear.complications.CwfAmbientBgComplication
+import app.aaps.wear.complications.CwfAmbientStatusComplication
+import app.aaps.wear.complications.CwfImageComplication
+import app.aaps.wear.complications.cwf.CwfAmbientFaceComplication
+import app.aaps.wear.complications.cwf.CwfFaceComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
@@ -49,6 +54,9 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesHeartRateListenerService(): HeartRateListener
     @ContributesAndroidInjector abstract fun contributesStepsCountListenerService(): StepCountListener
     @ContributesAndroidInjector abstract fun contributesBgGraphComplication(): BgGraphComplication
+    @ContributesAndroidInjector abstract fun contributesCwfImageComplication(): CwfImageComplication
+    @ContributesAndroidInjector abstract fun contributesCwfFaceComplication(): CwfFaceComplication
+    @ContributesAndroidInjector abstract fun contributesCwfAmbientFaceComplication(): CwfAmbientFaceComplication
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplication(): BrCobIobComplication
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplicationExt1(): BrCobIobComplicationExt1
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplicationExt2(): BrCobIobComplicationExt2
@@ -64,6 +72,8 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesLongStatusComplication(): LongStatusComplication
     @ContributesAndroidInjector abstract fun contributesLongStatusFlippedComplication(): LongStatusFlippedComplication
     @ContributesAndroidInjector abstract fun contributesSgvComplication(): SgvComplication
+    @ContributesAndroidInjector abstract fun contributesCwfAmbientBgComplication(): CwfAmbientBgComplication
+    @ContributesAndroidInjector abstract fun contributesCwfAmbientStatusComplication(): CwfAmbientStatusComplication
     @ContributesAndroidInjector abstract fun contributesSgvComplicationExt1(): SgvComplicationExt1
     @ContributesAndroidInjector abstract fun contributesSgvComplicationExt2(): SgvComplicationExt2
     @ContributesAndroidInjector abstract fun contributesSgvLargeComplication(): SgvLargeComplication

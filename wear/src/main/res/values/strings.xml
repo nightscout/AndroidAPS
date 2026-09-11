@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Custom) always-on</string>
     <string name="label_actions_tile">Actions</string>
     <string name="label_temp_target_tile">Temp Target</string>
     <string name="label_quick_wizard_tile">Quick Wizard</string>
@@ -323,6 +324,12 @@
     <string name="complication_blood_glucose_ext1">Blood Glucose Ext1</string>
     <string name="complication_blood_glucose_ext2">Blood Glucose Ext2</string>
     <string name="complication_bg_graph">BG Graph</string>
+    <string name="complication_cwf_image">Custom Watchface</string>
+    <string name="complication_cwf_ambient_bg">Custom Watchface ambient glucose</string>
+    <string name="complication_cwf_ambient_status">Custom Watchface ambient status</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Custom Watchface background</string>
+    <string name="complication_cwf_upper">Custom Watchface clock</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>

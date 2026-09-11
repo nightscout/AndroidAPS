@@ -28,6 +28,8 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
+import app.aaps.wear.complications.CwfAmbientBgComplication
+import app.aaps.wear.complications.CwfAmbientStatusComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
@@ -413,6 +415,11 @@ class DataHandlerWear @Inject constructor(
             SgvLargeComplication::class.java,
             // BG graph image complication (for WFF watchfaces on watches without CWF support)
             BgGraphComplication::class.java,
+            // Ambient readouts of the pushed Watch Face Format face. Without these they refresh
+            // only on their own 300 second period, and the ambient glucose was seen 4 minutes
+            // behind the value drawn in the face itself.
+            CwfAmbientBgComplication::class.java,
+            CwfAmbientStatusComplication::class.java,
             // Long status complications (show detailed glucose + status info)
             LongStatusComplication::class.java,
             LongStatusFlippedComplication::class.java,

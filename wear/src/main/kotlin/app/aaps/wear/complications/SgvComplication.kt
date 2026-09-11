@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
  * - Time auto-updates every minute (battery efficient)
  * - Delta is static until new BG reading
  */
-class SgvComplication : ModernBaseComplicationProviderService() {
+open class SgvComplication : ModernBaseComplicationProviderService() {
 
 
     override fun buildComplicationData(
