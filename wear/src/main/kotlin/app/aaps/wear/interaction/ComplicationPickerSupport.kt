@@ -103,9 +103,8 @@ internal class ComplicationPickerSupport(private val fragment: Fragment) {
      * silently inert: Wear Services serves the provider chooser only while an editing session is
      * registered, and an app-initiated launch has none, so the chooser opens and is cancelled after
      * ~400ms. Supplying the real watch-face instance id does not help - the session is system-side
-     * state no intent extra can substitute for. Only reachable on watches where
-     * `SamsungWatchFaceEditor.requestEditor` found no receiver; elsewhere the system editor has
-     * already taken over and these rows are never tapped.
+     * state no intent extra can substitute for. Reached only when the wearer opens these rows from
+     * the AAPS menu rather than from the system editor, which registers a session of its own.
      */
     fun handlePreferenceClick(preference: Preference): Boolean {
         val context = fragment.requireContext()

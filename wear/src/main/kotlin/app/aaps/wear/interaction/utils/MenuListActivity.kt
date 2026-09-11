@@ -1,5 +1,6 @@
 package app.aaps.wear.interaction.utils
 
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -91,7 +92,15 @@ abstract class MenuListActivity : DaggerAppCompatActivity() {
         super.onDestroy()
     }
 
-    class MenuItem(val actionIcon: Int, val actionItem: String)
+    /**
+     * One row of the menu.
+     *
+     * [actionImage] lets a row show a picture the app was given rather than one it ships - the Custom
+     * watch face entry uses it to show the design the wearer actually sent, instead of the built-in
+     * artwork that looks nothing like their watch. Null everywhere else, and [actionIcon] is still
+     * required as the fallback for when no zip is loaded.
+     */
+    class MenuItem(val actionIcon: Int, val actionItem: String, val actionImage: Bitmap? = null)
 }
 
 private val MenuItemBg = Color.White.copy(alpha = 0.15f)
@@ -138,6 +147,7 @@ private fun MenuListScreen(
                     icon = {
                         MenuIcon(
                             iconRes = item.actionIcon,
+                            image = item.actionImage,
                             contentDescription = item.actionItem
                         )
                     }
@@ -152,16 +162,20 @@ private fun MenuListScreen(
 }
 
 @Composable
-private fun MenuIcon(iconRes: Int, contentDescription: String) {
+private fun MenuIcon(iconRes: Int, image: Bitmap?, contentDescription: String) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val sizePx = with(density) { 35.dp.toPx() }.toInt()
-    val painter = remember(iconRes, sizePx) {
-        val drawable = ContextCompat.getDrawable(context, iconRes)!!
-        val bitmap = createBitmap(sizePx, sizePx)
-        drawable.setBounds(0, 0, sizePx, sizePx)
-        drawable.draw(Canvas(bitmap))
-        BitmapPainter(bitmap.asImageBitmap())
+    val painter = remember(iconRes, image, sizePx) {
+        // A picture the app was given wins over the one it ships: on the Custom watch face row that
+        // is the wearer's own design rather than artwork that looks nothing like their watch.
+        image?.let { BitmapPainter(it.asImageBitmap()) } ?: run {
+            val drawable = ContextCompat.getDrawable(context, iconRes)!!
+            val bitmap = createBitmap(sizePx, sizePx)
+            drawable.setBounds(0, 0, sizePx, sizePx)
+            drawable.draw(Canvas(bitmap))
+            BitmapPainter(bitmap.asImageBitmap())
+        }
     }
     Icon(
         painter = painter,

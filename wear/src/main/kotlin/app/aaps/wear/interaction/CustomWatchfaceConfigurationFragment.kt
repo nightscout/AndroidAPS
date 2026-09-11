@@ -22,6 +22,17 @@ internal interface CustomWatchfaceSettingsHost {
 
     /** The CWF currently loaded, exactly as stored, or null if there is none. */
     fun storedWatchfaceConfiguration(): String?
+
+    /**
+     * True when this screen is the system's watch face editor rather than the AAPS settings menu.
+     *
+     * The two hosts want different rows. The editor is where the code-based Custom watch face is
+     * configured, complication slots included, because that is the only place a slot can be assigned.
+     * The AAPS menu now serves the Watch Face Format face, which has no slots for the wearer and takes
+     * its ambient and charging choices from the document's own settings - so those rows would be
+     * offering something that cannot be acted on.
+     */
+    fun isSystemEditor(): Boolean = false
 }
 
 /**
@@ -53,7 +64,9 @@ class CustomWatchfaceConfigurationFragment : PreferenceFragmentCompat() {
         val rows = if (subScreenKey != 0) {
             CustomWatchface.subScreenRows(subScreenKey)
         } else {
-            CustomWatchface.settingRows((activity as? CustomWatchfaceSettingsHost)?.storedWatchfaceConfiguration())
+            (activity as? CustomWatchfaceSettingsHost).let { host ->
+                CustomWatchface.settingRows(host?.storedWatchfaceConfiguration(), systemEditor = host?.isSystemEditor() == true)
+            }
         }
         buildScreen(rows)
     }

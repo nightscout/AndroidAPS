@@ -26,6 +26,9 @@ import javax.inject.Inject
 
 class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsHost {
 
+    /** This activity *is* the system's editor: it is launched by it and owns the `EditorSession`. */
+    override fun isSystemEditor(): Boolean = true
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
 

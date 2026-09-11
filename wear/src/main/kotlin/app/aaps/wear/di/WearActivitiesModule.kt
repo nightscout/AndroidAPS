@@ -20,6 +20,7 @@ import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
 import app.aaps.wear.interaction.activities.BgGraphActivity
+import app.aaps.wear.interaction.activities.CwfRenderPreviewActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.menus.FillMenuActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
@@ -62,4 +63,5 @@ abstract class WearActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesRunningModeTimedActivity(): RunningModeTimedActivity
     @ContributesAndroidInjector abstract fun contributesLoopStatusActivity(): LoopStatusActivity
     @ContributesAndroidInjector abstract fun contributesBgGraphActivity(): BgGraphActivity
+    @ContributesAndroidInjector abstract fun contributesCwfRenderPreviewActivity(): CwfRenderPreviewActivity
 }
