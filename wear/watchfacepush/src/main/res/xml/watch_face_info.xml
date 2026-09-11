@@ -3,5 +3,14 @@
     <Preview value="@drawable/preview" />
     <MultipleInstancesAllowed value="true" />
     <FlavorsSupported value="false" />
+    <!-- Now true, because there is finally something to edit: "Simplify UI in Always On Mode", a
+         UserConfiguration in the document.
+         It was false for a good reason - the Samsung editor crashed on a face with nothing
+         customisable (IndexOutOfBoundsException in its own onViewCreated), and every element was
+         fixed deliberately so a user could not break the layout. That reason has expired, and the
+         crash it avoided was specific to having no options at all.
+         Keeping it false is what stopped the setting from ever reaching the wearer: the runtime does
+         not offer an editor for a face that declares itself non-editable, whatever the document
+         contains. -->
     <Editable value="true" />
 </WatchFaceInfo>
