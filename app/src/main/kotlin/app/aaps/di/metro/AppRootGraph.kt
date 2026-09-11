@@ -84,9 +84,7 @@ import app.aaps.core.interfaces.scenes.SceneIconResolver
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.scenes.Scenes
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
-import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
