@@ -5,7 +5,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.Metric
+import androidx.core.app.NotificationCompat.Metric.FixedFloat
+import androidx.core.app.NotificationCompat.MetricStyle
 import androidx.core.app.RemoteInput
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TrendArrow
@@ -161,14 +165,31 @@ class PersistentNotificationPlugin(
         var line1: String?
         var line2: String? = null
         var line3: String? = null
+        var bgStatusChipText: String? = null
+        var bgMetric: Metric? = null
+        var metricValue: Metric.MetricValue? = null
         var unreadConversationBuilder: NotificationCompat.CarExtender.UnreadConversation.Builder? = null
         if (profileFunction.isProfileValid("Notification")) {
             val lastBG = iobCobCalculator.ads.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
+            val units = profileFunction.getUnits()
             if (lastBG != null) {
+                bgStatusChipText = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated)
+                val fromMgdlToUnits = profileUtil.fromMgdlToUnits(lastBG.recalculated)
+                metricValue = if (units == GlucoseUnit.MMOL) {
+                    FixedFloat(
+                        fromMgdlToUnits.round(1).toFloat(),
+                        units.displayLabel
+                    )
+                } else {
+                    FixedInt(
+                        fromMgdlToUnits.toInt(),
+                        units.displayLabel
+                    )
+                }
                 val trendSymbol = (trendCalculator.getTrendArrow(iobCobCalculator.ads)
                     ?.takeIf { it != TrendArrow.NONE } ?: TrendArrow.FLAT).symbol
-                line1 = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated) + " " + trendSymbol
+                line1 = "$bgStatusChipText $trendSymbol"
                 if (glucoseStatus != null) {
                     line1 += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
                 } else {
@@ -190,6 +211,12 @@ class PersistentNotificationPlugin(
             val cobInfo = iobCobCalculator.getCobInfo("PersistentNotificationPlugin")
             line2 =
                 rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(R.string.notification_iob_short, bolusIob.iob + basalIob.basaliob) + " • " + rh.gs(app.aaps.core.ui.R.string.cob) + ": " + cobInfo.generateCOBString(decimalFormatter)
+            metricValue?.let {
+                bgMetric = Metric(
+                    it,
+                    line2,
+                )
+            }
             line3 = profileName
             /// For Android Auto
             val msgReadIntent = Intent()
@@ -217,7 +244,6 @@ class PersistentNotificationPlugin(
             // Build a RemoteInput for receiving voice input from devices
             val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
             // Build Android Auto message: IOB • COB • Target • Profile
-            val units = profileFunction.getUnits()
             var aaTarget = ""
             val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
             if (tempTarget != null) {
@@ -251,6 +277,11 @@ class PersistentNotificationPlugin(
         if (includeAuto) lastAutoNotificationContent = content
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)
+        applyLiveUpdate(
+            builder = builder,
+            bgStatusChipText = bgStatusChipText,
+            bgMetric = bgMetric
+        )
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
         builder.setSmallIcon(iconsProvider.getNotificationIcon())
@@ -271,5 +302,24 @@ class PersistentNotificationPlugin(
         val notification = builder.build()
         mNotificationManager.notify(notificationHolder.notificationID, notification)
         notificationHolder.notification = notification
+    }
+
+    private fun applyLiveUpdate(
+        builder: NotificationCompat.Builder,
+        bgStatusChipText: String?,
+        bgMetric: Metric?
+    ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) return
+        builder.setRequestPromotedOngoing(true)
+        if (!bgStatusChipText.isNullOrBlank()) {
+            builder.setShortCriticalText(bgStatusChipText)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN && bgMetric != null) {
+            builder.setStyle(
+                MetricStyle()
+                    .addMetric(bgMetric)
+                    .setCriticalMetric(0)
+            )
+        }
     }
 }
