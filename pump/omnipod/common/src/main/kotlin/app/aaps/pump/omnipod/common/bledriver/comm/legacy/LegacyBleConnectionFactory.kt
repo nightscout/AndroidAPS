@@ -12,7 +12,8 @@ import app.aaps.pump.omnipod.common.bledriver.comm.legacy.session.Connection
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import dev.zacsweers.metro.Inject
 
-class LegacyBleConnectionFactory @Inject constructor(
+@Inject
+class LegacyBleConnectionFactory(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val config: Config,

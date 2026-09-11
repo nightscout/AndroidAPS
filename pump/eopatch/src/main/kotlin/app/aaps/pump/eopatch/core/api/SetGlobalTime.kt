@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.milliseconds
 
 @SingleIn(AppScope::class)
-class SetGlobalTime @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_GLOBAL_TIME, patch, aapsLogger) {
+@Inject
+class SetGlobalTime(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_GLOBAL_TIME, patch, aapsLogger) {
 
     fun set(): Single<PatchBooleanResponse> = writeAndRead(generate())
 

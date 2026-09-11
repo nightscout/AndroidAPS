@@ -9,7 +9,8 @@ import java.util.UUID
 import kotlin.reflect.KProperty
 
 @SingleIn(OpenHumansScope::class)
-internal class OHAppIDDelegate @Inject internal constructor(
+@Inject
+internal class OHAppIDDelegate internal constructor(
     private val preferences: Preferences
 ) {
 

@@ -17,7 +17,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class TranslatorImpl @Inject internal constructor(
+@Inject
+class TranslatorImpl internal constructor(
     private val rh: TextResolver
 ) : Translator {
 

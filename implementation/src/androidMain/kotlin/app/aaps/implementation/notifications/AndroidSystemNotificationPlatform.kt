@@ -39,7 +39,8 @@ import android.app.NotificationManager as AndroidNotificationManager
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AndroidSystemNotificationPlatform @Inject constructor(
+@Inject
+class AndroidSystemNotificationPlatform(
     private val aapsLogger: AAPSLogger,
     private val context: Context,
     private val preferences: Preferences,

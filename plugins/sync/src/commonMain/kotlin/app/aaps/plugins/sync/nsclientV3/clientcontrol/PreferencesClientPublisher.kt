@@ -56,7 +56,8 @@ import kotlinx.coroutines.launch
  */
 @OptIn(FlowPreview::class)
 @SingleIn(AppScope::class)
-class PreferencesClientPublisher @Inject constructor(
+@Inject
+class PreferencesClientPublisher(
     private val preferences: Preferences,
     private val clientControlRoundTrip: ClientControlRoundTrip,
     private val config: Config,

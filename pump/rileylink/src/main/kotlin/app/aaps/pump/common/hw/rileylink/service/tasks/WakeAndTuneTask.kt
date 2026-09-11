@@ -5,7 +5,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshButtonState
 import dev.zacsweers.metro.Inject
 
-class WakeAndTuneTask @Inject constructor(activePlugin: ActivePlugin, private val rxBus: RxBus) : PumpTask(activePlugin) {
+@Inject
+class WakeAndTuneTask(activePlugin: ActivePlugin, private val rxBus: RxBus) : PumpTask(activePlugin) {
 
     override fun run() {
         rxBus.send(EventRefreshButtonState(false))

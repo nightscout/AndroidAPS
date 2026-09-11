@@ -17,7 +17,8 @@ import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
 import dev.zacsweers.metro.Inject
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.scan.PodScanner as LegacyPodScanner
 
-class LegacyBleDeviceManager @Inject constructor(
+@Inject
+class LegacyBleDeviceManager(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences

@@ -109,7 +109,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class MainViewModel @Inject constructor(
+@Inject
+class MainViewModel(
     private val activePlugin: ActivePlugin,
     val config: Config,
     private val urlOpener: UrlOpener,

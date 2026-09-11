@@ -18,7 +18,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class, binding = binding<ActivityStatsProvider>())
 @SingleIn(AppScope::class)
-class ActivityMonitor @Inject constructor(
+@Inject
+class ActivityMonitor(
     private var aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val preferences: Preferences,

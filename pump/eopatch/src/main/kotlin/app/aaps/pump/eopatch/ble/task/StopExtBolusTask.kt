@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StopExtBolusTask @Inject constructor() : BolusTask(TaskFunc.STOP_EXT_BOLUS) {
+@Inject
+class StopExtBolusTask() : BolusTask(TaskFunc.STOP_EXT_BOLUS) {
 
     @Inject lateinit var bolusStop: BolusStop
 

@@ -21,7 +21,8 @@ import dev.zacsweers.metro.Inject
  * - Master ([Config.AAPSCLIENT] false): "Paired clients: N" from [NsClient.pairedClientCountFlow].
  * - Client: paired/not-paired from [NsClient.masterOrPairedClientFlow].
  */
-class SWPairingStatus @Inject constructor(
+@Inject
+class SWPairingStatus(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
     rxBus: RxBus,

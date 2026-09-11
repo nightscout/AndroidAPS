@@ -81,7 +81,8 @@ import kotlin.time.Clock
 @IntKey(1000)
 @ContributesBinding(AppScope::class, binding = binding<VirtualPump>())
 @SingleIn(AppScope::class)
-open class VirtualPumpPlugin @Inject constructor(
+@Inject
+open class VirtualPumpPlugin(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     override val rh: TextResolver,

@@ -16,7 +16,8 @@ import kotlinx.coroutines.Dispatchers
  * The WorkManager side of the phase that follows the prepare pass. The work itself is in
  * [PostCalculationRunner]; [RunnerWorker] does the `Result` mapping.
  */
-class PostCalculationWorker @AssistedInject constructor(
+@AssistedInject
+class PostCalculationWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

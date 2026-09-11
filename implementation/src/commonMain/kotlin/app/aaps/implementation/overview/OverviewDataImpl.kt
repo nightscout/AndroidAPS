@@ -18,7 +18,8 @@ import kotlin.time.Clock
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class OverviewDataImpl @Inject constructor() : OverviewData {
+@Inject
+class OverviewDataImpl() : OverviewData {
 
     // Initialize the window anchor so workers reading these fields before the
     // first predictions-prep run see sensible values. Rounded to next

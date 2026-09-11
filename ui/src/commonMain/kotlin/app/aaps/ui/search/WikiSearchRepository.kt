@@ -39,7 +39,8 @@ sealed class WikiSearchResult {
  * that. Nothing here is a stored or transmitted format of ours.
  */
 @SingleIn(AppScope::class)
-class WikiSearchRepository @Inject constructor(
+@Inject
+class WikiSearchRepository(
     private val receiverStatusStore: ReceiverStatusStore
 ) {
 

@@ -43,7 +43,8 @@ import platform.Foundation.writeToFile
 @OptIn(ExperimentalForeignApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosPrefsFileAccess @Inject constructor(
+@Inject
+class IosPrefsFileAccess(
     /**
      * Settings exports, the counterpart of Android's `AAPS/preferences`.
      *

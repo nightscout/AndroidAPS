@@ -34,7 +34,8 @@ import kotlinx.serialization.json.put
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class GraphConfigRepositoryImpl @Inject constructor(
+@Inject
+class GraphConfigRepositoryImpl(
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger
 ) : GraphConfigRepository {

@@ -71,7 +71,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class TempTargetManagementViewModel @Inject constructor(
+@Inject
+class TempTargetManagementViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     val profileUtil: ProfileUtil,

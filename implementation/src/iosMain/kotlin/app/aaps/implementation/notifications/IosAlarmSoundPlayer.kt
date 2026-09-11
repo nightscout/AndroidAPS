@@ -55,7 +55,8 @@ import platform.Foundation.NSURL
 @OptIn(ExperimentalForeignApi::class)
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class IosAlarmSoundPlayer @Inject constructor(
+@Inject
+class IosAlarmSoundPlayer(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences
 ) : AlarmSoundPlayer {

@@ -30,7 +30,8 @@ import dev.zacsweers.metro.SingleIn
 @OptIn(ExperimentalForeignApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosMaintenance @Inject constructor(
+@Inject
+class IosMaintenance(
     private val aapsLogger: AAPSLogger,
     /** Overridden in a test, so it neither reads the real log nor deletes it. */
     private val logDirectory: String? = defaultLogDirectory()

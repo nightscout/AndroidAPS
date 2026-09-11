@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetGlobalTime @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<GlobalTimeResponse>(PatchFunc.GET_GLOBAL_TIME, patch, aapsLogger) {
+@Inject
+class GetGlobalTime(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<GlobalTimeResponse>(PatchFunc.GET_GLOBAL_TIME, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): GlobalTimeResponse {
         val time = BytesConverter.toUInt(bytes, DATA0)
         return GlobalTimeResponse(time, bytes[DATA5].toInt())

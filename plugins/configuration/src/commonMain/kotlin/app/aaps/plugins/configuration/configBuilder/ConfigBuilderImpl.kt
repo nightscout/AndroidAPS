@@ -50,7 +50,8 @@ import kotlin.time.Duration.Companion.seconds
 // Scoped, so every caller shares one config builder.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ConfigBuilderImpl @Inject constructor(
+@Inject
+class ConfigBuilderImpl(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val preferences: Preferences,

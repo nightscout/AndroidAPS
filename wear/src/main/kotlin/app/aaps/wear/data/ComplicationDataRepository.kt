@@ -36,7 +36,8 @@ import kotlinx.serialization.protobuf.ProtoBuf
  *
  */
 @SingleIn(AppScope::class)
-class ComplicationDataRepository @Inject constructor(
+@Inject
+class ComplicationDataRepository(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val sp: SP

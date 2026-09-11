@@ -54,7 +54,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class CarbsDialogViewModel @Inject constructor(
+@Inject
+class CarbsDialogViewModel(
     private val constraintChecker: ConstraintsChecker,
     private val profileUtil: ProfileUtil,
     private val iobCobCalculator: IobCobCalculator,

@@ -29,7 +29,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ResourceHelperImpl @Inject constructor(
+@Inject
+class ResourceHelperImpl(
     var context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val preferences: Preferences

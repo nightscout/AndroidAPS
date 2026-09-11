@@ -16,7 +16,8 @@ import kotlin.math.abs
 
 @Suppress("LocalVariableName")
 @SingleIn(AppScope::class)
-class DefaultProfile @Inject constructor(
+@Inject
+class DefaultProfile(
     private val dateUtil: DateUtil,
     private val profileUtil: ProfileUtil
 ) {

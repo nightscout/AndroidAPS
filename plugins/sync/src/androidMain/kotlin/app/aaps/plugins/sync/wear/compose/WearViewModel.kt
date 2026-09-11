@@ -99,7 +99,8 @@ data class CwfImportItemState(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class WearViewModel @Inject constructor(
+@Inject
+class WearViewModel(
     private val wearPlugin: WearPlugin,
     private val rxBus: RxBus,
     private val rh: ResourceHelper,

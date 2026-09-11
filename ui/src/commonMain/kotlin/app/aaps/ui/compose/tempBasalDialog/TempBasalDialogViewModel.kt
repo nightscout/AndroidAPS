@@ -40,7 +40,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class TempBasalDialogViewModel @Inject constructor(
+@Inject
+class TempBasalDialogViewModel(
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val config: Config,

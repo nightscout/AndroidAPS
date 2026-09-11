@@ -23,7 +23,8 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import dev.zacsweers.metro.Inject
 
-open class DanaRSPacketAPSHistoryEvents @Inject constructor(
+@Inject
+open class DanaRSPacketAPSHistoryEvents(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val rxBus: RxBus,

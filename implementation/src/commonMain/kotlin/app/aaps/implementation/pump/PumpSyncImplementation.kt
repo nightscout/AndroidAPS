@@ -38,7 +38,8 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
 @ContributesBinding(AppScope::class)
-class PumpSyncImplementation @Inject constructor(
+@Inject
+class PumpSyncImplementation(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val preferences: Preferences,

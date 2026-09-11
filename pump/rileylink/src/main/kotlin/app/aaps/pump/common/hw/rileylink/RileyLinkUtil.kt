@@ -17,7 +17,8 @@ import dev.zacsweers.metro.SingleIn
  * Created by andy on 17/05/2018.
  */
 @SingleIn(AppScope::class)
-class RileyLinkUtil @Inject constructor(
+@Inject
+class RileyLinkUtil(
     private val aapsLogger: AAPSLogger,
     private val context: Context
 ) {

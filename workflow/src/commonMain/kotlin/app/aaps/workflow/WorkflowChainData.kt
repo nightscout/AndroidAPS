@@ -40,7 +40,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
-class WorkflowChainData @Inject constructor(
+@Inject
+class WorkflowChainData(
     private val aapsLogger: AAPSLogger
 ) {
 

@@ -55,7 +55,8 @@ data class RileyLinkHistoryItem(
 @Stable
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class RileyLinkStatusViewModel @Inject constructor(
+@Inject
+class RileyLinkStatusViewModel(
     private val rh: ResourceHelper,
     private val rileyLinkServiceData: RileyLinkServiceData,
     private val rileyLinkUtil: RileyLinkUtil,

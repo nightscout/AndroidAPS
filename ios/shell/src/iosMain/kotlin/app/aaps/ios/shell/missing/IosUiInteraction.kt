@@ -32,7 +32,8 @@ import kotlin.reflect.KClass
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosUiInteraction @Inject constructor(
+@Inject
+class IosUiInteraction(
     private val aapsLogger: AAPSLogger,
     // Provider: the registry builds the notification platform, which would be a cycle back to here.
     private val notificationManager: () -> NotificationManager

@@ -9,7 +9,8 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketAPSSetEventHistory @Inject constructor(
+@Inject
+class DanaRSPacketAPSSetEventHistory(
     private val aapsLogger: AAPSLogger,
     dateUtil: DateUtil,
     private val danaPump: DanaPump

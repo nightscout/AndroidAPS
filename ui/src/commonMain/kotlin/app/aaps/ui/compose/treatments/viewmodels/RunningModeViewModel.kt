@@ -39,7 +39,8 @@ import kotlinx.coroutines.launch
  * ViewModel for RunningModeScreen managing running mode state and business logic.
  */
 @Stable
-class RunningModeViewModel @Inject constructor(
+@Inject
+class RunningModeViewModel(
     private val persistenceLayer: PersistenceLayer,
     val rh: TextResolver,
     val dateUtil: DateUtil,

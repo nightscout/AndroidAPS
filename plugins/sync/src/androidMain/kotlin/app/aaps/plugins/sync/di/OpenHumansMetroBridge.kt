@@ -30,7 +30,8 @@ import kotlin.reflect.KClass
  * written up in `MetroGraphs`.
  */
 @SingleIn(AppScope::class)
-class OpenHumansMetroBridge @Inject constructor(
+@Inject
+class OpenHumansMetroBridge(
     private val aapsLogger: () -> AAPSLogger,
     private val rh: () -> ResourceHelper,
     private val preferences: () -> Preferences,

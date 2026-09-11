@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BasalStop @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalStopResponse>(PatchFunc.STOP_BASAL, patch, aapsLogger) {
+@Inject
+class BasalStop(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalStopResponse>(PatchFunc.STOP_BASAL, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): BasalStopResponse {
         val resultCode = if (bytes[DATA0].toInt() == 0) PatchBleResultCode.SUCCESS else PatchBleResultCode.UNKNOWN_ERROR
         val id = BytesConverter.toUInt(bytes[DATA1], bytes[DATA2])

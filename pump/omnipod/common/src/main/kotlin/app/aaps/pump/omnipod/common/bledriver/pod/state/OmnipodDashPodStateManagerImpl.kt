@@ -40,7 +40,8 @@ import java.util.EnumSet
 import java.util.TimeZone
 import dev.zacsweers.metro.Inject
 
-class OmnipodDashPodStateManagerImpl @Inject constructor(
+@Inject
+class OmnipodDashPodStateManagerImpl(
     private val logger: AAPSLogger,
     private val rxBus: RxBus,
     private val preferences: Preferences,

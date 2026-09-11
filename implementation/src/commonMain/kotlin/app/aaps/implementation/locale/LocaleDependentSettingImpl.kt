@@ -8,7 +8,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class LocaleDependentSettingImpl @Inject constructor() : LocaleDependentSetting {
+@Inject
+class LocaleDependentSettingImpl() : LocaleDependentSetting {
 
     override val ntpServer: String get() = ntpServerFor(LocalePlatform.language, LocalePlatform.country)
 }

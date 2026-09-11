@@ -48,7 +48,8 @@ import kotlin.time.Duration.Companion.hours
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AlarmManager @Inject constructor() : IAlarmManager {
+@Inject
+class AlarmManager() : IAlarmManager {
 
     @Inject lateinit var patchManager: IPatchManager
     @Inject lateinit var activePlugin: ActivePlugin

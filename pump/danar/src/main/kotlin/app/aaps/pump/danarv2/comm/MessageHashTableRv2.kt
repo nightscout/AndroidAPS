@@ -58,7 +58,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class MessageHashTableRv2 @Inject constructor(
+@Inject
+class MessageHashTableRv2(
     private val injector: MetroMemberInjector
 ) : MessageHashTableBase {
 

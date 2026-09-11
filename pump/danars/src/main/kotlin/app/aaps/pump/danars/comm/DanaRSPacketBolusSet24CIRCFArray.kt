@@ -10,7 +10,8 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
 import kotlin.math.round
 
-class DanaRSPacketBolusSet24CIRCFArray @Inject constructor(
+@Inject
+class DanaRSPacketBolusSet24CIRCFArray(
     private val aapsLogger: AAPSLogger,
     private val danaPump: DanaPump,
     private val profileUtil: ProfileUtil

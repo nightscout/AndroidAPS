@@ -56,7 +56,8 @@ import kotlin.math.abs
 @IntKey(440)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<DexcomBoyda>())
-class DexcomPlugin @Inject constructor(
+@Inject
+class DexcomPlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val context: Context,
@@ -114,7 +115,8 @@ class DexcomPlugin @Inject constructor(
 
     // cannot be inner class because of needed injection
 
-    class DexcomWorker @AssistedInject constructor(
+    @AssistedInject
+    class DexcomWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

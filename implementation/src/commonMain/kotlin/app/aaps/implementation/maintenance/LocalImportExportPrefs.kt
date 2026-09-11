@@ -335,7 +335,8 @@ class LocalImportExportPrefs(
  * round.
  */
 @SingleIn(AppScope::class)
-class PrefsFileLister @Inject constructor(
+@Inject
+class PrefsFileLister(
     private val files: PrefsFileAccess,
     secureEncrypt: SecureEncrypt,
     textResolver: TextResolver

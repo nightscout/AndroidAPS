@@ -34,7 +34,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class MaintenanceImpl @Inject constructor(
+@Inject
+class MaintenanceImpl(
     private val context: Context,
     private val rh: ResourceHelper,
     private val preferences: Preferences,

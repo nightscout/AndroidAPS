@@ -50,7 +50,8 @@ import platform.UserNotifications.UNUserNotificationCenter
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosLoopNotifier @Inject constructor(
+@Inject
+class IosLoopNotifier(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val loop: () -> Loop

@@ -21,7 +21,8 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 @SingleIn(AppScope::class)
-class DetermineBasalAMA @Inject constructor(
+@Inject
+class DetermineBasalAMA(
     private val profileUtil: ProfileUtil
 ) {
 

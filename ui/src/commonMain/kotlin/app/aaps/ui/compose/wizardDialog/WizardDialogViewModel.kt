@@ -65,7 +65,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @Stable
-class WizardDialogViewModel @AssistedInject constructor(
+@AssistedInject
+class WizardDialogViewModel(
     @Assisted private val savedStateHandle: SavedStateHandle,
     private val bolusWizardProvider: () -> BolusWizard,
     private val constraintChecker: ConstraintsChecker,

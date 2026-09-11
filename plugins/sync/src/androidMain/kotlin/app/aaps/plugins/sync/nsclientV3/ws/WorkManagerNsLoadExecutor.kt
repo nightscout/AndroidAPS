@@ -33,7 +33,8 @@ import kotlinx.coroutines.flow.map
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class WorkManagerNsLoadExecutor @Inject constructor(
+@Inject
+class WorkManagerNsLoadExecutor(
     private val context: Context
 ) : NsLoadExecutor {
 

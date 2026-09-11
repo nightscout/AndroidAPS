@@ -17,7 +17,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class SelfTestTask @Inject constructor() : TaskBase(TaskFunc.SELF_TEST) {
+@Inject
+class SelfTestTask() : TaskBase(TaskFunc.SELF_TEST) {
 
     @Inject lateinit var temperatureGet: GetTemperature
     @Inject lateinit var batteryLevelGetBeforePriming: GetVoltageLevelB4Priming

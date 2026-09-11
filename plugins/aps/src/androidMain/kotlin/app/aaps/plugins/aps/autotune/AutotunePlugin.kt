@@ -77,7 +77,8 @@ import java.util.TimeZone
 @MetroIntKey(240)
 @ContributesBinding(AppScope::class, binding = binding<Autotune>())
 @SingleIn(AppScope::class)
-class AutotunePlugin @Inject constructor(
+@Inject
+class AutotunePlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

@@ -18,7 +18,8 @@ import kotlinx.coroutines.Dispatchers
  * lived in a multiplatform module. `androidMain` compiles against the Android SDK like any other
  * Android source set. The line was the annotation processor, not WorkManager.
  */
-class RunningModeExpiryWorker @AssistedInject constructor(
+@AssistedInject
+class RunningModeExpiryWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

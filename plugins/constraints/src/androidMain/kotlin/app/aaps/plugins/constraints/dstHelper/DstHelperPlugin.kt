@@ -37,7 +37,8 @@ import java.util.Calendar
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(850)
 @SingleIn(AppScope::class)
-class DstHelperPlugin @Inject constructor(
+@Inject
+class DstHelperPlugin(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,

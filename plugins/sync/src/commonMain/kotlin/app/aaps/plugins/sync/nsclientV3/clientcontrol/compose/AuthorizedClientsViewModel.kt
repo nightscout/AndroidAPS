@@ -36,7 +36,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class AuthorizedClientsViewModel @Inject constructor(
+@Inject
+class AuthorizedClientsViewModel(
     private val repository: AuthorizedClientsRepository,
     private val offerPublisher: PairingOfferPublisher,
     private val dateUtil: DateUtil,

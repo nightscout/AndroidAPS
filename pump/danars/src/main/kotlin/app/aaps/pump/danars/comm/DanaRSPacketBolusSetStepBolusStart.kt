@@ -6,7 +6,8 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketBolusSetStepBolusStart @Inject constructor(
+@Inject
+class DanaRSPacketBolusSetStepBolusStart(
     private val aapsLogger: AAPSLogger,
     private val danaPump: DanaPump
 ) : DanaRSPacket() {

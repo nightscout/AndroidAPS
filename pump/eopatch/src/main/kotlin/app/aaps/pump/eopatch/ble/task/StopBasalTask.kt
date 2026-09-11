@@ -26,7 +26,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StopBasalTask @Inject constructor(
+@Inject
+class StopBasalTask(
     private val commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
     private val uel: UserEntryLogger,

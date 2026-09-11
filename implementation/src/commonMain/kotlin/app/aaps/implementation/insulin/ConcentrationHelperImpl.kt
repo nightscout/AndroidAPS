@@ -26,7 +26,8 @@ import kotlin.time.Clock
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ConcentrationHelperImpl @Inject constructor(
+@Inject
+class ConcentrationHelperImpl(
     val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,

@@ -20,7 +20,8 @@ import dev.zacsweers.metro.SingleIn
  * Created by andy on 16/05/2018.
  */
 @SingleIn(AppScope::class)
-class RileyLinkServiceData @Inject constructor(
+@Inject
+class RileyLinkServiceData(
     private val aapsLogger: AAPSLogger,
     private val rileyLinkUtil: RileyLinkUtil,
     private val rxBus: RxBus

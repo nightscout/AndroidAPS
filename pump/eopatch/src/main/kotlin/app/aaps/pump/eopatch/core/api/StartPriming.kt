@@ -11,6 +11,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StartPriming @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.START_PRIMING, patch, aapsLogger) {
+@Inject
+class StartPriming(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.START_PRIMING, patch, aapsLogger) {
     fun start(): Single<PatchBooleanResponse> = writeAndRead(generate())
 }

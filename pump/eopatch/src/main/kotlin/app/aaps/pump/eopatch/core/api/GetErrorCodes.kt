@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetErrorCodes @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<AeCodeResponse>(PatchFunc.GET_AE_CODES, patch, aapsLogger) {
+@Inject
+class GetErrorCodes(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<AeCodeResponse>(PatchFunc.GET_AE_CODES, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): AeCodeResponse {
         val aeCount = BytesConverter.toUInt(bytes[DATA0])
         val set = mutableSetOf<PatchAeCode>()

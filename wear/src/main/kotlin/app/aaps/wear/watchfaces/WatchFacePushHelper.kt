@@ -26,7 +26,8 @@ import kotlinx.coroutines.withContext
  * the wear build script) and shipped in assets. The token is bound to the exact APK bytes, so both
  * always travel together.
  */
-class WatchFacePushHelper @Inject constructor(
+@Inject
+class WatchFacePushHelper(
     private val context: Context,
     private val sp: SP,
     private val aapsLogger: AAPSLogger

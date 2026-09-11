@@ -10,7 +10,8 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 
 @SingleIn(AppScope::class)
-class DeltaCalculator @Inject constructor(
+@Inject
+class DeltaCalculator(
     private val aapsLogger: AAPSLogger
 ) {
 

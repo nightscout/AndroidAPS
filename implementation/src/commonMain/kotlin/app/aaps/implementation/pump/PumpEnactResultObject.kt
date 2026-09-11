@@ -10,7 +10,8 @@ import dev.zacsweers.metro.Inject
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope. It is a result object, built
 // fresh for each call and handed back to the caller.
 @ContributesBinding(AppScope::class)
-class PumpEnactResultObject @Inject constructor(private val rh: TextResolver) : PumpEnactResult {
+@Inject
+class PumpEnactResultObject(private val rh: TextResolver) : PumpEnactResult {
 
     override var success = false // request was processed successfully (but possible no change was needed)
     override var enacted = false // request was processed successfully and change has been made

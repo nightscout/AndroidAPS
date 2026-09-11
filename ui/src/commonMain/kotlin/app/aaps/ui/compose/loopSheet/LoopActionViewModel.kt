@@ -41,7 +41,8 @@ data class LoopActionUiState(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class LoopActionViewModel @Inject constructor(
+@Inject
+class LoopActionViewModel(
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,

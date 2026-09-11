@@ -62,7 +62,8 @@ import kotlinx.serialization.json.JsonObject
  * here is Android-specific and nothing needs `org.json`.
  */
 @SingleIn(AppScope::class)
-class NsFrameHandler @Inject constructor(
+@Inject
+class NsFrameHandler(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val config: Config,

@@ -10,7 +10,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class DiaconnLogUploader @Inject constructor(
+@Inject
+class DiaconnLogUploader(
     private val aapsLogger: AAPSLogger,
 ) {
 

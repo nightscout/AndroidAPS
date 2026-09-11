@@ -33,7 +33,8 @@ data class NSClientUiState(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class NSClientViewModel @Inject constructor(
+@Inject
+class NSClientViewModel(
     private val rh: TextResolver,
     private val nsClientRepository: NSClientRepository,
     private val preferences: Preferences

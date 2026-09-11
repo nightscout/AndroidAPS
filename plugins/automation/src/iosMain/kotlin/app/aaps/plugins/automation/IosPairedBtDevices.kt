@@ -22,7 +22,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class IosPairedBtDevices @Inject constructor(
+@Inject
+class IosPairedBtDevices(
     private val aapsLogger: AAPSLogger
 ) : PairedBtDevices {
 

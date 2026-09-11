@@ -30,7 +30,8 @@ import dev.zacsweers.metro.binding
 @APS
 @IntKey(820)
 @SingleIn(AppScope::class)
-class StorageConstraintPlugin @Inject constructor(
+@Inject
+class StorageConstraintPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     private val notificationManager: NotificationManager

@@ -75,7 +75,8 @@ import kotlin.math.min
 @PumpDriver
 @MetroIntKey(1120)
 @SingleIn(AppScope::class)
-class MedtrumPlugin @Inject constructor(
+@Inject
+class MedtrumPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

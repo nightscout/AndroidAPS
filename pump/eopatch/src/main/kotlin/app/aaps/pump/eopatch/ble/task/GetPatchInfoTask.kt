@@ -25,7 +25,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetPatchInfoTask @Inject constructor(
+@Inject
+class GetPatchInfoTask(
     val updateConnectionTask: UpdateConnectionTask
 ) : TaskBase(TaskFunc.GET_PATCH_INFO) {
 

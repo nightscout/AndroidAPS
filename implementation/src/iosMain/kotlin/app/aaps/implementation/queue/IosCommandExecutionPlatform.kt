@@ -17,7 +17,8 @@ import platform.Foundation.endActivity
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class IosCommandExecutionPlatform @Inject constructor() : CommandExecutionPlatform {
+@Inject
+class IosCommandExecutionPlatform() : CommandExecutionPlatform {
 
     /**
      * `NSProcessInfo.beginActivityWithOptions` is the closest iOS equivalent: it tells the system not

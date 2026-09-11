@@ -48,7 +48,8 @@ import kotlinx.coroutines.flow.update
  */
 
 @Stable
-class GraphViewModel @AssistedInject constructor(
+@AssistedInject
+class GraphViewModel(
     @Assisted cache: OverviewDataCache,
     @Assisted private val fullWindow: Boolean,
     private val graphConfigRepository: GraphConfigRepository,

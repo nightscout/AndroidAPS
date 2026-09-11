@@ -58,7 +58,8 @@ import kotlin.time.Duration.Companion.hours
 
 @ContributesBinding(AppScope::class, binding = binding<OmnipodDashManager>())
 @SingleIn(AppScope::class)
-class OmnipodDashManagerImpl @Inject constructor(
+@Inject
+class OmnipodDashManagerImpl(
     private val logger: AAPSLogger,
     private val podStateManager: OmnipodDashPodStateManager,
     private val bleManager: OmnipodDashBleManager,

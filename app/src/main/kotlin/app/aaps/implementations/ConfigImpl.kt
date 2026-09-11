@@ -28,7 +28,8 @@ import dev.zacsweers.metro.Inject
 @Suppress("KotlinConstantConditions")
 @ContributesBinding(AppScope::class, binding = binding<Config>())
 @SingleIn(AppScope::class)
-class ConfigImpl @Inject constructor(
+@Inject
+class ConfigImpl(
     private val fileListProvider: () -> FileListProvider,
     private val externalOptionsOverride: ExternalOptionsOverride
 ) : Config {

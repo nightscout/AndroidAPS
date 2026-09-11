@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetFirmwareVersion @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<FirmwareVersionResponse>(PatchFunc.GET_FIRMWARE_VERSION, patch, aapsLogger) {
+@Inject
+class GetFirmwareVersion(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<FirmwareVersionResponse>(PatchFunc.GET_FIRMWARE_VERSION, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): FirmwareVersionResponse {
         val success = bytes[DATA0].toInt() == 0
         if (!success) return FirmwareVersionResponse(false, 0, 0, 0, 0)

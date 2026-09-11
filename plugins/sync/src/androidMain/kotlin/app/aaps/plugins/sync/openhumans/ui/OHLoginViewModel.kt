@@ -17,7 +17,8 @@ import kotlinx.coroutines.launch
 // contribution to AppScope would have to be nameable from `:app` where the root graph is generated.
 @ContributesIntoMap(OpenHumansScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-internal class OHLoginViewModel @Inject constructor(
+@Inject
+internal class OHLoginViewModel(
     private val plugin: OpenHumansUploaderPlugin
 ) : ViewModel() {
 

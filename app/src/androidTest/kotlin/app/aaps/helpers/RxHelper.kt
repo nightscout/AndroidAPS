@@ -22,7 +22,8 @@ import kotlin.reflect.KClass
  * @property listen Register class for listening
  * @property waitFor Wait until event doesn't appear on bus
  */
-class RxHelper @Inject constructor(
+@Inject
+class RxHelper(
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger

@@ -27,7 +27,8 @@ import dev.zacsweers.metro.SingleIn
  * and nothing else.
  */
 @SingleIn(AppScope::class)
-class SceneExpiryRunner @Inject constructor(
+@Inject
+class SceneExpiryRunner(
     private val aapsLogger: AAPSLogger,
     private val activeSceneManager: ActiveSceneManager,
     private val sceneExecutor: SceneExecutor,

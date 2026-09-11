@@ -59,7 +59,8 @@ import dev.zacsweers.metro.SingleIn
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
 //
 @SingleIn(AppScope::class)
-class MedtronicHistoryData @Inject constructor(
+@Inject
+class MedtronicHistoryData(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val medtronicUtil: MedtronicUtil,

@@ -10,7 +10,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Suppress("unused")
-class HardLimitsMock @Inject constructor(
+@Inject
+class HardLimitsMock(
     private val preferences: Preferences,
     private val rh: ResourceHelper
 ) : HardLimits {

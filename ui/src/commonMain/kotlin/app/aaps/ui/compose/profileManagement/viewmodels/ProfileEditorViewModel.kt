@@ -82,7 +82,8 @@ data class ProfileUiState(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class ProfileEditorViewModel @Inject constructor(
+@Inject
+class ProfileEditorViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val profileRepository: ProfileRepository,

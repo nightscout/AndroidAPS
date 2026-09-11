@@ -16,7 +16,8 @@ import dev.zacsweers.metro.SingleIn
 import java.util.Calendar
 
 @SingleIn(AppScope::class)
-class QuickWizardSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
+@Inject
+class QuickWizardSource(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
 
     companion object {
         // Mirrors QuickWizardMode in :core:objects (not a wear dependency): WIZARD(0), INSULIN(1), CARBS(2).

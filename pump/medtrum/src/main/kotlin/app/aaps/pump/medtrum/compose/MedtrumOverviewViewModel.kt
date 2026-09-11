@@ -73,7 +73,8 @@ sealed class MedtrumOverviewEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class MedtrumOverviewViewModel @Inject constructor(
+@Inject
+class MedtrumOverviewViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,

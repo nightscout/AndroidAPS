@@ -120,7 +120,8 @@ import kotlinx.coroutines.SupervisorJob
 private const val HEALTH_EVENT_QUIET_PERIOD_MS = 500L
 
 @SingleIn(AppScope::class)
-class DataHandlerMobile @Inject constructor(
+@Inject
+class DataHandlerMobile(
     private val context: Context,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,

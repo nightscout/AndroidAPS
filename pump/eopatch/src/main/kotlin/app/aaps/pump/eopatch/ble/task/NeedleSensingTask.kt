@@ -18,7 +18,8 @@ import dev.zacsweers.metro.SingleIn
 
 @Suppress("PropertyName")
 @SingleIn(AppScope::class)
-class NeedleSensingTask @Inject constructor(
+@Inject
+class NeedleSensingTask(
     private val alarmRegistry: IAlarmRegistry
 ) : TaskBase(TaskFunc.NEEDLE_SENSING) {
 

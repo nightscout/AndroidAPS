@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class SetLowReservoirTask @Inject constructor() : TaskBase(TaskFunc.LOW_RESERVOIR) {
+@Inject
+class SetLowReservoirTask() : TaskBase(TaskFunc.LOW_RESERVOIR) {
 
     @Inject lateinit var setLowReservoirAndExpireAlert: SetLowReservoirLevelAndExpireAlert
 

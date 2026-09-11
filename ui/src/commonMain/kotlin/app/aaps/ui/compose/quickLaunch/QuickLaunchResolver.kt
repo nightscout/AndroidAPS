@@ -39,7 +39,8 @@ import dev.zacsweers.metro.SingleIn
  * Used by both MainViewModel and QuickLaunchConfigViewModel.
  */
 @SingleIn(AppScope::class)
-class QuickLaunchResolver @Inject constructor(
+@Inject
+class QuickLaunchResolver(
     private val preferences: Preferences,
     private val quickWizard: QuickWizard,
     private val automation: Automation,

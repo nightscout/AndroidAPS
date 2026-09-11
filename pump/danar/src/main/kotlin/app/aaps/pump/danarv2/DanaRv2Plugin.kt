@@ -62,7 +62,8 @@ import kotlin.math.max
 @PumpDriver
 @MetroIntKey(1030)
 @SingleIn(AppScope::class)
-class DanaRv2Plugin @Inject constructor(
+@Inject
+class DanaRv2Plugin(
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
     private val context: Context,

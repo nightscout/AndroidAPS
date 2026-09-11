@@ -48,7 +48,8 @@ sealed class DiaconnPairWizardEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class DiaconnPairWizardViewModel @Inject constructor(
+@Inject
+class DiaconnPairWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rxBus: RxBus,

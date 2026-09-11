@@ -50,7 +50,8 @@ data class PluginGroup(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class QuickLaunchConfigViewModel @Inject constructor(
+@Inject
+class QuickLaunchConfigViewModel(
     private val preferences: Preferences,
     private val quickWizard: QuickWizard,
     private val automation: Automation,

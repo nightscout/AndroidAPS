@@ -34,7 +34,8 @@ import kotlinx.serialization.json.put
  * `StateFlow` the UI collects, so the outcome is handed back rather than written here.
  */
 @SingleIn(AppScope::class)
-class NsConnectHandler @Inject constructor(
+@Inject
+class NsConnectHandler(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val nsClientRepository: NSClientRepository,

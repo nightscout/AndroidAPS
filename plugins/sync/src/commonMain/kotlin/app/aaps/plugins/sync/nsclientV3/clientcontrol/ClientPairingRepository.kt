@@ -31,7 +31,8 @@ import dev.zacsweers.metro.SingleIn
  * re-pair", not "replay window opens".
  */
 @SingleIn(AppScope::class)
-class ClientPairingRepository @Inject constructor(
+@Inject
+class ClientPairingRepository(
     private val preferences: Preferences,
     private val secureEncrypt: SecureEncrypt,
     private val aapsLogger: AAPSLogger

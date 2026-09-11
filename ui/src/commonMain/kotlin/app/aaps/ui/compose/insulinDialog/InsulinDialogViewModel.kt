@@ -58,7 +58,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class InsulinDialogViewModel @Inject constructor(
+@Inject
+class InsulinDialogViewModel(
     constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,

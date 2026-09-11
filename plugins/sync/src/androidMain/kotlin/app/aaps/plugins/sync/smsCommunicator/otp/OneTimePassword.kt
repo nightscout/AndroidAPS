@@ -20,7 +20,8 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
 @SingleIn(AppScope::class)
-class OneTimePassword @Inject constructor(
+@Inject
+class OneTimePassword(
     private val preferences: Preferences,
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil

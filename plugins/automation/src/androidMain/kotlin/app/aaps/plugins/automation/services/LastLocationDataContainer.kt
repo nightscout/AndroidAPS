@@ -10,7 +10,8 @@ import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class LastLocationDataContainer @Inject constructor() : LastKnownLocation {
+@Inject
+class LastLocationDataContainer() : LastKnownLocation {
 
     /** Written by [LocationService]. Stays an Android `Location` because that is what the service gets. */
     var lastLocation: Location? = null

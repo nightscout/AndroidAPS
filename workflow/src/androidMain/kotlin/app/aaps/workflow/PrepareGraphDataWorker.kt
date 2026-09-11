@@ -18,7 +18,8 @@ import kotlinx.coroutines.Dispatchers
  * It reads where the chain left its input and hands that to [PrepareGraphDataRunner], which holds
  * the calculation and is plain Kotlin. [RunnerWorker] does the `Result` mapping.
  */
-class PrepareGraphDataWorker @AssistedInject constructor(
+@AssistedInject
+class PrepareGraphDataWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

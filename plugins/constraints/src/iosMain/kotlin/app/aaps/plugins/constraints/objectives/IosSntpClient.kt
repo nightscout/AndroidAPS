@@ -24,7 +24,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosSntpClient @Inject constructor(
+@Inject
+class IosSntpClient(
     private val aapsLogger: AAPSLogger
 ) : SntpClient {
 

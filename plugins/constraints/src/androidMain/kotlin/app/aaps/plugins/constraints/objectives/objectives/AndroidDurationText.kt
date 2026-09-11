@@ -18,7 +18,8 @@ import kotlin.math.floor
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class AndroidDurationText @Inject constructor(
+@Inject
+class AndroidDurationText(
     private val rh: ResourceHelper
 ) : DurationText {
 

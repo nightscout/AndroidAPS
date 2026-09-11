@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetInternalSuspendTime @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<PatchInternalSuspendTimeResponse>(PatchFunc.GET_INTERNAL_SUSPENDED_TIME, patch, aapsLogger) {
+@Inject
+class GetInternalSuspendTime(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<PatchInternalSuspendTimeResponse>(PatchFunc.GET_INTERNAL_SUSPENDED_TIME, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): PatchInternalSuspendTimeResponse {
         val success = bytes[DATA0].toInt() == 0
         return if (success) PatchInternalSuspendTimeResponse(true, BytesConverter.toInt(bytes, DATA1))

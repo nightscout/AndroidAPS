@@ -23,7 +23,8 @@ import dev.zacsweers.metro.SingleIn
 @Suppress("unused")
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DataSyncSelectorXdripImpl @Inject constructor(
+@Inject
+class DataSyncSelectorXdripImpl(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,

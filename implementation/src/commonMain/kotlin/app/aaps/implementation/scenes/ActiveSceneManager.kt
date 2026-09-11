@@ -50,7 +50,8 @@ import kotlinx.serialization.json.put
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ActiveSceneManager @Inject constructor(
+@Inject
+class ActiveSceneManager(
     private val preferences: Preferences,
     private val sceneRepository: SceneRepository,
     private val persistenceLayer: PersistenceLayer,

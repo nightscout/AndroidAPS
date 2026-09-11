@@ -19,7 +19,8 @@ import dev.zacsweers.metro.SingleIn
  * This class is intended for Pump Drivers that use temporaryId and need way to pair records
  */
 @SingleIn(AppScope::class)
-class PumpSyncStorage @Inject constructor(
+@Inject
+class PumpSyncStorage(
     val pumpSync: PumpSync,
     val preferences: Preferences,
     val aapsLogger: AAPSLogger

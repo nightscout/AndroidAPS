@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /** WorkManager shim. The work itself is [LoadFoodsRunner], which is shared. */
-class LoadFoodsWorker @AssistedInject constructor(
+@AssistedInject
+class LoadFoodsWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

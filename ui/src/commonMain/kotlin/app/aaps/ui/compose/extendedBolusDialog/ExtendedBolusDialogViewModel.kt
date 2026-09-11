@@ -39,7 +39,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class ExtendedBolusDialogViewModel @Inject constructor(
+@Inject
+class ExtendedBolusDialogViewModel(
     private val constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
     private val config: Config,

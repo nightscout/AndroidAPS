@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
 
 @Suppress("PrivatePropertyName", "SpellCheckingInspection")
 @SingleIn(AppScope::class)
-class InfoReminderTask @Inject constructor() : TaskBase(TaskFunc.INFO_REMINDER) {
+@Inject
+class InfoReminderTask() : TaskBase(TaskFunc.INFO_REMINDER) {
 
     @Inject lateinit var infoReminderSet: InfoReminderSet
 

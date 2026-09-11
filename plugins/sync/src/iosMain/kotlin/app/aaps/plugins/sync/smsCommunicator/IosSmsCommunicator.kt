@@ -32,7 +32,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosSmsCommunicator @Inject constructor(
+@Inject
+class IosSmsCommunicator(
     private val aapsLogger: AAPSLogger
 ) : SmsCommunicator {
 

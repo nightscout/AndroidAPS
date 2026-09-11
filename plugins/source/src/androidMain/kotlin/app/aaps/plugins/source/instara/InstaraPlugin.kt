@@ -48,7 +48,8 @@ import org.json.JSONObject
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(540)
 @SingleIn(AppScope::class)
-class InstaraPlugin @Inject constructor(
+@Inject
+class InstaraPlugin(
     private val context: Context,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
@@ -99,7 +100,8 @@ class InstaraPlugin @Inject constructor(
     }
 
 
-    class InstaraWorker @AssistedInject constructor(
+    @AssistedInject
+    class InstaraWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

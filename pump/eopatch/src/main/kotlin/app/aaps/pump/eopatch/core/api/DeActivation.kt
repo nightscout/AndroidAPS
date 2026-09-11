@@ -11,6 +11,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class DeActivation @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.DEACTIVATE, patch, aapsLogger) {
+@Inject
+class DeActivation(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.DEACTIVATE, patch, aapsLogger) {
     fun start(): Single<PatchBooleanResponse> = writeAndRead(generate())
 }

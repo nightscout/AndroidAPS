@@ -78,7 +78,8 @@ import dev.zacsweers.metro.Inject
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class EquilWizardViewModel @Inject constructor(
+@Inject
+class EquilWizardViewModel(
     private val context: Context,
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,

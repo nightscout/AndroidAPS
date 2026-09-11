@@ -37,7 +37,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.ceil
 
 @SingleIn(AppScope::class)
-open class AutotuneIob @Inject constructor(
+@Inject
+open class AutotuneIob(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,

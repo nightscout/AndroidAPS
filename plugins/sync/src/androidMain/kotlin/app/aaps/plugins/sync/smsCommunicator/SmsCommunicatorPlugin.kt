@@ -119,7 +119,8 @@ import org.joda.time.DateTime
 
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<SmsCommunicator>())
-class SmsCommunicatorPlugin @Inject constructor(
+@Inject
+class SmsCommunicatorPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     private val smsManager: SmsManager?,
@@ -217,7 +218,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     // cannot be inner class because of needed injection
-    class SmsCommunicatorWorker @AssistedInject constructor(
+    @AssistedInject
+    class SmsCommunicatorWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

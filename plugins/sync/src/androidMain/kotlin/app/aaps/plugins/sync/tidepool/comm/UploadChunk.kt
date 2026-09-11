@@ -41,7 +41,8 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 @SingleIn(AppScope::class)
-class UploadChunk @Inject constructor(
+@Inject
+class UploadChunk(
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,

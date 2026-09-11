@@ -21,7 +21,8 @@ import dev.zacsweers.metro.Inject
 /**
  * Fills the fields of the reference algorithm helpers, which are built with `new` rather than by a graph.
  */
-class StaticInjector @Inject constructor(
+@Inject
+class StaticInjector(
     aapsLogger: AAPSLogger,
     constraintChecker: ConstraintsChecker,
     preferences: Preferences,

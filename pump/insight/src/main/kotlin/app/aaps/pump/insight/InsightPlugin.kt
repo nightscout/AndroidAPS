@@ -147,7 +147,8 @@ import app.aaps.core.interfaces.pump.comment
 @PumpDriver
 @IntKey(1050)
 @SingleIn(AppScope::class)
-class InsightPlugin @Inject constructor(
+@Inject
+class InsightPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

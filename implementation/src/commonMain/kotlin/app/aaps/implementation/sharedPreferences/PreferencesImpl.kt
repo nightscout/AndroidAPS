@@ -63,7 +63,8 @@ import kotlin.math.min
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class PreferencesImpl @Inject constructor(
+@Inject
+class PreferencesImpl(
     private val sp: KeyValueStore,
     private val profileUtil: () -> ProfileUtil,
     private val profileFunction: () -> ProfileFunction,

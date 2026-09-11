@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BasalScheduleSetBig @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalScheduleSetResponse>(PatchFunc.SET_BASAL_SCHEDULE, patch, aapsLogger) {
+@Inject
+class BasalScheduleSetBig(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalScheduleSetResponse>(PatchFunc.SET_BASAL_SCHEDULE, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): BasalScheduleSetResponse {
         val ret = bytes[DATA0].toInt() and 0xFF
         val result = when (ret) {

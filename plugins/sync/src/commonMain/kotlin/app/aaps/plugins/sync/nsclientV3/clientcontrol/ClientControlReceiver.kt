@@ -100,7 +100,8 @@ import kotlinx.serialization.json.put
  */
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
-class ClientControlReceiver @Inject constructor(
+@Inject
+class ClientControlReceiver(
     private val authorizedRepository: AuthorizedClientsRepository,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsClientRepository: NSClientRepository,

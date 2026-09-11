@@ -34,7 +34,8 @@ import dev.zacsweers.metro.SingleIn
 /** xDrip as a glucose source: it broadcasts readings to other apps, and iOS has no such channel. */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosXDripSource @Inject constructor(
+@Inject
+class IosXDripSource(
     private val aapsLogger: AAPSLogger
 ) : XDripSource {
 
@@ -47,7 +48,8 @@ class IosXDripSource @Inject constructor(
 /** Sending back to xDrip, the other direction of the same missing channel. */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosXDripBroadcast @Inject constructor(
+@Inject
+class IosXDripBroadcast(
     private val aapsLogger: AAPSLogger
 ) : XDripBroadcast {
 
@@ -68,7 +70,8 @@ class IosXDripBroadcast @Inject constructor(
 /** The upload queue for xDrip. Nothing is queued, because nothing can be sent. */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosDataSyncSelectorXdrip @Inject constructor(
+@Inject
+class IosDataSyncSelectorXdrip(
     private val aapsLogger: AAPSLogger
 ) : DataSyncSelectorXdrip {
 
@@ -84,7 +87,8 @@ class IosDataSyncSelectorXdrip @Inject constructor(
 /** The Dexcom app's own build of the receiver - an Android app, reached by an Android permission. */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosDexcomBoyda @Inject constructor(
+@Inject
+class IosDexcomBoyda(
     private val aapsLogger: AAPSLogger
 ) : DexcomBoyda {
 

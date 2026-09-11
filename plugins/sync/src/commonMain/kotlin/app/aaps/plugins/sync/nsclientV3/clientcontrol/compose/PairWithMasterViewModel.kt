@@ -23,7 +23,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class PairWithMasterViewModel @Inject constructor(
+@Inject
+class PairWithMasterViewModel(
     private val repository: ClientPairingRepository,
     private val publisher: ClientControlPublisher,
     private val fetcher: PairingOfferFetcher,

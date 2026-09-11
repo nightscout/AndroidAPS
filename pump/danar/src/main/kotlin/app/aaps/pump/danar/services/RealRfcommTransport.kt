@@ -21,7 +21,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class RealRfcommTransport @Inject constructor(
+@Inject
+class RealRfcommTransport(
     private val context: Context,
     private val aapsLogger: AAPSLogger
 ) : RfcommTransport {

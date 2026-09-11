@@ -58,7 +58,8 @@ import dev.zacsweers.metro.Inject
  *     arrives during the linger keeps draining instead of forcing a disconnect+reconnect.
  */
 @SingleIn(AppScope::class)
-class CommandExecutor @Inject constructor(
+@Inject
+class CommandExecutor(
     private val aapsLogger: AAPSLogger,
     private val fabricPrivacy: FabricPrivacy,
     private val queue: CommandQueue,

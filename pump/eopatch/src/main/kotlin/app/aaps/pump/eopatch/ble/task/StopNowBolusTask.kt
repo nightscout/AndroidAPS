@@ -14,7 +14,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StopNowBolusTask @Inject constructor(
+@Inject
+class StopNowBolusTask(
     private val aapsSchedulers: AapsSchedulers
 ) : BolusTask(TaskFunc.STOP_NOW_BOLUS) {
 

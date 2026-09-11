@@ -38,7 +38,8 @@ import app.aaps.ui.widget.directionToDrawableRes
 import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
-class WidgetStateLoader @Inject constructor(
+@Inject
+class WidgetStateLoader(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val lastBgData: LastBgData,

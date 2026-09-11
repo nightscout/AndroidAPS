@@ -10,7 +10,8 @@ import dev.zacsweers.metro.Inject
 /**
  * Created by andy on 6/14/18.
  */
-class MedtronicUIComm @Inject constructor(
+@Inject
+class MedtronicUIComm(
     private val aapsLogger: AAPSLogger,
     private val medtronicUtil: MedtronicUtil,
     private val medtronicUIPostprocessor: MedtronicUIPostprocessor,

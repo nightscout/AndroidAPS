@@ -25,7 +25,8 @@ import platform.UIKit.UIViewController
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosAuthBrowser @Inject constructor(private val aapsLogger: AAPSLogger) : AuthBrowser {
+@Inject
+class IosAuthBrowser(private val aapsLogger: AAPSLogger) : AuthBrowser {
 
     private var presented: SFSafariViewController? = null
 

@@ -43,7 +43,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ExportPasswordDataStoreImpl @Inject constructor(
+@Inject
+class ExportPasswordDataStoreImpl(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val platform: ExportPasswordPlatform,

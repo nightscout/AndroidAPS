@@ -43,7 +43,8 @@ import kotlinx.coroutines.launch
  * ViewModel for ProfileSwitchScreen managing profile switch state and business logic.
  */
 @Stable
-class ProfileSwitchViewModel @Inject constructor(
+@Inject
+class ProfileSwitchViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val profileRepository: ProfileRepository,
     val rh: TextResolver,

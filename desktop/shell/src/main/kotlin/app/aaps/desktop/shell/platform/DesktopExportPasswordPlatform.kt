@@ -30,7 +30,8 @@ import java.util.Properties
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopExportPasswordPlatform @Inject constructor(
+@Inject
+class DesktopExportPasswordPlatform(
     private val aapsLogger: AAPSLogger
 ) : ExportPasswordPlatform {
 

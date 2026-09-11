@@ -20,7 +20,8 @@ import dev.zacsweers.metro.binding
  */
 @ContributesIntoSet(AppScope::class, binding = binding<SearchableProvider>())
 @SingleIn(AppScope::class)
-class DialogSearchables @Inject constructor(
+@Inject
+class DialogSearchables(
     private val visibilityContext: VisibilityContext
 ) : SearchableProvider {
 

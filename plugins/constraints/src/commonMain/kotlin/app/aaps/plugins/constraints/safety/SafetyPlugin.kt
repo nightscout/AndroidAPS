@@ -44,7 +44,8 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(800)
 @SingleIn(AppScope::class)
-class SafetyPlugin @Inject constructor(
+@Inject
+class SafetyPlugin(
     aapsLogger: AAPSLogger,
     override val rh: TextResolver,
     private val preferences: Preferences,

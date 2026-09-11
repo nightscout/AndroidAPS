@@ -18,7 +18,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AndroidPairedBtDevices @Inject constructor(
+@Inject
+class AndroidPairedBtDevices(
     private val context: Context
 ) : PairedBtDevices {
 

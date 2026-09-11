@@ -88,7 +88,8 @@ import org.json.JSONArray
 @ContributesBinding(AppScope::class, binding = binding<XDripBroadcast>())
 @IntKey(330)
 @SingleIn(AppScope::class)
-class XdripPlugin @Inject constructor(
+@Inject
+class XdripPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

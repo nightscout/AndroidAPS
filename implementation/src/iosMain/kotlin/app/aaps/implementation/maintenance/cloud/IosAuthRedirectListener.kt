@@ -14,7 +14,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosAuthRedirectListener @Inject constructor(aapsLogger: AAPSLogger) : AuthRedirectListener {
+@Inject
+class IosAuthRedirectListener(aapsLogger: AAPSLogger) : AuthRedirectListener {
 
     private val server = IosLoopbackAuthServer(aapsLogger)
 

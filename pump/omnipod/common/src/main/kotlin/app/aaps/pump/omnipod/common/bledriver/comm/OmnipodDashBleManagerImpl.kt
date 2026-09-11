@@ -37,7 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import dev.zacsweers.metro.Inject
 import kotlin.reflect.KClass
 
-class OmnipodDashBleManagerImpl @Inject constructor(
+@Inject
+class OmnipodDashBleManagerImpl(
     private val aapsLogger: AAPSLogger,
     private val podState: OmnipodDashPodStateManager,
     private val config: Config,

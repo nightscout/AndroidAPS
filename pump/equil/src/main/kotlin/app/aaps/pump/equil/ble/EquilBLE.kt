@@ -33,7 +33,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class EquilBLE @Inject constructor(
+@Inject
+class EquilBLE(
     private val aapsLogger: AAPSLogger,
     private val bleTransport: EquilBleTransport,
     private val rxBus: RxBus

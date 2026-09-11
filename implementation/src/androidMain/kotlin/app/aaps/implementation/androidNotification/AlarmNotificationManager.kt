@@ -44,7 +44,8 @@ import dev.zacsweers.metro.SingleIn
  * posting methods touch it before building anything, so a post can still never race their creation.
  */
 @SingleIn(AppScope::class)
-class AlarmNotificationManager @Inject constructor(
+@Inject
+class AlarmNotificationManager(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,

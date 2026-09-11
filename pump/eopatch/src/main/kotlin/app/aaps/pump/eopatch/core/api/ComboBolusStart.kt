@@ -16,7 +16,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class ComboBolusStart @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ComboBolusStartResponse>(PatchFunc.START_COMBO_BOLUS, patch, aapsLogger) {
+@Inject
+class ComboBolusStart(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ComboBolusStartResponse>(PatchFunc.START_COMBO_BOLUS, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): ComboBolusStartResponse {
         if (bytes[DATA0].toInt() != 0) return ComboBolusStartResponse(false, 0, 0)
         val id = BytesConverter.toUInt(bytes[DATA1], bytes[DATA2])

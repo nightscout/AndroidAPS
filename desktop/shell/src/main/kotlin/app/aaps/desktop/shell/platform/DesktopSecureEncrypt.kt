@@ -48,7 +48,8 @@ import javax.crypto.spec.SecretKeySpec
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopSecureEncrypt @Inject constructor(
+@Inject
+class DesktopSecureEncrypt(
     private val log: AAPSLogger,
     private val cryptoUtil: CryptoUtil
 ) : SecureEncrypt {

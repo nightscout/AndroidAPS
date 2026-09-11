@@ -42,7 +42,8 @@ import kotlin.math.pow
  * Created by geoff on 5/26/16.
  */
 @SingleIn(AppScope::class)
-class RFSpy @Inject constructor(
+@Inject
+class RFSpy(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rxBus: RxBus,

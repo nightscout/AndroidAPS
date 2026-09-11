@@ -44,7 +44,8 @@ data class ConfigurationUiState(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class ConfigurationViewModel @Inject constructor(
+@Inject
+class ConfigurationViewModel(
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder,
     private val config: Config,

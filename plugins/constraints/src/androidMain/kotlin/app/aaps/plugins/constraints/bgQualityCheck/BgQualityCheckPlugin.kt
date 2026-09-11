@@ -38,7 +38,8 @@ import kotlin.math.min
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(860)
 @SingleIn(AppScope::class)
-class BgQualityCheckPlugin @Inject constructor(
+@Inject
+class BgQualityCheckPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     private val rxBus: RxBus,

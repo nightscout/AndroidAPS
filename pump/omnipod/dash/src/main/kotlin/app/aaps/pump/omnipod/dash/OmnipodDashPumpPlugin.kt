@@ -113,7 +113,8 @@ import kotlin.time.Duration.Companion.hours
 @PumpDriver
 @IntKey(1080)
 @SingleIn(AppScope::class)
-class OmnipodDashPumpPlugin @Inject constructor(
+@Inject
+class OmnipodDashPumpPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

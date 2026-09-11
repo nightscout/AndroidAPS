@@ -26,7 +26,8 @@ import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.ui.compose.AapsSpacing
 import dev.zacsweers.metro.Inject
 
-class SWEditEncryptedPassword @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val cryptoUtil: PasswordHasher) :
+@Inject
+class SWEditEncryptedPassword(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val cryptoUtil: PasswordHasher) :
     SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var onSetPassword: (() -> Unit)? = null

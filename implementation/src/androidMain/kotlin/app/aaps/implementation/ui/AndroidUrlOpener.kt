@@ -14,7 +14,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AndroidUrlOpener @Inject constructor(
+@Inject
+class AndroidUrlOpener(
     private val context: Context,
     private val aapsLogger: AAPSLogger
 ) : UrlOpener {

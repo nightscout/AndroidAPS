@@ -60,7 +60,8 @@ class SocketIoNsSocket(url: String) : NsSocket {
 }
 
 @ContributesBinding(AppScope::class)
-class SocketIoNsSocketFactory @Inject constructor() : NsSocketFactory {
+@Inject
+class SocketIoNsSocketFactory() : NsSocketFactory {
 
     override fun create(url: String): NsSocket? =
         try {

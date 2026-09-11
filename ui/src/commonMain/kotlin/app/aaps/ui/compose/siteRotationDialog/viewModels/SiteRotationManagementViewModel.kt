@@ -44,7 +44,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class SiteRotationManagementViewModel @Inject constructor(
+@Inject
+class SiteRotationManagementViewModel(
     private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,

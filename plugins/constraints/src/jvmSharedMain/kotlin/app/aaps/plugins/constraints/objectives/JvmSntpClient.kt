@@ -32,7 +32,8 @@ import java.security.SecureRandom
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 @OpenForTesting
-class JvmSntpClient @Inject constructor(
+@Inject
+class JvmSntpClient(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val localeDependentSetting: LocaleDependentSetting

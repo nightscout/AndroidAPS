@@ -30,7 +30,8 @@ import kotlinx.coroutines.launch
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopReminderScheduler @Inject constructor(
+@Inject
+class DesktopReminderScheduler(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager,
     @ApplicationScope private val scope: CoroutineScope
@@ -73,7 +74,8 @@ class DesktopReminderScheduler @Inject constructor(
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopSceneExpiryScheduler @Inject constructor(
+@Inject
+class DesktopSceneExpiryScheduler(
     private val aapsLogger: AAPSLogger,
     private val expiryRunner: () -> SceneExpiryRunner,
     @ApplicationScope private val scope: CoroutineScope

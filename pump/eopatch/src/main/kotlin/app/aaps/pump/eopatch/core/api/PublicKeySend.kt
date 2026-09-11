@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class PublicKeySend @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<KeyResponse>(PatchFunc.SET_PUBLIC_KEY, patch, aapsLogger) {
+@Inject
+class PublicKeySend(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<KeyResponse>(PatchFunc.SET_PUBLIC_KEY, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): KeyResponse {
         val dest = ByteArray(KEY_SIZE)
         System.arraycopy(bytes, DATA1, dest, 0, KEY_SIZE)

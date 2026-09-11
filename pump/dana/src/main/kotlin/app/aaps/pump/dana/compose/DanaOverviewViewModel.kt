@@ -73,7 +73,8 @@ sealed class DanaOverviewEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-open class DanaOverviewViewModel @Inject constructor(
+@Inject
+open class DanaOverviewViewModel(
     private val aapsLogger: AAPSLogger,
     protected val rh: ResourceHelper,
     rxBus: RxBus,

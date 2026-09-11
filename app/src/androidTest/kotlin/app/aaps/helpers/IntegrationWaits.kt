@@ -24,7 +24,8 @@ import kotlin.reflect.KClass
  *  - blind `delay(2000)` / `Thread.sleep(2000)` settles after a calculation (always pay the full 2s,
  *    and `Thread.sleep` blocks the dispatcher — counter to the suspend-first direction).
  */
-class IntegrationWaits @Inject constructor(
+@Inject
+class IntegrationWaits(
     private val persistenceLayer: PersistenceLayer,
     private val iobCobCalculator: IobCobCalculator,
     private val aapsLogger: AAPSLogger

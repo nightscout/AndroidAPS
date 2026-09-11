@@ -27,7 +27,8 @@ internal data class OHUiState(
 // contribution to AppScope would have to be nameable from `:app` where the root graph is generated.
 @ContributesIntoMap(OpenHumansScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-internal class OHViewModel @Inject constructor(
+@Inject
+internal class OHViewModel(
     private val stateDelegate: OHStateDelegate
 ) : ViewModel() {
 

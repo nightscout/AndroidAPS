@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /** WorkManager shim. The work itself is [LoadLastModificationRunner], which is shared. */
-class LoadLastModificationWorker @AssistedInject constructor(
+@AssistedInject
+class LoadLastModificationWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

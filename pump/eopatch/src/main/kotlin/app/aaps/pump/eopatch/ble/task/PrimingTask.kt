@@ -17,7 +17,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class PrimingTask @Inject constructor() : TaskBase(TaskFunc.PRIMING) {
+@Inject
+class PrimingTask() : TaskBase(TaskFunc.PRIMING) {
 
     @Inject lateinit var updateConnection: UpdateConnection
     @Inject lateinit var startPriming: StartPriming

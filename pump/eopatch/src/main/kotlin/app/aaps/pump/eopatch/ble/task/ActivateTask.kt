@@ -14,7 +14,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class ActivateTask @Inject constructor(
+@Inject
+class ActivateTask(
     val startBasalTask: StartNormalBasalTask
 ) : TaskBase(TaskFunc.ACTIVATE) {
 

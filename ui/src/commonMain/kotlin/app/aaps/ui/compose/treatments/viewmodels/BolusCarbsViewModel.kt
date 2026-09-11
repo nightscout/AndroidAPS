@@ -45,7 +45,8 @@ import kotlinx.coroutines.launch
  * ViewModel for BolusCarbsScreen managing bolus, carbs, and calculator result state and business logic.
  */
 @Stable
-class BolusCarbsViewModel @Inject constructor(
+@Inject
+class BolusCarbsViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     val rh: TextResolver,

@@ -48,7 +48,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @Stable
-class CareDialogViewModel @AssistedInject constructor(
+@AssistedInject
+class CareDialogViewModel(
     @Assisted savedStateHandle: SavedStateHandle,
     private val persistenceLayer: PersistenceLayer,
     private val batchExecutor: BatchExecutor,

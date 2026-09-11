@@ -42,7 +42,8 @@ import kotlinx.coroutines.runBlocking
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(490)
 @SingleIn(AppScope::class)
-class IntelligoPlugin @Inject constructor(
+@Inject
+class IntelligoPlugin(
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,

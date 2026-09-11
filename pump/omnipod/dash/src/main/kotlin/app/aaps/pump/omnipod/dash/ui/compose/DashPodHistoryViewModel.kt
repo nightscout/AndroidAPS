@@ -22,7 +22,8 @@ import dev.zacsweers.metro.Inject
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class DashPodHistoryViewModel @Inject constructor(
+@Inject
+class DashPodHistoryViewModel(
     private val dashHistory: DashHistory,
     private val aapsSchedulers: AapsSchedulers,
     val rh: ResourceHelper,

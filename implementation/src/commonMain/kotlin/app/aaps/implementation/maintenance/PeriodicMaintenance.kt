@@ -45,7 +45,8 @@ import kotlin.time.Duration.Companion.minutes
  * the work itself, which is why it is one method rather than three call sites.
  */
 @SingleIn(AppScope::class)
-class PeriodicMaintenance @Inject constructor(
+@Inject
+class PeriodicMaintenance(
     private val aapsLogger: AAPSLogger,
     private val localAlertUtils: LocalAlertUtils,
     private val persistenceLayer: PersistenceLayer,

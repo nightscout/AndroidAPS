@@ -37,7 +37,8 @@ import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.milliseconds
 
 @SingleIn(AppScope::class)
-class DanaPump @Inject constructor(
+@Inject
+class DanaPump(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,

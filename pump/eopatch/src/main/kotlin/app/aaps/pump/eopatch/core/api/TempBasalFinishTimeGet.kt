@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class TempBasalFinishTimeGet @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<TempBasalFinishTimeResponse>(PatchFunc.GET_TEMP_BASAL_FINISH_TIME, patch, aapsLogger) {
+@Inject
+class TempBasalFinishTimeGet(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<TempBasalFinishTimeResponse>(PatchFunc.GET_TEMP_BASAL_FINISH_TIME, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): TempBasalFinishTimeResponse {
         val ret = bytes[DATA0].toInt()
         var tempBasalFinishTime = 0

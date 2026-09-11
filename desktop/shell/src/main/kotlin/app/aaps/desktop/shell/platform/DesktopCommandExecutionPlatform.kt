@@ -22,7 +22,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopCommandExecutionPlatform @Inject constructor() : CommandExecutionPlatform {
+@Inject
+class DesktopCommandExecutionPlatform() : CommandExecutionPlatform {
 
     override fun acquireWakeLock(tag: String, durationMs: Long): WakeLockHandle? = null
 

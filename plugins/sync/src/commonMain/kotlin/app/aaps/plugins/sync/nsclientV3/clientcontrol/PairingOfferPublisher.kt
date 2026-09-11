@@ -36,7 +36,8 @@ import kotlinx.serialization.json.put
  */
 @OptIn(ExperimentalEncodingApi::class)
 @SingleIn(AppScope::class)
-class PairingOfferPublisher @Inject constructor(
+@Inject
+class PairingOfferPublisher(
     private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsClientRepository: NSClientRepository,
     private val aapsLogger: AAPSLogger

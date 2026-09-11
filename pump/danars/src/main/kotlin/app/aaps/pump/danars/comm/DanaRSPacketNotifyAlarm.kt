@@ -11,7 +11,8 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import kotlinx.coroutines.runBlocking
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketNotifyAlarm @Inject constructor(
+@Inject
+class DanaRSPacketNotifyAlarm(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val pumpSync: PumpSync,

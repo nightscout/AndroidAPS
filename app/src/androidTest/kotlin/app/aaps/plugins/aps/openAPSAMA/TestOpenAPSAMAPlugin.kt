@@ -54,7 +54,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.floor
 
 @SingleIn(AlgTestScope::class)
-class TestOpenAPSAMAPlugin @Inject constructor(
+@Inject
+class TestOpenAPSAMAPlugin(
     private val injector: StaticInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,

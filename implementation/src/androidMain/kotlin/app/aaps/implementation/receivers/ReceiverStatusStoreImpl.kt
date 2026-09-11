@@ -14,7 +14,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ReceiverStatusStoreImpl @Inject constructor(val context: Context) : ReceiverStatusStore {
+@Inject
+class ReceiverStatusStoreImpl(val context: Context) : ReceiverStatusStore {
 
     private val _networkStatusFlow = MutableStateFlow<NetworkStatus?>(null)
     override val networkStatusFlow: StateFlow<NetworkStatus?> = _networkStatusFlow

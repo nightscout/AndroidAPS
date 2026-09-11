@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 @SingleIn(OpenHumansScope::class)
-internal class OHStateDelegate @Inject internal constructor(
+@Inject
+internal class OHStateDelegate internal constructor(
     private val preferences: Preferences
 ) {
 

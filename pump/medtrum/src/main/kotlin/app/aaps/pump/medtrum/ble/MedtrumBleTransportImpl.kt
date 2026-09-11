@@ -51,7 +51,8 @@ import dev.zacsweers.metro.Inject
 @SuppressLint("MissingPermission")
 @ContributesBinding(AppScope::class, binding = binding<MedtrumBleTransport>())
 @SingleIn(AppScope::class)
-class MedtrumBleTransportImpl @Inject constructor(
+@Inject
+class MedtrumBleTransportImpl(
     private val aapsLogger: AAPSLogger,
     private val context: Context,
     private val preferences: Preferences,

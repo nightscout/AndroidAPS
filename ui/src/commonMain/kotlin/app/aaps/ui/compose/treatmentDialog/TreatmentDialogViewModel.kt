@@ -46,7 +46,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class TreatmentDialogViewModel @Inject constructor(
+@Inject
+class TreatmentDialogViewModel(
     constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
     private val ch: ConcentrationHelper,

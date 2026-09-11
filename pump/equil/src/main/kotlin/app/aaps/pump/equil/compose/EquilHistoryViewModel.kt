@@ -44,7 +44,8 @@ import kotlin.math.abs
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class EquilHistoryViewModel @Inject constructor(
+@Inject
+class EquilHistoryViewModel(
     private val equilHistoryRecordDao: EquilHistoryRecordDao,
     private val equilHistoryPumpDao: EquilHistoryPumpDao,
     private val equilPumpPlugin: EquilPumpPlugin,

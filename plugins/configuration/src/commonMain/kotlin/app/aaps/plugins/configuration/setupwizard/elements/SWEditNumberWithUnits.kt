@@ -11,7 +11,8 @@ import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.ui.compose.preference.AdaptiveUnitDoublePreferenceItem
 import dev.zacsweers.metro.Inject
 
-class SWEditNumberWithUnits @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val profileUtil: ProfileUtil) :
+@Inject
+class SWEditNumberWithUnits(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck, private val profileUtil: ProfileUtil) :
     SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var updateDelay = 0

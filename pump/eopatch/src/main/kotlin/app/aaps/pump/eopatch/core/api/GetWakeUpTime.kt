@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetWakeUpTime @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<WakeUpTimeResponse>(PatchFunc.GET_WAKE_UP_TIME, patch, aapsLogger) {
+@Inject
+class GetWakeUpTime(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<WakeUpTimeResponse>(PatchFunc.GET_WAKE_UP_TIME, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): WakeUpTimeResponse {
         val success = bytes[DATA0].toInt() == 0
         if (!success) return WakeUpTimeResponse(false, 0)

@@ -123,7 +123,8 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 @PumpDriver
 @MetroIntKey(1060)
 @SingleIn(AppScope::class)
-class ComboV2Plugin @Inject constructor(
+@Inject
+class ComboV2Plugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

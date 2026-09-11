@@ -21,7 +21,8 @@ import dev.zacsweers.metro.Inject
 /**
  * Created by andy on 6/14/18.
  */
-class MedtronicUITask @Inject constructor(
+@Inject
+class MedtronicUITask(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
     private val medtronicPumpStatus: MedtronicPumpStatus,

@@ -10,7 +10,8 @@ import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.ui.compose.preference.InlineStringPreferenceItem
 import dev.zacsweers.metro.Inject
 
-class SWEditString @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
+@Inject
+class SWEditString(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var validator: ((string: String) -> Boolean)? = null
     private var updateDelay = 0L

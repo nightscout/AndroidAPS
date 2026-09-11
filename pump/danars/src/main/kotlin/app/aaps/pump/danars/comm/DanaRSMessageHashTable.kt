@@ -8,7 +8,8 @@ import dev.zacsweers.metro.SingleIn
 /**
  * Used to get an instance of a packet by received command code
  */
-class DanaRSMessageHashTable @Inject constructor(
+@Inject
+class DanaRSMessageHashTable(
     /**
      * Only packets which are not respond to sent packet are listed
      */

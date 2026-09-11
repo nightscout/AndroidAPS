@@ -30,7 +30,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosPasswordHasher @Inject constructor(
+@Inject
+class IosPasswordHasher(
     private val aapsLogger: AAPSLogger
 ) : PasswordHasher {
 

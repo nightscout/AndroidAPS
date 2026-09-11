@@ -9,7 +9,8 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketGeneralInitialScreenInformation @Inject constructor(
+@Inject
+class DanaRSPacketGeneralInitialScreenInformation(
     private val aapsLogger: AAPSLogger,
     private val danaPump: DanaPump,
     private val notificationManager: NotificationManager

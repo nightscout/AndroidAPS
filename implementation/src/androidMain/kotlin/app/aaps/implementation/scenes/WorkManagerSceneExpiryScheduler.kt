@@ -23,7 +23,8 @@ import java.util.concurrent.TimeUnit
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class WorkManagerSceneExpiryScheduler @Inject constructor(
+@Inject
+class WorkManagerSceneExpiryScheduler(
     private val context: Context,
     private val aapsLogger: AAPSLogger
 ) : SceneExpiryScheduler {

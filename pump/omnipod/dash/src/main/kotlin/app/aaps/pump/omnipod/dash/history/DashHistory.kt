@@ -26,7 +26,8 @@ import io.reactivex.rxjava3.core.Single
 import java.lang.System.currentTimeMillis
 import dev.zacsweers.metro.Inject
 
-class DashHistory @Inject constructor(
+@Inject
+class DashHistory(
     private val dao: HistoryRecordDao,
     private val historyMapper: HistoryMapper,
     private val logger: AAPSLogger

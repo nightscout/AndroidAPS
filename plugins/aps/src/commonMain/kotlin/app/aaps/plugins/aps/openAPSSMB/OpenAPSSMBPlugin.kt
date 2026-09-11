@@ -77,7 +77,8 @@ import kotlin.math.floor
 import kotlin.math.ln
 
 @SingleIn(AppScope::class)
-open class OpenAPSSMBPlugin @Inject constructor(
+@Inject
+open class OpenAPSSMBPlugin(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,

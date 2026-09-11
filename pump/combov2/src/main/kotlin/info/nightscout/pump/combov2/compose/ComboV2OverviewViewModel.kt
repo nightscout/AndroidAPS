@@ -67,7 +67,8 @@ data class ComboV2OverviewUiState(
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class ComboV2OverviewViewModel @Inject constructor(
+@Inject
+class ComboV2OverviewViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     rxBus: RxBus,

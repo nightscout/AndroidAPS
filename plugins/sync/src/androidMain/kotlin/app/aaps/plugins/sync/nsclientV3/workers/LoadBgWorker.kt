@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /** WorkManager shim. The work itself is [LoadBgRunner], which is shared. */
-class LoadBgWorker @AssistedInject constructor(
+@AssistedInject
+class LoadBgWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

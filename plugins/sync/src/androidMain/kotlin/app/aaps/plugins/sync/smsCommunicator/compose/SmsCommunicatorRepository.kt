@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 @SingleIn(AppScope::class)
-class SmsCommunicatorRepository @Inject constructor() {
+@Inject
+class SmsCommunicatorRepository() {
 
     private val _messages = MutableStateFlow<List<Sms>>(emptyList())
     val messages: StateFlow<List<Sms>> = _messages

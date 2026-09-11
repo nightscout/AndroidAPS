@@ -20,7 +20,8 @@ import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class SceneAutomationApiImpl @Inject constructor(
+@Inject
+class SceneAutomationApiImpl(
     private val sceneRepository: SceneRepository,
     private val sceneExecutor: SceneExecutor,
     private val activeSceneManager: ActiveSceneManager,

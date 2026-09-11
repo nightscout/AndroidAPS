@@ -27,7 +27,8 @@ import java.net.URL
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(530)
 @SingleIn(AppScope::class)
-class NotificationReaderPlugin @Inject constructor(
+@Inject
+class NotificationReaderPlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,

@@ -42,7 +42,8 @@ import dev.zacsweers.metro.SingleIn
 @OptIn(DelicateCryptographyApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosSecureEncrypt @Inject constructor(
+@Inject
+class IosSecureEncrypt(
     private val aapsLogger: AAPSLogger,
     private val keychain: Keychain = AppleKeychain()
 ) : SecureEncrypt {

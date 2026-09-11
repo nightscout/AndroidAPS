@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AndroidLocationPermissions @Inject constructor() : LocationPermissions {
+@Inject
+class AndroidLocationPermissions() : LocationPermissions {
 
     override fun groups(): List<PermissionGroup> = listOf(
         PermissionGroup(

@@ -17,7 +17,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ReminderSchedulerImpl @Inject constructor(
+@Inject
+class ReminderSchedulerImpl(
     private val context: Context,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,

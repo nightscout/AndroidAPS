@@ -26,7 +26,8 @@ import dev.zacsweers.metro.SingleIn
  * Created by andy on 6/15/18.
  */
 @SingleIn(AppScope::class)
-class MedtronicUIPostprocessor @Inject constructor(
+@Inject
+class MedtronicUIPostprocessor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val medtronicUtil: MedtronicUtil,

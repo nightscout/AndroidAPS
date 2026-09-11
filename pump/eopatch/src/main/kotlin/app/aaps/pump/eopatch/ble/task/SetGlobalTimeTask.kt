@@ -18,7 +18,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Suppress("unused", "PrivatePropertyName")
 @SingleIn(AppScope::class)
-class SetGlobalTimeTask @Inject constructor() : TaskBase(TaskFunc.SET_GLOBAL_TIME) {
+@Inject
+class SetGlobalTimeTask() : TaskBase(TaskFunc.SET_GLOBAL_TIME) {
 
     @Inject lateinit var setGlobalTime: SetGlobalTime
     @Inject lateinit var getGlobalTime: GetGlobalTime

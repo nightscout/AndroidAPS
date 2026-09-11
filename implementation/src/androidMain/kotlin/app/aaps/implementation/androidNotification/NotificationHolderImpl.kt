@@ -20,7 +20,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class NotificationHolderImpl @Inject constructor(
+@Inject
+class NotificationHolderImpl(
     private val rh: ResourceHelper,
     private val context: Context,
     private val iconsProvider: IconsProvider,

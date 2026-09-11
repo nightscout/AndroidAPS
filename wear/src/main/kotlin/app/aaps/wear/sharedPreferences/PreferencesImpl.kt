@@ -42,7 +42,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @SingleIn(AppScope::class)
-class PreferencesImpl @Inject constructor(
+@Inject
+class PreferencesImpl(
     private val sp: SP
 ) : Preferences {
 

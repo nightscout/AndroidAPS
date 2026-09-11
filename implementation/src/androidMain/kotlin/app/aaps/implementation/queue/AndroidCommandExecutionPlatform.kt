@@ -23,7 +23,8 @@ import kotlinx.coroutines.delay
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AndroidCommandExecutionPlatform @Inject constructor(
+@Inject
+class AndroidCommandExecutionPlatform(
     private val context: Context
 ) : CommandExecutionPlatform {
 

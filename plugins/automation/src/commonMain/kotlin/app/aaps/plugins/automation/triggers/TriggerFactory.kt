@@ -15,7 +15,8 @@ import kotlinx.serialization.json.JsonObject
  * Most triggers need only [TriggerDeps]. The three that need more take it on their own constructor.
  */
 @SingleIn(AppScope::class)
-class TriggerFactory @Inject constructor(
+@Inject
+class TriggerFactory(
     val deps: TriggerDeps,
     // Provider breaks a cycle: BtConnectionSource is AutomationRuntime, which reaches this factory.
     private val btConnectionSource: () -> BtConnectionSource,

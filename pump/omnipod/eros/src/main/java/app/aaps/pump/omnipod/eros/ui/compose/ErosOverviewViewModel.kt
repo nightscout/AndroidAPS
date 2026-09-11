@@ -93,7 +93,8 @@ import app.aaps.pump.omnipod.common.R as CommonR
 // gets its own - the same shape the other pump view models use.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class ErosOverviewViewModel @Inject constructor(
+@Inject
+class ErosOverviewViewModel(
     private val rh: ResourceHelper,
     private val podStateManager: ErosPodStateManager,
     private val omnipodErosPumpPlugin: OmnipodErosPumpPlugin,

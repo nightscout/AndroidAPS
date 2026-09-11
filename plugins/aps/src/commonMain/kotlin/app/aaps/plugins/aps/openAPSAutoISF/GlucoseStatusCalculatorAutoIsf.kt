@@ -17,7 +17,8 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 @SingleIn(AppScope::class)
-class GlucoseStatusCalculatorAutoIsf @Inject constructor(
+@Inject
+class GlucoseStatusCalculatorAutoIsf(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil,

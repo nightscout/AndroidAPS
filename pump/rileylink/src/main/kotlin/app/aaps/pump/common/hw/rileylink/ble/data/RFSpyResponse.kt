@@ -7,7 +7,8 @@ import dev.zacsweers.metro.Inject
 /**
  * Created by geoff on 5/26/16.
  */
-class RFSpyResponse @Inject constructor(
+@Inject
+class RFSpyResponse(
     private val radioResponseProvider: () -> RadioResponse
 ) {
 

@@ -52,7 +52,8 @@ import kotlin.math.round
 @IntKey(400)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<XDripSource>())
-class XdripSourcePlugin @Inject constructor(
+@Inject
+class XdripSourcePlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
@@ -78,7 +79,8 @@ class XdripSourcePlugin @Inject constructor(
 
     // cannot be inner class because of needed injection
 
-    class XdripSourceWorker @AssistedInject constructor(
+    @AssistedInject
+    class XdripSourceWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

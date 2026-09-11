@@ -21,7 +21,8 @@ import dev.zacsweers.metro.binding
 @ContributesIntoMap(AppScope::class, binding = binding<Objective>())
 @IntKey(6)
 @SingleIn(AppScope::class)
-class Objective6 @Inject constructor(
+@Inject
+class Objective6(
     preferences: Preferences,
     rh: TextResolver,
     durationText: DurationText,

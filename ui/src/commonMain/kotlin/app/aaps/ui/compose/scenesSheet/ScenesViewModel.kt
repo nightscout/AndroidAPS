@@ -69,7 +69,8 @@ data class ScenesUiState(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class ScenesViewModel @Inject constructor(
+@Inject
+class ScenesViewModel(
     private val automation: Automation,
     private val activePlugin: ActivePlugin,
     private val loop: Loop,

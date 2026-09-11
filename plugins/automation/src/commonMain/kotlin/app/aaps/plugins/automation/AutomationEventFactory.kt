@@ -15,7 +15,8 @@ import dev.zacsweers.metro.SingleIn
  * factory, so a new event can be created from an existing one without carrying a second bundle.
  */
 @SingleIn(AppScope::class)
-class AutomationEventFactory @Inject constructor(
+@Inject
+class AutomationEventFactory(
     val aapsLogger: AAPSLogger,
     val dateUtil: DateUtil,
     val actionFactory: ActionFactory,

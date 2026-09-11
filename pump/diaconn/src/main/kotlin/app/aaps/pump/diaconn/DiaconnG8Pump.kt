@@ -18,7 +18,8 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 @SingleIn(AppScope::class)
-class DiaconnG8Pump @Inject constructor(
+@Inject
+class DiaconnG8Pump(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter

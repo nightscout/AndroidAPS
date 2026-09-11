@@ -21,7 +21,8 @@ import kotlinx.coroutines.runBlocking
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class LastBgDataImpl @Inject constructor(
+@Inject
+class LastBgDataImpl(
     private val rh: TextResolver,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,

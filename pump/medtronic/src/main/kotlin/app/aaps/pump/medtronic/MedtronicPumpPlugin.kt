@@ -126,7 +126,8 @@ import kotlin.math.floor
 @PumpDriver
 @MetroIntKey(1090)
 @SingleIn(AppScope::class)
-class MedtronicPumpPlugin @Inject constructor(
+@Inject
+class MedtronicPumpPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

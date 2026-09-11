@@ -9,7 +9,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ProcessedDeviceStatusDataImpl @Inject constructor(
+@Inject
+class ProcessedDeviceStatusDataImpl(
     private val apsResultProvider: () -> APSResult
 ) : ProcessedDeviceStatusData {
 

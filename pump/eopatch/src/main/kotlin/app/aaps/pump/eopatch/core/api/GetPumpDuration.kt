@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetPumpDuration @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<PumpDurationResponse>(PatchFunc.GET_PUMP_DURATION, patch, aapsLogger) {
+@Inject
+class GetPumpDuration(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<PumpDurationResponse>(PatchFunc.GET_PUMP_DURATION, patch, aapsLogger) {
     override fun parse(bytes: ByteArray) = PumpDurationResponse(
         BytesConverter.toUInt(bytes[DATA0], bytes[DATA1]),
         BytesConverter.toUInt(bytes[DATA2], bytes[DATA3]),

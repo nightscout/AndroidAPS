@@ -37,7 +37,8 @@ import net.openid.appauth.browser.VersionedBrowserMatcher
  * Handler for new style Tidepool openid auth
  */
 @SingleIn(AppScope::class)
-class AuthFlowOut @Inject constructor(
+@Inject
+class AuthFlowOut(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val context: Context,

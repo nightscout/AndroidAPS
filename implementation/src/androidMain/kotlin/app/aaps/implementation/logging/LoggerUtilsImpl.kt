@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class LoggerUtilsImpl @Inject constructor() : LoggerUtils {
+@Inject
+class LoggerUtilsImpl() : LoggerUtils {
 
     override var suffix = ".log"
 

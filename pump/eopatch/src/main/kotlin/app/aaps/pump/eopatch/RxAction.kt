@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class RxAction @Inject constructor(
+@Inject
+class RxAction(
     private val aapsSchedulers: AapsSchedulers,
     private val aapsLogger: AAPSLogger
 ) {

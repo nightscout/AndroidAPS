@@ -14,7 +14,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class TempBasalScheduleStart @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<TempBasalScheduleSetResponse>(PatchFunc.START_TEMP_BASAL, patch, aapsLogger) {
+@Inject
+class TempBasalScheduleStart(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<TempBasalScheduleSetResponse>(PatchFunc.START_TEMP_BASAL, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): TempBasalScheduleSetResponse {
         val ret = bytes[DATA0].toInt() and 0xFF
         val result = when (ret) {

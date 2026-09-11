@@ -29,7 +29,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class LocationServiceControllerImpl @Inject constructor(
+@Inject
+class LocationServiceControllerImpl(
     private val context: Context,
     private val notificationHolder: NotificationHolder
 ) : LocationServiceController {

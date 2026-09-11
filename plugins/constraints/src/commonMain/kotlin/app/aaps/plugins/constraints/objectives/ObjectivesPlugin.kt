@@ -41,7 +41,8 @@ import dev.zacsweers.metro.binding
 @APS
 @IntKey(840)
 @SingleIn(AppScope::class)
-class ObjectivesPlugin @Inject constructor(
+@Inject
+class ObjectivesPlugin(
     aapsLogger: AAPSLogger,
     override val rh: TextResolver,
     preferences: Preferences,

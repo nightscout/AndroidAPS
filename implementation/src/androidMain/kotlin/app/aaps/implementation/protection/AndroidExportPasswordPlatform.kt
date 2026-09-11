@@ -30,7 +30,8 @@ import kotlinx.coroutines.runBlocking
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AndroidExportPasswordPlatform @Inject constructor(
+@Inject
+class AndroidExportPasswordPlatform(
     private val context: Context,
     private val config: Config,
     private val fileListProvider: FileListProvider

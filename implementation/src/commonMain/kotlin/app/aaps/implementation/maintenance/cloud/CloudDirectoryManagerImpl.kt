@@ -16,7 +16,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class CloudDirectoryManagerImpl @Inject constructor(
+@Inject
+class CloudDirectoryManagerImpl(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val preferences: Preferences,

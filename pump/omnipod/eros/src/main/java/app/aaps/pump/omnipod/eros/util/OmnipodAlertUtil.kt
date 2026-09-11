@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
  * Kotlin and Java alike - keep compiling unchanged.
  */
 @SingleIn(AppScope::class)
-class OmnipodAlertUtil @Inject constructor(
+@Inject
+class OmnipodAlertUtil(
     private val preferences: Preferences
 ) {
 

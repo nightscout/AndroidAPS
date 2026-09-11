@@ -34,7 +34,8 @@ import kotlin.time.Instant
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopUrlOpener @Inject constructor(
+@Inject
+class DesktopUrlOpener(
     private val aapsLogger: AAPSLogger
 ) : UrlOpener {
 
@@ -58,7 +59,8 @@ class DesktopUrlOpener @Inject constructor(
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopPluginPermissions @Inject constructor() : PluginPermissions {
+@Inject
+class DesktopPluginPermissions() : PluginPermissions {
 
     override fun collectMissingPermissions(): List<PermissionGroup> = emptyList()
 
@@ -78,7 +80,8 @@ class DesktopPluginPermissions @Inject constructor() : PluginPermissions {
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopPrefsFileInfo @Inject constructor(
+@Inject
+class DesktopPrefsFileInfo(
     private val aapsLogger: AAPSLogger
 ) : PrefsFileInfo {
 

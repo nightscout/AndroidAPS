@@ -17,7 +17,8 @@ import kotlin.math.min
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope. AutosensData is a value object
 // computed per run, so each caller is meant to get its own.
 @ContributesBinding(AppScope::class)
-class AutosensDataObject @Inject constructor(
+@Inject
+class AutosensDataObject(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val dateUtil: DateUtil

@@ -41,7 +41,8 @@ import kotlinx.serialization.json.buildJsonObject
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class InsulinImpl @Inject constructor(
+@Inject
+class InsulinImpl(
     private val preferences: Preferences,
     val rh: TextResolver,
     val profileFunction: ProfileFunction,

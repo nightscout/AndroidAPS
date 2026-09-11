@@ -38,7 +38,8 @@ import kotlinx.serialization.json.Json
  * built on the latest persisted state — relevant on a pump-control surface.
  */
 @SingleIn(AppScope::class)
-class AuthorizedClientsRepository @Inject constructor(
+@Inject
+class AuthorizedClientsRepository(
     private val preferences: Preferences,
     private val secureEncrypt: SecureEncrypt,
     private val aapsLogger: AAPSLogger

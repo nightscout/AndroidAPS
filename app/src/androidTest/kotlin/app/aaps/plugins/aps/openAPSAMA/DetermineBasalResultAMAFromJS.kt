@@ -11,7 +11,8 @@ import org.json.JSONObject
 import org.mozilla.javascript.NativeObject
 import dev.zacsweers.metro.Inject
 
-class DetermineBasalResultAMAFromJS @Inject constructor(injector: MetroMemberInjector) : APSResultObject(injector) {
+@Inject
+class DetermineBasalResultAMAFromJS(injector: MetroMemberInjector) : APSResultObject(injector) {
 
     @Inject lateinit var dateUtil: DateUtil
 

@@ -49,7 +49,8 @@ sealed class RileyLinkPairWizardEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class RileyLinkPairWizardViewModel @Inject constructor(
+@Inject
+class RileyLinkPairWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val activePlugin: ActivePlugin,

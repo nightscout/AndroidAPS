@@ -39,7 +39,8 @@ import kotlinx.coroutines.launch
  * ViewModel for ExtendedBolusScreen managing extended bolus state and business logic.
  */
 @Stable
-class ExtendedBolusViewModel @Inject constructor(
+@Inject
+class ExtendedBolusViewModel(
     private val persistenceLayer: PersistenceLayer,
     val rh: TextResolver,
     val dateUtil: DateUtil,

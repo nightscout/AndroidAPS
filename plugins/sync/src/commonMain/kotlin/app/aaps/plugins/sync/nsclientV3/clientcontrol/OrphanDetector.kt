@@ -46,7 +46,8 @@ import kotlinx.coroutines.launch
  * cannot signal that case. A liveness mechanism would be needed; deferred per Phase-2 scope.
  */
 @SingleIn(AppScope::class)
-class OrphanDetector @Inject constructor(
+@Inject
+class OrphanDetector(
     private val pairingRepository: ClientPairingRepository,
     private val preferences: Preferences,
     private val notificationManager: NotificationManager,

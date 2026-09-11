@@ -44,7 +44,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BLEComm @Inject constructor(
+@Inject
+class BLEComm(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val context: Context,

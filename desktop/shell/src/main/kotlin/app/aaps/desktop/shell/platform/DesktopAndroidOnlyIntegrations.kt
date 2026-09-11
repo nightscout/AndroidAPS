@@ -32,7 +32,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopXDripBroadcast @Inject constructor(
+@Inject
+class DesktopXDripBroadcast(
     private val aapsLogger: AAPSLogger
 ) : XDripBroadcast {
 
@@ -55,7 +56,8 @@ class DesktopXDripBroadcast @Inject constructor(
 /** xDrip+ as a glucose source needs the xDrip+ app, which is an Android one. */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopXDripSource @Inject constructor() : XDripSource {
+@Inject
+class DesktopXDripSource() : XDripSource {
 
     override fun isEnabled(): Boolean = false
 }
@@ -68,7 +70,8 @@ class DesktopXDripSource @Inject constructor() : XDripSource {
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopDexcomBoyda @Inject constructor(
+@Inject
+class DesktopDexcomBoyda(
     private val aapsLogger: AAPSLogger
 ) : DexcomBoyda {
 
@@ -90,7 +93,8 @@ class DesktopDexcomBoyda @Inject constructor(
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopDataSyncSelectorXdrip @Inject constructor(
+@Inject
+class DesktopDataSyncSelectorXdrip(
     private val aapsLogger: AAPSLogger
 ) : DataSyncSelectorXdrip {
 
@@ -118,7 +122,8 @@ class DesktopDataSyncSelectorXdrip @Inject constructor(
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopActivityStatsProvider @Inject constructor(
+@Inject
+class DesktopActivityStatsProvider(
     private val aapsLogger: AAPSLogger
 ) : ActivityStatsProvider {
 

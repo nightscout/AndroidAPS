@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BasalHistoryIndexGet @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalHistoryIndexResponse>(PatchFunc.GET_BASAL_HISTORY_INDEX, patch, aapsLogger) {
+@Inject
+class BasalHistoryIndexGet(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalHistoryIndexResponse>(PatchFunc.GET_BASAL_HISTORY_INDEX, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): BasalHistoryIndexResponse {
         val lastIndex = BytesConverter.toUInt(bytes[DATA1], bytes[DATA2])
         val curIndex = BytesConverter.toUInt(bytes[DATA3], bytes[DATA4])

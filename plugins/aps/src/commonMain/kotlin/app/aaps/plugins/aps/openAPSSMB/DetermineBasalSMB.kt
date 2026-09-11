@@ -28,7 +28,8 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 @SingleIn(AppScope::class)
-class DetermineBasalSMB @Inject constructor(
+@Inject
+class DetermineBasalSMB(
     private val profileUtil: ProfileUtil,
     private val fabricPrivacy: FabricPrivacy
 ) {

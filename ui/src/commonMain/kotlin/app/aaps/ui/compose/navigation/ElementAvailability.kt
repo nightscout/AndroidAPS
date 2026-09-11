@@ -18,7 +18,8 @@ import dev.zacsweers.metro.SingleIn
  * This is NOT about user preference toggles (e.g., "show carbs button") — those are separate.
  */
 @SingleIn(AppScope::class)
-class ElementAvailability @Inject constructor(
+@Inject
+class ElementAvailability(
     private val xDripSource: XDripSource,
     private val dexcomBoyda: DexcomBoyda,
     private val activePlugin: ActivePlugin

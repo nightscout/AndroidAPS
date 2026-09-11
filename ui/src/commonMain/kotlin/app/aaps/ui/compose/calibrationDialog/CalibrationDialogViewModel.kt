@@ -46,7 +46,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class CalibrationDialogViewModel @Inject constructor(
+@Inject
+class CalibrationDialogViewModel(
     private val profileUtil: ProfileUtil,
     @Suppress("unused") private val profileFunction: ProfileFunction,
     private val xDripBroadcast: XDripBroadcast,

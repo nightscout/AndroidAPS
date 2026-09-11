@@ -16,7 +16,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GlucoseStatusCalculatorSMB @Inject constructor(
+@Inject
+class GlucoseStatusCalculatorSMB(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil,

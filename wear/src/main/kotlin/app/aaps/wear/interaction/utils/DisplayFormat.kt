@@ -11,7 +11,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 
 @SingleIn(AppScope::class)
-class DisplayFormat @Inject internal constructor() {
+@Inject
+class DisplayFormat internal constructor() {
 
     companion object {
 

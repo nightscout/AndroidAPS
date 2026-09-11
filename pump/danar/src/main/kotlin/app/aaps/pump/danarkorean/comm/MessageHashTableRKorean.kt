@@ -37,7 +37,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class MessageHashTableRKorean @Inject constructor(
+@Inject
+class MessageHashTableRKorean(
     private val injector: MetroMemberInjector
 ) : MessageHashTableBase {
 

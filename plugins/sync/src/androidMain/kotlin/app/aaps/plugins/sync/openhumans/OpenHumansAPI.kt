@@ -25,7 +25,8 @@ import okio.BufferedSink
 import org.json.JSONArray
 import org.json.JSONObject
 
-class OpenHumansAPI @Inject constructor(
+@Inject
+class OpenHumansAPI(
     @BaseUrl
     private val baseUrl: String,
     @ClientId

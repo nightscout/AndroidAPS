@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /** WorkManager shim. The work itself is [DataSyncRunner], which is shared. */
-class DataSyncWorker @AssistedInject constructor(
+@AssistedInject
+class DataSyncWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

@@ -31,7 +31,8 @@ import kotlinx.coroutines.launch
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class VisibilityContextImpl @Inject constructor(
+@Inject
+class VisibilityContextImpl(
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
     private val constraintsChecker: ConstraintsChecker,

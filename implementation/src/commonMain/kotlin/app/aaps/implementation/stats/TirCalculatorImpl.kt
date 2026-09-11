@@ -50,7 +50,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class TirCalculatorImpl @Inject constructor(
+@Inject
+class TirCalculatorImpl(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer
 ) : TirCalculator {

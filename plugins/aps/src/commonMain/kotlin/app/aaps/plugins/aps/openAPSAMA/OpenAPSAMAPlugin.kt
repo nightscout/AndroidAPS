@@ -59,7 +59,8 @@ import kotlin.math.floor
 import kotlin.math.min
 
 @SingleIn(AppScope::class)
-class OpenAPSAMAPlugin @Inject constructor(
+@Inject
+class OpenAPSAMAPlugin(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,

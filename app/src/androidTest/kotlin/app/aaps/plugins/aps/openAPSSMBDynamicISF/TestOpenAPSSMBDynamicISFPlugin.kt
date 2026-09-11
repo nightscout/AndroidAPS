@@ -37,7 +37,8 @@ import app.aaps.di.metro.AlgTestScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AlgTestScope::class)
-class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
+@Inject
+class TestOpenAPSSMBDynamicISFPlugin(
     private val injector: StaticInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
