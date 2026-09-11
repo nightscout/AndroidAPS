@@ -250,6 +250,138 @@ capable of `RANGED_VALUE` but asked for `SHORT_TEXT` (because `SHORT_TEXT` was f
 has no path to send the ranged-value form for that request. Confirms our earlier working
 inference — this section makes it a checked fact.
 
+### Update frequency — a documented ceiling, and 1 Hz is privileged
+
+`ComplicationDataSourceService` KDoc, watchface-complications-data-source 1.3.0, lines 243-254.
+Quoted because it bounds what any image-based watch face can do:
+
+> *"A ComplicationDataSourceService should include a `meta-data` tag with
+> `android.support.wearable.complications.UPDATE_PERIOD_SECONDS` … the number of seconds the
+> complication data source would like to elapse between update requests.*
+>
+> ***Note that update requests are not guaranteed to be sent with this frequency.** For
+> complications with frequent updates they can also register a separate `meta-data` tag with
+> `androidx.wear.watchface.complications.data.source.IMMEDIATE_UPDATE_PERIOD_MILLISECONDS` in their
+> manifest which supports sampling at **up to 1Hz when the watch face is visible and non-ambient**,
+> however this also requires the application to have the privileged permission
+> `com.google.android.wearable.permission.USE_IMMEDIATE_COMPLICATION_UPDATE`."*
+
+Three facts follow:
+
+1. **`UPDATE_PERIOD_SECONDS` is a wish, not a contract** — stated outright. Measured on a GW4 (One UI
+   8.0): a request of 60 s produced intervals of 1m35s to 6m19s over 21 minutes, mean about 4 min.
+2. **1 Hz complication sampling exists** but only via `IMMEDIATE_UPDATE_PERIOD_MILLISECONDS` **plus a
+   privileged permission**, and only while the face is visible and non-ambient. An ordinary
+   sideloaded app cannot hold that permission.
+3. **The push path carries no documented rate limit.**
+   `ComplicationDataSourceUpdateRequester.requestUpdateAll()` / `requestUpdate(vararg ids)`
+   (`ComplicationDataSourceUpdateRequester.kt:59, 71`) only note that it does nothing when no active
+   complication uses the data source, and that it must be called from the same package. It works by
+   broadcasting to `com.google.android.wearable.app`
+   (`UPDATE_REQUEST_RECEIVER_PACKAGE`, line 76) or through the Wear SDK path. What cadence the system
+   actually honours is **not documented** — but the existence of a privileged gate for 1 Hz implies
+   ordinary apps are held below it. *Inference, flagged as such; measure before relying on it.*
+
+### Dynamic values — why some complications update at 1 Hz, and why an image never can
+
+watchface-complications-data 1.3.0, `androidx/wear/watchface/complications/data/Data.kt` and
+`Text.kt`, plus `ComplicationDataEvaluator.kt`.
+
+Complication data can carry an **expression that the consumer evaluates continuously**, instead of a
+fixed value. The provider sends it **once**; the watch face re-evaluates it every frame. No repeated
+`onComplicationRequest` is involved, so no update-frequency limit applies.
+
+- `ComplicationText` supports `dynamicValue` -> `DynamicComplicationText(dynamicValue, fallback)`
+  (`Text.kt:561, 666-673`).
+- `ComplicationData.dynamicValueInvalidationFallback` (`Data.kt:158`) covers evaluation failure.
+- Numeric dynamic values exist on exactly **two** types:
+  **`RangedValueComplicationData.dynamicValue: DynamicFloat?`** (`Data.kt:1201`) and
+  **`GoalProgressComplicationData.dynamicValue: DynamicFloat?`** (`Data.kt:1606`). Both
+  `@RequiresApi(TIRAMISU)`.
+
+**The three image types have no dynamic value at all** — `MonochromaticImageComplicationData`
+(`Data.kt:2225`), `SmallImageComplicationData` (2347) and `PhotoImageComplicationData` (2474) carry a
+plain `MonochromaticImage` / `SmallImage` / `Icon` and nothing evaluable.
+
+**Consequences, and this is the important part:**
+
+1. A 1 Hz heart-rate complication is a **dynamic value** (a platform health source expression),
+   re-evaluated locally on every redraw of the consuming watch face. That is why both a Samsung and a
+   third-party provider achieve it with no privileged permission — they are not being asked for data
+   every second at all. Observed in the code-based `CustomWatchface`, which redraws at 1 Hz
+   (`getInteractiveModeUpdateRate() = 1000L`); a consumer that redraws less often would show the same
+   complication changing less often, which is consistent with the maintainer's impression that the
+   WFF face updated it more slowly.
+2. **An image complication cannot update at 1 Hz by API design, not by policy.** There is no dynamic
+   image, so a picture changes only when the system actually issues a new request — and those are
+   explicitly "not guaranteed" and were measured at 1m35s-6m19s on a GW4 (One UI 8.0).
+3. So "another complication updates every second" is **not** evidence that an image-based one can.
+   Check whether the fast one carries a dynamic value before drawing any comparison.
+
+### Measured: a third-party provider IS asked about once a second — the ceiling is not what the KDoc implies
+
+Observed on device 2026-08-31 (GW4, One UI 8.0), on the AAPS V4 WFF face.
+
+`com.gs.complications.suite/…health.HealthProviderService`, an **ordinary third-party app**, feeds a
+heart-rate slot that visibly updates every **1–2 seconds**. The runtime dump shows its payload is a
+plain `ShortTextComplicationData` with **`mDynamicText=null`** and
+**`dynamicValueInvalidationFallback=null`** — i.e. **no dynamic value**, so nothing is being
+re-evaluated locally. The provider really is being invoked at that rate.
+
+> **This corrects an inference recorded above.** The "dynamic values explain the 1 Hz heart rate"
+> entry is right about the API (images genuinely have no dynamic value) but **wrong as an explanation
+> of the observed behaviour** for this provider. Fast update *requests* are demonstrably available to
+> a non-privileged app, despite the KDoc presenting 1 Hz as gated behind
+> `USE_IMMEDIATE_COMPLICATION_UPDATE`. Another platform deviation from the androidx contract, of the
+> same kind already recorded for safe-watch-face gating.
+
+**How it achieves it — established by elimination from its own manifest** (pulled from the device,
+`aapt2 dump xmltree`):
+
+| Mechanism | Status |
+|---|---|
+| Periodic timer | **`UPDATE_PERIOD_SECONDS = 0`** on `HealthProviderService` — and the KDoc defines 0 as *"never needs to receive update requests beyond the one sent when a complication is activated"*. So it asks for **no** periodic updates. |
+| `IMMEDIATE_UPDATE_PERIOD_MILLISECONDS` | **not declared anywhere** in the manifest |
+| `USE_IMMEDIATE_COMPLICATION_UPDATE` | **not requested** |
+| Dynamic values | ruled out by the live dump (`mDynamicText=null`) |
+| **Push — `ComplicationDataSourceUpdateRequester`** | **the only mechanism left** |
+
+**Conclusion: pushing achieves roughly 1 Hz for an ordinary, non-privileged third-party app.** The
+KDoc's framing — that frequent updates require a privileged permission — describes the *periodic*
+route only; the push route is not similarly gated, at least on this firmware.
+
+That provider declares `SUPPORTED_TYPES = SHORT_TEXT,LONG_TEXT,GOAL_PROGRESS,RANGED_VALUE` — **no
+image types** — so this proves the *request* mechanism is fast, not that a bitmap payload can keep
+up. Each image update also ships a full bitmap over a Binder, a cost the text case does not pay.
+Measure the image case separately.
+
+**Note for the image case specifically:** even if fast requests are available, each one ships a full
+bitmap over a Binder, which is a cost the text case does not pay. Fast *requests* being possible does
+not by itself make fast *image* updates practical.
+
+### WFF has its own health and time data sources — do not infer complication cadence from a WFF face
+
+`watch_face_format_validation/docs.zip`, `5/common/simpleTypes/sourceType.xsd` lists built-in data
+sources including **`HEART_RATE`**, `HEART_RATE_Z`, `STEP_COUNT`, `STEP_GOAL`, `STEP_PERCENT`, the
+`ACCELEROMETER_*` family, a `WEATHER.*` family, `BATTERY_*`, and time sources down to
+**`MILLISECOND`**, `SECOND`, `SECOND_MILLISECOND`.
+
+**Consequence:** a WFF face showing a live heart rate, step count or smooth second hand *may* be
+reading its own data source rather than a complication, so such a face is not by itself evidence
+about complication cadence. Check which mechanism is in play before concluding either way.
+
+> **Correction (2026-08-31), and the real mechanism.** An earlier version of this entry claimed such
+> a face was "very probably" reading its own data source rather than a complication. Observation:
+> Samsung's heart-rate complication, **and** a third-party heart-rate complication, both updated
+> roughly **every second** - observed in the **code-based CustomWatchface**, not in a WFF face (the
+> maintainer was unsure of the WFF rate). A third-party app would not hold a privileged permission,
+> so "privileged only" does not explain it either.
+>
+> **The mechanism is dynamic values - see the entry below - and the observation context fits it
+> exactly:** `CustomWatchface` overrides `getInteractiveModeUpdateRate()` to 1000 ms, so it redraws
+> every second and re-evaluates the complication's expression on each redraw. The provider is not
+> being asked for data at 1 Hz at all.
+
 ### "Safe watch face" trust gating — a provider may serve *different content* for an identical (provider, type) pair
 
 This is the mechanism behind "two watch faces bind the same provider, negotiate the same
@@ -1435,6 +1567,77 @@ system's thumbnail current on its own: call `Renderer.sendPreviewImageNeedsUpdat
 appearance actually changes. Whether any given OEM system acts on it is not knowable from these
 sources — the KDoc explicitly permits doing nothing — so it needs confirming on device per platform.
 
+### What a watch face document can say to the editor - the complete list
+
+Enumerated from the validator's own schemas (`watch_face_format_validation/docs.zip` inside
+`validator-push-cli-1.1.0-alpha01.jar`, version 5), because "can the editor's preview be hidden?"
+kept coming back:
+
+- `UserConfigurations` entries take exactly six attributes, from `AbstractConfigurationType`
+  (`5/userConfiguration/abstractConfigurationType.xsd`): `id`, `displayName`, `icon`,
+  `screenReaderText`, `defaultValue`, `highlight`. Both `displayName` and `defaultValue` are
+  required.
+- `watch_face_info.xml` takes `Preview`, `MultipleInstancesAllowed`, `FlavorsSupported`, `Editable`.
+- `Metadata` honours three keys: `PREVIEW_TIME`, `CLOCK_TYPE`, `STEP_GOAL` (any other key/value pair
+  is accepted and ignored).
+- `Variant` has exactly one `mode`: **`AMBIENT`** (`5/common/variant/variantElements.xsd`). There is
+  no editor or preview mode, so a document cannot draw itself differently while being edited.
+
+**Nothing in that list hides or dims the preview the editor draws.** `highlight` is the closest, and
+its own documentation says the opposite - the image *"will be laid on the watch face preview"*. The
+layout is the OEM editor's: on a Wear 6 emulator two `BooleanConfiguration`s render as two toggle
+rows with full-length labels over a dimmed face, while the Samsung editor on a Galaxy Watch 4 shows
+one setting per page with the title on one line at the top, where a long title loses both ends to the
+bezel. Short titles are therefore the only fix available for that truncation; the full sentence goes
+in `screenReaderText`, which has no such limit.
+
+Untested lever, worth trying before concluding: `icon` is documented as *"used as an item of option
+list in the configuration activity"*. "Option list" suggests an editor may present a list rather than
+one page per setting when the configurations carry icons.
+
+### `displayName` must be a string resource
+
+A literal is silently ignored: the editor showed "1st setting" instead of the text. `@string/...`
+works.
+
+### `BATTERY_CHARGING_STATUS` - measured
+
+Established on a Wear 6 emulator by printing the raw value on the face and guarding a marker with
+each candidate expression:
+
+- the value prints as **`true`** / **`false`** (lower case);
+- **both** `[BATTERY_CHARGING_STATUS] == "true"` and the bare `[BATTERY_CHARGING_STATUS]` work inside
+  a `Condition`, and both are false while discharging;
+- it is **true while the battery status is `FULL`**, not only while `CHARGING`, and it follows the
+  battery *status* rather than the presence of a charger (`dumpsys battery unplug` + `set status 2`
+  is enough to make it true). That matches `SimpleUi.isCharging` in the wear app, which counts
+  `BATTERY_STATUS_CHARGING || BATTERY_STATUS_FULL` - so the two watch faces agree on what "on the
+  charger" means.
+
+The operator list the schema documents (`5/common/simpleTypes/arithmeticExpressionType.xsd`) has no
+`!=`, `<` or `<=`: use `!(a == b)` and reverse the operands.
+
+### A pushed watch face reaches the picker through "Add new", and activation is a small quota
+
+Both learned while trying to get a re-pushed face back on screen:
+
+- After the face package is removed and pushed again, the face is **not** in the watch face carousel.
+  It is in the gallery behind **"Add new"**, and picking it there puts it back in the carousel. The
+  slot being occupied (`listWatchFaces` reporting `slots used=1`) says nothing about whether the
+  picker offers it.
+- `WatchFacePushManager.setWatchFaceAsActive` fails with *"The maximum number of attempts to set the
+  watch face as active has been reached"* once its allowance is used. That limit is **not** the
+  permission: it still failed after `pm grant com.google.wear.permission
+  .SET_PUSHED_WATCH_FACE_AS_ACTIVE`, and it survived an emulator cold boot. So activation is a
+  one-off courtesy, not a mechanism to lean on for every update - the wearer selects the face.
+
+### `syncOnStartup` does re-push a changed document
+
+The validation token the validator prints **is** content-dependent: two documents differing only in
+their `UserConfigurations` produced different tokens, and the app pushed the new one by itself on the
+next start ("face updated"), with no menu tap and no permission prompt. An earlier note here claiming
+otherwise was wrong - it came from missing the first push in the log.
+
 ## Engine lifecycle — when slots and schema are built (watchface 1.2.1, `WatchFaceService.kt`)
 
 Searched for every call site, because "can the app make its slots be rebuilt?" comes up whenever
@@ -1591,6 +1794,303 @@ title suppression or image selection — those are its renderer's decisions, and
 one in `watchface-complications-rendering`. Do not use "the WFF face shows X, so androidx can show X"
 as an argument; that inference has already been made and retracted more than once.
 
+## Watch Face Push validator (`validator-push-cli` 1.1.0-alpha01) and the WFF schema
+
+Checked 2026-08-30 against
+`com.google.android.wearable.watchface.validator:validator-push-cli:1.1.0-alpha01` (the artifact
+already on this project's `watchFacePushValidator` configuration, see `wear/build.gradle.kts`), and
+against `androidx.wear.watchfacepush:watchfacepush:1.0.0` sources.
+
+### The complete WFF schema ships inside the validator jar
+
+`watch_face_format_validation/docs.zip` (462 630 bytes) inside the jar is a zip of **467 `.xsd`
+files** in five top-level directories named `1` … `5` — one per **Watch Face Format version**
+(87/91/92/98/99 files respectively). This is the authoritative, offline, local copy of the WFF
+grammar: element names, attributes, enumerations and their `xs:documentation`.
+
+**Use this before searching online docs for any WFF question.** Extract with:
+
+```
+unzip -o -q <validator-push-cli.jar> watch_face_format_validation/docs.zip -d <dir>
+unzip -o -q <dir>/watch_face_format_validation/docs.zip -d <dir>/docs
+```
+
+Two entries read so far:
+
+- **`5/group/part/image/imageElement.xsd`** — `<Image>` has exactly one attribute, `resource`
+  (`xs:string`, **required**). Its documentation: *"Drawable id of image resource **or** Source of
+  image. e.g., Some complications could have a source of image such as ICON, SMALL_IMAGE or
+  LARGE_IMAGE."* So a bundled image is addressed by **drawable resource id**, i.e. it must exist in
+  the APK's `resources.arsc` — there is no file-path form.
+- **`5/group/part/text/fontElement.xsd`** — `<Font>` requires `family` (`xs:string`) and `size`;
+  optional `color`, `minSize` (default 12px), `letterSpacing` (EM units), `slant`
+  (`NORMAL|ITALIC`), `width` (9 values `ULTRA_CONDENSED`…`ULTRA_EXPANDED`), `weight` (12 values
+  `THIN`…`EXTRA_BLACK`). **The schema gives `family` no resource semantics at all** — it is a free
+  string, and `SYNC_TO_DEVICE` (used by this project's own template) is not among any enumeration
+  in the schema. How a *bundled* font is addressed is therefore **not answered by the schema** and
+  remains open.
+
+### `ComplicationSlot` in WFF — geometry, hit area and the hard limit of 8
+
+From `5/sceneElement.xsd`, `5/complication/complicationSlotElement.xsd`,
+`5/complication/boundingElement.xsd`, `5/common/conditionElement.xsd`, `5/group/groupElement.xsd`,
+`5/common/variant/variantElements.xsd`, `5/common/launchElement.xsd` (WFF format version 5).
+
+- **At most 8 slots per watch face.** `Scene`'s content model declares
+  `<xs:element ref="ComplicationSlot" minOccurs="0" maxOccurs="8"/>`.
+- **Slots may only be direct children of `Scene`.** `ComplicationSlot` appears in **neither**
+  `Group`'s content model nor `Condition`'s `_CompareChild` group (which allows `Group`,
+  `PartElementGroup`, `Condition`, `AnalogClock`, `DigitalClock` — and no slot). So a slot cannot be
+  conditionally shown, hidden, grouped or repositioned by an expression.
+- **Render geometry and hit area are two separate, both-static declarations on the same element:**
+  - the slot's own required geometric attributes (`x`, `y`, `width`, `height`) — where it draws;
+  - a **required** `<BoundingShape>` child — the tap/hit area. Substitution group:
+    `BoundingBox`, `BoundingRoundBox` (`cornerRadius`), `BoundingOval` (all three take the required
+    geometric attributes plus `outlinePadding`), and `BoundingArc` (`centerX`, `centerY`, `width`,
+    `height`, `thickness`, angles, `direction`, `isRoundEdge`).
+- **Neither can change at runtime.** `ComplicationSlot`'s only permitted children are
+  `DefaultProviderPolicy`, `BoundingShape`, `Complication`, `Variant` and `ScreenReader` — notably
+  **no `Transform`**, so no expression-driven geometry. `Variant`'s `mode` attribute is restricted
+  by enumeration to the single value **`AMBIENT`**, so variants only describe the interactive→ambient
+  transition (with `duration`, `startOffset`, `interpolation` LINEAR/EASE_*/OVERSHOOT/CUBIC_BEZIER,
+  `controls`), not arbitrary app-driven state.
+- Other slot attributes: `slotId` (required, `xs:string`), `supportedTypes` (required, a list),
+  `displayName`, `isCustomizable` (`booleanType`), `blendMode`, `alpha`, `tintColor`, `angle`,
+  `scaleX`/`scaleY`, pivot.
+
+**Consequence, stated plainly:** in WFF the desync between a complication's drawn position and its
+tapped position — a real hazard on the androidx side, where `ComplicationSlotsManager` tap routing
+reads *cached* bounds that can drift from where the face actually painted (see "Tap routing — reads
+cached bounds only") — **cannot occur**. Both come from one literal declaration in the document. The
+price is that neither is adjustable at runtime by any means: changing either requires editing the
+document and re-installing the watch face.
+
+**`<Launch target="…">`** (`launchElement.xsd`) is WFF's tap action: `target` is a union of a system
+shortcut enumeration (`ALARM`, `BATTERY_STATUS`, `CALENDAR`, `MESSAGE`, `MUSIC_PLAYER`, `PHONE`,
+`SETTINGS`, `HEALTH_HEART_RATE`) and a free `xs:string`. It is allowed **inside `Group`**
+(`groupElement.xsd:50`, `maxOccurs="1"`), so tap regions unrelated to complications are declared by
+wrapping content in a `Group`.
+
+### WFF tap routing does NOT follow androidx's lowest-id rule — measured, and it contradicts the entry above
+
+"Tap routing — reads cached bounds only" records androidx's rule: `getComplicationSlotAt` resolves a
+tap with `findLowestIdMatchingComplicationOrNull { it.enabled && it.tapFilter.hitTest(...) }`, so the
+**lowest slot id** wins and `alpha` is never consulted. It was reasonable to expect the WFF runtime to
+behave the same, since it is an androidx watch face.
+
+**It does not.** Measured on a GW4 (One UI 8.0) with a document containing two full-screen
+`SMALL_IMAGE` slots at ids **0** and **1**, and a smaller text slot at id **2** rendered with
+`alpha="0"` while the watch is awake:
+
+- tapping inside the invisible id-2 slot's area triggered **that** complication's tap action (the
+  glucose provider's `LOOP_STATUS` screen), not the id-0 slot's action.
+
+So on the WFF runtime a **higher-id, invisible** slot took the tap in preference to a lower-id,
+visible, full-screen one. Whether it resolves by document order, by topmost, or by smallest area is
+not established - only that "lowest id wins" is wrong here. `alpha="0"` does **not** make a slot
+untappable, which both implementations agree on.
+
+**The lever that does work is the format's own separation of geometry from hit area.** A
+`ComplicationSlot` carries its render rectangle in `x`/`y`/`width`/`height` and its hit area in a
+**separate, required `BoundingShape`** child (see "`ComplicationSlot` in WFF" above). They are
+independent, so a slot can be drawn full size and be given a hit area of a single pixel in a corner:
+
+```xml
+<ComplicationSlot x="0" y="0" width="450" height="450" …>
+  <BoundingBox x="0" y="0" width="1" height="1" />
+```
+
+That is how to make a decorative or mode-only slot effectively untappable while leaving another slot
+to own the taps. Applied but not yet re-verified on device.
+
+### `Complication` children, and where they are positioned
+
+`5/complication/complicationElement.xsd`: `<Complication type="…">` accepts **unbounded** children
+from `PartElementGroup`, `Group` and `Condition` — so several sibling `PartText`s in one
+`Complication` are legal, and both a value and a title can be laid out without wrapping them.
+
+**Unresolved, with a symptom worth knowing:** whether those children are positioned relative to the
+**slot** or to the **screen**. A slot declared at `x=75 y=55 width=300 height=95` with a child
+`PartText` at `y=0` rendered **nothing visible**, while its sibling at `y=60` appeared near the top of
+the screen — consistent with screen-absolute placement putting the first child off the top edge and
+under the bezel, and inconsistent with slot-relative placement. Not conclusive.
+
+**Robust workaround:** declare the slot **full screen** and place its children at the coordinates they
+should occupy. Relative and absolute then coincide, so the layout is correct either way.
+
+### Watch Face Push gives one app exactly ONE slot (measured)
+
+`WatchFacePush.ListWatchFacesResponse` exposes `remainingSlotCount`
+(`WatchFacePush.kt:180`), and the KDoc says only that "each calling app has a limited number of
+slots" (185-187) without naming the number. **Measured on a GW4 (Wear OS 6.0 / One UI 8.0):**
+
+```
+WatchFacePush: slots used=1 remaining=0 packages=<app>.watchfacepush.aapsv4
+```
+
+So the quota is **one face per app**. An app that already pushed a face has no room for a second;
+it can only `updateWatchFace()` the slot it holds, or `removeWatchFace()` to free it.
+
+Note `installedWatchFaceDetails` lists only faces added by the calling app, so this count is
+per-app, not device-wide.
+
+### Validating a WFF document without building an APK
+
+The validator jar also exposes the raw XML checker, so a document can be validated in a second
+instead of going through a full APK build:
+
+```java
+import com.samsung.watchface.WatchFaceXmlValidator;
+
+public class ValidateWff {
+    public static void main(String[] args) throws Exception {
+        WatchFaceXmlValidator v = new WatchFaceXmlValidator();
+        System.out.println(v.isSupportedVersion(args[1]));
+        System.out.println(v.validate(args[0], args[1]));   // args[0] is a FILE PATH
+    }
+}
+```
+
+Run with `java -cp <validator-push-cli.jar> ValidateWff.java <file.xml> <version>` (single-file
+source mode; needs Java 17, the jar is class-file version 61).
+
+**Trap:** `validate(String, String)`'s first argument is a **file path**, not the XML text. Passing
+the document itself fails with `SEVERE: xml path is invalid : <WatchFace …`, which reads like a
+schema error but is not.
+
+`WatchFaceXmlValidator` also offers `validate(org.w3c.dom.Document, String)` and
+`validateOrThrow(Document, String)` - the latter is the one to use when the *reason* for a failure
+matters, since the boolean overloads only log it.
+
+### Programmatic API — the CLI is not the only entry point
+
+`javap` of the jar:
+
+```
+public interface  DwfValidator            { ValidationResult validate(java.io.File, java.lang.String); }
+public final class DwfValidatorFactory    { static DwfValidator create(); }
+public abstract class ValidationResult    { successes(); failures(); java.lang.String validationToken(); }
+public abstract class CheckSuccess        { name(); category(); }
+public abstract class CheckFailure        { name(); category(); failureMessage(); }
+```
+
+(`com.google.android.wearable.watchface.validator.client.*`.) The second `validate` argument is the
+**client package name** — `wear/build.gradle.kts` passes `--package_name=<wear app id>` to the CLI.
+So the token binds the APK bytes **and** the package of the app that will push it. Scraping
+`generated token: (\S+)` from CLI stdout (what `EmbedWatchFaceTask` does today) can be replaced by
+`ValidationResult.validationToken()`.
+
+Token shape observed: `<43-char base64>=:MS4wLjA=`, where `MS4wLjA=` base64-decodes to `1.0.0` (the
+validator version). The leading part is a 32-byte digest, base64.
+
+The 10 checks it runs, by name and category: APK size / File contents / AndroidManifest
+(`SECURITY`), Watch face definition files presence / Watch Face Format validator run
+(`WATCH_FACE_FORMAT`), Memory footprint validation (`MEMORY_FOOTPRINT`), Watch Face Format version
+property / Minimum SDK version / Package name (`ANDROID_MANIFEST`), APK signature validation
+(`APK_SIGNATURE`).
+
+### It is offline — but it cannot run on Android
+
+**Offline: yes.** Across every `com/google/android/wearable/validator/**`, `com/samsung/**` and
+`com/google/wear/**` class in the jar there is **no** `HttpURLConnection`, no `openConnection`, no
+`https://` literal, and exactly one `java/net/*` reference — `java/net/URL` in
+`com/google/wear/watchface/dfx/memory/EvaluationSettings$Companion`, consistent with
+`getResource()`-style loading of the bundled schemas. Runs were performed with no network
+dependency and succeeded.
+
+**On Android: no, not as shipped.** The jar bundles **TwelveMonkeys `imageio-webp`**
+(`com/twelvemonkeys/imageio/plugins/webp/**`, plus `META-INF/services/javax.imageio.spi.ImageReaderSpi`),
+and the validator's own check helpers reference desktop-only APIs directly:
+
+| Class | Desktop APIs referenced |
+|---|---|
+| `validator/checks/A` | `java/awt/image/BufferedImage`, `javax/imageio/ImageReader` |
+| `validator/checks/B` | `java/awt/image/BufferedImage` |
+| `validator/checks/C` | `javax/imageio/ImageReader` |
+| `validator/checks/y` | `javax/imageio/{ImageIO,ImageReader,metadata/IIOMetadata,spi/IIORegistry,spi/ImageReaderSpi,stream/ImageInputStream}` |
+| `validator/checks/WebPResolutionReader`, `…Spi` | `javax.imageio` SPI |
+
+Android provides neither `java.awt.image` nor `javax.imageio`, and `java.*` is a protected package
+namespace that an app's dex cannot supply. Image *dimensions* are what these read, so the
+dependency most plausibly sits under the mandatory "Memory footprint validation" check — i.e. not
+an optional path that could simply be skipped. The jar is also **Java 17 bytecode** (class file
+version 61; a Java 8 JRE refuses to load `DwfValidation`).
+
+`androidx.wear.watchfacepush:watchfacepush:1.0.0` supplies **no** token generator of its own: its
+sources (`WatchFacePush.kt`, the only source file) merely say *"Get it from the provided validation
+library"* (line 47) and define `ERROR_INVALID_VALIDATION_TOKEN` (293). So the CLI jar is the only
+known token source.
+
+### Empirical: an APK can be repackaged and re-tokenised with no `aapt2`
+
+Performed on this project's own `:wear:watchfacepush:assembleFullRelease` output.
+
+1. **`res/raw/` stays plain text in the built APK.** The WFF document is stored uncompiled and
+   uncompressed-as-text; `res/xml/*` files in the same APK are compiled binary AXML (they start
+   with the `03 00 08 00` AXML magic). Verified by reading both out of the APK.
+2. **AGP release builds shorten resource file paths.** `res/raw/watchface.xml` is stored as
+   `res/li.xml`, the two previews as `res/5z.png` / `res/fs.png`. The names in `resources.arsc` are
+   unchanged; only the file paths are shortened. Anything that patches a built APK must therefore
+   resolve the real path from the arsc, or the shortening must be disabled.
+3. **Editing the WFF text, re-aligning and re-signing yields a valid new token.** Replacing the
+   `<Scene backgroundColor>` value, rewriting the zip entry-by-entry (preserving each entry's
+   original compression method), `zipalign -p -f 4`, `apksigner sign` with the ordinary Android
+   debug keystore → validator reports *"Validation is successful"*, all 10 checks pass, and a
+   **different** token is emitted.
+4. **Replacing a drawable's bytes works the same way.** Swapping a 37 504-byte PNG for an unrelated
+   339-byte PNG at the same zip path (arsc untouched) also validates and produces a new token.
+
+So the packaging half of "rebuild a WFF face outside the Android build system" needs only: a zip
+writer, `zipalign`, `apksigner` and this validator. Note (1)–(4) prove the **validator** accepts
+such an APK; they do **not** prove the watch *renders* a swapped drawable correctly, which is a
+device question.
+
+---
+
+## Colour in complication data — what a provider can and cannot control
+
+watchface-complications-data 1.3.0, `Data.kt`.
+
+- **`ShortTextComplicationData` has no colour field**: `text`, `title`, `monochromaticImage`,
+  `smallImage`, content description. A provider therefore **cannot** colour its text, whatever the
+  watch face does. `MonochromaticImage` is tinted by the *face*, not the provider.
+- **`RangedValueComplicationData.colorRamp: ColorRamp?`** (1213) is the exception - *"Optional hint to
+  render the value with the specified `ColorRamp`"*. `ColorRamp(colors: IntArray, interpolated:
+  Boolean)` (1104-1110) takes **at most 7** colours; with `interpolated = false` they render as
+  *"equal sized regions of solid colour"* (1098-1101), i.e. discrete bands rather than a gradient.
+- WFF exposes **`[COMPLICATION.RANGED_VALUE_COLOR_INTERPOLATE]`** as a colour data source, and
+  `Font`'s `color` is `colorAttributeType`, whose pattern is `\[[A-Z0-9]+([._]\w+)*\]|#hex`
+  (`common/simpleTypes/colorType.xsd:45-55`) - a hex literal **or a single data-source reference**,
+  never an expression. So a document cannot compute a colour, but it can consume one the provider
+  supplied.
+
+**Consequence:** the only way for a provider to control the colour of a value it publishes is to send
+it as `RANGED_VALUE` with a `colorRamp`, and have the document use that ramp's data source. Bands are
+equal-width, so thresholds are placed by choosing `min`/`max` rather than stated directly.
+
+## `Icon.createWithBitmap` sends the raw pixels
+
+An `Icon` built with `createWithBitmap` carries the uncompressed bitmap across Binder: a 450x450
+ARGB_8888 image is **810 kB**, against a Binder transaction limit of roughly 1 MB. Two such
+complications refreshed once a second is on the order of 1.6 MB/s of Binder traffic.
+
+`Icon.createWithData(bytes, offset, length)` takes **encoded** image data instead, so a PNG of a watch
+face travels at a small fraction of that and is decoded by the consumer.
+
+**This is not a micro-optimisation - it decides whether the app survives.** Measured on a GW4
+(One UI 8.0): an app publishing two 450x450 image complications at up to 1 Hz with
+`createWithBitmap` was killed by the system every 5-8 seconds - 23 process launches in one window,
+60 kills in another - **while visible and holding a foreground service**, which ordinary memory
+trimming does not do. Only that app was killed; no other process was. Its PSS was 62 MB against
+244 MB available, so it was not memory pressure.
+
+Switching the same complications to `createWithData` with PNG took them to **8-9 kB and 54 kB** (from
+791 kB) and the kills **stopped completely** - zero in the following period, against a kill every few
+seconds before.
+
+So: **never publish a large image complication as a raw bitmap, and never at any frequency.**
+Compress it. See `CWF_WFF_Prompt.md` §7w for the full trail.
+
 ## Other reusable facts
 
 - `ComplicationData.tapAction: PendingIntent?` is public — `watchface-complications-data`
@@ -1628,3 +2128,101 @@ as an argument; that inference has already been made and retracted more than onc
 *Draft — pending review. Contents are observations from published library sources at the versions
 listed above; verify against the sources for the version you are building against before relying
 on any specific line reference.*
+
+## DefaultProviderPolicy only binds a slot once
+
+In a Watch Face Format document, `DefaultProviderPolicy` names the provider a `ComplicationSlot`
+should start with. It applies **only to a slot the runtime has never bound before**. Changing
+`primaryProvider` on a `slotId` that is already bound does nothing: measured on a Galaxy Watch 4, the
+slot stayed connected to the previous provider across a re-push and a reinstall, and the newly named
+provider was **never asked for data once**. The binding survives because the runtime stores it per
+watch face id and slot id, and the watch face id does not change when the document is updated.
+
+**To move a slot to a different provider, give it a new `slotId`.** The fresh id has no stored
+binding, so the policy is applied. The abandoned id simply stops being referenced.
+
+Worth knowing because the failure is silent - the document validates, the face renders, and the only
+symptom is that taps and data keep coming from the provider you thought you had replaced.
+
+## WFF knows the battery and the charger
+
+The Watch Face Format schema (v1, `common/` data sources) exposes the charger and battery to the
+document itself, with no help from the app:
+
+- `BATTERY_CHARGING_STATUS` - whether the watch is on the charger
+- `BATTERY_PERCENT`, `BATTERY_IS_LOW`, `BATTERY_STATUS`
+- `BATTERY_TEMPERATURE_CELSIUS` / `BATTERY_TEMPERATURE_FAHRENHEIT`
+
+Useful because it means a "charging" layout - the bedside-clock case - can be a `Condition` in the
+document rather than a state the app has to detect, render and push. The app is frozen while the
+watch dozes on a charger, so anything that depends on us refreshing would be stale; a condition
+evaluated by the runtime is not.
+
+## Pushing a document to the face that is currently active leaves stale state
+
+Measured on a Wear OS 6 emulator: calling `updateWatchFace` while that face is the **active** one
+left the runtime showing both the old and the new scene's alphas at once. The ambient layer - clock,
+glucose and status text, all declared `alpha="0"` outside ambient - was ghosted **over** the normal
+face for minutes, in `ambient [ false ]`, long after any transition.
+
+It is not a fault in the document. After the runtime reloaded the face, normal mode was clean and
+ambient correct again. So treat it as an artefact of the hot swap:
+
+- **When a pushed document changes, reload the face before judging what you see.** Re-selecting it in
+  the picker is enough.
+- Do **not** `am force-stop com.google.wear.watchface.runtime` to force that reload - the system falls
+  back to `DefaultWatchFace` and the pushed face has to be selected again by hand.
+
+Worth remembering during development, where the document changes on nearly every build: a "the
+ambient layer is visible in normal mode" report after a push is most likely this, not the XML.
+
+## Watch Face Format: what the validator checks, and what it does not
+
+The validator runs **inside the build**, in the `embed<Variant>WatchFace` task, so a bad document
+fails `:wear:assembleFullDebug` with a `SEVERE: Could not validate xml:` line naming the element. No
+separate jar is needed - an earlier note suggesting one is only useful for checking a document
+outside a build.
+
+**A `ComplicationSlot` may not sit inside a `Condition`.** The validator says so plainly:
+
+```
+Invalid content was found starting with element 'ComplicationSlot'.
+One of '{Group, PartText, PartImage, PartAnimatedImage, PartDraw, Condition, AnalogClock, DigitalClock}' is expected.
+```
+
+A `Condition` *may* sit inside the content a complication draws, which is the way to make a slot's
+appearance depend on a setting: declare the slot unconditionally, and put the condition around the
+`PartImage` inside its `<Complication>`.
+
+**The validator checks the schema, not the meaning.** A document can pass every check and still draw
+nothing. `UserConfigurations` with a `BooleanConfiguration`, referenced as
+`[CONFIGURATION.id] == 0` and `[CONFIGURATION.id] == 1`, validated and then produced a **completely
+black watch face** on a Galaxy Watch 4 - no clock, no image, no ambient readouts, and no settings
+offered on long press. Every drawable element had been wrapped in one of those two conditions, so if
+the expression yields neither 0 nor 1, everything disappears at once.
+
+What a `BooleanConfiguration` actually yields in an expression is therefore **still unknown**, and
+worth establishing with an additive test before it is relied on.
+
+**The rule that follows, and it is not optional.** A change to the document must be additive and safe
+by construction: the existing, working rendering must never be made to depend on a new expression.
+Add the conditional element on top instead. Then a wrong expression can only fail to add something -
+it can never blank the watch, which is what happened here on a watch somebody was wearing.
+
+### What a `BooleanConfiguration` is worth in an expression - measured, not assumed
+
+Established on a Wear 6 emulator by printing the value on the face itself, after an assumption about
+it had blanked a watch:
+
+- `[CONFIGURATION.<id>]` of a `BooleanConfiguration` yields the string **`TRUE`** - **not** `1`.
+- `<Expression name="x">[CONFIGURATION.&lt;id&gt;] == "TRUE"</Expression>` inside a `Condition`
+  works: the guarded element renders when the setting is on.
+
+Comparing such a value to `0` and to `1` therefore makes **both** branches false. A document that
+wrapped the clock, the face image and the ambient readouts in those two branches validated cleanly
+and drew a **completely black watch face**, with no settings offered either. The validator cannot
+catch this: it checks the schema, not whether an expression means what its author thought.
+
+**How to find out cheaply, without risking the face**: add one `PartText` whose `Template` prints the
+raw value, change nothing else, and read it on the watch. Then add one guarded element and see
+whether it appears. Both are purely additive - a wrong expression can only fail to add something.

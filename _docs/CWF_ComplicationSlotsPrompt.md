@@ -818,6 +818,17 @@ so it cannot host `DynProvider`/`ValueMap`'s arbitrary AAPS-data-driven logic. I
 rendering" above) — explicitly **not** as evidence that our own renderer has some undiscovered
 capability, since the two share no rendering code.
 
+> **Correction (2026-08-30, from `_docs/CWF_WFF_Prompt.md`).** Two points above are now known to be
+> incomplete:
+> 1. *"not a device-level block on sideloaded code-based watch faces"* — true of the Play Store
+>    policy, but a **device-level block does exist** on recent firmware. Galaxy Watch 4/5/6 keep the
+>    libraries that display code-based watch faces; **Galaxy Watch 7/8/9 and recent Wear OS do
+>    not** — those watches can only show WFF faces. The code-based CWF must keep working for GW4–6.
+> 2. *"WFF cannot host `DynProvider`/`ValueMap`'s arbitrary logic"* — correct as stated, but it only
+>    rules out *translating the logic into XML*. WFF does not have to host the logic, only the
+>    result: the logic can stay in AAPS code and reach the face through complications. That is the
+>    basis of the WFF port topic. See `_docs/CWF_WFF_Prompt.md`.
+
 *(Root Causes 1–5 above were recovered verbatim from `6a0d903de26` after a rebase left the
 section structurally broken — heading emptied, 1 and 2 orphaned inside the checklist, 3–5 dropped
 entirely. The original architecture-as-built notes and the "not yet tested" list from the original
