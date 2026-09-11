@@ -170,13 +170,23 @@ class PersistentNotificationPlugin @Inject constructor(
         if (profileFunction.isProfileValid("Notification")) {
             val lastBG = iobCobCalculator.ads.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
+            val units = profileFunction.getUnits()
             if (lastBG != null) {
                 bgStatusChipText = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated)
-                bgMetric = Metric(
+                val fromMgdlToUnits = profileUtil.fromMgdlToUnits(lastBG.recalculated)
+                val metricValue: Metric.MetricValue = if (units == GlucoseUnit.MMOL) {
                     FixedFloat(
-                        profileUtil.fromMgdlToUnits(lastBG.recalculated).toFloat(),
-                        profileFunction.getUnits().displayLabel
-                    ),
+                        fromMgdlToUnits.round(1).toFloat(),
+                        units.displayLabel
+                    )
+                } else {
+                    FixedInt(
+                        fromMgdlToUnits.toInt(),
+                        units.displayLabel
+                    )
+                }
+                bgMetric = Metric(
+                    metricValue,
                     "BG"
                 )
                 val trendSymbol = (trendCalculator.getTrendArrow(iobCobCalculator.ads)
@@ -230,7 +240,6 @@ class PersistentNotificationPlugin @Inject constructor(
             // Build a RemoteInput for receiving voice input from devices
             val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
             // Build Android Auto message: IOB • COB • Target • Profile
-            val units = profileFunction.getUnits()
             var aaTarget = ""
             val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
             if (tempTarget != null) {
