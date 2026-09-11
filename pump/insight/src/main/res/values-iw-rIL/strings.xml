@@ -16,10 +16,7 @@
     <string name="not_inserted">לא הוכנס</string>
     <string name="tdd_bolus">מינון בולוס יומי מצטבר</string>
     <string name="tdd_basal">מינון בזאלי יומי מצטבר</string>
-    <string name="tbr_formatter">%1$d%% למשך %2$d/%3$d דק\'</string>
     <string name="multiwave_bolus">בולוס רב שלבי</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f יח\' למשך %3$d דק\'</string>
-    <string name="insight_last_bolus">בולוס אחרון</string>
     <string name="searching_for_devices">מחפש התקנים…</string>
     <string name="pairing_completed">הצימוד הושלם</string>
     <string name="code_compare">האם הקודים המוצגים בהתקן זה ובמשאבה זהים?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">המשאבה נעצרה</string>
     <string name="pump_started">המשאבה הופעלה</string>
     <string name="release_software_version">גרסת תוכנה</string>
-    <string name="ui_processor_software_version">גרסת תוכנת מעבד הממשק</string>
-    <string name="pc_processor_software_version">גרסת תוכנת מעבד המחשב</string>
-    <string name="md_tel_processor_software_version">גרסת תוכנת עיבוד MD tel</string>
-    <string name="safety_processor_software_version">גרסת תוכנת עיבוד בטיחות</string>
-    <string name="bt_info_page_version">גרסת דף מידע בלוטות\'</string>
     <string name="bluetooth_address">כתובת בלוטות\'</string>
-    <string name="system_id_appendix">נספח זהות מערכת</string>
     <string name="manufacturing_date">תאריך ייצור</string>
-    <string name="delete_pairing">מחיקת צימוד</string>
     <string name="log_site_changes">רישום החלפת אתר עירוי</string>
     <string name="log_reservoir_changes">רישום החלפת מכל</string>
     <string name="log_tube_changes">רישום החלפת צינורית</string>
@@ -58,6 +48,5 @@
     <string name="max_recovery_duration">משך זמן התאוששות מקסימלי [s]</string>
     <string name="min_recovery_duration">משך זמן התאוששות מינימלי [s]</string>
     <string name="pump_alert">התראת משאבה</string>
-    <string name="pairing_information">פרטי צימוד</string>
     <string name="last_connection">%1$s (%2$s)</string>
 </resources>

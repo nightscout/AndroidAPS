@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme palette -->
+    <color name="colorPrimary">#96CAF2</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#40bbaa</color>
+
+    <!-- Drawable ic_widget_tt_manual.xml -->
+    <color name="inRange">#00FF00</color>
+    <color name="tempTargetConfirmation">#77dd77</color>
+
+</resources>

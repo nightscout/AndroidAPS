@@ -9,7 +9,6 @@ import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
-import dagger.android.AndroidInjection
 
 /**
  * COB Icon Complication
@@ -20,11 +19,6 @@ import dagger.android.AndroidInjection
  */
 class CobIconComplication : ModernBaseComplicationProviderService() {
 
-    // Not derived from DaggerService, do injection here
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
-    }
 
     override fun buildComplicationData(
         type: ComplicationType,

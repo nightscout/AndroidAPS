@@ -18,18 +18,18 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.text.format.DateFormat
 import android.view.SurfaceHolder
+import android.view.WindowInsets
 import androidx.wear.watchface.CanvasType
+import androidx.wear.watchface.ComplicationSlot
 import androidx.wear.watchface.ComplicationSlotsManager
 import androidx.wear.watchface.DrawMode
 import androidx.wear.watchface.Renderer
+import androidx.wear.watchface.TapEvent
 import androidx.wear.watchface.WatchFace
 import androidx.wear.watchface.WatchFaceService
 import androidx.wear.watchface.WatchFaceType
 import androidx.wear.watchface.WatchState
 import androidx.wear.watchface.style.CurrentUserStyleRepository
-import androidx.wear.watchface.TapEvent
-import androidx.wear.watchface.ComplicationSlot
-import android.view.WindowInsets
 import java.time.ZonedDateTime
 import java.util.TimeZone
 

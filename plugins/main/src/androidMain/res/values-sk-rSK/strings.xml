@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Prehliadač histórie</string>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Inzulín</string>
+    <string name="pb_label">Batéria pumpy</string>
+    <string name="cannula">Kanyla</string>
+    <string name="patch_pump">Náplasťová pumpa</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAZ</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
+    <string name="old_data">ZASTARALÉ DÁTA</string>
+    <string name="notification_iob_short">%1$.1fU</string>
+</resources>

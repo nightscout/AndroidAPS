@@ -14,10 +14,7 @@
     <string name="operating_mode">Mode de funcionament</string>
     <string name="description_pump_insight_local">Integració de bomba per models Accu-Chek Insight</string>
     <string name="not_inserted">No inserit</string>
-    <string name="tbr_formatter">%1$d%% durant %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus multiona</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U durant %3$d min</string>
-    <string name="insight_last_bolus">Darrer bolus</string>
     <string name="searching_for_devices">Cercant dispositius…</string>
     <string name="pairing_completed">Sincronització completada</string>
     <string name="code_compare">Coincideixen els codis que es mostren en aquest dispositiu i la bomba?</string>
@@ -33,15 +30,8 @@
     <string name="pump_stopped">Bomba aturada</string>
     <string name="pump_started">Bomba iniciada</string>
     <string name="release_software_version">Versió de software</string>
-    <string name="ui_processor_software_version">Versió de software del processador d\'interfície d\'usuari</string>
-    <string name="pc_processor_software_version">Versió de software del processador del PC</string>
-    <string name="md_tel_processor_software_version">Versió de software del processador MD tel</string>
-    <string name="safety_processor_software_version">Versió de software del processador de seguretat</string>
-    <string name="bt_info_page_version">Versió de la pàgina d\'informació de BT</string>
     <string name="bluetooth_address">Adreça Bluetooth</string>
-    <string name="system_id_appendix">Apèndix ID del sistema</string>
     <string name="manufacturing_date">Data de fabricació</string>
-    <string name="delete_pairing">Eliminar sincronització</string>
     <string name="log_site_changes">Enregistrar canvis de cànula</string>
     <string name="log_reservoir_changes">Enregistrar canvis de reservori</string>
     <string name="log_tube_changes">Enregistrar canvis de tub</string>
@@ -54,5 +44,4 @@
     <string name="max_recovery_duration">Màx. durada recuperació [s]</string>
     <string name="min_recovery_duration">Min. durada recuperació [s]</string>
     <string name="pump_alert">Alerta bomba</string>
-    <string name="pairing_information">Informació sincronització</string>
 </resources>

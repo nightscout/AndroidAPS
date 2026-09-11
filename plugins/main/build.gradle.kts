@@ -1,52 +1,98 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.ksp)
-    id("kotlin-android")
-    id("android-module-dependencies")
-    id("test-module-dependencies")
-    id("jacoco-module-dependencies")
+    id("kmp-test-defaults")
+    kotlin("multiplatform")
+    // NOT com.android.library. AGP 9 refuses that plugin together with the multiplatform plugin.
+    // Same reason as the :core modules, :pump:virtual and the other converted plugins.
+    alias(libs.plugins.android.kmp.library)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
 }
 
-android {
-    namespace = "app.aaps.plugins.main"
+// Same generator as the other converted plugins, pointed at this module's strings. The strings do
+// not move, and AAPT keeps resolving them on Android exactly as before - this only adds a TextRef
+// named view of them that common code can reach.
+val generateMainStrings = tasks.register<GenerateKeyStringsTask>("generateMainStrings") {
+    resDir.set(layout.projectDirectory.dir("src/androidMain/res"))
+    packageName.set("app.aaps.plugins.main")
+    owner.set("main")
+    objectName.set("MainStrings")
+    idsObjectName.set("MainStringIds")
+    reportFile.set(layout.buildDirectory.file("reports/mainStrings/translations.txt"))
+    // Set explicitly: addGeneratedSourceDirectory derives its convention from the task name, so both
+    // properties would land on one directory and the second file written would delete the first.
+    commonOutputDir.set(layout.buildDirectory.dir("generated/mainStrings/common"))
+    androidOutputDir.set(layout.buildDirectory.dir("generated/mainStrings/android"))
 }
 
-dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":core:graph"))
-    implementation(project(":core:graphview"))
-    implementation(project(":core:interfaces"))
-    implementation(project(":core:keys"))
-    implementation(project(":core:objects"))
-    implementation(project(":core:nssdk"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:validators"))
-    implementation(project(":shared:impl"))
+kotlin {
+    android {
+        namespace = "app.aaps.plugins.main"
+        compileSdk = Versions.compileSdk
+        minSdk = Versions.minSdk
+        androidResources { enable = true }
+        // isIncludeAndroidResources is what makes Robolectric work - see :core:ui for the detail.
+        withHostTest {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+        compilerOptions { jvmTarget.set(Versions.jvmTarget) }
 
-    testImplementation(project(":implementation"))
-    testImplementation(project(":plugins:aps"))
-    testImplementation(project(":plugins:insulin"))
-    testImplementation(project(":shared:tests"))
+        lint {
+            checkReleaseBuilds = false
+            disable += "MissingTranslation"
+            disable += "ExtraTranslation"
+        }
+    }
 
-    api(libs.androidx.appcompat)
-    api(libs.com.google.android.material)
+    iosArm64()
+    iosSimulatorArm64()
 
-    // Actions
-    api(libs.androidx.gridlayout)
+    // Desktop (Windows/macOS/Linux). Compose Multiplatform resolves its `desktop` variant from a
+    // plain jvm() target, so no special target name is needed.
+    jvm()
 
-    //SmsCommunicator
-    api(libs.com.eatthepath.java.otp)
-    api(libs.com.github.kenglxn.qrgen.android)
+    sourceSets {
+        commonMain {
+            kotlin.srcDir(generateMainStrings.flatMap { it.commonOutputDir })
+            dependencies {
+                implementation(project(":core:data"))
+                implementation(project(":core:interfaces"))
+                implementation(project(":core:keys"))
+                implementation(project(":core:objects"))
+                implementation(project(":core:ui"))
+                implementation(project(":core:utils"))
 
-    api(libs.kotlinx.datetime)
+                implementation(libs.androidx.collection)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.cmp.runtime)
+            }
+        }
 
-    // Overview
-    api(libs.com.google.android.flexbox)
+        androidMain {
+            // Android only: the string name to R.string id map.
+            kotlin.srcDir(generateMainStrings.flatMap { it.androidOutputDir })
+        }
 
-    // Food
-    api(libs.androidx.work.runtime)
-
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.android.processor)
+        // Hand written rather than taken from test-module-dependencies, which applies
+        // com.android.library and so cannot be used here. Same approach as :plugins:sensitivity.
+        getByName("androidHostTest") {
+            dependencies {
+                implementation(project(":shared:tests"))
+                implementation(project(":implementation"))
+                implementation(project(":plugins:aps"))
+                implementation(libs.org.junit.jupiter)
+                implementation(libs.org.junit.jupiter.api)
+                implementation(libs.org.mockito.junit.jupiter)
+                implementation(libs.org.mockito.kotlin)
+                implementation(libs.com.google.truth)
+                implementation(libs.kotlinx.coroutines.test)
+                // The real org.json: isReturnDefaultValues makes the platform stub answer null rather
+                // than throwing, which NPEs the shared profile fixtures. Same reason as :pump:virtual.
+                implementation(libs.org.json.android)
+                runtimeOnly(libs.org.junit.vintage.engine)
+                runtimeOnly(libs.org.junit.platform.launcher)
+            }
+        }
+    }
 }
+

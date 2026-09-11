@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Сопряжение с помпой</string>
     <string name="combov2_unpair_pump_title">Разорвать сопряжение с помпой</string>
     <string name="combov2_driver_state_label">Статус драйвера помпы</string>
-    <string name="combov2_current_activity_label">Текущие действия</string>
     <string name="bluetooth_address">Адрес Bluetooth</string>
     <string name="combov2_start_pairing">Начните сопряжение</string>
     <string name="combov2_pairing_in_progress">Идёт сопряжение с Combo</string>
@@ -40,13 +39,14 @@
 3. Повторите процедуру сопряжения заново</string>
     <string name="combov2_enter_pin">Введите PIN-код</string>
     <string name="combov2_cancel_pairing">Отменить сопряжение</string>
+    <string name="combov2_confirm_cancel_pairing_message">Вы действительно хотите отменить сопряжение?</string>
+    <string name="combov2_confirm_unpair_message">Вы действительно хотите удалить сопряжение с помпой?</string>
     <string name="combov2_pin_hint">10-значный PIN-код</string>
     <string name="combov2_pairing_finished_successfully">Сопряжение с Combo завершено успешно</string>
     <string name="combov2_pairing_cancelled">Сопряжение с Combo отменено пользователем</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Тайм-аут сканирования Combo</string>
     <string name="combov2_pairing_failed_due_to_error">Сопряжение не состоялось из-за ошибки: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Сопряжение прервано по неизвестной причине</string>
-    <string name="combov2_pairing_invalid_pin_length">"Недопустимая длина PIN-кода соединения: надо %1$d цифр, указано %2$d"</string>
     <string name="combov2_scanning_for_pump">Поиск помпы</string>
     <string name="combov2_establishing_bt_connection">Установка Bluetooth-соединения (попытка № %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Cинхронизация связи с помпой</string>
@@ -66,7 +66,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Установка базального профиля</string>
     <string name="combov2_setting_tbr_cmddesc">Установка %1$d%% врем базала TBR на %2$d минут</string>
     <string name="combov2_cancelling_tbr">Отмена текущего врем базала TBR</string>
-    <string name="combov2_delivering_bolus_cmddesc">Подается болюс %1$.1f ед</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Получение суточной истории дозировок TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Обновление даты и времени помпы</string>
     <string name="combov2_updating_pump_status_cmddesc">Обновление статуса помпы</string>
@@ -91,6 +90,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (осталось меньше 1 минуты)</string>
     <string name="combov2_load_tdds_cancelled">Загрузка TDD отменена</string>
     <string name="combov2_retrieving_tdds_failed">Не удалось получить TDD</string>
+    <string name="combov2_battery_empty">Разряжена</string>
+    <string name="combov2_battery_low">Низкий заряд</string>
+    <string name="combov2_battery_full">Полностью заряжена</string>
     <string name="combov2_battery_low_warning">Низкий заряд батареи помпы</string>
     <string name="combov2_reservoir_low_warning">Низкий уровень инсулина в картридже помпы</string>
     <string name="combov2_setting_tbr_succeeded">Настройки TBR выполнены</string>
@@ -100,7 +102,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Игнорирование избыточного запроса на 100% TBR</string>
     <string name="combov2_hit_unexpected_tbr_limit">При настройке ВБС: обнаружен непредвиденный предел: целевой процент %1$d%%, достиг предела %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Невозможно установить абсолютный TBR, если базовая скорость равна нулю</string>
-    <string name="combov2_pair_with_pump_summary">Выполнить сопряжение AndroidAPS и Android с помпой Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Отключить AndroidAPS и AndroidAPS от помпы Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Обнаружена и остановлена неизвестная временная базальная скоростьTBR; в процентах: %1$d%%; оставшаяся продолжительность: %2$s</string>
     <string name="combov2_connection_error">Ошибка соединения: %1$s</string>

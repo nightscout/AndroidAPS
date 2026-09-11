@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_plugin_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensibilità Oref1</string>
+    <string name="sensitivity_aaps">Sensibilità AAPS</string>
+    <string name="sensitivity_weighted_average">Sensibilità WeightedAverage</string>
+    <string name="description_sensitivity_aaps">La sensibilità è calcolata allo stesso modo di Oref0, ma puoi specificare l\'intervallo di tempo al passato. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze.</string>
+    <string name="description_sensitivity_oref1">La sensibilità è calcolata dai dati delle ultime 8h o 24h (usando tra i due periodi quello più sensibile) e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze. Il plugin calcola anche UAM.</string>
+    <string name="description_sensitivity_weighted_average">La sensibilità è calcolata come media ponderata dalle deviazioni. Le deviazioni più recenti hanno peso maggiore. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze. Questo algoritmo è il più veloce nel seguire i cambiamenti di sensibilità.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM disabilitato perché il plugin di sensibilità Oref1, dal quale UAM dipende, non è abilitato</string>
+    <string name="absorption_settings_title">Impostazioni assorbimento</string>
+</resources>

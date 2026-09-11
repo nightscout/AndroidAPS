@@ -8,7 +8,7 @@ import app.aaps.pump.eopatch.code.BasalStatus
 import app.aaps.pump.eopatch.keys.EopatchStringNonKey
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 class NormalBasalManager : IPreference<NormalBasalManager> {
 
@@ -33,7 +33,7 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
                 return false
 
             for (i in it.getBasalValues().indices) {
-                if (TimeUnit.SECONDS.toMinutes(it.getBasalValues()[i].timeAsSeconds.toLong()) != normalBasal.list[i].start) {
+                if (it.getBasalValues()[i].timeAsSeconds.toLong().seconds.inWholeMinutes != normalBasal.list[i].start) {
                     return false
                 }
                 if (!CommonUtils.nearlyEqual(
@@ -55,8 +55,8 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
         val size = profile.getBasalValues().size
         for (idx in profile.getBasalValues().indices) {
             val nextIdx = if (idx == (size - 1)) 0 else idx + 1
-            val startTimeMinutes = TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[idx].timeAsSeconds.toLong())
-            val endTimeMinutes = if (nextIdx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[nextIdx].timeAsSeconds.toLong())
+            val startTimeMinutes = profile.getBasalValues()[idx].timeAsSeconds.toLong().seconds.inWholeMinutes
+            val endTimeMinutes = if (nextIdx == 0) 1440 else profile.getBasalValues()[nextIdx].timeAsSeconds.toLong().seconds.inWholeMinutes
 
             tmpNormalBasal.list.add(BasalSegment(startTimeMinutes, endTimeMinutes, profile.getBasalValues()[idx].value.toFloat()))
         }
@@ -70,8 +70,8 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
         val size = profile.getBasalValues().size
         for (idx in profile.getBasalValues().indices) {
             val nextIdx = if (idx == (size - 1)) 0 else idx + 1
-            val startTimeMinutes = TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[idx].timeAsSeconds.toLong())
-            val endTimeMinutes = if (nextIdx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[nextIdx].timeAsSeconds.toLong())
+            val startTimeMinutes = profile.getBasalValues()[idx].timeAsSeconds.toLong().seconds.inWholeMinutes
+            val endTimeMinutes = if (nextIdx == 0) 1440 else profile.getBasalValues()[nextIdx].timeAsSeconds.toLong().seconds.inWholeMinutes
 
             normalBasal.list.add(BasalSegment(startTimeMinutes, endTimeMinutes, profile.getBasalValues()[idx].value.toFloat()))
         }

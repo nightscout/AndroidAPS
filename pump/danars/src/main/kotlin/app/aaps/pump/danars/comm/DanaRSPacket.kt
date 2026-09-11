@@ -2,10 +2,11 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
+import org.joda.time.IllegalFieldValueException
 import org.joda.time.IllegalInstantException
 import java.nio.charset.StandardCharsets
 
-open class DanaRSPacket() {
+open class DanaRSPacket {
 
     var isReceived = false
         private set
@@ -75,7 +76,6 @@ open class DanaRSPacket() {
                 intFromBuff(buff, offset + 5, 1)
             ).millis
         } catch (_: IllegalInstantException) {
-            // expect
             // org.joda.time.IllegalInstantException: Illegal instant due to time zone offset transition (daylight savings time 'gap')
             // add 1 hour
             DateTime(
@@ -86,6 +86,9 @@ open class DanaRSPacket() {
                 intFromBuff(buff, offset + 4, 1),
                 intFromBuff(buff, offset + 5, 1)
             ).millis
+        } catch (_: IllegalFieldValueException) {
+            // Corrupted BLE data (e.g. hourOfDay=190) — return 0 to skip this record
+            0L
         }
 
     protected fun intFromBuff(b: ByteArray, srcStart: Int, srcLength: Int): Int =

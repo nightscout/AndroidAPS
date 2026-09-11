@@ -12,10 +12,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -23,51 +24,41 @@ import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
+import app.aaps.wear.data.bgDataArray
+import app.aaps.wear.data.statusDataArray
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.watchfaces.utils.WatchFace
 import app.aaps.wear.watchfaces.utils.WatchFaceTime
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
-import dagger.android.AndroidInjection
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.Inject
+import java.util.Calendar
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.max
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.util.Calendar
-import javax.inject.Inject
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.max
 
 @SuppressLint("Deprecated")
 class CircleWatchface : WatchFace() {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var complicationDataRepository: app.aaps.wear.data.ComplicationDataRepository
 
-    private var disposable = CompositeDisposable()
     private val watchfaceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     // DataStore as single source of truth - using EventData models directly
     private var complicationData: app.aaps.wear.data.ComplicationData = app.aaps.wear.data.ComplicationData()
 
     private val singleBg
-        get() = arrayOf(
-            complicationData.bgData,
-            complicationData.bgData1,
-            complicationData.bgData2
-        )
+        get() = complicationData.bgDataArray(sp.getBoolean(R.string.key_switch_external, false))
     private val status
-        get() = arrayOf(
-            complicationData.statusData,
-            complicationData.statusData1,
-            complicationData.statusData2
-        )
+        get() = complicationData.statusDataArray(sp.getBoolean(R.string.key_switch_external, false))
     private val graphData get() = complicationData.graphData
 
     companion object {
@@ -102,7 +93,7 @@ class CircleWatchface : WatchFace() {
 
 
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate()
         sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CIRCLE.ordinal)
         rxBus.send(EventUpdateSelectedWatchface())
@@ -132,10 +123,9 @@ class CircleWatchface : WatchFace() {
             }
         }
 
-        disposable += rxBus
-            .toObservable(EventData.Preferences::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe {
+        // watchfaceScope is Main.immediate, matching observeOn(aapsSchedulers.main).
+        rxBus.toFlow(EventData.Preferences::class)
+            .collectResilient(watchfaceScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 if (myLayout != null) {  // Only update if layout initialized
                     prepareDrawTime()
                     prepareLayout()
@@ -148,7 +138,6 @@ class CircleWatchface : WatchFace() {
     }
 
     override fun onDestroy() {
-        disposable.clear()
         watchfaceScope.cancel()
         super.onDestroy()
     }

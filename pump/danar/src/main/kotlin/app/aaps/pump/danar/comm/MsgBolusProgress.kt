@@ -1,12 +1,11 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgBolusProgress(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {
@@ -17,8 +16,7 @@ class MsgBolusProgress(
     override fun handleMessage(bytes: ByteArray) {
         val deliveredInsulin = danaPump.bolusingDetailedBolusInfo!!.insulin - intFromBuff(bytes, 0, 2) / 100.0
         danaPump.bolusProgressLastTimeStamp = System.currentTimeMillis()
-        BolusProgressData.delivered = deliveredInsulin
+        bolusProgressData.updateProgress(PumpInsulin(deliveredInsulin))
         aapsLogger.debug(LTag.PUMPCOMM, "Delivered insulin so far: $deliveredInsulin")
-        rxBus.send(EventOverviewBolusProgress(rh, delivered = deliveredInsulin, id = danaPump.bolusingDetailedBolusInfo?.id))
     }
 }

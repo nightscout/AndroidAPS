@@ -1,9 +1,9 @@
 package app.aaps.pump.danar
 
-import android.bluetooth.BluetoothSocket
 import android.os.SystemClock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.dana.DanaPump
@@ -20,16 +20,18 @@ import kotlin.math.max
  */
 class SerialIOThread(
     private val aapsLogger: AAPSLogger,
-    private val rfCommSocket: BluetoothSocket,
+    private val rfCommSocket: RfcommSocket,
     private val hashTable: MessageHashTableBase,
     private val danaPump: DanaPump
 ) : Thread() {
 
     private var mInputStream: InputStream = rfCommSocket.inputStream
     private var mOutputStream: OutputStream = rfCommSocket.outputStream
-    private var mKeepRunning = true
-    private var mReadBuff = ByteArray(0)
-    private var processedMessage: MessageBase? = null
+    // Written by disconnect()/the run() catch on other threads, read by the reader loop.
+    @Volatile private var mKeepRunning = true
+    private var mReadBuff = ByteArray(0)  // reader thread only - no cross-thread access
+    // Written by the sending thread (sendMessage), read by the reader thread (run) to match a reply.
+    @Volatile private var processedMessage: MessageBase? = null
 
     init {
         start()
@@ -43,7 +45,12 @@ class SerialIOThread(
                 val newData = ByteArray(max(1024, availableBytes))
                 val gotBytes = try {
                     mInputStream.read(newData)
-                } catch (_: IOException) {
+                } catch (e: IOException) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Read IOException, breaking loop: ${e.message}")
+                    break
+                }
+                if (gotBytes < 0) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Read returned $gotBytes (EOF), breaking loop")
                     break
                 }
                 // When we are here there is some new data available
@@ -62,16 +69,22 @@ class SerialIOThread(
                     }
                     aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< ${message.messageName} ${MessageBase.toHexString(extractedBuff)}")
 
-                    // process the message content
-                    message.isReceived = true
+                    // Process the message, then mark it received and wake the sender - both inside the
+                    // message monitor. isReceived is set AFTER handleMessage so the sender never proceeds
+                    // on a half-processed message, and together with notifyAll under the monitor so the
+                    // sender's wait-condition check cannot miss the wakeup.
                     message.handleMessage(extractedBuff)
-                    synchronized(message) { message.notifyAll() }
+                    synchronized(message) {
+                        message.isReceived = true
+                        message.notifyAll()
+                    }
                 }
             }
         } catch (e: Exception) {
-            if (e.message?.contains("bt socket closed") == true) aapsLogger.error("Thread exception: ", e)
+            aapsLogger.error(LTag.PUMPBTCOMM, "Reader thread exception: ${e.javaClass.simpleName}: ${e.message}")
             mKeepRunning = false
         }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Reader loop exited. mKeepRunning=$mKeepRunning")
         disconnect("EndOfLoop")
     }
 
@@ -139,10 +152,16 @@ class SerialIOThread(
             aapsLogger.error("sendMessage write exception: ", e)
         }
         synchronized(message) {
-            try {
-                message.waitMillis(5000)
-            } catch (e: InterruptedException) {
-                aapsLogger.error("sendMessage InterruptedException", e)
+            // Only wait if the reply has not already been received. On a fast pump - and the
+            // zero-latency emulator in particular - the reader can parse the reply and notifyAll()
+            // in the window between the write above and this block; a bare wait() would then miss
+            // that wakeup and block the full 5s. The isReceived guard closes that lost-wakeup race.
+            if (!message.isReceived) {
+                try {
+                    message.waitMillis(5000)
+                } catch (e: InterruptedException) {
+                    aapsLogger.error("sendMessage InterruptedException", e)
+                }
             }
         }
         SystemClock.sleep(200)

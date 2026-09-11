@@ -3,6 +3,8 @@ package app.aaps.plugins.aps.openAPSSMB
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.getPassedDurationToTimeInMinutes
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.aps.GlucoseStatus
@@ -20,13 +22,12 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.convertToJSONArray
+import app.aaps.shared.tests.extensions.convertToJSONArray
 import app.aaps.core.objects.extensions.convertedToAbsolute
-import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.utils.ScriptReader
-import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -41,9 +42,9 @@ import org.mozilla.javascript.Undefined
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class DetermineBasalAdapterSMBJS(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
+class DetermineBasalAdapterSMBJS(private val scriptReader: ScriptReader, private val injector: MetroMemberInjector) : DetermineBasalAdapter {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -252,7 +253,7 @@ class DetermineBasalAdapterSMBJS(private val scriptReader: ScriptReader, private
             this.profile.put("out_units", "mmol/L")
         }
         val now = System.currentTimeMillis()
-        val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
+        val tb = runBlocking { processedTbrEbData.getTempBasalIncludingConvertedExtended(now) }
         currentTemp.put("temp", "absolute")
         currentTemp.put("duration", tb?.plannedRemainingMinutes ?: 0)
         currentTemp.put("rate", tb?.convertedToAbsolute(now, profile) ?: 0.0)
@@ -306,6 +307,8 @@ class DetermineBasalAdapterSMBJS(private val scriptReader: ScriptReader, private
     }
 
     init {
-        injector.androidInjector().inject(this)
+        // Loud on the wrong injector: the app wide one returns false for a class it does not know, which
+        // would leave these lateinit fields unset and fail later somewhere unrelated.
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
     }
 }

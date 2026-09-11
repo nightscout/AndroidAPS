@@ -1,0 +1,95 @@
+package app.aaps.core.data.configuration
+
+/**
+ * Created by mike on 07.06.2016.
+ */
+object Constants {
+
+    const val MMOLL_TO_MGDL = 18.01559
+    const val MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL
+    const val DEFAULT_DIA = 5.0
+    const val NOTIFICATION_ID = 556677
+
+    // OpenAPS algorithm
+    const val NORMAL_TARGET_MGDL = 99 // 5.5 mmol/l = 99.1 mg/dL; use 99 to ensure consistent behavior across mg/dL and mmol/l units
+
+    // SMS COMMUNICATOR
+    const val REMOTE_BOLUS_MIN_DISTANCE = 15 * 60 * 1000L
+
+    // Circadian Percentage Profile
+    // Ranges are Double because they are mostly used as slider ranges in the UI
+    val CPP_PERCENTAGE_RANGE = 30.0..250.0
+    val CPP_TIMESHIFT_RANGE = -23.0..23.0
+
+    /** Duration the user can set for a timed action (profile switch, temp target, ...). [min] up to ~ 7 days */
+    val ACTION_DURATION = 0.0..(7 * 24 * 60).toDouble()
+
+    // Bolus wizard: how much of the calculated bolus may be delivered
+    val WIZARD_PERCENTAGE_RANGE = 10.0..200.0
+
+    // Scenes
+    val SCENE_DURATION = 0.0..(3 * 24 * 60).toDouble() // [min] up to ~ 3 days
+
+    //DanaR
+    const val DAILY_RESERVOIR_LIMIT_WARNING = 0.95
+
+    // Temp targets
+    // Upper is 180.16 (= 10.0 mmol * 18.01559), not a flat 180.0. A 10.0 mmol temp target is stored
+    // as 180.16 mg/dL. This range gates the NS-sync import of temp targets (they are uploaded in
+    // mg/dL), so a flat 180.0 would silently drop a synced 10.0 mmol temp target. Mirrors the
+    // HardLimits.LIMIT_TEMP_MIN_BG top.
+    val TT_RANGE_MGDL = 72.0..180.16
+    val TT_RANGE_MMOL = 4.0..10.0
+
+    // Temp target preset defaults (target in mg/dL, duration in minutes)
+    const val DEFAULT_TT_EATING_SOON_TARGET = 90.0
+    const val DEFAULT_TT_EATING_SOON_DURATION = 45
+    const val DEFAULT_TT_ACTIVITY_TARGET = 140.0
+    const val DEFAULT_TT_ACTIVITY_DURATION = 90
+    const val DEFAULT_TT_HYPO_TARGET = 160.0
+    const val DEFAULT_TT_HYPO_DURATION = 60
+
+    //Autosens
+    const val DEVIATION_TO_BE_EQUAL = 2.0
+
+    // Pump
+    const val PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 120 - 1
+    const val MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60
+
+    //SMS Communicator
+    const val SMS_CONFIRM_TIMEOUT = 5L * 60 * 1000
+
+    //Storage [MB]
+    const val MINIMUM_FREE_SPACE: Long = 200
+
+    // STATISTICS
+    const val STATS_TARGET_LOW_MMOL = 3.9
+    const val STATS_TARGET_HIGH_MMOL = 7.8
+    const val STATS_RANGE_VERY_LOW_MMOL = 3.1
+    const val STATS_RANGE_LOW_MMOL = 3.9
+    const val STATS_RANGE_HIGH_NIGHT_MMOL = 8.3
+    const val STATS_RANGE_HIGH_MMOL = 10.0
+    const val STATS_RANGE_VERY_HIGH_MMOL = 13.9
+
+    // Local profile
+    const val LOCAL_PROFILE = "LocalProfile"
+
+    // One Time Password
+    /**
+     * Size of generated key for TOTP Authenticator token, in bits
+     * rfc6238 suggest at least 160 for SHA1 based TOTP, but it ts too weak
+     * with 512 generated QRCode to provision authenticator is too detailed
+     * 256 is chosen as both secure enough and small enough for easy-scannable QRCode
+     */
+    const val OTP_GENERATED_KEY_LENGTH_BITS = 256
+
+    /**
+     * How many old TOTP tokens still accept.
+     * Each token is 30s valid, but copying and SMS transmission of it can take additional seconds,
+     * so we add leeway to still accept given amount of older tokens
+     */
+    const val OTP_ACCEPT_OLD_TOKENS_COUNT = 1
+
+    // Graph time range
+    const val GRAPH_TIME_RANGE_HOURS = 24
+}

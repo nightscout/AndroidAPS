@@ -14,7 +14,8 @@ class DanaRsPacketBolusSetStepBolusStopTest : DanaRSTestBase() {
         whenever(rh.gs(anyInt())).thenReturn("SomeString")
 
         danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo()
-        val testPacket = DanaRSPacketBolusSetStepBolusStop(aapsLogger, rxBus, rh, danaPump)
+        bolusProgressData.start(1.0, isSMB = false)
+        val testPacket = DanaRSPacketBolusSetStepBolusStop(aapsLogger, bolusProgressData, rh, danaPump)
         // test message decoding
         testPacket.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))
         Assertions.assertEquals(false, testPacket.failed)

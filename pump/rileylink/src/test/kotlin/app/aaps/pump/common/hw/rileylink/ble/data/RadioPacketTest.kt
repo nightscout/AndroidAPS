@@ -2,15 +2,14 @@ package app.aaps.pump.common.hw.rileylink.ble.data
 
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b
-import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
+import org.apache.commons.lang3.NotImplementedException
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.apache.commons.lang3.NotImplementedException
 
 /**
  * Tests for RadioPacket class

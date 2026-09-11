@@ -1,39 +1,37 @@
 package app.aaps.pump.danar.services
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.IBinder
 import android.os.SystemClock
-import androidx.core.app.ActivityCompat
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
+import app.aaps.core.interfaces.pump.rfcomm.RfcommTransport
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.toast.ToastUtils.errorToast
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
-import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.SerialIOThread
 import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MessageHashTableBase
@@ -49,51 +47,60 @@ import app.aaps.pump.danar.comm.MsgHistoryRefill
 import app.aaps.pump.danar.comm.MsgHistorySuspend
 import app.aaps.pump.danar.comm.MsgPCCommStart
 import app.aaps.pump.danar.comm.MsgPCCommStop
-import dagger.android.DaggerService
-import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import app.aaps.core.objects.workflow.MetroService
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.HasMemberInjections
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import java.io.IOException
-import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Provider
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 import kotlin.math.min
 
 /**
  * Created by mike on 28.01.2018.
  */
-abstract class AbstractDanaRExecutionService : DaggerService() {
+// Metro reads this class now that interop is on. It is subclassable, so it must declare that its
+// injected fields are meant to be filled.
+@HasMemberInjections
+abstract class AbstractDanaRExecutionService : MetroService() {
 
-    @Inject lateinit var injector: HasAndroidInjector
+    // Android constructs this service, so [MetroService] fills these fields in onCreate from the same
+    // map the messages it builds use. A subclass missing from that map fails by name on start.
+    @Inject lateinit var injector: MetroMemberInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var context: Context
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var uiInteraction: UiInteraction
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var pumpEnactResultProvider: () -> PumpEnactResult
+    @Inject lateinit var rfcommTransport: RfcommTransport
+    @Inject lateinit var bolusProgressData: BolusProgressData
+    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    private val disposable = CompositeDisposable()
-    protected var mRfcommSocket: BluetoothSocket? = null
-    var isConnecting = false
+    // Service lifetime. appScope above is the application scope and must not be cancelled here.
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    // These are read/written across the connect() worker thread, the reader thread, the BT/app-exit
+    // observers (io scheduler), disconnect(), and the command methods - @Volatile for visibility.
+    @Volatile protected var mRfcommSocket: RfcommSocket? = null
+    @Volatile var isConnecting = false
         protected set
-    protected var mHandshakeInProgress = false
-    protected var mSerialIOThread: SerialIOThread? = null
+    @Volatile protected var mHandshakeInProgress = false
+    @Volatile protected var mSerialIOThread: SerialIOThread? = null
     protected var mBinder: IBinder? = null
     abstract fun messageHashTable(): MessageHashTableBase
 
-    @Suppress("PrivatePropertyName")
-    private val SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
     protected var lastApproachingDailyLimit: Long = 0
-    abstract fun updateBasalsInPump(profile: Profile): Boolean
-    abstract fun getPumpStatus()
+    abstract suspend fun updateBasalsInPump(profile: Profile): Boolean
+    abstract suspend fun getPumpStatus()
     abstract fun loadEvents(): PumpEnactResult?
     abstract fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean
     abstract fun highTempBasal(percent: Int, durationInMinutes: Int): Boolean // Rv2 only
@@ -104,33 +111,31 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     abstract fun extendedBolusStop(): Boolean
     abstract fun setUserOptions(): PumpEnactResult?
 
-    @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
-        disposable += rxBus
-            .toObservable(EventBTChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventBTChange ->
-                           if (event.state === EventBTChange.Change.DISCONNECT) {
-                               aapsLogger.debug(LTag.PUMP, "Device was disconnected " + event.deviceName) //Device was disconnected
-                               if (preferences.get(DanaStringKey.RName) == event.deviceName) {
-                                   mSerialIOThread?.disconnect("BT disconnection broadcast")
-                                   rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
-                               }
-                           }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           aapsLogger.debug(LTag.PUMP, "EventAppExit received")
-                           mSerialIOThread?.disconnect("Application exit")
-                           stopSelf()
-                       }, fabricPrivacy::logException)
+        // Service lifetime scope on IO, like the io scheduler used before, cancelled in onDestroy
+        // like the CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a
+        // scheduled collector could miss an event sent before it starts.
+        rxBus.toFlow(EventBTChange::class)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { event ->
+                if (event.state === EventBTChange.Change.DISCONNECT) {
+                    aapsLogger.debug(LTag.PUMP, "Device was disconnected " + event.deviceName) //Device was disconnected
+                    if (preferences.get(DanaStringNonKey.RName) == event.deviceName) {
+                        mSerialIOThread?.disconnect("BT disconnection broadcast")
+                        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+                    }
+                }
+            }
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(scope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                aapsLogger.debug(LTag.PUMP, "EventAppExit received")
+                mSerialIOThread?.disconnect("Application exit")
+                stopSelf()
+            }
     }
 
     override fun onDestroy() {
-        disposable.clear()
+        scope.cancel()
         super.onDestroy()
     }
 
@@ -162,12 +167,12 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
         mSerialIOThread?.disconnect("stopConnecting")
     }
 
-    @SuppressLint("MissingPermission") fun connect() {
+    fun connect() {
         if (isConnecting) return
         Thread(Runnable {
             mHandshakeInProgress = false
             isConnecting = true
-            getBTSocketForSelectedPump()
+            getSocketForSelectedPump()
             if (mRfcommSocket == null) {
                 isConnecting = false
                 return@Runnable  // Device not found
@@ -189,32 +194,30 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
         }).start()
     }
 
-    fun getBTSocketForSelectedPump() {
-        val deviceName = preferences.get(DanaStringKey.RName)
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-            (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
-                ?.bondedDevices?.firstOrNull { it.name == deviceName }?.let { mBTDevice ->
-                    try {
-                        mRfcommSocket = mBTDevice.createRfcommSocketToServiceRecord(SPP_UUID)
-                    } catch (e: IOException) {
-                        aapsLogger.error("Error creating socket: ", e)
-                        errorToast(context.applicationContext, "Error creating socket")
-                    }
-                } ?: { errorToast(context.applicationContext, R.string.devicenotfound) }
-        } else {
-            errorToast(context, app.aaps.core.ui.R.string.need_connect_permission)
+    fun getSocketForSelectedPump() {
+        val deviceName = preferences.get(DanaStringNonKey.RName)
+        mRfcommSocket = rfcommTransport.getSocketForDevice(deviceName)
+        if (mRfcommSocket == null) {
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.devicenotfound), EventShowSnackbar.Type.Error))
         }
     }
 
     fun bolusStop() {
-        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ ${BolusProgressData.delivered}")
+        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ ${bolusProgressData.state.value?.delivered?.cU ?: 0.0}")
         val stop = MsgBolusStop(injector)
         danaPump.bolusStopForced = true
         if (isConnected) {
             mSerialIOThread?.sendMessage(stop)
-            while (!danaPump.bolusStopped) {
+            // Bound the retries: re-check the connection each iteration and cap at 10s so a lost stop
+            // ack or a link drop mid-stop can't spin this thread forever.
+            val giveUpAt = System.currentTimeMillis() + 10 * 1000L
+            while (!danaPump.bolusStopped && isConnected && System.currentTimeMillis() < giveUpAt) {
                 mSerialIOThread?.sendMessage(stop)
                 SystemClock.sleep(200)
+            }
+            if (!danaPump.bolusStopped) {
+                aapsLogger.warn(LTag.PUMP, "bolusStop: no stop confirmation (connected=$isConnected) — forcing stopped after timeout")
+                danaPump.bolusStopped = true
             }
         } else {
             danaPump.bolusStopped = true
@@ -222,7 +225,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     }
 
     fun loadHistory(type: Byte): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!isConnected) return result
         val msg: MessageBase = when (type) {
             RecordTypes.RECORD_TYPE_ALARM     -> MsgHistoryAlarm(injector)
@@ -254,13 +257,13 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
         while (true) {
             val time = dateUtil.now()
             val timeToWholeMinute = 60000 - time % 60000
-            if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000) break
+            if (timeToWholeMinute !in 3000..59800) break
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.waitingfortimesynchronization, (timeToWholeMinute / 1000).toInt())))
             SystemClock.sleep(min(timeToWholeMinute, 100))
         }
     }
 
-    fun doSanityCheck() {
+    suspend fun doSanityCheck() {
         val (temporaryBasal, extendedBolus) = pumpSync.expectedPumpState()
 
         // Temporary basal
@@ -269,11 +272,12 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                 if (temporaryBasal.rate != danaPump.tempBasalPercent.toDouble()
                     || abs(temporaryBasal.timestamp - danaPump.tempBasalStart) > 10000
                 ) { // Close current temp basal
-                    uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(app.aaps.pump.danar.R.string.unsupported_action_in_pump), Notification.URGENT)
+                    notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                     aapsLogger.error(LTag.PUMP, "Different temporary basal found running AAPS: " + (temporaryBasal.toString() + " DanaPump " + danaPump.temporaryBasalToString()))
                     pumpSync.syncTemporaryBasalWithPumpId(
                         danaPump.tempBasalStart,
-                        danaPump.tempBasalPercent.toDouble(), danaPump.tempBasalDuration,
+                        PumpRate(danaPump.tempBasalPercent.toDouble()),
+                        danaPump.tempBasalDuration,
                         false,
                         PumpSync.TemporaryBasalType.NORMAL,
                         danaPump.tempBasalStart,
@@ -288,21 +292,22 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                     activePlugin.activePump.model(),
                     activePlugin.activePump.serialNumber()
                 )
-                uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(app.aaps.pump.danar.R.string.unsupported_action_in_pump), Notification.URGENT)
+                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                 aapsLogger.error(LTag.PUMP, "Temporary basal should not be running. Sending stop to AAPS")
             }
         } else {
             if (danaPump.isTempBasalInProgress) { // Create new
                 pumpSync.syncTemporaryBasalWithPumpId(
                     danaPump.tempBasalStart,
-                    danaPump.tempBasalPercent.toDouble(), danaPump.tempBasalDuration,
+                    PumpRate(danaPump.tempBasalPercent.toDouble()),
+                    danaPump.tempBasalDuration,
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
                     danaPump.tempBasalStart,
                     activePlugin.activePump.model(),
                     activePlugin.activePump.serialNumber()
                 )
-                uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(app.aaps.pump.danar.R.string.unsupported_action_in_pump), Notification.URGENT)
+                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                 aapsLogger.error(LTag.PUMP, "Temporary basal should be running: DanaPump " + danaPump.temporaryBasalToString())
             }
         }
@@ -312,11 +317,11 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                 if (extendedBolus.rate != danaPump.extendedBolusAbsoluteRate
                     || abs(extendedBolus.timestamp - danaPump.extendedBolusStart) > 10000
                 ) { // Close current extended
-                    uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(app.aaps.pump.danar.R.string.unsupported_action_in_pump), Notification.URGENT)
+                    notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                     aapsLogger.error(LTag.PUMP, "Different extended bolus found running AAPS: " + (extendedBolus.toString() + " DanaPump " + danaPump.extendedBolusToString()))
                     pumpSync.syncExtendedBolusWithPumpId(
                         danaPump.extendedBolusStart,
-                        danaPump.extendedBolusAmount,
+                        PumpRate(danaPump.extendedBolusAmount),
                         danaPump.extendedBolusDuration,
                         activePlugin.activePump.isFakingTempsByExtendedBoluses,
                         danaPump.tempBasalStart,
@@ -331,16 +336,16 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
                     activePlugin.activePump.model(),
                     activePlugin.activePump.serialNumber()
                 )
-                uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(app.aaps.pump.danar.R.string.unsupported_action_in_pump), Notification.URGENT)
+                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                 aapsLogger.error(LTag.PUMP, "Extended bolus should not be running. Sending stop to AAPS")
             }
         } else {
             if (danaPump.isExtendedInProgress) { // Create new
-                uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(app.aaps.pump.danar.R.string.unsupported_action_in_pump), Notification.URGENT)
+                notificationManager.post(NotificationId.UNSUPPORTED_ACTION_IN_PUMP, TextRef.AndroidRes(app.aaps.pump.danar.R.string.unsupported_action_in_pump))
                 aapsLogger.error(LTag.PUMP, "Extended bolus should not be running:  DanaPump " + danaPump.extendedBolusToString())
                 pumpSync.syncExtendedBolusWithPumpId(
                     danaPump.extendedBolusStart,
-                    danaPump.extendedBolusAmount,
+                    PumpRate(danaPump.extendedBolusAmount),
                     danaPump.extendedBolusDuration,
                     activePlugin.activePump.isFakingTempsByExtendedBoluses,
                     danaPump.tempBasalStart,

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Đơn vị</string>
+    <string name="setupwizard_units_prompt">Chọn đơn vị mà bạn muốn hiển thị giá trị</string>
+    <string name="next_button">Tiếp theo</string>
+    <string name="previous_button">Trước đó</string>
+    <string name="setupwizard_finish">KẾT THÚC</string>
+    <string name="welcome">Chào mừng</string>
+    <string name="welcometosetupwizard">Chào mừng đến với trình hướng dẫn cài đặt. Hệ thống sẽ hướng dẫn bạn từng bước trong quá trình thiết lập.\n</string>
+    <string name="end_user_license_agreement">Thỏa thuận cấp phép với người dùng cuối</string>
+    <string name="end_user_license_agreement_text">KHÔNG ĐƯỢC SỬ DỤNG ĐỂ RA QUYẾT ĐỊNH Y TẾ. CHƯƠNG TRÌNH KHÔNG ĐƯỢC BẢO HÀNH, TRONG MỨC CHO PHÉP THEO LUẬT HIỆN HÀNH. TRỪ KHI ĐƯỢC NÊU KHÁC BẰNG VĂN BẢN, CÁC CHỦ SỞ HỮU BẢN QUYỀN VÀ/HOẶC CÁC BÊN KHÁC CUNG CẤP CHƯƠNG TRÌNH \"NGUYÊN TRẠNG\" MÀ KHÔNG CÓ BẢO HÀNH DẠNG NÀO, DÙ RÕ RÀNG HAY NGỤ Ý, BAO GỒM NHƯNG KHÔNG GIỚI HẠN Ở BẢO HÀNH NGỤ Ý VỀ TÍNH THƯƠNG MẠI VÀ PHÙ HỢP CHO MỤC ĐÍCH CỤ THỂ. TOÀN BỘ RỦI RO VỀ CHẤT LƯỢNG VÀ HIỆU SUẤT CỦA CHƯƠNG TRÌNH SẼ DO BẠN CHỊU TRÁCH NHIỆM. NẾU CHƯƠNG TRÌNH BỊ LỖI, BẠN PHẢI CHỊU TOÀN BỘ CHI PHÍ CHO VIỆC BẢO TRÌ, SỬA CHỮA HOẶC KHẮC PHỤC.</string>
+    <string name="end_user_license_agreement_i_understand">TÔI ĐÃ HIỂU VÀ ĐỒNG Ý</string>
+    <string name="display_settings">Thiết lập Hiển thị</string>
+    <string name="low_mark">Mức THẤP</string>
+    <string name="high_mark">Mức CAO</string>
+    <string name="low_mark_comment">Giá trị thấp nhất trong mục tiêu (chỉ hiển thị)</string>
+    <string name="high_mark_comment">Giá trị cao nhất trong mục tiêu (chỉ hiển thị)</string>
+    <string name="storedsettingsfound">Đã tìm thấy cài đặt đã lưu</string>
+    <string name="master_password_summary">Mật khẩu chính được dùng để mã hóa bản sao lưu và ghi đè các bảo mật trong ứng dụng. Hãy nhớ nó hoặc lưu ở nơi an toàn.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Sử dụng giá trị của bữa ăn lớn nhất bạn thường ăn</string>
+    <string name="syncinfotext">Đồng bộ dữ liệu lên đám mây. Bạn có thể bỏ qua bước này ngay bây giờ, nhưng sẽ không thể hoàn thành các mục tiêu cho đến khi bạn thiết lập client Nightscout hoặc Tidepool.</string>
+    <string name="status_label">Trạng thái:</string>
+    <string name="diawarning">Lưu ý: Các cấu hình insulin mới yêu cầu DIA ít nhất 5 giờ. DIA 5–6 giờ trên cấu hình mới tương đương với DIA 3 giờ trên cấu hình insulin cũ.</string>
+    <string name="profile">Cấu hình</string>
+    <string name="doprofileswitch">Chuyển cấu hình</string>
+    <string name="exitwizard">Bỏ qua cài đặt nhanh</string>
+    <string name="setupwizard_sensitivity_description">Plugin Sensitivity được sử dụng để phát hiện độ nhạy và tính toán COB. Để biết thêm thông tin, hãy truy cập:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Chọn một trong các thuật toán có sẵn. Chúng được sắp xếp từ cũ đến mới. Thuật toán mới hơn thường mạnh hơn. Đừng quên đọc tài liệu OpenAPS và cấu hình trước khi sử dụng.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Vui lòng cấu hình RileyLink của bạn bên dưới. Sau khi chọn RileyLink, bạn có thể tiếp tục cài đặt khi trạng thái RileyLink hiển thị \'Đã kết nối\'. Việc này có thể mất khoảng một phút.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Lưu ý:</b> Tiếp tục cài đặt sau khi bơm được thiết lập.\n</string>
+    <string name="startobjective">Bắt đầu mục tiêu đầu tiên của bạn</string>
+    <string name="open_objectives">Mở mục tiêu</string>
+    <string name="setupwizard_permissions">Quyền truy cập</string>
+    <string name="setupwizard_profile_info">Tạo cấu hình với các tỷ lệ basal, IC, ISF và giá trị mục tiêu của bạn. Bạn có thể thêm nhiều cấu hình sau.</string>
+    <string name="setupwizard_permissions_info">AAPS cần quyền truy cập bộ nhớ để hoạt động đúng cách. Vui lòng cấp các quyền cần thiết bên dưới.</string>
+    <string name="setupwizard_pump_riley_link_status">Trạng thái RileyLink:</string>
+    <string name="setupwizard_client_control_title">Điều khiển từ thiết bị khách</string>
+    <string name="setupwizard_client_control_info">Ghép nối các thiết bị khách để chúng có thể gửi các lệnh đã được ký xác thực đến thiết bị chính này thông qua Nightscout. Đây là phương thức mới được khuyến nghị để điều khiển AAPS từ xa.</string>
+    <string name="setupwizard_ns_receive_info">Tính năng nhận điều trị và dữ liệu trực tiếp từ Nightscout (phương thức kém an toàn hơn) hiện được tắt theo mặc định. Chỉ mở các cài đặt bên dưới nếu bạn vẫn cần sử dụng. Tính năng này cần thiết nếu bạn muốn nhập dữ liệu thông qua Nightscout hoặc các ứng dụng của bên thứ ba.</string>
+    <string name="setupwizard_open_ns_receive_settings">Chấp nhận dữ liệu từ Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Ghép nối thiết bị khách này với AAPS trên thiết bị chính để có thể gửi lệnh qua kênh bảo mật.</string>
+    <string name="setupwizard_pairing_ws_warning">Cần có kết nối WebSocket với Nightscout để ghép nối. Hãy quay lại bước trước và bật kết nối này trước.</string>
+    <string name="setupwizard_pairing_status_master">Thiết bị khách đã ghép nối: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Chưa có thiết bị khách nào được ghép nối</string>
+    <string name="setupwizard_pairing_status_client_paired">Đã ghép nối với thiết bị chính</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Chưa được ghép nối</string>
+    <string name="readstatus">Đọc trạng thái</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Thiết bị này dường như không hỗ trợ loại trừ khỏi tối ưu pin – bạn có thể gặp các vấn đề về hiệu suất.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Bạn muốn sử dụng loại bơm nào với AAPS?</string>
+    <string name="configbuilder_aps_description">Thuật toán APS nào sẽ thực hiện điều chỉnh điều trị?</string>
+    <string name="configbuilder_sync_description">Các plugin tải lên dữ liệu, đồng bộ hóa và giao tiếp.</string>
+    <string name="configbuilder_bgsource_description">Bạn muốn AAPS lấy dữ liệu từ đâu?</string>
+    <string name="configbuilder_sensitivity_description">Bạn muốn chọn thuật toán độ nhạy nào?</string>
+    <string name="allow_hardware_pump_text">Chú ý: Nếu bạn kích hoạt và kết nối với phần cứng bơm insulin, AAPS sẽ sao chép các thiết lập liều nền từ cấu hình sang bơm, ghi đè lên tốc độ liều nền hiện có được lưu trên bơm. Hãy đảm bảo rằng bạn đã có thiết lập liều nền chính xác trong AAPS. Nếu bạn không chắc chắn hoặc không muốn ghi đè các thiết lập liều nền trên bơm, hãy nhấn Hủy và thực hiện lại việc chuyển sang bơm sau.</string>
+    <string name="nsclient_version_does_not_match">Phiên bản AAPSClient không khớp với phiên bản AAPS. Vui lòng cập nhật.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <string name="loading">Đang tải…</string>
+    <string name="warning_wrong_directory_selected">Đã chọn sai thư mục</string>
+    <string name="warning_wrong_directory_message">Bạn đã chọn thư mục con “%1$s” thay vì thư mục gốc của AAPS. Vui lòng chọn thư mục AAPS cấp cha. Ứng dụng sẽ tự động tạo và quản lý các thư mục con.</string>
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

@@ -29,13 +29,6 @@ class Alarms : IPreference<Alarms> {
 
     var needToStopBeep = HashSet<AlarmCode>()
 
-    init {
-        initObject()
-    }
-
-    fun initObject() {
-    }
-
     fun clear() {
         registered.clear()
         occurred.clear()

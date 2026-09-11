@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Wrażliwość Oref1</string>
+    <string name="sensitivity_aaps">Wrażliwość AAPS</string>
+    <string name="sensitivity_weighted_average">Wrażliwość ŚredniaWażona</string>
+    <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
+    <string name="description_sensitivity_oref1">Wrażliwość oblicza się na podstawie danych z ostatnich 8 lub 24 godzin (przy użyciu danych o wyższej wrażliwości). Węglowodany (jeśli nie są wchłonięte) są skracane po upływie czasu określonego w ustawieniach. Wtyczka również oblicza UAM.</string>
+    <string name="description_sensitivity_weighted_average">Wrażliwość jest obliczana jako średnia ważona z odchyleń. Nowsze wartości mają większą wagę. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu. Algorytm ten najszybciej śledzi zmiany wrażliwości.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM jest wyłączone ponieważ zależy od wtyczki wrażliwości Oref1</string>
+    <string name="absorption_settings_title">Ustawienia wchłaniania</string>
+</resources>

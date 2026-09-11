@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="calibration_shortname">CAL</string>
+    <string name="no_calibration_name">Žádná kalibrace</string>
+    <string name="description_no_calibration">"Není použito žádné přepsání kalibrace. Hodnoty senzoru jsou použity tak, jak jsou. Použijte to, pokud je senzor již továrně kalibrován a přesný."</string>
+    <string name="linear_calibration_name">Lineární kalibrace</string>
+    <string name="description_linear_calibration">"Lineární kalibrační přepsání (sklon a posunutí) vypočtené z hodnot z prstu pro každý sensor. Nedávné položky jsou váženy více. Přepsání je aplikováno po spuštění aktuální relace senzoru; první 2 hodiny jsou přeskočeny jako zahřívání."</string>
+    <string name="sensor_change_detected_text">Možná změna senzoru byla zjištěna v %1$s. Označit jako nový senzor?</string>
+    <string name="sensor_change_detected_action">Zaznamenat výměnu senzoru</string>
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Zaznamenejte změnu senzoru pro povolení kalibrace.</string>
+    <string name="cal_status_warmup">Zahřívání senzoru — kalibrace aktivní po %1$s.</string>
+    <string name="cal_status_need_more_entries">Potřebují alespoň 2 záznamy z prstu (v současné době %1$d).</string>
+    <string name="cal_status_unsafe_fit">Hodnota mimo bezpečný rozsah – kalibrace se nepoužije.</string>
+    <string name="cal_status_applied">Kalibrace použita.</string>
+    <string name="cal_status_applied_offset_only">Kalibrace pouze u ofsetu – vzdálenost hodnot je příliš úzká pro výpočet sklonu.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibrace použita - sklon je posunut do bezpečného rozsahu. Přidejte více vstupů pro uvolnění.</string>
+    <string name="cal_slope_offset">Sklon %1$.2f, korekce střední hodnoty %2$s</string>
+    <string name="cal_session_started">Relace začala: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Zaznamenat výměnu senzoru</string>
+    <string name="cal_add_calibration">Přidat kalibraci</string>
+    <string name="cal_entries_header">Položky z prstu (%1$d)</string>
+    <string name="cal_no_entries">Zatím žádné hodnoty z prstu.</string>
+    <string name="cal_entry_pair">Hodnota z prstu %1$s → senzor %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Odstranit záznam?</string>
+    <string name="cal_remove_entry_message">Toto zruší platnost záznamu. Přizpůsobení bude přepočítáno.</string>
+    <string name="cal_chart_entry_readout">Položka %1$d/%2$d · %3$s · senzor %4$s → Gly %5$s</string>
+</resources>

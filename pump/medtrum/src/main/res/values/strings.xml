@@ -16,22 +16,15 @@
     <string name="patch_reset_after_primed_error">Patch reset detected after priming! Remove the patch and start a new patch.</string>
 
     <!-- overview fragment -->
-    <string name="ble_status_label">BLE Status</string>
-    <string name="last_connection_label">Last connected</string>
     <string name="active_bolus_label">Active bolus</string>
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Basal type</string>
-    <string name="basal_rate_label">Basal rate</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Pump type</string>
     <string name="fw_version_label">FW version</string>
     <string name="patch_no_label">Patch no</string>
     <string name="patch_expiry_label">Patch expires</string>
     <string name="patch_activation_time_label">Activation</string>
-    <string name="refresh_label">Refresh</string>
     <string name="reset_alarms_label">Reset alarms</string>
     <string name="change_patch_label">Change Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
@@ -59,13 +52,22 @@
     <string name="pump_time_update_failed">Failed to update pump timezone, snooze message and refresh manually.</string>
     <string name="bolus_error">Bolus error</string>
 
+    <!-- Status strings -->
+    <string name="status_idle">Idle</string>
+    <string name="status_filled">Filled</string>
+    <string name="status_priming">Priming</string>
+    <string name="status_primed">Primed</string>
+    <string name="status_ejecting">Ejecting</string>
+    <string name="status_ejected">Ejected</string>
+    <string name="status_active">Active</string>
+    <string name="status_stopped">Stopped</string>
+
     <!-- wizard-->
     <string name="retry">Retry</string>
-    <string name="next">Next</string>
-    <string name="discard">Discard</string>
 
     <string name="step_prepare_patch">Activate Patch</string>
     <string name="step_prepare_patch_connect">Connect and Fill</string>
+    <string name="step_select_insulin">Select Insulin</string>
     <string name="step_prime">Prime</string>
     <string name="step_priming">Priming</string>
     <string name="step_priming_complete">Priming Complete</string>
@@ -75,26 +77,21 @@
     <string name="step_deactivate">Deactivate Patch</string>
     <string name="step_deactivating">Deactivating...</string>
     <string name="step_deactivate_complete">Patch deactivated</string>
+    <string name="unpair_confirm_message">This will clear the stored pump serial number and disconnect. Activate a new patch to scan for a pump.</string>
     <string name="step_retry_activation">Activation in progress</string>
     <string name="unexpected_state">Unexpected state: %1$s</string>
-    <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
-    <string name="no_sn_in_settings">No serial number known. Please enter pumpbase serial number in settings and try again.</string>
-
-    <string name="base_serial">Pump Base Serial: %1$X</string>
+    <string name="ble_scan_connect_pump_base_first">Connect the pump base to a fresh patch to power it on, then select it from the list below.</string>
     <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>
-    <string name="patch_not_active_note">Pump base should not be connected to the patch until the next step!</string>
-    <string name="connect_pump_base">Connect pump base to a new patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
+    <string name="connect_pump_base">Make sure the pump base is connected to the patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
     <string name="note_min_70_units">Note: A minimum of 70 units is required for activation.</string>
     <string name="reservoir_text_and_level">Reservoir: %.2f U</string>
     <string name="do_not_attach_to_body">Do not attach the patch to the body yet.</string>
     <string name="half_press_needle">Half-press needle button. Then tap <b>Next</b> to start prime.</string>
     <string name="wait_for_priming">Please wait for the priming to complete.</string>
-    <string name="priming_error">Failed to prime, press <b>Retry</b> to try again.</string>
     <string name="press_next">Press <b>Next</b> to continue.</string>
     <string name="press_next_to_start_activation">Press <b>Next</b> to start activation.</string>
     <string name="remove_safety_lock">Remove the safety lock. Attach the pump to the body. Press the needle button.</string>
     <string name="activating_pump">Activating pump and setting initial basal rate. Please Wait.</string>
-    <string name="activating_error">Failed to activate, press <b>Retry</b> to try again.</string>
     <string name="activating_complete">New patch activated. %.2f Units remaining.</string>
     <string name="can_export_settings">You can export the settings to be able to recover this patch session later.</string>
     <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>
@@ -114,14 +111,16 @@
     <string name="reading_activation_status">Please wait, reading activation status from pump.</string>
 
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">Unreachable alert forced enabled, because Medtrum patch can fail and be unreachable.</string>
-    <string name="pump_unreachable_threshold_minutes_summary">Advised to set to 30 minutes, because Medtrum patch can fail and be unreachable.</string>
-    <string name="sn_input_title">Serial Number</string>
-    <string name="sn_input_summary">Enter the serial number of your pump base.</string>
-    <string name="sn_input_invalid">Invalid serial number!</string>
-    <string name="pump_unsupported">Pump untested: %1$s! Please contact us at discord or github for support</string>
     <string name="alarm_setting_title">Alarm Settings</string>
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
+    <string name="alarm_setting_light_vibrate_beep">Light, vibrate and beep</string>
+    <string name="alarm_setting_light_vibrate">Light and vibrate</string>
+    <string name="alarm_setting_light_beep">Light and beep</string>
+    <string name="alarm_setting_light">Light</string>
+    <string name="alarm_setting_vibrate_beep">Vibrate and beep</string>
+    <string name="alarm_setting_vibrate">Vibrate</string>
+    <string name="alarm_setting_beep">Beep</string>
+    <string name="alarm_setting_silent">Silent</string>
     <string name="pump_warning_notification_title">Notification on pump warning</string>
     <string name="pump_warning_notification_summary">Show notification on non critical pump warnings: low battery, low reservoir (20 units) and expires soon. Recommended to leave enabled when pump alarms are set to silent.</string>
     <string name="pump_warning_expiry_hour_title">Pump expiry warning [hours]</string>

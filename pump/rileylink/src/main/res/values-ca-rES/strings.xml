@@ -2,25 +2,11 @@
 <resources>
     <!-- PumpDeviceState -->
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Escanejar</string>
-    <string name="riley_link_ble_config_scan_stop">Aturar</string>
-    <string name="riley_link_ble_config_scan_selected">Seleccionat</string>
-    <string name="riley_link_ble_config_scan_title">Escaneig RileyLink</string>
     <string name="riley_link_ble_config_scan_scanning">Escanejant</string>
-    <string name="riley_link_ble_config_scan_finished">Escaneig finalitzat</string>
-    <string name="riley_link_ble_config_scan_error">Error d\'escaneig: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Mai</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink seleccionat actualment</string>
-    <string name="riley_link_ble_config_remove_riley_link">Eliminar</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Esteu segurs que voleu eliminar el vostre RileyLink?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Eliminar RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Cap RileyLink seleccionat</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Configuració</string>
-    <string name="rileylink_settings_tab2">Històric</string>
     <string name="rileylink_status">Estat RileyLink</string>
     <string name="medtronic_pump_status">Estat bomba</string>
-    <string name="title_activity_rileylink_settings">Configuració RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adreça:</string>
     <string name="rileylink_name">Nom:</string>
@@ -56,7 +42,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth desactivat</string>
     <string name="rileylink_error_no_bt_adapter">No hi ha adaptador Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Error en la posada a punt</string>
-    <string name="rileylink_error_pump_unreachable">Bomba no accessible</string>
     <string name="rileylink_error_pod_unreachable">Pod no accessible</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
@@ -72,5 +57,4 @@
         <item quantity="one">%1$d hora</item>
         <item quantity="other">%1$d hores</item>
     </plurals>
-    <string name="rileylink_configuration">Configuració RileyLink</string>
 </resources>

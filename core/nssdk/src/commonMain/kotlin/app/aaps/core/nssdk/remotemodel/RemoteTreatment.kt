@@ -1,0 +1,197 @@
+package app.aaps.core.nssdk.remotemodel
+
+import app.aaps.core.nssdk.localmodel.treatment.EventType
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+/*
+* Depending on the type, different other fields are present.
+* Those technically need to be optional.
+*
+* On upload a sanity check still needs to be done to verify that all mandatory fields for that type are there.
+*
+* TODO: Find out all types with their optional and mandatory fields
+*
+* */
+@Serializable
+internal data class RemoteTreatment(
+    @SerialName("identifier")
+    val identifier: String? = null,       // string Main addressing, required field that identifies document in the collection. The client should not create the identifier, the server automatically assigns it when the document is inserted.
+    @SerialName("date")
+    var date: Long? = null,                    // integer($int64) or string required timestamp when the record or event occurred, you can choose from three input formats Unix epoch in milliseconds (1525383610088), Unix epoch in seconds (1525383610), ISO 8601 with optional timezone ('2018-05-03T21:40:10.088Z' or '2018-05-03T23:40:10.088+02:00')
+    @SerialName("mills") val mills: Long? = null,                  // integer($int64) or string required timestamp when the record or event occurred, you can choose from three input formats Unix
+    @SerialName("timestamp")
+    val timestamp: Long? = null,          // integer($int64) or string required timestamp when the record or event occurred, you can choose from three input formats Unix  epoch in milliseconds (1525383610088), Unix epoch in seconds (1525383610), ISO 8601 with optional timezone ('2018-05-03T21:40:10.088Z' or '2018-05-03T23:40:10.088+02:00')
+    @SerialName("created_at") val created_at: String? = null,       // integer($int64) or string timestamp on previous version of api, in my examples, a lot of treatments don't have date, only created_at, some of them with string others with long...
+    @SerialName("utcOffset")
+    var utcOffset: Long? = null,          // integer Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming document) or it is automatically parsed from the date field.
+    @SerialName("app") var app: String? = null,                   // Application or system in which the record was entered by human or device for the first time.
+    @SerialName("device") val device: String? = null,              // string The device from which the data originated (including serial number of the device, if it is relevant and safe).
+    @SerialName("srvCreated")
+    val srvCreated: Long? = null,         // integer($int64) example: 1525383610088 The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
+    @SerialName("subject") val subject: String? = null,            // string Name of the security subject (within Nightscout scope) which has created the document. This field is automatically set by the server from the passed token or JWT.
+    @SerialName("srvModified")
+    val srvModified: Long? = null,       // integer($int64) example: 1525383610088 The server's timestamp of the last document modification in the database (Unix epoch in ms). This field appears only for documents which were somehow modified by API v3 (inserted, updated or deleted).
+    @SerialName("modifiedBy") val modifiedBy: String? = null,      // string Name of the security subject (within Nightscout scope) which has patched or deleted the document for the last time. This field is automatically set by the server.
+    @SerialName("isValid")
+    val isValid: Boolean? = null,           // boolean A flag set by the server only for deleted documents. This field appears only within history operation and for documents which were deleted by API v3 (and they always have a false value)
+    @SerialName("isReadOnly") val isReadOnly: Boolean? = null,     // boolean A flag set by client that locks the document from any changes. Every document marked with isReadOnly=true is forever immutable and cannot even be deleted.
+    @SerialName("eventType")
+    val eventType: EventType? = null,      // string "BG Check", "Snack Bolus", "Meal Bolus", "Correction Bolus", "Carb Correction", "Combo Bolus", "Announcement", "Note", "Question", "Exercise", "Site Change", "Sensor Start", "Sensor Change", "Pump Battery Change", "Insulin Change", "Temp Basal", "Profile Switch", "D.A.D. Alert", "Temporary Target", "OpenAPS Offline", "Bolus Wizard"
+    @SerialName("glucose") val glucose: Double? = null,            // double Current glucose
+    @SerialName("glucoseType") val glucoseType: String? = null,    // string example: "Sensor", "Finger", "Manual"
+    @SerialName("units") val units: String? = null,                // string The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
+    @SerialName("carbs") val carbs: Double? = null,                // number... Amount of carbs given.
+    @SerialName("protein") val protein: Int? = null,               // number... Amount of protein given.
+    @SerialName("fat") val fat: Int? = null,                       // number... Amount of fat given.
+    @SerialName("insulin") val insulin: Double? = null,            // number... Amount of insulin, if any.
+    /** Duration in minutes */
+    @SerialName("duration") val duration: Long? = null,             // number... Duration in minutes.
+    /** Duration in milliseconds */
+    @SerialName("durationInMilliseconds") val durationInMilliseconds: Long? = null, // number... Duration in milliseconds.
+    @SerialName("preBolus") val preBolus: Int? = null,             // number... How many minutes the bolus was given before the meal started.
+    @SerialName("splitNow") val splitNow: Int? = null,             // number... Immediate part of combo bolus (in percent).
+    @SerialName("splitExt") val splitExt: Int? = null,             // number... Extended part of combo bolus (in percent).
+    @SerialName("percent") val percent: Double? = null,            // number... Eventual basal change in percent.
+    @SerialName("absolute") val absolute: Double? = null,          // number... Eventual basal change in absolute value (insulin units per hour).
+    @SerialName("targetTop") val targetTop: Double? = null,        // number... Top limit of temporary target.
+    @SerialName("targetBottom") val targetBottom: Double? = null,  // number... Bottom limit of temporary target.
+    @SerialName("profile") val profile: String? = null,            // string Name of the profile to which the pump has been switched.
+    @SerialName("reason") val reason: String? = null,              // string For example the reason why the profile has been switched or why the temporary target has been set.
+    @SerialName("mode") val mode: String? = null,                  // string RunningMode
+    @SerialName("location") val location: String? = null,              // string Location for site management defined in TE.Location
+    @SerialName("arrow") val arrow: String? = null,                 // string Arrow for site management defined in TE.Arrow
+    @SerialName("autoForced") val autoForced: Boolean? = null,     // boolean RunningMode
+    @SerialName("reasons") val reasons: String? = null,            // string RunningMode
+    @SerialName("notes") val notes: String? = null,                // string Description/notes of treatment.
+    @SerialName("enteredBy") val enteredBy: String? = null,        // string Who entered the treatment.
+
+    @SerialName("endId") val endId: Long? = null,                  // long id of record which ended this
+    @SerialName("pumpId") val pumpId: Long? = null,                // long or "Meal Bolus", "Correction Bolus", "Combo Bolus" ex  4102 not sure if long or int
+    @SerialName("pumpType") val pumpType: String? = null,          // string "Meal Bolus", "Correction Bolus", "Combo Bolus" ex "ACCU_CHEK_INSIGHT_BLUETOOTH",
+    @SerialName("pumpSerial") val pumpSerial: String? = null,      // string "Meal Bolus", "Correction Bolus", "Combo Bolus" "33013206",
+
+    // other fields found in examples but not in documentation
+    @SerialName("profileJson") val profileJson: String? = null,            // string "Profile Switch" ex json toString "{\"units\":\"mg\\/dl\",\"dia\":5,\"timezone\":\"Africa\\/Cairo\",
+    // \"sens\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":60},{\"time\":\"07:00\",\"timeAsSeconds\":25200,\"value\":60},{\"time\":\"08:00\",\"timeAsSeconds\":28800,\"value\":61.33333333333333},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":65.33333333333333},{\"time\":\"10:00\",\"timeAsSeconds\":36000,\"value\":69.33333333333333},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":73.33333333333333},{\"time\":\"13:00\",\"timeAsSeconds\":46800,\"value\":72},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":68},{\"time\":\"15:00\",\"timeAsSeconds\":54000,\"value\":65.33333333333333},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":65.33333333333333}],\"carbratio\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.7333333333333325},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":7.333333333333333},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":6.666666666666666}],\"basal\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0.5249999999999999},{\"time\":\"01:00\",\"timeAsSeconds\":3600,\"value\":0.585},{\"time\":\"02:00\",\"timeAsSeconds\":7200,\"value\":0.6375},{\"time\":\"03:00\",\"timeAsSeconds\":10800,\"value\":0.5625},{\"time\":\"04:00\",\"timeAsSeconds\":14400,\"value\":0.4575},{\"time\":\"05:00\",\"timeAsSeconds\":18000,\"value\":0.5175},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":0.48},{\"time\":\"07:00\",\"timeAsSeconds\":25200,\"value\":0.51},{\"time\":\"08:00\",\"timeAsSeconds\":28800,\"value\":0.48750000000000004},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":0.48},{\"time\":\"10:00\",\"timeAsSeconds\":36000,\"value\":0.48750000000000004},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":0.5025000000000001},{\"time\":\"12:00\",\"timeAsSeconds\":43200,\"value\":0.5549999999999999},{\"time\":\"13:00\",\"timeAsSeconds\":46800,\"value\":0.5700000000000001},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":0.5700000000000001},{\"time\":\"15:00\",\"timeAsSeconds\":54000,\"value\":0.5775},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":0.51},{\"time\":\"17:00\",\"timeAsSeconds\":61200,\"value\":0.54},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":0.48750000000000004},{\"time\":\"19:00\",\"timeAsSeconds\":68400,\"value\":0.5249999999999999},{\"time\":\"20:00\",\"timeAsSeconds\":72000,\"value\":0.46499999999999997},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":0.46499999999999997},{\"time\":\"22:00\",\"timeAsSeconds\":79200,\"value\":0.43499999999999994},{\"time\":\"23:00\",\"timeAsSeconds\":82800,\"value\":0.41250000000000003}],\"target_low\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":100},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":90},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":100},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":90},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":100},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":90},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":100}],\"target_high\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":100},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":90},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":100},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":90},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":100},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":90},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":100}]}",
+    @SerialName("originalProfileName") val originalProfileName: String? = null, // string "Effective Profile Switch"
+    @SerialName("originalCustomizedName") val originalCustomizedName: String? = null, // string "Effective Profile Switch"
+    @SerialName("originalTimeshift") val originalTimeshift: Long? = null,  // long "Effective Profile Switch"
+    @SerialName("originalPercentage") val originalPercentage: Int? = null, // int "Effective Profile Switch"
+    @SerialName("originalDuration") val originalDuration: Long? = null,    // long "Effective Profile Switch", RunningMode
+    @SerialName("originalEnd") val originalEnd: Long? = null,              // long "Effective Profile Switch"
+    @SerialName("icfg") val iCfg: RemoteICfg? = null,              // long "Effective Profile Switch"
+
+    @SerialName("bolusCalculatorResult")
+    val bolusCalculatorResult: String? = null, // string "Bolus Wizard" json toString ex "bolusCalculatorResult": "{\"basalIOB\":-0.247,\"bolusIOB\":-1.837,\"carbs\":45.0,\"carbsInsulin\":9.0,\"cob\":0.0,\"cobInsulin\":0.0,\"dateCreated\":1626202788810,\"glucoseDifference\":44.0,\"glucoseInsulin\":0.8979591836734694,\"glucoseTrend\":5.5,\"glucoseValue\":134.0,\"ic\":5.0,\"id\":331,\"interfaceIDs_backing\":{\"nightscoutId\":\"60ede2a4c574da0004a3869d\"},\"isValid\":true,\"isf\":49.0,\"note\":\"\",\"otherCorrection\":0.0,\"percentageCorrection\":90,\"profileName\":\"Tuned 13/01 90%Lyum\",\"superbolusInsulin\":0.0,\"targetBGHigh\":90.0,\"targetBGLow\":90.0,\"timestamp\":1626202783325,\"totalInsulin\":7.34,\"trendInsulin\":0.336734693877551,\"utcOffset\":7200000,\"version\":1,\"wasBasalIOBUsed\":true,\"wasBolusIOBUsed\":true,\"wasCOBUsed\":true,\"wasGlucoseUsed\":true,\"wasSuperbolusUsed\":false,\"wasTempTargetUsed\":false,\"wasTrendUsed\":true,\"wereCarbsUsed\":false}",
+    @SerialName("type") val type: String? = null,                          // string "Meal Bolus", "Correction Bolus", "Combo Bolus", "Temp Basal" type of bolus "NORMAL", "SMB", "FAKE_EXTENDED"
+    @SerialName("isSMB") val isSMB: Boolean? = null,                        // boolean "Meal Bolus", "Correction Bolus", "Combo Bolus"
+    @SerialName("enteredinsulin") val enteredinsulin: Double? = null,      // number... "Combo Bolus" insulin is missing only enteredinsulin field found
+    @SerialName("relative") val relative: Double? = null,                  // number... "Combo Bolus", "extendedEmulated" (not in doc see below)
+    @SerialName("isEmulatingTempBasal") val isEmulatingTempBasal: Boolean? = null,  // boolean "Combo Bolus", "extendedEmulated" (not in doc see below)
+    @SerialName("isAnnouncement") val isAnnouncement: Boolean? = null,      // boolean "Announcement"
+    @SerialName("rate") val rate: Double? = null,                          // Double "Temp Basal" absolute rate (could be calculated with percent and profile information...)
+    @SerialName("extendedEmulated") var extendedEmulated: RemoteTreatment? = null,  // Gson of emulated EB
+    @SerialName("timeshift") val timeshift: Long? = null,                   // integer "Profile Switch"
+    @SerialName("percentage") val percentage: Int? = null,                 // integer "Profile Switch"
+    @SerialName("isBasalInsulin") val isBasalInsulin: Boolean? = null      // boolean "Bolus"
+) {
+
+    /**
+     * Best timestamp this record can offer, in milliseconds.
+     *
+     * `date` is what AAPS and every API v3 writer send, so it is almost always the answer. The rest
+     * of the chain is for older API v1 documents and other uploaders, which often carry only
+     * `created_at` - as the comment on that field says, "some of them with string others with long".
+     */
+    fun timestamp(): Long =
+        date ?: mills ?: timestamp ?: created_at?.let { parseCreatedAt(it) } ?: 0L
+
+    /**
+     * `created_at` arrives in two shapes and both have to work.
+     *
+     * It is declared `String?`, but a number in that position is coerced to its text form, so an
+     * epoch written as `1525383610088` reaches here as the **digits** `"1525383610088"`. joda's ISO
+     * parser cannot read that and used to throw, which the catch turned into `0L` - putting the
+     * treatment at the epoch, in 1970, with no error anywhere. The epoch form is tried first now.
+     *
+     * Seconds are not accepted on purpose. `1525383610` is a valid epoch in seconds and also a valid
+     * epoch in milliseconds (17 January 1970), and nothing in the document says which is meant, so
+     * guessing would trade a visible 1970 date for an invisible wrong one.
+     */
+    private fun parseCreatedAt(createdAt: String): Long {
+        val trimmed = createdAt.trim()
+        // Digits only (optionally signed) means an epoch, not an ISO date.
+        if (trimmed.isNotEmpty() && trimmed.all { it.isDigit() || it == '-' })
+            trimmed.toLongOrNull()?.let { return it }
+        return fromISODateString(trimmed)
+    }
+
+    /**
+     * Lenient ISO 8601 parsing, matching what joda's `ISODateTimeFormat.dateTimeParser()` used to
+     * accept here. joda is a JVM library, so it cannot go to iOS; kotlinx-datetime is multiplatform
+     * but strict, and a strict parser would return `0L` for shapes that work today - putting the
+     * treatment in 1970 with no error anywhere.
+     *
+     * The trick is to take any explicit offset off the end **first**, then parse what is left as a
+     * plain local value. That way one small parser covers every shape rather than needing a format
+     * per variant:
+     *
+     * - `2026-08-06T04:56:19.555Z`, `...+02:00`, `...+0200`, `...-04:00` -> that exact instant
+     * - `2026-08-06T04:56:19.555`, `2026-08-06T04:56` -> **local** time, as joda read it
+     * - `2026-08-06` -> **local** midnight
+     * - lower case `t` / `z` -> accepted
+     * - anything else -> `0L`, never a throw
+     *
+     * `CreatedAtParsingTest` pins all of it against the values joda produced.
+     */
+    private fun fromISODateString(isoDateString: String): Long {
+        val text = isoDateString.trim().uppercase()
+        if (text.isEmpty()) return 0L
+
+        // Peel off a trailing zone designator, so the rest is a plain local date-time.
+        var local = text
+        var offset: UtcOffset? = null
+        if (text.endsWith("Z")) {
+            local = text.dropLast(1)
+            offset = UtcOffset.ZERO
+        } else {
+            OFFSET_AT_END.find(text)?.let { match ->
+                val parsed = runCatching { UtcOffset.parse(withOffsetColon(match.value)) }.getOrNull()
+                if (parsed != null) {
+                    local = text.substring(0, match.range.first)
+                    offset = parsed
+                }
+            }
+        }
+
+        val zone = TimeZone.currentSystemDefault()
+
+        runCatching { LocalDateTime.parse(local) }.getOrNull()?.let { dateTime ->
+            val instant = offset?.let { dateTime.toInstant(it) } ?: dateTime.toInstant(zone)
+            return instant.toEpochMilliseconds()
+        }
+        // Date only. joda gave local midnight, and a date without a time never carries an offset.
+        runCatching { LocalDate.parse(local) }.getOrNull()?.let { date ->
+            return date.atStartOfDayIn(zone).toEpochMilliseconds()
+        }
+        return 0L
+    }
+
+}
+
+// File scope, not a companion: `@Serializable` generates its own companion to carry `serializer()`,
+// and declaring a private one here would make that private too.
+
+/** A trailing `+HH:MM` / `+HHMM` offset. Anchored so it cannot match the date's own dashes. */
+private val OFFSET_AT_END = Regex("""[+-]\d{2}:?\d{2}$""")
+
+/** `+0200` -> `+02:00`; already-correct input is returned unchanged. */
+private fun withOffsetColon(offset: String): String =
+    if (offset.contains(':')) offset else offset.substring(0, 3) + ":" + offset.substring(3)

@@ -16,8 +16,9 @@ import app.aaps.pump.medtronic.defs.MedtronicDeviceType
 import app.aaps.pump.medtronic.defs.PumpBolusType
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.experimental.and
 
 /**
@@ -27,8 +28,9 @@ import kotlin.experimental.and
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
-@Singleton
-class MedtronicPumpHistoryDecoder @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class MedtronicPumpHistoryDecoder(
     aapsLogger: AAPSLogger,
     medtronicUtil: MedtronicUtil
 ) : MedtronicHistoryDecoder<PumpHistoryEntry>(aapsLogger, medtronicUtil) {

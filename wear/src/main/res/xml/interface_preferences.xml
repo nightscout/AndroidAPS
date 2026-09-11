@@ -2,14 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/input_design"
-        android:entryValues="@array/input_design_values"
-        android:key="@string/key_input_design"
-        android:title="@string/pref_input_design"
-        android:summary="%s" />
-
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="showWizard"

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_plugin_shortname">灵敏度</string>
+    <string name="sensitivity_oref1">灵敏度 Oref1</string>
+    <string name="sensitivity_aaps">灵敏度 AAPS</string>
+    <string name="sensitivity_weighted_average">灵敏度 WeightedAverage</string>
+    <string name="description_sensitivity_aaps">灵敏度的计算方式与 Oref0 相同, 但可以指定过去的时间范围。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的</string>
+    <string name="description_sensitivity_oref1">根据过去的8小时或24小时数据计算胰岛素灵敏度（使用更敏感的数据）。碳水化合物（如果没有被吸收）则在首选项中指定的时间后被核减。插件还计算UAM。</string>
+    <string name="description_sensitivity_weighted_average">灵敏度计算根据偏差的加权平均值。新的偏差有更高的权重。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的好。此算法在敏感度变化后最快。</string>
+    <string name="uam_disabled_oref1_not_selected">UAM被禁用, 因为它依赖于 Oref1 敏感都插件</string>
+    <string name="absorption_settings_title">食物吸收设置</string>
+</resources>

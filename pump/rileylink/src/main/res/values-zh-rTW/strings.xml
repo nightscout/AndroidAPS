@@ -7,32 +7,18 @@
     <string name="pump_status_active">使用中</string>
     <string name="pump_status_error_comm">通訊錯誤</string>
     <string name="pump_status_timeout_comm">通訊逾時</string>
-    <string name="pump_status_pump_unreachable">幫浦無法使用</string>
     <string name="pump_status_invalid_config">配置無效</string>
+    <string name="medtronic_pump_encoding_title">Medtronic 編碼</string>
     <string name="medtronic_pump_encoding_4b6b_local">軟體 4b6b 編碼</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">硬體 4b6b 編碼</string>
     <string name="medtronic_pump_frequency_us_ca">美國與加拿大（916 MHz）</string>
     <string name="medtronic_pump_frequency_worldwide">全球（868 MHz）</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">掃描</string>
-    <string name="riley_link_ble_config_scan_stop">停止</string>
-    <string name="riley_link_ble_config_scan_selected">已選擇</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink 掃描</string>
     <string name="riley_link_ble_config_scan_scanning">掃描中</string>
-    <string name="riley_link_ble_config_scan_finished">掃描完成</string>
-    <string name="riley_link_ble_config_scan_error">掃描錯誤：%1$d</string>
     <string name="riley_link_ble_config_connected_never">從未連線</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">目前選擇的 RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">移除</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">你確定要移除你的 RileyLink 嗎？</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">移除 RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">未選擇 RileyLink</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">設定</string>
-    <string name="rileylink_settings_tab2">歷史</string>
     <string name="rileylink_status">RileyLink 狀態</string>
     <string name="medtronic_pump_status">幫浦狀態</string>
-    <string name="title_activity_rileylink_settings">RileyLink 設定</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">地址：</string>
     <string name="rileylink_name">名稱：</string>
@@ -69,7 +55,6 @@
     <string name="rileylink_error_bt_disabled">藍牙已停用</string>
     <string name="rileylink_error_no_bt_adapter">無藍牙適配器</string>
     <string name="rileylink_error_tuneup_failed">調整失敗</string>
-    <string name="rileylink_error_pump_unreachable">幫浦無法使用</string>
     <string name="rileylink_error_pod_unreachable">Pod 無法使用</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic 幫浦</string>
@@ -85,5 +70,7 @@
     </plurals>
     <string name="orange_use_scanning_level">使用掃描</string>
     <string name="orange_use_scanning_level_summary">在連線到 OrangeLink 之前進行掃描，應該能改善連線（如果需要，也可以用於其他 RileyLink 複製）</string>
-    <string name="rileylink_configuration">RileyLink 配置</string>
+    <string name="rileylink_pair">配對 RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink 配對成功</string>
+    <string name="rileylink_config_reset">RileyLink 設定已重設</string>
 </resources>

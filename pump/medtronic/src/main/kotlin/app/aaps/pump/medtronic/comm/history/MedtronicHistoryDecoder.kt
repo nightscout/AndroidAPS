@@ -3,6 +3,7 @@ package app.aaps.pump.medtronic.comm.history
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.StringUtil
+import app.aaps.core.utils.formatUS
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import org.apache.commons.lang3.StringUtils
 
@@ -112,7 +113,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(
     }
 
     fun getFormattedFloat(value: Float, decimals: Int): String {
-        return StringUtil.getFormattedValueUS(value, decimals)
+        return value.formatUS(decimals)
     }
 
 }

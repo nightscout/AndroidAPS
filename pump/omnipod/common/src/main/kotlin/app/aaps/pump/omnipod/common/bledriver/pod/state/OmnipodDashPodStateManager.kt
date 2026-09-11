@@ -147,7 +147,11 @@ interface OmnipodDashPodStateManager {
         val createdRealtime: Long,
         var sentRealtime: Long = 0,
         val historyId: Long,
-        var sendError: Throwable?,
+        // Runtime-only: set on a failed send and read back immediately from the in-memory command in the
+        // confirm path; never restored from persistence. @Transient keeps Gson from serializing it — a
+        // Throwable can't round-trip through JSON (and on JDK 17+ makeAccessible on Throwable#detailMessage
+        // throws, flooding test logs).
+        @Transient var sendError: Throwable?,
         var basalProgram: BasalProgram?,
         val tempBasal: TempBasal?,
         val requestedBolus: Double?

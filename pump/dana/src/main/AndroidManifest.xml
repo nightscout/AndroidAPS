@@ -1,13 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest>
 
-    <application android:supportsRtl="true">
-        <activity
-            android:name=".activities.DanaHistoryActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.DanaUserOptionsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-    </application>
 </manifest>

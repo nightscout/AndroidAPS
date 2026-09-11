@@ -104,13 +104,6 @@ class EquilIntPreferenceKeyTest : TestBase() {
             "Key should start with 'key_equil_'"
         )
     }
-
-    @Test
-    fun `enum should implement IntPreferenceKey`() {
-        val key = EquilIntPreferenceKey.EquilTone
-        assert(key is app.aaps.core.keys.interfaces.IntPreferenceKey)
-    }
-
     @Test
     fun `EquilTone range should be valid for alarm mode values`() {
         // Based on AlarmMode enum (MUTE=0, TONE=1, SHAKE=2, TONE_AND_SHAKE=3)

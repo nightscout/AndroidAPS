@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.common.bledriver.pod.state
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
@@ -35,7 +36,7 @@ class NeedsBasalCorrectionTest : TestBase() {
     // ---- setup --------------------------------------------------------------------------------
 
     @BeforeEach fun setUp() {
-        `when`(config.enableOmnipodDriftCompensation()).thenReturn(true)
+        `when`(config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)).thenReturn(true)
         sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences, config)
         sut.activationProgress = ActivationProgress.COMPLETED
     }
@@ -55,7 +56,7 @@ class NeedsBasalCorrectionTest : TestBase() {
     // ---- prerequisite checks ------------------------------------------------------------------
 
     @Test fun `drift compensation disabled — returns false`() {
-        `when`(config.enableOmnipodDriftCompensation()).thenReturn(false)
+        `when`(config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)).thenReturn(false)
         setDrift(10, 0, 0.0)    // drift = +0.5, would reset if enabled
         assertThat(sut.needsBasalCorrection()).isFalse()
     }

@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metro)
     alias(libs.plugins.ksp)
-    id("kotlin-android")
+    alias(libs.plugins.compose.compiler)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -10,12 +11,11 @@ plugins {
 android {
 
     namespace = "app.aaps.pump.insight"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+}
+
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -25,16 +25,10 @@ dependencies {
     implementation(project(":core:keys"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
-    implementation(project(":pump:common"))
     testImplementation(project(":shared:tests"))
 
-    api(libs.com.google.android.material)
-    api(libs.androidx.room)
+    implementation(libs.com.google.android.material)
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
 
     ksp(libs.androidx.room.compiler)
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.android.processor)
 }

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <string name="count_selected">%1$d izabrano</string>
+    <string name="constraint_applied">Primenjeno ograničenje!</string>
+    <string name="tt_label">TT</string>
+    <string name="save">Sačuvaj</string>
+    <string name="virtual_pump">Virtuelna Pumpa</string>
+    <string name="constraints">Ograničenja</string>
+    <string name="result">Rezultat</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="configbuilder_bgsource">GUK Izvor</string>
+    <string name="configbuilder_pump">Pumpa</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_general">Uopšteno</string>
+    <!-- master_password moved to core/keys/strings.xml -->
+    <string name="pump">Pumpa</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="goingtodeliver">Isporučujem %1$.2f U</string>
+    <string name="basal_label">Basal</string>
+    <string name="exit">Izađi</string>
+    <string name="iob">IOB</string>
+    <string name="bg_label">GUK</string>
+    <string name="duration_label">Trajanje</string>
+    <string name="profile">Profil</string>
+    <string name="overview_treatment_label">Tretman</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basalni IOB</string>
+    <string name="invalid">NEVAŽEĆE</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">Niska Glukoza Obustavi</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout verzija:</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <string name="duration">Trajanje</string>
+    <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="glucosetype_sensor">Senzor</string>
+    <string name="wear">Sat</string>
+    <string name="loop">Loop</string>
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <string name="basalrate">Basal</string>
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Profile validation -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <string name="set">Postavi</string>
+    <string name="quick_wizard_not_available">Izabrani brzi čarobnjak više nije dostupan, molimo osvežite svoju pločicu</string>
+    <!--    Preferences-->
+    <!--    Protection-->
+    <!--    Pumps -->
+    <!--    Constraints-->
+    <!--    Dialogs-->
+    <!-- TwoMessagesDialog -->
+    <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
+    <string name="export_to">Izvezi podešavanja u</string>
+    <string name="password_preferences_encrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za šifrovanje izvezenih postavki.</string>
+    <string name="preferences_export_canceled">Izvoz je otkazan! Postavke NISU izvezene!</string>
+    <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    Pump pair/unpair (shared) -->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <!-- Navigation -->
+    <string name="nav_exit">Izađi</string>
+    <string name="open_navigation">Otvori navigaciju</string>
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <string name="extended_bolus_button">Produženi Bolus</string>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="cannula">Kanila</string>
+    <!-- Site Rotation -->
+    <!-- About -->
+    <!--    Maintenance-->
+    <string name="reset_db_confirm">Da li zaista želite da poništite baze podataka?</string>
+    <!--    Weekday-->
+    <!--    DecimalFormatterImpl -->
+    <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Food Management -->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <string name="import_setting">Uvezi podešavanja</string>
+    <!-- Import settings screen -->
+    <string name="nav_resetdb">Poništite baze podataka</string>
+    <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
+</resources>
