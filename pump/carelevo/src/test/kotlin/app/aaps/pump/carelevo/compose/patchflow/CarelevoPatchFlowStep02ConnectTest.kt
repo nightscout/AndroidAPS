@@ -65,9 +65,8 @@ class CarelevoPatchFlowStep02ConnectTest {
     private var exitFlowCount = 0
 
     private lateinit var searchLabel: String
-    private lateinit var deactivateLabel: String
+    private lateinit var cancelButtonLabel: String
     private lateinit var confirmLabel: String
-    private lateinit var cancelLabel: String
     private lateinit var rescanLabel: String
     private lateinit var step1Label: String
     private lateinit var step2Label: String
@@ -75,8 +74,6 @@ class CarelevoPatchFlowStep02ConnectTest {
     private lateinit var step1Desc: String
     private lateinit var step2Title: String
     private lateinit var step2Desc: String
-    private lateinit var discardDialogTitle: String
-    private lateinit var discardDialogDesc: String
     private lateinit var connectDialogTitle: String
     private lateinit var scanFailedMsg: String
     private lateinit var bluetoothNotEnabledMsg: String
@@ -89,9 +86,8 @@ class CarelevoPatchFlowStep02ConnectTest {
     fun setUp() {
         val context: Context = RuntimeEnvironment.getApplication()
         searchLabel = context.getString(R.string.carelevo_btn_input_search_patch)
-        deactivateLabel = context.getString(R.string.carelevo_btn_patch_expiration)
+        cancelButtonLabel = context.getString(R.string.carelevo_btn_cancel)
         confirmLabel = context.getString(R.string.carelevo_btn_confirm)
-        cancelLabel = context.getString(R.string.carelevo_btn_cancel)
         rescanLabel = context.getString(R.string.carelevo_btn_research)
         step1Label = context.getString(R.string.carelevo_patch_step_1)
         step2Label = context.getString(R.string.carelevo_patch_step_2)
@@ -99,8 +95,6 @@ class CarelevoPatchFlowStep02ConnectTest {
         step1Desc = context.getString(R.string.carelevo_patch_connect_step_1_desc)
         step2Title = context.getString(R.string.carelevo_patch_connect_step_2_title)
         step2Desc = context.getString(R.string.carelevo_patch_connect_step_2_desc)
-        discardDialogTitle = context.getString(R.string.carelevo_dialog_patch_discard_message_title)
-        discardDialogDesc = context.getString(R.string.carelevo_dialog_patch_discard_message_desc)
         connectDialogTitle = context.getString(R.string.carelevo_dialog_patch_connect_message_title)
         scanFailedMsg = context.getString(R.string.carelevo_toast_msg_scan_failed)
         bluetoothNotEnabledMsg = context.getString(R.string.carelevo_toast_msg_bluetooth_not_enabled)
@@ -160,8 +154,7 @@ class CarelevoPatchFlowStep02ConnectTest {
         setContent()
 
         compose.onNodeWithText(searchLabel).assertIsDisplayed().assertIsEnabled()
-        compose.onNodeWithText(deactivateLabel).assertIsDisplayed().assertIsEnabled()
-        compose.onNodeWithText(discardDialogTitle).assertDoesNotExist()
+        compose.onNodeWithText(cancelButtonLabel).assertIsDisplayed().assertIsEnabled()
         compose.onNodeWithText(connectDialogTitle).assertDoesNotExist()
     }
 
@@ -194,49 +187,14 @@ class CarelevoPatchFlowStep02ConnectTest {
     }
 
     @Test
-    fun deactivateButton_click_showsDiscardDialog_withoutCallingViewModel() {
+    fun cancelButton_click_leavesWithoutAskingFirst() {
         setContent()
 
-        compose.onNodeWithText(deactivateLabel).performClick()
+        compose.onNodeWithText(cancelButtonLabel).performClick()
         compose.waitForIdle()
 
-        compose.onNodeWithText(discardDialogTitle).assertIsDisplayed()
-        compose.onNodeWithText(discardDialogDesc).assertIsDisplayed()
-        compose.onNodeWithText(confirmLabel).assertIsDisplayed()
-        compose.onNodeWithText(cancelLabel).assertIsDisplayed()
-        verify(viewModel, never()).startPatchDiscardProcess()
-    }
-
-    // endregion
-
-    // region discard dialog
-
-    @Test
-    fun discardDialog_confirm_callsStartPatchDiscardProcess_andDismisses() {
-        setContent()
-        compose.onNodeWithText(deactivateLabel).performClick()
-        compose.waitForIdle()
-
-        compose.onNodeWithText(confirmLabel).performClick()
-        compose.waitForIdle()
-
+        // Nothing is paired here, so the wizard does not confirm - only the back gesture does.
         verify(viewModel).startPatchDiscardProcess()
-        compose.onNodeWithText(discardDialogTitle).assertDoesNotExist()
-        assertThat(exitFlowCount).isEqualTo(0)
-    }
-
-    @Test
-    fun discardDialog_cancel_dismisses_withoutCallingViewModel() {
-        setContent()
-        compose.onNodeWithText(deactivateLabel).performClick()
-        compose.waitForIdle()
-
-        compose.onNodeWithText(cancelLabel).performClick()
-        compose.waitForIdle()
-
-        compose.onNodeWithText(discardDialogTitle).assertDoesNotExist()
-        compose.onNodeWithText(searchLabel).assertIsDisplayed()
-        verify(viewModel, never()).startPatchDiscardProcess()
         assertThat(exitFlowCount).isEqualTo(0)
     }
 
@@ -390,29 +348,24 @@ class CarelevoPatchFlowStep02ConnectTest {
     }
 
     @Test
-    fun discardCompleteEvent_dismissesDiscardDialog_andExitsFlow() {
+    fun discardCompleteEvent_exitsFlow() {
         setContent()
-        compose.onNodeWithText(deactivateLabel).performClick()
+        compose.onNodeWithText(cancelButtonLabel).performClick()
         compose.waitForIdle()
-        compose.onNodeWithText(discardDialogTitle).assertIsDisplayed()
 
         emitEvent(CarelevoConnectPrepareEvent.DiscardComplete)
 
-        compose.onNodeWithText(discardDialogTitle).assertDoesNotExist()
         assertThat(exitFlowCount).isEqualTo(1)
         assertNoErrorBanner()
     }
 
     @Test
-    fun discardFailedEvent_dismissesDiscardDialog_andShowsErrorBanner() {
+    fun discardFailedEvent_showsErrorBanner() {
         setContent()
-        compose.onNodeWithText(deactivateLabel).performClick()
+        compose.onNodeWithText(cancelButtonLabel).performClick()
         compose.waitForIdle()
-        compose.onNodeWithText(discardDialogTitle).assertIsDisplayed()
 
         emitEvent(CarelevoConnectPrepareEvent.DiscardFailed)
-
-        compose.onNodeWithText(discardDialogTitle).assertDoesNotExist()
         compose.onNodeWithText(discardFailedMsg).assertIsDisplayed()
         assertThat(exitFlowCount).isEqualTo(0)
     }

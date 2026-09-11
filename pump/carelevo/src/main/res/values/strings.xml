@@ -10,7 +10,6 @@
 
     <string name="carelevo_bluetooth_state_key">Bluetooth status</string>
     <string name="carelevo_serial_number_key">Serial No.</string>
-    <string name="carelevo_firmware_version_key">Firmware</string>
     <string name="carelevo_boot_date_time_key">Activation Time</string>
     <string name="carelevo_expiration_key">Expiration</string>
     <string name="carelevo_basal_rate_key">Basal Rate</string>
@@ -45,6 +44,7 @@
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
 
     <string name="carelevo_btn_insulin_guide">Insulin Guide</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
     <string name="carelevo_btn_patch_expiration">Deactivate Patch</string>
     <string name="carelevo_btn_input_search_patch">Search Patch</string>
     <string name="carelevo_btn_retry">Retry</string>
@@ -53,7 +53,7 @@
     <string name="carelevo_btn_cancel">Cancel</string>
     <string name="carelevo_btn_confirm">Confirm</string>
     <string name="carelevo_btn_research">Rescan</string>
-    <string name="carelevo_btn_needle_insert_check">Check Insertion</string>
+    <string name="carelevo_btn_needle_insert_check">Confirm Insertion</string>
 
     <string name="carelevo_state_none_value">No Active Patch</string>
     <string name="carelevo_state_disconnected_value">Disconnected</string>
@@ -61,6 +61,8 @@
 
     <string name="carelevo_overview_connect_btn_label">Activate Patch</string>
     <string name="carelevo_overview_pump_discard_btn_label">Discard Patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Suspend Infusion</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Resume Infusion</string>
 
     <string name="patch_prepare_dialog_title_insulin_amount">Select filled amount.</string>
     <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Range : %1$d ~ %2$d U</string>
@@ -126,6 +128,10 @@
     <string name="carelevo_dialog_patch_needle_retry_count">%d retry attempt(s) left for needle insertion.</string>
     <string name="carelevo_dialog_patch_discard_message_title">Deactivate patch and start new patch?</string>
     <string name="carelevo_dialog_patch_discard_message_desc">Pressing the [OK] button will stop insulin.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Finish without starting delivery?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Pressing the [OK] button will make this patch unusable.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Cancel patch activation?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Pressing the [OK] button will discard what you entered.</string>
     <string name="carelevo_dialog_patch_connect_message_title">If the patch detected below is correct, please tap the Confirm button.</string>
 
     <string name="carelevo_dialog_patch_connect_needle_injected">Needle insertion complete and applicator removal</string>

@@ -19,10 +19,12 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
+import app.aaps.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -36,7 +38,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.yield
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -49,6 +54,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
@@ -108,6 +114,7 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var activationExecutor: CarelevoActivationExecutor
     @Mock lateinit var patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase
+    @Mock lateinit var carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
 
     private lateinit var sut: CarelevoPatchSafetyCheckViewModel
     private lateinit var collectorScope: CoroutineScope
@@ -150,7 +157,8 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
             activationExecutor = activationExecutor,
-            patchForceDiscardUseCase = patchForceDiscardUseCase
+            patchForceDiscardUseCase = patchForceDiscardUseCase,
+            carelevoAlarmInfoUseCase = carelevoAlarmInfoUseCase
         )
     }
 
@@ -333,19 +341,75 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
         verifyBlocking(commandQueue) { customCommand(any<CmdSafetyCheck>()) }
     }
 
+    // A check that never started is dialled again, so these tests need a virtual clock for the wait.
     @Test
-    fun `startSafetyCheck fails without completing the progress bar when the queue reports failure`() {
+    fun `startSafetyCheck retries once when the check never started, then fails`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         stubCustomCommand(enactResult(false))
         val events = collectEvents()
 
         sut.startSafetyCheck()
+        advanceUntilIdle()
 
         assertThat(events).contains(CarelevoConnectSafetyCheckEvent.SafetyCheckFailed)
         assertThat(events).doesNotContain(CarelevoConnectSafetyCheckEvent.SafetyCheckComplete)
+        verifyBlocking(commandQueue, times(2)) { customCommand(any<CmdSafetyCheck>()) }
         // The failure branch must not fake a finished bar.
         assertThat(sut.progress.value).isNull()
         assertThat(sut.remainSec.value).isNull()
+    }
+
+    @Test
+    fun `startSafetyCheck clears the finished bar before the next check runs`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(enactResult(true))
+
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+        assertThat(sut.progress.value).isEqualTo(100)
+
+        sut.startSafetyCheck()
+
+        // Cleared synchronously, so the next patch never shows the previous one's full bar.
+        assertThat(sut.progress.value).isNull()
+        assertThat(sut.remainSec.value).isNull()
+    }
+
+    // The progress StateFlow keeps the finished 100 after a success, and the ViewModel outlives the
+    // wizard — so the next patch must not read that as "this check started".
+    @Test
+    fun `startSafetyCheck still retries after an earlier check finished successfully`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(enactResult(true))
+
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+        assertThat(sut.progress.value).isEqualTo(100)
+
+        stubCustomCommand(enactResult(false))
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+
+        // One attempt for the success, then two for the check that never started.
+        verifyBlocking(commandQueue, times(3)) { customCommand(any<CmdSafetyCheck>()) }
+    }
+
+    @Test
+    fun `startSafetyCheck does not retry a check that had already started`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommandEmittingProgress(enactResult(false))
+        val events = collectEvents()
+
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+
+        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.SafetyCheckFailed)
+        // A progress frame arrived, so the patch really did fail the check — one attempt only.
+        verifyBlocking(commandQueue, times(1)) { customCommand(any<CmdSafetyCheck>()) }
     }
 
     @Test
@@ -719,29 +783,90 @@ internal class CarelevoPatchSafetyCheckViewModelTest {
         verifyBlocking(commandQueue, never()) { customCommand(any()) }
     }
 
+    // The burst sleeps between pulses, so these tests swap Main for a virtual clock. setUp
+    // reinstalls Unconfined (see class KDoc) before every test, so the swap cannot leak.
     @Test
-    fun `retryAdditionalPriming returns to idle without feedback on success`() {
+    fun `retryAdditionalPriming fires a burst of three pulses and returns to idle`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         stubCustomCommand(enactResult(true))
-        val events = collectEvents()
 
         sut.retryAdditionalPriming()
+        advanceUntilIdle()
 
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
-        assertThat(events).doesNotContain(CarelevoConnectSafetyCheckEvent.DiscardFailed)
-        verifyBlocking(commandQueue) { customCommand(any<CmdAdditionalPriming>()) }
+        verifyBlocking(commandQueue, times(3)) { customCommand(any<CmdAdditionalPriming>()) }
     }
 
     @Test
-    fun `retryAdditionalPriming surfaces feedback and returns to idle on failure`() {
+    fun `retryAdditionalPriming stops the burst and reports a link failure`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         stubCustomCommand(enactResult(false))
         val events = collectEvents()
 
         sut.retryAdditionalPriming()
+        advanceUntilIdle()
 
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
-        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.SafetyCheckFailed)
+        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.AdditionalPrimingFailed)
+        // The first pulse is attempted twice, then the burst gives up without sending the other two.
+        verifyBlocking(commandQueue, times(2)) { customCommand(any<CmdAdditionalPriming>()) }
+    }
+
+    @Test
+    fun `retryAdditionalPriming keeps its allowance when the link failed`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(enactResult(false))
+
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+        stubCustomCommand(enactResult(true))
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+
+        // Two failed attempts on the abandoned burst, then a full burst of three.
+        verifyBlocking(commandQueue, times(5)) { customCommand(any<CmdAdditionalPriming>()) }
+        verify(carelevoAlarmInfoUseCase, never()).upsertAlarm(any())
+    }
+
+    // The ViewModel outlives the wizard, so a spent allowance must not follow the next patch in.
+    @Test
+    fun `startSafetyCheck restores the priming allowance`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(enactResult(true))
+        val events = collectEvents()
+
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+        sut.startSafetyCheck()
+        advanceUntilIdle()
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+
+        assertThat(events).doesNotContain(CarelevoConnectSafetyCheckEvent.PrimingRetryLimitExceeded)
+        verify(carelevoAlarmInfoUseCase, never()).upsertAlarm(any())
+    }
+
+    @Test
+    fun `retryAdditionalPriming raises the self-diagnosis alarm once the allowance is spent`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(enactResult(true))
+        whenever(carelevoAlarmInfoUseCase.upsertAlarm(any())).thenReturn(Completable.complete())
+        val events = collectEvents()
+
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+        sut.retryAdditionalPriming()
+        advanceUntilIdle()
+
+        assertThat(events).contains(CarelevoConnectSafetyCheckEvent.PrimingRetryLimitExceeded)
+        // Only the first request reaches the patch; the second is refused before any pulse.
+        verifyBlocking(commandQueue, times(3)) { customCommand(any<CmdAdditionalPriming>()) }
+        verify(carelevoAlarmInfoUseCase).upsertAlarm(any())
     }
 
     // ---- isSafetyCheckPassed ------------------------------------------------------------------

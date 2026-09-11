@@ -112,6 +112,10 @@ private fun CarelevoPatchConnectionFlowScreen(
         }
     }
 
+    // Nothing is paired until the connect step succeeds, and basal only starts after needle
+    // insertion, which ends the wizard - so no step here is stopping a running patch.
+    val beforePatch = page in PRE_PATCH_STEPS
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -122,8 +126,14 @@ private fun CarelevoPatchConnectionFlowScreen(
             currentStepIndex = currentStepIndex,
             canGoBack = true,
             onBack = { viewModel.startPatchDiscardProcess() },
-            cancelDialogTitle = stringResource(R.string.carelevo_dialog_patch_discard_message_title),
-            cancelDialogText = stringResource(R.string.carelevo_dialog_patch_discard_message_desc),
+            cancelDialogTitle = stringResource(
+                if (beforePatch) R.string.carelevo_dialog_patch_activation_cancel_title
+                else R.string.carelevo_dialog_patch_discard_unused_title
+            ),
+            cancelDialogText = stringResource(
+                if (beforePatch) R.string.carelevo_dialog_patch_activation_cancel_desc
+                else R.string.carelevo_dialog_patch_discard_unused_desc
+            ),
             title = patchStepTitle(page),
             setToolbarConfig = setToolbarConfig,
         ) { step, _ ->
@@ -215,3 +225,11 @@ private fun CarelevoPatchConnectionFlowScreen(
         }
     }
 }
+
+internal val PRE_PATCH_STEPS = setOf(
+    CarelevoPatchStep.PROFILE_GATE,
+    CarelevoPatchStep.SELECT_INSULIN,
+    CarelevoPatchStep.PATCH_START,
+    CarelevoPatchStep.SET_AMOUNT,
+    CarelevoPatchStep.PATCH_CONNECT
+)
