@@ -40,7 +40,8 @@ import kotlinx.coroutines.launch
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ProfileFunctionImpl @Inject constructor(
+@Inject
+class ProfileFunctionImpl(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rh: TextResolver,

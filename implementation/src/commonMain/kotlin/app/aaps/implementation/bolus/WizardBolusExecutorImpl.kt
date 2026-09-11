@@ -71,7 +71,8 @@ import kotlin.math.ceil
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class WizardBolusExecutorImpl @Inject constructor(
+@Inject
+class WizardBolusExecutorImpl(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val config: Config,
