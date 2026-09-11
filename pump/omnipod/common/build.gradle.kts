@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     id("android-module-dependencies")
     id("test-module-dependencies")

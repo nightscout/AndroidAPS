@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.metro)
-    alias(libs.plugins.ksp)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
