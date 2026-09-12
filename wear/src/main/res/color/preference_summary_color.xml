@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Summary colour of a preference row - see preference_title_color.xml for why this is a state
+     list rather than a plain colour. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="#66CCCCCC" android:state_enabled="false" />
+    <item android:color="#CCCCCC" />
+</selector>
