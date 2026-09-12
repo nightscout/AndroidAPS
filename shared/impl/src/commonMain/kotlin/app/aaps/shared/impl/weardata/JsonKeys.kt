@@ -24,17 +24,17 @@ enum class JsonKeys(val key: String) {
     LEFTMARGIN("leftmargin"),
     ROTATION("rotation"),
     VISIBILITY("visibility"),
-    TEXTSIZE("textsize"),
+    TEXTSIZE("textsize"),           // Also used in Complications
     TEXTVALUE("textvalue"),
     GRAVITY("gravity"),
-    FONT("font"),
-    FONTSTYLE("fontStyle"),
-    FONTCOLOR("fontColor"),
-    COLOR("color"),
+    FONT("font"),                   // Also used in Complications
+    FONTSTYLE("fontStyle"),         // Also used in Complications
+    FONTCOLOR("fontColor"),         // Also used in Complications
+    COLOR("color"),                 // Also used for Complications Background Color
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),
     MONTHFORMAT("monthFormat"),
-    BACKGROUND("background"),       // Background image for textView
+    BACKGROUND("background"),       // Background image for textView, also used in Complications
     LEFTOFFSET("leftOffset"),       // Boolean allow left offset according to dynData value or key for LeftOffset Range definition
     TOPOFFSET("topOffset"),         // Boolean allow top offset according to dynData value or key for TopOffset Range definition
     ROTATIONOFFSET("rotationOffset"),// Boolean allow rotation offset according to dynData value or key for rotation Offset Range definition
@@ -61,5 +61,18 @@ enum class JsonKeys(val key: String) {
     INVALIDLEFTOFFSET("invalidLeftOffset"),
     INVALIDROTATIONOFFSET("invalidRotationOffset"),
     INVALIDTEXTVALUE("invalidTextvalue"),
+    COMPLICATIONSTYLE("complicationStyle"), // Key for Complication global styling block
+    ICONCOLOR("iconColor"),         // Complication slots only: set icon color
+    TITLESIZE("titleSize"),         // Complication slots only: text size for Complication Title/label
+    TITLESTYLE("titleStyle"),       // Complication slots only: title Style for Complication Title/label
+    FONTTITLE("fontTitle"),         // Complication slots only: typeface for the title/label text (see ComplicationStyle.titleTypeface)
+    FONTTITLECOLOR("fontTitleColor"), // Complication slots only: color for the title/label text (see ComplicationStyle.titleColor)
+    BORDERRADIUS("borderRadius"),   // Complication slots only: corner radius of the complication
+    BORDERCOLOR("borderColor"),     // Complication slots only: border color, absent or transparent means no border
+    BORDERWIDTH("borderWidth"),     // Complication slots only: border thickness, same 400x400 space as width/height
+    RINGWIDTH("ringWidth"),         // Complication slots only: ring width, same 400x400 space as width/height
+    RINGPRIMARYCOLOR("ringPrimaryColor"), // Complication slots only: ring color
+    RINGSECONDARYCOLOR("ringSecondaryColor"), // Complication slots only: color of the unfilled part of the ring
+    IMAGEFIT("imageFit"),           // Complication slots only: how a SMALL_IMAGE/PHOTO_IMAGE fills the slot (see JsonKeyValues FIT_CENTER/CENTER_CROP/FIT_XY)
     DEFAULT("default")
 }

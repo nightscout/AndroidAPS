@@ -51,10 +51,10 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    // Not derived from WearMetroService, so inject here for every concrete subclass. AndroidInjection
-    // resolves the injector by this instance's concrete runtime class, so each subclass is injected
-    // through its own @ContributesAndroidInjector binding in WearServicesModule — kept in the base to
-    // avoid duplicating the identical override in every complication.
+    // Not derived from WearMetroService, so inject here for every concrete subclass. The injector is
+    // resolved by this instance's concrete runtime class, so each subclass needs its own entry in
+    // WearMemberInjectors even when it adds no injected field of its own - kept in the base to avoid
+    // duplicating the identical override in every complication.
     override fun onCreate() {
         injectMetroMembers(this)
         super.onCreate()

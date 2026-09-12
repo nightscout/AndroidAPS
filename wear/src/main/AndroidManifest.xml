@@ -11,11 +11,6 @@
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
-    <!-- Samsung-only, protectionLevel="normal" so it is granted automatically at install and is a
-         no-op on non-Samsung watches (the permission simply doesn't exist there). Lets us send
-         ACTION_EDIT_WATCH_FACE to Samsung SysUI's exported WatchFaceEditorBroadcastReceiver, which
-         is the only known way for an app to get the system to activate a watchface. -->
-    <uses-permission android:name="com.samsung.android.wearable.sysui.permission.EDIT_WATCH_FACE" />
     <!-- Watch Face Push (Wear OS 6+): PUSH_WATCH_FACES gates binding to the system push service;
          SET_PUSHED_WATCH_FACE_AS_ACTIVE allows re-activating the pushed AAPS watchface after the
          one-shot activation on first install was used -->
@@ -223,6 +218,114 @@
                 android:value="${applicationId}.watchfacepush.aapsv4" />
         </service>
 
+        <!-- Same reading as SgvComplication, but a tap opens the menu. Used only by the ambient
+             layer of the pushed Watch Face Format face, whose slots are invisible while the watch
+             is awake yet still answer taps - see CwfAmbientBgComplication. -->
+        <service
+            android:name=".complications.CwfAmbientBgComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_sgv"
+            android:label="@string/complication_cwf_ambient_bg"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
+        </service>
+
+        <service
+            android:name=".complications.CwfAmbientStatusComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_ins"
+            android:label="@string/complication_cwf_ambient_status"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.aapsv4" />
+        </service>
+
+        <!-- Publishes the whole Custom watch face as a full-screen image, for Watch Face Format
+             faces on watches that can no longer run a code-based watch face.
+             LARGE_IMAGE is the manifest tag for ComplicationType.PHOTO_IMAGE. -->
+        <service
+            android:name=".complications.CwfImageComplication"
+            android:exported="true"
+            android:icon="@drawable/watchface_custom"
+            android:label="@string/complication_cwf_image"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE,SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="60" />
+        </service>
+        <!-- The whole Custom watch face as one picture, for the pushed WFF document. One provider
+             rather than two halves: the halves had to agree with each other from outside, and each
+             paid its own data read and its own compression. This one keeps the layers privately and
+             blends them, which a Galaxy Watch 4 measured at about 1 ms per layer. -->
+        <service
+            android:name=".complications.cwf.CwfFaceComplication"
+            android:exported="true"
+            android:icon="@drawable/watchface_custom"
+            android:label="@string/label_watchface_custom"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE,SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="60" />
+        </service>
+        <!-- The same face without seconds, for the always-on slot of the pushed document. The
+             runtime swaps the two pictures itself when the watch dozes, which is the only way the
+             second hand goes at the moment the screen dims rather than at the next minute - see
+             CwfMinuteFrame. Not offered to other watch faces: it is only meaningful beside its
+             twin. -->
+        <service
+            android:name=".complications.cwf.CwfAmbientFaceComplication"
+            android:exported="true"
+            android:icon="@drawable/watchface_custom"
+            android:label="@string/label_watchface_custom_ambient"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE,SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="60" />
+        </service>
         <service
             android:name=".complications.BgGraphComplication"
             android:exported="true"
@@ -757,6 +860,11 @@
             android:exported="true"
             android:label="@string/menu_settings"
             android:taskAffinity="" />
+        <!-- Not exported: only ever opened from the watch face's own settings screen, in-process. -->
+        <activity
+            android:name=".interaction.ComplicationTypeSettingsActivity"
+            android:exported="false"
+            android:label="@string/pref_complication_type_priority" />
         <!-- taskAffinity="": activities launched from tiles/complications (NEW_TASK) get their own
              task, so back returns to the tile/watchface instead of a lingering main menu. Launches
              from within the app (no NEW_TASK) still stack in the caller's task as before. -->
@@ -796,6 +904,13 @@
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.BgGraphActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
+        <!-- Proof of concept for the WFF port, deliberately not in any menu: renders the Custom
+             watch face into a bitmap and shows it. Started with adb, see the class KDoc. -->
+        <activity
+            android:name=".interaction.activities.CwfRenderPreviewActivity"
             android:exported="true"
             android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />

@@ -1,7 +1,9 @@
 package app.aaps.wear.watchfaces.utils
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -13,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.core.graphics.createBitmap
 import androidx.viewbinding.ViewBinding
 import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -35,6 +38,7 @@ import app.aaps.wear.utils.toVisibility
 import app.aaps.wear.utils.toVisibilityKeepSpace
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlin.math.floor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -48,6 +52,16 @@ import kotlinx.coroutines.runBlocking
 @SuppressLint("Deprecated")
 @HasMemberInjections
 abstract class BaseWatchFace : WatchFace() {
+
+    private companion object {
+
+        /**
+         * How long one loaded set of data is reused across renders, so the halves of a split render
+         * are drawn from the same moment. Long enough to cover two back-to-back complication
+         * requests, short enough that no user-visible staleness comes from it.
+         */
+        private const val RENDER_DATA_SHARE_MS = 500L
+    }
 
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -148,7 +162,15 @@ abstract class BaseWatchFace : WatchFace() {
     var dayNameFormat = "E"
     var monthFormat = "MMM"
     val showSecond: Boolean
-        get() = enableSecond && currentWatchMode == WatchMode.INTERACTIVE
+        get() = showSeconds(enableSecond, currentWatchMode == WatchMode.INTERACTIVE, renderSecondsOverride)
+
+    /**
+     * Render-only: forces the seconds off for the frame being built. Null follows the watch mode.
+     *
+     * Only [setRenderSeconds] writes it, and that refuses unless this instance exists purely to draw
+     * into a bitmap - so on the watch face people wear it stays null and [showSecond] is unchanged.
+     */
+    private var renderSecondsOverride: Boolean? = null
 
     // Tapping times
     private var sgvTapTime: Long = 0
@@ -167,9 +189,33 @@ abstract class BaseWatchFace : WatchFace() {
     private var mLastSvg = ""
     private var mLastDirection = ""
 
+    // True only once injection has returned, via onCreate below or via ensureInjected() for instances
+    // that never get an onCreate. Checked instead of catching UninitializedPropertyAccessException,
+    // which would also mask unrelated bugs.
+    protected var injectionComplete = false
+
+    /**
+     * Injects this instance if [onCreate] never ran, so `@Inject` fields are usable anyway.
+     *
+     * Editor sessions and preview generation run the watch face as a *headless* instance, which
+     * `androidx.wear.watchface` builds by reflection: `newInstance()` plus an internal `setContext()`
+     * that calls `attachBaseContext`. `Service.onCreate()` is never called, so without this every
+     * `@Inject` field stays unset and anything the framework calls into throws
+     * `UninitializedPropertyAccessException` - which during a headless release kills the binder and
+     * makes the system drop the editing session, losing the configuration just chosen.
+     *
+     * Works because `attachBaseContext` has run, so the graph can be reached. Safe to call
+     * repeatedly - it no-ops once injection has happened by either route.
+     */
+    protected fun ensureInjected() {
+        if (injectionComplete) return
+        injectMetroMembers(this)
+        injectionComplete = true
+    }
+
     override fun onCreate() {
         // Not derived from WearMetroService, do injection here
-        injectMetroMembers(this)
+        ensureInjected()
         super.onCreate()
         simpleUi.onCreate(::forceUpdate)
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -302,7 +348,9 @@ abstract class BaseWatchFace : WatchFace() {
         layoutSet = true
         setupCharts()
         setDataFields()
-        missedReadingAlert()
+        // Sends a resend request to the phone - an effect outside the drawing, so a render-only
+        // instance must not do it, or every rendered frame would ask the phone for data again
+        if (!isRenderOnly) missedReadingAlert()
     }
 
     fun ageLevel(id: Int = 0): Int =
@@ -320,6 +368,9 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun onDestroy() {
+        // Headless instances reach this without ever having run onCreate, so inject first - see
+        // ensureInjected(). For watch faces with no complication slots this is the only entry point.
+        ensureInjected()
         watchfaceScope.cancel()
         simpleUi.onDestroy()
         super.onDestroy()
@@ -327,6 +378,20 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun getInteractiveModeUpdateRate(): Long {
         return if (showSecond) 1000L else 60 * 1000L // Only call onTimeChanged every 60 seconds
+    }
+
+    /**
+     * Override to true when a subclass needs something - complications, say - painted on the Canvas
+     * between measure/layout and the mainLayout draw; see [drawMainLayout]. False keeps the single
+     * measure+layout+draw pass.
+     */
+    protected open fun deferMainLayoutDraw(): Boolean = false
+
+    /** Performs the mainLayout draw that [onDraw] skipped because [deferMainLayoutDraw] is true. */
+    protected fun drawMainLayout(canvas: Canvas) {
+        if (::binding.isInitialized && layoutSet && !simpleUi.isEnabled(currentWatchMode)) {
+            binding.mainLayout.draw(canvas)
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -340,16 +405,157 @@ abstract class BaseWatchFace : WatchFace() {
             performViewSetup()
         }
 
-        if (simpleUi.isEnabled(currentWatchMode)) {
+        // A render never takes the simple UI branch. Two reasons, either sufficient.
+        //
+        // It crashes: SimpleUi builds its paints in BaseWatchFace.onCreate(), which a render-only
+        // instance never calls, so drawing through it throws UninitializedPropertyAccessException on
+        // mSvgPaint. Seen on a real Galaxy Watch 4 whose owner had "simplified view" switched on -
+        // every render failed, no image was ever produced, and the face looked like it was
+        // refreshing erratically with halves missing.
+        //
+        // And it would be wrong even if it worked: for the Watch Face Format face the **document**
+        // decides what ambient and charging look like (§8.1), and it can only choose between things
+        // it has. Our job is to hand it the full face; a simplified picture would leave it with
+        // nothing to switch to.
+        if (!isRenderOnly && simpleUi.isEnabled(currentWatchMode)) {
             simpleUi.onDraw(canvas, singleBg[0])
         } else {
             if (layoutSet) {
                 binding.mainLayout.measure(specW, specH)
                 val y = if (forceSquareCanvas) displayWidth else displayHeight // Square Steampunk
                 binding.mainLayout.layout(0, 0, displayWidth, y)
-                binding.mainLayout.draw(canvas)
+                if (!deferMainLayoutDraw()) binding.mainLayout.draw(canvas)
             }
         }
+    }
+
+    /**
+     * Width of the surface currently being drawn: the screen for a live watch face, the bitmap for
+     * a render. Subclasses that scale their layout to the surface should measure against this
+     * rather than asking the `WindowManager`, so a render into a bitmap of any size scales
+     * correctly. One value, two sources - [onCreate] sets it from the screen, [renderToBitmap] from
+     * the requested bitmap.
+     *
+     * Note a complication request carries no size of its own, so the render size is *our* choice;
+     * this is what makes the layout follow that choice.
+     *
+     * The `WindowManager` fallback covers an instance that ran neither [onCreate] nor
+     * [renderToBitmap] - it keeps the previous behaviour exactly for such an instance instead of
+     * silently scaling by zero.
+     */
+    protected val canvasWidth: Int
+        get() = if (displayWidth > 0) displayWidth
+        else (getSystemService(WINDOW_SERVICE) as WindowManager).currentWindowMetrics.bounds.width()
+
+    /**
+     * True when this instance exists only to draw into a [Bitmap] and is not, and never will be, a
+     * live watch face. Subclasses check it to skip anything that would have an effect outside the
+     * drawing itself - stored preferences, events, alerts.
+     */
+    protected var isRenderOnly: Boolean = false
+        private set
+
+    /**
+     * Tells a render-only instance to draw the ambient variant rather than the active one.
+     *
+     * A complication data source is never told about ambient mode, so the provider works it out from
+     * the display state and passes it here. `showSecond` then turns false, and the existing
+     * `updateSecondVisibility()` hides both the digital seconds and the analog second hand - which is
+     * what a still picture needs, since a second hand it cannot keep moving would otherwise freeze at
+     * a stale position.
+     *
+     * Ignored unless this instance is render-only, so a live watch face keeps deciding its own mode
+     * from the engine.
+     */
+    open fun setRenderAmbient(ambient: Boolean) {
+        if (isRenderOnly) isAmbient = ambient
+    }
+
+    /**
+     * Decides the seconds for the frame in hand, without touching the watch mode.
+     *
+     * The mode is deliberately left alone: it drives more than the seconds - `simpleUi` is chosen
+     * from it too - so switching the whole render to ambient late would draw an empty picture for
+     * anyone who has the simple always-on display switched on.
+     *
+     * @param show false to leave the seconds out of this frame, null to follow the mode again
+     */
+    open fun setRenderSeconds(show: Boolean?) {
+        if (isRenderOnly) renderSecondsOverride = show
+    }
+
+    private var lastRenderDataLoad = 0L
+
+    /**
+     * Prepares this instance to draw into a [Bitmap] without ever being started as a `Service`.
+     *
+     * Needed on watches whose firmware no longer selects or binds code-based watch faces: there the
+     * drawing is published through an image complication instead, and the provider builds the watch
+     * face itself. Constructing one is safe - `WatchFaceService` has a single, lazily initialised
+     * field, engines are only ever created by the system over IPC, and none of the field
+     * initialisers here touch a `Context` (see `_docs/CWF_WFF_Prompt.md`, section 7d).
+     *
+     * Call once, before [renderToBitmap]. Attaching a base context is what makes `getSystemService`,
+     * `resources` and `applicationContext` work on an instance the framework never started;
+     * [ensureInjected] then fills the `@Inject` fields, exactly as it does for the headless
+     * instances the editor creates.
+     *
+     * @param hostContext the context of the component doing the rendering
+     */
+    fun prepareForRendering(hostContext: Context) {
+        isRenderOnly = true
+        attachBaseContext(hostContext.applicationContext)
+        ensureInjected()
+        refreshRenderData()
+    }
+
+    /**
+     * Reloads the data the next render will draw from.
+     *
+     * The live path collects the repository flow and is pushed new values; a render-only instance has
+     * no such subscription, so an instance kept warm across several renders must call this itself or
+     * it would keep drawing the values it started with.
+     */
+    open fun refreshRenderData() {
+        // The halves of a split render are two separate requests, answered a few milliseconds apart.
+        // Reloading for each of them would let a data change land between the two, and the picture
+        // would then be assembled from two different moments - one half coloured for the old value
+        // and one for the new. Holding the snapshot briefly makes both halves of one refresh agree.
+        val now = System.currentTimeMillis()
+        if (now - lastRenderDataLoad >= RENDER_DATA_SHARE_MS) {
+            lastRenderDataLoad = now
+            runBlocking { complicationData = complicationDataRepository.complicationData.first() }
+        }
+        // [onDraw] populates the views only on its first call, through performViewSetup(); after that
+        // it just measures, lays out and draws. So a warm instance must re-apply the data itself or
+        // every render after the first would redraw the values the first one captured.
+        // setDataFields() is the whole refresh: it fills in the values and ends with setColor(),
+        // which reaches the subclass's own re-read of its description - for the Custom watch face
+        // that is where a newly sent zip and a changed preference are picked up.
+        if (layoutSet) setDataFields()
+    }
+
+    /**
+     * Draws one frame at [width] x [height] and returns it.
+     *
+     * Runs the real render sequence - [onDraw] then [onDrawOverlay] - so the result is what the
+     * watch face would paint, not a second implementation that could drift from it. Inflation and
+     * [performViewSetup] happen inside [onDraw] on the first call, so repeated calls reuse the same
+     * view hierarchy and only re-measure.
+     *
+     * Must run on the main thread: inflating the layout builds views that require a Looper.
+     * [prepareForRendering] must have been called first.
+     */
+    fun renderToBitmap(width: Int, height: Int): Bitmap {
+        displayWidth = width
+        displayHeight = height
+        specW = View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY)
+        specH = if (forceSquareCanvas) specW else View.MeasureSpec.makeMeasureSpec(displayHeight, View.MeasureSpec.EXACTLY)
+        val bitmap = createBitmap(width, height)
+        val canvas = Canvas(bitmap)
+        onDraw(canvas)
+        onDrawOverlay(canvas)
+        return bitmap
     }
 
     override fun onTimeChanged(oldTime: WatchFaceTime, newTime: WatchFaceTime) {

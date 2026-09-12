@@ -40,7 +40,20 @@ class WatchFacePushHelper(
         private const val MIN_SDK = 36
 
         const val KEY_FACE_INSTALLED = "wfpush_face_installed"
-        private const val KEY_SYNCED_VERSION = "wfpush_synced_version"
+        /**
+         * The face this app last pushed, stored as its validation token.
+         *
+         * Deliberately not the app version. The face lives in `watchface.xml` and is rebuilt into
+         * the app on every build, so its content changes independently of any version string:
+         * between two commits the version is identical while the face is not, and the old check
+         * then skipped the push and left a stale face on the watch with nothing said. That is a
+         * trap for anyone building AAPS from source, and the "install watchface" menu entry cannot
+         * rescue them - it only shows while the face is missing.
+         *
+         * The token is a hash over the exact APK bytes we embed, so comparing it means "push when
+         * the face really changed, and never otherwise".
+         */
+        private const val KEY_SYNCED_FACE = "wfpush_synced_face"
     }
 
     private val facePackageName get() = "${context.packageName}.watchfacepush.aapsv4"
@@ -53,6 +66,20 @@ class WatchFacePushHelper(
             false
         }
     }
+
+    /**
+     * The validation token shipped beside the embedded face, or null when it cannot be read.
+     *
+     * Doubles as the identity of the face: the build generates it as a hash over the exact APK
+     * bytes, so two builds share a token only when they carry the same face.
+     */
+    private fun embeddedFaceToken(): String? =
+        try {
+            context.assets.open(ASSET_TOKEN).use { String(it.readBytes()) }.trim()
+        } catch (e: IOException) {
+            aapsLogger.error(LTag.WEAR, "WatchFacePush: cannot read the embedded face token", e)
+            null
+        }
 
     fun isSupported(): Boolean = Build.VERSION.SDK_INT >= MIN_SDK && hasEmbeddedFace
 
@@ -86,10 +113,11 @@ class WatchFacePushHelper(
      */
     suspend fun syncOnStartup() {
         if (!isSupported()) return
-        // KEY_SYNCED_VERSION matching means this exact app build already put the face in place
-        // once — if the face is missing now, the user removed it: respect that
-        if (sp.getString(KEY_SYNCED_VERSION, "") == BuildConfig.BUILDVERSION) return
-        aapsLogger.debug(LTag.WEAR, "WatchFacePush: syncing face for app version ${BuildConfig.BUILDVERSION}")
+        // A matching token means this exact face was already put in place once — if it is missing
+        // now, the user removed it: respect that
+        val token = embeddedFaceToken() ?: return
+        if (sp.getString(KEY_SYNCED_FACE, "") == token) return
+        aapsLogger.debug(LTag.WEAR, "WatchFacePush: embedded face changed, syncing")
         // Catches all its failures internally — this path runs on app start and must never take
         // the app down; on failure the version is not marked synced, so the next start retries
         installOrUpdate()
@@ -111,7 +139,7 @@ class WatchFacePushHelper(
         val apkFile = File(context.cacheDir, "wfpush_aapsv4.apk")
         try {
             val manager = createManager()
-            val token = context.assets.open(ASSET_TOKEN).use { String(it.readBytes()) }.trim()
+            val token = embeddedFaceToken() ?: return@withContext false
             context.assets.open(ASSET_APK).use { input ->
                 apkFile.outputStream().use { input.copyTo(it) }
             }
@@ -126,7 +154,7 @@ class WatchFacePushHelper(
             if (activate) {
                 installedFaceSlotId(manager)?.let { slotId -> setActive(manager, slotId) }
             }
-            sp.putString(KEY_SYNCED_VERSION, BuildConfig.BUILDVERSION)
+            sp.putString(KEY_SYNCED_FACE, token)
             sp.putBoolean(KEY_FACE_INSTALLED, true)
             aapsLogger.debug(LTag.WEAR, "WatchFacePush: face ${if (existingSlotId == null) "installed" else "updated"}")
             true
@@ -162,10 +190,20 @@ class WatchFacePushHelper(
     private fun createManager(): WatchFacePushManager =
         WatchFacePushManagerFactory.createWatchFacePushManager(context)
 
-    private suspend fun installedFaceSlotId(manager: WatchFacePushManager): String? =
-        manager.listWatchFaces().installedWatchFaceDetails
+    private suspend fun installedFaceSlotId(manager: WatchFacePushManager): String? {
+        val response = manager.listWatchFaces()
+        // How many faces one app may push is not stated in the API documentation - only that the
+        // number is limited - so it is logged here, where the response is already in hand. It decides
+        // whether AAPS can offer a second face alongside this one, or would have to replace it.
+        aapsLogger.debug(
+            LTag.WEAR,
+            "WatchFacePush: slots used=${response.installedWatchFaceDetails.size} remaining=${response.remainingSlotCount}" +
+                " packages=${response.installedWatchFaceDetails.joinToString { it.packageName }}"
+        )
+        return response.installedWatchFaceDetails
             .firstOrNull { it.packageName == facePackageName }
             ?.slotId
+    }
 
     private suspend fun setActive(manager: WatchFacePushManager, slotId: String) {
         try {
