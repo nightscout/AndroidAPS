@@ -134,13 +134,16 @@ Other
     <string name="pumpsuspended">幫浦已暫停</string>
     <string name="loopsuspended">循環已暫停</string>
     <string name="pump_disconnected">幫浦已中斷連線</string>
+    <string name="basalprofilenotaligned">基礎率數值未與整點對齊：%1$s</string>
     <string name="minimalbasalvaluereplaced">基礎率值已被最低支援值取代：%1$s</string>
     <string name="maximumbasalvaluereplaced">基礎率值已被最高支援值取代：%1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d 分鐘</string>
     <string name="record">紀錄</string>
     <string name="bolus">注射</string>
     <string name="uel_extended_carbs">延長碳水化合物</string>
+    <string name="profile_low_target">設定檔低目標</string>
     <string name="profile_high_target">設定檔高目標</string>
     <string name="profile_dia">設定檔 DIA 值</string>
     <string name="profile_sensitivity_value">設定檔敏感度值</string>
