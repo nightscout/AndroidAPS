@@ -69,6 +69,7 @@
     <string name="temptargetcomparedmgdl">临时目标 %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">临时目标 %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">配置文件pct %1$s %2$d</string>
+    <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">或</string>
     <string name="xor">唯一的</string>
     <string name="atspecifiedtime">在 %1$s</string>
@@ -98,6 +99,7 @@
     <string name="lastboluslabel">上次大剂量</string>
     <string name="lastboluscompared">上次大剂量时间 %1$s %2$s 分钟前</string>
     <string name="triggercoblabel">碳水</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">心率</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="triggerSensorAgeLabel">传感器使用时间</string>
@@ -149,6 +151,11 @@
     <string name="on">开</string>
     <string name="off">关</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">变化平滑</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">变化平滑到 %1$s</string>
+    <string name="smoothing_label">平滑</string>
+    <string name="precondition_smoothing_not_active_name">平滑未启用</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">平滑 %1$s 未激活</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">从地图中选</string>
     <string name="tap_to_select_location">点击地图选择一个位置</string>

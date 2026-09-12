@@ -244,6 +244,8 @@
     <string name="complication_iob_icon">IoB圖示</string>
     <string name="complication_iob_detailed">IoB詳細</string>
     <string name="complication_uploader_phone_battery">Uploader/顯示手機電池</string>
+    <string name="running_mode_resume">恢復循環</string>
+    <string name="running_mode_reconnect">重新連線幫浦</string>
     <string name="label_running_mode_title">執行模式</string>
     <string name="label_bg_graph_tile">血糖圖表</string>
     <string name="tile_tap_action">輕觸動作</string>
