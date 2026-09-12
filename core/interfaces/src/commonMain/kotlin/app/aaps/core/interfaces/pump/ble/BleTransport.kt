@@ -41,7 +41,8 @@ interface BleAdapter {
 data class ScannedDevice(
     val name: String,
     val address: String,
-    val scanRecordBytes: ByteArray? = null
+    val scanRecordBytes: ByteArray? = null,
+    val rssi: Int = Int.MIN_VALUE
 )
 
 interface BleScanner {

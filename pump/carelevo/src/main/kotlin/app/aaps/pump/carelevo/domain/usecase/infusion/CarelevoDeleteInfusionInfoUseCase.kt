@@ -1,0 +1,73 @@
+package app.aaps.pump.carelevo.domain.usecase.infusion
+
+import app.aaps.pump.carelevo.domain.model.ResponseResult
+import app.aaps.pump.carelevo.domain.model.infusion.CarelevoPatchMode
+import app.aaps.pump.carelevo.domain.model.infusion.derivePatchMode
+import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
+import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
+import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
+import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseRequest
+import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
+import app.aaps.pump.carelevo.domain.usecase.infusion.model.CarelevoDeleteInfusionRequestModel
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlin.time.Clock
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+
+// App-scoped: a view model injects this, and ViewModelOwnershipTest requires every concrete class
+// a view model injects to have one owner. It is a stateless view over the app-scoped DAOs, so one
+// instance is also the only sensible number.
+@SingleIn(AppScope::class)
+class CarelevoDeleteInfusionInfoUseCase @Inject constructor(
+    private val patchInfoRepository: CarelevoPatchInfoRepository,
+    private val infusionInfoRepository: CarelevoInfusionInfoRepository
+) {
+
+    fun execute(request: CarelevoUseCaseRequest): Single<ResponseResult<CarelevoUseCaseResponse>> {
+        return Single.fromCallable {
+            runCatching {
+                require(request is CarelevoDeleteInfusionRequestModel) {
+                    "Request must be CarelevoDeleteInfusionRequestModel"
+                }
+                val req = request
+
+                if (req.isDeleteTempBasal) {
+                    val ok = infusionInfoRepository.deleteTempBasalInfusionInfo()
+                    if (!ok) error("Failed to delete temp basal infusion info")
+                }
+                if (req.isDeleteImmeBolus) {
+                    val ok = infusionInfoRepository.deleteImmeBolusInfusionInfo()
+                    if (!ok) error("Failed to delete immediate bolus infusion info")
+                }
+                if (req.isDeleteExtendBolus) {
+                    val ok = infusionInfoRepository.deleteExtendBolusInfusionInfo()
+                    if (!ok) error("Failed to delete extended bolus infusion info")
+                }
+
+                val infusionInfo = infusionInfoRepository.getInfusionInfoBySync()
+                    ?: error("Infusion info must not be null after deletion step")
+
+                // Delete/discard path: nothing left running means the patch is stopped, so fall
+                // back to BASAL_STOPPED (the mid-therapy persists treat the same case as an error).
+                val mode = infusionInfo.derivePatchMode() ?: CarelevoPatchMode.BASAL_STOPPED
+
+                val now = Clock.System.now()
+                val patchInfo = patchInfoRepository.getPatchInfoBySync()
+                    ?: error("Patch info must not be null")
+
+                val updated = patchInfoRepository.updatePatchInfo(
+                    patchInfo.copy(updatedAt = now, mode = mode)
+                )
+                if (!updated) error("Failed to update patch info (mode=$mode)")
+
+                ResultSuccess
+            }.fold(
+                onSuccess = { ResponseResult.Success(it as CarelevoUseCaseResponse) },
+                onFailure = { ResponseResult.Error(it) }
+            )
+            // subscribeOn, NOT observeOn — see CarelevoFinishImmeBolusInfusionUseCase.
+        }.subscribeOn(Schedulers.io())
+    }
+}

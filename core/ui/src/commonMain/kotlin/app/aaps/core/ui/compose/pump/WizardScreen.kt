@@ -40,7 +40,9 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
  * @param currentStep Current wizard step (null hides content)
  * @param totalSteps Total number of steps for progress indicator
  * @param currentStepIndex Zero-based current step position
- * @param canGoBack Whether back navigation is allowed on current step
+ * @param canGoBack Whether leaving the wizard is allowed on the current step. When false, the
+ *   toolbar back arrow is hidden and the system back button is swallowed without showing the
+ *   cancel dialog — used by steps where aborting is unsafe (e.g. mid-priming).
  * @param onBack Called when user confirms exit from the wizard
  * @param cancelDialogTitle Title for the cancel confirmation dialog
  * @param cancelDialogText Body text for the cancel confirmation dialog
@@ -63,17 +65,21 @@ fun <S> WizardScreen(
 ) {
     var showCancelDialog by remember { mutableStateOf(false) }
 
-    // Take over toolbar: back arrow shows confirmation dialog
+    // Take over toolbar: back arrow shows confirmation dialog (hidden while canGoBack is false —
+    // ViewModels compute per-step canGoBack precisely to lock the user in during irreversible
+    // steps; this parameter used to be accepted but never wired, silently disabling that gating).
     if (setToolbarConfig != null) {
         // Use a stable callback ref so toolbar icon can trigger dialog
         val onRequestCancel = remember { { showCancelDialog = true } }
-        DisposableEffect(title, onRequestCancel) {
+        DisposableEffect(title, onRequestCancel, canGoBack) {
             setToolbarConfig(
                 ToolbarConfig(
                     title = title,
                     navigationIcon = {
-                        IconButton(onClick = onRequestCancel) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        if (canGoBack) {
+                            IconButton(onClick = onRequestCancel) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                            }
                         }
                     },
                     actions = {}
@@ -86,12 +92,13 @@ fun <S> WizardScreen(
         }
     }
 
-    // System back button: always confirm before leaving the wizard.
+    // System back button: confirm before leaving the wizard; swallow entirely on steps that
+    // must not be left. The handler stays enabled in both cases, so back never escapes the wizard.
     // The wizard has no back stack of its own, so the handler carries no navigation info.
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
         isBackEnabled = true,
-        onBackCompleted = { showCancelDialog = true }
+        onBackCompleted = { if (canGoBack) showCancelDialog = true }
     )
 
     if (showCancelDialog) {

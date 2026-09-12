@@ -1,6 +1,7 @@
 package app.aaps.di.metro
 
 import com.google.common.truth.Truth.assertThat
+import app.aaps.pump.carelevo.CarelevoPumpPlugin
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danars.DanaRSPlugin
@@ -39,7 +40,7 @@ class PumpDriverBucketTest {
     @Test
     fun `the pump bucket holds exactly the known drivers`() {
         assertThat(testRoot().contributedPumpDriverPlugins.keys)
-            .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130)
+            .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130, 1190)
     }
 
     @Test
@@ -59,6 +60,7 @@ class PumpDriverBucketTest {
         assertThat(drivers[1110]).isInstanceOf(EopatchPumpPlugin::class.java)
         assertThat(drivers[1120]).isInstanceOf(MedtrumPlugin::class.java)
         assertThat(drivers[1130]).isInstanceOf(EquilPumpPlugin::class.java)
+        assertThat(drivers[1190]).isInstanceOf(CarelevoPumpPlugin::class.java)
     }
 
     /**
@@ -100,6 +102,6 @@ class PumpDriverBucketTest {
         // would report it.
         val everyBuild = testRoot().contributedPlugins.keys
 
-        assertThat(everyBuild).containsNoneOf(1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130)
+        assertThat(everyBuild).containsNoneOf(1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130, 1190)
     }
 }
