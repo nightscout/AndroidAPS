@@ -2,16 +2,18 @@ package app.aaps.pump.eopatch.core.api
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.eopatch.core.ble.BaseAPI
-import app.aaps.pump.eopatch.core.scan.IBleDevice
-import javax.inject.Inject
-import javax.inject.Singleton
 import app.aaps.pump.eopatch.core.ble.BytesConverter
 import app.aaps.pump.eopatch.core.ble.PatchFunc
 import app.aaps.pump.eopatch.core.response.GlobalTimeResponse
+import app.aaps.pump.eopatch.core.scan.IBleDevice
 import io.reactivex.rxjava3.core.Single
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
-class GetGlobalTime @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<GlobalTimeResponse>(PatchFunc.GET_GLOBAL_TIME, patch, aapsLogger) {
+@SingleIn(AppScope::class)
+@Inject
+class GetGlobalTime(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<GlobalTimeResponse>(PatchFunc.GET_GLOBAL_TIME, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): GlobalTimeResponse {
         val time = BytesConverter.toUInt(bytes, DATA0)
         return GlobalTimeResponse(time, bytes[DATA5].toInt())

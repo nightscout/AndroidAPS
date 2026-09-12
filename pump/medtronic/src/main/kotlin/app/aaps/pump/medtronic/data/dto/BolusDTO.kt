@@ -2,8 +2,8 @@ package app.aaps.pump.medtronic.data.dto
 
 import app.aaps.core.utils.StringUtil
 import app.aaps.core.utils.formatUS
-import com.google.gson.annotations.Expose
 import app.aaps.pump.medtronic.defs.PumpBolusType
+import com.google.gson.annotations.Expose
 
 /**
  * Application: GGC - GNU Gluco Control

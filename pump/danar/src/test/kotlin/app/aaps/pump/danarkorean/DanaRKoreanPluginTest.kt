@@ -37,8 +37,8 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRPlugin = DanaRKoreanPlugin(
-            aapsLogger, aapsSchedulers, rxBus, context, rh, activePlugin, commandQueue, danaPump, dateUtil, fabricPrivacy,
-            pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), pumpEnactResultProvider
+            aapsLogger, rxBus, context, rh, activePlugin, commandQueue, danaPump, dateUtil,
+            pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)), pumpEnactResultProvider
         )
     }
 

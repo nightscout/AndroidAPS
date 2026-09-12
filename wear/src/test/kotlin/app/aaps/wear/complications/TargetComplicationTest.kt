@@ -10,12 +10,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [TargetComplication] and the shared [ModernBaseComplicationProviderService] logic it
- * inherits: [getPreviewData]/[getPreviewComplicationData] (sample temp-target data + tap intent →
- * build) and the action/name accessors. Built via [Robolectric] so a Context is attached without
- * running onCreate's Dagger injection; the `@Inject` fields are set directly.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class TargetComplicationTest {

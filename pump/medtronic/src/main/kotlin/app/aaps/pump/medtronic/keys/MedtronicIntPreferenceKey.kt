@@ -3,27 +3,18 @@ package app.aaps.pump.medtronic.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.medtronic.R
 
 enum class MedtronicIntPreferenceKey(
     override val key: String,
     override val defaultValue: Int,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    override val entries: Map<Int, Int> = emptyMap(),
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     MaxBasal(
@@ -45,7 +36,7 @@ enum class MedtronicIntPreferenceKey(
         defaultValue = 10,
         titleResId = R.string.medtronic_pump_bolus_delay,
         preferenceType = PreferenceType.LIST,
-        entries = mapOf(
+        entriesResIds = mapOf(
             5 to R.string.medtronic_bolus_delay_5s,
             10 to R.string.medtronic_bolus_delay_10s,
             15 to R.string.medtronic_bolus_delay_15s
@@ -53,4 +44,9 @@ enum class MedtronicIntPreferenceKey(
         min = 5,
         max = 15
     ),
+    ;
+
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.AndroidRes(it.value) }
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

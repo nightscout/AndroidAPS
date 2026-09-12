@@ -4,8 +4,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.BeforeEach
@@ -14,19 +13,18 @@ import org.junit.jupiter.api.Test
 class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
 
     private lateinit var diaconnG8Pump: DiaconnG8Pump
-    private val bolusProgressData by lazy { BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)) }
+    private val bolusProgressData by lazy { BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)) }
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is InjectionSnackResultReportPacket) {
+    private val packetInjector = MetroMemberInjector {
+        if (it is InjectionSnackResultReportPacket) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
                 it.diaconnG8Pump = diaconnG8Pump
                 it.rxBus = rxBus
                 it.rh = rh
                 it.bolusProgressData = bolusProgressData
-            }
         }
+        true
     }
 
     @BeforeEach

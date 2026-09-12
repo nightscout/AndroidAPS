@@ -3,14 +3,17 @@ package app.aaps.pump.diaconn.packet
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
-import dagger.android.HasAndroidInjector
-import java.lang.StringBuilder
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.HasMemberInjections
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 @Suppress("SpellCheckingInspection")
-open class DiaconnG8Packet(protected val injector: HasAndroidInjector) {
+// Metro reads this class now that interop is on for the module. It is subclassable, so it has to
+// say its injected fields are meant to be filled - Metro will not infer that for an open type.
+@HasMemberInjections
+open class DiaconnG8Packet(protected val injector: MetroMemberInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
@@ -21,7 +24,7 @@ open class DiaconnG8Packet(protected val injector: HasAndroidInjector) {
     open val friendlyName = "UNKNOWN_PACKET"
 
     init {
-        injector.androidInjector().inject(this)
+        check(injector.injectMembers(this)) { "No member injector for ${this::class.java.name}" }
     }
 
     fun success(): Boolean = !failed

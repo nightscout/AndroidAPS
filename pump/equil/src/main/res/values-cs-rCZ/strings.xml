@@ -114,30 +114,8 @@
     <string name="equil_history_item18">Zastaveno abnormální podávání izulínu</string>
     <string name="equil_common_overview_button_suspend_delivery">Pozastavit</string>
     <string name="equil_common_overview_button_resume_delivery">Obnovit podávání inzulínu</string>
-    <string name="equil_common_moments_ago">Před chvílí</string>
-    <string name="equil_common_less_than_a_minute_ago">Před méně než minutou</string>
-    <string name="equil_common_time_ago">před %1$s</string>
-    <string name="equil_common_composite_time">%1$s a %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Dosud jste nedokončili všechny kroky. Jste si jisti, že chcete skončit?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Odejít</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minuta</item>
-        <item quantity="few">%1$d minut</item>
-        <item quantity="many">%1$d minut</item>
-        <item quantity="other">%1$d minut</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d hodina</item>
-        <item quantity="few">%1$d hodin</item>
-        <item quantity="many">%1$d hodin</item>
-        <item quantity="other">%1$d hodin</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d den</item>
-        <item quantity="few">%1$d dní</item>
-        <item quantity="many">%1$d dní</item>
-        <item quantity="other">%1$d dní</item>
-    </plurals>
     <string name="equil_support_error">Verze firmwaru je příliš stará. Není podporována.</string>
     <string name="equil_password_tips">Volitelně nastavte heslo pro spárování s pumpou Equil v5.3. Toto heslo bude použito i pro budoucí odpárování, proto si jej dobře zapamatujte. Pravidlo hesla: musí být 4 znaky dlouhé, z množiny ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Nastavit heslo pro párování</string>

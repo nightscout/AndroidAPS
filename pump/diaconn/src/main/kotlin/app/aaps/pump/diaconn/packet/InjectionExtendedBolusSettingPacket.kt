@@ -1,15 +1,15 @@
 package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import javax.inject.Inject
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.Inject
 
 /**
  * InjectionExtendedBolusSettingPacket
  */
 class InjectionExtendedBolusSettingPacket(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     private val amount: Int,
     private val minutes: Int,
     private val bcDttm: Long

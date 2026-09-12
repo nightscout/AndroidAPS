@@ -39,15 +39,17 @@ import org.apache.commons.lang3.StringUtils
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.Semaphore
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by geoff on 5/26/16.
  * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
-@Singleton
-class RileyLinkBLE @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class RileyLinkBLE(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val rileyLinkServiceData: RileyLinkServiceData,
@@ -70,11 +72,6 @@ class RileyLinkBLE @Inject constructor(
     private var radioResponseCountNotified: Runnable? = null
     var isConnected = false
         private set
-
-    @Inject fun onInit() {
-        //aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
-        orangeLink.rileyLinkBLE = this
-    }
 
     private fun isAnyRileyLinkServiceFound(service: BluetoothGattService): Boolean {
         val found = GattAttributes.isRileyLink(service.uuid)
@@ -341,7 +338,6 @@ class RileyLinkBLE @Inject constructor(
         }
 
     init {
-        //orangeLink.rileyLinkBLE = this;
         bluetoothGattCallback = object : BluetoothGattCallback() {
             @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
             override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {

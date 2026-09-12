@@ -13,10 +13,12 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.events.EventWearPreferenceChange
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -27,8 +29,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Asks the system to refresh the Custom watch face image complications when the picture has actually
@@ -49,8 +52,9 @@ import javax.inject.Singleton
  * Lives for the life of the process rather than of a service: a data source is bound only for as
  * long as it takes to answer one request, so nothing inside one can drive a schedule.
  */
-@Singleton
-class CwfComplicationUpdater @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class CwfComplicationUpdater(
     private val context: Context,
     private val rxBus: RxBus,
     private val complicationDataRepository: ComplicationDataRepository,
@@ -502,15 +506,18 @@ class CwfComplicationUpdater @Inject constructor(
         // coroutine, and reading it before that finishes would draw the design being replaced. If the
         // style has not changed by then, one further attempt is made - a slow write should not cost
         // the wearer the whole minute.
-        rxBus.toObservable(EventData.ActionSetCustomWatchface::class.java)
-            .subscribe(
-                { scope.launch { refreshForNewWatchFace() } },
-                { aapsLogger.error(LTag.WEAR, "CwfComplicationUpdater: watch face stream failed", it) }
-            )
+        // UNDISPATCHED because the bus does not replay: without it, anything sent between this call
+        // and the collector actually starting is dropped with no trace - see collectResilient.
+        rxBus.toFlow(EventData.ActionSetCustomWatchface::class)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
+                refreshForNewWatchFace()
+            }
 
         // A preference can change the layout itself, and the user is watching when they change one
-        rxBus.toObservable(EventWearPreferenceChange::class.java)
-            .subscribe({ requestRefresh("preference changed", COALESCE_MS) }, { aapsLogger.error(LTag.WEAR, "CwfComplicationUpdater: preference stream failed", it) })
+        rxBus.toFlow(EventWearPreferenceChange::class)
+            .collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
+                requestRefresh("preference changed", COALESCE_MS)
+            }
 
         // New data from the phone, or a newly sent watch face. drop(1) skips the value the flow
         // replays on subscription, which is not a change and would refresh for nothing at startup.

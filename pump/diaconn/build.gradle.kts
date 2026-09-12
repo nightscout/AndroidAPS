@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -10,12 +11,11 @@ plugins {
 android {
 
     namespace = "app.aaps.pump.diaconn"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+}
+
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -32,16 +32,10 @@ dependencies {
     implementation(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
 
-    implementation(libs.androidx.hilt.navigation.compose)
-
     api(libs.com.squareup.okhttp3.okhttp)
     api(libs.com.squareup.retrofit2.retrofit)
     implementation(libs.com.squareup.retrofit2.converter.gson)
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":core:objects"))
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
 }

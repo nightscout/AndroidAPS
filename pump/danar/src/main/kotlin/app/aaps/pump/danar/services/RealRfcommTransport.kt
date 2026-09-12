@@ -16,11 +16,13 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
-class RealRfcommTransport @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class RealRfcommTransport(
     private val context: Context,
     private val aapsLogger: AAPSLogger
 ) : RfcommTransport {

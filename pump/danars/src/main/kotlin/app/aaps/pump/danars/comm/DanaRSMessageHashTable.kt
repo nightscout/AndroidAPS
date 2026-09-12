@@ -1,13 +1,15 @@
 package app.aaps.pump.danars.comm
 
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
+@SingleIn(AppScope::class)
 /**
  * Used to get an instance of a packet by received command code
  */
-class DanaRSMessageHashTable @Inject constructor(
+@Inject
+class DanaRSMessageHashTable(
     /**
      * Only packets which are not respond to sent packet are listed
      */

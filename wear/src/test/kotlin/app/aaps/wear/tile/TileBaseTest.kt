@@ -29,10 +29,6 @@ import org.robolectric.annotation.Config
  * Covers the shared tile layout engine [TileBase] via the concrete [ActionsTileService]: onTileRequest across
  * every [WearControl] state and 0–4 action grid arrangement (which drives the button geometry, text sizing and
  * screen-shape branches), the freshness/resource-version wiring, and onResourcesRequest image mapping.
- *
- * Built via [Robolectric] so a Context is attached without running onCreate's Dagger injection; the `@Inject`
- * fields are set directly and the data source is mocked to drive each branch. onTileRequest runs its work on
- * Dispatchers.IO via a guava future, so `.get()` blocks for the built Tile.
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])

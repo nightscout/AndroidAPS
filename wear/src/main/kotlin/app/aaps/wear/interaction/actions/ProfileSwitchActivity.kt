@@ -42,10 +42,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionProfileSwitchPreCheck
 import app.aaps.wear.R
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import app.aaps.wear.di.WearMetroActivity
+import dev.zacsweers.metro.Inject
 
-class ProfileSwitchActivity : DaggerAppCompatActivity() {
+class ProfileSwitchActivity : WearMetroActivity() {
 
     @Inject lateinit var rxBus: RxBus
 

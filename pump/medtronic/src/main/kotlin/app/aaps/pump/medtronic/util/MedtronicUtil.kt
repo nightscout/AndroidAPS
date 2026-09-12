@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
@@ -21,16 +22,18 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.InvalidParameterException
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.experimental.or
 import kotlin.math.abs
 
 /**
  * Created by andy on 5/9/18.
  */
-@Singleton
-class MedtronicUtil @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class MedtronicUtil(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val rileyLinkUtil: RileyLinkUtil,
@@ -98,7 +101,11 @@ class MedtronicUtil @Inject constructor(
     // }
 
     fun sendNotification(notificationType: MedtronicNotificationType, vararg parameters: Any?) {
-        notificationManager.post(notificationType.notificationId, notificationType.resourceId, *parameters, level = notificationType.notificationLevel)
+        notificationManager.post(
+            notificationType.notificationId,
+            TextRef.AndroidRes(notificationType.resourceId, parameters.filterNotNull()),
+            level = notificationType.notificationLevel
+        )
     }
 
     fun dismissNotification(notificationType: MedtronicNotificationType) {

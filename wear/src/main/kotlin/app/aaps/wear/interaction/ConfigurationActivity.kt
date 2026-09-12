@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
 import androidx.wear.watchface.editor.EditorSession
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
@@ -17,12 +18,11 @@ import app.aaps.wear.preference.WearPreferenceActivity
 import app.aaps.wear.watchfaces.CircleWatchface
 import app.aaps.wear.watchfaces.CustomWatchface
 import app.aaps.wear.watchfaces.DigitalStyleWatchface
-import dagger.android.AndroidInjection
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsHost {
 
@@ -53,7 +53,7 @@ class ConfigurationActivity : WearPreferenceActivity(), CustomWatchfaceSettingsH
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
 
         // Extract the watchface component name from the intent BEFORE calling super.onCreate()
         // Wear OS 5.0 uses "COMPONENT_NAME_KEY" instead of the standard extras

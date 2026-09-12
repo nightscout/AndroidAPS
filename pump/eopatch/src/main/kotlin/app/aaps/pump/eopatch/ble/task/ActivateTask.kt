@@ -9,11 +9,13 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
-class ActivateTask @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class ActivateTask(
     val startBasalTask: StartNormalBasalTask
 ) : TaskBase(TaskFunc.ACTIVATE) {
 

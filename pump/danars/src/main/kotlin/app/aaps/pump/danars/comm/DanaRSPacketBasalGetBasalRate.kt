@@ -4,12 +4,14 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class DanaRSPacketBasalGetBasalRate @Inject constructor(
+@Inject
+class DanaRSPacketBasalGetBasalRate(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager,
     private val danaPump: DanaPump
@@ -42,7 +44,7 @@ class DanaRSPacketBasalGetBasalRate @Inject constructor(
             aapsLogger.debug(LTag.PUMPCOMM, "Basal " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + danaPump.pumpProfiles!![danaPump.activeProfile][index])
         if (danaPump.basalStep != 0.01) {
             failed = true
-            notificationManager.post(NotificationId.WRONG_BASAL_STEP, app.aaps.pump.dana.R.string.danar_setbasalstep001)
+            notificationManager.post(NotificationId.WRONG_BASAL_STEP, TextRef.AndroidRes(app.aaps.pump.dana.R.string.danar_setbasalstep001))
         } else {
             notificationManager.dismiss(NotificationId.WRONG_BASAL_STEP)
         }

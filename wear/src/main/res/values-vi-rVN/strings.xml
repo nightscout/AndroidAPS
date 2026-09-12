@@ -107,6 +107,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Cao[%s]</string>
     <string name="action_carbs">Carbs</string>
     <string name="action_carbs_gram">Carbs [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Xoá lượng carb tối đa: %1$d g (COB)</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Phần trăm\n[%]</string>
     <string name="action_start_minutes">Bắt đầu\n[phút]</string>
@@ -262,7 +263,9 @@
     <string name="contacting_master_unknown">Trạng thái không xác định — hãy kiểm tra điện thoại</string>
     <string name="tile_settings">Cài đặt Tile</string>
     <string name="loop_status_error">Không tải được trạng thái</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s còn lại</string>
     <string name="loop_status_tbr_continues">Tiếp tục liều nền tạm thời</string>
     <string name="loop_status_tbr_cancel">Đang thiết lập liều nền thường</string>
     <string name="loop_status_smb">%1$.2f U</string>

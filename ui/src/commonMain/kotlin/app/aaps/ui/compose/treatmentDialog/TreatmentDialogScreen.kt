@@ -1,0 +1,255 @@
+package app.aaps.ui.compose.treatmentDialog
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.banner.WarningBanner
+import app.aaps.core.ui.compose.bottomBarSafeArea
+import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
+import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
+import app.aaps.ui.compose.components.DialogStatusBar
+import app.aaps.ui.compose.overview.chips.CobUiState
+import app.aaps.ui.compose.overview.chips.IobUiState
+import app.aaps.ui.compose.overview.graphs.BgInfoUiState
+import kotlinx.coroutines.flow.StateFlow
+
+@Composable
+fun TreatmentDialogScreen(
+    viewModel: TreatmentDialogViewModel = metroViewModel(),
+    bgInfoState: StateFlow<BgInfoUiState>,
+    iobUiState: StateFlow<IobUiState>,
+    cobUiState: StateFlow<CobUiState>,
+    onNavigateBack: () -> Unit,
+    onShowDeliveryError: (String) -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val bgInfo by bgInfoState.collectAsStateWithLifecycle()
+    val iob by iobUiState.collectAsStateWithLifecycle()
+    val cob by cobUiState.collectAsStateWithLifecycle()
+
+    // Dialog states
+    // The master's prepared confirmation (bolusId + its merged lines), set via the ShowConfirmation side effect.
+    var confirmation by remember { mutableStateOf<Pair<Long, List<ConfirmationLine>>?>(null) }
+    var showNoAction by rememberSaveable { mutableStateOf(false) }
+
+    // Observe side effects
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is TreatmentDialogViewModel.SideEffect.ShowDeliveryError -> {
+                    onShowDeliveryError(effect.comment)
+                }
+
+                is TreatmentDialogViewModel.SideEffect.ShowNoActionDialog -> {
+                    showNoAction = true
+                }
+
+                is TreatmentDialogViewModel.SideEffect.ShowConfirmation -> {
+                    confirmation = effect.bolusId to effect.lines
+                }
+            }
+        }
+    }
+
+    // Confirmation dialog — renders the MASTER's prepared lines (set via the ShowConfirmation side effect after prepare()).
+    confirmation?.let { (bolusId, lines) ->
+        ElementConfirmationDialog(
+            elementType = ElementType.TREATMENT,
+            lines = lines,
+            onConfirm = {
+                viewModel.commit(bolusId)
+                confirmation = null
+                onNavigateBack()
+            },
+            onDismiss = { confirmation = null }
+        )
+    }
+
+    // No action dialog
+    if (showNoAction) {
+        ElementConfirmationDialog(
+            elementType = ElementType.TREATMENT,
+            message = stringResource(CoreUiStrings.no_action_selected),
+            onConfirm = { showNoAction = false },
+            onDismiss = { showNoAction = false }
+        )
+    }
+
+    TreatmentDialogContent(
+        uiState = uiState,
+        bgInfo = bgInfo,
+        iob = iob,
+        cob = cob,
+        bolusFormat = viewModel.decimalFormatter.pumpSupportedBolusFormat(uiState.bolusStep),
+        onInsulinChange = { viewModel.updateInsulin(it) },
+        onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
+        onNavigateBack = onNavigateBack,
+        onConfirmClick = { viewModel.prepareAndConfirm() }
+    )
+}
+
+/**
+ * @see TreatmentDialogScreenPreview
+ */
+@Composable
+internal fun TreatmentDialogContent(
+    uiState: TreatmentDialogUiState,
+    bgInfo: BgInfoUiState,
+    iob: IobUiState,
+    cob: CobUiState,
+    bolusFormat: NumberFormat,
+    onInsulinChange: (Double) -> Unit,
+    onCarbsChange: (Double) -> Unit,
+    onNavigateBack: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+    Scaffold(
+        topBar = {
+            AapsTopAppBar(
+                title = { Text((stringResourceOrNull(ElementType.TREATMENT.label()) ?: "")) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(CoreUiStrings.close)
+                        )
+                    }
+                },
+                actions = {}
+            )
+        },
+        bottomBar = {
+            val hasAction = uiState.insulin > 0.0 || uiState.carbs > 0
+            Button(
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
+                enabled = hasAction,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .bottomBarSafeArea()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                if (uiState.insulin > 0.0) {
+                    Text(stringResource(InterfacesStrings.format_insulin_units, uiState.insulin))
+                }
+                if (uiState.insulin > 0.0 && uiState.carbs > 0) {
+                    Spacer(modifier = Modifier.width(4.dp))
+                }
+                if (uiState.carbs > 0) {
+                    Text(stringResource(InterfacesStrings.format_carbs, uiState.carbs))
+                }
+                if (!hasAction) {
+                    Text(stringResource(CoreUiStrings.ok))
+                }
+            }
+        }
+    ) { paddingValues ->
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // --- Status Bar ---
+            DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
+
+            // --- Forced-record-only warning ---
+            if (uiState.forcedRecordOnly) {
+                WarningBanner(message = stringResource(InterfacesStrings.bolus_recorded_only))
+            }
+
+            // --- Single Card: Insulin + Carbs ---
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    NumberInputRow(
+                        labelRef = CoreUiStrings.overview_insulin_label,
+                        value = uiState.insulin,
+                        onValueChange = onInsulinChange,
+                        valueRange = 0.0..uiState.maxInsulin,
+                        step = uiState.bolusStep,
+                        valueFormat = bolusFormat,
+                        unitLabel = CoreUiStrings.insulin_unit_shortname,
+                        modifier = itemModifier
+                    )
+
+                    NumberInputRow(
+                        labelRef = InterfacesStrings.carbs,
+                        value = uiState.carbs.toDouble(),
+                        onValueChange = onCarbsChange,
+                        valueRange = 0.0..uiState.maxCarbs.toDouble(),
+                        step = 1.0,
+                        valueFormat = NumberFormat.INTEGER,
+                        unitLabel = CoreUiStrings.shortgramm,
+                        modifier = itemModifier
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}

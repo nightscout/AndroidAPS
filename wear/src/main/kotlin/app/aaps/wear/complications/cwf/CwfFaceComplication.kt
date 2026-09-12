@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.shared.impl.weardata.ResFileMap
 import app.aaps.wear.R
 import app.aaps.wear.watchfaces.CustomWatchface
+import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -59,6 +60,7 @@ import app.aaps.wear.data.ComplicationData as ComplicationStore
  * preparation can fix - and the user's own complication slots are not part of it, because
  * complication data only ever reaches the watch face the system has bound.
  */
+@HasMemberInjections
 open class CwfFaceComplication : ModernBaseComplicationProviderService() {
 
     companion object {

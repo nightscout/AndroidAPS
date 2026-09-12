@@ -13,13 +13,14 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.roundToLong
 
 /**
  * This class is intended to be run by the Service, for the Service. Not intended for clients to run.
  */
-class InitializePumpManagerTask @Inject constructor(
+@Inject
+class InitializePumpManagerTask(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rileyLinkServiceData: RileyLinkServiceData,

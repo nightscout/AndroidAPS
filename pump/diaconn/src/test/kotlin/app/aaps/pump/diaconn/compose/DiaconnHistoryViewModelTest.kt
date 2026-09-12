@@ -13,11 +13,11 @@ import app.aaps.pump.diaconn.common.RecordTypes
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -56,7 +56,7 @@ internal class DiaconnHistoryViewModelTest {
         // init runs synchronously (not in a launch): builds the type list, subscribes to status events,
         // and loads records for the first type — every collaborator it touches must be stubbed.
         whenever(rh.gs(anyInt())).thenReturn("")
-        whenever(rxBus.toObservable(EventPumpStatusChanged::class.java)).thenReturn(Observable.empty())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
         whenever(dateUtil.now()).thenReturn(0L)

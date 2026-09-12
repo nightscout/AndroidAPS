@@ -11,14 +11,16 @@ import app.aaps.core.keys.interfaces.Preferences
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * This class is intended for Pump Drivers that use temporaryId and need way to pair records
  */
-@Singleton
-class PumpSyncStorage @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class PumpSyncStorage(
     val pumpSync: PumpSync,
     val preferences: Preferences,
     val aapsLogger: AAPSLogger
@@ -29,8 +31,6 @@ class PumpSyncStorage @Inject constructor(
 
     @Volatile private var storageInitialized: Boolean = false
 
-    // XStream construction is heavy (Class.forName chain in setupSecurity) — defer it so it
-    // doesn't run on the main thread during Dagger eager-construct in MainApp.onCreate.
     private val xstream: XStream by lazy {
         XStream().apply { addPermission(AnyTypePermission.ANY) }
     }

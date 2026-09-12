@@ -1,6 +1,6 @@
 package app.aaps.pump.eopatch
 
-import java.util.*
+import java.util.Locale
 import java.util.function.Function
 
 object FloatFormatters {

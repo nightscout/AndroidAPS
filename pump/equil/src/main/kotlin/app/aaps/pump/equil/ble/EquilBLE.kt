@@ -28,11 +28,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
-class EquilBLE @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class EquilBLE(
     private val aapsLogger: AAPSLogger,
     private val bleTransport: EquilBleTransport,
     private val rxBus: RxBus

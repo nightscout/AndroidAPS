@@ -104,30 +104,8 @@
     <string name="equil_history_item18">Neįprastas suleidimas sustabdytas</string>
     <string name="equil_common_overview_button_suspend_delivery">Sustabdyti</string>
     <string name="equil_common_overview_button_resume_delivery">Atnaujinti suleidimą</string>
-    <string name="equil_common_moments_ago">Neseniai</string>
-    <string name="equil_common_less_than_a_minute_ago">Mažiau nei prieš minutę</string>
-    <string name="equil_common_time_ago">prieš %1$s</string>
-    <string name="equil_common_composite_time">%1$s ir %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Dar nesate užbaigę visų žingsnių. Ar tikrai norite išeiti?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Išeiti</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minutė</item>
-        <item quantity="few">%1$d minutės</item>
-        <item quantity="many">%1$d minutės</item>
-        <item quantity="other">%1$d min.</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d valanda</item>
-        <item quantity="few">%1$d valandos</item>
-        <item quantity="many">%1$d valandų</item>
-        <item quantity="other">%1$d val.</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d diena</item>
-        <item quantity="few">%1$d dienos</item>
-        <item quantity="many">%1$d d.</item>
-        <item quantity="other">%1$d d.</item>
-    </plurals>
     <string name="equil_support_error">Programinės įrangos versija per žema. Nepalaikoma</string>
     <string name="equil_set_pair_password">Nustatyti suporavimo slaptažodį</string>
     <string name="equil_hint1">Po to, kai uždėsite pompą ant pagrindo plokštės, pasirinkite, ar norite išstumti orą iš įvestos adatos.</string>

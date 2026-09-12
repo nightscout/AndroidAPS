@@ -5,9 +5,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class DanaRSPacketOptionSetPumpTime @Inject constructor(
+@Inject
+class DanaRSPacketOptionSetPumpTime(
     private val aapsLogger: AAPSLogger,
     dateUtil: DateUtil
 ) : DanaRSPacket() {

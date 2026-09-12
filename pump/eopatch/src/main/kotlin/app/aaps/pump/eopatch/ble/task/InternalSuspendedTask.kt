@@ -21,11 +21,13 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
-class InternalSuspendedTask @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class InternalSuspendedTask(
     private val commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
     private val uel: UserEntryLogger,

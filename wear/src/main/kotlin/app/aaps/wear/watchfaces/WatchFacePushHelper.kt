@@ -9,11 +9,13 @@ import androidx.wear.watchfacepush.WatchFacePushManagerFactory
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import app.aaps.wear.BuildConfig
+import app.aaps.wear.watchfaces.WatchFacePushHelper.Companion.KEY_FACE_INSTALLED
+import dev.zacsweers.metro.Inject
 import java.io.File
 import java.io.IOException
-import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Installs and updates the embedded "AAPS V4" Watch Face Format face through the Watch Face Push
@@ -24,7 +26,8 @@ import javax.inject.Inject
  * the wear build script) and shipped in assets. The token is bound to the exact APK bytes, so both
  * always travel together.
  */
-class WatchFacePushHelper @Inject constructor(
+@Inject
+class WatchFacePushHelper(
     private val context: Context,
     private val sp: SP,
     private val aapsLogger: AAPSLogger

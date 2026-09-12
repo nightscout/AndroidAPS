@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Polecenie jest teraz wykonywane</string>
+    <string name="basal_value_below_minimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Węglowodany</string>
+    <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Ost. Poł.: %1$d m. temu</string>
+    <string name="short_status_last_bolus">Ost. Bolus: %1$sU @ %2$s</string>
+    <string name="short_status_temp_basal">Tymcz.: %1$s</string>
+    <string name="short_status_battery">Bat.: %1$d%%</string>
+    <string name="short_status_not_initialized">Pompa nie zainicjal.</string>
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported">Ustawienia wyeksportowane</string>
+    <string name="exported_failed">Eksport ustawień nie powiódł się!</string>
+    <string name="filenotfound">Nie znaleziono pliku</string>
+    <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
+    <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
+    <string name="exported_less_than_hour_ago">wyeksportowano mniej niż godzinę temu</string>
+    <string name="metadata_warning_different_flavour">Ustawienia zostały utworzone z innym wariantem AAPS (%1$s) gdy masz %2$s.\n\nNiektóre ustawienia mogą być brakujące lub nieprawidłowe - po zaimportowaniu proszę sprawdzić i zaktualizować swoje ustawienia.</string>
+    <string name="metadata_warning_different_device">Preferencje zostały utworzone na innym urządzeniu. Import ze starszego/innego telefonu jest OK, ale upewnij się, że importowane preferencje są poprawne!</string>
+    <string name="metadata_warning_old_export">Zaimportowane ustawienia mają już %1$s dni! Może masz bardziej aktualne ustawienia lub wybierzesz niewłaściwy plik? Pamiętaj o regularnym eksporcie ustawień!</string>
+    <string name="metadata_warning_date_format">Niepoprawny format daty i czasu!</string>
+    <string name="metadata_warning_different_version">Importujesz ustawienia z innej, nieco starszej wersji aplikacji. Prawdopodobnie to jest OK bo np.: importujesz ustawienia po aktualizacji do nowej wersji, ale sprawdź po zaimportowaniu, czy ustawienia są nadal poprawne!</string>
+    <string name="metadata_urgent_different_version">Importujesz ustawienia ze znacząco innej wersji aplikacji. Zmiana głównego numeru wersji aplikacji oznacza znaczące zmiany, i może oznaczać niekompatybilność niektórych ustawień. Upewnij się po imporcie, że ustawienia są nadal poprawne!</string>
+    <string name="prefdecrypt_settings_tampered">Plik ustawień został zmieniony</string>
+    <string name="prefdecrypt_settings_secure">Plik ustawień jest bezpieczny</string>
+    <string name="prefdecrypt_settings_unencrypted">Używanie niebezpieczne, niezaszyfrowany format ustawień</string>
+    <string name="prefdecrypt_wrong_json">Błąd w formacie JSON, brak wymaganego pola (format, zawartość, metadane lub zabezpieczenia)</string>
+    <string name="prefdecrypt_wrong_password">Błąd odszyfrowania, podane hasło nie może odszyfrować pliku</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Brak sumy kontrolnej pliku (hash), nie można zweryfikować autentyczności ustawień!</string>
+    <string name="prefdecrypt_issue_modified">Plik został zmodyfikowany po eksporcie!</string>
+    <string name="prefdecrypt_issue_parsing">Błąd odszyfrowania, nie udało się odczytać ustawień!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Błąd deszyfrowania, podane hasło jest niepoprawne lub plik ustawień został zmodyfikowany! Może się zdarzyć, że zaimportowany plik został wyeksportowany z innym hasłem głównym.</string>
+    <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>
+    <string name="metadata_label_created_at">Utworzono</string>
+    <string name="metadata_label_aaps_version">Wersja AAPS</string>
+    <string name="metadata_label_aaps_flavour">Wariant kompilacji</string>
+    <string name="metadata_label_device_name">Eksportowanie nazwy pacjenta urządzenia</string>
+    <string name="metadata_label_device_model">Eksportowanie modelu urządzenia</string>
+    <string name="metadata_label_encryption">Szyfrowanie pliku</string>
+    <string name="metadata_format_new">Nowy zaszyfrowany format</string>
+    <string name="metadata_format_other">Nieznany format eksportu</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Błąd dostępu do systemu plików. Wybierz prawidłowo katalog AAPS.</string>
+</resources>

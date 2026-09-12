@@ -3,13 +3,14 @@ package app.aaps.pump.danarv2.comm
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danar.comm.MessageBase
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.launch
 
 class MsgCheckValueV2(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {
@@ -24,7 +25,7 @@ class MsgCheckValueV2(
         danaPump.protocol = intFromBuff(bytes, 1, 1)
         danaPump.productCode = intFromBuff(bytes, 2, 1)
         if (danaPump.hwModel != DanaPump.EXPORT_MODEL) {
-            notificationManager.post(NotificationId.WRONG_DRIVER, app.aaps.pump.dana.R.string.pumpdrivercorrected)
+            notificationManager.post(NotificationId.WRONG_DRIVER, TextRef.AndroidRes(app.aaps.pump.dana.R.string.pumpdrivercorrected))
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)
@@ -38,7 +39,7 @@ class MsgCheckValueV2(
             return
         }
         if (danaPump.protocol != 2) {
-            notificationManager.post(NotificationId.WRONG_DRIVER, app.aaps.pump.dana.R.string.pumpdrivercorrected)
+            notificationManager.post(NotificationId.WRONG_DRIVER, TextRef.AndroidRes(app.aaps.pump.dana.R.string.pumpdrivercorrected))
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to non APS DanaR")
             danaRv2Plugin.setPluginEnabled(PluginType.PUMP, false)

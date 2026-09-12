@@ -7,6 +7,7 @@ import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
+import dev.zacsweers.metro.HasMemberInjections
 
 /**
  * SGV (Sensor Glucose Value) Complication
@@ -16,6 +17,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
  * - Time auto-updates every minute (battery efficient)
  * - Delta is static until new BG reading
  */
+@HasMemberInjections
 open class SgvComplication : ModernBaseComplicationProviderService() {
 
 

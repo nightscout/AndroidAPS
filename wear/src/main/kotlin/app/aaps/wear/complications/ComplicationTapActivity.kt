@@ -13,7 +13,9 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
+import app.aaps.wear.di.WearMetroActivity
 import app.aaps.wear.interaction.actions.ECarbActivity
+import app.aaps.wear.interaction.actions.RunningModePickerActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
@@ -23,8 +25,7 @@ import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.StatusMenuActivity
 import app.aaps.wear.interaction.utils.Constants
 import app.aaps.wear.interaction.utils.DisplayFormat
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Transparent activity to handle complication tap actions reliably.
@@ -35,7 +36,7 @@ import javax.inject.Inject
  * when trying to start a foreground service from a BroadcastReceiver
  * while the app is in the background.
  */
-class ComplicationTapActivity : DaggerAppCompatActivity() {
+class ComplicationTapActivity : WearMetroActivity() {
 
     @Inject lateinit var displayFormat: DisplayFormat
     @Inject lateinit var sp: SP
@@ -153,6 +154,7 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
             ComplicationAction.BG_GRAPH -> intentOpen = Intent(this, BgGraphActivity::class.java)
             ComplicationAction.STATUS -> intentOpen = Intent(this, StatusMenuActivity::class.java)
             ComplicationAction.LOOP_STATUS -> intentOpen = Intent(this, LoopStatusActivity::class.java)
+            ComplicationAction.RUNNING_MODE -> intentOpen = Intent(this, RunningModePickerActivity::class.java)
 
             ComplicationAction.WARNING_OLD, ComplicationAction.WARNING_SYNC -> {
                 val oneAndHalfMinuteAgo = System.currentTimeMillis() - (Constants.MINUTE_IN_MS + Constants.SECOND_IN_MS * 30)
@@ -190,6 +192,7 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
                 "status" -> ComplicationAction.STATUS
                 "loop_status" -> ComplicationAction.LOOP_STATUS
                 "bg_graph" -> ComplicationAction.BG_GRAPH
+                "running_mode" -> ComplicationAction.RUNNING_MODE
                 "none" -> ComplicationAction.NONE
                 "default" -> originalAction
                 else -> originalAction

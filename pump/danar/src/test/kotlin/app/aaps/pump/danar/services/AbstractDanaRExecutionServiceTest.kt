@@ -39,7 +39,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
                 injector.aapsLogger = aapsLogger
                 injector.rh = rh
                 injector.danaPump = danaPump
-                injector.bolusProgressData = BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined))
+                injector.bolusProgressData = BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined))
             }
         }
     }
@@ -75,13 +75,11 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         testService.context = context
         testService.rh = rh
         testService.danaPump = danaPump
-        testService.fabricPrivacy = fabricPrivacy
         testService.dateUtil = dateUtil
-        testService.aapsSchedulers = aapsSchedulers
         testService.pumpSync = pumpSync
         testService.activePlugin = activePlugin
         testService.notificationManager = notificationManager
-        testService.bolusProgressData = BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined))
+        testService.bolusProgressData = BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined))
         testService.pumpEnactResultProvider = pumpEnactResultProvider
         testService.rfcommTransport = mock()
         testService.injector = injector

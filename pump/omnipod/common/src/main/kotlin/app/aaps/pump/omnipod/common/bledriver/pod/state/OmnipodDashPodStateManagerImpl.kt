@@ -38,11 +38,10 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.EnumSet
 import java.util.TimeZone
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
 
-@Singleton
-class OmnipodDashPodStateManagerImpl @Inject constructor(
+@Inject
+class OmnipodDashPodStateManagerImpl(
     private val logger: AAPSLogger,
     private val rxBus: RxBus,
     private val preferences: Preferences,
@@ -55,7 +54,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     /** Internal (rather than private) to allow unit testing within this module.
      *  Lazily deserialized on first access to keep Gson reflection off the main thread
-     *  during app startup (Dagger constructs this @Singleton eagerly). */
+     *  during app startup. */
     internal var podState: PodState
         get() = _podState ?: synchronized(this) { _podState ?: load().also { _podState = it } }
         set(value) {

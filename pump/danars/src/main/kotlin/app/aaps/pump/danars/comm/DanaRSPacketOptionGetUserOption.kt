@@ -4,9 +4,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class DanaRSPacketOptionGetUserOption @Inject constructor(
+@Inject
+class DanaRSPacketOptionGetUserOption(
     private val aapsLogger: AAPSLogger,
     private val danaPump: DanaPump
 ) : DanaRSPacket() {

@@ -22,7 +22,6 @@ import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 import java.util.Locale
-import javax.inject.Provider
 
 /**
  * This is abstract class for RileyLink Communication, this one needs to be extended by specific "Pump" class.
@@ -38,8 +37,8 @@ abstract class RileyLinkCommunicationManager<T : RLMessage>(
     val rfspy: RFSpy,
     val activePlugin: ActivePlugin,
     val rileyLinkUtil: RileyLinkUtil,
-    val wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
-    val radioResponseProvider: Provider<RadioResponse>
+    val wakeAndTuneTaskProvider: () -> WakeAndTuneTask,
+    val radioResponseProvider: () -> RadioResponse
 ) {
 
     @Suppress("PrivatePropertyName")
@@ -98,7 +97,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage>(
 
                     if (diff > ALLOWED_PUMP_UNREACHABLE) {
                         aapsLogger.warn(LTag.PUMPBTCOMM, "We reached max time that Pump can be unreachable. Starting Tuning.")
-                        serviceTaskExecutor.startTask(wakeAndTuneTaskProvider.get())
+                        serviceTaskExecutor.startTask(wakeAndTuneTaskProvider())
                         timeoutCount = 0
                     }
                 }
@@ -222,7 +221,7 @@ abstract class RileyLinkCommunicationManager<T : RLMessage>(
                 if (resp?.wasTimeout() == true) {
                     aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "scanForPump: Failed to find pump at frequency %.3f", frequencies[i]))
                 } else if (resp?.looksLikeRadioPacket() == true) {
-                    val radioResponse = radioResponseProvider.get()
+                    val radioResponse = radioResponseProvider()
 
                     try {
                         radioResponse.init(resp.raw)

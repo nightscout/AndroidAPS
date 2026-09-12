@@ -24,11 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.watchfaces.CustomWatchface
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 
 /**
  * Proof of concept, not a user-facing screen.
@@ -52,12 +53,13 @@ import javax.inject.Inject
  * Texts are English literals rather than string resources: this screen is a temporary POC and must
  * not add strings for translators.
  */
+@HasMemberInjections
 class CwfRenderPreviewActivity : AppCompatActivity() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate(savedInstanceState)
         setContent { MaterialTheme { CwfRenderPreviewScreen(::render) } }
     }
