@@ -2,10 +2,10 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.dana.DanaPump
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgInitConnStatusBasic(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {

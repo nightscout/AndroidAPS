@@ -7,10 +7,11 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.round
 
-class DanaRSPacketBolusSet24CIRCFArray @Inject constructor(
+@Inject
+class DanaRSPacketBolusSet24CIRCFArray(
     private val aapsLogger: AAPSLogger,
     private val danaPump: DanaPump,
     private val profileUtil: ProfileUtil

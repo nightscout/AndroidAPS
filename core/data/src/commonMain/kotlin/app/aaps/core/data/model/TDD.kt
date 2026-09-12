@@ -1,0 +1,22 @@
+package app.aaps.core.data.model
+
+import app.aaps.core.data.time.systemUtcOffsetAt
+
+data class TDD(
+    override var id: Long = 0,
+    override var version: Int = 0,
+    override var dateCreated: Long = -1,
+    override var isValid: Boolean = true,
+    override var referenceId: Long? = null,
+    override var ids: IDs = IDs(),
+    override var timestamp: Long,
+    var utcOffset: Long = systemUtcOffsetAt(timestamp),
+    var basalAmount: Double = 0.0,
+    var bolusAmount: Double = 0.0,
+    var totalAmount: Double = 0.0, // if zero it's calculated as basalAmount + bolusAmount
+    var carbs: Double = 0.0,
+    var carbInsulin: Double = 0.0 // estimated insulin for carbs = sum(carbs / IC at carb time)
+) : HasIDs, TimeStamped {
+
+    companion object
+}

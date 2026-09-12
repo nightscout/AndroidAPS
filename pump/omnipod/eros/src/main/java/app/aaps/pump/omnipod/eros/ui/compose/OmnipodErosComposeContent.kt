@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -49,7 +49,7 @@ class OmnipodErosComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: ErosOverviewViewModel = hiltViewModel()
+        val overviewViewModel: ErosOverviewViewModel = metroViewModel()
         val context = LocalContext.current
         val snackbarHostState = LocalSnackbarHostState.current
 
@@ -189,7 +189,7 @@ class OmnipodErosComposeContent(
                         onFailed = { showRileyLinkPairWizard = false }
                     )
                 } else {
-                    val rlWizardViewModel: RileyLinkPairWizardViewModel = hiltViewModel()
+                    val rlWizardViewModel: RileyLinkPairWizardViewModel = metroViewModel()
 
                     LaunchedEffect(rlWizardViewModel) {
                         rlWizardViewModel.events.collect { event ->
@@ -209,14 +209,14 @@ class OmnipodErosComposeContent(
             }
 
             showRileyLinkStats      -> {
-                val rlStatusViewModel: RileyLinkStatusViewModel = hiltViewModel()
+                val rlStatusViewModel: RileyLinkStatusViewModel = metroViewModel()
                 RileyLinkStatusScreen(viewModel = rlStatusViewModel)
             }
 
             showWizard              -> {
                 KeepScreenOnEffect()
 
-                val wizardViewModel: ErosOmnipodWizardViewModel = hiltViewModel()
+                val wizardViewModel: ErosOmnipodWizardViewModel = metroViewModel()
                 val wizardReady by wizardViewModel.ready.collectAsStateWithLifecycle()
                 LaunchedEffect(wizardReady, isDeactivation, wizardActivationType) {
                     if (!wizardReady) return@LaunchedEffect
@@ -235,7 +235,7 @@ class OmnipodErosComposeContent(
             }
 
             showHistory             -> {
-                val historyViewModel: ErosPodHistoryViewModel = hiltViewModel()
+                val historyViewModel: ErosPodHistoryViewModel = metroViewModel()
                 val records by historyViewModel.records.collectAsStateWithLifecycle()
 
                 // Set toolbar with back arrow for history

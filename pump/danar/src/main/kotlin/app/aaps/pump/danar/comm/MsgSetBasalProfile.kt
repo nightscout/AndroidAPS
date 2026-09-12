@@ -1,10 +1,10 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgSetBasalProfile(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     index: Byte,
     values: Array<Double>
 ) : MessageBase(injector) {

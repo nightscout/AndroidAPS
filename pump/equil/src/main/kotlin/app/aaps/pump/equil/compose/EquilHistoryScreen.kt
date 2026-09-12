@@ -29,7 +29,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import app.aaps.core.ui.compose.AapsTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.driver.definition.EquilHistoryEntryGroup

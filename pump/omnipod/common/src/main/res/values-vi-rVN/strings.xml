@@ -42,7 +42,7 @@
     <string name="omnipod_common_overview_lot_number">Số Lô</string>
     <string name="omnipod_common_overview_pod_sequence_number">Số thứ tự</string>
     <string name="omnipod_common_overview_pod_expiry_date">Pod hết hạn</string>
-    <string name="omnipod_common_overview_last_connection">Kết nối lần cuối</string>
+    <string name="omnipod_common_overview_last_connection">Kết nối gần nhất</string>
     <string name="omnipod_common_overview_last_bolus">Liều bolus mới nhất</string>
     <string name="omnipod_common_overview_temp_basal_rate">Tỷ lệ liều nền tạm thời</string>
     <string name="omnipod_common_overview_base_basal_rate">Tỷ lệ Liều nền Cơ bản</string>
@@ -145,7 +145,7 @@
     <string name="omnipod_common_alert_finish_setup_reminder_reminder">Nhắc hoàn tất thiết lập</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
-    <string name="omnipod_common_moments_ago">Vừa nãy</string>
+    <string name="omnipod_common_moments_ago">Cách đây ít phút</string>
     <string name="omnipod_common_less_than_a_minute_ago">Chưa đầy một phút trước</string>
     <string name="omnipod_common_composite_time">%1$s và %2$s</string>
     <string name="omnipod_common_time_ago">%1$s trước</string>

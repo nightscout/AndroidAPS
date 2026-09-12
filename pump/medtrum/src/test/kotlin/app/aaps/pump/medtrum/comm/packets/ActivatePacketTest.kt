@@ -5,8 +5,7 @@ import app.aaps.pump.medtrum.comm.enums.AlarmSetting
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.junit.jupiter.api.Test
 
 class ActivatePacketTest : MedtrumTestBase() {
@@ -15,16 +14,15 @@ class ActivatePacketTest : MedtrumTestBase() {
 
     /** Test packet specific behavior */
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is ActivatePacket) {
+    private val packetInjector = MetroMemberInjector {
+        if (it is ActivatePacket) {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
                 it.tddCalculator = tddCalculator
                 it.pumpSync = pumpSync
                 it.medtrumTimeUtil = medtrumTimeUtil
-            }
         }
+        true
     }
 
     @Test fun getRequestGivenPacketWhenValuesSetThenReturnCorrectByteArray() {

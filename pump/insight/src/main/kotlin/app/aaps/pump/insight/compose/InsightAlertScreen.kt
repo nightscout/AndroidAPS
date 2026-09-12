@@ -32,7 +32,7 @@ data class InsightAlertUiState(
     val icon: ImageVector,
     val errorCode: String,
     val title: String,
-    val description: CharSequence?,
+    val description: String?,
     val alertStatus: AlertStatus?,
     val muteEnabled: Boolean,
     val confirmEnabled: Boolean
@@ -70,7 +70,7 @@ fun InsightAlertScreen(
         )
         state.description?.let { desc ->
             Text(
-                text = desc.toString(),
+                text = desc,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )

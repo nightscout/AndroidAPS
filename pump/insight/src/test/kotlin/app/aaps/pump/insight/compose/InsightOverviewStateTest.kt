@@ -2,9 +2,9 @@ package app.aaps.pump.insight.compose
 
 import android.content.Context
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.pump.PumpInfoRow
@@ -35,11 +35,11 @@ import app.aaps.core.ui.R as CoreUiR
 internal class InsightOverviewStateTest {
 
     @Mock private lateinit var rh: ResourceHelper
+    @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var commandQueue: CommandQueue
     @Mock private lateinit var context: Context
-    @Mock private lateinit var aapsSchedulers: AapsSchedulers
     @Mock private lateinit var ch: ConcentrationHelper
 
     private val insightPlugin: InsightPlugin = mock()
@@ -55,12 +55,12 @@ internal class InsightOverviewStateTest {
 
     private fun createState() = InsightOverviewState(
         insightPlugin = insightPlugin,
+        aapsLogger = aapsLogger,
         rh = rh,
         rxBus = rxBus,
         dateUtil = dateUtil,
         commandQueue = commandQueue,
         context = context,
-        aapsSchedulers = aapsSchedulers,
         ch = ch,
         appScope = appScope
     )

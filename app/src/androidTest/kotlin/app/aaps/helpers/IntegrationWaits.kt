@@ -11,7 +11,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
+import kotlin.reflect.KClass
 
 /**
  * Suspend-first waiting helpers for integration tests.
@@ -23,7 +24,8 @@ import javax.inject.Inject
  *  - blind `delay(2000)` / `Thread.sleep(2000)` settles after a calculation (always pay the full 2s,
  *    and `Thread.sleep` blocks the dispatcher — counter to the suspend-first direction).
  */
-class IntegrationWaits @Inject constructor(
+@Inject
+class IntegrationWaits(
     private val persistenceLayer: PersistenceLayer,
     private val iobCobCalculator: IobCobCalculator,
     private val aapsLogger: AAPSLogger
@@ -38,8 +40,8 @@ class IntegrationWaits @Inject constructor(
      * On timeout this fails with a message naming [what] instead of an opaque coroutine timeout.
      */
     suspend fun <T : Any> awaitDbChange(
-        type: Class<T>,
-        what: String = type.simpleName,
+        type: KClass<T>,
+        what: String = type.simpleName ?: "?",
         timeoutMs: Long = 40_000,
         action: suspend () -> Unit
     ): List<T> = coroutineScope {

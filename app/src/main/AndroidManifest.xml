@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
@@ -114,6 +115,8 @@
                 <action android:name="cn.diyaps.sharing.OT_APP" />
                 <!-- Receiver from patched SI app -->
                 <action android:name="cn.diyaps.sharing.SI_APP" />
+                <!-- Receiver from Sibionics app, handled by the same plugin as SI app -->
+                <action android:name="com.diyaps.sharing.SIBIO_APP" />
                 <!-- Receiver from patched Sino app -->
                 <action android:name="cn.diyaps.sharing.SINO_APP" />
                 <!-- Receiver from Instara App -->
@@ -134,7 +137,9 @@
         </receiver>
 
         <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
-        <receiver android:name="app.aaps.plugins.aps.loop.CarbSuggestionReceiver" />
+        <receiver
+            android:name="app.aaps.receivers.CarbSuggestionReceiver"
+            android:exported="false" />
 
         <!-- Auto start -->
         <receiver
@@ -145,6 +150,16 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <!-- Moved here from :plugins:main together with the class. The service field injects, and a
+             members injector is generated code, which a multiplatform module cannot produce. -->
+        <service
+            android:name="app.aaps.persistentNotification.DummyService"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps AndroidAPS alive for continuous automated insulin delivery (artificial pancreas loop)." />
+        </service>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -161,7 +176,7 @@
             android:required="false" />
 
         <!-- WorkManager on-demand initialization: remove the default initializer so MainApp's
-             Configuration.Provider (with HiltWorkerFactory) is used instead. -->
+             Configuration.Provider (with MetroWorkerFactory) is used instead. -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

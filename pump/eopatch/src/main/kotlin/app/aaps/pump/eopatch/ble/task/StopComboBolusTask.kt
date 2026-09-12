@@ -10,13 +10,14 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Singleton
-class StopComboBolusTask @Inject constructor() : BolusTask(TaskFunc.STOP_COMBO_BOLUS) {
+@SingleIn(AppScope::class)
+@Inject
+class StopComboBolusTask() : BolusTask(TaskFunc.STOP_COMBO_BOLUS) {
 
     @Inject lateinit var bolusStop: BolusStop
 

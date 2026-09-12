@@ -107,6 +107,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Haut [%s]</string>
     <string name="action_carbs">Glucides</string>
     <string name="action_carbs_gram">Glucides [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Suppression max : %1$d g (GA)</string>
     <string name="action_ecarbs">eGlucides</string>
     <string name="action_percentage">Pourcentage\n[%]</string>
     <string name="action_start_minutes">Démarrage\n[minutes]</string>
@@ -262,7 +263,9 @@
     <string name="contacting_master_unknown">État inconnu — vérifier le téléphone</string>
     <string name="tile_settings">Paramètres des tuiles</string>
     <string name="loop_status_error">Impossible de charger l\'état</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s restants</string>
     <string name="loop_status_tbr_continues">Basal Temp. continue</string>
     <string name="loop_status_tbr_cancel">Définir la basale du profil</string>
     <string name="loop_status_smb">%1$.2f U</string>

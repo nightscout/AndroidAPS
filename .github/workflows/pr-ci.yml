@@ -42,35 +42,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Decode Secrets Keystore Set and Oauth2 to Env
+        env:
+          # Secrets arrive as environment variables. They must not be pasted into
+          # the script text, because bash then parses them as source: any $,
+          # backtick, quote or newline inside a password changes or truncates the
+          # value before it is ever used, and jarsigner then blames the password.
+          S_KEYSTORE_SET: ${{ secrets.KEYSTORE_SET }}
+          S_KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          S_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          S_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          S_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          S_GDRIVE_OAUTH2: ${{ secrets.GDRIVE_OAUTH2 }}
         run: |
-          if [ -n "${{ secrets.KEYSTORE_SET }}" ]; then
+          # The heredoc form of GITHUB_ENV keeps any value intact, newlines
+          # included. The delimiter is random so that no value can close the
+          # block early and add variables of its own.
+          DELIM="AAPS_EOF_$(openssl rand -hex 16)"
+          emit() { printf '%s<<%s\n%s\n%s\n' "$1" "$DELIM" "$2" "$DELIM" >> "$GITHUB_ENV"; }
+          # Values cut out of KEYSTORE_SET are not registered secrets, so the
+          # runner does not hide them in the log unless we ask it to.
+          emit_masked() { echo "::add-mask::$2"; emit "$1" "$2"; }
+
+          if [ -n "$S_KEYSTORE_SET" ]; then
             echo "🔐 Decoding KEYSTORE_SET..."
-            DECODED=$(echo "${{ secrets.KEYSTORE_SET }}" | base64 -d)
+            DECODED=$(printf '%s' "$S_KEYSTORE_SET" | base64 -d)
 
-            KEYSTORE_BASE64=$(echo "$DECODED" | cut -d'|' -f1)
-            KEYSTORE_PASSWORD=$(echo "$DECODED" | cut -d'|' -f2)
-            KEY_ALIAS=$(echo "$DECODED" | cut -d'|' -f3)
-            KEY_PASSWORD=$(echo "$DECODED" | cut -d'|' -f4)
-
-            echo "KEYSTORE_BASE64=$KEYSTORE_BASE64" >> $GITHUB_ENV
-            echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
-            echo "KEY_ALIAS=$KEY_ALIAS" >> $GITHUB_ENV
-            echo "KEY_PASSWORD=$KEY_PASSWORD" >> $GITHUB_ENV
-
-            echo "::add-mask::$KEYSTORE_BASE64"
-            echo "::add-mask::$KEYSTORE_PASSWORD"
-            echo "::add-mask::$KEY_ALIAS"
-            echo "::add-mask::$KEY_PASSWORD"
+            emit_masked KEYSTORE_BASE64   "$(printf '%s' "$DECODED" | cut -d'|' -f1)"
+            emit_masked KEYSTORE_PASSWORD "$(printf '%s' "$DECODED" | cut -d'|' -f2)"
+            emit_masked KEY_ALIAS         "$(printf '%s' "$DECODED" | cut -d'|' -f3)"
+            emit_masked KEY_PASSWORD      "$(printf '%s' "$DECODED" | cut -d'|' -f4)"
 
             echo "✅ Keystore parameters extracted from KEYSTORE_SET"
           else
             echo "ℹ️ KEYSTORE_SET not provided, using separate secrets."
-            echo "KEYSTORE_BASE64=${{ secrets.KEYSTORE_BASE64 }}" >> $GITHUB_ENV
-            echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
-            echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
-            echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+            emit KEYSTORE_BASE64   "$S_KEYSTORE_BASE64"
+            emit KEYSTORE_PASSWORD "$S_KEYSTORE_PASSWORD"
+            emit KEY_ALIAS         "$S_KEY_ALIAS"
+            emit KEY_PASSWORD      "$S_KEY_PASSWORD"
           fi
-          echo "GDRIVE_OAUTH2=${{ secrets.GDRIVE_OAUTH2 }}" >> $GITHUB_ENV
+          emit GDRIVE_OAUTH2 "$S_GDRIVE_OAUTH2"
 
       - name: Check Secrets
         run: |
@@ -135,18 +145,20 @@ jobs:
 
       - name: Decode GDrive OAuth2 secrets
         run: |
+          # GDRIVE_OAUTH2 is already in the environment from the decode step
+          # above, so nothing has to be pasted into the script text here either.
+          DELIM="AAPS_EOF_$(openssl rand -hex 16)"
+          emit_masked() {
+            echo "::add-mask::$2"
+            printf '%s<<%s\n%s\n%s\n' "$1" "$DELIM" "$2" "$DELIM" >> "$GITHUB_ENV"
+          }
+
           echo "🔐 Decoding GDRIVE_OAUTH2..."
-          DECODED=$(echo "${{ secrets.GDRIVE_OAUTH2 }}" | base64 -d)
-          
-          GDRIVE_CLIENT_ID=$(echo "$DECODED" | cut -d'|' -f1)
-          GDRIVE_REFRESH_TOKEN=$(echo "$DECODED" | cut -d'|' -f2)
-          
-          echo "::add-mask::$GDRIVE_CLIENT_ID"
-          echo "::add-mask::$GDRIVE_REFRESH_TOKEN"
-          
-          echo "GDRIVE_CLIENT_ID=$GDRIVE_CLIENT_ID" >> $GITHUB_ENV
-          echo "GDRIVE_REFRESH_TOKEN=$GDRIVE_REFRESH_TOKEN" >> $GITHUB_ENV
-          
+          DECODED=$(printf '%s' "$GDRIVE_OAUTH2" | base64 -d)
+
+          emit_masked GDRIVE_CLIENT_ID     "$(printf '%s' "$DECODED" | cut -d'|' -f1)"
+          emit_masked GDRIVE_REFRESH_TOKEN "$(printf '%s' "$DECODED" | cut -d'|' -f2)"
+
           echo "✅ GDRIVE_CLIENT_ID and GDRIVE_REFRESH_TOKEN extracted from GDRIVE_OAUTH2"
 
       - name: Retrieving Google Drive access token
@@ -230,7 +242,7 @@ jobs:
       - name: Build APKs
         run: |
           ./gradlew :app:assemble${{ env.BUILD_VARIANT }} :wear:assemble${{ env.BUILD_VARIANT }} \
-            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss4m" \
             -Dkotlin.daemon.jvm.options="-Xmx2g" \
             -Dkotlin.compiler.execution.strategy="in-process" \
             -Dorg.gradle.daemon=true \

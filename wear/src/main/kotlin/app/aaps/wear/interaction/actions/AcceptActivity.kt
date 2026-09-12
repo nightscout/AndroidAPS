@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import androidx.wear.activity.ConfirmationActivity
 import androidx.wear.compose.foundation.pager.HorizontalPager
 import androidx.wear.compose.foundation.pager.rememberPagerState
@@ -57,13 +58,12 @@ import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import app.aaps.wear.comm.IntentCancelNotification
 import app.aaps.wear.comm.IntentWearToMobile
-import dagger.android.support.DaggerAppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Two-page confirmation screen for an action authored on (or relayed by) the master.
@@ -82,7 +82,7 @@ import kotlinx.serialization.json.Json
  * instead start a 30s grace-period job so a brief wrist-down doesn't destroy the result — cancelled by [onResume].
  * Non-wizard flows also have a 60s [LaunchedEffect] absolute timeout as a backstop.
  */
-class AcceptActivity : DaggerAppCompatActivity() {
+class AcceptActivity : AppCompatActivity() {
 
     private var actionKey = ""
     private var deferConfirm = false
@@ -146,7 +146,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
                 val correctionU = if (correctionSteps == 0) 0.0 else correctionSteps * (wizardDetail?.bolusStep ?: 0.0)
                 val adjustedTotal = wizardDetail?.let { (it.unclampedInsulin + correctionU).coerceAtLeast(0.0) }
                 // Swipe to confirm is only meaningful when there is insulin or carbs to deliver.
-                val canConfirm = adjustedTotal == null || adjustedTotal > 0.0 || (wizardDetail!!.carbs > 0)
+                val canConfirm = adjustedTotal == null || adjustedTotal > 0.0 || (wizardDetail.carbs > 0)
                 val pagerState = rememberPagerState(pageCount = { if (isError && !hasLines) 1 else if (canConfirm) 2 else 1 })
 
                 if (wizardDetail == null) LaunchedEffect(Unit) {
@@ -628,7 +628,7 @@ private fun WizardDetailPage(detail: EventData.WizardDetail, correctionSteps: In
                         val hasIob = totalIob != null && totalIob != 0.0
                         if (hasIob || correctionU != 0.0) {
                             WizardDetailDivider()
-                            if (hasIob) WizardDetailRow(stringResource(R.string.wizard_result_iob), -totalIob!!, fmt2)
+                            if (hasIob) WizardDetailRow(stringResource(R.string.wizard_result_iob), -totalIob, fmt2)
                             if (correctionU != 0.0) WizardDetailRow(stringResource(R.string.wizard_result_correction), correctionU, fmt2)
                         }
                         WizardDetailDivider()

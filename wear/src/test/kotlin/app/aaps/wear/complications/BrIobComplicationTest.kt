@@ -12,14 +12,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [BrIobComplication] (basal rate + IOB) and the shared
- * [ModernBaseComplicationProviderService] logic it inherits: [getPreviewData]/
- * [getPreviewComplicationData] (sample data + tap intent → build) and the action/name accessors.
- * Built via [Robolectric] so a Context is attached without running onCreate's Dagger injection; the
- * `@Inject` fields are set directly. [DisplayFormat] is used by buildComplicationData
- * (basalRateSymbol) so it is wired with a mocked SP + this service as its Context.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class BrIobComplicationTest {
@@ -27,10 +19,7 @@ internal class BrIobComplicationTest {
     private fun sut(): BrIobComplication =
         Robolectric.buildService(BrIobComplication::class.java).get().also {
             it.aapsLogger = AAPSLoggerTest()
-            it.displayFormat = DisplayFormat().also { d ->
-                d.sp = mock()
-                d.context = it
-            }
+            it.displayFormat = DisplayFormat(mock(), it)
         }
 
     @Test

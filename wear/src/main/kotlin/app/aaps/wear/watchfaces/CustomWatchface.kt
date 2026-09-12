@@ -43,6 +43,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfData
+import app.aaps.core.interfaces.InterfacesStringIds
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
 import app.aaps.core.interfaces.rx.weardata.CwfResDataMap
@@ -50,7 +52,6 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.ResData
 import app.aaps.core.interfaces.rx.weardata.ResFormat
 import app.aaps.core.interfaces.rx.weardata.isEquals
-import app.aaps.wear.utils.toVisibility
 import app.aaps.shared.impl.weardata.JsonKeyValues
 import app.aaps.shared.impl.weardata.JsonKeys
 import app.aaps.shared.impl.weardata.ResFileMap
@@ -60,6 +61,7 @@ import app.aaps.shared.impl.weardata.toDrawable
 import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
+import app.aaps.wear.utils.toVisibility
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
 import app.aaps.wear.watchfaces.utils.ComplicationImageFit
 import app.aaps.wear.watchfaces.utils.ComplicationRender
@@ -71,6 +73,7 @@ import app.aaps.wear.watchfaces.utils.WatchFaceComplications
 import app.aaps.wear.watchfaces.utils.WatchFaceSettingRow
 import app.aaps.wear.watchfaces.utils.WatchFaceSettings
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 import org.json.JSONObject
@@ -78,8 +81,6 @@ import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.temporal.WeekFields
-import javax.inject.Inject
-import kotlin.collections.get
 import kotlin.math.floor
 
 @SuppressLint("Deprecated")
@@ -329,14 +330,14 @@ class CustomWatchface : BaseWatchFace() {
     // Must never throw: this can run before BaseWatchFace's Dagger injection has completed, and it is
     // the first thing the framework calls on a headless instance, which never gets an onCreate. Hence
     // ensureInjected() first, so the editor's headless instance builds slots from the real CWF json.
-    // daggerInjectionComplete is checked rather than catching UninitializedPropertyAccessException,
+    // injectionComplete is checked rather than catching UninitializedPropertyAccessException,
     // which would also mask unrelated lateinit bugs; with no injection we fall back to each slot's
     // default bounds, same as a fresh install.
     override fun createComplicationSlotsManager(currentUserStyleRepository: CurrentUserStyleRepository): ComplicationSlotsManager {
         ensureInjected()
-        // Read here rather than in WatchFaceComplications: ensureInjected / daggerInjectionComplete
+        // Read here rather than in WatchFaceComplications: ensureInjected / injectionComplete
         // are protected members of BaseWatchFace. The generic layer only needs the resulting bounds.
-        val storedJson = if (daggerInjectionComplete) {
+        val storedJson = if (injectionComplete) {
             runBlocking {
                 complicationDataRepository.getCustomWatchface() ?: complicationDataRepository.getCustomWatchface(true)
             }?.json?.let { JSONObject(it) }
@@ -1583,7 +1584,8 @@ class CustomWatchface : BaseWatchFace() {
          * from [metadataKey] wherever there is one, so a preference is labelled by the same string the
          * phone shows for it. See `CustomWatchfaceConfigurationFragment`, which builds the screen.
          */
-        @get:StringRes val title: Int? get() = metadataKey?.label ?: localTitle
+        @get:StringRes val title: Int? get() =
+            (metadataKey?.label as? TextRef.Named)?.let { InterfacesStringIds.idOf(it.name) } ?: localTitle
 
         var value: String = ""
 

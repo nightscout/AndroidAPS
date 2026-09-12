@@ -5,13 +5,13 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.Inject
 
 /**
  * SerialNumInquireResponsePacket
  */
-class SerialNumInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
+class SerialNumInquireResponsePacket(injector: MetroMemberInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var preferences: Preferences

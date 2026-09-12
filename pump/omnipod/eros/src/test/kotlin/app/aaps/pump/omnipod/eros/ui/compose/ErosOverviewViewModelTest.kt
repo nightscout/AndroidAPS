@@ -43,7 +43,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
 
 /**
@@ -80,7 +79,7 @@ internal class ErosOverviewViewModelTest {
     private val omnipodAlertUtil: OmnipodAlertUtil = mock()
     private val rileyLinkServiceData: RileyLinkServiceData = mock()
     private val serviceTaskExecutor: ServiceTaskExecutor = mock()
-    private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask> = mock()
+    private val resetRileyLinkConfigurationTaskProvider: () -> ResetRileyLinkConfigurationTask = mock()
 
     @BeforeEach
     fun setUp() {
@@ -88,10 +87,10 @@ internal class ErosOverviewViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
 
         // PumpCommunicationStatus + omnipodRefresh subscribe to these at construction.
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventOmnipodErosPumpValuesChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventOmnipodErosPumpValuesChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)).thenReturn(emptyFlow())
 
         // buildInfoRows()/buildManagementActions() read these unconditionally at construction.
         whenever(rileyLinkServiceData.rileyLinkServiceState).thenReturn(RileyLinkServiceState.NotStarted)

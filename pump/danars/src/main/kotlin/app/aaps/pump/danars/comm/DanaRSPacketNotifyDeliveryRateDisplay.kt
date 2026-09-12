@@ -7,10 +7,10 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import javax.inject.Inject
-import kotlin.math.min
+import dev.zacsweers.metro.Inject
 
-class DanaRSPacketNotifyDeliveryRateDisplay @Inject constructor(
+@Inject
+class DanaRSPacketNotifyDeliveryRateDisplay(
     private val aapsLogger: AAPSLogger,
     private val ch: ConcentrationHelper,
     private val bolusProgressData: BolusProgressData,

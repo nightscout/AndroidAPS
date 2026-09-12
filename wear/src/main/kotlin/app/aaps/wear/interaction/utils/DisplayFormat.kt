@@ -5,12 +5,17 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.Pair.Companion.create
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 
-@Singleton
-class DisplayFormat @Inject internal constructor() {
+@SingleIn(AppScope::class)
+@Inject
+class DisplayFormat internal constructor(
+    private val sp: SP,
+    private val context: Context
+) {
 
     companion object {
 
@@ -19,9 +24,6 @@ class DisplayFormat @Inject internal constructor() {
         const val MIN_FIELD_LEN_COB = 3 // since carbs are usually 0..99g
         const val MIN_FIELD_LEN_IOB = 3 // IoB can range from like .1U to 99U
     }
-
-    @Inject lateinit var sp: SP
-    @Inject lateinit var context: Context
 
     /**
      * Maximal and minimal lengths of fields/labels shown in complications, in characters

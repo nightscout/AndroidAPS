@@ -10,12 +10,14 @@ import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.tile.Action
 import app.aaps.wear.tile.TileSource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.util.Calendar
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class QuickWizardSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
+@SingleIn(AppScope::class)
+@Inject
+class QuickWizardSource(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
 
     companion object {
         // Mirrors QuickWizardMode in :core:objects (not a wear dependency): WIZARD(0), INSULIN(1), CARBS(2).

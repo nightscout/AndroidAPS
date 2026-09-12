@@ -25,7 +25,6 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -85,13 +84,13 @@ internal class DanaOverviewViewModelTest {
         whenever(danaPump.temporaryBasalToString()).thenReturn("")   // DanaPump method, read in buildUiState
 
         // rx wiring touched at construction
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toObservable(EventDanaRNewStatus::class.java)).thenReturn(Observable.empty())
-        whenever(rxBus.toObservable(EventInitializationChanged::class.java)).thenReturn(Observable.empty())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventDanaRNewStatus::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EB::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TB::class)).thenReturn(emptyFlow())
 
         // formatting collaborators (called during buildUiState before the isConfigured branch)
         whenever(ch.basalRateString(any(), any(), any())).thenReturn("0.00 U/h")
@@ -121,7 +120,7 @@ internal class DanaOverviewViewModelTest {
     }
 
     private fun createViewModel() = DanaOverviewViewModel(
-        aapsLogger, rh, rxBus, aapsSchedulers, commandQueue, dateUtil, danaPump,
+        aapsLogger, rh, rxBus, commandQueue, dateUtil, danaPump,
         activePlugin, ch, persistenceLayer, uel, preferences, context
     )
 

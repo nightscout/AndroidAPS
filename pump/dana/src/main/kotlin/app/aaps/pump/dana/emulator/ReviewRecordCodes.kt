@@ -1,5 +1,8 @@
 package app.aaps.pump.dana.emulator
 
+import app.aaps.pump.dana.emulator.ReviewRecordCodes.ALARM
+import app.aaps.pump.dana.emulator.ReviewRecordCodes.BOLUS
+
 /**
  * The pump's own record codes, as they appear in the first byte of a review-history record —
  * what `HistoryEventStore.buildReviewRecordData` writes and `DanaRSPacketHistory.handleMessage`

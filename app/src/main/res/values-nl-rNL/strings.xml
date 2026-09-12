@@ -4,4 +4,12 @@
     <string name="identification_not_set">Identificatie niet ingesteld in dev modus</string>
     <string name="select">Selecteer</string>
     <string name="set">Stel in</string>
+    <string name="migrating_preferences">Instellingen migreren…</string>
+    <string name="optimizing_database">Gegevensverzameling optimaliseren…</string>
+    <string name="initializing_plugins">Initialiseren plug-ins…</string>
+    <string name="initializing">Initialiseren…</string>
+    <string name="migrating_profile_switches">Profiel wisselingen migreren…</string>
+    <string name="migrating_effective_profile_switches">Actieve profiel migreren…</string>
+    <string name="migrating_boluses">Bolussen migreren…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Oudere records hadden geen insuline configuratie en er was geen actief profiel, daarom werd %1$s voor hen gebruikt. Controleer uw insuline-instellingen; al gemigreerde records worden daarna niet bijgewerkt.</string>
 </resources>

@@ -14,49 +14,49 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.viewbinding.ViewBinding
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.wear.utils.toVisibility
-import app.aaps.wear.utils.toVisibilityKeepSpace
 import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.data.bgDataArray
 import app.aaps.wear.data.statusDataArray
+import app.aaps.wear.di.WearMetroService
 import app.aaps.wear.events.EventWearPreferenceChange
 import app.aaps.wear.interaction.menus.MainMenuActivity
-import dagger.android.AndroidInjection
-import dagger.android.HasAndroidInjector
+import app.aaps.wear.utils.toVisibility
+import app.aaps.wear.utils.toVisibilityKeepSpace
+import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlin.math.floor
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import kotlin.math.floor
 
 @SuppressLint("Deprecated")
+@HasMemberInjections
 abstract class BaseWatchFace : WatchFace() {
 
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var simpleUi: SimpleUi
 
-    private var disposable = CompositeDisposable()
     private val watchfaceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     // DataStore as single source of truth - using EventData models directly
@@ -171,7 +171,7 @@ abstract class BaseWatchFace : WatchFace() {
     // True only once injection has returned, via onCreate below or via ensureInjected() for instances
     // that never get an onCreate. Checked instead of catching UninitializedPropertyAccessException,
     // which would also mask unrelated bugs.
-    protected var daggerInjectionComplete = false
+    protected var injectionComplete = false
 
     /**
      * Injects this instance if [onCreate] never ran, so `@Inject` fields are usable anyway.
@@ -183,22 +183,18 @@ abstract class BaseWatchFace : WatchFace() {
      * `UninitializedPropertyAccessException` - which during a headless release kills the binder and
      * makes the system drop the editing session, losing the configuration just chosen.
      *
-     * Works because `attachBaseContext` has run, so `applicationContext` resolves to `WearApp`, a
-     * `DaggerApplication` and therefore a [HasAndroidInjector]. Safe to call repeatedly - it no-ops
-     * once injection has happened by either route.
+     * Works because `attachBaseContext` has run, so the graph can be reached. Safe to call
+     * repeatedly - it no-ops once injection has happened by either route.
      */
     protected fun ensureInjected() {
-        if (daggerInjectionComplete) return
-        (applicationContext as? HasAndroidInjector)?.let {
-            it.androidInjector().inject(this)
-            daggerInjectionComplete = true
-        }
+        if (injectionComplete) return
+        injectMetroMembers(this)
+        injectionComplete = true
     }
 
     override fun onCreate() {
-        // Not derived from DaggerService, do injection here
-        AndroidInjection.inject(this)
-        daggerInjectionComplete = true
+        // Not derived from WearMetroService, do injection here
+        ensureInjected()
         super.onCreate()
         simpleUi.onCreate(::forceUpdate)
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -207,10 +203,9 @@ abstract class BaseWatchFace : WatchFace() {
         displayHeight = bounds.height()
         specW = View.MeasureSpec.makeMeasureSpec(displayWidth, View.MeasureSpec.EXACTLY)
         specH = if (forceSquareCanvas) specW else View.MeasureSpec.makeMeasureSpec(displayHeight, View.MeasureSpec.EXACTLY)
-        disposable += rxBus
-            .toObservable(EventWearPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { _: EventWearPreferenceChange ->
+        // watchfaceScope is Main.immediate, matching observeOn(aapsSchedulers.main).
+        rxBus.toFlow(EventWearPreferenceChange::class)
+            .collectResilient(watchfaceScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 simpleUi.updatePreferences()
                 if (::binding.isInitialized && layoutSet) setDataFields()
                 invalidate()
@@ -353,7 +348,6 @@ abstract class BaseWatchFace : WatchFace() {
         // Headless instances reach this without ever having run onCreate, so inject first - see
         // ensureInjected(). For watch faces with no complication slots this is the only entry point.
         ensureInjected()
-        disposable.clear()
         watchfaceScope.cancel()
         simpleUi.onDestroy()
         super.onDestroy()
