@@ -20,7 +20,11 @@ tasks.withType<Test>().configureEach {
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
     maxHeapSize = "1536m"
     testLogging {
-        events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
+        // See the same block in `test-module-dependencies` for why CI drops the passing tests' stdout.
+        events = if (providers.environmentVariable("CI").isPresent)
+            setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED)
+        else
+            setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
         exceptionFormat = TestExceptionFormat.FULL
     }
 }
