@@ -53,6 +53,29 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
+      # The repo's gradle.properties is tuned for the 64 GB self-hosted runner: 8g for Gradle and 12
+      # workers. A GitHub-hosted runner has 4 vCPU and 16 GB, so that plus the forked test JVMs
+      # oversubscribes it and the runner is killed outright - the job ends with "exit code 143" and
+      # "The runner has received a shutdown signal", which reads like an infrastructure blip rather
+      # than the memory setting it is. gradle.properties in GRADLE_USER_HOME takes precedence over the
+      # project one, so this leaves the self-hosted tuning untouched.
+      #
+      # The Kotlin daemon keeps its 4g. That number is measured, not guessed: gradle.properties records
+      # that a 3g ceiling sent the compile daemon into a GC spiral (66 full collections, 42 s in GC)
+      # and killed build 41233 with "GC overhead limit exceeded". Cutting it here would buy memory by
+      # reintroducing a known failure. The budget comes out of Gradle and the worker count instead:
+      # 3g daemon + 4g Kotlin + at most 3 test JVMs at 1536m each is about 11.5g of the 16g.
+      - name: Size the JVMs for a hosted runner
+        run: |
+          mkdir -p ~/.gradle
+          cat > ~/.gradle/gradle.properties <<'EOF'
+          org.gradle.jvmargs=-Xmx3g -XX:+UseParallelGC -Xss4m
+          org.gradle.workers.max=3
+          kotlin.daemon.jvm.options=-Xmx4g
+          EOF
+          echo "--- effective overrides ---"; cat ~/.gradle/gradle.properties
+          echo "--- runner ---"; nproc; free -g
+
       # Four task names, because a module lands in exactly one of them and a missing name runs no
       # tests instead of failing. Kept identical to the CircleCI step so this is a move, not a
       # redefinition of what "the unit suite" means:
