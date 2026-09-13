@@ -152,7 +152,7 @@
     <string name="percentage_label">Percentage</string>
     <!-- LoopDialog -->
     <string name="resume">Gjenoppta</string>
-    <string name="reconnect">Koble til pumpen</string>
+    <string name="reconnect">Koble til pumpen på nytt</string>
     <string name="duration15m">15 min</string>
     <string name="duration30m">30 min</string>
     <string name="duration1h">1 time</string>
