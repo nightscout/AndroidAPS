@@ -20,9 +20,12 @@
     <!-- androidx.wear.watchfacepush requires minSdk 36; all usages are runtime-guarded by SDK checks -->
     <uses-sdk tools:overrideLibrary="androidx.wear.tiles,androidx.wear.watchfacepush" />
 
-    <!-- Package visibility for the pushed watchface, so the install state can be verified -->
+    <!-- Package visibility for the pushed watchfaces, so the install state can be verified. Both
+         faces, whichever one the slot holds: without its entry here getPackageInfo throws for an
+         installed face, the menu believes it missing, and "Install watchface" never goes away. -->
     <queries>
-        <package android:name="${applicationId}.watchfacepush.aapsv4" />
+        <package android:name="${applicationId}.watchfacepush.wfs" />
+        <package android:name="${applicationId}.watchfacepush.cwf" />
     </queries>
 
     <application
@@ -215,7 +218,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <!-- Same reading as SgvComplication, but a tap opens the menu. Used only by the ambient
@@ -239,7 +242,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -260,7 +263,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <!-- Publishes the whole Custom watch face as a full-screen image, for Watch Face Format
@@ -359,7 +362,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -488,7 +491,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -581,7 +584,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -614,7 +617,7 @@
 
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />
@@ -659,7 +662,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -680,7 +683,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
