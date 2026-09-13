@@ -1,0 +1,102 @@
+name: Unit tests (JVM)
+
+# EXPERIMENT: moving the unit suite off the self-hosted CircleCI runner.
+#
+# Today `.circleci/config.yml` runs the whole unit suite on the same self-hosted machine as three
+# emulators, in a step named "pinned off the emulator cores ... overlaps the shards". That contention
+# is the documented cause of emulators dropping offline mid-instrumentation, and it shows up as
+# `comboctl` unit tests and emulator UI tests going red while passing locally.
+#
+# Nothing here needs a device, so it runs on a GitHub-hosted runner instead. Coverage is uploaded to
+# Codecov under the `unit` flag; CircleCI uploads the instrumented run under `instrumented`. Codecov
+# merges uploads that carry the same commit SHA, so the combined number is the union of the two - a
+# line covered by either source counts as covered.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ci-split-test
+  pull_request:
+    branches:
+      - ci-split-test
+
+# A newer push to the same branch makes an in-flight run pointless.
+concurrency:
+  group: unit-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Load jdk version
+        run: |
+          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: gradle
+
+      # The bit is 100755 in the index and `ios-ci.yml` runs ./gradlew without this, but four other
+      # workflows set it anyway. A checkout of a contributor's fork can arrive without it, and the
+      # failure is a bare "Permission denied" that looks nothing like its cause.
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      # Four task names, because a module lands in exactly one of them and a missing name runs no
+      # tests instead of failing. Kept identical to the CircleCI step so this is a move, not a
+      # redefinition of what "the unit suite" means:
+      #  - testFullDebugUnitTest: the flavoured modules, which are only :app and the :wear ones.
+      #  - testDebugUnitTest: the Android libraries, which have no "Full" variant.
+      #  - jvmTest and testAndroidHostTest: the multiplatform modules, which have no build variants.
+      # `:desktop:shell:test` is named explicitly and must stay: it is a plain `kotlin("jvm")` module
+      # whose task is `test`, so it matches none of the four names, and an unqualified `test` would
+      # instead match the AGP lifecycle task in every Android module and run every variant of each.
+      # Drop this and its tests run on no machine at all.
+      - name: Run the unit suite
+        run: |
+          # Actions runs `bash -e` but NOT pipefail, so without this the exit code of the pipeline
+          # would be tee's and a failed Gradle build would report success.
+          set -o pipefail
+          ./gradlew --console=plain --no-daemon -Pcoverage -PfirebaseDisable \
+            testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test \
+            2>&1 | tee unit-tests.log
+
+      # A separate invocation on purpose: running a compile task and jacocoAllDebugReport together
+      # trips Gradle's implicit-dependency validation on `:core:data`'s jvm classes and fails the
+      # build before the report is written.
+      - name: Aggregate coverage
+        run: ./gradlew --console=plain --no-daemon jacocoAllDebugReport
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
+          flags: unit
+          # The merge commit Actions checks out for a pull_request is not the commit Codecov should
+          # attribute this to; without this the upload lands on a commit CircleCI never reports on and
+          # the two halves never merge.
+          override_commit: ${{ github.event.pull_request.head.sha || github.sha }}
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Keep the test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: |
+            **/build/test-results/**/*.xml
+            unit-tests.log
+          retention-days: 7
