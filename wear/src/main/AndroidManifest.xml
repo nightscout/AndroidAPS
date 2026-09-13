@@ -265,7 +265,14 @@
 
         <!-- Publishes the whole Custom watch face as a full-screen image, for Watch Face Format
              faces on watches that can no longer run a code-based watch face.
-             LARGE_IMAGE is the manifest tag for ComplicationType.PHOTO_IMAGE. -->
+             LARGE_IMAGE is the manifest tag for ComplicationType.PHOTO_IMAGE.
+
+             All three picture sources below carry HIDDEN: they are left out of the complication
+             chooser, where three "Custom watchface" entries looked like a mistake, and where the
+             chooser is the wrong place anyway - AAPS ships the Watch Face Format face that shows the
+             picture, and its slots are not customizable. A hidden source can still be named as a
+             default provider, which is how that face binds them; a slot that already holds one keeps
+             it, as HIDDEN only stops new choices. -->
         <service
             android:name=".complications.CwfImageComplication"
             android:exported="true"
@@ -282,6 +289,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
+            <meta-data
+                android:name="android.support.wearable.complications.HIDDEN"
+                android:value="true" />
         </service>
         <!-- The whole Custom watch face as one picture, for the pushed WFF document. One provider
              rather than two halves: the halves had to agree with each other from outside, and each
@@ -303,12 +313,14 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
+            <meta-data
+                android:name="android.support.wearable.complications.HIDDEN"
+                android:value="true" />
         </service>
         <!-- The same face without seconds, for the always-on slot of the pushed document. The
              runtime swaps the two pictures itself when the watch dozes, which is the only way the
              second hand goes at the moment the screen dims rather than at the next minute - see
-             CwfMinuteFrame. Not offered to other watch faces: it is only meaningful beside its
-             twin. -->
+             CwfMinuteFrame. Only meaningful beside its twin. -->
         <service
             android:name=".complications.cwf.CwfAmbientFaceComplication"
             android:exported="true"
@@ -325,6 +337,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
+            <meta-data
+                android:name="android.support.wearable.complications.HIDDEN"
+                android:value="true" />
         </service>
         <service
             android:name=".complications.BgGraphComplication"
