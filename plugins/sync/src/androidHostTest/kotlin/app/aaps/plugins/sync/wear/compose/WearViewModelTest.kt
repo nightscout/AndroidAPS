@@ -202,6 +202,8 @@ internal class WearViewModelTest {
         )
         whenever(rh.gs(any<Int>(), any())).thenReturn("mocked")
         whenever(rh.gs(any<Int>())).thenReturn("comment")
+        // The state this builds reads CwfMetadataKey.label, a TextRef - see the same stub below
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("mocked")
         whenever(versionCheckerUtils.versionDigits(any())).thenReturn(intArrayOf(1, 0, 0))
 
         sut.showCwfInfos()
