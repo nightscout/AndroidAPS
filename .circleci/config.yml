@@ -391,8 +391,28 @@ jobs:
             # ~/test-results also survives between jobs on the self-hosted runner, so wipe it rather
             # than adding to whatever the previous job left behind.
             rm -rf ~/test-results
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+            DEST="$HOME/test-results/junit"
+            mkdir -p "$DEST"
+            # Copy under a name built from the full path, NOT into a flat directory.
+            #
+            # The instrumented runner names every file after the device it ran on, so all three shards
+            # write "TEST-citest0(AVD) - 12.xml". A flat copy made them overwrite each other and build
+            # 41310 kept exactly one artifact: 2 passing tests from emulator-5554, while the shard that
+            # actually failed was gone. The same applies to unit results, where each module writes its
+            # own TEST-<class>.xml.
+            #
+            # Unit results are collected here too. Without them a failing unit test cannot be named at
+            # all: CircleCI truncates a step's console output at 400000 characters, the unit step went
+            # well past that, and the dropped part is the part naming the test. All Gradle leaves behind
+            # is a link to an HTML report that stays on the runner. That is what made the comboctl flake
+            # impossible to diagnose.
+            find . -type f -name "*.xml" \
+                 \( -path "*/build/outputs/androidTest-results/*" -o -path "*/build/test-results/*" \) \
+                 -print0 \
+              | while IFS= read -r -d '' f; do
+                  cp "$f" "$DEST/$(echo "${f#./}" | tr '/' '_')"
+                done
+            echo "collected $(find "$DEST" -type f -name '*.xml' | wc -l) result files"
           when: always
 
       - store_test_results:
