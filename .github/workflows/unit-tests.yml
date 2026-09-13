@@ -110,7 +110,12 @@ jobs:
           # attribute this to; without this the upload lands on a commit CircleCI never reports on and
           # the two halves never merge.
           override_commit: ${{ github.event.pull_request.head.sha || github.sha }}
-          fail_ci_if_error: false
+          # Loud on purpose. With this false the first run of this job printed
+          # 'Repository not found' from create-commit, create-report AND do-upload, and the step still
+          # reported success - a coverage upload can fail completely and the only trace is a line in a
+          # log nobody reads. A coverage number that silently stops updating is worse than a red build,
+          # because the drop gets blamed on whatever change happens to land next.
+          fail_ci_if_error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 

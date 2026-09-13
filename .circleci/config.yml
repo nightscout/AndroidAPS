@@ -426,6 +426,11 @@ jobs:
           # Flagged so the two halves stay tellable apart once the unit suite uploads from GitHub
           # Actions. Without flags the merged number hides which suite actually covers what.
           flags: 'instrumented'
+          # -Z makes the uploader exit non-zero when the upload fails, which fails this step. The orb
+          # has no fail-on-error parameter and ends its script with the uploader call, so its exit code
+          # is the step's. Without it a rejected upload is just a line in the log and coverage quietly
+          # stops updating - the same trap the GitHub job fell into with fail_ci_if_error: false.
+          xtra_args: '-Z'
 
       - run:
           name: Kill java processes
