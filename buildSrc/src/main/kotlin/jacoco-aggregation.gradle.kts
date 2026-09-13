@@ -85,12 +85,21 @@ project.afterEvaluate {
             // then contributed no classes and no execution data, dropping about 8000 well covered
             // lines from the report with nothing failing.
             if (proj.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
-                // Take the Android compilation when the module has one, the JVM compilation
-                // otherwise. Never both: a multiplatform module compiles the same commonMain code
-                // once per target, and only the target whose tests actually ran produces .exec
-                // data. Counting the other copy would report identical code as 0% covered and make
-                // the number worse than leaving the module out.
-                val kmpTarget = if (File("${proj.projectDir}/src/androidMain").isDirectory) "android" else "jvm"
+                // Take the compilation whose tests actually ran. Never both: a multiplatform module
+                // compiles the same commonMain code once per target, and only the target whose tests
+                // ran produces .exec data. Counting the other copy would report identical code as 0%
+                // covered and make the number worse than leaving the module out.
+                //
+                // Decided by the .exec that exists, not by the source layout. The previous check was
+                // `src/androidMain`.isDirectory, which is a source convention rather than a statement
+                // about the build: `:appshell`, `:core:graph` and `:database:persistence` keep every
+                // file in `commonMain` while still declaring an Android target, so that check sent all
+                // three to `classes/kotlin/jvm/main`. Locally that directory is empty and the modules
+                // vanished from the report; on CI `jvmTest` fills it, so their JVM classes were matched
+                // against Android probes and read as barely covered. Same silent failure the comment
+                // above describes, reached from the other side.
+                val ranOnAndroid = proj.layout.buildDirectory.file("jacoco/testAndroidHostTest.exec").get().asFile.isFile
+                val kmpTarget = if (ranOnAndroid || File("${proj.projectDir}/src/androidMain").isDirectory) "android" else "jvm"
                 val kmpPath = proj.layout.buildDirectory.dir("classes/kotlin/$kmpTarget/main").get()
                 classes.add(fileTree(kmpPath) { exclude(excludes); include("**/*.class") })
             } else {
