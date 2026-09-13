@@ -37,9 +37,11 @@ import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.EquilHistoryEntryGroup
 import app.aaps.pump.equil.emulator.EquilEmulatorBleTransport
+import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -338,7 +340,15 @@ class EquilEmulatorActivationTest {
     private fun activatePod() {
         val start = SystemClock.uptimeMillis()
         assertThat(bleTransport).isInstanceOf(EquilEmulatorBleTransport::class.java)
-        assertThat(equilManager.isActivationCompleted()).isFalse()
+        // Say WHAT leaked, not just that something did. `bringUp()` calls clearPodState() right before
+        // this, so a COMPLETED pod here means an earlier test's state came back after the reset, and the
+        // interesting question is whether it came back in memory or from preferences. Build 41310 failed
+        // here with the bare Truth message "expected to be false", which named neither.
+        assertWithMessage(
+            "pod state leaked past clearPodState(): activationProgress=%s, persisted state=%s",
+            equilManager.getActivationProgress(),
+            preferences.get(EquilStringKey.State)
+        ).that(equilManager.isActivationCompleted()).isFalse()
 
         onMain { viewModel.initializeWorkflow(EquilWorkflow.PAIR) }
         awaitStep(EquilWizardStep.ASSEMBLE)
