@@ -151,6 +151,11 @@
     <string name="on">PÅ</string>
     <string name="off">AV</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Endre utjevning</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Endre utjevning til %1$s</string>
+    <string name="smoothing_label">Utjevning</string>
+    <string name="precondition_smoothing_not_active_name">Utjevning er ikke aktiv</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Utjevning %1$s er ikke aktiv</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Velg fra kart</string>
     <string name="tap_to_select_location">Trykk på kartet for å velge et sted</string>
