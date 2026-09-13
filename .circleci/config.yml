@@ -426,11 +426,31 @@ jobs:
           # Flagged so the two halves stay tellable apart once the unit suite uploads from GitHub
           # Actions. Without flags the merged number hides which suite actually covers what.
           flags: 'instrumented'
-          # -Z makes the uploader exit non-zero when the upload fails, which fails this step. The orb
-          # has no fail-on-error parameter and ends its script with the uploader call, so its exit code
-          # is the step's. Without it a rejected upload is just a line in the log and coverage quietly
-          # stops updating - the same trap the GitHub job fell into with fail_ci_if_error: false.
-          xtra_args: '-Z'
+
+      # Check that the coverage landed, rather than trusting the uploader's exit code.
+      #
+      # The orb has no fail-on-error parameter, and its uploader's own error reporting is not something
+      # to hang a build on: the equivalent flag on the GitHub side (fail_ci_if_error) failed the job on
+      # every run because an ancillary 'create-commit' call always errors while the upload itself works.
+      # Asking Codecov whether the report exists sidesteps that entirely - it is the outcome that
+      # matters, and it needs no token because the repo is public.
+      - run:
+          name: Check the coverage actually landed
+          command: |
+            API="https://api.codecov.io/api/v2/github/nightscout/repos/AndroidAPS/commits/$CIRCLE_SHA1"
+            # Uploads are processed asynchronously, so a miss right away means "not yet", not "never".
+            for i in $(seq 1 36); do
+              code=$(curl -sS -o /tmp/codecov-commit.json -w '%{http_code}' "$API" || echo 000)
+              if [ "$code" = "200" ]; then
+                echo "Codecov has a report for $CIRCLE_SHA1:"
+                head -c 400 /tmp/codecov-commit.json; echo
+                exit 0
+              fi
+              echo "attempt $i: HTTP $code - no report yet, waiting 10s"
+              sleep 10
+            done
+            echo "Codecov has no report for $CIRCLE_SHA1 after 6 minutes. The coverage upload did not land."
+            exit 1
 
       - run:
           name: Kill java processes

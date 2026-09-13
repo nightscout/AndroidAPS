@@ -110,12 +110,37 @@ jobs:
           # attribute this to; without this the upload lands on a commit CircleCI never reports on and
           # the two halves never merge.
           override_commit: ${{ github.event.pull_request.head.sha || github.sha }}
-          # Loud on purpose. With this false the first run of this job printed
-          # 'Repository not found' from create-commit, create-report AND do-upload, and the step still
-          # reported success - a coverage upload can fail completely and the only trace is a line in a
-          # log nobody reads. A coverage number that silently stops updating is worse than a red build,
-          # because the drop gets blamed on whatever change happens to land next.
-          fail_ci_if_error: true
+          # Stays false, and the next step is why. This action runs several calls (create-commit,
+          # create-report, do-upload) and on this repo the first two answer 'Repository not found' on
+          # every run while do-upload succeeds and the coverage lands correctly - verified by comparing
+          # commits: 008c08ecee reported that error and still has a complete report, while 1c28d04e57,
+          # whose job died before uploading, has no report at all. So turning this to true failed the
+          # job on every single run with the coverage perfectly fine. A build that is always red teaches
+          # people to ignore red, which is worse than the silence it was meant to fix.
+          fail_ci_if_error: false
+
+      # The real check. The uploader's exit code describes the tool; this describes the outcome, which
+      # is the thing worth failing on: does Codecov actually have a report for this commit? It is loud
+      # when coverage genuinely fails to land and quiet about the create-commit noise above.
+      # No token needed - the repo is public and this is a read.
+      - name: Check the coverage actually landed
+        run: |
+          SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+          API="https://api.codecov.io/api/v2/github/nightscout/repos/AndroidAPS/commits/$SHA"
+          # Codecov processes uploads asynchronously, so a miss right after the upload means "not yet",
+          # not "never". Poll for up to 6 minutes before calling it a failure.
+          for i in $(seq 1 36); do
+            code=$(curl -sS -o /tmp/codecov-commit.json -w '%{http_code}' "$API" || echo 000)
+            if [ "$code" = "200" ]; then
+              echo "Codecov has a report for $SHA:"
+              jq -r '"  state=\(.state)  coverage=\(.totals.coverage)  lines=\(.totals.lines)"' /tmp/codecov-commit.json
+              exit 0
+            fi
+            echo "attempt $i: HTTP $code - no report yet, waiting 10s"
+            sleep 10
+          done
+          echo "::error::Codecov has no report for $SHA after 6 minutes. The coverage upload did not land."
+          exit 1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
