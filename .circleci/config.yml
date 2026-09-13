@@ -27,6 +27,10 @@ jobs:
             find . -type d -path "*/build/outputs/androidTest-results" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/code_coverage" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/unit_test_code_coverage" -prune -exec rm -rf {} +
+            # Unit results too, now that "Save test results" collects them. Without this a module whose
+            # tests do not run this time (up-to-date, or skipped because an earlier task failed) keeps
+            # its old TEST-*.xml on the runner and it gets reported as if it had just passed.
+            find . -type d -path "*/build/test-results" -prune -exec rm -rf {} +
             rm -f /tmp/rc-A /tmp/rc-B /tmp/rc-C
 
       # THREE emulators, so the app suite splits three ways (@ShardA / @ShardB / the rest) and each shard
