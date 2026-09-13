@@ -144,6 +144,13 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+      # The jacoco XML is kept alongside the test results so the two halves of the split can be compared
+      # file by file. They do not have the same denominator: this job reported 189985 lines where the
+      # single combined report on `dev` reports 195785, on identical code. That is not a bug in either -
+      # `jacoco-aggregation` builds classDirectories with a fileTree over the class files actually
+      # present in the workspace, and this job never assembles the androidTest APK, so fewer classes
+      # exist here. The union of the two file sets should restore the real total, and keeping both XMLs
+      # is what makes that checkable rather than assumed.
       - name: Keep the test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -152,4 +159,5 @@ jobs:
           path: |
             **/build/test-results/**/*.xml
             unit-tests.log
+            build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
           retention-days: 7

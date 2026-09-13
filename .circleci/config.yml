@@ -421,6 +421,14 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
+      # The same report that gets uploaded to Codecov, kept so this half of the split can be compared
+      # against the GitHub job's. See the matching note in .github/workflows/unit-tests.yml: the two
+      # halves count different numbers of lines because each workspace has compiled a different set of
+      # classes, and the merged total is only trustworthy if the union of the two covers everything.
+      - store_artifacts:
+          path: ./build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
+          destination: jacoco/jacocoAllDebugReport.xml
+
       - codecov/upload:
           file: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
           # Flagged so the two halves stay tellable apart once the unit suite uploads from GitHub
