@@ -5,7 +5,7 @@ version: 2.1
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 orbs:
   android: circleci/android@2.4.0
-  codecov: codecov/codecov@3.3.0
+  codecov: codecov/codecov@6.0.0
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
@@ -429,36 +429,22 @@ jobs:
           path: ./build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
           destination: jacoco/jacocoAllDebugReport.xml
 
+      # `files`, plural - orb 6.0.0 renamed it from `file`, and parameters are validated when the
+      # config is compiled, so the old name breaks the whole pipeline rather than just this step.
       - codecov/upload:
-          file: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
+          files: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
           # Flagged so the two halves stay tellable apart once the unit suite uploads from GitHub
           # Actions. Without flags the merged number hides which suite actually covers what.
           flags: 'instrumented'
-
-      # Check that the coverage landed, rather than trusting the uploader's exit code.
-      #
-      # The orb has no fail-on-error parameter, and its uploader's own error reporting is not something
-      # to hang a build on: the equivalent flag on the GitHub side (fail_ci_if_error) failed the job on
-      # every run because an ancillary 'create-commit' call always errors while the upload itself works.
-      # Asking Codecov whether the report exists sidesteps that entirely - it is the outcome that
-      # matters, and it needs no token because the repo is public.
-      - run:
-          name: Check the coverage actually landed
-          command: |
-            API="https://api.codecov.io/api/v2/github/nightscout/repos/AndroidAPS/commits/$CIRCLE_SHA1"
-            # Uploads are processed asynchronously, so a miss right away means "not yet", not "never".
-            for i in $(seq 1 36); do
-              code=$(curl -sS -o /tmp/codecov-commit.json -w '%{http_code}' "$API" || echo 000)
-              if [ "$code" = "200" ]; then
-                echo "Codecov has a report for $CIRCLE_SHA1:"
-                head -c 400 /tmp/codecov-commit.json; echo
-                exit 0
-              fi
-              echo "attempt $i: HTTP $code - no report yet, waiting 10s"
-              sleep 10
-            done
-            echo "Codecov has no report for $CIRCLE_SHA1 after 6 minutes. The coverage upload did not land."
-            exit 1
+          # A real parameter in 6.0.0; 3.3.0 had none, which is why this used to be a hand-written poll
+          # of the Codecov API instead. Verified on job 41335: the CLI reports
+          # "RequestResult(error=None, status_code=200)" and honours --fail-on-error.
+          #
+          # The poll it replaced is deliberately gone rather than kept as a second guard. It asked
+          # whether the commit had *any* report, and on a branch where GitHub Actions uploads the other
+          # half against the same commit, that question can be answered by the other job - the same
+          # false pass the GitHub-side check had to be tightened to avoid.
+          fail_on_error: true
 
       - run:
           name: Kill java processes
