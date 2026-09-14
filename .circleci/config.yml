@@ -5,7 +5,7 @@ version: 2.1
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 orbs:
   android: circleci/android@2.4.0
-  codecov: codecov/codecov@3.3.0
+  codecov: codecov/codecov@6.0.0
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
@@ -439,8 +439,23 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
+      # Orb 6.0.0. Two things change with it, both wanted:
+      #
+      # `files`, plural - renamed from `file`. Parameters are validated when the config is compiled,
+      # for every job in the pipeline, so the old name fails the whole build rather than this step.
+      #
+      # And the coverage PERCENTAGE steps up by about a point, once, without any test changing. 6.0.0
+      # uses the current Codecov CLI, which applies Codecov's "file fixes" - blank lines, lone closing
+      # brackets and similar stop being counted. Measured on the ci-split-test branch: the reported
+      # line count fell from 195057 to 182221 at exactly the commit that bumped the orb, with identical
+      # code and identical jacoco input (the raw reports either side agree line for line). This is a
+      # deliberate re-base onto a more honest denominator, not a regression and not a real improvement.
+      # Comparisons with commits measured before this point are not like for like. `disable_file_fixes`
+      # would restore the old basis if that is ever wanted.
       - codecov/upload:
-          file: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
+          files: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
+          # 3.3.0 had no such parameter, so a refused upload used to pass silently.
+          fail_on_error: true
 
       - run:
           name: Kill java processes
