@@ -94,6 +94,33 @@ know to check all.
 you cannot find afterwards, they may have been lost rather than moved. Ask before assuming it was
 deliberate - this has been a real user-facing regression before.
 
+**A file's timestamp is not a change date.** `ls -l` shows when a checkout or pull last touched the
+file on this machine, which can be days after the last real edit. Always ask git:
+`git log -1 --date=short -- <path>`.
+
+## A memory can rot without a single fact being wrong
+
+There is a second kind of staleness that checking against the code will never find: **the memory
+describes a practice that everybody quietly stopped following.** The file it names still exists, the
+commits are there, every claim verifies - and the habit is dead.
+
+Code cannot tell you this. Only behaviour can. For any memory that describes a way of working - a
+hand-off file, a checklist to fill in, a doc to update, a naming convention - check the *last time
+anyone actually did it*, and compare that against the work done since:
+
+- `git log -1 --date=short -- <the file the practice maintains>` - when it was last really done
+- `git log --since=<that date> --oneline` across the whole repo - what actually shipped since, and
+  how much of it should have been recorded
+
+Take the second half from the repo's history, **not from your own recollection of the session**. A
+fresh session has no memory of what it did last week; it would see only "last commit on the 5th" and
+have no way to tell whether anything since should have gone in. The gap is only visible when both
+halves come from git.
+
+A gap means one of two things, and only the user can say which: the practice is worth reviving, or
+it served its purpose and the memory should go. Do not quietly "fix" the memory to match what is
+happening now - surface the gap.
+
 ## Finish by checking
 
 - index and files match one to one
