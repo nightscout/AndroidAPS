@@ -60,8 +60,14 @@ reliably. In particular: never `cd && command`, and do not start a command with 
 
 **5. Fix and retire.** Split the work:
 - **Mechanical** - moved paths, renamed symbols, corrected counts, a status that is factually wrong.
-  Do these yourself. A dated correction block at the top of the file is enough; it is honest and much
-  cheaper than a rewrite.
+  Do these yourself. A dated correction block is enough; it is honest and much cheaper than a
+  rewrite. Put it **below the frontmatter**, as the first paragraph of the body - never above the
+  opening `---`. Frontmatter only parses as frontmatter when it is the first thing in the file, and a
+  banner pushed above it turns `name` and `description` into ordinary text. The description is what
+  recall matches on, so the memory you just corrected becomes the one nobody finds.
+- **A correction that is itself a snapshot will need correcting again.** Replacing "zero components
+  do X" with "these five do X today" fixes the fact and keeps the defect. If the claim is
+  re-derivable, delete it and say how to re-derive it instead.
 - **Retirement** - deleting a memory is a judgement call. Finished migrations go, keeping only the
   end state. Fixed bugs go unless they carry a standing "do not re-raise" decision or a still-open
   part. Ask before deleting in bulk.
@@ -88,7 +94,17 @@ Expect every line number older than a few months to be wrong.
 
 **A source-set or framework move breaks paths wholesale.** After a large migration, nearly every path
 in every memory is wrong at the directory level even when the file still exists. Check one, and you
-know to check all.
+know to check all. Do not assume one rule covers the repo either - some modules move and some do not,
+so "every `src/main` is now `src/commonMain`" will itself be a false memory.
+
+**A leftover worktree shadows the whole repo with a plausible past.** `git worktree list` can show a
+checkout under `.claude/worktrees/` pinned months back and hidden from `git status` by
+`.git/info/exclude`. It still sits inside the repo directory, so `find`, plain `grep` and globbing
+walk into it and return pre-migration paths that look real - one such checkout held 635 files with
+`import dagger` long after Dagger was removed. Run `git worktree list` before you trust a repo-wide
+search, prefer `git -C <repo> grep` (which only sees the main worktree's tracked files), and treat a
+hit under `.claude/worktrees/` as noise. Check the worktree for uncommitted work before suggesting
+its removal, and leave the removal to the user.
 
 **Watch for a feature that was dropped rather than migrated.** When a migration checklist lists items
 you cannot find afterwards, they may have been lost rather than moved. Ask before assuming it was
@@ -117,9 +133,16 @@ fresh session has no memory of what it did last week; it would see only "last co
 have no way to tell whether anything since should have gone in. The gap is only visible when both
 halves come from git.
 
-A gap means one of two things, and only the user can say which: the practice is worth reviving, or
-it served its purpose and the memory should go. Do not quietly "fix" the memory to match what is
-happening now - surface the gap.
+A gap means one of three things, and only the user can say which:
+
+- the practice lapsed and is worth reviving
+- it served its purpose and the memory should go
+- **the practice is alive and simply had nothing to record** - the work it tracks finished, or the
+  thing it logs stopped happening
+
+That third one is easy to miss and is often good news: an empty blockers list means there are no
+blockers. Do not read silence as failure, and do not quietly "fix" the memory to match what is
+happening now - surface the gap and ask.
 
 ## Finish by checking
 
