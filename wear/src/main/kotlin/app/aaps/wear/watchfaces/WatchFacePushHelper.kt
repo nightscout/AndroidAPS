@@ -14,10 +14,13 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.PushedWatchfaceId
 import app.aaps.wear.watchfaces.WatchFacePushHelper.Companion.KEY_FACE_INSTALLED
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.io.File
 import java.io.IOException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -61,7 +64,13 @@ enum class PushedFace(val id: String) {
  * The face APKs and their validation tokens are generated at build time (see `EmbedWatchFaceTask`
  * in the wear build script) and shipped in assets. A token is bound to the exact APK bytes, so both
  * always travel together.
+ *
+ * One instance for the process, and that is not a detail: the install lock below lives in the
+ * instance. Without the scope every injection site got its own helper with its own lock - the app,
+ * the data handler, the menu and the data layer service - and two installs ran side by side after
+ * all, exactly the race the lock exists to stop. Seen on a Galaxy Watch 5.
  */
+@SingleIn(AppScope::class)
 @Inject
 class WatchFacePushHelper(
     private val context: Context,
@@ -97,11 +106,25 @@ class WatchFacePushHelper(
          * not: a watch that gets Wear OS 6 later pushes the chosen face on its next start.
          */
         private const val KEY_SELECTED_FACE = "wfpush_selected_face"
+
+        /**
+         * How long a fresh install waits for the phone's choice before installing the default.
+         *
+         * The phone holds the choice, and when it is reachable it answers the resend request that
+         * the data layer service sends at start - measured 0.6 s after the app came up. Installing
+         * the default first only to replace it costs a second install and an editor reset for
+         * nothing. Not reachable: the default goes in after this wait, as it did before.
+         */
+        private const val FIRST_CHOICE_GRACE_MS = 5_000L
     }
 
     /** The face the wearer chose on the phone; [PushedFace.CWF] until a choice arrives - the watchface AAPS users know */
     val selectedFace: PushedFace
         get() = PushedFace.fromId(sp.getString(KEY_SELECTED_FACE, PushedFace.CWF.id))
+
+    /** Whether the phone's choice has ever reached this watch; false after a fresh install */
+    private val hasStoredSelection: Boolean
+        get() = sp.getString(KEY_SELECTED_FACE, "").isNotEmpty()
 
     /**
      * Records the wearer's choice from the phone.
@@ -178,6 +201,14 @@ class WatchFacePushHelper(
             reportStatus()
             return
         }
+        // A fresh install has no choice stored yet. Give the phone a moment to send it, so the
+        // face that goes in is the chosen one rather than the default followed by a swap. If the
+        // choice arrives meanwhile, the preferences path installs it and the compare below finds
+        // it already in place.
+        if (!hasStoredSelection) {
+            aapsLogger.debug(LTag.WEAR, "WatchFacePush: no face chosen yet, waiting for the phone")
+            delay(FIRST_CHOICE_GRACE_MS)
+        }
         // A matching token means this exact face was already put in place once — if it is missing
         // now, the user removed it: respect that
         val token = embeddedFaceToken(selectedFace) ?: return
@@ -248,6 +279,14 @@ class WatchFacePushHelper(
             try {
                 val manager = createManager()
                 val token = embeddedFaceToken(face) ?: return@withLock false
+                // Two callers wanting the same face - the startup sync and the preferences that
+                // arrived during it - now run one after the other, and the second has nothing to
+                // do. Not for a menu tap: that is the wearer asking for a face they removed, and
+                // the token is still stored from before the removal.
+                if (!activate && sp.getString(KEY_SYNCED_FACE, "") == token) {
+                    aapsLogger.debug(LTag.WEAR, "WatchFacePush: face ${face.id} already in place")
+                    return@withLock true
+                }
                 context.assets.open(face.assetApk).use { input ->
                     apkFile.outputStream().use { input.copyTo(it) }
                 }
