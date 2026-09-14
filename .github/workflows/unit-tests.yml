@@ -102,7 +102,7 @@ jobs:
         run: ./gradlew --console=plain --no-daemon jacocoAllDebugReport
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7
         with:
           files: ./build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
           flags: unit
@@ -110,14 +110,16 @@ jobs:
           # attribute this to; without this the upload lands on a commit CircleCI never reports on and
           # the two halves never merge.
           override_commit: ${{ github.event.pull_request.head.sha || github.sha }}
-          # Stays false, and the next step is why. This action runs several calls (create-commit,
-          # create-report, do-upload) and on this repo the first two answer 'Repository not found' on
-          # every run while do-upload succeeds and the coverage lands correctly - verified by comparing
-          # commits: 008c08ecee reported that error and still has a complete report, while 1c28d04e57,
-          # whose job died before uploading, has no report at all. So turning this to true failed the
-          # job on every single run with the coverage perfectly fine. A build that is always red teaches
-          # people to ignore red, which is worse than the silence it was meant to fix.
-          fail_ci_if_error: false
+          # True, because an upload that is refused must not pass as success. It is safe to fail on now
+          # in a way it was not before: uploads used to be rejected on every run with "Repository not
+          # found" because the CODECOV_TOKEN secret held a different token from the repository's, and
+          # with that unfixed this flag only produced a permanently red build.
+          fail_ci_if_error: true
+        # Must stay attached to THIS step. It was accidentally left on the step below when the check
+        # was added, and the upload - with no token - was refused with "Token required because branch
+        # is protected" while the job still went green.
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       # The real check. The uploader's exit code describes the tool; this describes the outcome, which
       # is the thing worth failing on: does Codecov actually have a report for this commit? It is loud
@@ -154,8 +156,6 @@ jobs:
           done
           echo "::error::Codecov has no unit coverage for $SHA after 6 minutes ($PROBE never showed hits). This job's upload did not land."
           exit 1
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       # The jacoco XML is kept alongside the test results so the two halves of the split can be compared
       # file by file. They do not have the same denominator: this job reported 189985 lines where the
