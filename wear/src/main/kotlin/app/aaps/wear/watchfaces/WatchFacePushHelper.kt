@@ -8,6 +8,9 @@ import androidx.wear.watchfacepush.WatchFacePushManager
 import androidx.wear.watchfacepush.WatchFacePushManagerFactory
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.PushedWatchfaceId
 import app.aaps.wear.watchfaces.WatchFacePushHelper.Companion.KEY_FACE_INSTALLED
@@ -63,6 +66,7 @@ enum class PushedFace(val id: String) {
 class WatchFacePushHelper(
     private val context: Context,
     private val sp: SP,
+    private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger
 ) {
 
@@ -170,15 +174,47 @@ class WatchFacePushHelper(
      * activates the face: selecting it is always the user's choice (picker, or the main menu entry).
      */
     suspend fun syncOnStartup() {
-        if (!isSupported()) return
+        if (!isSupported()) {
+            reportStatus()
+            return
+        }
         // A matching token means this exact face was already put in place once — if it is missing
         // now, the user removed it: respect that
         val token = embeddedFaceToken(selectedFace) ?: return
-        if (sp.getString(KEY_SYNCED_FACE, "") == token) return
+        if (sp.getString(KEY_SYNCED_FACE, "") == token) {
+            reportStatus()
+            return
+        }
         aapsLogger.debug(LTag.WEAR, "WatchFacePush: embedded face changed, syncing")
         // Catches all its failures internally — this path runs on app start and must never take
-        // the app down; on failure the version is not marked synced, so the next start retries
+        // the app down; on failure the version is not marked synced, so the next start retries.
+        // Reports to the phone when done, whatever the outcome.
         installOrUpdate()
+    }
+
+    /**
+     * Tells the phone what this watch can do and which face it holds.
+     *
+     * The phone shows the face choice only on a watch that says it has Watch Face Push, and can
+     * warn when the watch still holds the other face - after a reinstall the watch starts with the
+     * default and only catches up once the preferences reach it. Sent after the startup sync, after
+     * every install, and in reply to the preferences, so the phone's picture is never older than
+     * the last exchange. Never throws: a failed listing reports "supported, face unknown".
+     */
+    suspend fun reportStatus() = withContext(Dispatchers.IO) {
+        val status = if (!isSupported()) {
+            EventData.WatchFacePushStatus(supported = false)
+        } else try {
+            val packageName = listOwnFaces(createManager()).installedWatchFaceDetails.firstOrNull()?.packageName
+            EventData.WatchFacePushStatus(
+                supported = true,
+                installedFace = PushedFace.entries.firstOrNull { it.packageName(context.packageName) == packageName }?.id
+            )
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.WEAR, "WatchFacePush: status listing failed", e)
+            EventData.WatchFacePushStatus(supported = true)
+        }
+        rxBus.send(EventWearToMobile(status))
     }
 
     /**
@@ -204,7 +240,7 @@ class WatchFacePushHelper(
      */
     suspend fun installOrUpdate(activate: Boolean = false): Boolean = withContext(Dispatchers.IO) {
         if (!isSupported()) return@withContext false
-        installLock.withLock {
+        val installed = installLock.withLock {
             // Read under the lock: a choice that arrived while another install was running is
             // what this one must install, not what was selected when it was asked for
             val face = selectedFace
@@ -252,6 +288,9 @@ class WatchFacePushHelper(
                 apkFile.delete()
             }
         }
+        // Whatever happened, the phone shows the truth rather than its own wish
+        reportStatus()
+        installed
     }
 
     /** Whether the selected face is the currently shown watch face */

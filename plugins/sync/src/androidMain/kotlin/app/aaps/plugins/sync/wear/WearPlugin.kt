@@ -104,8 +104,17 @@ class WearPlugin(
     private val _savedCustomWatchface = MutableStateFlow<CwfData?>(null)
     val savedCustomWatchface: StateFlow<CwfData?> = _savedCustomWatchface.asStateFlow()
 
+    /**
+     * What the watch last said about Watch Face Push: whether it has it, and which face it holds.
+     * Null until the watch reports, and again when it disconnects - a fresh watch must speak for
+     * itself, since the answer differs from one watch to the next.
+     */
+    private val _watchFacePushStatus = MutableStateFlow<EventData.WatchFacePushStatus?>(null)
+    val watchFacePushStatus: StateFlow<EventData.WatchFacePushStatus?> = _watchFacePushStatus.asStateFlow()
+
     fun updateConnectedDevice(deviceName: String?) {
         _connectedDevice.value = deviceName
+        if (deviceName == null) _watchFacePushStatus.value = null
     }
 
     fun updateSavedCustomWatchface(cwfData: CwfData?) {
@@ -203,6 +212,7 @@ class WearPlugin(
                             checkCustomWatchfacePreferences()
                         }
                     }
+                    event.watchFacePushStatus?.let { _watchFacePushStatus.value = it }
                 }
             }
         rxBus.toFlow(EventMobileToWear::class)

@@ -1,6 +1,9 @@
 package app.aaps.wear.watchfaces
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.PushedWatchfaceId
 import app.aaps.wear.AAPSLoggerTest
@@ -33,10 +36,11 @@ import org.robolectric.annotation.Config
 internal class WatchFacePushHelperTest {
 
     private val sp: SP = mock()
+    private val rxBus: RxBus = mock()
     private val aapsLogger: AAPSLogger = AAPSLoggerTest()
 
     private fun sut(): WatchFacePushHelper =
-        WatchFacePushHelper(RuntimeEnvironment.getApplication(), sp, aapsLogger)
+        WatchFacePushHelper(RuntimeEnvironment.getApplication(), sp, rxBus, aapsLogger)
 
     @Test
     fun `below API 36 the feature reports unsupported`() {
@@ -66,13 +70,20 @@ internal class WatchFacePushHelperTest {
         verifyNoInteractions(sp)
     }
 
+    @Test
+    fun `below API 36 the watch still tells the phone that Watch Face Push is missing`() = runTest {
+        // Without this the phone would show the face choice to a watch that cannot act on it
+        sut().syncOnStartup()
+        verify(rxBus).send(EventWearToMobile(EventData.WatchFacePushStatus(supported = false)))
+    }
+
     /** An SP that hands back the default it is asked for, like the real one */
     private fun spWithDefaults(): SP = mock<SP>().also {
         whenever(it.getString(any<String>(), any())).thenAnswer { call -> call.arguments[1] }
     }
 
     private fun sut(sp: SP): WatchFacePushHelper =
-        WatchFacePushHelper(RuntimeEnvironment.getApplication(), sp, aapsLogger)
+        WatchFacePushHelper(RuntimeEnvironment.getApplication(), sp, rxBus, aapsLogger)
 
     @Test
     fun `the selected face is the Custom watchface until the phone chooses`() {

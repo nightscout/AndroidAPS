@@ -219,6 +219,8 @@ class DataHandlerMobile(
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.NOTIFICATION_ID)
         }
         onEvent<EventData.ActionResendData> { resendData(it.from) }
+        // The watch's word on Watch Face Push, kept by WearPlugin for the wear screen
+        onEvent<EventData.WatchFacePushStatus> { rxBus.send(EventWearUpdateGui(watchFacePushStatus = it)) }
         onEvent<EventData.ActionPumpStatus> {
             sendToWear(
                 EventData.ConfirmAction(

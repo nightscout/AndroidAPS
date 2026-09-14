@@ -67,6 +67,7 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.plugins.sync.R
 
 @Composable
@@ -176,6 +177,7 @@ internal fun WearScreen(
                         context.startActivity(Intent(Intent.ACTION_VIEW, moreWatchfacesUrl.toUri()))
                     },
                     onSelectPushedWatchface = { viewModel.selectPushedWatchface(it) },
+                    onDismissCustomWatchfaceNotShown = { viewModel.dismissCustomWatchfaceNotShown() },
                     modifier = modifier
                 )
             }
@@ -199,21 +201,32 @@ internal fun WearMainContent(
     onExportTemplate: () -> Unit,
     onMoreWatchfaces: () -> Unit,
     onSelectPushedWatchface: (String) -> Unit,
+    onDismissCustomWatchfaceNotShown: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // The face the wearer tapped, waiting for their confirmation; null while no dialog is open.
-    // Confirmed first because the watch replaces its installed face at once and that resets the
-    // choices made in the watch face editor.
+    // Confirmed first because the watch replaces its installed face at once.
     var pendingWatchface by remember { mutableStateOf<String?>(null) }
     pendingWatchface?.let { face ->
+        val current = if (uiState.customWatchfaceSelected) PushedWatchfaceId.CWF else PushedWatchfaceId.WFS
         OkCancelDialog(
             title = stringResource(SyncStrings.wear_pushed_watchface_confirm_title),
-            message = stringResource(SyncStrings.wear_pushed_watchface_confirm_message, pushedWatchfaceLabel(face)),
+            message = stringResource(SyncStrings.wear_pushed_watchface_confirm_message, pushedWatchfaceLabel(face), pushedWatchfaceLabel(current)),
             onConfirm = {
                 onSelectPushedWatchface(face)
                 pendingWatchface = null
             },
             onDismiss = { pendingWatchface = null }
+        )
+    }
+
+    // A zip was just sent while the complications face is the one on the wrist: it is stored on
+    // the watch, but nothing shows it until the custom face is selected. Said once, at that moment.
+    uiState.customWatchfaceNotShown?.let { name ->
+        OkDialog(
+            title = pushedWatchfaceLabel(PushedWatchfaceId.CWF),
+            message = stringResource(SyncStrings.wear_custom_watchface_not_shown, name),
+            onDismiss = onDismissCustomWatchfaceNotShown
         )
     }
 
@@ -249,9 +262,9 @@ internal fun WearMainContent(
             }
         }
 
-        // Watchface Card (visible only when connected): which face the watch installs, then the
-        // controls of that face
-        if (uiState.isDeviceConnected) {
+        // Pushed Watchface Card: only on a watch that reported Watch Face Push (Wear OS 6+). Below
+        // that the pushed faces cannot exist, and a choice that does nothing would only mislead.
+        if (uiState.isDeviceConnected && uiState.watchFacePushSupported) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
@@ -270,57 +283,80 @@ internal fun WearMainContent(
 
                     // Watch Face Push gives the app one slot, so this is a choice between the two
                     // embedded faces, not two switches. The tap asks first, see pendingWatchface.
+                    // While the watch still holds the other face - the seconds an install takes,
+                    // or longer after a reinstall until the preferences reach it - the chosen row
+                    // says so, quietly: it is progress, not a fault.
+                    val selectedId = if (uiState.customWatchfaceSelected) PushedWatchfaceId.CWF else PushedWatchfaceId.WFS
+                    val installing = uiState.installedWatchface != null && uiState.installedWatchface != selectedId
                     Column(modifier = Modifier.selectableGroup()) {
                         listOf(PushedWatchfaceId.CWF, PushedWatchfaceId.WFS).forEach { face ->
-                            val selected = (face == PushedWatchfaceId.CWF) == uiState.customWatchfaceInstalled
+                            val selected = face == selectedId
                             WatchfaceChoiceRow(
                                 label = pushedWatchfaceLabel(face),
                                 selected = selected,
+                                hint = if (selected && installing) stringResource(SyncStrings.wear_pushed_watchface_installing) else null,
                                 onSelect = { if (!selected) pendingWatchface = face }
                             )
                         }
                     }
 
-                    if (uiState.customWatchfaceInstalled) {
-                        Text(
-                            text = stringResource(SyncStrings.wear_custom_watchface, uiState.watchfaceName),
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(horizontal = AapsSpacing.small)
-                        )
-
-                        // Row 1: Load + Info
-                        ButtonRow(
-                            button1 = ButtonDef(Icons.Default.Upload, stringResource(SyncStrings.wear_load_watchface), onLoadWatchface),
-                            button2 = if (uiState.hasCustomWatchface)
-                                ButtonDef(Icons.Default.Info, stringResource(SyncStrings.wear_infos_watchface), onInfosWatchface)
-                            else null
-                        )
-
-                        // Row 2: More Watchfaces + Export
-                        ButtonRow(
-                            button1 = ButtonDef(Icons.Default.Public, stringResource(InterfacesStrings.wear_more_watchfaces), onMoreWatchfaces),
-                            button2 = ButtonDef(Icons.Default.Download, stringResource(SyncStrings.wear_export_watchface), onExportTemplate)
-                        )
-
-                        // Watchface preview image
-                        uiState.watchfaceImage?.let { image ->
-                            Spacer(modifier = Modifier.height(AapsSpacing.small))
-                            Image(
-                                bitmap = image,
-                                contentDescription = uiState.watchfaceName,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = AapsSpacing.extraLarge),
-                                contentScale = ContentScale.FillWidth
-                            )
-                        }
-                    } else {
-                        // The complications face has nothing to load or export: its layout is fixed
-                        // and the wearer edits the slots on the watch. Only its picture is shown.
+                    // What the wrist shows with the complications face chosen. The custom face
+                    // needs no picture here: its own preview is in its own card below.
+                    if (!uiState.customWatchfaceSelected) {
                         Spacer(modifier = Modifier.height(AapsSpacing.small))
                         Image(
                             painter = painterResource(R.drawable.wfs_watchface_preview),
                             contentDescription = pushedWatchfaceLabel(PushedWatchfaceId.WFS),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = AapsSpacing.extraLarge),
+                            contentScale = ContentScale.FillWidth
+                        )
+                    }
+                }
+            }
+        }
+
+        // Custom Watchface Card (visible only when connected), whatever face is chosen above: a
+        // watch below Wear OS 6 runs the code-based face, a watch like the Galaxy Watch 5 runs it
+        // beside the pushed faces, and a zip can be loaded before switching
+        if (uiState.isDeviceConnected) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(AapsSpacing.large),
+                    verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
+                ) {
+                    Text(
+                        text = stringResource(SyncStrings.wear_custom_watchface, uiState.watchfaceName),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(horizontal = AapsSpacing.small)
+                    )
+
+                    // Row 1: Load + Info
+                    ButtonRow(
+                        button1 = ButtonDef(Icons.Default.Upload, stringResource(SyncStrings.wear_load_watchface), onLoadWatchface),
+                        button2 = if (uiState.hasCustomWatchface)
+                            ButtonDef(Icons.Default.Info, stringResource(SyncStrings.wear_infos_watchface), onInfosWatchface)
+                        else null
+                    )
+
+                    // Row 2: More Watchfaces + Export
+                    ButtonRow(
+                        button1 = ButtonDef(Icons.Default.Public, stringResource(InterfacesStrings.wear_more_watchfaces), onMoreWatchfaces),
+                        button2 = ButtonDef(Icons.Default.Download, stringResource(SyncStrings.wear_export_watchface), onExportTemplate)
+                    )
+
+                    // Watchface preview image
+                    uiState.watchfaceImage?.let { image ->
+                        Spacer(modifier = Modifier.height(AapsSpacing.small))
+                        Image(
+                            bitmap = image,
+                            contentDescription = uiState.watchfaceName,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = AapsSpacing.extraLarge),
@@ -338,10 +374,12 @@ internal fun WearMainContent(
 private fun pushedWatchfaceLabel(face: String): String =
     stringResource(if (face == PushedWatchfaceId.CWF) KeysStrings.wear_pushed_watchface_cwf else KeysStrings.wear_pushed_watchface_wfs)
 
+/** One radio row; [hint] is a quiet note after the label, for a state that will pass by itself */
 @Composable
 private fun WatchfaceChoiceRow(
     label: String,
     selected: Boolean,
+    hint: String?,
     onSelect: () -> Unit
 ) {
     Row(
@@ -357,6 +395,14 @@ private fun WatchfaceChoiceRow(
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = AapsSpacing.medium)
         )
+        if (hint != null) {
+            Text(
+                text = hint,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = AapsSpacing.small)
+            )
+        }
     }
 }
 

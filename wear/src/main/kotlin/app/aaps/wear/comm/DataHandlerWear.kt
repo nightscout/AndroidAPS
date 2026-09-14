@@ -240,9 +240,13 @@ class DataHandlerWear(
             preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
             // The Watch Face Push face the wearer chose on the phone. Stored whatever the watch
             // can do with it, so a watch updated to Wear OS 6 later installs the chosen face on
-            // its next start; swapped now when the watch can
-            if (watchFacePushHelper.selectFace(it.pushedWatchface))
-                dataStoreScope.launch { watchFacePushHelper.installOrUpdate() }
+            // its next start; swapped now when the watch can. Either way the phone is told what
+            // the watch has, which is what lets its screen show the choice only where it applies
+            val faceChanged = watchFacePushHelper.selectFace(it.pushedWatchface)
+            dataStoreScope.launch {
+                if (faceChanged) watchFacePushHelper.installOrUpdate()
+                else watchFacePushHelper.reportStatus()
+            }
         }
         onEvent<EventData.QuickWizard> {
             val serialized = it.serialize()

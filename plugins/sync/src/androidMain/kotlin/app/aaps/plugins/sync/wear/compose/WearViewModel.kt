@@ -58,10 +58,16 @@ data class WearUiState(
     val watchfaceName: String = "",
     val watchfaceImage: ImageBitmap? = null,
     /**
-     * Whether the face the watch installs through Watch Face Push is the one that shows the
-     * custom watchface. When it is not, a loaded zip reaches the watch but stays invisible there.
+     * Whether the phone's choice of pushed face is the one that shows the custom watchface. When it
+     * is not, a loaded zip reaches the watch but stays invisible there until the choice changes.
      */
-    val customWatchfaceInstalled: Boolean = true,
+    val customWatchfaceSelected: Boolean = true,
+    /** Whether the connected watch reported Watch Face Push (Wear OS 6+); the face choice shows only then */
+    val watchFacePushSupported: Boolean = false,
+    /** The face the watch reported holding, as a `PushedWatchfaceId` value, or null when unknown or none */
+    val installedWatchface: String? = null,
+    /** Name of a custom watchface just sent while the complications face is selected; the screen says so once, then clears it */
+    val customWatchfaceNotShown: String? = null,
     val showInfos: Boolean = false,
     val cwfInfosState: CwfInfosState? = null,
     val showImportList: Boolean = false,
@@ -148,7 +154,17 @@ class WearViewModel(
         }
         viewModelScope.launch {
             preferences.observe(StringKey.WearPushedWatchface).collect { face ->
-                _uiState.update { it.copy(customWatchfaceInstalled = face == PushedWatchfaceId.CWF) }
+                _uiState.update { it.copy(customWatchfaceSelected = face == PushedWatchfaceId.CWF) }
+            }
+        }
+        viewModelScope.launch {
+            wearPlugin.watchFacePushStatus.collect { status ->
+                _uiState.update {
+                    it.copy(
+                        watchFacePushSupported = status?.supported == true,
+                        installedWatchface = status?.installedFace
+                    )
+                }
             }
         }
         viewModelScope.launch {
@@ -307,7 +323,20 @@ class WearViewModel(
         preferences.put(StringNonKey.WearCwfAuthorVersion, metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
         preferences.put(StringNonKey.WearCwfFileName, metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
         rxBus.send(EventMobileToWearWatchface(cwfFile.zipByteArray))
-        _uiState.update { it.copy(showImportList = false, importItems = emptyList()) }
+        _uiState.update { state ->
+            // Sent and stored either way; but with the complications face on the wrist nothing
+            // draws it, and the wearer should hear that now rather than wonder later
+            val hidden = state.watchFacePushSupported && !state.customWatchfaceSelected
+            state.copy(
+                showImportList = false,
+                importItems = emptyList(),
+                customWatchfaceNotShown = if (hidden) metadata[CwfMetadataKey.CWF_NAME] ?: "" else null
+            )
+        }
+    }
+
+    fun dismissCustomWatchfaceNotShown() {
+        _uiState.update { it.copy(customWatchfaceNotShown = null) }
     }
 
     fun hideImportList() {
