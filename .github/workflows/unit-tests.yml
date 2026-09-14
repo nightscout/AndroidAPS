@@ -11,14 +11,22 @@ name: Unit tests (JVM)
 # Codecov under the `unit` flag; CircleCI uploads the instrumented run under `instrumented`. Codecov
 # merges uploads that carry the same commit SHA, so the combined number is the union of the two - a
 # line covered by either source counts as covered.
+# The pull_request trigger is the point of this, not a detail. CircleCI refuses fork PRs outright -
+# build 41327 on #5123 died 0.03s after being queued with "Forked prs not allowed to run on OSS
+# projects", before starting - because its runner is self-hosted and running a contributor's code on
+# the Nightscout machine would be a real risk. That block is correct and should stay. A GitHub-hosted
+# runner is an ephemeral VM, so the same code is safe to run here, which is why ios-ci.yml passes on
+# the very PRs CircleCI rejects. Moving the unit suite here means fork PRs get tested at all.
 on:
   workflow_dispatch:
   push:
     branches:
-      - ci-split-test
+      - dev
+      - master
   pull_request:
     branches:
-      - ci-split-test
+      - dev
+      - master
 
 # A newer push to the same branch makes an in-flight run pointless.
 concurrency:
@@ -29,6 +37,14 @@ jobs:
   unit-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+
+    # At job level so the coverage steps can ask whether a token exists at all. GitHub withholds
+    # secrets from pull_request runs on forks - deliberately, since a fork's workflow must not be able
+    # to read them - so on exactly the PRs this workflow exists to cover, this is the empty string. The
+    # tests still run and still gate the PR; only the upload is skipped. Without the guard the upload
+    # would fail and, with fail_ci_if_error on, fail the job on every fork PR.
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     steps:
       - uses: actions/checkout@v5
@@ -101,7 +117,9 @@ jobs:
       - name: Aggregate coverage
         run: ./gradlew --console=plain --no-daemon jacocoAllDebugReport
 
+      # Skipped on fork PRs, which have no secrets. See the job-level env above.
       - name: Upload coverage
+        if: env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v7
         with:
           files: ./build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
@@ -115,17 +133,14 @@ jobs:
           # found" because the CODECOV_TOKEN secret held a different token from the repository's, and
           # with that unfixed this flag only produced a permanently red build.
           fail_ci_if_error: true
-        # Must stay attached to THIS step. It was accidentally left on the step below when the check
-        # was added, and the upload - with no token - was refused with "Token required because branch
-        # is protected" while the job still went green.
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       # The real check. The uploader's exit code describes the tool; this describes the outcome, which
       # is the thing worth failing on: does Codecov actually have a report for this commit? It is loud
       # when coverage genuinely fails to land and quiet about the create-commit noise above.
-      # No token needed - the repo is public and this is a read.
+      # No token needed to READ - the repo is public - but it is skipped with the upload, because there
+      # is nothing to verify when nothing was sent.
       - name: Check the coverage actually landed
+        if: env.CODECOV_TOKEN != ''
         run: |
           SHA="${{ github.event.pull_request.head.sha || github.sha }}"
           API="https://api.codecov.io/api/v2/github/nightscout/repos/AndroidAPS/commits/$SHA"
