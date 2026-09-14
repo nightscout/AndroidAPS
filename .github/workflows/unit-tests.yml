@@ -142,7 +142,11 @@ jobs:
           for i in $(seq 1 36); do
             code=$(curl -sS -o /tmp/codecov-commit.json -w '%{http_code}' "$API" || echo 000)
             if [ "$code" = "200" ]; then
-              hits=$(jq -r --arg p "$PROBE" '[.report.files[] | select(.name == $p) | .totals.hits] | first // -1' /tmp/codecov-commit.json)
+              # `.report.files // []`, because Codecov answers 200 with a null report while it is still
+              # processing the upload. Walking null made jq exit 5 and, under `bash -e`, killed the step
+              # on the first attempt - reported as "the upload did not land" when it simply had not been
+              # processed yet. The trailing `|| echo -1` covers any other jq failure the same way.
+              hits=$(jq -r --arg p "$PROBE" '[(.report.files // [])[] | select(.name == $p) | .totals.hits] | first // -1' /tmp/codecov-commit.json 2>/dev/null || echo -1)
               if [ "$hits" != "-1" ] && [ "$hits" -gt 0 ] 2>/dev/null; then
                 echo "This job's coverage landed. $PROBE has $hits hits."
                 jq -r '"  state=\(.state)  coverage=\(.totals.coverage)  lines=\(.totals.lines)"' /tmp/codecov-commit.json
