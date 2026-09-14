@@ -51,6 +51,7 @@ class CobExtendedCarbsTest : AapsInstrumentedTest() {
     private val config get() = testGraphs.config
     private val loop get() = testGraphs.loop
     private val objectivesPlugin get() = testGraphs.objectivesPlugin
+    private val commandQueue get() = testGraphs.commandQueue
 
     private val profileData = "{\"_id\":\"653f90bc89f99714b4635b33\",\"defaultProfile\":\"U200_32\",\"date\":1695655201449,\"created_at\":\"2023-09-25T15:20:01.449Z\"," +
         "\"startDate\":\"2023-09-25T15:20:01.4490000Z\",\"store\":{\"U200_32\":{\"dia\":8,\"carbratio\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":10}],\"sens\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"basal\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0.3}],\"target_low\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"target_high\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.5}],\"units\":\"mmol\",\"timezone\":\"GMT\"}},\"app\":\"AAPS\",\"utcOffset\":0}"
@@ -61,6 +62,14 @@ class CobExtendedCarbsTest : AapsInstrumentedTest() {
         loop.lastRun = null
         objectivesPlugin.objectives.forEach { it.startedOn = 0 }
         (profileFunction as ProfileFunctionImpl).cache.clear()
+        // Leave the command queue empty for whatever runs next in this process. This class is @ShardB,
+        // which it shares with six Dana tests that drive pumps through the same queue, and work left in
+        // it is not harmless here: a ProfileSwitch is turned into the EffectiveProfileSwitch this test
+        // waits for by a collector that processes emissions SEQUENTIALLY, so anything still queued
+        // delays that write. The wait allows 40s; the pump round-trip behind it is bounded at
+        // PROFILE_SET_TIMEOUT_MS, ten minutes. A queue that is merely busy therefore reads as a test
+        // failure long before the code under test would consider anything wrong.
+        runCatching { commandQueue.clear() }
         runBlocking { persistenceLayer.clearDatabases() }
     }
 
@@ -100,26 +109,50 @@ class CobExtendedCarbsTest : AapsInstrumentedTest() {
         val profileName = store.getDefaultProfileName() ?: error("No profile")
         val iCfg = store.getSpecificProfile(profileName)?.iCfg ?: ICfg("Insulin", peak = 75, dia = 5.0, concentration = 1.0)
 
+        // Start from an idle queue. Anything still in it is processed before this ProfileSwitch, and
+        // the wait below only allows 40s - see the note in tearDown.
+        waits.awaitQuiet("command queue before profile switch") { commandQueue.size() > 0 }
+        commandQueue.clear()
+
         // Create the profile switch and wait for the resulting EffectiveProfileSwitch (written by the
         // command queue once the pump push succeeds). Replaces old EventEffectiveProfileSwitchChanged.
-        val epsList = waits.awaitDbChange(EPS::class, what = "EffectiveProfileSwitch after createProfileSwitch") {
-            val result = profileFunction.createProfileSwitch(
-                profileStore = store,
-                profileName = profileName,
-                durationInMinutes = 0,
-                percentage = 100,
-                timeShiftInHours = 0,
-                timestamp = dateUtil.now(),
-                action = Action.PROFILE_SWITCH,
-                source = Sources.ProfileSwitchDialog,
-                note = "Test",
-                listValues = listOf(
-                    ValueWithUnit.SimpleString(profileName),
-                    ValueWithUnit.Percent(100)
-                ),
-                iCfg = iCfg
+        //
+        // Three things can mean no EPS is ever written - CommandQueueImplementation skipping the
+        // ProfileSwitch because an active EPS already represents it, the pump round-trip timing out, or
+        // the pump write failing - and a bare "timed out" cannot tell them apart. If the wait expires,
+        // report what actually happened first, so the next occurrence names the path instead of
+        // repeating the symptom.
+        val epsList = try {
+            waits.awaitDbChange(EPS::class, what = "EffectiveProfileSwitch after createProfileSwitch") {
+                val result = profileFunction.createProfileSwitch(
+                    profileStore = store,
+                    profileName = profileName,
+                    durationInMinutes = 0,
+                    percentage = 100,
+                    timeShiftInHours = 0,
+                    timestamp = dateUtil.now(),
+                    action = Action.PROFILE_SWITCH,
+                    source = Sources.ProfileSwitchDialog,
+                    note = "Test",
+                    listValues = listOf(
+                        ValueWithUnit.SimpleString(profileName),
+                        ValueWithUnit.Percent(100)
+                    ),
+                    iCfg = iCfg
+                )
+                assertThat(result).isNotNull()
+            }
+        } catch (e: IllegalStateException) {
+            val switches = persistenceLayer.getProfileSwitches().size
+            val effective = persistenceLayer.getEffectiveProfileSwitches().size
+            val queued = runCatching { commandQueue.size() }.getOrElse { -1 }
+            throw IllegalStateException(
+                "$e | ProfileSwitch rows=$switches, EffectiveProfileSwitch rows=$effective, commands still queued=$queued. " +
+                    "switches=0 means createProfileSwitch itself did not write; switches>0 with effective=0 means the " +
+                    "command queue never turned it into an EPS (skipped, pump write failed, or still within the " +
+                    "10 minute PROFILE_SET_TIMEOUT_MS); queued>0 means it had not got to it yet.",
+                e
             )
-            assertThat(result).isNotNull()
         }
         aapsLogger.info(LTag.CORE, "EPS flow emitted ${epsList.size} entries")
         assertThat(epsList).isNotEmpty()
