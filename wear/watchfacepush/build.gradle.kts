@@ -128,6 +128,32 @@ configurations.configureEach {
 }
 
 /**
+ * Takes `android:testOnly` back out of the face's manifest.
+ *
+ * Android Studio passes `-Pandroid.injected.testOnly=true` when it builds to Run or Install, and it
+ * applies to **every** application module in the build - this one included. Studio installs the app
+ * it deploys with `adb install -t`, so the flag never shows there. This APK is different: it is
+ * installed at runtime by Watch Face Push, which uses the ordinary route and refuses a test-only
+ * APK - reporting only "error code 1", with the watch left on its default face and nothing in the
+ * logs to say why. It cost an evening once.
+ */
+abstract class StripTestOnlyTask : DefaultTask() {
+
+    @get:InputFile
+    abstract val mergedManifest: RegularFileProperty
+
+    @get:OutputFile
+    abstract val updatedManifest: RegularFileProperty
+
+    @TaskAction
+    fun strip() {
+        val text = mergedManifest.get().asFile.readText()
+        // The whole attribute, quotes included - leaving the closing quote behind would break the XML
+        updatedManifest.get().asFile.writeText(text.replace(Regex("\\s*android:testOnly=\"[^\"]*\""), ""))
+    }
+}
+
+/**
  * Generates `res/raw/watchface.xml` for a variant by substituting the wear app's application id
  * into the DefaultProviderPolicy entries of the face's template, so the face's complication slots
  * default to the AAPS complications of the matching wear flavor.
@@ -164,6 +190,16 @@ extensions.configure<ApplicationAndroidComponentsExtension>("androidComponents")
             providerAppId.set(variant.applicationId.map { appId -> appId.substringBefore(".watchfacepush.") })
         }
         variant.sources.res?.addGeneratedSourceDirectory(taskProvider, GenerateWatchFaceResTask::outputDir)
+
+        // Before the APK is taken below: the flag would otherwise travel into the wear app's
+        // assets and make the face impossible to install on the watch.
+        val stripProvider = project.tasks.register(
+            "strip${variant.name.replaceFirstChar { it.uppercase() }}TestOnly",
+            StripTestOnlyTask::class.java
+        )
+        variant.artifacts.use(stripProvider)
+            .wiredWithFiles(StripTestOnlyTask::mergedManifest, StripTestOnlyTask::updatedManifest)
+            .toTransform(SingleArtifact.MERGED_MANIFEST)
 
         // Expose the release APK directory as an outgoing artifact so the wear app can consume it
         // with a real producer→consumer dependency (a hardcoded path would fail Gradle's
