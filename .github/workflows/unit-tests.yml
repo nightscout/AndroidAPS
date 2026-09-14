@@ -127,19 +127,32 @@ jobs:
         run: |
           SHA="${{ github.event.pull_request.head.sha || github.sha }}"
           API="https://api.codecov.io/api/v2/github/nightscout/repos/AndroidAPS/commits/$SHA"
+          # Look for coverage of a file only THIS job can cover, not merely for "a report".
+          #
+          # Checking that a report exists is not enough, and quietly passed while this job's upload was
+          # being rejected outright: CircleCI uploads the instrumented half against the same commit, so
+          # its report answered the check on this job's behalf. `comboctl` has no instrumented tests at
+          # all - its coverage can only come from the unit suite here - so hits on this file prove that
+          # this upload is the one that landed.
+          PROBE="pump/combov2/comboctl/src/commonMain/kotlin/info/nightscout/comboctl/parser/Pattern.kt"
           # Codecov processes uploads asynchronously, so a miss right after the upload means "not yet",
           # not "never". Poll for up to 6 minutes before calling it a failure.
           for i in $(seq 1 36); do
             code=$(curl -sS -o /tmp/codecov-commit.json -w '%{http_code}' "$API" || echo 000)
             if [ "$code" = "200" ]; then
-              echo "Codecov has a report for $SHA:"
-              jq -r '"  state=\(.state)  coverage=\(.totals.coverage)  lines=\(.totals.lines)"' /tmp/codecov-commit.json
-              exit 0
+              hits=$(jq -r --arg p "$PROBE" '[.report.files[] | select(.name == $p) | .totals.hits] | first // -1' /tmp/codecov-commit.json)
+              if [ "$hits" != "-1" ] && [ "$hits" -gt 0 ] 2>/dev/null; then
+                echo "This job's coverage landed. $PROBE has $hits hits."
+                jq -r '"  state=\(.state)  coverage=\(.totals.coverage)  lines=\(.totals.lines)"' /tmp/codecov-commit.json
+                exit 0
+              fi
+              echo "attempt $i: report present but $PROBE has hits=$hits - not this job's upload yet"
+            else
+              echo "attempt $i: HTTP $code - no report yet"
             fi
-            echo "attempt $i: HTTP $code - no report yet, waiting 10s"
             sleep 10
           done
-          echo "::error::Codecov has no report for $SHA after 6 minutes. The coverage upload did not land."
+          echo "::error::Codecov has no unit coverage for $SHA after 6 minutes ($PROBE never showed hits). This job's upload did not land."
           exit 1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
