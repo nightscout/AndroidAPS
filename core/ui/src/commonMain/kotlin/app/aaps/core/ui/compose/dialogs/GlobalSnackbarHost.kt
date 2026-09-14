@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.SnackbarColors
@@ -48,10 +49,16 @@ import app.aaps.core.ui.compose.stringResource
  * The [hostState] should be the same instance provided via
  * `LocalSnackbarHostState` so that in-tree composables wanting a local
  * snackbar (e.g. undo actions) share the single active host.
+ *
+ * While this host collects it holds a [snackbarHostPresence] handle. That is
+ * how `SnackbarNotificationFallback` knows a message is being shown here and
+ * must not also become a system notification. Every host must pass it, or a
+ * message shown on screen would be duplicated in the notification shade.
  */
 @Composable
 fun GlobalSnackbarHost(
     rxBus: RxBus,
+    snackbarHostPresence: SnackbarHostPresence,
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
@@ -59,16 +66,22 @@ fun GlobalSnackbarHost(
     val lifecycleOwner = LocalLifecycleOwner.current
 
     // Scoped to STARTED so the collector is cancelled when the activity goes
-    // to the background. The application-scope collector in MainApp then
-    // takes over and routes events to a system Notification. Without this,
-    // both collectors would fire during the ProcessLifecycle STARTED→CREATED
-    // transition, double-surfacing messages.
-    LaunchedEffect(rxBus, lifecycleOwner) {
+    // to the background. `SnackbarNotificationFallback` then takes over and
+    // routes events to a system Notification. Without this, both collectors
+    // would fire during the STARTED→CREATED transition, double-surfacing
+    // messages.
+    //
+    // The presence handle is held for exactly as long as this collector runs,
+    // which is what tells the fallback to stay out of the way. It is released
+    // on cancellation too, so the hand-off cannot be missed.
+    LaunchedEffect(rxBus, snackbarHostPresence, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            rxBus.toFlow(EventShowSnackbar::class).collect { event ->
-                hostState.showSnackbar(
-                    BusSnackbarVisuals(message = event.message, type = event.type)
-                )
+            snackbarHostPresence.acquire().use {
+                rxBus.toFlow(EventShowSnackbar::class).collect { event ->
+                    hostState.showSnackbar(
+                        BusSnackbarVisuals(message = event.message, type = event.type)
+                    )
+                }
             }
         }
     }

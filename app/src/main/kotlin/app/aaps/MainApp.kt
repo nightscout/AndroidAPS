@@ -10,7 +10,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
@@ -36,7 +35,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
-import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -161,6 +159,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val runningModeExpiryScheduler get() = metroGraphs.runningModeExpiryScheduler
     private val profileSwitchExpiryScheduler get() = metroGraphs.profileSwitchExpiryScheduler
     private val automationRuntime get() = metroGraphs.automationRuntime
+    private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
     private val appScope get() = metroGraphs.applicationScope
 
     private lateinit var insulinLabel: String
@@ -184,33 +183,11 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         aapsLogger.debug("onCreate")
         ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
-        // Background fallback for EventShowSnackbar: when no activity is STARTED
-        // (app in background / process alive but UI offscreen), promote the
-        // snackbar to a system Notification so the message is not lost.
-        // Visible activities host their own GlobalSnackbarHost that also
-        // subscribes; those win while UI is present.
-        appScope.launch {
-            rxBus.toFlow(EventShowSnackbar::class).collect { event ->
-                val uiVisible = ProcessLifecycleOwner.get().lifecycle.currentState
-                    .isAtLeast(Lifecycle.State.STARTED)
-                if (!uiVisible) {
-                    notificationManager.post(
-                        id = NotificationId.SNACKBAR_FALLBACK,
-                        text = event.message,
-                        // URGENT is reserved for pump/loop alarms that play alarm-stream
-                        // sounds and wake users. Generic snackbar errors — "failed to save
-                        // preference", etc. — route through NORMAL instead.
-                        level = when (event.type) {
-                            EventShowSnackbar.Type.Error   -> NotificationLevel.NORMAL
-                            EventShowSnackbar.Type.Warning -> NotificationLevel.NORMAL
-                            EventShowSnackbar.Type.Success -> NotificationLevel.INFO
-                            EventShowSnackbar.Type.Info    -> NotificationLevel.INFO
-                        },
-                        validMinutes = 30
-                    )
-                }
-            }
-        }
+        // Background fallback for EventShowSnackbar: when no GlobalSnackbarHost is collecting,
+        // promote the snackbar to a system Notification so the message is not lost. Shared code -
+        // the iOS and desktop shells start the same class. Started here, before the migrations
+        // below, so messages sent during startup are covered too.
+        snackbarNotificationFallback.start()
         // Configure LeakCanary with Firebase reporting
         // Memory leaks will be uploaded to Firebase Crashlytics via FabricPrivacy.logException
         configureLeakCanary(

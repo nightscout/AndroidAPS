@@ -122,6 +122,7 @@ import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.database.AppRepository
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
+import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.implementation.plugin.PluginStore
@@ -348,6 +349,7 @@ interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
     val profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler
+    val snackbarNotificationFallback: SnackbarNotificationFallback
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys
     val activePlugin: ActivePlugin

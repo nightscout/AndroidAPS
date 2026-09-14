@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.IntComposedKey
@@ -28,6 +29,7 @@ class WidgetConfigureActivity : MetroAppCompatActivity() {
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var widgetUpdater: WidgetUpdater
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var snackbarHostPresence: SnackbarHostPresence
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
@@ -79,6 +81,7 @@ class WidgetConfigureActivity : MetroAppCompatActivity() {
                         )
                         GlobalSnackbarHost(
                             rxBus = rxBus,
+                            snackbarHostPresence = snackbarHostPresence,
                             hostState = snackbarHostState,
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )

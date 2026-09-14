@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
@@ -39,6 +40,7 @@ class OpenHumansMetroBridge(
     private val persistenceLayer: () -> PersistenceLayer,
     private val notificationManager: () -> NotificationManager,
     private val rxBus: () -> RxBus,
+    private val snackbarHostPresence: () -> SnackbarHostPresence,
     private val fabricPrivacy: () -> FabricPrivacy
 ) {
 
@@ -51,6 +53,7 @@ class OpenHumansMetroBridge(
             DeferredRef { persistenceLayer() },
             DeferredRef { notificationManager() },
             DeferredRef { rxBus() },
+            DeferredRef { snackbarHostPresence() },
             DeferredRef { fabricPrivacy() }
         )
     }

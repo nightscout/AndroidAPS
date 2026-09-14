@@ -56,6 +56,7 @@ import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.objects.workflow.MetroWorkerCreator
 import app.aaps.database.AppRepository
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
+import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.implementation.plugin.PluginStore
@@ -276,6 +277,7 @@ class MetroGraphs(
     val activityMonitor: ActivityMonitor get() = root.activityMonitor
     val notificationManager: NotificationManager get() = root.notificationManager
     val profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler get() = root.profileSwitchExpiryScheduler
+    val snackbarNotificationFallback: SnackbarNotificationFallback get() = root.snackbarNotificationFallback
     val activePlugin: ActivePlugin get() = root.activePlugin
     val pluginStore: PluginStore get() = root.pluginStore
     val maintenance: Maintenance get() = root.maintenance

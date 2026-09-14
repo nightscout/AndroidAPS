@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
@@ -86,6 +87,8 @@ import app.aaps.ui.compose.clientcontrol.ClientControlPendingDialog
  * @param onNavControllerReady handed the controller as soon as it exists, for a platform entry point
  *   that has to route from outside the composition - an Android intent, for example.
  * @param onClose leaves the app when initialization failed and there is nothing to show.
+ * @param snackbarHostPresence held by the snackbar host below while it collects, so that
+ *   `SnackbarNotificationFallback` posts a system notification only when no host is up.
  */
 @Composable
 fun AapsAppRoot(
@@ -105,6 +108,7 @@ fun AapsAppRoot(
     visibilityContext: VisibilityContext,
     nsClient: NsClient,
     rxBus: RxBus,
+    snackbarHostPresence: SnackbarHostPresence,
     clientControlActionDispatcher: ClientControlActionDispatcher,
     appIcon: @Composable (Modifier) -> Unit,
     splashLogo: @Composable (Modifier) -> Unit,
@@ -175,6 +179,7 @@ fun AapsAppRoot(
                     // and is the single visible SnackbarHost across every screen.
                     GlobalSnackbarHost(
                         rxBus = rxBus,
+                        snackbarHostPresence = snackbarHostPresence,
                         hostState = rootSnackbarHostState,
                         modifier = Modifier.align(Alignment.BottomCenter)
                     )
