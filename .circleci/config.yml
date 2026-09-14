@@ -27,6 +27,10 @@ jobs:
             find . -type d -path "*/build/outputs/androidTest-results" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/code_coverage" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/unit_test_code_coverage" -prune -exec rm -rf {} +
+            # Unit results too, now that "Save test results" collects them. Without this a module whose
+            # tests do not run this time (up-to-date, or skipped because an earlier task failed) keeps
+            # its old TEST-*.xml on the runner and it gets reported as if it had just passed.
+            find . -type d -path "*/build/test-results" -prune -exec rm -rf {} +
             rm -f /tmp/rc-A /tmp/rc-B /tmp/rc-C
 
       # THREE emulators, so the app suite splits three ways (@ShardA / @ShardB / the rest) and each shard
@@ -422,28 +426,32 @@ jobs:
           path: ~/test-results/junit
 
       # The same report that gets uploaded to Codecov, kept so this half of the split can be compared
-      # against the GitHub job's. See the matching note in .github/workflows/unit-tests.yml: the two
-      # halves count different numbers of lines because each workspace has compiled a different set of
-      # classes, and the merged total is only trustworthy if the union of the two covers everything.
+      # against the GitHub job's, file by file, instead of guessed at.
       - store_artifacts:
           path: ./build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
           destination: jacoco/jacocoAllDebugReport.xml
 
-      # `files`, plural - orb 6.0.0 renamed it from `file`, and parameters are validated when the
-      # config is compiled, so the old name breaks the whole pipeline rather than just this step.
+      # Orb 6.0.0. Two things change with it, both wanted:
+      #
+      # `files`, plural - renamed from `file`. Parameters are validated when the config is compiled,
+      # for every job in the pipeline, so the old name fails the whole build rather than this step.
+      #
+      # And the coverage PERCENTAGE steps up by about a point, once, without any test changing. 6.0.0
+      # uses the current Codecov CLI, which applies Codecov's "file fixes" - blank lines, lone closing
+      # brackets and similar stop being counted. Measured on this branch: the reported line count fell
+      # from 195057 to 182221 at exactly the commit that bumped the orb, with identical code and
+      # identical jacoco input (the raw reports either side agree line for line). This is a deliberate
+      # re-base onto a more honest denominator, not a regression and not a real improvement.
+      # Comparisons with commits measured before this point are not like for like. `disable_file_fixes`
+      # would restore the old basis if that is ever wanted.
       - codecov/upload:
           files: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
-          # Flagged so the two halves stay tellable apart once the unit suite uploads from GitHub
-          # Actions. Without flags the merged number hides which suite actually covers what.
+          # Flagged so the two halves stay tellable apart. Note the breakdown is not visible today:
+          # flag analytics is disabled on this Codecov plan, so per-flag totals read 0 through the API
+          # for every flag. The flags still attach and still merge - only the per-suite view is missing.
           flags: 'instrumented'
-          # A real parameter in 6.0.0; 3.3.0 had none, which is why this used to be a hand-written poll
-          # of the Codecov API instead. Verified on job 41335: the CLI reports
-          # "RequestResult(error=None, status_code=200)" and honours --fail-on-error.
-          #
-          # The poll it replaced is deliberately gone rather than kept as a second guard. It asked
-          # whether the commit had *any* report, and on a branch where GitHub Actions uploads the other
-          # half against the same commit, that question can be answered by the other job - the same
-          # false pass the GitHub-side check had to be tightened to avoid.
+          # A real parameter in 6.0.0; 3.3.0 had none, so a refused upload used to pass silently.
+          # Verified on job 41335: the CLI reports "RequestResult(error=None, status_code=200)".
           fail_on_error: true
 
       - run:
