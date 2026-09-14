@@ -27,6 +27,7 @@ import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
 import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
+import app.aaps.plugins.automation.actions.ActionSMBMaxMinutesChangeBase
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionSmoothingChange
@@ -71,6 +72,7 @@ fun ActionEditor(
             is ActionSMBChange            -> ActionSMBChangeEditor(action, tick, onChange)
             is ActionSmoothingChange      -> ActionSmoothingChangeEditor(action, tick, onChange)
             is ActionProfileSwitch        -> ActionProfileSwitchEditor(action, profileNames, tick, onChange)
+            is ActionSMBMaxMinutesChangeBase -> ActionSMBMaxMinutesChangeEditor(action, tick, onChange)
             is ActionProfileSwitchPercent -> ActionProfileSwitchPercentEditor(action, tick, onChange)
             is ActionRunAutotune          -> ActionRunAutotuneEditor(action, profileNames, tick, onChange)
             is ActionStartTempTarget      -> ActionStartTempTargetEditor(action, tick, onChange)
@@ -182,6 +184,19 @@ fun ActionSmoothingChangeEditor(a: ActionSmoothingChange, tick: Int = 0, onChang
             }
         },
         label = stringResource(AutomationStrings.smoothing_label)
+    )
+}
+
+@Composable
+fun ActionSMBMaxMinutesChangeEditor(a: ActionSMBMaxMinutesChangeBase, tick: Int = 0, onChange: () -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick
+    NumberInputRow(
+        labelRef = a.key.title,
+        value = a.minutes.value.toDouble(),
+        onValueChange = { a.minutes.value = it.toInt(); onChange() },
+        valueRange = a.key.min.toDouble()..a.key.max.toDouble(),
+        step = 5.0,
+        unitLabel = CoreUiStrings.units_min
     )
 }
 
