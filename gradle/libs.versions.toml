@@ -75,7 +75,7 @@ com-google-gms = { group = "com.google.gms", name = "google-services", version.r
 
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.8" }
-com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.18.0" }
+com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.19.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-config = { group = "com.google.firebase", name = "firebase-config" }
