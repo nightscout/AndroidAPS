@@ -90,7 +90,10 @@ class SnackbarNotificationFallbackTest {
 
     /** The level mapping is the one thing the fallback decides on its own, so it is pinned here. */
     @Test
-    fun `an error becomes a normal notification, not an urgent one`() {
+    // No comma in this name: Kotlin/Native rejects a comma inside a backticked identifier, so it
+    // compiles on the JVM and then fails the iOS test target outright. See commit 6d1a639359, which
+    // broke `:implementation:compileTestKotlinIosSimulatorArm64` on dev exactly this way.
+    fun `an error becomes a normal notification rather than an urgent one`() {
         startSut()
 
         rxBus.send(EventShowSnackbar("Export failed", EventShowSnackbar.Type.Error))
