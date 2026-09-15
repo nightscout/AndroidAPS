@@ -170,6 +170,23 @@ enum class StringKey(
 
     VirtualPumpType(key = "virtualpump_type", defaultValue = "Generic AAPS", title = KeysStrings.pref_title_virtual_pump_type, preferenceType = PreferenceType.LIST),
 
+    /**
+     * Which embedded Watch Face Format face the wear app installs through Watch Face Push on a
+     * Wear OS 6+ watch. Watch Face Push gives an app one slot, so this is a choice, not a set.
+     * Values in [PushedWatchfaceId]. Older watches receive and keep the value but cannot act on it.
+     */
+    WearPushedWatchface(
+        key = "wear_pushed_watchface",
+        defaultValue = PushedWatchfaceId.CWF,
+        title = KeysStrings.pref_title_wear_pushed_watchface,
+        summary = KeysStrings.pref_summary_wear_pushed_watchface,
+        preferenceType = PreferenceType.LIST,
+        entriesRefs = mapOf(
+            PushedWatchfaceId.WFS to KeysStrings.wear_pushed_watchface_wfs,
+            PushedWatchfaceId.CWF to KeysStrings.wear_pushed_watchface_cwf
+        )
+    ),
+
     NsClientUrl(
         key = "nsclientinternal_url",
         defaultValue = "",

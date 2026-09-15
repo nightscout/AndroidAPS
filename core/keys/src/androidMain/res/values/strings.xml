@@ -158,6 +158,10 @@
     <string name="pref_title_wear_wizard_cob">Include COB in wizard</string>
     <string name="pref_title_wear_wizard_iob">Include IOB in wizard</string>
     <string name="pref_title_wear_custom_watchface_authorization">Authorize custom watchfaces</string>
+    <string name="pref_title_wear_pushed_watchface">Watchface installed on watch</string>
+    <string name="pref_summary_wear_pushed_watchface">Wear OS 6 and newer only. AAPS can install one watchface on the watch: the complications watchface or the custom watchface. Older watches ignore this setting.</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Complications watchface</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Custom watchface</string>
     <string name="pref_title_wear_notify_on_smb">Notify on SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Send notifications to watch when SMB is delivered.</string>
     <string name="pref_title_wear_broadcast_data">Broadcast data to watch</string>
