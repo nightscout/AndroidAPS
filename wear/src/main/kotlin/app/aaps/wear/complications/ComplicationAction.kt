@@ -64,6 +64,12 @@ enum class ComplicationAction {
     BG_GRAPH,
 
     /**
+     * Opens the running mode picker.
+     * Allows a quick change of the running mode (open/closed loop, suspend, disconnect...).
+     */
+    RUNNING_MODE,
+
+    /**
      * Opens warning dialog about watch-phone sync issues.
      * Displayed when data hasn't updated from phone recently.
      */

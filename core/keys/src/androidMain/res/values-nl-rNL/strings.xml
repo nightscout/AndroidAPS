@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Eenvoudige modus</string>
+    <string name="pref_title_insulin_concentration">Insuline concentratie ondersteuning</string>
+    <string name="pref_summary_insulin_concentration">Schakel ondersteuning in voor verschillende insuline concentraties (U50, U200, enz.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Scherm aan houden</string>
+    <string name="pref_summary_keep_screen_on">Voorkomen dat Android het scherm uitschakelt. Dit kost veel accuvoeding als je de telefoon niet aan de oplader hebt.</string>
+    <string name="pref_title_show_treatment_button">Toon behandelingsknop</string>
+    <string name="pref_title_show_wizard_button">Toon wizard knop</string>
+    <string name="pref_title_show_insulin_button">Toon insuline knop</string>
+    <string name="pref_title_show_carbs_button">Toon Koolhydraten knop</string>
+    <string name="pref_title_show_cgm_button">Toon CGM knop</string>
+    <string name="pref_title_show_calibration_button">Toon kalibratieknop</string>
     <!-- Pump preferences -->
     <!-- Alert preferences -->
+    <string name="pref_title_alert_override_dnd">Niet storen stand overschrijven</string>
     <!-- BG Source preferences -->
     <!-- APS preferences -->
     <!-- Maintenance preferences -->
@@ -11,6 +23,8 @@
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_allow_client_control">Client controle toestaan</string>
+    <string name="pref_summary_ns_allow_client_control">Laat gekoppelde client apparaten ondertekende opdrachten verzenden (bijvoorbeeld scènes starten/stoppen) via Nightscout.</string>
     <!-- OpenHumans preferences -->
     <!-- xDrip preferences -->
     <!-- Wear preferences -->
@@ -23,6 +37,7 @@
     <string name="biometric">Biometrisch</string>
     <string name="master_password">Masterwachtwoord</string>
     <string name="custom_password">Aangepast wachtwoord</string>
+    <string name="custom_pin">Aangepaste pincode</string>
     <!-- IntKey: Safety preferences -->
     <!-- IntKey: Loop preferences -->
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
@@ -40,9 +55,14 @@
     <string name="autotune_default_tune_days_summary">Standaard aantal dagen aan gegevens dat Autotune moet verwerken (tot 30)</string>
     <!-- IntKey: SMS preferences -->
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_randomize">Genereer willekeurige BG waarden</string>
+    <string name="pref_summary_random_bg_randomize">Voeg ruis toe, laat tijdstempels variëren, maak trendpijlen willekeurig en voeg zo nu en dan willekeurige koolhydraten toe. Schakel deze optie uit voor een zuivere, deterministische sinusgolf met de trendpijl afgeleid van de sinushelling.</string>
     <!-- IntKey: NS Client preferences -->
     <!-- IntKey: Site rotation preferences -->
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Man</string>
+    <string name="site_rotation_profile_woman">Vrouw</string>
+    <string name="site_rotation_profile_child">Kind</string>
     <!-- StringKey: General preferences -->
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->

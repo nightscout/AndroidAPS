@@ -48,7 +48,8 @@ import dev.zacsweers.metro.SingleIn
  * Captures prior state before activation for revert on deactivation.
  */
 @SingleIn(AppScope::class)
-class SceneExecutor @Inject constructor(
+@Inject
+class SceneExecutor(
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val profileRepository: ProfileRepository,

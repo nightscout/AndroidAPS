@@ -204,4 +204,52 @@ internal class RunningModeSourceTest {
             R.drawable.ic_loop_resume
         ).inOrder()
     }
+
+    @Test
+    fun tileDropsDisableWhenSuspendIsPresentButKeepsPhoneIndices() {
+        stubStates(
+            11_000L,
+            listOf(
+                mode(RunningMode.LOOP_OPEN),
+                mode(RunningMode.LOOP_DISABLE),
+                mode(RunningMode.LOOP_USER_SUSPEND, listOf(60)),
+                mode(RunningMode.PUMP_DISCONNECT, listOf(30))
+            )
+        )
+
+        val actions = source.getSelectedActions()
+
+        // LOOP_DISABLE is hidden on the 4-slot tile when LOOP_USER_SUSPEND is offered...
+        assertThat(actions.map { it.iconRes }).containsExactly(
+            R.drawable.ic_loop_open,
+            R.drawable.ic_loop_paused,
+            R.drawable.ic_loop_disconnected
+        ).inOrder()
+        // ...but the remaining actions still carry the indices of the FULL phone list
+        assertThat((actions[0].action as EventData.RunningModeSelected).index).isEqualTo(0)
+        assertThat((actions[1].action as EventData.RunningModePreSelect).stateIndex).isEqualTo(2)
+        assertThat((actions[2].action as EventData.RunningModePreSelect).stateIndex).isEqualTo(3)
+    }
+
+    @Test
+    fun pickerOverloadKeepsEveryEntryIncludingDisable() {
+        val list = EventData.RunningModeList(
+            12_000L,
+            listOf(
+                mode(RunningMode.LOOP_OPEN),
+                mode(RunningMode.LOOP_DISABLE),
+                mode(RunningMode.LOOP_USER_SUSPEND, listOf(60)),
+                mode(RunningMode.PUMP_DISCONNECT, listOf(30)),
+                mode(RunningMode.LOOP_LGS)
+            )
+        )
+
+        val actions = source.getSelectedActions(list)
+
+        // No drop, no 4-cap: one action per entry, aligned by index
+        assertThat(actions).hasSize(5)
+        assertThat(actions[1].iconRes).isEqualTo(R.drawable.ic_loop_disabled)
+        assertThat((actions[1].action as EventData.RunningModeSelected).index).isEqualTo(1)
+        assertThat((actions[4].action as EventData.RunningModeSelected).index).isEqualTo(4)
+    }
 }

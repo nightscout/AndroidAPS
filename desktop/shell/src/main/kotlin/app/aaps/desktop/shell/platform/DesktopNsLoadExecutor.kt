@@ -55,7 +55,8 @@ import kotlinx.coroutines.launch
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class DesktopNsLoadExecutor @Inject constructor(
+@Inject
+class DesktopNsLoadExecutor(
     private val aapsLogger: AAPSLogger,
     @ApplicationScope private val scope: CoroutineScope,
     private val loadStatus: () -> LoadStatusRunner,

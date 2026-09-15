@@ -25,7 +25,8 @@ import dev.zacsweers.metro.SingleIn
  * Created by andy on 4/28/18.
  */
 @SingleIn(AppScope::class)
-class MedtronicPumpStatus @Inject constructor(
+@Inject
+class MedtronicPumpStatus(
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val rileyLinkUtil: RileyLinkUtil

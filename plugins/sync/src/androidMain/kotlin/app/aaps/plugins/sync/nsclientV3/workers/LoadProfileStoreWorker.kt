@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /** WorkManager shim. The work itself is [LoadProfileStoreRunner], which is shared. */
-class LoadProfileStoreWorker @AssistedInject constructor(
+@AssistedInject
+class LoadProfileStoreWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

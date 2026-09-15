@@ -37,7 +37,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosExportPasswordPlatform @Inject constructor(
+@Inject
+class IosExportPasswordPlatform(
     private val aapsLogger: AAPSLogger,
     private val keychain: Keychain = AppleKeychain(service = "app.aaps.exportpassword")
 ) : ExportPasswordPlatform {

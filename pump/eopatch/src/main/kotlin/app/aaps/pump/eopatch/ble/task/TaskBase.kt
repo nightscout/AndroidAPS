@@ -19,7 +19,8 @@ import dev.zacsweers.metro.SingleIn
 
 @HasMemberInjections
 @SingleIn(AppScope::class)
-open class TaskBase @Inject constructor(val func: TaskFunc) {
+@Inject
+open class TaskBase(val func: TaskFunc) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var pm: PreferenceManager

@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /** WorkManager shim. The work itself is [LoadSettingsRunner], which is shared. */
-class LoadSettingsWorker @AssistedInject constructor(
+@AssistedInject
+class LoadSettingsWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

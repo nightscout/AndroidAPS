@@ -59,7 +59,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class RunningModeManagementViewModel @Inject constructor(
+@Inject
+class RunningModeManagementViewModel(
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,

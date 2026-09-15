@@ -31,7 +31,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosPluginPermissions @Inject constructor(
+@Inject
+class IosPluginPermissions(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
     private val permissionProviders: () -> Set<PermissionProvider>

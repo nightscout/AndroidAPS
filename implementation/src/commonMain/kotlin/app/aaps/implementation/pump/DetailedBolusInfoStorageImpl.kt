@@ -23,7 +23,8 @@ import kotlin.math.abs
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DetailedBolusInfoStorageImpl @Inject constructor(
+@Inject
+class DetailedBolusInfoStorageImpl(
     val aapsLogger: AAPSLogger,
     val preferences: Preferences
 ) : DetailedBolusInfoStorage {

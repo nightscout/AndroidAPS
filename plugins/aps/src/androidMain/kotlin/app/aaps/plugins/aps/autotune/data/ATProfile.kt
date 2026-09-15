@@ -38,7 +38,8 @@ import java.util.TimeZone
 
 import kotlin.math.min
 
-class ATProfile @Inject constructor(
+@Inject
+class ATProfile(
     private val preferences: Preferences,
     private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,

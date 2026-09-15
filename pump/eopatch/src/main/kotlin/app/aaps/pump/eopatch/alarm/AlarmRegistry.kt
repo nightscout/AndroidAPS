@@ -35,7 +35,8 @@ import kotlin.time.Duration.Companion.hours
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AlarmRegistry @Inject constructor(
+@Inject
+class AlarmRegistry(
     private val mContext: Context,
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,

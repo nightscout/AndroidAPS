@@ -44,7 +44,8 @@ import dev.zacsweers.metro.SingleIn
 
 @Suppress("SpellCheckingInspection")
 @SingleIn(AppScope::class)
-class BLECommonService @Inject internal constructor(
+@Inject
+class BLECommonService internal constructor(
     private val injector: MetroMemberInjector,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

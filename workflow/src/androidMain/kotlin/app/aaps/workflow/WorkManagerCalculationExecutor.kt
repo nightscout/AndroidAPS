@@ -25,7 +25,8 @@ import kotlin.time.Clock
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class WorkManagerCalculationExecutor @Inject constructor(
+@Inject
+class WorkManagerCalculationExecutor(
     private val context: Context,
     private val aapsLogger: AAPSLogger
 ) : CalculationExecutor {

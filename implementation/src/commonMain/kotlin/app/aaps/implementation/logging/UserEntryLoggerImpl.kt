@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class UserEntryLoggerImpl @Inject constructor(
+@Inject
+class UserEntryLoggerImpl(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val appScope: CoroutineScope

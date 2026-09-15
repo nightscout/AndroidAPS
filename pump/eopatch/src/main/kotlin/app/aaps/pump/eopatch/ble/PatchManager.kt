@@ -57,7 +57,8 @@ import kotlin.time.Duration.Companion.hours
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class PatchManager @Inject constructor(
+@Inject
+class PatchManager(
     private val aapsPatchManager: PatchManagerExecutor,
     private val pm: PreferenceManager,
     private val alarms: Alarms,

@@ -62,7 +62,8 @@ sealed class PairWizardEvent {
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class ComboV2PairWizardViewModel @Inject constructor(
+@Inject
+class ComboV2PairWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val combov2Plugin: ComboV2Plugin

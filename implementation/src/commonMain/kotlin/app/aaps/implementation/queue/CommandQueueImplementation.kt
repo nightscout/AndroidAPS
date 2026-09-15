@@ -97,7 +97,8 @@ import kotlin.time.Duration.Companion.milliseconds
 @OpenForTesting
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class CommandQueueImplementation @Inject constructor(
+@Inject
+class CommandQueueImplementation(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val rh: TextResolver,

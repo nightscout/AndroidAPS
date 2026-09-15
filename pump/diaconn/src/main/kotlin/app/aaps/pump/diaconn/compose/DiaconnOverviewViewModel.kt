@@ -73,7 +73,8 @@ sealed class DiaconnOverviewEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class DiaconnOverviewViewModel @Inject constructor(
+@Inject
+class DiaconnOverviewViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,

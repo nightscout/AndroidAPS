@@ -126,7 +126,8 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoSet(AppScope::class, binding = binding<PermissionProvider>())
 @SingleIn(AppScope::class)
 @OptIn(ExperimentalAtomicApi::class)
-class AutomationRuntime @Inject constructor(
+@Inject
+class AutomationRuntime(
     private val locationPermissions: LocationPermissions,
     private val automationEventFactory: AutomationEventFactory,
     private val aapsLogger: AAPSLogger,
@@ -656,6 +657,7 @@ class AutomationRuntime @Inject constructor(
             actionFactory.actionProfileSwitch(),
             actionFactory.actionSendSMS(),
             actionFactory.actionSMBChange(),
+            actionFactory.actionSmoothingChange(),
             actionFactory.actionRunScene(),
             actionFactory.actionEnableScene(),
             actionFactory.actionDisableScene()

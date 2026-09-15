@@ -36,7 +36,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class DesktopLoopNotifier @Inject constructor(
+@Inject
+class DesktopLoopNotifier(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager
 ) : LoopNotifier {

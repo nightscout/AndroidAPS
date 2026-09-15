@@ -11,6 +11,7 @@
     <string name="autotune_run_cancelled">Виявлено ще один запуск Autotune, запуск скасовано</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>

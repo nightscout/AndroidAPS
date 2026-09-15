@@ -61,7 +61,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.json.JsonObject
 
 @SingleIn(AppScope::class)
-class NsIncomingDataProcessor @Inject constructor(
+@Inject
+class NsIncomingDataProcessor(
     private val aapsLogger: AAPSLogger,
     private val nsClientSource: NSClientSource,
     private val preferences: Preferences,

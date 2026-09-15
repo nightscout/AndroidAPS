@@ -15,7 +15,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class ResumeBasalTask @Inject constructor(
+@Inject
+class ResumeBasalTask(
     val alarmRegistry: IAlarmRegistry,
     val startNormalBasalTask: StartNormalBasalTask,
     val patchStateManager: PatchStateManager

@@ -41,7 +41,8 @@ import dev.zacsweers.metro.Inject
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class DanaHistoryViewModel @Inject constructor(
+@Inject
+class DanaHistoryViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,

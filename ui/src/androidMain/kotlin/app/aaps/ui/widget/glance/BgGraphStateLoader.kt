@@ -37,7 +37,8 @@ data class BgGraphRenderState(
  * widget has already awaited `config.appInitialized`, so all lateinit plugin state
  * is ready.
  */
-class BgGraphStateLoader @Inject constructor(
+@Inject
+class BgGraphStateLoader(
     private val cacheProvider: () -> OverviewDataCache,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,

@@ -34,11 +34,13 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.receivers.IosReceiverStatusStore
 import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.implementation.maintenance.PeriodicMaintenance
+import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import kotlinx.coroutines.CoroutineScope
 import app.aaps.plugins.automation.AutomationRuntime
@@ -96,6 +98,7 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val visibilityContext: VisibilityContext
     val nsClient: NsClient
     val rxBus: RxBus
+    val snackbarHostPresence: SnackbarHostPresence
     val clientControlActionDispatcher: ClientControlActionDispatcher
 
     // Shared pieces the navigation graph reads.
@@ -144,6 +147,8 @@ interface IosAppGraph : MetroViewModelMultibindings {
     val automationRuntime: AutomationRuntime
     // The periodic housekeeping shared with Android, and the scope the shell drives it on.
     val periodicMaintenance: PeriodicMaintenance
+    // Turns a snackbar into a notification when no screen is up to show it. Shared with Android.
+    val snackbarNotificationFallback: SnackbarNotificationFallback
     val appScope: CoroutineScope
     val swDefinition: SWDefinition
     val builtInSearchables: BuiltInSearchables

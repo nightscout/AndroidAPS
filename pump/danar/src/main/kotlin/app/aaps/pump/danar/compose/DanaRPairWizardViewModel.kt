@@ -52,7 +52,8 @@ sealed class DanaRPairWizardEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class DanaRPairWizardViewModel @Inject constructor(
+@Inject
+class DanaRPairWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val preferences: Preferences,

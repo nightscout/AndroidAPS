@@ -72,7 +72,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.min
 
 @SingleIn(AppScope::class)
-class EquilManager @Inject constructor(
+@Inject
+class EquilManager(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val preferences: Preferences,

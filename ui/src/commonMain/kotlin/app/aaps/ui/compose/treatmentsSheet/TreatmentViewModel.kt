@@ -53,7 +53,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class TreatmentViewModel @Inject constructor(
+@Inject
+class TreatmentViewModel(
     private val rh: TextResolver,
     private val preferences: Preferences,
     private val activePlugin: ActivePlugin,

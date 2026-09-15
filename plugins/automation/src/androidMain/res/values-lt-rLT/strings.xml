@@ -112,6 +112,7 @@
     <!--    SMB mode-->
     <string name="on">ĮJUNGTA</string>
     <string name="off">IŠJUNGTA</string>
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>

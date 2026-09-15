@@ -94,7 +94,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class UserEntryPresentationHelperImpl @Inject constructor(
+@Inject
+class UserEntryPresentationHelperImpl(
     private val translator: Translator,
     private val profileUtil: ProfileUtil,
     private val rh: TextResolver,

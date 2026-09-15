@@ -23,7 +23,8 @@ import platform.Foundation.NSURL
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosUrlOpener @Inject constructor(
+@Inject
+class IosUrlOpener(
     private val aapsLogger: AAPSLogger,
     private val launcher: UrlLauncher = SystemUrlLauncher()
 ) : UrlOpener {

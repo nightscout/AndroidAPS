@@ -27,7 +27,6 @@ internal actual fun databaseFileStats(path: String): DatabaseFileStats {
 // expect/actual at all. Same dispatcher as Android, so behaviour matches.
 internal actual val databaseDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-// Room has no clearAllTables outside Android, and no iOS surface asks for it yet. Fail loudly rather
-// than silently doing nothing - this empties the user's whole history when it does run.
-internal actual suspend fun AppDatabase.clearAllTablesCompat(): Unit =
-    throw UnsupportedOperationException("Clearing the database is not implemented on this platform")
+// Room only generates clearAllTables for Android, so the reset button on iOS clears the tables with
+// SQL instead. The work is shared with desktop - see clearAllTablesBySql.
+internal actual suspend fun AppDatabase.clearAllTablesCompat() = clearAllTablesBySql()

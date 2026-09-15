@@ -161,6 +161,16 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
+        EventData.Status(
+            dataset = 0, externalStatus = "st", iobSum = "1", iobDetail = "2", cob = "3", currentBasal = "4",
+            battery = "5", rigBattery = "6", openApsStatus = 7L, bgi = "8", batteryLevel = 9, patientName = "p",
+            tempTarget = "t", tempTargetLevel = 1, tempTargetDuration = 10L, reservoirString = "r",
+            reservoir = 11.0, reservoirLevel = 0, cobValue = 12.0, loopMode = LoopStatusData.LoopMode.SUSPENDED,
+            modeEndTime = 13L
+        ).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
         EventData.QuickWizard(arrayListOf(EventData.QuickWizard.QuickWizardEntry("1", "2", 3, 4, 5))).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
@@ -248,5 +258,21 @@ class EventDataTest {
 
         val nestedUnknown = event.serialize().replaceFirst("\"loopMode\"", "\"futureField\":42,\"loopMode\"")
         assertThat(EventData.deserialize(nestedUnknown)).isEqualTo(event)
+    }
+
+    @Test
+    fun statusFromOlderPeerDefaultsLoopModeToUnknown() {
+        // A phone older than the loopMode field sends Status without it — the watch must default
+        // to UNKNOWN instead of failing to decode
+        val status = EventData.Status(
+            dataset = 0, externalStatus = "st", iobSum = "1", iobDetail = "2", cob = "3", currentBasal = "4",
+            battery = "5", rigBattery = "6", openApsStatus = 7L, bgi = "8", batteryLevel = 9, patientName = "p",
+            tempTarget = "t", tempTargetLevel = 1, tempTargetDuration = 10L, reservoirString = "r",
+            reservoir = 11.0, reservoirLevel = 0, cobValue = 12.0, loopMode = LoopStatusData.LoopMode.CLOSED
+        )
+        val legacyJson = status.serialize().replaceFirst(",\"loopMode\":\"CLOSED\"", "")
+        assertThat(legacyJson).doesNotContain("loopMode")
+        val restored = EventData.deserialize(legacyJson) as EventData.Status
+        assertThat(restored.loopMode).isEqualTo(LoopStatusData.LoopMode.UNKNOWN)
     }
 }

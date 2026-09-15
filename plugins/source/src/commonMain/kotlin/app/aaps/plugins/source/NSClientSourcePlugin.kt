@@ -23,7 +23,8 @@ import dev.zacsweers.metro.binding
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(410)
 @SingleIn(AppScope::class)
-class NSClientSourcePlugin @Inject constructor(
+@Inject
+class NSClientSourcePlugin(
     override val rh: TextResolver,
     aapsLogger: AAPSLogger,
     config: Config,

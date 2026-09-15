@@ -15,7 +15,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class UserActionSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
+@Inject
+class UserActionSource(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
 
     override fun getSelectedActions(): List<Action> {
         val userList = mutableListOf<Action>()

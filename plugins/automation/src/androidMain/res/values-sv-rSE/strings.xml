@@ -90,6 +90,7 @@
     <string name="autotune_run_cancelled">En annan Autotune-körning upptäcktes, körning avbruten</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <!-- Permission rationales -->
 </resources>

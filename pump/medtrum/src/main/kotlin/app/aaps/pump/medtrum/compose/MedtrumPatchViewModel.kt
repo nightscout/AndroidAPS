@@ -69,7 +69,8 @@ enum class WizardPage {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class MedtrumPatchViewModel @Inject constructor(
+@Inject
+class MedtrumPatchViewModel(
     private val aapsLogger: AAPSLogger,
     private val medtrumPlugin: MedtrumPlugin,
     private val commandQueue: CommandQueue,

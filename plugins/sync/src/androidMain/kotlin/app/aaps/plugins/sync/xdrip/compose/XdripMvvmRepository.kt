@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.update
  * that are collected by the ViewModel and displayed in XdripScreen.
  */
 @SingleIn(AppScope::class)
-class XdripMvvmRepository @Inject constructor(
+@Inject
+class XdripMvvmRepository(
     private val aapsLogger: AAPSLogger
 ) {
 

@@ -29,6 +29,5 @@ class PostCalculationData(
     val overviewData: OverviewData,
     val cache: OverviewDataCache,
     val signals: CalculationSignalsEmitter,
-    val triggeredByNewBG: Boolean,
     val runLoopAndWidgetPhase: Boolean
 )

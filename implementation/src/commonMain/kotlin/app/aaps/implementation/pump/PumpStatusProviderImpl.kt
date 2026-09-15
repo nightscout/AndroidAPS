@@ -25,7 +25,8 @@ import kotlinx.serialization.json.putJsonObject
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class PumpStatusProviderImpl @Inject constructor(
+@Inject
+class PumpStatusProviderImpl(
     private val activePlugin: ActivePlugin,
     private val pumpSync: PumpSync,
     private val profileFunction: ProfileFunction,

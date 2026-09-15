@@ -50,7 +50,8 @@ import dev.zacsweers.metro.binding
  */
 @ContributesIntoSet(AppScope::class, binding = binding<SearchableProvider>())
 @SingleIn(AppScope::class)
-class BuiltInSearchables @Inject constructor(
+@Inject
+class BuiltInSearchables(
     private val rh: TextResolver,
     private val insulinManager: InsulinManager,
     private val profileFunction: ProfileFunction,

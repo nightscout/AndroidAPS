@@ -296,6 +296,30 @@ and their `linkDebugTestIosSimulatorArm64` task reports `NO-SOURCE`.
 - Skills are checked into the repo, so every contributor and the macOS checkout get them. Keep them
   free of session state ("green, uncommitted, device-pending") - that belongs in notes, not here.
 
+## Memory
+
+Decide where a thing belongs **before** writing it down. Three tiers:
+
+- **Method and procedure** (how to flip a module, how to review, how to audit memory) → a skill or
+  `.claude/procedures/*.md` in the repo. Everybody gets it and git carries it between machines.
+- **Durable facts** (a stated preference, a decision made under pushback, a standing "do not re-add
+  this", a trap in a tool) → memory. These are worth sharing between machines.
+- **Working state** (file paths, counts, "migration is 60% done", "applied but not committed") →
+  memory, but short-lived and local. It rots fastest and another machine does not need it.
+
+Rules that follow from that:
+
+- **Anything re-derivable from the code is a liability, not an asset.** A list of files a migration
+  touched will be wrong within weeks and someone will plan work from it. Record *why* a decision was
+  made - that is the part the code cannot tell you.
+- **Never put sensitive content in this public repo**: analysis of unfixed safety bugs, machine
+  names, network addresses, key paths. Those stay in private memory.
+- **Cite symbols, not line numbers.** `File.kt:123` is wrong within months; a function or class name
+  survives.
+- **The goal is not the same memory on every machine, it is true memory.** The three machines work on
+  different branches, so their memories should differ. Syncing does not make memory true - auditing
+  does. Use the `memory-audit` skill.
+
 ## Migration Procedures
 
 - **For migrations**: Follow procedures in `.claude/procedures/migration.md`

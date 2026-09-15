@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -52,6 +53,7 @@ class ErrorActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var snackbarHostPresence: SnackbarHostPresence
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var uiInteraction: UiInteraction
@@ -130,6 +132,7 @@ class ErrorActivity : MetroAppCompatActivity() {
                         }
                         GlobalSnackbarHost(
                             rxBus = rxBus,
+                            snackbarHostPresence = snackbarHostPresence,
                             hostState = snackbarHostState,
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )

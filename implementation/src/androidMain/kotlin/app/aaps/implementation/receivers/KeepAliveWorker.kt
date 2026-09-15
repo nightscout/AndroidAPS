@@ -48,7 +48,8 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import kotlin.math.abs
 
-class KeepAliveWorker @AssistedInject constructor(
+@AssistedInject
+class KeepAliveWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

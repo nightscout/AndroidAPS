@@ -34,7 +34,8 @@ import kotlinx.coroutines.launch
  * ViewModel for UserEntryScreen managing user entry log state and business logic.
  */
 @Stable
-class UserEntryViewModel @Inject constructor(
+@Inject
+class UserEntryViewModel(
     private val persistenceLayer: PersistenceLayer,
     val rh: TextResolver,
     val dateUtil: DateUtil,

@@ -7,7 +7,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class RateLimit @Inject constructor(
+@Inject
+class RateLimit(
     private val dateUtil: DateUtil
 ) {
 

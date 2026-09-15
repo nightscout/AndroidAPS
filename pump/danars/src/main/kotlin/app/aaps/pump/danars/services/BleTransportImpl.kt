@@ -36,7 +36,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BleTransportImpl @Inject constructor(
+@Inject
+class BleTransportImpl(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val bluetoothAdapter: BluetoothAdapter?

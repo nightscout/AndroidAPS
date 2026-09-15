@@ -47,6 +47,8 @@ fun List<ConfirmationLine>.toAnnotatedString(primaryColor: Color): AnnotatedStri
         ConfirmationRole.LOOP_CLOSED       -> loopClosed
         ConfirmationRole.LOOP_OPEN         -> loopOpen
         ConfirmationRole.LOOP_LGS          -> loopLgs
+        // Suspend TEXT is yellow everywhere (belt graph, wear status header, confirm lines) so it
+        // stays distinguishable from disabled red; only suspend ICONS are red.
         ConfirmationRole.LOOP_SUSPENDED    -> loopSuspended
         ConfirmationRole.LOOP_DISABLED     -> loopDisabled
         ConfirmationRole.LOOP_DISCONNECTED -> loopDisconnected

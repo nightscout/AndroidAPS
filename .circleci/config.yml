@@ -5,7 +5,7 @@ version: 2.1
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 orbs:
   android: circleci/android@2.4.0
-  codecov: codecov/codecov@3.3.0
+  codecov: codecov/codecov@6.0.0
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
@@ -27,6 +27,10 @@ jobs:
             find . -type d -path "*/build/outputs/androidTest-results" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/code_coverage" -prune -exec rm -rf {} +
             find . -type d -path "*/build/outputs/unit_test_code_coverage" -prune -exec rm -rf {} +
+            # Unit results too, now that "Save test results" collects them. Without this a module whose
+            # tests do not run this time (up-to-date, or skipped because an earlier task failed) keeps
+            # its old TEST-*.xml on the runner and it gets reported as if it had just passed.
+            find . -type d -path "*/build/test-results" -prune -exec rm -rf {} +
             rm -f /tmp/rc-A /tmp/rc-B /tmp/rc-C
 
       # THREE emulators, so the app suite splits three ways (@ShardA / @ShardB / the rest) and each shard
@@ -94,12 +98,56 @@ jobs:
               COMPILE_PIN=""
             fi
             echo "export GRADLE_PIN=\"$GRADLE_PIN\"" >> "$BASH_ENV"
+            # 6g, and the GC log that earned the number. Build 41233 died here with "GC overhead limit
+            # exceeded"; at 3g build 41263 passed, but its GC log shows why that was luck:
+            #
+            #   GC(140) Pause Full (Ergonomics) 2423M->2401M(2734M) 719.304ms
+            #
+            # a full collection recovering 22 MB of 2423, one of 66 Full GCs and 42 s of GC in the last
+            # 200 events alone. The live set on this machine reaches 2.4 GB against a 3 GB cap - 1.3x,
+            # where a JVM wants 2-3x - so it thrashes and any extra pressure tips it over. Local builds
+            # peak near 540 MB and never show this, which is why the daemon has to be measured here
+            # rather than reasoned about. The runner has 64 GB with ~40 GB free at the failure, so the
+            # ceiling was ours. Keep -Xlog:gc: the daemon is invisible otherwise and it costs nothing.
+            # kotlin.daemon.jvm.options is COMMA separated. Space separated, the whole string is handed
+            # to -Xmx as one value, the daemon refuses to start ("Invalid maximum heap size"), and the
+            # build quietly falls back to compiling inside the Gradle JVM - which has 8g, so it passes
+            # and proves nothing. Build 41261 was lost that way. The guard below turns that silent
+            # degradation into a failure.
+            # Explicit, because the `| tee` below would otherwise report tee's exit code and a FAILED
+            # build would read as green. CircleCI already defaults to `bash -eo pipefail`; this does
+            # not rely on that staying true.
+            set -o pipefail
             $COMPILE_PIN ./gradlew \
-            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx3g" \
+            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss4m" \
+            -Dkotlin.daemon.jvm.options="-Xmx6g,-Xlog:gc:file=/tmp/kotlin-daemon-gc.log" \
             -Dorg.gradle.daemon=true \
             compileFullDebugUnitTestSources compileDebugUnitTestSources \
-            :app:assembleFullDebug :app:assembleFullDebugAndroidTest
+            :app:assembleFullDebug :app:assembleFullDebugAndroidTest 2>&1 | tee /tmp/compile-step.log
+            if grep -q "Using fallback strategy: Compile without Kotlin daemon" /tmp/compile-step.log; then
+              echo "ERROR: the Kotlin compile daemon never started, so compilation ran inside the Gradle"
+              echo "JVM on its own heap. Whatever this build proves, it is not about the daemon settings."
+              grep -m3 -A2 "Failed to compile with Kotlin daemon" /tmp/compile-step.log || true
+              exit 1
+            fi
+
+      # `when: always`, because the failing case is the only one worth reading. The Kotlin daemon is a
+      # separate process whose output never reaches the Gradle log, so this is the only way to see its
+      # collections. Read the last lines: heap figures close to 3072M with little recovered means the
+      # heap really was full and it needs raising; small heaps with long pause times means the
+      # collector was starved and more heap would not have helped.
+      - run:
+          name: Kotlin daemon GC log
+          when: always
+          command: |
+            if [ -f /tmp/kotlin-daemon-gc.log ]; then
+              echo "--- last 200 GC lines ---"
+              tail -n 200 /tmp/kotlin-daemon-gc.log
+            else
+              echo "no GC log at /tmp/kotlin-daemon-gc.log"
+            fi
+            echo "--- kotlin daemon logs ---"
+            ls -la "$HOME"/.kotlin/daemon 2>/dev/null | tail -n 20 || true
 
       - run:
           name: Wait for all three emulators to boot
@@ -273,30 +321,16 @@ jobs:
       # startup timed out into a "failed to complete startup" ANR (a process crash the in-process RetryRule
       # can't catch; build 40333's shard A). Dropped 10 -> 8 to give the emulators more startup headroom, at
       # a small unit wall-time cost (unit hides under the shards either way).
-      - run:
-          name: Unit tests (Gradle, pinned off the emulator cores, starts right after compile, overlaps the shards)
-          command: |
-            export ANDROID_SDK_ROOT=/usr/lib/android-sdk
-            export ANDROID_HOME=/usr/lib/android-sdk
-            # Four task names, because a module lands in exactly one of them and a missing name runs
-            # no tests instead of failing:
-            #  - testFullDebugUnitTest: the flavoured modules, which are only :app and the :wear ones.
-            #  - testDebugUnitTest: the Android libraries. Flavours live on the app modules only, so
-            #    a library has no "Full" variant and this is where its tests are.
-            #  - jvmTest and testAndroidHostTest: the multiplatform modules, which have no build
-            #    variants at all - which is what happened to :core:data and :core:nssdk, and showed
-            #    up as a Codecov drop the moment :core:keys converted too.
-            # The names are unqualified on purpose: Gradle runs them in whichever projects have them,
-            # so a module converting later is picked up without editing this file.
-            # `:desktop:shell:test` is the one exception and has to be named. It is a plain
-            # `kotlin("jvm")` module, so its task is called `test` - and an unqualified `test` would
-            # also match the AGP lifecycle task in every Android module and run every variant of
-            # each. Without this line its tests run on no machine at all: they are not in any of the
-            # four names above, and `runtests.sh` does not use them either.
-            # Deliberately not `allTests`: that would pull in the Kotlin/Native toolchain for the
-            # iOS targets, whose tests cannot run on a Linux box anyway.
-            $GRADLE_PIN ./gradlew --continue -Dorg.gradle.daemon=true -Dorg.gradle.workers.max=8 testFullDebugUnitTest testDebugUnitTest jvmTest testAndroidHostTest :desktop:shell:test
-
+      # The unit suite moved to GitHub Actions (.github/workflows/unit-tests.yml).
+      #
+      # It needs no device, and running it here meant it competed with the three emulators on this
+      # one self-hosted runner - the contention the comment above describes, which timed out a heavy
+      # E2E app startup into an ANR the in-process RetryRule cannot catch. Moving it off leaves this
+      # machine to do only what needs a device.
+      #
+      # Coverage still reaches Codecov from both halves: Actions uploads under the flag "unit", the
+      # step below uploads under "instrumented", and Codecov merges uploads that share a commit SHA.
+      # codecov.yml sets after_n_builds so the status waits for both instead of reporting half.
       - run:
           name: Non-app module androidTests (Gradle, emu-5554)
           command: |
@@ -361,8 +395,28 @@ jobs:
             # ~/test-results also survives between jobs on the self-hosted runner, so wipe it rather
             # than adding to whatever the previous job left behind.
             rm -rf ~/test-results
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+            DEST="$HOME/test-results/junit"
+            mkdir -p "$DEST"
+            # Copy under a name built from the full path, NOT into a flat directory.
+            #
+            # The instrumented runner names every file after the device it ran on, so all three shards
+            # write "TEST-citest0(AVD) - 12.xml". A flat copy made them overwrite each other and build
+            # 41310 kept exactly one artifact: 2 passing tests from emulator-5554, while the shard that
+            # actually failed was gone. The same applies to unit results, where each module writes its
+            # own TEST-<class>.xml.
+            #
+            # Unit results are collected here too. Without them a failing unit test cannot be named at
+            # all: CircleCI truncates a step's console output at 400000 characters, the unit step went
+            # well past that, and the dropped part is the part naming the test. All Gradle leaves behind
+            # is a link to an HTML report that stays on the runner. That is what made the comboctl flake
+            # impossible to diagnose.
+            find . -type f -name "*.xml" \
+                 \( -path "*/build/outputs/androidTest-results/*" -o -path "*/build/test-results/*" \) \
+                 -print0 \
+              | while IFS= read -r -d '' f; do
+                  cp "$f" "$DEST/$(echo "${f#./}" | tr '/' '_')"
+                done
+            echo "collected $(find "$DEST" -type f -name '*.xml' | wc -l) result files"
           when: always
 
       - store_test_results:
@@ -371,8 +425,34 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
+      # The same report that gets uploaded to Codecov, kept so this half of the split can be compared
+      # against the GitHub job's, file by file, instead of guessed at.
+      - store_artifacts:
+          path: ./build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml
+          destination: jacoco/jacocoAllDebugReport.xml
+
+      # Orb 6.0.0. Two things change with it, both wanted:
+      #
+      # `files`, plural - renamed from `file`. Parameters are validated when the config is compiled,
+      # for every job in the pipeline, so the old name fails the whole build rather than this step.
+      #
+      # And the coverage PERCENTAGE steps up by about a point, once, without any test changing. 6.0.0
+      # uses the current Codecov CLI, which applies Codecov's "file fixes" - blank lines, lone closing
+      # brackets and similar stop being counted. Measured on this branch: the reported line count fell
+      # from 195057 to 182221 at exactly the commit that bumped the orb, with identical code and
+      # identical jacoco input (the raw reports either side agree line for line). This is a deliberate
+      # re-base onto a more honest denominator, not a regression and not a real improvement.
+      # Comparisons with commits measured before this point are not like for like. `disable_file_fixes`
+      # would restore the old basis if that is ever wanted.
       - codecov/upload:
-          file: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
+          files: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
+          # Flagged so the two halves stay tellable apart. Note the breakdown is not visible today:
+          # flag analytics is disabled on this Codecov plan, so per-flag totals read 0 through the API
+          # for every flag. The flags still attach and still merge - only the per-suite view is missing.
+          flags: 'instrumented'
+          # A real parameter in 6.0.0; 3.3.0 had none, so a refused upload used to pass silently.
+          # Verified on job 41335: the CLI reports "RequestResult(error=None, status_code=200)".
+          fail_on_error: true
 
       - run:
           name: Kill java processes

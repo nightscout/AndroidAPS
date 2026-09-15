@@ -26,7 +26,8 @@ import dev.zacsweers.metro.SingleIn
  * price of the smaller change, and it is the thing to revisit if triggers are ever split up.
  */
 @SingleIn(AppScope::class)
-class TriggerDeps @Inject constructor(
+@Inject
+class TriggerDeps(
     val aapsLogger: AAPSLogger,
     val rxBus: RxBus,
     val rh: TextResolver,

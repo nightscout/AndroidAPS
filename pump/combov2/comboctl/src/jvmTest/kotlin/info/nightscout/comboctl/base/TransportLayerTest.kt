@@ -305,6 +305,81 @@ class TransportLayerTest : TestBase() {
     }
 
     @Test
+    fun sendFailsImmediatelyAfterTheReceiverReportsAnException() {
+        // The window between "the receiver told us it failed" and "the receiver coroutine actually
+        // ended". The receiver records the exception, closes the channel and invokes the callback while
+        // it is still running, and only then leaves its loop. A caller notified by that callback acts
+        // inside this window - so send() has to fail here too, not just once the job has ended.
+        //
+        // This is also why checkPacketReceiverExceptionHandling() was intermittently red on CI: it
+        // joins on the callback and then calls send(), so it only passed when the coroutine happened to
+        // finish tearing down first. That was a scheduling race, not machine load - it failed on
+        // dedicated runners too.
+
+        runBlockingWithWatchdog(40000) {
+            val testPumpStateStore = TestPumpStateStore()
+            val testComboIO = TestComboIO()
+            val testBluetoothAddress = BluetoothAddress(byteArrayListOfInts(1, 2, 3, 4, 5, 6))
+            val reported = Job()
+            var reportedError: Throwable? = null
+            val tpLayerIO = TransportLayer.IO(testPumpStateStore, testBluetoothAddress, testComboIO) { exception ->
+                reportedError = exception
+                reported.complete()
+            }
+
+            testPumpStateStore.createPumpState(
+                testBluetoothAddress,
+                InvariantPumpData(
+                    clientPumpCipher = Cipher(
+                        byteArrayListOfInts(0x5a, 0x25, 0x0b, 0x75, 0xa9, 0x02, 0x21, 0xfa, 0xab, 0xbd, 0x36, 0x4d, 0x5c, 0xb8, 0x37, 0xd7)
+                            .toByteArray()
+                    ),
+                    pumpClientCipher = Cipher(
+                        byteArrayListOfInts(0x2a, 0xb0, 0xf2, 0x67, 0xc2, 0x7d, 0xcf, 0xaa, 0x32, 0xb2, 0x48, 0x94, 0xe1, 0x6d, 0xe9, 0x5c)
+                            .toByteArray()
+                    ),
+                    keyResponseAddress = 0x10.toByte(),
+                    pumpID = "testPump"
+                ),
+                UtcOffset.ZERO, CurrentTbrState.NoTbrOngoing
+            )
+
+            val errorResponsePacket = TransportLayer.Packet(
+                command = TransportLayer.Command.ERROR_RESPONSE,
+                version = 0x10.toByte(),
+                sequenceBit = false,
+                reliabilityBit = false,
+                address = 0x01.toByte(),
+                nonce = Nonce(byteArrayListOfInts(0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+                payload = byteArrayListOfInts(0x0F)
+            )
+            errorResponsePacket.authenticate(
+                Cipher(
+                    byteArrayListOfInts(0x2a, 0xb0, 0xf2, 0x67, 0xc2, 0x7d, 0xcf, 0xaa, 0x32, 0xb2, 0x48, 0x94, 0xe1, 0x6d, 0xe9, 0x5c)
+                        .toByteArray()
+                )
+            )
+
+            tpLayerIO.start(packetReceiverScope = this) { TransportLayer.IO.ReceiverBehavior.FORWARD_PACKET }
+            testComboIO.feedIncomingData(errorResponsePacket.toByteList())
+
+            // Deliberately nothing between the callback and the send: this is the window under test.
+            reported.join()
+            assertNotNull(reportedError)
+
+            val thrown = assertFailsWith<TransportLayer.PacketReceiverException> {
+                tpLayerIO.send(TransportLayer.createRequestPairingConnectionPacketInfo())
+            }
+            assertIs<TransportLayer.ErrorResponseException>(thrown.cause)
+
+            // Nothing may reach the far side after the link is known to be dead.
+            assertEquals(0, testComboIO.sentPacketData.size)
+
+            tpLayerIO.stop()
+        }
+    }
+
+    @Test
     fun checkCustomIncomingPacketFiltering() {
         // Test the custom incoming packet processing feature and
         // its ability to drop packets. We simulate 3 incoming packets,

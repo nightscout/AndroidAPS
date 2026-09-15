@@ -17,7 +17,8 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import dev.zacsweers.metro.Inject
 import kotlin.reflect.KClass
 
-class SWEventListener @Inject constructor(
+@Inject
+class SWEventListener(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
     rxBus: RxBus,

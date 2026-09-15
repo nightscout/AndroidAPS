@@ -11,6 +11,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BuzzerStop @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.STOP_BUZZER, patch, aapsLogger) {
+@Inject
+class BuzzerStop(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.STOP_BUZZER, patch, aapsLogger) {
     fun stop(): Single<PatchBooleanResponse> = writeAndRead(generate())
 }

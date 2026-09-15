@@ -19,7 +19,8 @@ import kotlin.math.roundToLong
 /**
  * This class is intended to be run by the Service, for the Service. Not intended for clients to run.
  */
-class InitializePumpManagerTask @Inject constructor(
+@Inject
+class InitializePumpManagerTask(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rileyLinkServiceData: RileyLinkServiceData,

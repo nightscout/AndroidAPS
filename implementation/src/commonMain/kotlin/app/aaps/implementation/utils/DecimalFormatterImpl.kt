@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DecimalFormatterImpl @Inject constructor(
+@Inject
+class DecimalFormatterImpl(
     private val rh: TextResolver
 ) : DecimalFormatter {
 

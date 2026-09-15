@@ -67,7 +67,8 @@ import dev.zacsweers.metro.Inject
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(0)
 @SingleIn(AppScope::class)
-class PersistentNotificationPlugin @Inject constructor(
+@Inject
+class PersistentNotificationPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,

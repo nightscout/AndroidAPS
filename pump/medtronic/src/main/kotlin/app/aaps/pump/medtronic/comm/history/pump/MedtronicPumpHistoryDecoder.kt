@@ -29,7 +29,8 @@ import kotlin.experimental.and
  * Author: Andy {andy.rozman@gmail.com}
  */
 @SingleIn(AppScope::class)
-class MedtronicPumpHistoryDecoder @Inject constructor(
+@Inject
+class MedtronicPumpHistoryDecoder(
     aapsLogger: AAPSLogger,
     medtronicUtil: MedtronicUtil
 ) : MedtronicHistoryDecoder<PumpHistoryEntry>(aapsLogger, medtronicUtil) {

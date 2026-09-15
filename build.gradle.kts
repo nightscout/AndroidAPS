@@ -1,4 +1,5 @@
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -23,7 +24,6 @@ buildscript {
 }
 
 plugins {
-    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler) apply false
     id(libs.plugins.android.test.get().pluginId) apply false
     // Aggregates the per-module coverage into one report.
@@ -46,6 +46,21 @@ allprojects {
             jvmTarget.set(Versions.jvmTarget)
         }
     }
+    // The build cache may replay compilation. It may not replay test results.
+    //
+    // A cached Test task does not run its tests - it restores the previous outcome and reports green.
+    // By Gradle's rules that is sound, same inputs give the same result, and in the log it is
+    // indistinguishable from a real run. This project has twice shipped tests that silently were not
+    // executing (JUnit 5 skipping expression-body tests; the non-app instrumented step running nothing
+    // for months), and both times the signal was a green build that proved nothing. For an app that
+    // doses insulin that is not a trade worth making for a few seconds.
+    //
+    // This disables cache *reuse* only. Up-to-date checks still skip genuinely unchanged tests on a
+    // local incremental build, and CI checks out fresh where nothing is up to date anyway. Compile
+    // tasks keep the cache, and they are where nearly all of the saving is.
+    tasks.withType<AbstractTestTask>().configureEach {
+        outputs.doNotCacheIf("tests must actually run, not be replayed from a previous build") { true }
+    }
     gradle.projectsEvaluated {
         tasks.withType<JavaCompile> {
             val compilerArgs = options.compilerArgs
@@ -55,6 +70,25 @@ allprojects {
     }
 
     apply<JacocoPlugin>()
+
+    // Robolectric loads classes through its own sandbox classloader and rewrites their bytecode, so
+    // the JaCoCo agent sees classes with no source location and skips them. Without this the tests
+    // still run and still pass - only the coverage silently disappears, which is the worst shape for
+    // a problem to have.
+    //
+    // It lives here, next to the apply that gives every project the plugin, because putting it in a
+    // convention means a module can miss it. That already happened: `jacoco-module-dependencies` had
+    // it, but that convention applies `com.android.library`, which AGP 9 refuses next to the
+    // multiplatform plugin - so :core:graph and :plugins:calibration lost it the moment they flipped
+    // to KMP, and reported 0% and 33.5% for Compose screens their Robolectric tests were already
+    // driving. :core:ui kept a hand-copied version and was the only one unaffected. One place, every
+    // project, nothing to remember on the next flip.
+    tasks.withType<Test>().configureEach {
+        extensions.configure<JacocoTaskExtension> {
+            isIncludeNoLocationClasses = true
+            excludes = listOf("jdk.internal.*")
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {

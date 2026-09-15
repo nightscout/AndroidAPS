@@ -8,7 +8,8 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketOptionGetPumpUTCAndTimeZone @Inject constructor(
+@Inject
+class DanaRSPacketOptionGetPumpUTCAndTimeZone(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil
 ) : DanaRSPacket() {

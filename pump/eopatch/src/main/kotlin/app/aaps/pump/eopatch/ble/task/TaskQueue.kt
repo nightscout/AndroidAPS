@@ -17,7 +17,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class TaskQueue @Inject constructor(
+@Inject
+class TaskQueue(
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers
 ) {

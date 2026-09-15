@@ -5,6 +5,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
+import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -33,6 +34,7 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var autotunePlugin: Autotune
     @Mock lateinit var importExportPrefs: ImportExportPrefs
     @Mock lateinit var exportPasswordDataStore: ExportPasswordDataStore
+    @Mock lateinit var configBuilder: ConfigBuilder
 
     /**
      * Actions take their dependencies through the constructor now, so most tests build the action
@@ -51,7 +53,7 @@ ActionsTestBase : TestBaseWithProfile() {
             triggerDeps, aapsLogger, rh, { pumpEnactResultProvider() }, rxBus, dateUtil, mock<ReminderScheduler>(),
             config, persistenceLayer, profileFunction, profileRepository, profileUtil, glucoseStatusProvider,
             notificationManager, activePlugin, preferences, sceneApi, sceneIconResolver, smsCommunicator,
-            autotunePlugin, importExportPrefs, exportPasswordDataStore
+            autotunePlugin, importExportPrefs, exportPasswordDataStore, configBuilder
         )
     }
 

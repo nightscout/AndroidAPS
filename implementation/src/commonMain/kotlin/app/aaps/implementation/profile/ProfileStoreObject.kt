@@ -20,7 +20,8 @@ import dev.zacsweers.metro.Inject
 import kotlinx.serialization.json.JsonObject
 
 @ContributesBinding(AppScope::class)
-class ProfileStoreObject @Inject constructor(
+@Inject
+class ProfileStoreObject(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
     private val rh: TextResolver,

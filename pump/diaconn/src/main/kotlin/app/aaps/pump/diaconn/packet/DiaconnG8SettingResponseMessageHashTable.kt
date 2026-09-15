@@ -6,7 +6,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class DiaconnG8SettingResponseMessageHashTable @Inject constructor(
+@Inject
+class DiaconnG8SettingResponseMessageHashTable(
     val injector: MetroMemberInjector
 ) {
 

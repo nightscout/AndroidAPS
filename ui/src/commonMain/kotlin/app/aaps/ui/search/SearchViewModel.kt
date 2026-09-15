@@ -40,7 +40,8 @@ import kotlinx.coroutines.withContext
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class SearchViewModel @Inject constructor(
+@Inject
+class SearchViewModel(
     private val searchIndexBuilder: SearchIndexBuilder,
     private val wikiSearchRepository: WikiSearchRepository,
     private val nsClient: NsClient,

@@ -18,7 +18,8 @@ import kotlinx.coroutines.flow.update
  * that are collected by the ViewModel and displayed in TidepoolScreen.
  */
 @SingleIn(AppScope::class)
-class TidepoolRepository @Inject constructor(
+@Inject
+class TidepoolRepository(
     private val aapsLogger: AAPSLogger
 ) {
 

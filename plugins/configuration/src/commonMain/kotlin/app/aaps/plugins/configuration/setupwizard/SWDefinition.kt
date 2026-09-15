@@ -56,7 +56,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @SingleIn(AppScope::class)
-class SWDefinition @Inject constructor(
+@Inject
+class SWDefinition(
     @ApplicationScope private val appScope: CoroutineScope,
     private val rxBus: RxBus,
     private val rh: TextResolver,

@@ -150,6 +150,7 @@
     <string name="newSmbMode">Нов SMB режим:</string>
     <string name="on">ВКЛ</string>
     <string name="off">ИЗКЛ</string>
+    <!--    Smoothing-->
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Избери на карта</string>
     <string name="tap_to_select_location">Чукни на картата за избор на локация</string>

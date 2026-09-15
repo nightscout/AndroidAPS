@@ -40,7 +40,8 @@ import kotlinx.coroutines.launch
  * ViewModel for CareportalScreen managing therapy event state and business logic.
  */
 @Stable
-class CareportalViewModel @Inject constructor(
+@Inject
+class CareportalViewModel(
     private val persistenceLayer: PersistenceLayer,
     val rh: TextResolver,
     private val translator: Translator,

@@ -14,7 +14,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StartQuickBolusTask @Inject constructor() : BolusTask(TaskFunc.START_QUICK_BOLUS) {
+@Inject
+class StartQuickBolusTask() : BolusTask(TaskFunc.START_QUICK_BOLUS) {
 
     @Inject lateinit var nowBolusStart: BolusStart
     @Inject lateinit var extBolusStart: ExtBolusStart

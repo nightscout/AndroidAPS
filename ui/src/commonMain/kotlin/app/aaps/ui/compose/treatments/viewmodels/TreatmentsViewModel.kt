@@ -32,7 +32,8 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class TreatmentsViewModel @Inject constructor(
+@Inject
+class TreatmentsViewModel(
     val persistenceLayer: PersistenceLayer,
     val profileUtil: ProfileUtil,
     val profileFunction: ProfileFunction,

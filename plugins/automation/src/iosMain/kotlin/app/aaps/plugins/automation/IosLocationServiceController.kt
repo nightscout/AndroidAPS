@@ -33,7 +33,8 @@ import platform.CoreLocation.CLLocationManager
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosLocationServiceController @Inject constructor(
+@Inject
+class IosLocationServiceController(
     private val aapsLogger: AAPSLogger
 ) : LocationServiceController {
 

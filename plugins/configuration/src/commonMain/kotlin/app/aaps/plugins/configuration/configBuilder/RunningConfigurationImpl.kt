@@ -46,7 +46,8 @@ import dev.zacsweers.metro.binding
 @ContributesBinding(AppScope::class, binding = binding<RunningConfiguration>())
 @ContributesBinding(AppScope::class, binding = binding<RunningConfigurationKeys>())
 @SingleIn(AppScope::class)
-class RunningConfigurationImpl @Inject constructor(
+@Inject
+class RunningConfigurationImpl(
     private val activePlugin: ActivePlugin,
     private val activeSceneSync: ActiveSceneSync,
     private val preferences: Preferences,

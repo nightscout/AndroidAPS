@@ -2,9 +2,12 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.metro)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ksp)
     id("android-module-dependencies")
     id("test-module-dependencies")
+    // Robolectric plus the compose-ui-test artifacts: most of this module's untested code is the
+    // activation wizard and the overview, which are Compose. Paired with jacoco-module-dependencies
+    // below, which is what makes the classes Robolectric loads show up in coverage.
+    id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
 }
 

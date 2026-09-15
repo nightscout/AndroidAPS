@@ -161,16 +161,8 @@ kotlin {
     }
 }
 
-tasks.withType<Test> {
-    // useJUnitPlatform() and the heap cap come from kmp-test-defaults; only the JaCoCo part is
-    // specific to this module.
-    // Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default
-    // JaCoCo on-the-fly agent records no coverage for the classes those tests exercise - here that is
-    // every Compose screen the UI tests drive. Restated from jacoco-module-dependencies, which applies
-    // com.android.library and so cannot be used by a multiplatform module. The jacoco plugin itself is
-    // already applied to every project by the root build file.
-    extensions.configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
-    }
-}
+// The JaCoCo/Robolectric setting that used to be restated here now lives in `kmp-test-defaults`, so
+// every multiplatform module gets it instead of only the ones that remembered. This module was the
+// only one that did remember: :core:graph and :plugins:calibration lost it when they flipped to
+// multiplatform and reported 0% and 33.5% for Compose screens their Robolectric tests were already
+// driving.

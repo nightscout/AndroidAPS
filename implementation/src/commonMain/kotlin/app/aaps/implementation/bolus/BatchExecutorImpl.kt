@@ -20,7 +20,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class BatchExecutorImpl @Inject constructor(
+@Inject
+class BatchExecutorImpl(
     private val roleBranch: RoleBranch,
     private val wizardBolusExecutor: WizardBolusExecutor
 ) : BatchExecutor {

@@ -49,7 +49,8 @@ import kotlin.time.Duration.Companion.days
 @APS
 @IntKey(830)
 @SingleIn(AppScope::class)
-class SignatureVerifierPlugin @Inject constructor(
+@Inject
+class SignatureVerifierPlugin(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,

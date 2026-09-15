@@ -25,16 +25,20 @@ dependencies {
     androidTestImplementationFromCatalog("kotlinx-coroutines-test")
 }
 
+// Printing every passing test's stdout is useful while working on one module and harmful on CI, where
+// the whole suite runs as one step. CircleCI truncates a step's console output at 400000 characters, so
+// that stdout pushed the lines naming a failed test out of the log, leaving only a link to an HTML report
+// that stays on the runner. A failing test that cannot be named cannot be fixed. Failures and their full
+// stack traces are kept in both cases - only the passing chatter is dropped on CI.
+val showTestStandardOut = !providers.environmentVariable("CI").isPresent
+
 tasks.withType<Test> {
-    // use to display stdout in travis
     testLogging {
         // set options for log level LIFECYCLE
-        events = setOf(
-            TestLogEvent.FAILED,
-            //TestLogEvent.STARTED,
-            TestLogEvent.SKIPPED,
-            TestLogEvent.STANDARD_OUT
-        )
+        events = if (showTestStandardOut)
+            setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
+        else
+            setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED)
         exceptionFormat = TestExceptionFormat.FULL
         useJUnitPlatform()
     }

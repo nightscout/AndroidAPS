@@ -33,7 +33,8 @@ import kotlinx.coroutines.flow.asStateFlow
 // have to see the same [request] flow.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class PasswordCheckImpl @Inject constructor(
+@Inject
+class PasswordCheckImpl(
     private val preferences: Preferences,
     private val passwordHasher: PasswordHasher,
     private val rxBus: RxBus,

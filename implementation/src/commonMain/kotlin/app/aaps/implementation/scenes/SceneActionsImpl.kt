@@ -23,7 +23,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class SceneActionsImpl @Inject constructor(
+@Inject
+class SceneActionsImpl(
     private val dispatcher: ClientControlActionDispatcher,
     private val roleBranch: RoleBranch,
     private val sceneApi: SceneAutomationApi,

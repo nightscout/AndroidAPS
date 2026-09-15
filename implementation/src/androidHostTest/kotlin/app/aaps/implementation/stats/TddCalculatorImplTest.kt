@@ -2,17 +2,21 @@ package app.aaps.implementation.stats
 
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AverageTDD
+import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.TimeZone
 import java.time.Instant
 import java.time.LocalDateTime
@@ -20,6 +24,11 @@ import java.time.ZoneId
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class TddCalculatorImplTest : TestBase() {
@@ -380,6 +389,62 @@ class TddCalculatorImplTest : TestBase() {
         assertThat(result).isNotNull()
         assertThat(result?.data?.basalAmount).isWithin(0.0001).of(20.0015)
         assertThat(result?.data?.bolusAmount).isWithin(0.0001).of(10.0015)
+    }
+
+    /**
+     * A day computed from part of its data must not be left in the cache when the answer is refused.
+     *
+     * `calculate` used to store every day it managed to compute and only afterwards decide whether it
+     * had enough of them, so a run that found one day of seven stored that day and returned null. The
+     * caller correctly discarded the answer; the database kept it. That is how a full Nightscout sync
+     * produced wrong totals - treatments arrive oldest first, the loop asks for seven days while only
+     * the first chunk has landed, and invalidation only ever deletes *forward* from a changed record,
+     * so nothing ever reached back to remove the row. Only "Recalculate" in the statistics screen,
+     * which wipes the table outright, fixed it.
+     */
+    @Test
+    fun `a result too short to be returned is not cached`() = runTest {
+        givenSevenDayWindow(profileAvailableFromDay = 6)
+
+        val result = tddCalculator.calculate(now, days = 7, allowMissingDays = false)
+
+        assertThat(result).isNull()
+        verify(persistenceLayer, never()).insertOrUpdateCachedTotalDailyDose(any())
+    }
+
+    /** The other direction, so the fix above cannot quietly become "never cache anything". */
+    @Test
+    fun `a complete result is still cached`() = runTest {
+        givenSevenDayWindow(profileAvailableFromDay = 0)
+
+        val result = tddCalculator.calculate(now, days = 7, allowMissingDays = false)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.size()).isEqualTo(7)
+        verify(persistenceLayer, times(7)).insertOrUpdateCachedTotalDailyDose(any())
+    }
+
+    /**
+     * Nothing cached, no boluses or carbs, and a flat temporary basal so every day the profile covers
+     * produces a non-zero total. [profileAvailableFromDay] is the first day of the window that has a
+     * profile - days before it make `calculateInterval` bail out, which is how a partial result is
+     * produced without having to fake a half-written database.
+     */
+    private suspend fun givenSevenDayWindow(profileAvailableFromDay: Int) {
+        val profile = mock<EffectiveProfile>()
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(true)
+        whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(null)
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        whenever(iobCobCalculator.getBasalData(any(), any())).thenReturn(BasalData().apply { tempBasalAbsolute = 1.0 })
+
+        val windowStart = MidnightTime.calcDaysBack(now, 7)
+        val profileFrom = MidnightTime.calc(windowStart + T.days(profileAvailableFromDay.toLong()).msecs())
+        whenever(profileFunction.getProfile(any())).thenAnswer { invocation ->
+            if (invocation.getArgument<Long>(0) >= profileFrom) profile else null
+        }
     }
 
     /**

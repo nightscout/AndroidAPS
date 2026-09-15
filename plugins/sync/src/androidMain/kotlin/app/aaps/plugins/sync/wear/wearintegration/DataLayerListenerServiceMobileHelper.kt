@@ -20,7 +20,8 @@ import dev.zacsweers.metro.SingleIn
 
  */
 @SingleIn(AppScope::class)
-class DataLayerListenerServiceMobileHelper @Inject constructor(
+@Inject
+class DataLayerListenerServiceMobileHelper(
     private val notificationHolder: NotificationHolder
 ) {
 

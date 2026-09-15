@@ -8,7 +8,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KProperty
 
 @SingleIn(OpenHumansScope::class)
-internal class OHCounterDelegate @Inject internal constructor(
+@Inject
+internal class OHCounterDelegate internal constructor(
     private val preferences: Preferences
 ) {
 

@@ -38,7 +38,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class SecureEncryptImpl @Inject constructor(
+@Inject
+class SecureEncryptImpl(
     private var log: AAPSLogger,
     private var cryptoUtil: CryptoUtil
     ) : SecureEncrypt {

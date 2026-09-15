@@ -20,7 +20,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class AndroidAppExit @Inject constructor(
+@Inject
+class AndroidAppExit(
     private val context: Context
 ) : AppExit {
 

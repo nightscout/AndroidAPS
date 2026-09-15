@@ -16,7 +16,8 @@ import dev.zacsweers.metro.SingleIn
 
 @Suppress("unused", "PrivatePropertyName")
 @SingleIn(AppScope::class)
-class SyncBasalHistoryTask @Inject constructor() : TaskBase(TaskFunc.SYNC_BASAL_HISTORY) {
+@Inject
+class SyncBasalHistoryTask() : TaskBase(TaskFunc.SYNC_BASAL_HISTORY) {
 
     @Inject lateinit var basalHistoryIndexGet: BasalHistoryIndexGet
     @Inject lateinit var basalHistoryGetExBig: BasalHistoryGetExBig

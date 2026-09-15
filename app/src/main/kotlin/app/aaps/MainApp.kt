@@ -10,7 +10,6 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
@@ -24,43 +23,21 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.alerts.LocalAlertUtils
-import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
-import app.aaps.core.interfaces.rx.events.EventShowSnackbar
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.tempTargets.toJson
-import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
-import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
@@ -72,44 +49,20 @@ import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.database.AppRepository
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.metro.MetroWorkerFactory
-import app.aaps.implementation.lifecycle.ProcessLifecycleListener
-import app.aaps.implementation.plugin.PluginStore
-import app.aaps.implementation.resources.ResourceHelperImpl
-import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
-import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
-import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
-import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
-import app.aaps.plugins.automation.AutomationRuntime
-import app.aaps.plugins.aps.ApsStringIds
-import app.aaps.plugins.automation.AutomationStringIds
-import app.aaps.plugins.calibration.CalibrationStringIds
-import app.aaps.plugins.configuration.ConfigurationStringIds
-import app.aaps.plugins.constraints.ConstraintsStringIds
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
-import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import app.aaps.plugins.main.MainStringIds
-import app.aaps.plugins.sensitivity.SensitivityStringIds
-import app.aaps.plugins.sync.SyncStringIds
-import app.aaps.plugins.source.SourceStringIds
-import app.aaps.plugins.smoothing.SmoothingStringIds
-import app.aaps.pump.virtual.VirtualStringIds
-import app.aaps.ui.UiStringIds
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
@@ -132,7 +85,6 @@ import kotlinx.serialization.json.jsonObject
 import rxdogtag2.RxDogTag
 import java.io.IOException
 import java.util.Locale
-import dev.zacsweers.metro.Inject
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
@@ -207,6 +159,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private val runningModeExpiryScheduler get() = metroGraphs.runningModeExpiryScheduler
     private val profileSwitchExpiryScheduler get() = metroGraphs.profileSwitchExpiryScheduler
     private val automationRuntime get() = metroGraphs.automationRuntime
+    private val snackbarNotificationFallback get() = metroGraphs.snackbarNotificationFallback
     private val appScope get() = metroGraphs.applicationScope
 
     private lateinit var insulinLabel: String
@@ -230,33 +183,11 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         aapsLogger.debug("onCreate")
         ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
-        // Background fallback for EventShowSnackbar: when no activity is STARTED
-        // (app in background / process alive but UI offscreen), promote the
-        // snackbar to a system Notification so the message is not lost.
-        // Visible activities host their own GlobalSnackbarHost that also
-        // subscribes; those win while UI is present.
-        appScope.launch {
-            rxBus.toFlow(EventShowSnackbar::class).collect { event ->
-                val uiVisible = ProcessLifecycleOwner.get().lifecycle.currentState
-                    .isAtLeast(Lifecycle.State.STARTED)
-                if (!uiVisible) {
-                    notificationManager.post(
-                        id = NotificationId.SNACKBAR_FALLBACK,
-                        text = event.message,
-                        // URGENT is reserved for pump/loop alarms that play alarm-stream
-                        // sounds and wake users. Generic snackbar errors — "failed to save
-                        // preference", etc. — route through NORMAL instead.
-                        level = when (event.type) {
-                            EventShowSnackbar.Type.Error   -> NotificationLevel.NORMAL
-                            EventShowSnackbar.Type.Warning -> NotificationLevel.NORMAL
-                            EventShowSnackbar.Type.Success -> NotificationLevel.INFO
-                            EventShowSnackbar.Type.Info    -> NotificationLevel.INFO
-                        },
-                        validMinutes = 30
-                    )
-                }
-            }
-        }
+        // Background fallback for EventShowSnackbar: when no GlobalSnackbarHost is collecting,
+        // promote the snackbar to a system Notification so the message is not lost. Shared code -
+        // the iOS and desktop shells start the same class. Started here, before the migrations
+        // below, so messages sent during startup are covered too.
+        snackbarNotificationFallback.start()
         // Configure LeakCanary with Firebase reporting
         // Memory leaks will be uploaded to Firebase Crashlytics via FabricPrivacy.logException
         configureLeakCanary(

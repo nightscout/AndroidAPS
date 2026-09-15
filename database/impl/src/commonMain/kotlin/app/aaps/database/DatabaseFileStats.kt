@@ -27,9 +27,11 @@ internal expect fun databaseFileStats(path: String): DatabaseFileStats
 internal expect val databaseDispatcher: kotlinx.coroutines.CoroutineDispatcher
 
 /**
- * Empties every table.
+ * Empties every table, for the maintenance "reset databases" action.
  *
- * `RoomDatabase.clearAllTables()` is Android and JVM only - it is absent from the iOS klib - so the
- * one caller (the maintenance "reset databases" action) reaches it through here.
+ * `RoomDatabase.clearAllTables()` is generated for Android only, so Android uses Room's own version
+ * and the other targets clear the tables with SQL. That SQL is common code - see
+ * [clearAllTablesBySql] - so this is only about which of the two a target gets, not about doing the
+ * work twice.
  */
 internal expect suspend fun AppDatabase.clearAllTablesCompat()

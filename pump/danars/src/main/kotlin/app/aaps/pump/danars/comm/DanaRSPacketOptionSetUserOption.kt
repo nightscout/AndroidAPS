@@ -6,7 +6,8 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketOptionSetUserOption @Inject constructor(
+@Inject
+class DanaRSPacketOptionSetUserOption(
     private val aapsLogger: AAPSLogger,
     private val danaPump: DanaPump
 ) : DanaRSPacket() {

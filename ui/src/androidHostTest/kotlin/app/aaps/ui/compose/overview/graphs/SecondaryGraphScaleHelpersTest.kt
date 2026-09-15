@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.overview.graphs
 
 import app.aaps.core.interfaces.overview.graph.DeviationType
+import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import com.google.common.truth.Truth.assertThat
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
@@ -72,6 +73,58 @@ internal class SecondaryGraphScaleHelpersTest {
     }
 
     @Nested
+    inner class ProcessStepPointsTest {
+
+        /** x is whole minutes from minTimestamp, so a minute count is the readable way to write one. */
+        private fun min(m: Long) = m * 60_000L
+
+        @Test
+        fun `a closing point past the right edge is clamped to the edge, not dropped`() {
+            // The reported "missing basal" bug. rebuildBasalGraph closes the series at the newest
+            // prediction time, which is hours past an axis that ends at TimeRange.toTime while the
+            // predictions overlay is off. Dropping that point left the line stopping at the last
+            // basal change instead of at the edge.
+            val points = listOf(
+                GraphDataPoint(min(0), 1.0),
+                GraphDataPoint(min(30), 2.0),
+                GraphDataPoint(min(300), 2.0) // closing point, far past the edge
+            )
+            val result = processStepPoints(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 1.0, 30.0 to 2.0, 60.0 to 2.0).inOrder()
+        }
+
+        @Test
+        fun `the clamped point carries the value in effect at the edge, not the last value overall`() {
+            val points = listOf(
+                GraphDataPoint(min(0), 1.0),
+                GraphDataPoint(min(30), 2.0),
+                GraphDataPoint(min(90), 3.0), // a change after the edge must not leak back into view
+                GraphDataPoint(min(300), 3.0)
+            )
+            val result = processStepPoints(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 1.0, 30.0 to 2.0, 60.0 to 2.0).inOrder()
+        }
+
+        @Test
+        fun `a series that already ends exactly at the edge is left alone`() {
+            val points = listOf(GraphDataPoint(min(0), 1.0), GraphDataPoint(min(60), 1.0))
+            val result = processStepPoints(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)
+            assertThat(result).containsExactly(0.0 to 1.0, 60.0 to 1.0).inOrder()
+        }
+
+        @Test
+        fun `an empty series stays empty`() {
+            assertThat(processStepPoints(emptyList(), minTimestamp = 0L, minX = 0.0, maxX = 60.0)).isEmpty()
+        }
+
+        @Test
+        fun `a series lying entirely past the edge contributes nothing`() {
+            val points = listOf(GraphDataPoint(min(90), 1.0), GraphDataPoint(min(120), 2.0))
+            assertThat(processStepPoints(points, minTimestamp = 0L, minX = 0.0, maxX = 60.0)).isEmpty()
+        }
+    }
+
+    @Nested
     inner class WindowedPrimaryYTest {
 
         @Test
@@ -82,7 +135,7 @@ internal class SecondaryGraphScaleHelpersTest {
             val devSlopeMin = listOf(0.0 to -1.0, 10.0 to -2.0)
             val deviations = ProcessedDeviationLines(allX = listOf(0.0, 10.0), series = mapOf(DeviationType.POSITIVE to listOf(3.0, 4.0)))
 
-            val result = windowedPrimaryY(5.0, 10.0, iob, cob, simple, devSlopeMin, deviations)
+            val result = windowedPrimaryY(5.0, 10.0, iob, cob, emptyList(), simple, devSlopeMin, deviations)
 
             assertThat(result).containsExactly(2.0, 6.0, 8.0, -2.0, 4.0)
         }
@@ -95,9 +148,32 @@ internal class SecondaryGraphScaleHelpersTest {
             val iob = listOf(0.0 to 1.0, 2.0 to 1.5)
             val cob = listOf(0.0 to 5.0, 10.0 to 6.0)
 
-            val result = windowedPrimaryY(5.0, 10.0, iob, cob, emptyList(), emptyList(), null)
+            val result = windowedPrimaryY(5.0, 10.0, iob, cob, emptyList(), emptyList(), emptyList(), null)
 
             assertThat(result).containsExactly(6.0)
+        }
+
+        /**
+         * Carb markers count towards the axis, because they are drawn on it.
+         *
+         * `hasPrimaryData` is taken from the model, which includes the carb markers, so a graph
+         * holding nothing else still claims to have data - and the "no data" branch that would
+         * anchor a 0..1 axis is skipped. If the range union left the markers out it was empty, so
+         * every branch needing it returned null too and the axis fell through to Vico's raw
+         * auto-range over the model.
+         *
+         * That gap is open on every cold start: carb markers come straight from the database while
+         * COB waits for the calculation workflow. Measured on a Pixel with COB+ABS after a restart -
+         * `primaryY=[null..null] n=0` against `modelY=[0.0..43.0] slots=[CarbsMarker]` - and the COB
+         * curve, once it arrived at 148, was drawn straight through the top of a 0..44 axis.
+         */
+        @Test
+        fun `carb markers alone still give the axis something to scale to`() {
+            val carbs = listOf(6.0 to 36.0, 8.0 to 43.0)
+
+            val result = windowedPrimaryY(5.0, 10.0, emptyList(), emptyList(), carbs, emptyList(), emptyList(), null)
+
+            assertThat(result).containsExactly(36.0, 43.0)
         }
 
         @Test
@@ -105,7 +181,7 @@ internal class SecondaryGraphScaleHelpersTest {
             val iob = listOf(0.0 to 1.0, 10.0 to 2.0)
             val cob = listOf(0.0 to 5.0, 10.0 to 6.0)
 
-            val result = windowedPrimaryY(1000.0, 2000.0, iob, cob, emptyList(), emptyList(), null)
+            val result = windowedPrimaryY(1000.0, 2000.0, iob, cob, emptyList(), emptyList(), emptyList(), null)
 
             assertThat(result).containsExactly(1.0, 2.0, 5.0, 6.0)
         }

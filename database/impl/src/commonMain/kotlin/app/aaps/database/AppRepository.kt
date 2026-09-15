@@ -210,7 +210,6 @@ class AppRepository internal constructor(
             removed.add(Pair("CHANGES HeartRate", database.heartRateDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES StepsCount", database.stepsCountDao.deleteTrackedChanges()))
         }
-        repositoryScope.launch { _databaseClearedFlow.emit(Unit) }
         val ret = StringBuilder()
         removed
             .filter { it.second > 0 }

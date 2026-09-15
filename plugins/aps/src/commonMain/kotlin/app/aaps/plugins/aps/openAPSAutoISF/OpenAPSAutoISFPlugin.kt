@@ -77,7 +77,8 @@ import kotlin.math.pow
 import kotlin.math.roundToLong
 
 @SingleIn(AppScope::class)
-open class OpenAPSAutoISFPlugin @Inject constructor(
+@Inject
+open class OpenAPSAutoISFPlugin(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,

@@ -31,7 +31,8 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import dev.zacsweers.metro.Inject
 
-class SWPermissions @Inject constructor(
+@Inject
+class SWPermissions(
     aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck
 ) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 

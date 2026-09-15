@@ -71,7 +71,8 @@ import kotlin.math.ceil
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class WizardBolusExecutorImpl @Inject constructor(
+@Inject
+class WizardBolusExecutorImpl(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val config: Config,
@@ -567,7 +568,7 @@ class WizardBolusExecutorImpl @Inject constructor(
             if (tt != null && !raising && accepted) applyTempTarget(tt, source)
             // Insulin activation re-applies the active profile with the new insulin — run BEFORE any explicit PS
             // (insulin set first), independent of any dose (an InsulinActivate-only batch no-ops the deliver(0,0)).
-            p.insulinActivate?.let { applyInsulinActivate(it, source) }
+            p.insulinActivate?.let { applyInsulinActivate(it, source, onError) }
             // Careportal therapy events (≥0) — dose-independent metadata; the master persists them (sole writer).
             p.therapyEvents.forEach { applyTherapyEvent(it, source) }
             // Edits of existing therapy events (≥0) — the master updates its own copy in place (sole writer); a
@@ -980,9 +981,20 @@ class WizardBolusExecutorImpl @Inject constructor(
     private fun buildInsulinActivateLine(ia: BatchAction.InsulinActivate): List<ConfirmationLine> =
         listOf(ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.activate_insulin), ia.iCfg.insulinLabel)))
 
-    /** Apply an insulin activation: re-apply the master's CURRENT active profile with this insulin (active-EPS precondition checked at prepare). */
-    private suspend fun applyInsulinActivate(ia: BatchAction.InsulinActivate, source: Sources) {
-        profileFunction.createProfileSwitchWithNewInsulin(ia.iCfg, source)
+    /**
+     * Apply an insulin activation: re-apply the master's CURRENT active profile with this insulin
+     * (active-EPS precondition checked at prepare).
+     *
+     * The result used to be discarded. `createProfileSwitchWithNewInsulin` returns false when there is no
+     * running profile or no profile store, and the batch then still reported success, so the caller told the
+     * user their insulin had changed while the old one was still in force. That is the worst way for this to
+     * fail: every later dose is scaled by the wrong peak, DIA and concentration, and nothing says so.
+     * `FillDialogViewModel.reportInsulinActivation` already funnels every non-success outcome to the user -
+     * it just never heard about this one.
+     */
+    private suspend fun applyInsulinActivate(ia: BatchAction.InsulinActivate, source: Sources, onError: (String) -> Unit) {
+        if (!profileFunction.createProfileSwitchWithNewInsulin(ia.iCfg, source))
+            onError(rh.gs(CoreUiStrings.insulin_activation_failed))
     }
 
     /** The careportal-event confirmation line (rarely surfaced — careportal auto-commits without showing the batch preview). */

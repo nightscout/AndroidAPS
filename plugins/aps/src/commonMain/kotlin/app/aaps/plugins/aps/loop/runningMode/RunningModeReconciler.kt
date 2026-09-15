@@ -42,7 +42,8 @@ import kotlinx.coroutines.launch
  */
 
 @SingleIn(AppScope::class)
-class RunningModeReconciler @Inject constructor(
+@Inject
+class RunningModeReconciler(
     private val persistenceLayer: PersistenceLayer,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val activePlugin: ActivePlugin,

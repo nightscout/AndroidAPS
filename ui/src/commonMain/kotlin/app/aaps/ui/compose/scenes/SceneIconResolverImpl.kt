@@ -14,7 +14,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class SceneIconResolverImpl @Inject constructor(
+@Inject
+class SceneIconResolverImpl(
     private val sceneStore: SceneStore
 ) : SceneIconResolver {
 

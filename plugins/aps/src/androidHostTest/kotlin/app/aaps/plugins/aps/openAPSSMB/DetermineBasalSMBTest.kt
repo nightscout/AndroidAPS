@@ -201,4 +201,67 @@ class DetermineBasalSMBTest : TestBaseWithProfile() {
         assertThat(result.duration).isEqualTo(30)
         assertThat(result.reason.toString()).contains("Setting neutral temp basal")
     }
+
+    /**
+     * A zero temp shorter than 30 minutes becomes a 30 minute temp, and the rate has to be the basal
+     * that was NOT withheld - issue #5082.
+     *
+     * The pump is given 30 minutes because a shorter zero temp is not worth setting, so to hold back
+     * `durationReq` minutes of basal the rate must deliver the other `30 - durationReq` minutes spread
+     * over the whole half hour. oref computes `basal * durationReq / 30`, which is the complement of
+     * that, so asking to hold back nearly the whole 30 minutes delivered nearly the whole basal
+     * instead - in the one case where the algorithm has just decided a low is coming.
+     *
+     * The fixture puts the worst case far enough below target to want 29 of the 30 minutes held back,
+     * so the correct rate is 1/30 of a 1.0 U/h basal. The inverted form returns 0.97 here.
+     */
+    @Test
+    fun `a zero temp shorter than 30 minutes keeps only the basal that was not withheld`() {
+        val rT = runWithSmb()
+
+        // Fail loudly if the fixture stopped reaching the branch, otherwise this test passes for the
+        // wrong reason - the >= 30 branch also reports a "30m low temp", but always at 0 U/h.
+        assertThat(rT.reason.toString()).contains("30m low temp")
+
+        assertThat(rT.rate).isEqualTo(0.03)
+        assertThat(rT.duration).isEqualTo(30)
+    }
+
+    /**
+     * The SMB path with a worst case below target: BG high and rising, so a bolus is wanted, while
+     * enough insulin is already acting that the naive and minIOB predictions land under target and a
+     * zero temp is wanted too. That combination is what reaches the low temp branch above; the plain
+     * [run] fixture cannot, because it disallows microboluses.
+     */
+    private fun runWithSmb(): RT {
+        val iobs = Array(48) { i ->
+            val time = currentTime + i * 5 * 60000L
+            IobTotal(
+                time = time,
+                iob = 1.3,
+                activity = 0.0105,
+                lastBolusTime = currentTime - 3600000L,
+                iobWithZeroTemp = IobTotal(time = time, iob = 1.3, activity = 0.0105)
+            )
+        }
+        return sut.determine_basal(
+            glucose_status = glucoseStatus(),
+            currenttemp = CurrentTemp(0, 0.0, null),
+            iob_data_array = iobs,
+            profile = profile().copy(enableSMB_always = true),
+            autosens_data = AutosensResult(ratio = 1.0),
+            meal_data = MealData(
+                carbs = 0.0,
+                mealCOB = 0.0,
+                slopeFromMaxDeviation = 0.0,
+                slopeFromMinDeviation = 0.0,
+                lastBolusTime = currentTime - 3600000L,
+                lastCarbTime = currentTime - 4 * 3600000L
+            ),
+            microBolusAllowed = true,
+            currentTime = currentTime,
+            flatBGsDetected = false,
+            dynIsfMode = false
+        )
+    }
 }

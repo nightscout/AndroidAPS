@@ -6,7 +6,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class MessageHashTableR @Inject constructor(
+@Inject
+class MessageHashTableR(
     private val injector: MetroMemberInjector
 ) : MessageHashTableBase {
 

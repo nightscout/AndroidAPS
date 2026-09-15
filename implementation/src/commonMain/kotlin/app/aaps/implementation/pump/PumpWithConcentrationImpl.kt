@@ -34,7 +34,8 @@ import dev.zacsweers.metro.ContributesBinding
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope, so every injection site got its
 // own. Scoping it now would be a silent behaviour change in a class that talks to the pump.
 @ContributesBinding(AppScope::class)
-class PumpWithConcentrationImpl @Inject constructor(
+@Inject
+class PumpWithConcentrationImpl(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,

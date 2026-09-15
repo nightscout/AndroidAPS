@@ -8,7 +8,6 @@ import app.aaps.di.metro.testRoot
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
-import app.aaps.ui.compose.overview.OverviewDataCacheFactory
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

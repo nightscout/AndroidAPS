@@ -20,10 +20,7 @@ internal class LongStatusFlippedComplicationTest {
     private fun sut(): LongStatusFlippedComplication =
         Robolectric.buildService(LongStatusFlippedComplication::class.java).get().also {
             it.aapsLogger = AAPSLoggerTest()
-            it.displayFormat = DisplayFormat().also { d ->
-                d.sp = mock()
-                d.context = it
-            }
+            it.displayFormat = DisplayFormat(mock(), it)
         }
 
     @Test

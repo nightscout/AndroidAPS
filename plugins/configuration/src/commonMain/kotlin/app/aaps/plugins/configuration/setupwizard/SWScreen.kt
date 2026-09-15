@@ -8,7 +8,8 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import dev.zacsweers.metro.Inject
 
-class SWScreen @Inject constructor(private val rh: TextResolver) {
+@Inject
+class SWScreen(private val rh: TextResolver) {
 
     var header: TextRef? = null
         private set

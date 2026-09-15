@@ -52,7 +52,8 @@ private val KClass<*>.label: String get() = simpleName ?: ""
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class StoreDataForDbImpl @Inject constructor(
+@Inject
+class StoreDataForDbImpl(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,

@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import app.aaps.core.interfaces.configuration.Config
 import java.awt.Image
+import java.awt.Taskbar
 import javax.imageio.ImageIO
 
 /**
@@ -69,3 +70,24 @@ internal fun loadAppIcon(path: String): Painter {
 internal fun loadAwtAppIcon(path: String): Image? = runCatching {
     IconResources::class.java.classLoader?.getResourceAsStream(path)?.use { ImageIO.read(it) }
 }.getOrNull()
+
+/**
+ * Puts the icon on the macOS Dock.
+ *
+ * `Window(icon = ...)` is enough on Windows and Linux, where the window icon is also the one the
+ * taskbar shows. macOS does not work that way: the Dock and the app switcher read the icon from the
+ * application bundle, not from the window, so a run that is not packaged - `./gradlew run`, or the
+ * app started from an IDE - showed the default JVM icon and the app looked like a Kotlin sample.
+ * [Taskbar] is the one way to set it from inside a running JVM.
+ *
+ * Quiet when it cannot be done. `getTaskbar` throws where there is no taskbar at all, Windows and
+ * most Linux desktops do not support this feature even though they support others, and none of that
+ * is worth failing a startup over - the window icon is already correct there.
+ */
+internal fun applyDockIcon(path: String) {
+    val image = loadAwtAppIcon(path) ?: return
+    runCatching {
+        val taskbar = Taskbar.getTaskbar()
+        if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) taskbar.iconImage = image
+    }
+}

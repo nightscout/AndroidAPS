@@ -18,7 +18,8 @@ import kotlinx.coroutines.CoroutineDispatcher
  * A subclass should hold its runner and do nothing else:
  *
  * ```
- * class ThingWorker @AssistedInject constructor(
+ * @AssistedInject
+ * class ThingWorker(
  *     @Assisted context: Context, @Assisted params: WorkerParameters,
  *     aapsLogger: AAPSLogger, fabricPrivacy: FabricPrivacy,
  *     private val runner: ThingRunner

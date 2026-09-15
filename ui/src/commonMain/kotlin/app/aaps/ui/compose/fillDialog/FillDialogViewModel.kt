@@ -65,7 +65,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @Stable
-class FillDialogViewModel @AssistedInject constructor(
+@AssistedInject
+class FillDialogViewModel(
     @Assisted savedStateHandle: SavedStateHandle,
     private val constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,

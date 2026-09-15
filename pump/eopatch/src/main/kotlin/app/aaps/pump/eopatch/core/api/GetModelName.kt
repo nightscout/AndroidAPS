@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetModelName @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ModelNameResponse>(PatchFunc.GET_MODEL_NAME, patch, aapsLogger) {
+@Inject
+class GetModelName(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ModelNameResponse>(PatchFunc.GET_MODEL_NAME, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): ModelNameResponse {
         val success = bytes[DATA0].toInt() == 0
         if (!success) return ModelNameResponse(false, byteArrayOf())

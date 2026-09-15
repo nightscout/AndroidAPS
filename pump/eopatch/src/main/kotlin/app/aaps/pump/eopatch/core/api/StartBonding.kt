@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StartBonding @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BondingResponse>(PatchFunc.REQUEST_BONDING, patch, aapsLogger) {
+@Inject
+class StartBonding(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BondingResponse>(PatchFunc.REQUEST_BONDING, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): BondingResponse {
         val ret = bytes[DATA0].toInt()
         val resultCode = if (ret == REQUEST_FAIL) PatchBleResultCode.UNKNOWN_ERROR else PatchBleResultCode.SUCCESS

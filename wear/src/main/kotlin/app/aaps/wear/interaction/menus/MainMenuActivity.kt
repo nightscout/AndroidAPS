@@ -14,6 +14,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.wear.BuildConfig
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.ECarbActivity
+import app.aaps.wear.interaction.actions.RunningModePickerActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
@@ -59,13 +60,15 @@ class MainMenuActivity : MenuListActivity() {
                 add(MenuItem(R.drawable.ic_sync, getString(R.string.menu_resync)))
             } else {
                 add(MenuItem(R.drawable.ic_loop_closed, getString(R.string.loop_status)))
-                add(MenuItem(R.drawable.ic_bg_graph, getString(R.string.menu_bg_graph)))
                 if (sp.getBoolean(R.string.key_show_wizard, true))
                     add(MenuItem(R.drawable.ic_calculator, getString(R.string.menu_wizard)))
                 add(MenuItem(R.drawable.ic_carbs_orange, getString(R.string.menu_ecarb)))
                 add(MenuItem(R.drawable.ic_bolus_carbs, getString(R.string.menu_treatment)))
                 add(MenuItem(R.drawable.ic_temptarget_flat, getString(R.string.loop_status_temp_target)))
                 add(MenuItem(R.drawable.ic_profile_switch, getString(R.string.status_profile_switch)))
+                // Running mode + BG graph: only path to these for watchfaces without tiles/complications
+                add(MenuItem(R.drawable.ic_loop_closed_white, getString(R.string.label_running_mode_title)))
+                add(MenuItem(R.drawable.ic_bg_graph, getString(R.string.menu_bg_graph)))
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
                 add(MenuItem(R.drawable.ic_status, getString(R.string.menu_status)))
                 if (sp.getBoolean(R.string.key_prime_fill, false))
@@ -84,6 +87,7 @@ class MainMenuActivity : MenuListActivity() {
     override fun doAction(position: String) {
         when (position) {
             getString(R.string.loop_status)             -> startActivity(Intent(this, LoopStatusActivity::class.java))
+            getString(R.string.label_running_mode_title) -> startActivity(Intent(this, RunningModePickerActivity::class.java))
             getString(R.string.menu_bg_graph)           -> startActivity(Intent(this, BgGraphActivity::class.java))
             getString(R.string.menu_wizard)             -> startActivity(Intent(this, WizardActivity::class.java))
             getString(R.string.menu_ecarb)              -> startActivity(Intent(this, ECarbActivity::class.java))

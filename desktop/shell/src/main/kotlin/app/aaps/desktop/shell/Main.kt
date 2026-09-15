@@ -109,8 +109,13 @@ fun main() {
     // Which icon and which name depend on what kind of build this is, so both are read after the
     // graph. A failed startup still gets a window, and that window still gets an icon and a title.
     val graph = startup.getOrNull()
-    val appIcon = loadAppIcon(graph?.let { appIconResource(it.config) } ?: DEFAULT_APP_ICON)
+    val iconPath = graph?.let { appIconResource(it.config) } ?: DEFAULT_APP_ICON
+    val appIcon = loadAppIcon(iconPath)
     val appName = graph?.let { it.textResolver.gs(it.config.appName) } ?: DEFAULT_APP_NAME
+
+    // Before the window, because macOS reads the Dock icon once as the app starts. Does nothing on
+    // the other platforms, where `Window(icon = ...)` below already covers the taskbar.
+    applyDockIcon(iconPath)
 
     application {
         Window(
@@ -218,6 +223,9 @@ private fun startPlugins(graph: DesktopAppGraph) {
     // The periodic housekeeping Android gets from KeepAliveWorker. The work is shared; only the
     // trigger is not, because there is no WorkManager here.
     graph.periodicMaintenance.start(graph.appScope)
+    // A snackbar sent while no window is showing one becomes a system notification instead of being
+    // lost. The same shared class Android and iOS start.
+    graph.snackbarNotificationFallback.start()
     graph.logger.debug(LTag.CORE, "Registered ${plugins.size} plugins and verified selections")
 }
 
@@ -284,6 +292,7 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
             visibilityContext = graph.visibilityContext,
             nsClient = graph.nsClient,
             rxBus = graph.rxBus,
+            snackbarHostPresence = graph.snackbarHostPresence,
             clientControlActionDispatcher = graph.clientControlActionDispatcher,
             // Image rather than Icon: Icon paints its vector in a single tint, which flattens a logo
             // to one colour. Android passes the launcher bitmap here and this is the same file.

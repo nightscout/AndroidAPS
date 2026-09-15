@@ -25,9 +25,7 @@ class DisplayFormatTest : WearTestBase() {
 
     @BeforeEach
     fun mock() {
-        displayFormat = DisplayFormat()
-        displayFormat.sp = sp
-        displayFormat.context = context
+        displayFormat = DisplayFormat(sp, context)
         whenever(sp.getBoolean("complication_unicode", true)).thenReturn(true)
         whenever(context.getString(R.string.insulin_unit_short)).thenReturn("U")
         whenever(context.getString(R.string.hour_short)).thenReturn("h")

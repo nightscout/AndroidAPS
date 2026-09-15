@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class FetchAlarmTask @Inject constructor(
+@Inject
+class FetchAlarmTask(
     private val alarmRegistry: IAlarmRegistry
 ) : TaskBase(TaskFunc.FETCH_ALARM) {
 

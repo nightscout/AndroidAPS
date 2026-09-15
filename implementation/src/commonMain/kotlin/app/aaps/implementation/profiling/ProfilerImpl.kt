@@ -11,7 +11,8 @@ import kotlin.time.Clock
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ProfilerImpl @Inject constructor(val aapsLogger: AAPSLogger) : Profiler {
+@Inject
+class ProfilerImpl(val aapsLogger: AAPSLogger) : Profiler {
 
     override fun log(lTag: LTag, function: String, start: Long) {
         val milliseconds = Clock.System.now().toEpochMilliseconds() - start

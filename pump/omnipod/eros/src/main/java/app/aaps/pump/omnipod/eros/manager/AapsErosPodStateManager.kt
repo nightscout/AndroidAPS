@@ -19,7 +19,8 @@ import dev.zacsweers.metro.SingleIn
  * Was Java.
  */
 @SingleIn(AppScope::class)
-class AapsErosPodStateManager @Inject constructor(
+@Inject
+class AapsErosPodStateManager(
     aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rxBus: RxBus,

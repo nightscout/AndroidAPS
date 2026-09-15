@@ -24,6 +24,7 @@
         <item>@string/menu_treatment</item>
         <item>@string/menu_ecarb</item>
         <item>@string/menu_status</item>
+        <item>@string/label_running_mode_title</item>
         <item>@string/menu_none</item>
     </string-array>
 
@@ -46,6 +47,7 @@
         <item>bolus</item>
         <item>ecarb</item>
         <item>status</item>
+        <item>running_mode</item>
         <item>none</item>
     </string-array>
 
