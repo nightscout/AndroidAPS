@@ -218,7 +218,7 @@ com-thoughtworks-xstream = { group = "com.thoughtworks.xstream", name = "xstream
 com-garmin-connectiq = { group = "com.garmin.connectiq", name = "ciq-companion-app-sdk", version = "2.4.0" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version = "1.3.0" }
 androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version = "1.3.0" }
-androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version = "1.4.1" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version = "1.5.0" }
 net-openid-appauth = { group = "net.openid", name = "appauth", version = "0.11.1" }
 
 # Compose
