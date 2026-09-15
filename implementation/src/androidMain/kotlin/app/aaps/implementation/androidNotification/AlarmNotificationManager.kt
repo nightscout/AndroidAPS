@@ -424,6 +424,12 @@ class AlarmNotificationManager(
             activeSoundKeys.forEach { mgr.cancel(SOUND_ID_OFFSET + it) }
             activeSoundKeys.clear()
         }
+        // Cancelling the notification does not silence the alarm. postFullScreenAlarm starts the
+        // looping sound itself, as OWNER_FULLSCREEN, and that playback belongs to AlarmSoundPlayer
+        // rather than to the notification - so it outlives the cancel unless it is stopped here.
+        // This is the only path Mute on the notification, the Wear snooze and onTerminate all reach,
+        // and none of them silenced the loop before (issue #5133).
+        alarmSoundPlayer.stop(AlarmSoundPlayer.OWNER_FULLSCREEN)
         aapsLogger.debug(LTag.NOTIFICATION, "Cancelled all AAPS alarm notifications")
     }
 }
