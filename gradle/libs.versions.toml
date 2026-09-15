@@ -28,7 +28,7 @@ datastorePreferences = "1.2.1"
 
 # Compose
 activityCompose = "1.13.0"
-composeBom = "2026.08.00"
+composeBom = "2026.09.00"
 wearCompose = "1.6.2"
 navigationCompose = "2.10.0"
 # The JetBrains republish of navigation-compose - same `androidx.navigation` package names, with
