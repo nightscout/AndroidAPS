@@ -97,7 +97,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -113,11 +112,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.job
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
@@ -445,8 +442,11 @@ class NSClientV3Plugin(
                 toTime = dateUtil.now() + T.mins(1).plus(T.secs(0)).msecs()
                 origin = "1_MIN_OLD_DATA"
             }
-            // A delayed one-shot. Successive calls stack up, exactly as the Handler posts did;
-            // executeLoop is guarded, and the scope cancels them all on stop.
+            // A delayed one-shot. Successive calls stack up, exactly as the Handler posts did, and
+            // the scope cancels them all on stop. Note that executeLoop's isRunning check is NOT
+            // atomic with the enqueue after it, so two calls arriving together can both start a
+            // round. That costs a redundant REPLACE and a repeated fetch, nothing worse: rows
+            // already read stay staged in StoreDataForDb until they reach the database.
             scope.launch {
                 delay(toTime - dateUtil.now())
                 executeLoop(origin)
@@ -471,6 +471,22 @@ class NSClientV3Plugin(
         nsConnection.stop()
         nsLoadExecutor.cancel()
         super.onStop()
+    }
+
+    /**
+     * Cancels everything this plugin started, including the app-lifetime [reachableScope] that
+     * [onStop] deliberately leaves running so `masterReachable` survives a service restart.
+     *
+     * For tests only. A test builds a plugin per test method, and a scope that outlives the method
+     * goes on calling mocks that Mockito has already disabled. The throw then lands on whatever
+     * test starts next, far away from the test that actually caused it.
+     */
+    @VisibleForTesting
+    suspend fun shutdownForTest() {
+        onStop()
+        withContext(NonCancellable) {
+            withTimeoutOrNull(STOP_JOIN_TIMEOUT_MS) { reachableScope.coroutineContext.job.cancelAndJoin() }
+        }
     }
 
     override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true

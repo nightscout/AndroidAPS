@@ -88,7 +88,7 @@ class SocketNsConnectionTest : TestBaseWithProfile() {
     // runs next as UncaughtExceptionsBeforeTest. onStop cancels that scope and waits for it.
     @AfterEach
     fun stopPlugin() {
-        runBlocking { plugin.onStop() }
+        runBlocking { plugin.shutdownForTest() }
     }
 
     @Test

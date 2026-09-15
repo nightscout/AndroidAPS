@@ -101,8 +101,8 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @AfterEach
     fun stopPlugins() {
         runBlocking {
-            if (::sut.isInitialized) sut.onStop()
-            extraPlugins.forEach { it.onStop() }
+            if (::sut.isInitialized) sut.shutdownForTest()
+            extraPlugins.forEach { it.shutdownForTest() }
         }
         extraPlugins.clear()
     }

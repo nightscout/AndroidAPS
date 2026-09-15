@@ -87,7 +87,7 @@ internal class LoadLastModificationWorkerTest : TestBaseWithProfile() {
     // runs next as UncaughtExceptionsBeforeTest. onStop cancels that scope and waits for it.
     @AfterEach
     fun stopPlugin() {
-        runBlocking { nsClientV3Plugin.onStop() }
+        runBlocking { nsClientV3Plugin.shutdownForTest() }
     }
 
     @Test

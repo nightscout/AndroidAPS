@@ -66,7 +66,7 @@ class NSClientV3PluginSchedulingTest : TestBaseWithProfile() {
     // runs next as UncaughtExceptionsBeforeTest. onStop cancels that scope and waits for it.
     @AfterEach
     fun stopPlugin() {
-        runBlocking { sut.onStop() }
+        runBlocking { sut.shutdownForTest() }
     }
 
     @Test
