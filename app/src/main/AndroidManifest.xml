@@ -21,6 +21,8 @@
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
+    <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" />
+
     <!-- Remove legacy storage permissions pulled in by library manifest merge.
          App uses scoped storage / SAF (minSdk 31). -->
     <uses-permission
