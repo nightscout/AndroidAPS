@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Metric
 import androidx.core.app.NotificationCompat.Metric.FixedFloat
+import androidx.core.app.NotificationCompat.Metric.FixedInt
 import androidx.core.app.NotificationCompat.MetricStyle
 import androidx.core.app.RemoteInput
 import app.aaps.core.data.model.GlucoseUnit
@@ -64,6 +65,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.runBlocking
 import dev.zacsweers.metro.Inject
+import kotlin.math.round
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
 // Registers itself into the every-build plugin bucket at order 0, replacing the @Binds @IntKey(0) in
@@ -321,5 +323,11 @@ class PersistentNotificationPlugin(
                     .setCriticalMetric(0)
             )
         }
+    }
+
+    private fun Double.round(decimals: Int): Double {
+        var multiplier = 1.0
+        repeat(decimals) { multiplier *= 10 }
+        return round(this * multiplier) / multiplier
     }
 }
