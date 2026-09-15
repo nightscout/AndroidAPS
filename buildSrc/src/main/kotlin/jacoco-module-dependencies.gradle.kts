@@ -10,7 +10,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
-import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlin.math.roundToInt
 
@@ -19,16 +18,10 @@ plugins {
     id("jacoco")
 }
 
-// Robolectric runs tests in its own classloader sandbox and rewrites bytecode, so the default
-// JaCoCo on-the-fly agent records no coverage for the classes those tests exercise (e.g. Compose
-// screens). includeNoLocationClasses lets JaCoCo account for the Robolectric-loaded classes.
-// No-op for modules without Robolectric tests, so it's safe to apply to every jacoco module.
-tasks.withType<Test>().configureEach {
-    extensions.configure(JacocoTaskExtension::class) {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
-    }
-}
+// The JaCoCo/Robolectric setting that used to be here now applies to every project from the root
+// build file. It was moved because this convention applies `com.android.library`, which AGP 9 refuses
+// next to the multiplatform plugin - so any module that flipped to KMP silently stopped recording
+// coverage for its Robolectric tests, while the tests kept passing.
 
 private val limits = mutableMapOf(
     "instruction" to 0.0,
