@@ -536,12 +536,21 @@ class CarelevoOverviewViewModel @Inject constructor(
             triggerEvent(CarelevoOverviewEvent.ShowMessageBluetoothNotEnabled)
             return
         }
+        // A slow BLE round trip must not let a second tap start its own coroutine and insert a second
+        // PUMP_SUSPEND row for what the user did once.
+        if (_uiState.value == UiState.Loading) {
+            aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] already in progress, ignoring re-entrant call")
+            return
+        }
 
         setUiState(UiState.Loading)
 
         val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull()
         val isExtendBolusRunning = infusionInfo?.extendBolusInfusionInfo != null
         val isTempBasalRunning = infusionInfo?.tempBasalInfusionInfo != null
+        // Read once, so every sync below shares one identity - a stable dedup key rather than a fresh
+        // dateUtil.now() at each insert site.
+        val stopEventTimestamp = dateUtil.now()
 
         viewModelScope.launch {
             val cancelExtendBolusResult = if (isExtendBolusRunning) {
@@ -561,12 +570,12 @@ class CarelevoOverviewViewModel @Inject constructor(
                 // Route the stop frame through the queue (connect-before-execute). The pre-cancel above
                 // already ran on the queue from this coroutine (safe — not the worker thread).
                 val result = commandQueue.customCommand(CmdPumpStop(stopMinute))
-                setUiState(UiState.Idle)
                 if (result.success) {
                     handlePumpStopResponse(
                         isTempBasalRunning = isTempBasalRunning,
                         isExtendBolusRunning = isExtendBolusRunning,
-                        stopMinute = stopMinute
+                        stopMinute = stopMinute,
+                        stopEventTimestamp = stopEventTimestamp
                     )
                 } else {
                     aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] stop failed")
@@ -574,38 +583,39 @@ class CarelevoOverviewViewModel @Inject constructor(
                 }
             } else {
                 aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] no active temp/extend bolus to cancel")
-                setUiState(UiState.Idle)
                 triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
             }
+            // Released only once the DB sync inside handlePumpStopResponse has settled; releasing right
+            // after the BLE round trip left a window for a re-entrant tap.
+            setUiState(UiState.Idle)
         }
     }
 
-    private fun handlePumpStopResponse(
+    private suspend fun handlePumpStopResponse(
         isTempBasalRunning: Boolean,
         isExtendBolusRunning: Boolean,
-        stopMinute: Int
+        stopMinute: Int,
+        stopEventTimestamp: Long
     ) {
         aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] response success")
 
-        viewModelScope.launch {
-            pumpSync.syncTemporaryBasalWithPumpId(
-                timestamp = dateUtil.now(),
-                rate = PumpRate(0.0),
-                duration = T.mins(stopMinute.toLong()).msecs(),
-                isAbsolute = true,
-                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                pumpId = dateUtil.now(),
-                pumpType = PumpType.CAREMEDI_CARELEVO,
-                pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
-            )
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = stopEventTimestamp,
+            rate = PumpRate(0.0),
+            duration = T.mins(stopMinute.toLong()).msecs(),
+            isAbsolute = true,
+            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+            pumpId = stopEventTimestamp,
+            pumpType = PumpType.CAREMEDI_CARELEVO,
+            pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
+        )
 
-            pumpSync.syncStopExtendedBolusWithPumpId(
-                timestamp = dateUtil.now(),
-                endPumpId = dateUtil.now(),
-                pumpType = PumpType.CAREMEDI_CARELEVO,
-                pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
-            )
-        }
+        pumpSync.syncStopExtendedBolusWithPumpId(
+            timestamp = stopEventTimestamp,
+            endPumpId = stopEventTimestamp,
+            pumpType = PumpType.CAREMEDI_CARELEVO,
+            pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
+        )
 
         clearInfusionInfo(
             CarelevoDeleteInfusionRequestModel(
@@ -629,16 +639,21 @@ class CarelevoOverviewViewModel @Inject constructor(
             triggerEvent(CarelevoOverviewEvent.ShowMessageBluetoothNotEnabled)
             return
         }
+        // Same re-entrancy guard as startPumpStopProcess - see its comment.
+        if (_uiState.value == UiState.Loading) {
+            aapsLogger.debug(LTag.PUMPCOMM, "[startPumpResume] already in progress, ignoring re-entrant call")
+            return
+        }
 
         setUiState(UiState.Loading)
         viewModelScope.launch {
             // Route the resume frame through the queue (connect-before-execute).
             val result = commandQueue.customCommand(CmdPumpResume())
-            setUiState(UiState.Idle)
             if (result.success) {
+                val resumeEventTimestamp = dateUtil.now()
                 pumpSync.syncStopTemporaryBasalWithPumpId(
-                    timestamp = dateUtil.now(),
-                    endPumpId = dateUtil.now(),
+                    timestamp = resumeEventTimestamp,
+                    endPumpId = resumeEventTimestamp,
                     pumpType = PumpType.CAREMEDI_CARELEVO,
                     pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
                 )
@@ -646,6 +661,7 @@ class CarelevoOverviewViewModel @Inject constructor(
                 aapsLogger.debug(LTag.PUMPCOMM, "[startPumpResume] resume failed")
                 triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
             }
+            setUiState(UiState.Idle)
         }
     }
 
