@@ -253,6 +253,21 @@ class CarelevoOverviewViewModelTest {
         whenever { commandQueue.cancelExtended() }.thenReturn(result)
     }
 
+    /** What AAPS believes the pump is running; `startPumpResume` only ends a TBR it can see here. */
+    private fun stubExpectedPumpState(tempBasalRunning: Boolean) {
+        val tbr = if (tempBasalRunning) {
+            PumpSync.PumpState.TemporaryBasal(
+                timestamp = nowMillis, duration = 30L * 60L * 1000L, rate = 0.0, isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND, id = 1L, pumpId = nowMillis
+            )
+        } else {
+            null
+        }
+        whenever { pumpSync.expectedPumpState() }.thenReturn(
+            PumpSync.PumpState(temporaryBasal = tbr, extendedBolus = null, bolus = null, profile = null, serialNumber = "SN-0001")
+        )
+    }
+
     private fun infoRows(): List<PumpInfoRow> = sut.overviewUiState.value.infoRows.map { it as PumpInfoRow }
 
     // ---- setup --------------------------------------------------------------------------------
@@ -1175,6 +1190,7 @@ class CarelevoOverviewViewModelTest {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-0001", isStopped = true)))
         stubCustomCommand(success = true)
+        stubExpectedPumpState(tempBasalRunning = true)
 
         sut.startPumpResume()
 
@@ -1183,6 +1199,23 @@ class CarelevoOverviewViewModelTest {
         // `ignorePumpIds` has a default value → the mock records all 5 args.
         verifyBlocking(pumpSync) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), serial.capture(), any()) }
         assertThat(serial.firstValue).isEqualTo("SN-0001")
+        assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
+        assertThat(events).isEmpty()
+    }
+
+    @Test
+    fun `startPumpResume leaves an unrelated temp basal alone when no suspension is expected`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-0001", isStopped = true)))
+        stubCustomCommand(success = true)
+        // The suspension record already expired, so AAPS sees no TBR of its own to end. Ending one here
+        // would cut short whatever rate the loop set in the meantime.
+        stubExpectedPumpState(tempBasalRunning = false)
+
+        sut.startPumpResume()
+
+        verifyBlocking(commandQueue) { customCommand(any<CmdPumpResume>()) }
+        verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
     }

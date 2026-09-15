@@ -548,46 +548,52 @@ class CarelevoOverviewViewModel @Inject constructor(
         val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull()
         val isExtendBolusRunning = infusionInfo?.extendBolusInfusionInfo != null
         val isTempBasalRunning = infusionInfo?.tempBasalInfusionInfo != null
-        // Read once, so every sync below shares one identity - a stable dedup key rather than a fresh
-        // dateUtil.now() at each insert site.
-        val stopEventTimestamp = dateUtil.now()
 
         viewModelScope.launch {
-            val cancelExtendBolusResult = if (isExtendBolusRunning) {
-                cancelExtendBolus()
-            } else {
-                true
-            }
-            val cancelTempBasalResult = if (isTempBasalRunning) {
-                cancelTempBasal()
-            } else {
-                true
-            }
-
-            aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] isTempBasalRunning=$cancelTempBasalResult, isExtendBolusRunning=$cancelExtendBolusResult, stopMinute: $stopMinute")
-
-            if (cancelExtendBolusResult && cancelTempBasalResult) {
-                // Route the stop frame through the queue (connect-before-execute). The pre-cancel above
-                // already ran on the queue from this coroutine (safe — not the worker thread).
-                val result = commandQueue.customCommand(CmdPumpStop(stopMinute))
-                if (result.success) {
-                    handlePumpStopResponse(
-                        isTempBasalRunning = isTempBasalRunning,
-                        isExtendBolusRunning = isExtendBolusRunning,
-                        stopMinute = stopMinute,
-                        stopEventTimestamp = stopEventTimestamp
-                    )
+            try {
+                val cancelExtendBolusResult = if (isExtendBolusRunning) {
+                    cancelExtendBolus()
                 } else {
-                    aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] stop failed")
+                    true
+                }
+                val cancelTempBasalResult = if (isTempBasalRunning) {
+                    cancelTempBasal()
+                } else {
+                    true
+                }
+
+                aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] isTempBasalRunning=$cancelTempBasalResult, isExtendBolusRunning=$cancelExtendBolusResult, stopMinute: $stopMinute")
+
+                if (cancelExtendBolusResult && cancelTempBasalResult) {
+                    // Route the stop frame through the queue (connect-before-execute). The pre-cancel above
+                    // already ran on the queue from this coroutine (safe — not the worker thread).
+                    val result = commandQueue.customCommand(CmdPumpStop(stopMinute))
+                    if (result.success) {
+                        // Read the clock only here, after the pump has confirmed the stop. The pre-cancel
+                        // and the stop frame are queue round trips that can take tens of seconds, so a
+                        // value read before them would back-date the suspension and cut the extended bolus
+                        // earlier than it really ended. One read, so both syncs below share one instant.
+                        handlePumpStopResponse(
+                            isTempBasalRunning = isTempBasalRunning,
+                            isExtendBolusRunning = isExtendBolusRunning,
+                            stopMinute = stopMinute,
+                            stopEventTimestamp = dateUtil.now()
+                        )
+                    } else {
+                        aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] stop failed")
+                        triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
+                    }
+                } else {
+                    aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] no active temp/extend bolus to cancel")
                     triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                 }
-            } else {
-                aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] no active temp/extend bolus to cancel")
-                triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
+            } finally {
+                // Released only once the DB sync inside handlePumpStopResponse has settled; releasing right
+                // after the BLE round trip left a window for a re-entrant tap. In a `finally` because a DB
+                // write that throws would otherwise leave the screen behind the Loading scrim for good,
+                // and the guard above would then refuse every later suspend and resume.
+                setUiState(UiState.Idle)
             }
-            // Released only once the DB sync inside handlePumpStopResponse has settled; releasing right
-            // after the BLE round trip left a window for a re-entrant tap.
-            setUiState(UiState.Idle)
         }
     }
 
@@ -647,21 +653,31 @@ class CarelevoOverviewViewModel @Inject constructor(
 
         setUiState(UiState.Loading)
         viewModelScope.launch {
-            // Route the resume frame through the queue (connect-before-execute).
-            val result = commandQueue.customCommand(CmdPumpResume())
-            if (result.success) {
-                val resumeEventTimestamp = dateUtil.now()
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    timestamp = resumeEventTimestamp,
-                    endPumpId = resumeEventTimestamp,
-                    pumpType = PumpType.CAREMEDI_CARELEVO,
-                    pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
-                )
-            } else {
-                aapsLogger.debug(LTag.PUMPCOMM, "[startPumpResume] resume failed")
-                triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
+            try {
+                // Route the resume frame through the queue (connect-before-execute).
+                val result = commandQueue.customCommand(CmdPumpResume())
+                if (result.success) {
+                    // Only record a TBR stop if AAPS actually believes one is running — the transaction
+                    // ends whatever temporary basal is active, so an unguarded stop would cut short a
+                    // rate the loop set after the suspension record had already expired.
+                    if (pumpSync.expectedPumpState().temporaryBasal != null) {
+                        val resumeEventTimestamp = dateUtil.now()
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            timestamp = resumeEventTimestamp,
+                            endPumpId = resumeEventTimestamp,
+                            pumpType = PumpType.CAREMEDI_CARELEVO,
+                            pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
+                        )
+                    }
+                } else {
+                    aapsLogger.debug(LTag.PUMPCOMM, "[startPumpResume] resume failed")
+                    triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
+                }
+            } finally {
+                // See startPumpStopProcess — released in a `finally` so a throwing sync cannot wedge the
+                // screen in Loading.
+                setUiState(UiState.Idle)
             }
-            setUiState(UiState.Idle)
         }
     }
 
