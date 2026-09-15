@@ -19,6 +19,19 @@ tasks.withType<Test>().configureEach {
     failOnNoDiscoveredTests = false
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
     maxHeapSize = "1536m"
+
+    // The same JaCoCo setting `jacoco-module-dependencies` applies, repeated here because a
+    // multiplatform module cannot have that convention: it applies `com.android.library`, which AGP 9
+    // refuses next to the multiplatform plugin. Without it a Robolectric test records nothing -
+    // Robolectric loads classes through its own sandbox classloader and rewrites their bytecode, so
+    // the on-the-fly agent sees classes with no source location and skips them. The tests still run
+    // and pass; only the coverage is missing, which is the worst shape for a problem to have.
+    // Measured on :core:graph, whose only test is a Robolectric Compose one: its exec file held no
+    // app/aaps class at all, and ProfileViewerContent.kt reported 0 of 399 lines.
+    extensions.findByType(org.gradle.testing.jacoco.plugins.JacocoTaskExtension::class)?.apply {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
     testLogging {
         // See the same block in `test-module-dependencies` for why CI drops the passing tests' stdout.
         events = if (providers.environmentVariable("CI").isPresent)
