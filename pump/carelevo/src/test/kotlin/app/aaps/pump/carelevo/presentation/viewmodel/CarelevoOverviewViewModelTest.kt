@@ -23,12 +23,12 @@ import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.command.CmdDiscard
-import app.aaps.pump.carelevo.command.CmdPumpResume
 import app.aaps.pump.carelevo.command.CmdPumpStop
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.UiState
+import app.aaps.pump.carelevo.coordinator.CarelevoAlarmClearCoordinator
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
@@ -77,6 +77,7 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.timeout
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
@@ -106,9 +107,9 @@ import java.util.concurrent.CopyOnWriteArrayList
  * two [RxBus] flows stay empty.
  *
  * **Dispatcher strategy.** `Dispatchers.setMain(UnconfinedTestDispatcher())` makes `viewModelScope`
- * eager: `triggerEvent`, `setUiState`, `startDiscardProcess`, `startPumpStopProcess`,
- * `startPumpResume` and `refreshPatchInfusionInfo` all run their `launch { }` bodies in-line, so the
- * terminal state can be asserted straight after the call. The suspend [CommandQueue]/[PumpSync]
+ * eager: `triggerEvent`, `startDiscardProcess`, `startPumpStopProcess`, `startPumpResume` and
+ * `refreshPatchInfusionInfo` all run their `launch { }` bodies in-line, so the terminal state can be
+ * asserted straight after the call. `setUiState` writes the flow straight through, with no `launch`. The suspend [CommandQueue]/[PumpSync]
  * members are Mockito stubs and never really suspend, so nothing needs virtual time to be advanced.
  * Deliberately **no `advanceUntilIdle()`**: `overviewUiState` combines an endless `tickerFlow(30 s)`
  * whose `delay` is virtual, so advancing to idle would never terminate. The ticker's first emission
@@ -146,6 +147,7 @@ class CarelevoOverviewViewModelTest {
     private lateinit var rxBus: RxBus
     private lateinit var decimalFormatter: DecimalFormatter
     private lateinit var bleSession: CarelevoBleSession
+    private lateinit var alarmClearCoordinator: CarelevoAlarmClearCoordinator
 
     private lateinit var sut: CarelevoOverviewViewModel
 
@@ -253,19 +255,8 @@ class CarelevoOverviewViewModelTest {
         whenever { commandQueue.cancelExtended() }.thenReturn(result)
     }
 
-    /** What AAPS believes the pump is running; `startPumpResume` only ends a TBR it can see here. */
-    private fun stubExpectedPumpState(tempBasalRunning: Boolean) {
-        val tbr = if (tempBasalRunning) {
-            PumpSync.PumpState.TemporaryBasal(
-                timestamp = nowMillis, duration = 30L * 60L * 1000L, rate = 0.0, isAbsolute = true,
-                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND, id = 1L, pumpId = nowMillis
-            )
-        } else {
-            null
-        }
-        whenever { pumpSync.expectedPumpState() }.thenReturn(
-            PumpSync.PumpState(temporaryBasal = tbr, extendedBolus = null, bolus = null, profile = null, serialNumber = "SN-0001")
-        )
+    private fun stubResumeInfusion(success: Boolean) {
+        whenever { alarmClearCoordinator.resumeInfusion() }.thenReturn(success)
     }
 
     private fun infoRows(): List<PumpInfoRow> = sut.overviewUiState.value.infoRows.map { it as PumpInfoRow }
@@ -288,6 +279,7 @@ class CarelevoOverviewViewModelTest {
         // Deterministic, locale-independent 2-decimal text (the real impl is locale aware).
         whenever(decimalFormatter.to2Decimal(any<Double>())).thenAnswer { inv -> "%.2f".format(Locale.US, inv.getArgument<Double>(0)) }
         bleSession = mock()
+        alarmClearCoordinator = mock()
 
         // Main must be a test dispatcher BEFORE construction: viewModelScope resolves it on creation.
         Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -335,6 +327,7 @@ class CarelevoOverviewViewModelTest {
             aapsLogger = aapsLogger,
             carelevoPatch = carelevoPatch,
             bleSession = bleSession,
+            alarmClearCoordinator = alarmClearCoordinator,
             aapsSchedulers = aapsSchedulers,
             patchForceDiscardUseCase = patchForceDiscardUseCase,
             carelevoDeleteInfusionInfoUseCase = deleteInfusionInfoUseCase,
@@ -1056,7 +1049,8 @@ class CarelevoOverviewViewModelTest {
         verifyBlocking(pumpSync) {
             syncTemporaryBasalWithPumpId(any(), any(), any(), any(), anyOrNull(), any(), any(), any())
         }
-        verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
+        // Nothing was running → no extended-bolus cut either; the transaction ends whatever it finds.
+        verifyBlocking(pumpSync, never()) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
         verify(deleteInfusionInfoUseCase).execute(CarelevoDeleteInfusionRequestModel(false, false, false))
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
@@ -1091,6 +1085,7 @@ class CarelevoOverviewViewModelTest {
         verifyBlocking(commandQueue) { cancelExtended() }
         verifyBlocking(commandQueue, never()) { cancelTempBasal(any(), any()) }
         verifyBlocking(commandQueue) { customCommand(any<CmdPumpStop>()) }
+        verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(any(), any(), any(), any()) }
         verify(deleteInfusionInfoUseCase).execute(CarelevoDeleteInfusionRequestModel(false, false, true))
         assertThat(events).isEmpty()
     }
@@ -1163,6 +1158,8 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `startPumpStopProcess syncs an empty serial when no patch report has arrived`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolus())))
+        stubCancelExtended(success = true)
         stubCustomCommand(success = true)
 
         sut.startPumpStopProcess(30)
@@ -1170,6 +1167,87 @@ class CarelevoOverviewViewModelTest {
         val serial = argumentCaptor<String>()
         verifyBlocking(pumpSync) { syncStopExtendedBolusWithPumpId(any(), any(), any(), serial.capture()) }
         assertThat(serial.firstValue).isEqualTo("")
+    }
+
+    /**
+     * The whole point of the guard: the suspend is one BLE round trip long, and a second tap during it
+     * used to start its own coroutine and insert a second PUMP_SUSPEND row. The tap is simulated from
+     * inside the queue answer, which is exactly when a real one would land.
+     */
+    @Test
+    fun `startPumpStopProcess ignores a second tap while the first is still in flight`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        val result = mock<PumpEnactResult>()
+        whenever(result.success).thenReturn(true)
+        whenever { commandQueue.customCommand(any()) }.thenAnswer {
+            sut.startPumpStopProcess(30)
+            result
+        }
+
+        sut.startPumpStopProcess(30)
+
+        verifyBlocking(commandQueue, times(1)) { customCommand(any()) }
+        verifyBlocking(pumpSync, times(1)) {
+            syncTemporaryBasalWithPumpId(any(), any(), any(), any(), anyOrNull(), any(), any(), any())
+        }
+        assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
+    }
+
+    /**
+     * The lock is one lock for the whole screen: a discard tapped mid-suspend must be refused, and must
+     * not release the lock the suspend is holding. A screen-wide "is the UI busy" flag used to let the
+     * discard set it back to idle and re-open the window above.
+     */
+    @Test
+    fun `startDiscardProcess is refused while a suspend is still in flight`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
+        val result = mock<PumpEnactResult>()
+        whenever(result.success).thenReturn(true)
+        whenever { commandQueue.customCommand(any()) }.thenAnswer {
+            sut.startDiscardProcess()
+            result
+        }
+
+        sut.startPumpStopProcess(30)
+
+        val captor = argumentCaptor<CustomCommand>()
+        verifyBlocking(commandQueue, times(1)) { customCommand(captor.capture()) }
+        assertThat(captor.firstValue).isInstanceOf(CmdPumpStop::class.java)
+        assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
+    }
+
+    /** One instant for the record and for its dedup key, so the two cannot drift apart. */
+    @Test
+    fun `startPumpStopProcess writes the suspension with one instant for timestamp and pump id`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(success = true)
+
+        sut.startPumpStopProcess(30)
+
+        val timestamp = argumentCaptor<Long>()
+        val pumpId = argumentCaptor<Long>()
+        verifyBlocking(pumpSync) {
+            syncTemporaryBasalWithPumpId(timestamp.capture(), any(), any(), any(), anyOrNull(), pumpId.capture(), any(), any())
+        }
+        assertThat(timestamp.firstValue).isEqualTo(nowMillis)
+        assertThat(pumpId.firstValue).isEqualTo(nowMillis)
+    }
+
+    /** A throwing DB write must not leave the screen behind the Loading scrim, nor hold the lock. */
+    @Test
+    fun `startPumpStopProcess releases the screen when the suspension sync throws`() {
+        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        stubCustomCommand(success = true)
+        whenever { pumpSync.syncTemporaryBasalWithPumpId(any(), any(), any(), any(), anyOrNull(), any(), any(), any()) }
+            .thenThrow(RuntimeException("database unavailable"))
+
+        sut.startPumpStopProcess(30)
+
+        assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
+        // The lock is free again, so a later suspend still reaches the queue.
+        sut.startPumpStopProcess(30)
+        verifyBlocking(commandQueue, times(2)) { customCommand(any()) }
     }
 
     // ---- startPumpResume -----------------------------------------------------------------------
@@ -1181,49 +1259,36 @@ class CarelevoOverviewViewModelTest {
         sut.startPumpResume()
 
         assertThat(events).containsExactly(CarelevoOverviewEvent.ShowMessageBluetoothNotEnabled)
+        verifyBlocking(alarmClearCoordinator, never()) { resumeInfusion() }
         verifyBlocking(commandQueue, never()) { customCommand(any()) }
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
     }
 
+    /**
+     * The resume goes through [CarelevoAlarmClearCoordinator] rather than queueing its own
+     * `CmdPumpResume`, so that the button and an alarm-driven resume take the same app-scoped mutex —
+     * [CommandQueue.customCommand] dedups by command class and would fail the second one. The TBR-stop
+     * sync that follows a successful resume belongs to the coordinator and is covered by its own test.
+     */
     @Test
-    fun `startPumpResume ends the suspension TBR when the queued frame succeeds`() {
+    fun `startPumpResume goes through the coordinator instead of queueing its own frame`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-0001", isStopped = true)))
-        stubCustomCommand(success = true)
-        stubExpectedPumpState(tempBasalRunning = true)
+        stubResumeInfusion(success = true)
 
         sut.startPumpResume()
 
-        verifyBlocking(commandQueue) { customCommand(any<CmdPumpResume>()) }
-        val serial = argumentCaptor<String>()
-        // `ignorePumpIds` has a default value → the mock records all 5 args.
-        verifyBlocking(pumpSync) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), serial.capture(), any()) }
-        assertThat(serial.firstValue).isEqualTo("SN-0001")
-        assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
-        assertThat(events).isEmpty()
-    }
-
-    @Test
-    fun `startPumpResume leaves an unrelated temp basal alone when no suspension is expected`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
-        patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-0001", isStopped = true)))
-        stubCustomCommand(success = true)
-        // The suspension record already expired, so AAPS sees no TBR of its own to end. Ending one here
-        // would cut short whatever rate the loop set in the meantime.
-        stubExpectedPumpState(tempBasalRunning = false)
-
-        sut.startPumpResume()
-
-        verifyBlocking(commandQueue) { customCommand(any<CmdPumpResume>()) }
+        verifyBlocking(alarmClearCoordinator) { resumeInfusion() }
+        verifyBlocking(commandQueue, never()) { customCommand(any()) }
         verifyBlocking(pumpSync, never()) { syncStopTemporaryBasalWithPumpId(any(), any(), any(), any(), any()) }
         assertThat(sut.uiState.value).isEqualTo(UiState.Idle)
         assertThat(events).isEmpty()
     }
 
     @Test
-    fun `startPumpResume reports failure and leaves the TBR alone when the queued frame fails`() {
+    fun `startPumpResume reports failure and leaves the TBR alone when the resume fails`() {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
-        stubCustomCommand(success = false)
+        stubResumeInfusion(success = false)
 
         sut.startPumpResume()
 

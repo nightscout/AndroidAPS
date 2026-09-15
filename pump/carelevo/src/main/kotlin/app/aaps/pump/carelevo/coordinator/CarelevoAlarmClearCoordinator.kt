@@ -64,7 +64,13 @@ class CarelevoAlarmClearCoordinator @Inject constructor(
     fun isPatchReachable(): Boolean =
         carelevoPatch.getPatchInfoAddress() != null && carelevoPatch.isBluetoothEnabled()
 
-    /** Resume infusion after an auto-suspend alarm; syncs the TBR-cancel to NS on success. */
+    /**
+     * Resume infusion; syncs the TBR-cancel to NS on success. Used both after an auto-suspend alarm and by
+     * the Resume button on the overview screen
+     * ([app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel.startPumpResume]), so that
+     * the two cannot queue a `CmdPumpResume` at the same time and make one of them misread a class-level
+     * dedup as a resume failure.
+     */
     suspend fun resumeInfusion(): Boolean = opMutex.withLock {
         val success = commandQueue.customCommand(CmdPumpResume()).success
         if (success) {

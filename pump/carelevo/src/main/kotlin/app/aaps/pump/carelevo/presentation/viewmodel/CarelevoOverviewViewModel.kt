@@ -33,7 +33,6 @@ import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.command.CmdDiscard
-import app.aaps.pump.carelevo.command.CmdPumpResume
 import app.aaps.pump.carelevo.command.CmdPumpStop
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.MutableEventFlow
@@ -42,6 +41,7 @@ import app.aaps.pump.carelevo.common.model.Event
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.common.model.State
 import app.aaps.pump.carelevo.common.model.UiState
+import app.aaps.pump.carelevo.coordinator.CarelevoAlarmClearCoordinator
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
@@ -84,6 +84,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
 import app.aaps.core.interfaces.R as InterfacesR
@@ -99,6 +100,7 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val carelevoPatch: CarelevoPatch,
     private val bleSession: CarelevoBleSession,
+    private val alarmClearCoordinator: CarelevoAlarmClearCoordinator,
     private val aapsSchedulers: AapsSchedulers,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val carelevoDeleteInfusionInfoUseCase: CarelevoDeleteInfusionInfoUseCase,
@@ -469,10 +471,39 @@ class CarelevoOverviewViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Written straight through, not posted through `viewModelScope.launch`. [startOperation] reads the
+     * lock and then writes this in the same step, so a posted write would make that a check-then-act that
+     * only holds together while every caller happens to be on the main thread.
+     */
     private fun setUiState(state: State) {
-        viewModelScope.launch {
-            _uiState.tryEmit(state)
+        _uiState.tryEmit(state)
+    }
+
+    /**
+     * One patch operation at a time. Discard, suspend and resume are all BLE round trips on the same
+     * patch, so they are mutually exclusive, and a slow round trip must not let a second tap start its own
+     * coroutine - two suspends would insert two PUMP_SUSPEND rows for what the user did once.
+     *
+     * Deliberately NOT [_uiState]: the screen state is what the UI draws, several code paths write it, and
+     * any of them reaching [UiState.Idle] would release a lock it never took.
+     */
+    private val operationInProgress = AtomicBoolean(false)
+
+    /** Take the operation lock and show the busy state, or report that another operation holds it. */
+    private fun startOperation(tag: String): Boolean {
+        if (!operationInProgress.compareAndSet(false, true)) {
+            aapsLogger.debug(LTag.PUMPCOMM, "[$tag] another patch operation is in progress, ignoring")
+            return false
         }
+        setUiState(UiState.Loading)
+        return true
+    }
+
+    /** Release the operation lock and return the screen to idle. Safe to call when nothing is held. */
+    private fun endOperation() {
+        operationInProgress.set(false)
+        setUiState(UiState.Idle)
     }
 
     fun startDiscardProcess() {
@@ -480,17 +511,18 @@ class CarelevoOverviewViewModel @Inject constructor(
             is PatchState.NotConnectedNotBooting, null -> Unit // no active patch → nothing to discard
 
             else                                       -> {
+                if (!startOperation("startDiscard")) return
                 // Route the BLE stop through the queue (reconnect-before-execute); if the patch can't
                 // be reached at all, fall back to the DB-only force-discard.
-                setUiState(UiState.Loading)
                 viewModelScope.launch {
                     val result = commandQueue.customCommand(CmdDiscard())
                     if (result.success) {
                         aapsLogger.debug(LTag.PUMPCOMM, "[startDiscard] success")
                         // unBond + releasePatch run inside CmdDiscard on the queue thread
-                        setUiState(UiState.Idle)
+                        endOperation()
                     } else {
                         aapsLogger.error(LTag.PUMPCOMM, "[startDiscard] failed, falling back to force-discard")
+                        // Keeps the lock; the force-discard callbacks below release it.
                         startPatchForceDiscard()
                     }
                 }
@@ -510,17 +542,17 @@ class CarelevoOverviewViewModel @Inject constructor(
                 triggerEvent(CarelevoOverviewEvent.DiscardFailed)
             }
         }
-        setUiState(UiState.Idle)
+        endOperation()
     }
 
     private fun handlePatchDiscardError(error: Throwable) {
         aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] error: $error")
-        setUiState(UiState.Idle)
+        endOperation()
         triggerEvent(CarelevoOverviewEvent.DiscardFailed)
     }
 
+    /** Only reached from [startDiscardProcess], which already holds the operation lock. */
     private fun startPatchForceDiscard() {
-        setUiState(UiState.Loading)
         compositeDisposable += patchForceDiscardUseCase.execute()
             .timeout(10, TimeUnit.SECONDS)
             .subscribeOn(aapsSchedulers.io)
@@ -536,14 +568,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             triggerEvent(CarelevoOverviewEvent.ShowMessageBluetoothNotEnabled)
             return
         }
-        // A slow BLE round trip must not let a second tap start its own coroutine and insert a second
-        // PUMP_SUSPEND row for what the user did once.
-        if (_uiState.value == UiState.Loading) {
-            aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] already in progress, ignoring re-entrant call")
-            return
-        }
-
-        setUiState(UiState.Loading)
+        if (!startOperation("startPumpStopProcess")) return
 
         val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull()
         val isExtendBolusRunning = infusionInfo?.extendBolusInfusionInfo != null
@@ -584,15 +609,16 @@ class CarelevoOverviewViewModel @Inject constructor(
                         triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                     }
                 } else {
-                    aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] no active temp/extend bolus to cancel")
+                    aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] pre-cancel failed, aborting stop")
                     triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                 }
             } finally {
-                // Released only once the DB sync inside handlePumpStopResponse has settled; releasing right
-                // after the BLE round trip left a window for a re-entrant tap. In a `finally` because a DB
-                // write that throws would otherwise leave the screen behind the Loading scrim for good,
-                // and the guard above would then refuse every later suspend and resume.
-                setUiState(UiState.Idle)
+                // Held until the two pumpSync writes in handlePumpStopResponse have settled; releasing right
+                // after the BLE round trip left a window for a re-entrant tap. The infusion-info delete in
+                // that same function is a fire-and-forget Rx call and is NOT covered by this. In a `finally`
+                // because a sync that throws would otherwise leave the screen behind the Loading scrim for
+                // good, and the lock would then refuse every later suspend, resume and discard.
+                endOperation()
             }
         }
     }
@@ -616,12 +642,16 @@ class CarelevoOverviewViewModel @Inject constructor(
             pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
         )
 
-        pumpSync.syncStopExtendedBolusWithPumpId(
-            timestamp = stopEventTimestamp,
-            endPumpId = stopEventTimestamp,
-            pumpType = PumpType.CAREMEDI_CARELEVO,
-            pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
-        )
+        // Only cut an extended bolus that was really running - the transaction ends whatever it finds, so
+        // an ungated call could touch a record this suspend never meant to change.
+        if (isExtendBolusRunning) {
+            pumpSync.syncStopExtendedBolusWithPumpId(
+                timestamp = stopEventTimestamp,
+                endPumpId = stopEventTimestamp,
+                pumpType = PumpType.CAREMEDI_CARELEVO,
+                pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
+            )
+        }
 
         clearInfusionInfo(
             CarelevoDeleteInfusionRequestModel(
@@ -645,38 +675,22 @@ class CarelevoOverviewViewModel @Inject constructor(
             triggerEvent(CarelevoOverviewEvent.ShowMessageBluetoothNotEnabled)
             return
         }
-        // Same re-entrancy guard as startPumpStopProcess - see its comment.
-        if (_uiState.value == UiState.Loading) {
-            aapsLogger.debug(LTag.PUMPCOMM, "[startPumpResume] already in progress, ignoring re-entrant call")
-            return
-        }
+        if (!startOperation("startPumpResume")) return
 
-        setUiState(UiState.Loading)
         viewModelScope.launch {
             try {
-                // Route the resume frame through the queue (connect-before-execute).
-                val result = commandQueue.customCommand(CmdPumpResume())
-                if (result.success) {
-                    // Only record a TBR stop if AAPS actually believes one is running — the transaction
-                    // ends whatever temporary basal is active, so an unguarded stop would cut short a
-                    // rate the loop set after the suspension record had already expired.
-                    if (pumpSync.expectedPumpState().temporaryBasal != null) {
-                        val resumeEventTimestamp = dateUtil.now()
-                        pumpSync.syncStopTemporaryBasalWithPumpId(
-                            timestamp = resumeEventTimestamp,
-                            endPumpId = resumeEventTimestamp,
-                            pumpType = PumpType.CAREMEDI_CARELEVO,
-                            pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
-                        )
-                    }
-                } else {
+                // Go through the coordinator rather than queueing CmdPumpResume here. The CommandQueue
+                // dedups custom commands by CLASS, so a resume running for an auto-suspend alarm would make
+                // this one report a failure that never happened; the coordinator's app-scoped mutex makes
+                // the two wait for each other instead. It also owns the guarded TBR-stop sync.
+                if (!alarmClearCoordinator.resumeInfusion()) {
                     aapsLogger.debug(LTag.PUMPCOMM, "[startPumpResume] resume failed")
                     triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
                 }
             } finally {
                 // See startPumpStopProcess — released in a `finally` so a throwing sync cannot wedge the
                 // screen in Loading.
-                setUiState(UiState.Idle)
+                endOperation()
             }
         }
     }
