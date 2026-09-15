@@ -35,6 +35,7 @@ import app.aaps.wear.utils.toVisibility
 import app.aaps.wear.utils.toVisibilityKeepSpace
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlin.math.floor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -167,9 +168,33 @@ abstract class BaseWatchFace : WatchFace() {
     private var mLastSvg = ""
     private var mLastDirection = ""
 
+    // True only once injection has returned, via onCreate below or via ensureInjected() for instances
+    // that never get an onCreate. Checked instead of catching UninitializedPropertyAccessException,
+    // which would also mask unrelated bugs.
+    protected var injectionComplete = false
+
+    /**
+     * Injects this instance if [onCreate] never ran, so `@Inject` fields are usable anyway.
+     *
+     * Editor sessions and preview generation run the watch face as a *headless* instance, which
+     * `androidx.wear.watchface` builds by reflection: `newInstance()` plus an internal `setContext()`
+     * that calls `attachBaseContext`. `Service.onCreate()` is never called, so without this every
+     * `@Inject` field stays unset and anything the framework calls into throws
+     * `UninitializedPropertyAccessException` - which during a headless release kills the binder and
+     * makes the system drop the editing session, losing the configuration just chosen.
+     *
+     * Works because `attachBaseContext` has run, so the graph can be reached. Safe to call
+     * repeatedly - it no-ops once injection has happened by either route.
+     */
+    protected fun ensureInjected() {
+        if (injectionComplete) return
+        injectMetroMembers(this)
+        injectionComplete = true
+    }
+
     override fun onCreate() {
         // Not derived from WearMetroService, do injection here
-        injectMetroMembers(this)
+        ensureInjected()
         super.onCreate()
         simpleUi.onCreate(::forceUpdate)
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -320,6 +345,9 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun onDestroy() {
+        // Headless instances reach this without ever having run onCreate, so inject first - see
+        // ensureInjected(). For watch faces with no complication slots this is the only entry point.
+        ensureInjected()
         watchfaceScope.cancel()
         simpleUi.onDestroy()
         super.onDestroy()
@@ -327,6 +355,20 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun getInteractiveModeUpdateRate(): Long {
         return if (showSecond) 1000L else 60 * 1000L // Only call onTimeChanged every 60 seconds
+    }
+
+    /**
+     * Override to true when a subclass needs something - complications, say - painted on the Canvas
+     * between measure/layout and the mainLayout draw; see [drawMainLayout]. False keeps the single
+     * measure+layout+draw pass.
+     */
+    protected open fun deferMainLayoutDraw(): Boolean = false
+
+    /** Performs the mainLayout draw that [onDraw] skipped because [deferMainLayoutDraw] is true. */
+    protected fun drawMainLayout(canvas: Canvas) {
+        if (::binding.isInitialized && layoutSet && !simpleUi.isEnabled(currentWatchMode)) {
+            binding.mainLayout.draw(canvas)
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -347,7 +389,7 @@ abstract class BaseWatchFace : WatchFace() {
                 binding.mainLayout.measure(specW, specH)
                 val y = if (forceSquareCanvas) displayWidth else displayHeight // Square Steampunk
                 binding.mainLayout.layout(0, 0, displayWidth, y)
-                binding.mainLayout.draw(canvas)
+                if (!deferMainLayoutDraw()) binding.mainLayout.draw(canvas)
             }
         }
     }
