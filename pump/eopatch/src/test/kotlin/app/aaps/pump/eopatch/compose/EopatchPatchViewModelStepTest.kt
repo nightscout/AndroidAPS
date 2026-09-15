@@ -16,12 +16,14 @@ import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManagerExecutor
 import app.aaps.pump.eopatch.ble.PreferenceManager
 import app.aaps.pump.eopatch.code.PatchStep
+import app.aaps.pump.eopatch.core.scan.BleConnectionState
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchLifecycleEvent
 import app.aaps.pump.eopatch.vo.PatchState
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -70,13 +72,23 @@ class EopatchPatchViewModelStepTest {
         // viewModelScope runs on Main, which a unit test has to provide.
         Dispatchers.setMain(testDispatcher)
         // What the view model's init block touches.
+        // All four, on the trampoline: the work then runs inline instead of on another thread, so a
+        // test sees the result without waiting for one.
         whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
+        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
+        whenever(aapsSchedulers.cpu).thenReturn(Schedulers.trampoline())
+        whenever(aapsSchedulers.newThread).thenReturn(Schedulers.trampoline())
         whenever(preferenceManager.observePatchLifeCycle()).thenReturn(Observable.never())
         whenever(preferenceManager.patchState).thenReturn(PatchState())
+        // The life cycle is read back when a step asks where the patch currently stands.
+        whenever(patchConfig.lifecycleEvent).thenReturn(PatchLifecycleEvent.createShutdown())
         // Alarm handling rides on Maybe; a bare mock hands back null and the chain dies on it.
         whenever(alarmRegistry.remove(any())).thenReturn(Maybe.empty())
         // add() has a third parameter with a default, so all three have to be matched.
         whenever(alarmRegistry.add(any(), any(), any())).thenReturn(Maybe.empty())
+        // Arriving at WAKE_UP starts looking for a patch; never() leaves the scan pending, which is
+        // what a test wants - these tests are about where the wizard goes, not about scanning.
+        whenever(patchManager.scan(any())).thenReturn(Single.never())
     }
 
     @AfterEach
@@ -153,6 +165,83 @@ class EopatchPatchViewModelStepTest {
         viewModel.moveStep(PatchStep.WAKE_UP)
 
         verify(patchConfig).rotateKnobNeedleSensingError = false
+    }
+
+    // ---- onConfirm: where the Next button leads from each step ----
+
+    private fun viewModelAtStep(step: PatchStep) = sut().also { it.moveStep(step) }
+
+    /** Discarding in order to change the patch leads back to the start of a new activation. */
+    @Test
+    fun confirmingAfterADiscardForChangeStartsANewPatch() {
+        val viewModel = viewModelAtStep(PatchStep.DISCARDED_FOR_CHANGE)
+
+        viewModel.onConfirm()
+
+        assertThat(viewModel.patchStep.value).isEqualTo(PatchStep.WAKE_UP)
+    }
+
+    /** Discarding because an alarm demanded it just ends the wizard. */
+    @Test
+    fun confirmingAfterADiscardFromAnAlarmFinishes() {
+        val viewModel = viewModelAtStep(PatchStep.DISCARDED_FROM_ALARM)
+
+        viewModel.onConfirm()
+
+        assertThat(viewModel.patchStep.value).isEqualTo(PatchStep.FINISH)
+    }
+
+    @Test
+    fun confirmingAPlainDiscardGoesBackHome() {
+        val viewModel = viewModelAtStep(PatchStep.DISCARDED)
+
+        viewModel.onConfirm()
+
+        assertThat(viewModel.patchStep.value).isEqualTo(PatchStep.BACK_TO_HOME)
+    }
+
+    /** Not started as a safe deactivation, so turning the alarm off leads to a plain discard. */
+    @Test
+    fun confirmingTheAlarmStepDiscardsThePatch() {
+        val viewModel = viewModelAtStep(PatchStep.MANUALLY_TURNING_OFF_ALARM)
+
+        viewModel.onConfirm()
+
+        assertThat(viewModel.patchStep.value).isEqualTo(PatchStep.DISCARDED)
+    }
+
+    @Test
+    fun confirmingTheBasalScheduleCompletesWhenThePatchIsConnected() {
+        whenever(patchManagerExecutor.patchConnectionState).thenReturn(BleConnectionState.CONNECTED)
+        val viewModel = viewModelAtStep(PatchStep.BASAL_SCHEDULE)
+
+        viewModel.onConfirm()
+
+        assertThat(viewModel.patchStep.value).isEqualTo(PatchStep.COMPLETE)
+    }
+
+    /**
+     * With no connection the wizard must not declare the patch done - the basal schedule has not
+     * reached it yet. It checks the connection instead.
+     */
+    @Test
+    fun confirmingTheBasalScheduleDoesNotCompleteWhileDisconnected() {
+        whenever(patchManagerExecutor.patchConnectionState).thenReturn(BleConnectionState.DISCONNECTED)
+        val viewModel = viewModelAtStep(PatchStep.BASAL_SCHEDULE)
+
+        viewModel.onConfirm()
+
+        assertThat(viewModel.patchStep.value).isNotEqualTo(PatchStep.COMPLETE)
+    }
+
+    /** A step with nothing to confirm must stay put rather than fall through to somewhere else. */
+    @Test
+    fun confirmingAStepWithNoNextLeavesTheWizardWhereItIs() {
+        val viewModel = viewModelAtStep(PatchStep.SAFETY_CHECK)
+
+        viewModel.onConfirm()
+
+        assertThat(viewModel.patchStep.value).isEqualTo(PatchStep.SAFETY_CHECK)
     }
 
     // ---- the site location step is optional ----
