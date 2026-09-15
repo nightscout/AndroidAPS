@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.insight.R
+import app.aaps.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock
 import app.aaps.pump.insight.connection_service.InsightConnectionService
 import app.aaps.pump.insight.descriptors.ActiveBasalRate
 import app.aaps.pump.insight.descriptors.BatteryStatus
@@ -21,6 +22,9 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -29,6 +33,8 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import app.aaps.core.ui.R as CoreUiR
 
@@ -62,7 +68,7 @@ internal class InsightOverviewStateTest {
         MockitoAnnotations.openMocks(this)
     }
 
-    private fun createState() = InsightOverviewState(
+    private fun createState(scope: CoroutineScope = appScope) = InsightOverviewState(
         insightPlugin = insightPlugin,
         aapsLogger = aapsLogger,
         rh = rh,
@@ -71,7 +77,7 @@ internal class InsightOverviewStateTest {
         commandQueue = commandQueue,
         context = context,
         ch = ch,
-        appScope = appScope
+        appScope = scope
     )
 
     @Test
@@ -243,6 +249,122 @@ internal class InsightOverviewStateTest {
         val rows = createState().uiState.value.infoRows.filterIsInstance<PumpInfoRow>()
 
         assertThat(rows.map { it.label }).contains(label(R.string.last_connected))
+    }
+
+    // ---- the actions offered on the overview ----
+
+    /** Collects the events the state emits while [block] runs; they are not replayed to a late collector. */
+    private fun eventsDuring(state: InsightOverviewState, block: () -> Unit): List<InsightOverviewEvent> {
+        val received = mutableListOf<InsightOverviewEvent>()
+        val job = CoroutineScope(Dispatchers.Unconfined).launch { state.events.collect { received.add(it) } }
+        block()
+        job.cancel()
+        return received
+    }
+
+    @Test
+    fun anInitializedPumpOffersRefresh() {
+        stubPlainStrings()
+        connectedAndInitialized()
+
+        val actions = createState().uiState.value.primaryActions
+
+        assertThat(actions.map { it.label }).containsExactly(label(CoreUiR.string.refresh))
+        assertThat(actions.single().enabled).isTrue()
+    }
+
+    @Test
+    fun clickingRefreshAsksTheQueueForAStatusRead() = runTest {
+        stubPlainStrings()
+        connectedAndInitialized()
+        val state = createState()
+
+        state.uiState.value.primaryActions.single().onClick()
+
+        verify(commandQueue).readStatus("InsightRefreshButton")
+    }
+
+    /**
+     * The button goes flat while the read is in flight, so it cannot be pressed twice. The state is
+     * given a scope that does not run its work straight away, which is what leaves the read pending.
+     */
+    @Test
+    fun refreshIsDisabledWhileTheReadIsStillRunning() = runTest {
+        stubPlainStrings()
+        connectedAndInitialized()
+        val state = createState(scope = CoroutineScope(StandardTestDispatcher(testScheduler)))
+
+        state.uiState.value.primaryActions.single().onClick()
+
+        assertThat(state.uiState.value.primaryActions.single().enabled).isFalse()
+    }
+
+    @Test
+    fun theTbrOverNotificationActionSaysWhatItWillDo() {
+        for (enabled in listOf(true, false)) {
+            stubPlainStrings()
+            connectedAndInitialized()
+            whenever(insightPlugin.tBROverNotificationBlock)
+                .thenReturn(TBROverNotificationBlock().also { it.isEnabled = enabled })
+
+            val labels = createState().uiState.value.primaryActions.map { it.label }
+
+            val expected = if (enabled) R.string.disable_tbr_over_notification else R.string.enable_tbr_over_notification
+            assertThat(labels).contains(label(expected))
+        }
+    }
+
+    @Test
+    fun aPumpWithoutTheNotificationSettingOffersOnlyRefresh() {
+        stubPlainStrings()
+        connectedAndInitialized()
+        // tBROverNotificationBlock is null on the mock.
+
+        val actions = createState().uiState.value.primaryActions
+
+        assertThat(actions).hasSize(1)
+    }
+
+    @Test
+    fun anUnpairedPumpOffersPairingInsteadOfUnpair() {
+        stubPlainStrings()
+        whenever(insightPlugin.connectionService).thenReturn(service)
+        whenever(insightPlugin.isInitialized()).thenReturn(false)
+        whenever(service.state).thenReturn(InsightState.NOT_PAIRED)
+        whenever(service.isPaired).thenReturn(false)
+
+        val actions = createState().uiState.value.managementActions
+
+        assertThat(actions.map { it.label }).containsExactly(label(R.string.insight_pairing))
+    }
+
+    /** Unpairing is destructive, so the action only asks - the screen confirms it. */
+    @Test
+    fun clickingUnpairAsksRatherThanUnpairing() {
+        stubPlainStrings()
+        connectedAndInitialized()
+        whenever(service.isPaired).thenReturn(true)
+        val state = createState()
+
+        val events = eventsDuring(state) { state.uiState.value.managementActions.single().onClick() }
+
+        assertThat(events).containsExactly(InsightOverviewEvent.RequestUnpair)
+        // Asking is all it does: the keys are only dropped once performUnpair() is called.
+        verify(service, never()).reset()
+    }
+
+    @Test
+    fun clickingPairingAsksToStartPairing() {
+        stubPlainStrings()
+        whenever(insightPlugin.connectionService).thenReturn(service)
+        whenever(insightPlugin.isInitialized()).thenReturn(false)
+        whenever(service.state).thenReturn(InsightState.NOT_PAIRED)
+        whenever(service.isPaired).thenReturn(false)
+        val state = createState()
+
+        val events = eventsDuring(state) { state.uiState.value.managementActions.single().onClick() }
+
+        assertThat(events).containsExactly(InsightOverviewEvent.StartPairing)
     }
 
     /** A connected pump has nothing to say about when it was last connected. */
