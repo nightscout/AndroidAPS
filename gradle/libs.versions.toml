@@ -3,7 +3,7 @@
 gradlePlugin = "9.4.0"
 googleServices = "4.5.0"
 kotlin = "2.4.20"
-room = "2.8.4"
+room = "2.8.5"
 sqlite = "2.7.0"
 # A release again. The snapshot was taken because 1.4.2 had a member-injection codegen bug
 # (ZacSweers/metro#2731) that blocked converting the remaining Android entry points; the note here
