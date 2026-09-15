@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Сдвояване</string>
-    <string name="danars_no_device_available">Все още устройството не е намерено</string>
-    <string name="danars_pairingok">Сдвояване - ОК</string>
     <string name="danars_pairingtimedout">Времето за сдвояване изтече</string>
-    <string name="danars_waitingforpairing">Очаква сдвояване с помпа</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Интеграция за помпа DANA Diabecare RS и Dana-i</string>
@@ -19,6 +15,7 @@
     <string name="dana_model">%1$s\nМодел: %2$02X\nПротокол: %3$02X\nКод: %4$02X</string>
     <string name="processinghistory">Обработва се събитие</string>
     <string name="danar_enableextendedbolus">Разрешете удължените болуси в настройките на помпата</string>
+    <string name="danar_disablebolusblock">Блокиране на болус е включено на помпата. AAPS не може да пуска инсулин когато е активно това. Изключете блокирането на инсулин в настройките на помпата.</string>
     <string name="overview_bolusprogress_stoped">Спрян</string>
     <string name="unsupportedfirmware">Неподдържан фърмуер на помпата</string>
     <string name="pumperror">Грешка в промпата</string>
@@ -41,7 +38,7 @@
     <string name="gettingtempbasalstatus">Получава статус на временен базал</string>
     <string name="gettingpumpsettings">Получава настройките на помпата</string>
     <string name="gettingpumptime">Получава времето на помпата</string>
-    <string name="largetimedifftitle">Голяма времева разлика</string>
+    <string name="largetimedifftitle">Голяма часова разлика</string>
     <string name="largetimediff">Голяма времева разлика: Помпата е изключена за повече от 1,5 часа. Моля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение. Ако е възможно, премахнете историята от помпата, преди да промените времето или да изключите затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
     <string name="pairfirst">Моля първо свържете помпата с телефона от Bluetooth настройките </string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
@@ -59,7 +56,6 @@
     <string name="danar_history_bolus">Болуси</string>
     <string name="danar_history_carbohydrates">Въглехидрати</string>
     <string name="danar_history_dailyinsulin">Инсулин за деня</string>
-    <string name="danar_history_errors">Грешки</string>
     <string name="danar_history_glucose">КЗ</string>
     <string name="danar_history_refill">Презареждане</string>
     <string name="danar_history_syspend">Спиране</string>
@@ -68,7 +64,6 @@
     <string name="danar_time_display">Формат на времето</string>
     <string name="danar_button_scroll">Превъртане при задъжане</string>
     <string name="danar_beep">Звуков сигнал при натискане на бутон</string>
-    <string name="danar_pump_alarm">Тип аларма</string>
     <string name="danar_pump_alarm_sound">Звукова</string>
     <string name="danar_pump_alarm_vibrate">Вибрация</string>
     <string name="danar_pump_alarm_both">И двете</string>
@@ -82,7 +77,6 @@
     <string name="description_pump_dana_r_korean">Поддръжка за корейски Dana Diabecare R помпи</string>
     <string name="description_pump_dana_r_v2">Поддръжка за Dana Diabecare R помпи с обновен софтуер</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Не е открит Bluetooth адаптер</string>
     <string name="devicenotfound">Избраното устройство не е открито</string>
     <string name="danar_switchtouhmode">Променете режима от Е/д на Е/ч в помпата</string>
     <string name="danarkoreanpump">DanaR Корейска</string>
@@ -91,27 +85,38 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Забрани EasyUI режим в помпата</string>
     <string name="profile_set_failed">Неуспешно задаване на базален профил</string>
-    <string name="danar_bluetooth_status">Bluetooh статус</string>
-    <string name="firmware_label">Фърмуер</string>
     <string name="danar_pump_settings">DanaR настройки</string>
     <string name="time_format_12h">12ч</string>
     <string name="time_format_24h">24ч</string>
     <string name="option_on">Вкл</string>
     <string name="option_off">Изкл</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth устройство</string>
     <string name="danars_password_title">Парола на помпата (само v1)</string>
     <string name="danar_password_title">Парола за помпата</string>
-    <string name="bolusspeed">Скорост на болус</string>
+    <string name="danar_useextended_title">Използвай уд болус на &gt;200%</string>
+    <string name="bolus_speed_12">12 сек/Е</string>
+    <string name="bolus_speed_30">30 сек/Е</string>
+    <string name="bolus_speed_60">60 сек/Е</string>
     <string name="selectedpump">Избрана помпа</string>
     <string name="rs_loginsulinchange_title">Записвай смените на резервоар</string>
-    <string name="rs_loginsulinchange_summary">Добави \"Смяна на резервоар\" в НС, когато е открит в историята</string>
+    <string name="rs_loginsulinchange_summary">Добави \"Смяна на резервоар\" в NS, когато е открит в историята</string>
     <string name="rs_logcanulachange_title">Записвай смяна на канюла</string>
-    <string name="rs_logcanulachange_summary">Добави \"смяна на канюла\" в НС, когато е открит в историята</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
+    <string name="rs_logcanulachange_summary">Добави \"смяна на канюла\" в Ns, когато е открит в историята</string>
     <string name="press_ok_on_the_pump">Натиснете OK на помпата\nи въведете двата номера\nДръжте дисплея на помпата включен чрез натискане минус бутон, докато завършите въвеждане на код.</string>
     <string name="num1pin">1: (12 цифри)</string>
     <string name="num2pin">2: (8 цифри)</string>
     <string name="basal_bolus_step">Базал/Болус стъпка</string>
-    <string name="carbs_store_error">Възможно е въглехидратите да не са се запазили. Моля, проверете ръчно и ги запишете отново ако е необходимо.</string>
+    <string name="connecting_to_pump">Свързване с помпата…</string>
+    <string name="pairing_successful">Успешно свързване!</string>
+    <string name="pairing_successful_message">Помпата е свързана и готова за употреба.</string>
+    <string name="cancel_pairing_title">Спри свързване?</string>
+    <string name="cancel_pairing_message">Процесът ще бъде спрян.</string>
+    <string name="done">Готово</string>
+    <string name="open_bluetooth_settings">Отваряне на Bluetooth настройки</string>
+    <string name="enter_pump_password">Парола за помпата</string>
+    <string name="select_paired_device">Изберете Свързано устройство</string>
+    <string name="no_paired_devices">Няма свързано устройство. Първо свържете помпата в настройките на Android.</string>
+    <string name="password_hint">4-цифрена парола (0–9999)</string>
+    <string name="connecting_verifying">Проверявам паролата…</string>
+    <string name="password_ok">Паролата е правилна!</string>
+    <string name="password_wrong">Грешна парола. Върнете се и я променете.</string>
 </resources>

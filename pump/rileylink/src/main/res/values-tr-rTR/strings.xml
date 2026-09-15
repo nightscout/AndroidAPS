@@ -7,32 +7,17 @@
     <string name="pump_status_active">Aktif</string>
     <string name="pump_status_error_comm">İletişim hatası</string>
     <string name="pump_status_timeout_comm">İletişimde zaman aşımı</string>
-    <string name="pump_status_pump_unreachable">Pompa\'ya ulaşılamıyor</string>
     <string name="pump_status_invalid_config">Geçersiz yapılandırma</string>
     <string name="medtronic_pump_encoding_4b6b_local">Yazılım 4b6b Kodlama</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Donanım 4b6b Kodlama</string>
     <string name="medtronic_pump_frequency_us_ca">ABD &amp; Kanada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Dünya geneli (868 Mhz)</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Tarama</string>
-    <string name="riley_link_ble_config_scan_stop">Dur</string>
-    <string name="riley_link_ble_config_scan_selected">Seçili</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink Tarama</string>
     <string name="riley_link_ble_config_scan_scanning">Taranıyor</string>
-    <string name="riley_link_ble_config_scan_finished">Tarama tamamlandı</string>
-    <string name="riley_link_ble_config_scan_error">Tarama Hatası:%1$d</string>
     <string name="riley_link_ble_config_connected_never">Hiçbir zaman</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Şu Anda Seçili RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">Kaldır</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">RileyLink\'inizi kaldırmak istediğinizden emin misiniz?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">RileyLink\'i Kaldır</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">RileyLink seçilmedi</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Ayarlar</string>
-    <string name="rileylink_settings_tab2">Geçmiş</string>
     <string name="rileylink_status">RileyLink Durumu</string>
     <string name="medtronic_pump_status">Pompa Durumu</string>
-    <string name="title_activity_rileylink_settings">RileyLink Ayarları</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adres:</string>
     <string name="rileylink_name">Ad:</string>
@@ -69,7 +54,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth devre dışı</string>
     <string name="rileylink_error_no_bt_adapter">Bluetooth Adaptörü Yok</string>
     <string name="rileylink_error_tuneup_failed">Ayarlama Başarısız</string>
-    <string name="rileylink_error_pump_unreachable">Pompaya ulaşılamıyor</string>
     <string name="rileylink_error_pod_unreachable">Pod\'a erişilemiyor</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pompa</string>
@@ -87,5 +71,4 @@
     </plurals>
     <string name="orange_use_scanning_level">Taramayı Kullan</string>
     <string name="orange_use_scanning_level_summary">OrangeLink\'e bağlanmadan önce tarayın, bağlantıları iyileştirebilir (gerekirse diğer RileyLink klonlarıyla da kullanılabilir)</string>
-    <string name="rileylink_configuration">RileyLink Yapılandırması</string>
 </resources>

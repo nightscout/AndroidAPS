@@ -2,12 +2,12 @@ package app.aaps.pump.danarv2.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danar.comm.MessageBase
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.Date
 import java.util.GregorianCalendar
 
 class MsgSetHistoryEntryV2(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     type: Int, time: Long, param1: Int, param2: Int
 ) : MessageBase(injector) {
 

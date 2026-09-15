@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Jedinice</string>
+    <string name="next_button">Sljedeći</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="profile">Profil</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na popis dopuštenih za optimizaciju baterije - mogli biste imati problema s performansama.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Koju pumpu želite koristiti s AndroidAPS-om?</string>
+    <string name="configbuilder_bgsource_description">Odakle bi AAPS trebao dobiti svoje podatke?</string>
+    <string name="allow_hardware_pump_text">Pažnja: ako aktivirate i povežete se s hardverskom pumpom, AAPS će kopirati bazalne postavke iz profila na pumpu, prebrišući postojeću bazalnu dozu pohranjenu na pumpi. Provjerite imate li ispravnu bazalnu postavku u AAPS-u. Ako niste sigurni ili ne želite prebrisati bazalne postavke na pumpi, pritisnite Odustani i ponovite prebacivanje na pumpu kasnije.</string>
+    <string name="nsclient_version_does_not_match">Verzija AAPS klijenta ne odgovara verziji AAPS. Molimo ažurirajte.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

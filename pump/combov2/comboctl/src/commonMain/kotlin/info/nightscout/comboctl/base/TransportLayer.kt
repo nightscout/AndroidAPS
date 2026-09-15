@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.base
 
+import info.nightscout.comboctl.base.TransportLayer.MAX_VALID_PAYLOAD_SIZE
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -810,15 +811,22 @@ object TransportLayer {
          *         for sending.
          */
         suspend fun send(packetInfo: OutgoingPacketInfo) {
+            // The recorded exception is checked FIRST, before liveness. The receiver records it, closes
+            // the channel and calls onPacketReceiverException while its coroutine is still running, and
+            // only then leaves the loop. Asking `receiverIsOK()` first therefore leaves a window - from
+            // the callback until the job actually ends - in which the link is already dead, the reason
+            // is already known, and this method would nonetheless go on and send. A caller that reacts
+            // to onPacketReceiverException by sending, which is the natural thing to do in a cleanup
+            // handler, would get a silent success on a dead link. Reading the recorded exception closes
+            // that window, because it is set before the callback rather than after the job ends.
+            lastPacketReceiverException?.let { throw it }
+
             check(isIORunning()) {
                 "Attempted to send packet even though IO is not running"
             }
 
-            if (!receiverIsOK()) {
-                lastPacketReceiverException?.let {
-                    throw it
-                } ?: throw Error("Packet receiver channel failed for unknown reason")
-            }
+            if (!receiverIsOK())
+                throw Error("Packet receiver channel failed for unknown reason")
 
             sendInternal(packetInfo)
         }
@@ -852,15 +860,15 @@ object TransportLayer {
             // The actual reception takes place there. startInternal()
             // contains that receiver's code.
 
+            // Recorded exception first, for the same reason as in send() - see the note there.
+            lastPacketReceiverException?.let { throw it }
+
             check(isIORunning()) {
                 "Attempted to receive packet even though IO is not running"
             }
 
-            if (!receiverIsOK()) {
-                lastPacketReceiverException?.let {
-                    throw it
-                } ?: throw Error("Packet receiver channel failed for unknown reason")
-            }
+            if (!receiverIsOK())
+                throw Error("Packet receiver channel failed for unknown reason")
 
             logger(LogLevel.VERBOSE) {
                 if (expectedCommand == null)
@@ -1142,8 +1150,6 @@ object TransportLayer {
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
                 Command.DATA               -> cachedInvariantPumpData.keyResponseAddress
-
-                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             val isCRCPacket = when (outgoingPacketInfo.command) {
@@ -1207,8 +1213,6 @@ object TransportLayer {
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
                 Command.DATA               -> cachedInvariantPumpData.clientPumpCipher
-
-                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             // Authenticate the packet if necessary.

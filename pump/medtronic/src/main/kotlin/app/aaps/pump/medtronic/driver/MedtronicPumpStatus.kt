@@ -17,14 +17,16 @@ import app.aaps.pump.medtronic.keys.MedtronicLongNonKey
 import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import java.util.Calendar
 import java.util.GregorianCalendar
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 4/28/18.
  */
-@Singleton
-class MedtronicPumpStatus @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class MedtronicPumpStatus(
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val rileyLinkUtil: RileyLinkUtil

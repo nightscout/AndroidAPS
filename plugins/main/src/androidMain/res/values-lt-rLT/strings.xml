@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_history_browser">Istorija</string>
+    <string name="sensor_label">Sensorius</string>
+    <string name="insulin_label">Insulinas</string>
+    <string name="pb_label">Pompos baterija</string>
+    <string name="cannula">Kaniulė</string>
+    <string name="patch_pump">Patch pompa</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">VB</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
+    <string name="old_data">SENI DUOMENYS</string>
+</resources>

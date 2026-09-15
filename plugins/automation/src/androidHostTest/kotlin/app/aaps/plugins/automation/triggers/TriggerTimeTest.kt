@@ -1,0 +1,65 @@
+package app.aaps.plugins.automation.triggers
+
+import app.aaps.plugins.automation.AutomationStrings
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.data.time.T
+import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.asJsonObject
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.whenever
+import org.skyscreamer.jsonassert.JSONAssert
+
+class TriggerTimeTest : TriggerTestBase() {
+
+    fun mock() {
+    }
+
+    @Test
+    fun shouldRunTest() = runTest {
+        whenever(rh.gs(AutomationStrings.atspecifiedtime)).thenReturn("At %1\$s")
+
+        // scheduled 1 min before
+        var t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
+        assertThat(t.shouldRun()).isTrue()
+
+        // scheduled 1 min in the future
+        t = TriggerTime(triggerDeps).runAt(now + T.mins(1).msecs())
+        assertThat(t.shouldRun()).isFalse()
+    }
+
+    private var timeJson = "{\"data\":{\"runAt\":1656358762000},\"type\":\"TriggerTime\"}"
+
+    @Test
+    fun toJSONTest() = runTest {
+        val t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
+        JSONAssert.assertEquals(timeJson, t.toJSON(), true)
+    }
+
+    @Test
+    fun fromJSONTest() = runTest {
+        val t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerTime
+        assertThat(t2.time.value).isEqualTo(now - T.mins(1).msecs())
+    }
+
+    @Test
+    fun copyConstructorTest() = runTest {
+        val t = TriggerTime(triggerDeps)
+        t.runAt(now)
+        val t1 = t.duplicate() as TriggerTime
+        assertThat(t1.time.value).isEqualTo(now)
+    }
+
+    @Test
+    fun friendlyNameTest() = runTest {
+        assertThat(TriggerTime(triggerDeps).friendlyName()).isEqualTo(CoreUiStrings.time)
+    }
+
+    @Test
+    fun friendlyDescriptionTest() = runTest {
+        whenever(rh.gs(AutomationStrings.atspecifiedtime)).thenReturn("At %1\$s")
+        assertThat(TriggerTime(triggerDeps).friendlyDescription()).startsWith("At ")
+    }
+}

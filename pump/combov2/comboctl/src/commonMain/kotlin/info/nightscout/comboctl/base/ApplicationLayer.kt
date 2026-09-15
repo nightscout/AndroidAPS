@@ -1,5 +1,6 @@
 package info.nightscout.comboctl.base
 
+import info.nightscout.comboctl.base.ApplicationLayer.MAX_VALID_PAYLOAD_SIZE
 import info.nightscout.comboctl.base.ApplicationLayer.createCMDDeliverBolusPacket
 import info.nightscout.comboctl.base.ApplicationLayer.createCMDReadHistoryBlockPacket
 import info.nightscout.comboctl.base.ApplicationLayer.parseCMDReadHistoryBlockResponsePacket

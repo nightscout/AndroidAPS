@@ -7,20 +7,19 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T.Companion.mins
 import app.aaps.core.data.time.T.Companion.secs
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.pump.BolusProgressData.stopPressed
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaIntKey
@@ -56,16 +55,17 @@ import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
-import javax.inject.Inject
+import kotlinx.coroutines.launch
+import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
 class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
 
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var messageHashTableRv2: MessageHashTableRv2
-    @Inject lateinit var profileFunction: ProfileFunction
 
     override fun messageHashTable() = messageHashTableRv2
 
@@ -74,7 +74,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         mBinder = LocalBinder()
     }
 
-    override fun getPumpStatus() {
+    override suspend fun getPumpStatus() {
         try {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpstatus)))
             val statusMsg = MsgStatus(injector)
@@ -96,13 +96,13 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingextendedbolusstatus)))
             mSerialIOThread?.sendMessage(exStatusMsg)
             danaPump.lastConnection = System.currentTimeMillis()
-            val profile = profileFunction.getProfile()
+            val profile = pumpSync.expectedPumpState().profile
             val pump = activePlugin.activePump
             if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
                 mSerialIOThread?.sendMessage(MsgSettingBasal(injector))
-                if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
-                    rxBus.send(EventProfileSwitchChanged())
+                if (!danaRv2Plugin.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                    rxBus.send(EventProfileChangeRequested())
                 }
             }
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumptime)))
@@ -121,7 +121,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), app.aaps.core.ui.R.raw.error)
+                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
 
                     //de-initialize pump
                     danaPump.reset()
@@ -156,10 +156,10 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             loadEvents()
             rxBus.send(EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
-            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
                 aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    uiInteraction.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT)
+                    notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, TextRef.AndroidRes(R.string.approachingdailylimit))
                     pumpSync.insertAnnouncement(
                         rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
                         null,
@@ -255,7 +255,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
 
     override fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
         if (!isConnected) return false
-        if (stopPressed) return false
+        if (bolusProgressData.isStopPressed) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.startingbolus)))
         danaPump.bolusingDetailedBolusInfo = detailedBolusInfo
         danaPump.bolusDone = false
@@ -271,12 +271,15 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
             if (!danaPump.bolusStopped) {
                 mSerialIOThread?.sendMessage(start)
             } else {
-                BolusProgressData.delivered = 0.0
+                bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: TextRef.Literal(""), PumpInsulin(0.0))
                 return false
             }
+            // Arm the 15s comm watchdog from bolus start (was never initialised → a stale timestamp
+            // made the check below fire on the first iteration, falsely aborting the bolus).
+            danaPump.bolusProgressLastTimeStamp = System.currentTimeMillis()
             while (!danaPump.bolusStopped && !start.failed && !connectionBroken) {
                 SystemClock.sleep(100)
-                if (System.currentTimeMillis() - danaPump.bolusProgressLastTimeStamp > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
+                if (System.currentTimeMillis() - danaPump.bolusProgressLastTimeStamp > 15 * 1000L) { // if I didn't receive status for more than 15 sec expecting broken comm
                     connectionBroken = true
                     aapsLogger.error("Communication stopped")
                 }
@@ -293,28 +296,27 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
         while (System.currentTimeMillis() < expectedEnd) {
             val waitTime = expectedEnd - System.currentTimeMillis()
-            rxBus.send(EventOverviewBolusProgress(status = rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), id = detailedBolusInfo.id))
+            bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, TextRef.AndroidRes(R.string.waitingforestimatedbolusend, listOf(waitTime / 1000)), bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0))
             SystemClock.sleep(1000)
         }
         // do not call loadEvents() directly, reconnection may be needed
-        commandQueue.loadEvents(object : Callback() {
-            override fun run() {
-                // load last bolus status
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
-                mSerialIOThread?.sendMessage(MsgStatus(injector))
-                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
-            }
-        })
+        appScope.launch {
+            commandQueue.loadEvents()
+            // load last bolus status
+            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
+            mSerialIOThread?.sendMessage(MsgStatus(injector))
+            rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
+        }
         return !start.failed && !connectionBroken
     }
 
     override fun loadEvents(): PumpEnactResult {
         if (!danaRv2Plugin.isInitialized()) {
-            val result = pumpEnactResultProvider.get().success(false)
+            val result = pumpEnactResultProvider().success(false)
             result.comment("pump not initialized")
             return result
         }
-        if (!isConnected) return pumpEnactResultProvider.get().success(false)
+        if (!isConnected) return pumpEnactResultProvider().success(false)
         SystemClock.sleep(300)
         val msg = MsgHistoryEventsV2(injector, danaPump.readHistoryFrom)
         aapsLogger.debug(LTag.PUMP, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.readHistoryFrom))
@@ -325,10 +327,10 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         SystemClock.sleep(200)
         if (danaPump.lastEventTimeLoaded != 0L) danaPump.readHistoryFrom = danaPump.lastEventTimeLoaded - mins(1).msecs() else danaPump.readHistoryFrom = 0
         danaPump.lastConnection = System.currentTimeMillis()
-        return pumpEnactResultProvider.get().success(true)
+        return pumpEnactResultProvider().success(true)
     }
 
-    override fun updateBasalsInPump(profile: Profile): Boolean {
+    override suspend fun updateBasalsInPump(profile: Profile): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.updatingbasalrates)))
         val basal = danaPump.buildDanaRProfileRecord(profile)
@@ -339,16 +341,19 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         danaPump.lastSettingsRead = 0 // force read full settings
         getPumpStatus()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        // Report the actual write outcome. sendMessage is blocking, so msgSet/msgActivate.failed are populated by
+        // now. Previously this returned true unconditionally, masking a genuine pump rejection as success.
+        // Notifications are handled centrally from this Boolean via AbstractDanaRPlugin + onProfileChanged.
+        return !msgSet.failed && !msgActivate.failed
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isConnected) return pumpEnactResultProvider.get().success(false)
+        if (!isConnected) return pumpEnactResultProvider().success(false)
         SystemClock.sleep(300)
         val msg = MsgSetUserOptions(injector)
         mSerialIOThread?.sendMessage(msg)
         SystemClock.sleep(200)
-        return pumpEnactResultProvider.get().success(!msg.failed)
+        return pumpEnactResultProvider().success(!msg.failed)
     }
 
     inner class LocalBinder : Binder() {

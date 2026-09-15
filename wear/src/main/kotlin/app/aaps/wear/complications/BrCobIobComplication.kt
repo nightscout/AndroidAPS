@@ -8,7 +8,6 @@ import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.SmallestDoubleString
-import dagger.android.AndroidInjection
 import kotlin.math.max
 
 /**
@@ -21,11 +20,6 @@ import kotlin.math.max
  */
 class BrCobIobComplication : ModernBaseComplicationProviderService() {
 
-    // Not derived from DaggerService, do injection here
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
-    }
 
     override fun buildComplicationData(
         type: ComplicationType,

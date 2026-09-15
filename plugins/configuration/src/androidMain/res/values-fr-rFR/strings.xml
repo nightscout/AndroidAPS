@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Unités</string>
+    <string name="setupwizard_units_prompt">Sélectionnez les unités dans lesquelles vous souhaitez afficher les valeurs</string>
+    <string name="next_button">Suivant</string>
+    <string name="previous_button">Préc</string>
+    <string name="setupwizard_finish">TERMINER</string>
+    <string name="welcome">Bienvenue</string>
+    <string name="welcometosetupwizard">Bienvenue dans l\'assistant de configuration. Il vous guidera tout au long du processus de configuration\n</string>
+    <string name="end_user_license_agreement">Accord de licence de l’utilisateur final</string>
+    <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
+L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME SONT DE VOTRE RESPONSABILITÉ. SI LE PROGRAMME EST DÉFECTUEUX, VOUS ASSUMEZ LE COÛT DE TOUS LES SERVICES, RÉPARATIONS OU CORRECTIONS NÉCESSAIRES.</string>
+    <string name="end_user_license_agreement_i_understand">JE COMPRENDS ET J\'ACCEPTE LES CONDITIONS DU CONTRAT</string>
+    <string name="display_settings">Paramètres d\'affichage</string>
+    <string name="low_mark">Ligne BASSE</string>
+    <string name="high_mark">Ligne HAUTE</string>
+    <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
+    <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
+    <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
+    <string name="master_password_summary">Le mot de passe principal est utilisé pour crypter les sauvegardes et superviser la sécurité de l\'application. Rappelez-vous en ou stockez le en lieu sûr.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
+    <string name="syncinfotext">Synchroniser les données sur le cloud. Vous pouvez sauter cette partie maintenant mais vous ne pourrez pas passer les objectifs tant que vous n\'aurez pas configuré le client Nightscout ou Tidepool.</string>
+    <string name="status_label">État :</string>
+    <string name="diawarning">Rappel : les nouveaux profils d\'insuline requièrent une DIA d\'au moins 5h. Une DIA 5-6h dans les nouveaux profils d\'insuline équivaut à une DIA 3h dans les anciens profils d\'insuline.</string>
+    <string name="profile">Profil</string>
+    <string name="doprofileswitch">Changer de profil</string>
+    <string name="exitwizard">Ignorer l\'assistant de configuration</string>
+    <string name="setupwizard_sensitivity_description">Le plugin de Sensibilité est utilisé pour la détection de la Sensibilité et de calcul de glucides actifs. Pour plus d’informations visitez :</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Sélectionnez un des algorithmes disponibles. Ils sont triés du plus ancien au plus récent. L\'algorithme plus récent est généralement plus puissant. N\'oubliez pas de lire la documentation OpenAPS et de le configurer avant de l\'utiliser.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Veuillez configurer votre RileyLink ci-dessous. Après avoir sélectionné un RileyLink, il sera possible de continuer l\'installation une fois que le statut de RileyLink sera « Connecté ». Cela peut prendre une minute.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Remarque :</b> Vous pouvez continuer l\'installation une fois la pompe configurée.\n</string>
+    <string name="startobjective">Démarrez votre premier objectif</string>
+    <string name="open_objectives">Ouvrir les objectifs</string>
+    <string name="setupwizard_permissions">Autorisations</string>
+    <string name="setupwizard_profile_info">Créez un profil avec vos taux de basal, G/I, SI et valeurs cibles. Vous pourrez ajouter plusieurs profils plus tard.</string>
+    <string name="setupwizard_permissions_info">AAPS a besoin d\'un accès au stockage et d\'autorisations pour fonctionner correctement. Veuillez accorder les autorisations requises ci-dessous.</string>
+    <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
+    <string name="setupwizard_client_control_title">Contrôle par le client</string>
+    <string name="setupwizard_client_control_info">Associer des appareils clients pour qu\'ils puissent envoyer des commandes signées à ce maître via Nightscout. C\'est le nouveau moyen recommandé pour contrôler AAPS à distance.</string>
+    <string name="setupwizard_ns_receive_info">L\'acceptation des traitements et des données directement depuis Nightscout (méthode moins sécurisée) est maintenant désactivée par défaut. Ouvrez les paramètres ci-dessous uniquement si vous en avez toujours besoin. Nécessaire si vous avez besoin de saisir des données via NS ou des applications tierces.</string>
+    <string name="setupwizard_open_ns_receive_settings">Acceptation des données Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Associer ce client à votre AAPS maître pour qu\'il puisse envoyer des commandes sur un canal sécurisé.</string>
+    <string name="setupwizard_pairing_ws_warning">La connexion WebSocket Nightscout est requise pour l\'association. Retournez à l\'étape précédente et activez-la d\'abord.</string>
+    <string name="setupwizard_pairing_status_master">Clients associés : %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Aucun client associé pour l\'instant</string>
+    <string name="setupwizard_pairing_status_client_paired">Associé à un maître</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Pas encore associé</string>
+    <string name="readstatus">Statut de lecture</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
+    <string name="configbuilder_aps_description">Quel algorithme APS doit faire les ajustements de thérapie?</string>
+    <string name="configbuilder_sync_description">Plugins de téléversement, synchronisation et communication.</string>
+    <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
+    <string name="configbuilder_sensitivity_description">Quel algorithme de Sensibilité doit être utilisé ?</string>
+    <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AAPS copiera les paramètres basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres basal dans AAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres basal sur votre pompe, appuyez sur Annuler et reporter la selection de la pompe à une date ultérieure.</string>
+    <string name="nsclient_version_does_not_match">La version AAPSClient ne correspond pas à AAPS. Faites une mise à jour.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <string name="loading">Chargement…</string>
+    <string name="warning_wrong_directory_selected">Mauvais répertoire sélectionné</string>
+    <string name="warning_wrong_directory_message">Vous avez sélectionné le sous-répertoire \"%1$s\" au lieu du répertoire racine AAPS. Veuillez sélectionner le répertoire parent AAPS. L\'application va automatiquement créer et gérer les sous-répertoires.</string>
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

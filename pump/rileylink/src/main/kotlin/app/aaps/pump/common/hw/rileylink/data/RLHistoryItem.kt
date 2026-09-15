@@ -3,7 +3,6 @@ package app.aaps.pump.common.hw.rileylink.data
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.common.extensions.stringResource
-import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem.RLHistoryItemSource
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice

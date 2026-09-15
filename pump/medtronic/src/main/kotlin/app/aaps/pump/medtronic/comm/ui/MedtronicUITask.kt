@@ -16,12 +16,13 @@ import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import org.joda.time.LocalDateTime
 import java.util.Locale
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 /**
  * Created by andy on 6/14/18.
  */
-class MedtronicUITask @Inject constructor(
+@Inject
+class MedtronicUITask(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
     private val medtronicPumpStatus: MedtronicPumpStatus,

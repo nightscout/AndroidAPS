@@ -1,12 +1,12 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgInitConnStatusOption(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {
@@ -32,9 +32,9 @@ class MsgInitConnStatusOption(
             failed = true
         }
         if (!danaPump.isPasswordOK) {
-            uiInteraction.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(app.aaps.pump.dana.R.string.wrongpumppassword), Notification.URGENT)
+            notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, TextRef.AndroidRes(app.aaps.pump.dana.R.string.wrongpumppassword))
         } else {
-            rxBus.send(EventDismissNotification(Notification.WRONG_PUMP_PASSWORD))
+            notificationManager.dismiss(NotificationId.WRONG_PUMP_PASSWORD)
         }
         // This is last message of initial sequence
         activePlugin.activePump.finishHandshaking()

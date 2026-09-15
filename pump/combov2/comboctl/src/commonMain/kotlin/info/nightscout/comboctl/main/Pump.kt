@@ -1358,8 +1358,7 @@ class Pump(
         // the TBR was actually set, and if so, whether it was set correctly.
         // If not, throw an exception, since this is an error.
 
-        val mainScreen = waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)
-        val mainScreenContent = when (mainScreen) {
+        val mainScreenContent = when (val mainScreen = waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)) {
             is ParsedScreen.MainScreen -> mainScreen.content
             else                       -> throw NoUsableRTScreenException()
         }
@@ -2044,6 +2043,40 @@ class Pump(
 
     private fun packetReceiverExceptionThrown(e: TransportLayer.PacketReceiverException) {
         parsedDisplayFrameStream.abortDueToError(e)
+
+        // CancellationException is the normal disconnect path — the receive
+        // loop's coroutine was cancelled by disconnect(), not a real failure.
+        // Without this, every clean disconnect flips Ready → Error and the
+        // UI flow gets stuck at Error (setDriverState() does not downgrade
+        // Error → Disconnected for the UI).
+        if (e.cause is CancellationException) return
+
+        // If the receive loop dies asynchronously while the pump is idle
+        // (ReadyForCommands or Suspended), there is no in-flight suspend call
+        // to observe the closed channel — the failure is silently swallowed
+        // and the driver state stays at "Ready" until something forces a
+        // reconnect (typically the user restarting the app). Surface it as
+        // an Error so observers (ComboV2Plugin → pump queue) can drive a
+        // reconnect via EventPumpStatusChanged.
+        //
+        // For Connecting / CheckingPump / ExecutingCommand, the in-flight
+        // receive() call will throw on its own once the receiver channel is
+        // closed, and connect() / executeCommand() already handle that path
+        // — touching the state here would race with them.
+        //
+        // Use compareAndSet so a concurrent transition (e.g. disconnect()
+        // moving us to Disconnected, or another error path setting Error)
+        // wins instead of being clobbered. PacketReceiverException always
+        // wraps a non-null cause per its constructor.
+        val newError = State.Error(throwable = e.cause, message = "Packet receiver failed asynchronously")
+        val transitioned = _stateFlow.compareAndSet(State.ReadyForCommands, newError) ||
+            _stateFlow.compareAndSet(State.Suspended, newError)
+        if (transitioned) {
+            logger(LogLevel.ERROR) {
+                "Packet receiver failed asynchronously while pump was idle; " +
+                    "transitioned to Error to trigger reconnect"
+            }
+        }
     }
 
     private inline fun <reified ProgressStageSubtype : ProgressStage> createBasalProgressReporter() =
@@ -2660,7 +2693,7 @@ class Pump(
             // be ahead of the current time. In such cases, compensate
             // for that by using the current time instead.
             val now = Clock.System.now()
-            val bolusTimestamp = lastBolusInfusionTimestamp!!.let {
+            val bolusTimestamp = lastBolusInfusionTimestamp.let {
                 if (now < it) now else it
             }
 
@@ -3486,16 +3519,12 @@ class Pump(
     }
 
     private suspend fun updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary: Boolean) {
-        val mainScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, pumpSuspended)
-
-        val mainScreenContent = when (mainScreen) {
+        val mainScreenContent = when (val mainScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, pumpSuspended)) {
             is ParsedScreen.MainScreen -> mainScreen.content
             else                       -> throw NoUsableRTScreenException()
         }
 
-        val quickinfoScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, pumpSuspended)
-
-        val quickinfo = when (quickinfoScreen) {
+        val quickinfo = when (val quickinfoScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, pumpSuspended)) {
             is ParsedScreen.QuickinfoMainScreen -> {
                 // After parsing the quickinfo screen, exit back to the main screen by pressing BACK.
                 rtNavigationContext.shortPressButton(RTNavigationButton.BACK)

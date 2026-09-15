@@ -10,6 +10,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.extensions.connectGattCompat
 import app.aaps.core.utils.toHex
 import app.aaps.pump.omnipod.common.bledriver.comm.Ids
 import app.aaps.pump.omnipod.common.bledriver.comm.endecrypt.EnDecrypt
@@ -22,19 +23,18 @@ import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.CmdBleIO
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.DataBleIO
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.IncomingPackets
 import app.aaps.pump.omnipod.common.bledriver.comm.message.MessageIO
-import app.aaps.pump.omnipod.common.bledriver.comm.session.STOP_CONNECTING_CHECK_INTERVAL_MS
+import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionState
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
 import app.aaps.pump.omnipod.common.bledriver.comm.session.DisconnectHandler
 import app.aaps.pump.omnipod.common.bledriver.comm.session.EapSqn
 import app.aaps.pump.omnipod.common.bledriver.comm.session.NotConnected
+import app.aaps.pump.omnipod.common.bledriver.comm.session.STOP_CONNECTING_CHECK_INTERVAL_MS
 import app.aaps.pump.omnipod.common.bledriver.comm.session.Session
 import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionEstablisher
 import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionKeys
 import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionNegotiationResynchronization
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
-import java.util.concurrent.CountDownLatch
 
 class Connection(
     private val podDevice: BluetoothDevice,
@@ -67,7 +67,7 @@ class Connection(
         val autoConnect = false
         var gatt = gattConnection
         if (gatt == null) {
-            gatt = podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
+            gatt = podDevice.connectGattCompat(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
             if (gatt == null) {
                 Thread.sleep(SLEEP_WHEN_FAILING_TO_CONNECT_GATT) // Do not retry too often
                 throw FailedToConnectException("connectGatt() returned null")

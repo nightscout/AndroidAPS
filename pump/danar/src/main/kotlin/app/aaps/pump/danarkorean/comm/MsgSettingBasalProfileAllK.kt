@@ -2,7 +2,7 @@ package app.aaps.pump.danarkorean.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danar.comm.MessageBase
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import java.util.Locale
 
 /**
@@ -14,7 +14,7 @@ import java.util.Locale
  * THIS IS BROKEN IN PUMP... SENDING ONLY 1 PROFILE
  */
 class MsgSettingBasalProfileAllK(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {

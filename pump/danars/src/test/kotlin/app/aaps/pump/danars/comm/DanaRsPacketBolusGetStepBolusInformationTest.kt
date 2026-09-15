@@ -25,10 +25,10 @@ class DanaRsPacketBolusGetStepBolusInformationTest : DanaRSTestBase() {
         Assertions.assertTrue(packet.failed)
         Assertions.assertEquals(6.0, danaPump.initialBolusAmount, 0.01)
         val lastBolus = Calendar.getInstance()
-        lastBolus.timeInMillis = danaPump.lastBolusTime
+        lastBolus.timeInMillis = danaPump.lastBolusTime ?: 0L
         Assertions.assertEquals(13, lastBolus.get(Calendar.HOUR_OF_DAY))
         Assertions.assertEquals(20, lastBolus.get(Calendar.MINUTE))
-        Assertions.assertEquals(12.5, danaPump.lastBolusAmount, 0.01)
+        Assertions.assertEquals(12.5, danaPump.lastBolusAmount ?: 0.0, 0.01)
         Assertions.assertEquals(25.0, danaPump.maxBolus, 0.01)
         Assertions.assertEquals(1.0, danaPump.bolusStep, 0.01)
         Assertions.assertEquals("BOLUS__GET_STEP_BOLUS_INFORMATION", packet.friendlyName)

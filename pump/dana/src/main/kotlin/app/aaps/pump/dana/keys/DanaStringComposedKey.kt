@@ -6,7 +6,6 @@ enum class DanaStringComposedKey(
     override val key: String,
     override val format: String = "%s",
     override val defaultValue: String,
-    override val exportable: Boolean = true
 ) : StringComposedNonPreferenceKey {
 
     ParingKey(key = "danars_pairing_key_", defaultValue = ""),

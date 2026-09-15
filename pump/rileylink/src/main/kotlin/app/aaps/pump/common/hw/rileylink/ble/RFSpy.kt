@@ -33,23 +33,24 @@ import org.apache.commons.lang3.ArrayUtils
 import java.util.Locale
 import java.util.Optional
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import kotlin.math.pow
 
 /**
  * Created by geoff on 5/26/16.
  */
-@Singleton
-class RFSpy @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class RFSpy(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val rileyLinkBle: RileyLinkBLE,
     private val rileyLinkServiceData: RileyLinkServiceData,
     private val rileyLinkUtil: RileyLinkUtil,
-    private val rfSpyResponseProvider: Provider<RFSpyResponse>
+    private val rfSpyResponseProvider: () -> RFSpyResponse
 ) {
 
     private val radioServiceUUID: UUID = UUID.fromString(GattAttributes.SERVICE_RADIO)
@@ -196,7 +197,7 @@ class RFSpy @Inject constructor(
             notConnectedCount++
             return null
         }
-        val resp = rfSpyResponseProvider.get().with(command, rawResponse)
+        val resp = rfSpyResponseProvider().with(command, rawResponse)
         if (resp.wasInterrupted()) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink was interrupted")
         } else if (resp.wasTimeout()) {

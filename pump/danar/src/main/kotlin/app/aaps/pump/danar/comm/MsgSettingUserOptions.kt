@@ -1,10 +1,10 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgSettingUserOptions(
-    injector: HasAndroidInjector
+    injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
     init {
@@ -39,7 +39,7 @@ class MsgSettingUserOptions(
         aapsLogger.debug(LTag.PUMPCOMM, "screen timeout: " + danaPump.lcdOnTimeSec)
         aapsLogger.debug(LTag.PUMPCOMM, "BackLight: " + danaPump.backlightOnTimeSec)
         aapsLogger.debug(LTag.PUMPCOMM, "Selected language: " + danaPump.selectedLanguage)
-        aapsLogger.debug(LTag.PUMPCOMM, "Units: " + danaPump.getUnits())
+        aapsLogger.debug(LTag.PUMPCOMM, "Units: " + danaPump.unitsString)
         aapsLogger.debug(LTag.PUMPCOMM, "Shutdown: " + danaPump.shutdownHour)
         aapsLogger.debug(LTag.PUMPCOMM, "Low reservoir: " + danaPump.lowReservoirRate)
     }

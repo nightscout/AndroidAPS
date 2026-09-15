@@ -6,7 +6,6 @@ import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkCommandType
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import java.nio.ByteBuffer
-import java.util.ArrayList
 
 class SendAndListen(
     val rileyLinkServiceData: RileyLinkServiceData,

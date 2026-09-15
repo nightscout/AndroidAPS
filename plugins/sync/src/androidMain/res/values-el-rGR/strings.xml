@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <string name="connection_settings_title">Ρυθμίσεις σύνδεσης</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="blocked_by_charging">Αποκλεισμός από τις επιλογές φόρτισης</string>
+    <string name="blocked_by_connectivity">Αποκλεισμός από τις επιλογές συνδεσιμότητας</string>
+    <string name="unsupported_ns_version">Μη υποστηριζόμενη έκδοση Nightscout</string>
+    <!-- AAPSClient -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="deliver_now">Έγχυση τώρα</string>
+    <string name="queue">Σειρά:</string>
+    <string name="clear_log">Διαγραφή αρχείου καταγραφής</string>
+    <string name="full_sync">Πλήρης συγχρονισμός</string>
+    <string name="full_sync_comment">Πλήρης συγχρονισμός; Μπορεί να χρειαστούν πολλές ώρες και μέχρι να ολοκληρωθεί δε θα δείτε νέα δεδομένα στο NS.</string>
+    <string name="ns_sync_options">Συγχρονισμός</string>
+    <string name="ns_alarm_options">Επιλογές συναγερμού</string>
+    <!-- Tidepool -->
+    <string name="title_tidepool_dev_servers">Χρησιμοποιήστε διακομιστές ολοκλήρωσης (δοκιμής)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
+    <string name="upload_now">Ανέβασμα τώρα</string>
+    <string name="not_connected">Μη συνδεδεμένο</string>
+    <string name="read_only">Μόνο για ανάγνωση</string>
+    <string name="working">Σε επεξεργασία</string>
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Αποστολή δεδομένων στο xDrip+</string>
+    <string name="xdrip_status_settings">Γραμμή Κατάστασης xDrip+ Για Προχωρημένους</string>
+    <string name="xdrip_not_installed">xDrip+ μη εγκατεστημένο</string>
+    <string name="calibration_sent">Το καλιμπράρισμα εστάλει στο xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Αποστολή δεδομένων γλυκόζης και θεραπειών στο xDrip +. Η πηγή δεδομένων \"συγχρονισμός xDrip+ Ακόλουθος\" πρέπει να επιλεγεί και η αποδοχή δεδομένων πρέπει να ενεργοποιηθεί στις Ρυθμίσεις - Ρυθμίσεις Inter-app - Αποδοχή Γλυκόζης/Θεραπειών</string>
+    <string name="xdrip_local_broadcasts_title">Ενεργοποίηση εκπομπών στο xDrip+.</string>
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="description_wear">Παρακολούθηση και χειρισμός του AAPS χρησιμοποιώντας το ρολόι WearOS.</string>
+    <string name="no_watch_connected">(Χωρίς Σύνδεση Ρολογιού)</string>
+    <string name="pump_status">Κατάσταση Αντλίας</string>
+    <string name="loop_status">Κατάσταση κυκλώματος</string>
+    <string name="wear_action_tempt_unit_error">Χρησιμοποιούνται διαφορετικές μονάδες στο ρολόι και το τηλέφωνο!</string>
+    <string name="wear_action_tempt_min_bg_error">Ελάσιχτο-BG εκτός εύρους!</string>
+    <string name="wear_action_tempt_max_bg_error">Μέγιστο-BG εκτός εύρους!</string>
+    <string name="wear_wizard_settings_summary">Υπολογισμοί που περιλαμβάνονται στο αποτέλεσμα του γρήγορου οδηγού:</string>
+    <string name="wear_general_settings">Γενικές Ρυθμίσεις</string>
+    <string name="wear_custom_watchface_settings">Προσαρμοσμένες Ρυθμίσεις Watchface</string>
+    <string name="wear_custom_watchface">Προσαρμοσμένο Watchface: %1$s</string>
+    <string name="wear_load_watchface">Φόρτωση Watchface</string>
+    <string name="wear_infos_watchface">Πληροφορίες Watchface</string>
+    <string name="wear_export_watchface">Εξαγωγή Προτύπου</string>
+    <string name="wear_new_custom_watchface_exported">Εξήχθη προσαρμοσμένο πρότυπο watchface</string>
+    <string name="resend_all_data">Ξαναστείλτε όλα τα Δεδομένα</string>
+    <string name="open_settings_on_wear">Ρυθμίσεις στο Wear</string>
+    <string name="cwf_infos_pref_locked">Λίστα προτιμήσεων που κλειδώθηκαν από το Watchface</string>
+    <string name="cwf_infos_pref_required">Λίστα προτιμήσεων που απαιτούνται για το Watchface</string>
+    <string name="cwf_infos_view_title">Λίστα πεδίων που περιλαμβάνονται στο Watchface</string>
+    <string name="pump_fetching_data">προσπάθεια λήψης δεδομένων από την αντλία.</string>
+    <string name="pump_old_data">TDD: Ακόμα είναι παλιά τα δεδομένα! Δεν μπορεί να φορτωθεί από την αντλία.</string>
+    <string name="units_short">U</string>
+    <string name="hour_short">ω</string>
+    <string name="no_active_profile">Μη ενεργή αλλαγή προφίλ!</string>
+    <string name="target_only_aps_mode">Οι στόχοι ισχύουν μόνο στη λειτουργία APS!</string>
+    <string name="no_history">Δεν υπάρχουν ιστορικά δεδομένα!</string>
+    <string name="temp_target">Προσωρινός Στόχος</string>
+    <string name="until">μέχρι</string>
+    <string name="default_range">ΠΡΟΕΠΙΛΕΓΜΕΝΟ ΕΥΡΟΣ</string>
+    <string name="target">στόχος</string>
+    <string name="rate_duration">Τιμή: %1$.2fU/h (%2$.2f%%) \nΔιάρκεια %3$d λεπτά</string>
+    <string name="no_profile">Δεν φορτώθηκε προφίλ</string>
+    <string name="aps_only">Ισχύει μόνο σε λειτουργία APS!</string>
+    <string name="last_aps_result_na">Τελευταίο αποτέλεσμα μη διαθέσιμο!</string>
+    <string name="loop_status_closed">ΚΛΕΙΣΤΟ ΚΥΚΛΩΜΑ</string>
+    <string name="loop_status_open">ΑΝΟΙΚΤΟ ΚΥΚΛΩΜΑ</string>
+    <string name="loop_status_disabled">ΚΥΚΛΩΜΑ ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΟ</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Τελευταία εκτέλεση</string>
+    <string name="last_enact">Τελευταία Ενέργεια</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="today">Σήμερα</string>
+    <string name="weighted">σταθμισμένο</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Επικοινωνία με SMS</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Απομακρυσμένος έλεγχος του AAPS με τη χρήση SMS.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">από την εφαρμογή Ελέγχου Ταυτότητας για: %1$s ακολουθούμενο από PIN</string>
+    <string name="smscommunicator_tab_otp_label">Ρύθμιση ελέγχου ταυτότητας</string>
+    <string name="smscommunicator_code_verify_label">Κωδικός για έλεγχο:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Ο κωδικός επαλήθευσης αποτελείται από 6 ψηφία που εμφανίζονται στην εφαρμογή Ελέγχου Ταυτότητας (γνωστή ως OTP) και ακολουθούνται από 3 ή περισσότερα ψηφία του υποχρεωτικού PIN.</string>
+    <string name="smscommunicator_otp_reset_btn">Επαναφορά Πιστοποιητικών</string>
+    <string name="smscommunicator_otp_reset_title">Επαναφορά Κλειδιού Ταυτοποίησης</string>
+    <string name="smscommunicator_otp_reset_prompt">Είστε βέβαιοι ότι θα επαναφέρετε το κλειδί ελέγχου ταυτότητας? Θα καταστήσει όλους τους ρυθμισμένους Επαληθευτές άκυρους και θα πρέπει να τους ρυθμίσετε ξανά.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Εγκατάσταση Επαληθευτή</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Σαρώστε τον κωδικό για να ρυθμίσετε τους κωδικούς OTP του AAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Δοκιμάστε τον Κωδικό μίας Χρήσης</string>
+    <string name="smscommunicator_otp_reset_header">Επαναφορά Επαληθευτών</string>
+    <string name="smscommunicator_otp_install_info">Σε κάθε τηλέφωνο-ακόλουθο εγκαταστήστε την εφαρμογή ελέγχου ταυτότητας(Επαληθευτής) που υποστηρίζει RFC 6238 TOTP tokens. Τέτοιες δημοφιλείς δωρεάν εφαρμογές είναι οι:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Με την επαναφορά του επαληθευτή κάνετε όλους τους ήδη ρυθμισμένους επαληθευτές άκυρους. Θα χρειαστεί να τους ρυθμίσετε ξανά!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">ΛΑΘΟΣ ΜΕΓΕΘΟΣ!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">ΛΑΘΟΣ PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">ΛΑΘΟΣ OTP</string>
+    <string name="sms_wrong_code">Λάθος κωδικός. Η εντολή ακυρώθηκε.</string>
+    <string name="sms_timeout_while_waiting">Τέλος χρονικού ορίου κατά την αναμονή για το τέλος της προηγούμενης επικοινωνίας με την αντλίας</string>
+    <string name="smscommunicator_bolus_reply_with_code">Για έγχυση bolus %1$.2fU στείλτε με κωδικό %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Για έγχυση bolus %1$.2fU απαντήστε με κωδικό %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Για να ορίσετε τον Προσωρινό Στόχο %1$s απαντήστε με κωδικό %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Για να ακυρώσετε Προσωρινό Στόχο απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Για να απενεργοποιήσετε το SMS Απομακρυσμένη Υπηρεσία απαντήστε με κωδικό %1$s.\n\n μπορείτε να το ενεργοποιήσετε ξανά απευθείας μόνο από το AAPS master smartphone.</string>
+    <string name="smscommunicator_stopped_sms">Η απομάκρυσμένη υπηρεσία SMS σταμάτησε. Για να την ενεργοποιήσετε πάλι, χρησιμοποιήστε το AAPS στο κύριο τηλέφωνο.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Για αποστολή καλιμπραρίσματος %1$.2f στείλτε με κωδικό %2$s</string>
+    <string name="smscommunicator_bolus_delivered">Bolus %1$.2fU δόθηκε επιτυχώς</string>
+    <string name="smscommunicator_meal_bolus_delivered">Γευματική Bolus %1$.2fU μονάδες δόθηκε επιτυχώς</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Στόχος %1$s για %2$d λεπτά</string>
+    <string name="smscommunicator_tt_set">Στόχος %1$s για %2$d λεπτά ορίστηκε με επιτυχία</string>
+    <string name="smscommunicator_tt_canceled">Ο προσωρινός στόχος ακυρώθηκε με επιτυχία</string>
+    <string name="smscommunicator_loop_has_been_disabled">Το κύκλωμα απενεργοποιήθηκε</string>
+    <string name="smscommunicator_loop_is_enabled">Κύκλωμα ενεργοποιημένο</string>
+    <string name="smscommunicator_pump_connect_with_code">Για να συνδέσετε την αντλία απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">Αποτυχία σύνδεσης με την αντλία</string>
+    <string name="smscommunicator_pump_disconnect_with_code">Για αποσύνδεση αντλίας για %1$d λεπτά απαντήστε με κωδικό %2$s</string>
+    <string name="smscommunicator_pump_disconnected">Η αντλία αποσυνδέθηκε</string>
+    <string name="smscommunicator_reconnect">Η αντλία επανασυνδέθηκε</string>
+    <string name="smscommunicator_remote_command_not_allowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Απομακρυσμένο bolus μη διαθέσιμο. Δοκιμάστε ξανά αργότερα.</string>
+    <string name="smscommunicator_basal_reply_with_code">Για έναρξη βασικού %1$.2fU/h για %2$d λεπτά απαντήστε με κωδικό %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">Για αλλαγή προφίλ σε %1$s %2$d%% στείλτε κωδικό %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Για έναρξη εκτεταμένου bolus %1$.2fU για %2$d λεπτά απαντήστε με κωδικό %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Για να εισαγάγετε %1$dg στο %2$s απαντήστε με κωδικό %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Για έναρξη βασικού %1$d%% για %2$d λεπτά στείλτε κωδικό %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Για αναστολή κυκλκώματος για %1$d λεπτών στείλτε με κωδικό %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Για να συνεχίσετε το κύκλωμα απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Για να απενεργοποιήσετε το κύκλωμα απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_tempbasal_set">Προσωρινός Ρυθμός %1$.2fU/h για %2$d λεπτά ξεκίνησε επιτυχώς</string>
+    <string name="smscommunicator_extended_set">Εκτεταμένο bolus %1$.2fU για %2$d λεπτά ξεκίνησε επιτυχώς</string>
+    <string name="smscommunicator_carbs_set">Υδατάνθρακες %1$d  g εισήχθησαν επιτυχώς</string>
+    <string name="smscommunicator_carbs_failed">Η εισαγωγή %1$dg υδατανθράκων απέτυχε</string>
+    <string name="smscommunicator_tempbasal_set_percent">Προσωρινός Ρυθμός %1$d%% για %2$d λεπτά ξεκίνησε επιτυχώς</string>
+    <string name="smscommunicator_tempbasal_failed">Εκκίνηση Προσωρινού Ρυθμού απέτυχε</string>
+    <string name="smscommunicator_extended_failed">Έναρξη εκτεταμένου bolus απέτυχε</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Για κλείσιμο Προσωρινού Ρυθμού στείλτε κωδικό %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Για κλείσιμο Εκτεταμένου bolus στείλτε κωδικό %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Ο Προσωρινός Ρυθμός ακυρώθηκε</string>
+    <string name="smscommunicator_extended_canceled">Εκτεταμένο bolus ακυρώθηκε</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Ακύρωση Προσωρινού Ρυθμού απέτυχε</string>
+    <string name="smscommunicator_extended_cancel_failed">Η ακύρωση του Εκτεταμένου bolus απέτυχε</string>
+    <string name="smscommunicator_unknown_command">Άγνωστη εντολή ή λάθος απάντηση</string>
+    <string name="smscommunicator_another_bolus_in_queue">Υπάρχει μια άλλη δόση bolus στην ουρά. Προσπαθήστε ξανά αργότερα.</string>
+    <string name="smscommunicator_wrong_duration">Λάθος διάρκεια</string>
+    <string name="smscommunicator_loop_suspended">Κύκλωμα σε αναστολή</string>
+    <string name="smscommunicator_loop_resumed">Επαναφορά κυκλώματος</string>
+    <string name="smscommunicator_invalid_phone_number">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
+    <string name="smscommunicator_calibration_sent">Το καλιμπράρισμα στάλθηκε. Η λήψη πρέπει να είναι ενεργοποιημένη στο xDrip+.</string>
+    <string name="smscommunicator_calibration_failed">το xDrip+ δεν λαμβάνει βαθμονόμηση</string>
+    <string name="smscommunicator_message_body">Μη έγκυρο μήνυμα</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Για να αλλάξετε τη λειτουργία του κυκλώματος σε LGS (Low Glucose Suspend) απαντήστε με τον κωδικό %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Για να αλλάξετε τη λειτουργία του κυκλώματος σε Κλειστό Κύκλωμα απαντήστε με τον κωδικό %1$s</string>
+    <string name="wrong_format">Λάθος μορφή αρχείου</string>
+    <string name="sms_actual_bg">BG:</string>
+    <string name="sms_last_bg">Τελευταία BG:</string>
+    <string name="sms_delta">Διαφορά:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Βασικός Ρυθμός:</string>
+    <string name="sms_min_ago">πριν από %1$d λεπτά</string>
+    <string name="sms_loop_suspended_for">Αναστολή (%1$d m)</string>
+    <string name="sms_read_status_failed">Η ανάγνωση κατάστασης απέτυχε</string>
+    <string name="sms_profile_switch_created">Δημιουργήθηκε αλλαγή προφίλ</string>
+    <string name="sms_wrong_tbr_duration">Η διάρκεια του TBR πρέπει να είναι πολλαπλάσια του %1$d λεπτά και μεγαλύτερη από 0.</string>
+    <string name="a11y_otp_qr_code">Κωδικός QR για την εγκατάσταση κωδικού πρόσβασης μιας χρήσης</string>
+</resources>
