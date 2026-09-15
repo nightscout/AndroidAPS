@@ -132,6 +132,7 @@
     <string name="maximumbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea maximă posibilă: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Înregistrați</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">CARBOHIDRAȚI EXTINȘI</string>
