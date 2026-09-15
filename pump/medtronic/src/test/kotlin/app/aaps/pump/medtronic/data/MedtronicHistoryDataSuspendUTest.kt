@@ -168,21 +168,16 @@ class MedtronicHistoryDataSuspendUTest : MedtronicTestBase() {
         }
 
     /**
-     * SUSPECTED DEFECT, pinned here as it behaves today so that a fix shows up as a failing test.
+     * A bolus record the pump reports again with a different amount must replace the stored one.
      *
-     * `PumpHistoryEntry.hasBolusChanged` returns `thisOne.value == otherOne.value`, which is true
-     * when the two records are the SAME. `addNewHistory` uses it the other way round: it treats a
-     * true answer as "this record changed, take the new one". The result is the reverse of the name:
-     * a bolus whose amount changed between two reads is DROPPED, and an identical re-read is
-     * re-processed instead.
-     *
-     * A Medtronic bolus record does change between reads - an extended or dual-wave bolus is read
-     * while it is still being delivered - so the stored amount can stay at the partial figure that
-     * was read first. Not changed here because it is insulin accounting on a pump driver, and the
-     * one-character fix deserves a maintainer's eye.
+     * This failed before `PumpHistoryEntry.hasBolusChanged` was corrected: it answered true when the
+     * two records were the SAME, while `addNewHistory` takes a true answer as "this record changed,
+     * keep the new one". An extended or dual-wave bolus is read while it is still being delivered,
+     * so the amount really does change between reads, and the later value was dropped - the entry
+     * kept the partial amount that was read first.
      */
     @Test
-    fun anAmendedBolusKeepsItsFirstAmount_whichLooksWrong() {
+    fun aBolusReadAgainWithANewAmountIsUpdated() {
         val stamp = 20240101_120000L
         val data = sut()
 
@@ -192,12 +187,12 @@ class MedtronicHistoryDataSuspendUTest : MedtronicTestBase() {
         data.finalizeNewHistoryRecords()
 
         val stored = (data.allHistory.single().decodedData["Object"] as BolusDTO).deliveredAmount
-        assertThat(stored).isEqualTo(1.0)          // the amended 2.0 never arrives
+        assertThat(stored).isEqualTo(2.0)
     }
 
-    /** The mirror of the case above: an identical re-read is taken as a change, but does not duplicate. */
+    /** An unchanged record read a second time must not be processed again, nor duplicated. */
     @Test
-    fun anIdenticalReReadDoesNotDuplicateTheEntry() {
+    fun anIdenticalReReadChangesNothing() {
         val stamp = 20240101_120000L
         val data = sut()
 
@@ -207,6 +202,8 @@ class MedtronicHistoryDataSuspendUTest : MedtronicTestBase() {
         data.finalizeNewHistoryRecords()
 
         assertThat(data.allHistory).hasSize(1)
+        val stored = (data.allHistory.single().decodedData["Object"] as BolusDTO).deliveredAmount
+        assertThat(stored).isEqualTo(1.0)
     }
 
     @Test

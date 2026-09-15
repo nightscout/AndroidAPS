@@ -8,12 +8,11 @@ import org.junit.jupiter.api.Test
 /**
  * Covers [MessageQueue]: the order pump commands are sent in, and how waiting callers are released.
  *
- * Note what is deliberately NOT asserted here: which priority is served first. `enqueueRequest`
- * sorts ascending and `nextRequest` takes index 0, while [MessagePriority] is declared
- * NORMAL, HIGHER, HIGHEST - so today the lowest priority goes first. That looks inverted, but it is
- * how the driver has behaved since it was written, so pinning either answer here would be guessing.
- * The order that IS pinned is the one the driver demonstrably depends on: requests of equal
- * priority keep the order they were added in.
+ * Two orderings matter and both are pinned below. The urgent message must go first - a bolus
+ * cancellation is HIGHEST and used to be sent last, because the queue sorted ascending over a
+ * [MessagePriority] declared NORMAL, HIGHER, HIGHEST while `nextRequest` takes index 0. And messages
+ * of equal priority must keep the order they were added in, which the open/write/close
+ * configuration batch depends on.
  */
 class MessageQueueTest {
 
@@ -63,6 +62,45 @@ class MessageQueueTest {
         sut.activeRequest = null
         sut.nextRequest()
         assertThat(sut.activeRequest).isSameInstanceAs(close)
+    }
+
+    /**
+     * A bolus cancellation is HIGHEST. If it queues behind routine reads the pump keeps delivering
+     * for the length of those round trips, which is the whole reason the priority exists.
+     */
+    @Test
+    fun theMostUrgentRequestIsSentFirst() {
+        val sut = MessageQueue()
+        val routine = request(MessagePriority.NORMAL)
+        val urgent = request(MessagePriority.HIGHEST)
+        val middle = request(MessagePriority.HIGHER)
+
+        sut.enqueueRequest(routine)
+        sut.enqueueRequest(urgent)
+        sut.enqueueRequest(middle)
+
+        sut.nextRequest()
+        assertThat(sut.activeRequest).isSameInstanceAs(urgent)
+        sut.activeRequest = null
+        sut.nextRequest()
+        assertThat(sut.activeRequest).isSameInstanceAs(middle)
+        sut.activeRequest = null
+        sut.nextRequest()
+        assertThat(sut.activeRequest).isSameInstanceAs(routine)
+    }
+
+    /** An urgent message arriving while routine ones are already waiting still overtakes them. */
+    @Test
+    fun anUrgentRequestOvertakesTheOnesAlreadyWaiting() {
+        val sut = MessageQueue()
+        sut.enqueueRequest(request(MessagePriority.NORMAL))
+        sut.enqueueRequest(request(MessagePriority.NORMAL))
+        val urgent = request(MessagePriority.HIGHEST)
+
+        sut.enqueueRequest(urgent)
+        sut.nextRequest()
+
+        assertThat(sut.activeRequest).isSameInstanceAs(urgent)
     }
 
     @Test
