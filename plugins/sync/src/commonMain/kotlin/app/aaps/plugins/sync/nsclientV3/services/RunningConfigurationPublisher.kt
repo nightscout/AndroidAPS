@@ -57,7 +57,8 @@ import kotlinx.serialization.json.put
  */
 @OptIn(FlowPreview::class)
 @SingleIn(AppScope::class)
-class RunningConfigurationPublisher @Inject constructor(
+@Inject
+class RunningConfigurationPublisher(
     private val runningConfiguration: RunningConfiguration,
     private val runningConfigurationKeys: RunningConfigurationKeys,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,

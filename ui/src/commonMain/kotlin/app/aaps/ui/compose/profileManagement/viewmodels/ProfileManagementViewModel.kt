@@ -89,7 +89,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class ProfileManagementViewModel @Inject constructor(
+@Inject
+class ProfileManagementViewModel(
     private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,
     val rh: TextResolver,

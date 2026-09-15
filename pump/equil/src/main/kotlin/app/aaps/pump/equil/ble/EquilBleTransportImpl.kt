@@ -38,7 +38,8 @@ import dev.zacsweers.metro.Inject
 
 @SuppressLint("MissingPermission")
 @SingleIn(AppScope::class)
-class EquilBleTransportImpl @Inject constructor(
+@Inject
+class EquilBleTransportImpl(
     private val context: Context,
     private val aapsLogger: AAPSLogger
 ) : EquilBleTransport {

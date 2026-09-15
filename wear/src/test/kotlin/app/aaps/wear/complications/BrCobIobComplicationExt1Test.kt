@@ -20,7 +20,7 @@ internal class BrCobIobComplicationExt1Test {
     private fun sut(): BrCobIobComplicationExt1 =
         Robolectric.buildService(BrCobIobComplicationExt1::class.java).get().also {
             it.aapsLogger = AAPSLoggerTest()
-            it.displayFormat = DisplayFormat().also { d -> d.sp = mock(); d.context = it }
+            it.displayFormat = DisplayFormat(mock(), it)
         }
 
     @Test

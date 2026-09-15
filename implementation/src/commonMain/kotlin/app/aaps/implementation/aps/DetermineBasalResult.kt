@@ -44,7 +44,8 @@ import kotlin.time.Clock
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope. It is a result object, built
 // fresh for each call and handed back to the caller.
 @ContributesBinding(AppScope::class)
-class DetermineBasalResult @Inject constructor(
+@Inject
+class DetermineBasalResult(
     private val aapsLogger: AAPSLogger,
     private val fabricPrivacy: FabricPrivacy,
     private val constraintChecker: ConstraintsChecker,

@@ -41,7 +41,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @SingleIn(AppScope::class)
-class TidepoolUploader @Inject constructor(
+@Inject
+class TidepoolUploader(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val ctx: Context,

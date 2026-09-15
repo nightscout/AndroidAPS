@@ -19,7 +19,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class IosLocationPermissions @Inject constructor() : LocationPermissions {
+@Inject
+class IosLocationPermissions() : LocationPermissions {
 
     override fun groups(): List<PermissionGroup> = emptyList()
 }

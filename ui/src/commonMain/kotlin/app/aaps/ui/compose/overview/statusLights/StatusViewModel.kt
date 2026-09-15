@@ -51,7 +51,8 @@ import kotlinx.coroutines.withContext
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class StatusViewModel @Inject constructor(
+@Inject
+class StatusViewModel(
     private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,

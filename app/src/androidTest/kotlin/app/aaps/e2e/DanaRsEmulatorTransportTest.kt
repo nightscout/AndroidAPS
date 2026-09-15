@@ -3,11 +3,9 @@ package app.aaps.e2e
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.di.EmulatedOptions
-import app.aaps.di.metro.MetroGraphs
 import app.aaps.pump.danars.emulator.EmulatorBleTransport
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat

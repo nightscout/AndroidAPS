@@ -22,7 +22,8 @@ import kotlinx.coroutines.flow.asStateFlow
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class HistoryViewModel @Inject constructor(
+@Inject
+class HistoryViewModel(
     private val historyScope: HistoryScope,
     private val calculationWorkflow: CalculationWorkflow,
     private val dateUtil: DateUtil,

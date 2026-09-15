@@ -32,7 +32,8 @@ import kotlin.math.abs
  * Created by andy on 5/9/18.
  */
 @SingleIn(AppScope::class)
-class MedtronicUtil @Inject constructor(
+@Inject
+class MedtronicUtil(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val rileyLinkUtil: RileyLinkUtil,

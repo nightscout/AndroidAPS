@@ -27,7 +27,8 @@ import android.app.NotificationManager as AndroidNotificationManager
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AndroidLoopNotifier @Inject constructor(
+@Inject
+class AndroidLoopNotifier(
     private val context: Context,
     private val rh: ResourceHelper,
     private val uiInteraction: UiInteraction,

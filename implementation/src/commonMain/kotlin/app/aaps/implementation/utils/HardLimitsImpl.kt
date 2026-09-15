@@ -30,7 +30,8 @@ import kotlin.math.min
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class HardLimitsImpl @Inject constructor(
+@Inject
+class HardLimitsImpl(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager,
     private val preferences: Preferences,

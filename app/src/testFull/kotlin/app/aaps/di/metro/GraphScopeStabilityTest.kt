@@ -190,6 +190,7 @@ class GraphScopeStabilityTest {
             "signatureVerifierPlugin",
             "smsCommunicatorPlugin",
             "smsCommunicatorRepository",
+            "snackbarNotificationFallback",
             "sp",
             "storage",
             "storeDataForDb",

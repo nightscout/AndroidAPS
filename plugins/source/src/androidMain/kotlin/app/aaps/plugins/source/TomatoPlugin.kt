@@ -37,7 +37,8 @@ import kotlinx.coroutines.Dispatchers
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(470)
 @SingleIn(AppScope::class)
-class TomatoPlugin @Inject constructor(
+@Inject
+class TomatoPlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
@@ -61,7 +62,8 @@ class TomatoPlugin @Inject constructor(
 
     // cannot be inner class because of needed injection
 
-    class TomatoWorker @AssistedInject constructor(
+    @AssistedInject
+    class TomatoWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

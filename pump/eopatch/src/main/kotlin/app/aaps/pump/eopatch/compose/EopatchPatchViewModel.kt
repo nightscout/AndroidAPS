@@ -74,7 +74,8 @@ import kotlin.time.Duration.Companion.minutes
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class EopatchPatchViewModel @Inject constructor(
+@Inject
+class EopatchPatchViewModel(
     val rh: ResourceHelper,
     val patchManager: IPatchManager,
     private val patchManagerExecutor: PatchManagerExecutor,

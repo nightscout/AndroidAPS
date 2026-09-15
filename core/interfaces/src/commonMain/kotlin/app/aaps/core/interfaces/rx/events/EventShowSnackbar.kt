@@ -3,10 +3,11 @@ package app.aaps.core.interfaces.rx.events
 /**
  * Request a snackbar to be displayed on the currently-visible screen.
  *
- * Consumed by the root snackbar host in [ComposeMainActivity] (and sibling
- * activities via their own [GlobalSnackbarHost]). If no activity is visible
- * when the event fires, an application-scoped collector falls back to a
- * system Notification so the message is not silently lost.
+ * Consumed by `GlobalSnackbarHost`, which every shell places at the root of
+ * its UI, and which a few standalone activities host themselves. A host
+ * collects only while it is on screen. When none is,
+ * `SnackbarNotificationFallback` turns the message into a system notification
+ * instead, so it is not silently lost - on Android, iOS and desktop alike.
  *
  * @param message User-facing message text (already localized).
  * @param type    Styling bucket (error/warning/info/success).

@@ -8,7 +8,8 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import org.joda.time.DateTime
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketOptionGetPumpTime @Inject constructor(
+@Inject
+class DanaRSPacketOptionGetPumpTime(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val danaPump: DanaPump

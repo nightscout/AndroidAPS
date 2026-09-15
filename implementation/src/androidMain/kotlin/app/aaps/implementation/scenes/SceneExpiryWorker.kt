@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
 /** WorkManager shim. The work itself is [SceneExpiryRunner], which is shared. */
-class SceneExpiryWorker @AssistedInject constructor(
+@AssistedInject
+class SceneExpiryWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

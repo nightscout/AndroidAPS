@@ -25,7 +25,8 @@ import dev.zacsweers.metro.SingleIn
  * Index is built lazily on first search to avoid startup delay.
  */
 @SingleIn(AppScope::class)
-class SearchIndexBuilder @Inject constructor(
+@Inject
+class SearchIndexBuilder(
     private val activePlugin: ActivePlugin,
     private val providers: Set<SearchableProvider>,
     private val preferences: Preferences,

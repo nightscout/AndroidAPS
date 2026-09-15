@@ -4,11 +4,13 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import dev.zacsweers.metro.Inject
@@ -24,7 +26,8 @@ import kotlin.reflect.KClass
  *  - blind `delay(2000)` / `Thread.sleep(2000)` settles after a calculation (always pay the full 2s,
  *    and `Thread.sleep` blocks the dispatcher — counter to the suspend-first direction).
  */
-class IntegrationWaits @Inject constructor(
+@Inject
+class IntegrationWaits(
     private val persistenceLayer: PersistenceLayer,
     private val iobCobCalculator: IobCobCalculator,
     private val aapsLogger: AAPSLogger
@@ -33,10 +36,17 @@ class IntegrationWaits @Inject constructor(
     /**
      * Run [action], then suspend until the first database change of [type] is observed, and return it.
      *
-     * The observer is started *before* [action] runs, so an emission triggered by [action] can never
-     * be missed. The observe + timeout run on [Dispatchers.IO] (real time) on purpose: these tests
-     * execute inside `runTest`, whose virtual clock would otherwise make the timeout fire instantly.
-     * On timeout this fails with a message naming [what] instead of an opaque coroutine timeout.
+     * [action] does not start until the observer has actually subscribed. This matters because the
+     * change flow behind `observeChanges` is a `MutableSharedFlow` with `replay = 0`: an emission that
+     * happens while nobody is collecting is dropped and never arrives. Starting the collector with
+     * `async` only *schedules* it, so without the handshake below the test was racing the dispatcher -
+     * if [action] committed its transaction before that coroutine got a thread, the change was lost and
+     * the wait could only run out the clock. On an idle machine the collector always won, which is why
+     * this passed locally and failed on CI, where the suite shares the runner with three emulators.
+     *
+     * The observe + timeout run on [Dispatchers.IO] (real time) on purpose: these tests execute inside
+     * `runTest`, whose virtual clock would otherwise make the timeout fire instantly. On timeout this
+     * fails with a message naming [what] instead of an opaque coroutine timeout.
      */
     suspend fun <T : Any> awaitDbChange(
         type: KClass<T>,
@@ -44,9 +54,18 @@ class IntegrationWaits @Inject constructor(
         timeoutMs: Long = 40_000,
         action: suspend () -> Unit
     ): List<T> = coroutineScope {
+        val subscribed = CompletableDeferred<Unit>()
         val deferred = async(Dispatchers.IO) {
-            withTimeoutOrNull(timeoutMs) { persistenceLayer.observeChanges(type).first() }
+            withTimeoutOrNull(timeoutMs) {
+                persistenceLayer.observeChanges(type)
+                    .onStart { subscribed.complete(Unit) }
+                    .first()
+            }
         }
+        // Releases the latch if the collector died (or timed out) before it ever subscribed, so a
+        // failure surfaces as that failure from await() below instead of hanging here forever.
+        deferred.invokeOnCompletion { subscribed.complete(Unit) }
+        subscribed.await()
         action()
         deferred.await() ?: error("Timed out after ${timeoutMs}ms waiting for database change of $what")
     }

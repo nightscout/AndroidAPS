@@ -73,7 +73,8 @@ private const val TDD_RELOAD_DEBOUNCE_MS = 5_000L
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class StatsViewModel @Inject constructor(
+@Inject
+class StatsViewModel(
     private val tddCalculator: TddCalculator,
     private val tirCalculator: TirCalculator,
     private val dexcomTirCalculator: DexcomTirCalculator,

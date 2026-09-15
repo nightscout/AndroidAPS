@@ -21,7 +21,8 @@ import dev.zacsweers.metro.SingleIn
 
  */
 @SingleIn(AppScope::class)
-class DummyServiceHelper @Inject constructor(
+@Inject
+class DummyServiceHelper(
     private val notificationHolder: NotificationHolder
 ) {
 

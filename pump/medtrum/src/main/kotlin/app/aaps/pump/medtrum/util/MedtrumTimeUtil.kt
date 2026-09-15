@@ -7,7 +7,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class MedtrumTimeUtil @Inject constructor() {
+@Inject
+class MedtrumTimeUtil() {
 
     fun getCurrentTimePumpSeconds(): Long {
         val startInstant = Instant.parse("2014-01-01T00:00:00Z")

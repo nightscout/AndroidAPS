@@ -28,7 +28,8 @@ import app.aaps.core.ui.compose.ConfigPluginUiModel
 import app.aaps.core.ui.compose.SelectionMode
 import dev.zacsweers.metro.Inject
 
-class SWPlugin @Inject constructor(
+@Inject
+class SWPlugin(
     aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck,
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder

@@ -6,7 +6,8 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketBolusGet24CIRCFArray @Inject constructor(
+@Inject
+class DanaRSPacketBolusGet24CIRCFArray(
     private val aapsLogger: AAPSLogger
 ) : DanaRSPacket() {
 

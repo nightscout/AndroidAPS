@@ -36,7 +36,8 @@ import java.util.Locale
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class DesktopAuthBrowser @Inject constructor(private val aapsLogger: AAPSLogger) : AuthBrowser {
+@Inject
+class DesktopAuthBrowser(private val aapsLogger: AAPSLogger) : AuthBrowser {
 
     override fun show(url: String): Boolean {
         if (browseWithAwt(url) || browseWithPlatformCommand(url)) {

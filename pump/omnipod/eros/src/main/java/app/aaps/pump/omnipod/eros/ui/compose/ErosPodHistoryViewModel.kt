@@ -22,7 +22,8 @@ import dev.zacsweers.metro.Inject
 // gets its own - the same shape the other pump view models use.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class ErosPodHistoryViewModel @Inject constructor(
+@Inject
+class ErosPodHistoryViewModel(
     private val erosHistory: ErosHistory,
     val aapsOmnipodUtil: AapsOmnipodUtil,
     val rh: ResourceHelper,

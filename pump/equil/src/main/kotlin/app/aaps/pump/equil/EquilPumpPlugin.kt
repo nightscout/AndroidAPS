@@ -86,7 +86,8 @@ import kotlin.math.max
 @PumpDriver
 @MetroIntKey(1130)
 @SingleIn(AppScope::class)
-class EquilPumpPlugin @Inject constructor(
+@Inject
+class EquilPumpPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

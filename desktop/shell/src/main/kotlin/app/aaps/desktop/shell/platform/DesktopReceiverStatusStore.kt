@@ -34,7 +34,8 @@ import java.net.NetworkInterface
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopReceiverStatusStore @Inject constructor() : ReceiverStatusStore {
+@Inject
+class DesktopReceiverStatusStore() : ReceiverStatusStore {
 
     private val _networkStatusFlow = MutableStateFlow<ReceiverStatusStore.NetworkStatus?>(null)
     override val networkStatusFlow: StateFlow<ReceiverStatusStore.NetworkStatus?> = _networkStatusFlow.asStateFlow()

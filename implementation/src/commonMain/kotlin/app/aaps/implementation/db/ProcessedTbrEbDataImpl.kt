@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ProcessedTbrEbDataImpl @Inject constructor(
+@Inject
+class ProcessedTbrEbDataImpl(
     private val persistenceLayer: PersistenceLayer,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction

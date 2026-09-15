@@ -47,7 +47,8 @@ import kotlinx.coroutines.withContext
 // a view model belongs to one screen and must be built fresh each time.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class ObjectivesViewModel @Inject constructor(
+@Inject
+class ObjectivesViewModel(
     private val objectivesPlugin: ObjectivesPlugin,
     private val rxBus: RxBus,
     private val rh: TextResolver,

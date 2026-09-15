@@ -21,7 +21,8 @@ import kotlin.math.roundToInt
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ProfileUtilImpl @Inject constructor(
+@Inject
+class ProfileUtilImpl(
     private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter,
     private val rh: TextResolver

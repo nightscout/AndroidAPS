@@ -25,7 +25,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosAppExit @Inject constructor(
+@Inject
+class IosAppExit(
     private val aapsLogger: AAPSLogger
 ) : AppExit {
 

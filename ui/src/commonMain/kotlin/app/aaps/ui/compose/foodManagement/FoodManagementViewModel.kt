@@ -33,7 +33,8 @@ import kotlinx.coroutines.launch
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class FoodManagementViewModel @Inject constructor(
+@Inject
+class FoodManagementViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val aapsLogger: AAPSLogger,
 ) : ViewModel() {

@@ -9,7 +9,6 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.Provides
-import dev.zacsweers.metro.SingleIn
 
 /**
  * The one `:plugins:sync` plugin that cannot register itself.

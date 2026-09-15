@@ -51,7 +51,8 @@ import platform.Foundation.dateWithTimeIntervalSince1970
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosPrefsFileInfo @Inject constructor(
+@Inject
+class IosPrefsFileInfo(
     private val aapsLogger: AAPSLogger,
     private val lister: PrefsFileLister,
     private val exportDirectory: String? = defaultDocumentsDirectory()

@@ -27,7 +27,8 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 // kotlin.concurrent.atomics rather than java.util.concurrent: same semantics, and it exists off the JVM.
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
-class ProfileSwitchSilentGate @Inject constructor() {
+@Inject
+class ProfileSwitchSilentGate() {
 
     private val silentNext = AtomicBoolean(false)
 

@@ -15,7 +15,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class RunningModeSource @Inject constructor(private val context: Context, private val sp: SP) : TileSource {
+@Inject
+class RunningModeSource(private val context: Context, private val sp: SP) : TileSource {
 
     // The tile has only 4 slots: drop LOOP_DISABLE when LOOP_USER_SUSPEND is also offered and cap
     // at 4. This filter lives here (not on the phone) so the running-mode picker can show every entry.

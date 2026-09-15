@@ -15,7 +15,8 @@ import kotlin.math.abs
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class TemporaryBasalStorageImpl @Inject constructor(
+@Inject
+class TemporaryBasalStorageImpl(
     val aapsLogger: AAPSLogger
 ) : TemporaryBasalStorage {
 

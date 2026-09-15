@@ -5,7 +5,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketEtcKeepConnection @Inject constructor(
+@Inject
+class DanaRSPacketEtcKeepConnection(
     private val aapsLogger: AAPSLogger
 ) : DanaRSPacket() {
 

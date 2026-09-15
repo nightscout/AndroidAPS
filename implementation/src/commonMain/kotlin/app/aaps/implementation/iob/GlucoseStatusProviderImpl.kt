@@ -10,7 +10,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class GlucoseStatusProviderImpl @Inject constructor(
+@Inject
+class GlucoseStatusProviderImpl(
     private val activePlugin: ActivePlugin
 ) : GlucoseStatusProvider {
 

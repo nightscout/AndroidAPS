@@ -143,7 +143,8 @@ private const val WARN_BATTERY_VOLTAGE = 1.35
 private const val URGENT_BATTERY_VOLTAGE = 1.3
 
 @OptIn(FlowPreview::class)
-class OverviewDataCacheImpl @AssistedInject constructor(
+@AssistedInject
+class OverviewDataCacheImpl(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val profileUtil: ProfileUtil,

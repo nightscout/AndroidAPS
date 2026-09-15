@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetSerialNumber @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<SerialNumberResponse>(PatchFunc.GET_SERIAL_NUMBER, patch, aapsLogger) {
+@Inject
+class GetSerialNumber(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<SerialNumberResponse>(PatchFunc.GET_SERIAL_NUMBER, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): SerialNumberResponse {
         if (bytes[DATA0].toInt() == 0) {
             val part = if (bytes[DATA1].toInt() != 0) String(bytes, DATA1, 11, Charsets.UTF_8) else ""

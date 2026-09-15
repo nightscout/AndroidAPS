@@ -12,7 +12,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.roundToInt
 
 @SingleIn(AppScope::class)
-class BasalPause @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.PAUSE_BASAL, patch, aapsLogger) {
+@Inject
+class BasalPause(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.PAUSE_BASAL, patch, aapsLogger) {
     fun pause(hour: Float): Single<PatchBooleanResponse> {
         var h = (hour * 2).roundToInt()
         if (h > 4) h = 0xFF

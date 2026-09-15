@@ -21,7 +21,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosWidgetUpdater @Inject constructor(
+@Inject
+class IosWidgetUpdater(
     private val aapsLogger: AAPSLogger
 ) : WidgetUpdater {
 

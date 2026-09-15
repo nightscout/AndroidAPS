@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class ComboBolusStop @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ComboBolusStopResponse>(PatchFunc.STOP_COMBO_BOLUS, patch, aapsLogger) {
+@Inject
+class ComboBolusStop(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<ComboBolusStopResponse>(PatchFunc.STOP_COMBO_BOLUS, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): ComboBolusStopResponse {
         val ret = bytes[DATA0].toInt()
         var idNow = BytesConverter.toUInt(bytes[DATA1], bytes[DATA2])

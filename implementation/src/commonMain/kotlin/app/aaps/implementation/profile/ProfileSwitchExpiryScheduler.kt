@@ -35,7 +35,8 @@ import dev.zacsweers.metro.SingleIn
  * which creates the EffectiveProfileSwitch on master while clients sync it over NS.
  */
 @SingleIn(AppScope::class)
-class ProfileSwitchExpiryScheduler @Inject constructor(
+@Inject
+class ProfileSwitchExpiryScheduler(
     private val persistenceLayer: PersistenceLayer,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,

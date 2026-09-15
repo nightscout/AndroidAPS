@@ -33,7 +33,8 @@ import kotlin.reflect.KClass
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopSmsCommunicator @Inject constructor(
+@Inject
+class DesktopSmsCommunicator(
     private val aapsLogger: AAPSLogger
 ) : SmsCommunicator {
 
@@ -63,7 +64,8 @@ class DesktopSmsCommunicator @Inject constructor(
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopFabricPrivacy @Inject constructor(
+@Inject
+class DesktopFabricPrivacy(
     private val aapsLogger: AAPSLogger
 ) : FabricPrivacy {
 
@@ -100,7 +102,8 @@ class DesktopFabricPrivacy @Inject constructor(
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopWidgetUpdater @Inject constructor(
+@Inject
+class DesktopWidgetUpdater(
     private val aapsLogger: AAPSLogger
 ) : WidgetUpdater {
 
@@ -122,7 +125,8 @@ class DesktopWidgetUpdater @Inject constructor(
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopUiInteraction @Inject constructor(
+@Inject
+class DesktopUiInteraction(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager
 ) : UiInteraction {

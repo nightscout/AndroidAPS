@@ -101,7 +101,8 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 @MetroIntKey(200)
 @ContributesBinding(AppScope::class, binding = binding<Loop>())
 @SingleIn(AppScope::class)
-class LoopPlugin @Inject constructor(
+@Inject
+class LoopPlugin(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val preferences: Preferences,

@@ -27,7 +27,8 @@ data class XdripUiState(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class XdripViewModel @Inject constructor(
+@Inject
+class XdripViewModel(
     private val rh: ResourceHelper,
     private val xdripMvvmRepository: XdripMvvmRepository,
     private val dataSyncSelector: DataSyncSelectorXdrip

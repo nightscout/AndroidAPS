@@ -35,7 +35,8 @@ import platform.CoreLocation.CLLocation
 @OptIn(ExperimentalForeignApi::class)
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class IosLastKnownLocation @Inject constructor(
+@Inject
+class IosLastKnownLocation(
     private val aapsLogger: AAPSLogger,
     private val locationServiceController: IosLocationServiceController
 ) : LastKnownLocation {

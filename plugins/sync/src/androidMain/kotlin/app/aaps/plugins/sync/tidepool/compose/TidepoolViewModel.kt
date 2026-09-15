@@ -25,7 +25,8 @@ data class TidepoolUiState(
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class TidepoolViewModel @Inject constructor(
+@Inject
+class TidepoolViewModel(
     private val tidepoolRepository: TidepoolRepository,
     private val authFlowOut: AuthFlowOut
 ) : ViewModel() {

@@ -41,7 +41,8 @@ class CarbSuggestionReceiver : MetroBroadcastReceiver() {
 // Metro builds this; the @Binds in PersistentNotificationModule is gone.
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class CarbSuggestionActionsImpl @Inject constructor(
+@Inject
+class CarbSuggestionActionsImpl(
     private val context: Context
 ) : CarbSuggestionActions {
 

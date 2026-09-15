@@ -7,7 +7,8 @@ import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class DanaRSPacketAPSBasalSetTemporaryBasal @Inject constructor(
+@Inject
+class DanaRSPacketAPSBasalSetTemporaryBasal(
     private val aapsLogger: AAPSLogger
 ) : DanaRSPacket() {
 

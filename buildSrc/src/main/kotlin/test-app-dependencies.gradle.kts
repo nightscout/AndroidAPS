@@ -22,16 +22,16 @@ dependencies {
     androidTestImplementationFromCatalog("com-google-truth")
 }
 
+// See the same block in `test-module-dependencies` for why CI drops the passing tests' stdout.
+val showTestStandardOut = !providers.environmentVariable("CI").isPresent
+
 tasks.withType<Test> {
-    // use to display stdout in travis
     testLogging {
         // set options for log level LIFECYCLE
-        events = setOf(
-            TestLogEvent.FAILED,
-            //TestLogEvent.STARTED,
-            TestLogEvent.SKIPPED,
-            TestLogEvent.STANDARD_OUT
-        )
+        events = if (showTestStandardOut)
+            setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
+        else
+            setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED)
         exceptionFormat = TestExceptionFormat.FULL
         useJUnitPlatform()
     }

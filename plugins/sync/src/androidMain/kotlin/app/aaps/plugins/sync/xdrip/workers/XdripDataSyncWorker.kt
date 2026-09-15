@@ -14,7 +14,8 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.Dispatchers
 
-class XdripDataSyncWorker @AssistedInject constructor(
+@AssistedInject
+class XdripDataSyncWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

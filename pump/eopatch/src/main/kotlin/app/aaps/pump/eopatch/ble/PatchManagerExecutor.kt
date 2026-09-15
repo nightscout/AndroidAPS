@@ -110,7 +110,8 @@ import kotlin.check
 import kotlin.synchronized
 
 @SingleIn(AppScope::class)
-class PatchManagerExecutor @Inject constructor(
+@Inject
+class PatchManagerExecutor(
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,
     private val normalBasalManager: NormalBasalManager,

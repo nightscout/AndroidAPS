@@ -44,7 +44,8 @@ import kotlinx.coroutines.launch
  * ViewModel for TempBasalScreen managing temporary basal state and business logic.
  */
 @Stable
-class TempBasalViewModel @Inject constructor(
+@Inject
+class TempBasalViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,

@@ -78,7 +78,8 @@ sealed class EopatchOverviewEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class EopatchOverviewViewModel @Inject constructor(
+@Inject
+class EopatchOverviewViewModel(
     private val rh: ResourceHelper,
     val patchManager: IPatchManager,
     private val patchManagerExecutor: PatchManagerExecutor,

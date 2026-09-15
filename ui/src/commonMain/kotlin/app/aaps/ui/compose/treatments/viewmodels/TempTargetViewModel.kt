@@ -41,7 +41,8 @@ import kotlinx.coroutines.launch
  * ViewModel for TempTargetScreen managing temporary target state and business logic.
  */
 @Stable
-class TempTargetViewModel @Inject constructor(
+@Inject
+class TempTargetViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val profileUtil: ProfileUtil,
     val rh: TextResolver,

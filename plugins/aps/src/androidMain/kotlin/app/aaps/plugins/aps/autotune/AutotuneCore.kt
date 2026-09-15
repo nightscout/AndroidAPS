@@ -14,7 +14,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 
 @SingleIn(AppScope::class)
-class AutotuneCore @Inject constructor(
+@Inject
+class AutotuneCore(
     private val preferences: Preferences,
     private val autotuneFS: AutotuneFS
 ) {

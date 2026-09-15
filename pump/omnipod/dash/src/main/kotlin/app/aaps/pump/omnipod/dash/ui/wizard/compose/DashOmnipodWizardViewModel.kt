@@ -64,7 +64,8 @@ import app.aaps.pump.omnipod.common.R as CommonR
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class DashOmnipodWizardViewModel @Inject constructor(
+@Inject
+class DashOmnipodWizardViewModel(
     private val omnipodManager: OmnipodDashManager,
     private val podStateManager: OmnipodDashPodStateManager,
     private val preferences: Preferences,

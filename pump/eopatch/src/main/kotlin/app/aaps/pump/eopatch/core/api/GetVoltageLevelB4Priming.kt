@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetVoltageLevelB4Priming @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BatteryVoltageLevelPairingResponse>(PatchFunc.GET_VOLTAGE_B4_PRIMING, patch, aapsLogger) {
+@Inject
+class GetVoltageLevelB4Priming(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BatteryVoltageLevelPairingResponse>(PatchFunc.GET_VOLTAGE_B4_PRIMING, patch, aapsLogger) {
     override fun parse(bytes: ByteArray) = BatteryVoltageLevelPairingResponse(
         BytesConverter.toUInt(bytes[DATA0], bytes[DATA1]),
         BytesConverter.toUInt(bytes[DATA2]),

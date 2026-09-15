@@ -62,7 +62,8 @@ sealed class EquilOverviewEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class EquilOverviewViewModel @Inject constructor(
+@Inject
+class EquilOverviewViewModel(
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,

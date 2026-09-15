@@ -38,7 +38,8 @@ import platform.UserNotifications.UNUserNotificationCenter
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosReminderScheduler @Inject constructor(
+@Inject
+class IosReminderScheduler(
     private val aapsLogger: AAPSLogger
 ) : ReminderScheduler {
 

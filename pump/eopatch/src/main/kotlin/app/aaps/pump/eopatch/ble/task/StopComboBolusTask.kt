@@ -16,7 +16,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StopComboBolusTask @Inject constructor() : BolusTask(TaskFunc.STOP_COMBO_BOLUS) {
+@Inject
+class StopComboBolusTask() : BolusTask(TaskFunc.STOP_COMBO_BOLUS) {
 
     @Inject lateinit var bolusStop: BolusStop
 

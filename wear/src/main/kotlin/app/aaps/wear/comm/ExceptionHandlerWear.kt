@@ -10,7 +10,8 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectOutputStream
 
-class ExceptionHandlerWear @Inject constructor(
+@Inject
+class ExceptionHandlerWear(
     private val rxBus: RxBus,
 ) {
 

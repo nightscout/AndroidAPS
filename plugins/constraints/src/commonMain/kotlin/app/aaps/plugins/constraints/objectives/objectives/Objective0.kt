@@ -28,7 +28,8 @@ import dev.zacsweers.metro.binding
 @ContributesIntoMap(AppScope::class, binding = binding<Objective>())
 @IntKey(0)
 @SingleIn(AppScope::class)
-class Objective0 @Inject constructor(
+@Inject
+class Objective0(
     preferences: Preferences,
     rh: TextResolver,
     durationText: DurationText,

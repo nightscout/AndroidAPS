@@ -60,7 +60,8 @@ sealed interface MaintenanceEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class MaintenanceViewModel @Inject constructor(
+@Inject
+class MaintenanceViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val l: L,

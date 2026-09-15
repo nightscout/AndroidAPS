@@ -36,7 +36,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopPairedBtDevices @Inject constructor(
+@Inject
+class DesktopPairedBtDevices(
     private val aapsLogger: AAPSLogger
 ) : PairedBtDevices {
 
@@ -49,7 +50,8 @@ class DesktopPairedBtDevices @Inject constructor(
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopLastKnownLocation @Inject constructor(
+@Inject
+class DesktopLastKnownLocation(
     private val aapsLogger: AAPSLogger
 ) : LastKnownLocation {
 
@@ -80,7 +82,8 @@ class DesktopLastKnownLocation @Inject constructor(
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopLocationPermissions @Inject constructor() : LocationPermissions {
+@Inject
+class DesktopLocationPermissions() : LocationPermissions {
 
     override fun groups(): List<PermissionGroup> = emptyList()
 }
@@ -93,7 +96,8 @@ class DesktopLocationPermissions @Inject constructor() : LocationPermissions {
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class DesktopLocationServiceController @Inject constructor(
+@Inject
+class DesktopLocationServiceController(
     private val aapsLogger: AAPSLogger
 ) : LocationServiceController {
 

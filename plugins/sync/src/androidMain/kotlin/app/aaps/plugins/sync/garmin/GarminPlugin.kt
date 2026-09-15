@@ -58,7 +58,8 @@ import kotlinx.coroutines.flow.drop
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(370)
 @SingleIn(AppScope::class)
-class GarminPlugin @Inject constructor(
+@Inject
+class GarminPlugin(
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     preferences: Preferences,

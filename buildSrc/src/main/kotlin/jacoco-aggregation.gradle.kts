@@ -85,12 +85,31 @@ project.afterEvaluate {
             // then contributed no classes and no execution data, dropping about 8000 well covered
             // lines from the report with nothing failing.
             if (proj.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
-                // Take the Android compilation when the module has one, the JVM compilation
-                // otherwise. Never both: a multiplatform module compiles the same commonMain code
-                // once per target, and only the target whose tests actually ran produces .exec
-                // data. Counting the other copy would report identical code as 0% covered and make
-                // the number worse than leaving the module out.
-                val kmpTarget = if (File("${proj.projectDir}/src/androidMain").isDirectory) "android" else "jvm"
+                // Take the compilation this workspace actually produced. Never both: a multiplatform
+                // module compiles the same commonMain code once per target, and only the target whose
+                // tests actually ran produces .exec data. Counting the other copy would report
+                // identical code as 0% covered and make the number worse than leaving the module out.
+                //
+                // The target is NOT guessed from the source layout any more. `src/androidMain` says
+                // nothing useful: `database/persistence` and `core/graph` declare both `android {}` and
+                // `jvm()` while keeping every line in commonMain, so the old check sent them to
+                // classes/kotlin/jvm/main. That directory exists only because `jvmTest` compiled it, so
+                // the guess held on a machine that runs the unit suite and broke on one that runs only
+                // the instrumented suite - both modules then contributed no classes at all, and their
+                // instrumented coverage was discarded with them, since execution data that matches no
+                // class file is dropped silently. That cost about 940 hits once the suites were split
+                // across two machines.
+                //
+                // Prefer the target whose .exec is present, so classes and execution data always come
+                // from the same compilation; otherwise take whichever compilation is on disk.
+                val jacocoDir = proj.layout.buildDirectory.dir("jacoco").get().asFile
+                val kotlinClasses = proj.layout.buildDirectory.dir("classes/kotlin").get().asFile
+                val kmpTarget = when {
+                    File(jacocoDir, "testAndroidHostTest.exec").isFile -> "android"
+                    File(jacocoDir, "jvmTest.exec").isFile             -> "jvm"
+                    File(kotlinClasses, "android/main").isDirectory    -> "android"
+                    else                                              -> "jvm"
+                }
                 val kmpPath = proj.layout.buildDirectory.dir("classes/kotlin/$kmpTarget/main").get()
                 classes.add(fileTree(kmpPath) { exclude(excludes); include("**/*.class") })
             } else {

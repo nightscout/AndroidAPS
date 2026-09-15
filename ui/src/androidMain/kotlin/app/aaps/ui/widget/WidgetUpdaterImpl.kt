@@ -25,7 +25,8 @@ import kotlinx.coroutines.launch
  */
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope.
 @ContributesBinding(AppScope::class)
-class WidgetUpdaterImpl @Inject constructor(
+@Inject
+class WidgetUpdaterImpl(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     // Unqualified: @ApplicationScope is a javax qualifier and cannot appear in commonMain. The graph

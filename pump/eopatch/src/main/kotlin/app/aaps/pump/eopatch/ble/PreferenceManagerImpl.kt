@@ -25,7 +25,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class PreferenceManagerImpl @Inject constructor() : PreferenceManager {
+@Inject
+class PreferenceManagerImpl() : PreferenceManager {
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus

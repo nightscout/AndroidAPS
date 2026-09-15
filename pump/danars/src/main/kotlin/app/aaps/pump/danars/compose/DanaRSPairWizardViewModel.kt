@@ -66,7 +66,8 @@ sealed class PairWizardEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class DanaRSPairWizardViewModel @Inject constructor(
+@Inject
+class DanaRSPairWizardViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val bleTransport: BleTransport,

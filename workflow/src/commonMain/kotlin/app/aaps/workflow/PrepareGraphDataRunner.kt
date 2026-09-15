@@ -74,7 +74,8 @@ import kotlin.math.roundToLong
  * [emitFinalProgress] is set when this worker is the last in the chain (HISTORY);
  * otherwise [PostCalculationWorker] emits the final signal.
  */
-class PrepareGraphDataRunner @Inject constructor(
+@Inject
+class PrepareGraphDataRunner(
     private val aapsLogger: AAPSLogger,
     private val workflowChainData: WorkflowChainData,
     private val dateUtil: DateUtil,

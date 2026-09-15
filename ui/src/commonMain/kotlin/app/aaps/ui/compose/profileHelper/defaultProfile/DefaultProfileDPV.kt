@@ -13,7 +13,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class DefaultProfileDPV @Inject constructor(
+@Inject
+class DefaultProfileDPV(
     private val dateUtil: DateUtil,
     private val profileUtil: ProfileUtil
 ) {

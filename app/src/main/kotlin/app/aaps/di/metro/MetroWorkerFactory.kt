@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import app.aaps.core.objects.workflow.MetroWorkerCreator
 
 /**
  * Builds every worker in the app.

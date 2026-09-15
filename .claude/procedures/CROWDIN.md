@@ -16,8 +16,11 @@ repo's `values-xx/` files** (which would conflict with Crowdin's own sync).
    base_url: "https://api.crowdin.com"
    ```
    Proper YAML, one key per line — no JSON-style quoted keys on a single line.
-4. Invoke the CLI via `java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" ...`
-   (the installer does not put it on PATH).
+4. Invoke the CLI as `crowdin ...`. The installer does put a `crowdin.bat` on PATH — check with
+   `where crowdin`, which resolves to `C:\Program Files (x86)\CrowdinCLI\crowdin.bat`. Wrap it as
+   `powershell.exe -Command "crowdin ..."` so it starts with an allowed command prefix.
+   The `java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" ...` form below still works and
+   is the fallback if `where crowdin` finds nothing.
 
 ## Project specifics
 

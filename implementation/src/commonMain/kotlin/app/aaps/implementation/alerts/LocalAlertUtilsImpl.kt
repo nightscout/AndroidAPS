@@ -38,7 +38,8 @@ import kotlinx.coroutines.launch
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class LocalAlertUtilsImpl @Inject constructor(
+@Inject
+class LocalAlertUtilsImpl(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rh: TextResolver,

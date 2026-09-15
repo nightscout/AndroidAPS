@@ -126,7 +126,8 @@ import kotlinx.serialization.json.encodeToJsonElement
 @ContributesBinding(AppScope::class, binding = binding<NsClient>())
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(310)
-class NSClientV3Plugin @Inject constructor(
+@Inject
+class NSClientV3Plugin(
     aapsLogger: AAPSLogger,
     override val rh: TextResolver,
     preferences: Preferences,

@@ -84,7 +84,8 @@ import app.aaps.core.ui.R as CoreUiR
 @PumpDriver
 @MetroIntKey(1110)
 @SingleIn(AppScope::class)
-class EopatchPumpPlugin @Inject constructor(
+@Inject
+class EopatchPumpPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

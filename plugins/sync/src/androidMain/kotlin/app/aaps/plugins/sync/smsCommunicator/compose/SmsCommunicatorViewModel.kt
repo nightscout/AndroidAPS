@@ -33,7 +33,8 @@ data class SmsCommunicatorUiState(
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class SmsCommunicatorViewModel @Inject constructor(
+@Inject
+class SmsCommunicatorViewModel(
     private val repository: SmsCommunicatorRepository,
     private val dateUtil: DateUtil
 ) : ViewModel() {

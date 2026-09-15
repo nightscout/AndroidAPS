@@ -24,7 +24,8 @@ import java.net.SocketTimeoutException
  * machine has any business reaching a sign in that ends on this one.
  */
 @ContributesBinding(AppScope::class)
-class JvmAuthRedirectListener @Inject constructor(private val aapsLogger: AAPSLogger) : AuthRedirectListener {
+@Inject
+class JvmAuthRedirectListener(private val aapsLogger: AAPSLogger) : AuthRedirectListener {
 
     private var server: ServerSocket? = null
 
