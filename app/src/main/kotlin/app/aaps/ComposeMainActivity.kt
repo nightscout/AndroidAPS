@@ -87,6 +87,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.MetroAppCompatActivity
+import app.aaps.core.ui.compose.FallbackViewModelFactory
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
@@ -183,7 +184,14 @@ class ComposeMainActivity : MetroAppCompatActivity() {
      * The factory `by viewModels()` uses.
      */
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-        get() = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+        get() = FallbackViewModelFactory(
+            primary = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory,
+            // Anything the graph does not contribute still has to be buildable. AndroidX creates its
+            // own view models through this activity - BiometricPrompt makes a BiometricViewModel -
+            // and handing out the Metro factory alone made that throw, taking the biometric prompt
+            // down and with it the Configuration screen and profile editing.
+            fallback = super.defaultViewModelProviderFactory
+        )
 
     // View models, built by Metro - each carries @ContributesIntoMap and @ViewModelKey.
     private val mainViewModel: MainViewModel by viewModels()
