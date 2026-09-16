@@ -268,17 +268,19 @@ internal fun createPatchResultModel(response: BtResponse): PatchResultModel? {
     } else if (isPatchProtocol(response.command) && response is WarningReportResponse) {
         WarningReportResultModel(
             //response.cause.codeToWarningMessageCommand(),
-            AlarmCause.fromTypeAndCode(AlarmType.WARNING, response.cause),
+            AlarmCause.fromTypeAndCode(AlarmType.WARNING, response.cause, response.value),
             response.value
         )
     } else if (isPatchProtocol(response.command) && response is AlertReportResponse) {
         AlertReportResultModel(
-            AlarmCause.fromTypeAndCode(AlarmType.ALERT, response.cause),
+            AlarmCause.fromTypeAndCode(AlarmType.ALERT, response.cause, response.value),
             response.value
         )
     } else if (isPatchProtocol(response.command) && response is NoticeReportResponse) {
+        // The value is part of the identity where one cause code covers several causes (the LGS-finished
+        // family); fromTypeAndCode ignores it for the codes that do not use it.
         NoticeReportResultModel(
-            AlarmCause.fromTypeAndCode(AlarmType.NOTICE, response.cause),
+            AlarmCause.fromTypeAndCode(AlarmType.NOTICE, response.cause, response.value),
             response.value
         )
     } else if (isPatchProtocol(response.command) && response is AppAuthRptResponse) {

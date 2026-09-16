@@ -79,10 +79,21 @@ enum class AlarmCause(val alarmType: AlarmType, val code: Int?, val value: Int? 
 
     companion object {
 
-        fun fromTypeAndCode(alarmType: AlarmType, code: Int?, value: Int? = null): AlarmCause {
-            return entries.find {
-                it.alarmType == alarmType && it.code == code && it.value == value
-            } ?: ALARM_UNKNOWN
-        }
+        /**
+         * Resolve the cause for a tier plus cause code, using [value] only where the protocol needs it to
+         * tell two causes apart. Today that is the LGS-finished family, which all share code 100 and
+         * differ by value 1..5.
+         *
+         * The exact match is tried first, then the entry for that code that carries no value. That
+         * fallback is what makes it safe for callers to pass the value byte through for every alarm: the
+         * wire carries a value for the other causes too, and their entries declare `value = null`, so an
+         * exact-only match would turn every one of them into [ALARM_UNKNOWN]. An unexpected value on a
+         * value-discriminated code lands on that code's catch-all entry
+         * ([ALARM_NOTICE_LGS_FINISHED_UNKNOWN]) rather than on [ALARM_UNKNOWN].
+         */
+        fun fromTypeAndCode(alarmType: AlarmType, code: Int?, value: Int? = null): AlarmCause =
+            entries.find { it.alarmType == alarmType && it.code == code && it.value == value }
+                ?: entries.find { it.alarmType == alarmType && it.code == code && it.value == null }
+                ?: ALARM_UNKNOWN
     }
 }

@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
+import app.aaps.pump.carelevo.ble.UnsolicitedMessage
 import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.BondingState
 import app.aaps.pump.carelevo.ble.data.DeviceModuleState
@@ -210,5 +211,37 @@ internal class CarelevoPatchTest {
 
         assertThat(sut.getPatchInfoAddress()).isNull()
         assertThat(sut.resolvePatchState()).isEqualTo(PatchState.NotConnectedNotBooting)
+    }
+
+    // ---- pushed alarm frames -------------------------------------------------------------------
+
+    /** Raise a pushed alarm frame `[opcode][cause][value]` and hand back the alarm that was stored. */
+    private fun raisedAlarmFor(opcode: Int, cause: Int, value: Int): CarelevoAlarmInfo {
+        sut.onUnsolicited(UnsolicitedMessage(opcode.toByte(), byteArrayOf(opcode.toByte(), cause.toByte(), value.toByte())))
+        val captor = argumentCaptor<CarelevoAlarmInfo>()
+        verify(carelevoAlarmInfoUseCase).upsertAlarm(captor.capture())
+        return captor.firstValue
+    }
+
+    /**
+     * The LGS-finished causes all share cause code 100 and are told apart by the value byte. The decode
+     * used to drop that byte, so every one of them - "time over", "high BG", "LGS switched off" - reached
+     * the user as the unnamed catch-all.
+     */
+    @Test
+    fun `a pushed notice keeps the value byte that names the LGS-finished reason`() {
+        val alarm = raisedAlarmFor(opcode = 0xA3, cause = 100, value = 3)
+
+        assertThat(alarm.cause).isEqualTo(AlarmCause.ALARM_NOTICE_LGS_FINISHED_TIME_OVER)
+        assertThat(alarm.value).isEqualTo(3)
+    }
+
+    /** The other causes carry a value too, and must not be turned into ALARM_UNKNOWN by it. */
+    @Test
+    fun `a pushed warning still resolves when its value byte means something else`() {
+        val alarm = raisedAlarmFor(opcode = 0xA1, cause = 0x01, value = 45)
+
+        assertThat(alarm.cause).isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN)
+        assertThat(alarm.value).isEqualTo(45)
     }
 }

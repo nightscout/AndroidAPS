@@ -585,7 +585,9 @@ class CarelevoPatch @Inject constructor(
     private fun raiseAlarm(modelType: String, type: AlarmType, payload: ByteArray) {
         val causeCode = payload.getOrNull(1)?.toUByte()?.toInt()
         val value = payload.getOrNull(2)?.toUByte()?.toInt()
-        handleAlarm(modelType, value, AlarmCause.fromTypeAndCode(type, causeCode))
+        // The value byte is part of the identity for codes that share one cause code - without it every
+        // LGS-finished reason resolved to ALARM_NOTICE_LGS_FINISHED_UNKNOWN.
+        handleAlarm(modelType, value, AlarmCause.fromTypeAndCode(type, causeCode, value))
     }
 
     private fun observeInfusionInfo() {

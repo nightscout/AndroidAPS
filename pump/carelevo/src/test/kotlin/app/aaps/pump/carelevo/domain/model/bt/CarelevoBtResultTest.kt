@@ -380,6 +380,26 @@ internal class CarelevoBtResultTest {
             .isEqualTo(AlarmCause.ALARM_UNKNOWN)
     }
 
+    /**
+     * Callers pass the wire value byte for every alarm, not only for the codes that need it, so a cause
+     * whose entry declares no value has to ignore it. Without the fallback this returned ALARM_UNKNOWN for
+     * every ordinary alarm as soon as the value was passed through.
+     */
+    @Test fun `fromTypeAndCode ignores the value for causes that do not use it`() {
+        assertThat(AlarmCause.fromTypeAndCode(AlarmType.WARNING, 0x01, 7))
+            .isEqualTo(AlarmCause.ALARM_WARNING_LOW_INSULIN)
+        assertThat(AlarmCause.fromTypeAndCode(AlarmType.ALERT, 0x03, 0))
+            .isEqualTo(AlarmCause.ALARM_ALERT_LOW_BATTERY)
+        assertThat(AlarmCause.fromTypeAndCode(AlarmType.NOTICE, 0x02, 42))
+            .isEqualTo(AlarmCause.ALARM_NOTICE_PATCH_EXPIRED)
+    }
+
+    /** An unexpected value on a shared code is still an LGS-finished event, just an unnamed reason. */
+    @Test fun `fromTypeAndCode falls back to the catch-all for an unknown value on a shared code`() {
+        assertThat(AlarmCause.fromTypeAndCode(AlarmType.NOTICE, 100, 9))
+            .isEqualTo(AlarmCause.ALARM_NOTICE_LGS_FINISHED_UNKNOWN)
+    }
+
     // endregion
 
     // region createPatchResultModel dispatch -------------------------------------------------------
