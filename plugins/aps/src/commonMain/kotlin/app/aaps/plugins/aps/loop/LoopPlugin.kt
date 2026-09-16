@@ -87,6 +87,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import app.aaps.core.objects.extensions.jsonObject
@@ -169,6 +170,11 @@ class LoopPlugin @Inject constructor(
     // deferred (postDelayed + appScope.launch) and runs after the current run releases the lock.
     private val invokeMutex = Mutex()
 
+    // Serializes running-mode reconciliation. runningModePreCheck() is a read-check-write across two
+    // separate IO calls, and its triggers (the pump-status collector and invoke()) can arrive together, so
+    // without this two of them read the same stale mode and each writes its own row.
+    private val reconcileMutex = Mutex()
+
     @OptIn(FlowPreview::class)
     override suspend fun onStart() {
         super.onStart()
@@ -189,9 +195,11 @@ class LoopPlugin @Inject constructor(
         // Pump-state changes (suspend/resume, typically detected on a status read): reconcile the running
         // mode promptly instead of waiting for the next loop/keepalive tick (~5 min). EventPumpStatusChanged
         // is fired centrally by the command queue after every command, so it is pump-agnostic and arrives
-        // exactly when isSuspended() may have flipped. runningModePreCheck() is idempotent (writes only when
-        // isSuspended() and the RM mode disagree, APS-gated) and emits only EventRefreshOverview — never
-        // EventPumpStatusChanged — so there is no feedback loop. The debounce collapses connection chatter.
+        // exactly when isSuspended() may have flipped. This is one of only two triggers for the pre-check
+        // (the other is invoke()); it is deliberately NOT reached from a read of the mode any more, and
+        // reconcileMutex keeps the two triggers from racing each other. It emits only EventRefreshOverview —
+        // never EventPumpStatusChanged — so there is no feedback loop, and the debounce collapses
+        // connection chatter.
         rxBus.toFlow(EventPumpStatusChanged::class)
             .debounce(1000L)
             .onEach {
@@ -230,10 +238,15 @@ class LoopPlugin @Inject constructor(
 
     override suspend fun runningMode(): RM.Mode = runningModeRecord().mode
 
-    override suspend fun runningModeRecord(): RM {
-        runningModePreCheck()
-        return persistenceLayer.getRunningModeActiveAt(dateUtil.now())
-    }
+    /**
+     * A pure read. It used to call [runningModePreCheck] first, which made every reader of the mode a
+     * writer - and there are about 36 of them, across ViewModels, the Glance widget, wear, KeepAliveWorker,
+     * SMS and automation. One pump suspend wakes many of them at once through the central
+     * `EventPumpStatusChanged`, they all read the pre-suspend mode before any of them commits, and each
+     * inserts its own row: that was the duplicate `Pump suspended` history. Reconciliation now has its own
+     * triggers - see [runningModePreCheck].
+     */
+    override suspend fun runningModeRecord(): RM = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
 
     override suspend fun allowedNextModes(): List<RM.Mode> {
         if (profileFunction.isProfileValid("allowedNextModes").not()) return emptyList()
@@ -348,105 +361,128 @@ class LoopPlugin @Inject constructor(
     }
 
     /**
-     * Check if running mode is corresponding to pump state and constraints
-     * and force change mode if needed
+     * Bring the running mode into line with the pump state and the constraints, writing a new mode row if
+     * they disagree.
+     *
+     * This is a write, so it must NOT be called from a read of the mode - see [runningModeRecord]. It has
+     * two triggers instead: the `EventPumpStatusChanged` collector in [onStart], and the start of
+     * [invoke], which reconciles before the loop reads the mode and decides anything.
+     *
+     * The constraint branches therefore apply at the next loop run rather than the next time some screen
+     * happens to read the mode. That is a display lag of at most one cycle and nothing more: the loop
+     * reconciles before it acts, and `constraintChecker` is consulted again for the dosing decision
+     * itself, so no decision is ever taken on a stale mode.
+     *
+     * [reconcileMutex] keeps two triggers from doing the read-check-write at the same time. The lock is
+     * safe here only because this is off the read path: on it, the mode had about 36 readers, four of them
+     * blocking with `runBlocking`, and it was re-entered from inside [invokeMutex].
      */
-    suspend fun runningModePreCheck() {
-        val runningMode = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
-        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed()
-        val loopInvocationAllowed = constraintChecker.isLoopInvocationAllowed()
-        val lgsModeForced = constraintChecker.isLgsForced()
+    suspend fun runningModePreCheck() = reconcileMutex.withLock { reconcileRunningMode() }
 
-        // Pump-state reconciliation: only on the device that actually owns the pump.
-        // Followers (config.APS=false) must not react to their own local activePump.isSuspended()
-        // state because they have no real pump — doing so rewrites NS-synced SUSPENDED_BY_PUMP
-        // rows with garbage durations and triggers a cross-device feedback loop.
-        if (config.APS) {
-            // Suspended pump found but suspended running mode not set
-            if (activePlugin.activePump.isSuspended() && runningMode.mode != RM.Mode.SUSPENDED_BY_PUMP) {
-                suspendLoop(
-                    mode = RM.Mode.SUSPENDED_BY_PUMP,
-                    autoForced = true,
-                    reasons = rh.gs(InterfacesStrings.pumpsuspended),
-                    durationInMinutes = Int.MAX_VALUE,
-                    action = Action.SUSPEND,
-                    source = Sources.Loop
+    /**
+     * The body of [runningModePreCheck]. Call it only with [reconcileMutex] held.
+     *
+     * Written as a loop rather than the recursive call it used to be: ending a SUSPENDED_BY_PUMP mode has
+     * to re-run the other conditions, and `Mutex` is not reentrant, so recursing here would deadlock.
+     */
+    private suspend fun reconcileRunningMode() {
+        while (true) {
+            val runningMode = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
+            val closedLoopAllowed = constraintChecker.isClosedLoopAllowed()
+            val loopInvocationAllowed = constraintChecker.isLoopInvocationAllowed()
+            val lgsModeForced = constraintChecker.isLgsForced()
+
+            // Pump-state reconciliation: only on the device that actually owns the pump.
+            // Followers (config.APS=false) must not react to their own local activePump.isSuspended()
+            // state because they have no real pump — doing so rewrites NS-synced SUSPENDED_BY_PUMP
+            // rows with garbage durations and triggers a cross-device feedback loop.
+            if (config.APS) {
+                // Suspended pump found but suspended running mode not set
+                if (activePlugin.activePump.isSuspended() && runningMode.mode != RM.Mode.SUSPENDED_BY_PUMP) {
+                    suspendLoop(
+                        mode = RM.Mode.SUSPENDED_BY_PUMP,
+                        autoForced = true,
+                        reasons = rh.gs(InterfacesStrings.pumpsuspended),
+                        durationInMinutes = Int.MAX_VALUE,
+                        action = Action.SUSPEND,
+                        source = Sources.Loop
+                    )
+                    rxBus.send(EventRefreshOverview("runningModePreCheck"))
+                    return
+                }
+                // Pump not suspended anymore but running mode is suspended by pump -> end running mode
+                if (!activePlugin.activePump.isSuspended() && runningMode.mode == RM.Mode.SUSPENDED_BY_PUMP) {
+                    runningMode.duration = dateUtil.now() - runningMode.timestamp
+                    persistenceLayer.insertOrUpdateRunningMode(
+                        runningMode = runningMode,
+                        action = Action.PUMP_RUNNING,
+                        source = Sources.Loop,
+                        listValues = listOf(ValueWithUnit.SimpleString(rh.gs(CoreUiStrings.pump_running)))
+                    )
+                    // re-run to process other conditions
+                    continue
+                }
+            }
+
+            var action = Action.CLOSED_LOOP_MODE
+            var newMode = runningMode.mode
+            var reasons: String? = null
+
+            // Check for LoopInvocation limitation on CLOSED_LOOP mode
+            if (runningMode.mode.isLoopRunning() && loopInvocationAllowed.value().not()) {
+                action = Action.LOOP_DISABLED
+                newMode = RM.Mode.DISABLED_LOOP
+                reasons = loopInvocationAllowed.getReasons()
+            }
+            // Check for OPEN_LOOP limitation on CLOSED_LOOP mode
+            else if (runningMode.mode == RM.Mode.CLOSED_LOOP && closedLoopAllowed.value().not()) {
+                action = Action.OPEN_LOOP_MODE
+                newMode = RM.Mode.OPEN_LOOP
+                reasons = closedLoopAllowed.getReasons()
+            }
+            // Check for LGS limitation on CLOSED_LOOP mode
+            else if (runningMode.mode == RM.Mode.CLOSED_LOOP && lgsModeForced.value()) {
+                action = Action.LGS_LOOP_MODE
+                newMode = RM.Mode.CLOSED_LOOP_LGS
+                reasons = lgsModeForced.getReasons()
+            }
+
+            // Perform change if needed
+            if (reasons != null) {
+                persistenceLayer.insertOrUpdateRunningMode(
+                    runningMode = RM(
+                        timestamp = dateUtil.now(),
+                        mode = newMode,
+                        reasons = reasons,
+                        autoForced = true,
+                        duration = Long.MAX_VALUE
+                    ),
+                    action = action,
+                    source = Sources.Loop,
+                    listValues = listOf(ValueWithUnit.SimpleString(reasons))
                 )
                 rxBus.send(EventRefreshOverview("runningModePreCheck"))
-                return
             }
-            // Pump not suspended anymore but running mode is suspended by pump -> end running mode
-            if (!activePlugin.activePump.isSuspended() && runningMode.mode == RM.Mode.SUSPENDED_BY_PUMP) {
+
+            if (
+            // Revert back from DISABLED_LOOP temporary mode
+                runningMode.autoForced && runningMode.mode == RM.Mode.DISABLED_LOOP && loopInvocationAllowed.value() ||
+                // Revert back from OPEN_LOOP temporary mode
+                runningMode.autoForced && runningMode.mode == RM.Mode.OPEN_LOOP && closedLoopAllowed.value() ||
+                // Revert back from LGS temporary mode
+                runningMode.autoForced && runningMode.mode == RM.Mode.CLOSED_LOOP_LGS && !lgsModeForced.value()
+            ) {
+                // End now
                 runningMode.duration = dateUtil.now() - runningMode.timestamp
                 persistenceLayer.insertOrUpdateRunningMode(
                     runningMode = runningMode,
-                    action = Action.PUMP_RUNNING,
+                    action = Action.LOOP_CHANGE,
                     source = Sources.Loop,
-                    listValues = listOf(ValueWithUnit.SimpleString(rh.gs(CoreUiStrings.pump_running)))
+                    listValues = listOf(ValueWithUnit.SimpleString(rh.gs(CoreUiStrings.mode_reverted)))
                 )
-                // re-run to process other conditions
-                runningModePreCheck()
-                return
+                rxBus.send(EventRefreshOverview("runningModePreCheck"))
             }
-        }
-
-        var action = Action.CLOSED_LOOP_MODE
-        var newMode = runningMode.mode
-        var reasons: String? = null
-
-        // Check for LoopInvocation limitation on CLOSED_LOOP mode
-        if (runningMode.mode.isLoopRunning() && loopInvocationAllowed.value().not()) {
-            action = Action.LOOP_DISABLED
-            newMode = RM.Mode.DISABLED_LOOP
-            reasons = loopInvocationAllowed.getReasons()
-        }
-        // Check for OPEN_LOOP limitation on CLOSED_LOOP mode
-        else if (runningMode.mode == RM.Mode.CLOSED_LOOP && closedLoopAllowed.value().not()) {
-            action = Action.OPEN_LOOP_MODE
-            newMode = RM.Mode.OPEN_LOOP
-            reasons = closedLoopAllowed.getReasons()
-        }
-        // Check for LGS limitation on CLOSED_LOOP mode
-        else if (runningMode.mode == RM.Mode.CLOSED_LOOP && lgsModeForced.value()) {
-            action = Action.LGS_LOOP_MODE
-            newMode = RM.Mode.CLOSED_LOOP_LGS
-            reasons = lgsModeForced.getReasons()
-        }
-
-        // Perform change if needed
-        if (reasons != null) {
-            persistenceLayer.insertOrUpdateRunningMode(
-                runningMode = RM(
-                    timestamp = dateUtil.now(),
-                    mode = newMode,
-                    reasons = reasons,
-                    autoForced = true,
-                    duration = Long.MAX_VALUE
-                ),
-                action = action,
-                source = Sources.Loop,
-                listValues = listOf(ValueWithUnit.SimpleString(reasons))
-            )
-            rxBus.send(EventRefreshOverview("runningModePreCheck"))
-        }
-
-        if (
-        // Revert back from DISABLED_LOOP temporary mode
-            runningMode.autoForced && runningMode.mode == RM.Mode.DISABLED_LOOP && loopInvocationAllowed.value() ||
-            // Revert back from OPEN_LOOP temporary mode
-            runningMode.autoForced && runningMode.mode == RM.Mode.OPEN_LOOP && closedLoopAllowed.value() ||
-            // Revert back from LGS temporary mode
-            runningMode.autoForced && runningMode.mode == RM.Mode.CLOSED_LOOP_LGS && !lgsModeForced.value()
-        ) {
-            // End now
-            runningMode.duration = dateUtil.now() - runningMode.timestamp
-            persistenceLayer.insertOrUpdateRunningMode(
-                runningMode = runningMode,
-                action = Action.LOOP_CHANGE,
-                source = Sources.Loop,
-                listValues = listOf(ValueWithUnit.SimpleString(rh.gs(CoreUiStrings.mode_reverted)))
-            )
-            rxBus.send(EventRefreshOverview("runningModePreCheck"))
+            return
         }
     }
 
@@ -485,6 +521,9 @@ class LoopPlugin @Inject constructor(
         invokeMutex.lock()
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
+            // Reconcile before reading the mode: reads are pure now, so this is what makes the loop act on
+            // a mode that matches the pump state and the current constraints.
+            runningModePreCheck()
             if (runningMode() == RM.Mode.DISABLED_LOOP) {
                 val message = rh.gs(CoreUiStrings.loop_disabled_by_user)
                 aapsLogger.debug(LTag.APS, message)
