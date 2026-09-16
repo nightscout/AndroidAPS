@@ -466,7 +466,20 @@ abstract class AbstractDanaEmulatorUiTest {
         error("Timed out after ${timeout}ms looking for '$label'")
     }
 
-    protected fun click(label: String) = withStaleRetry { find(label).click() }
+    /**
+     * Taps [label] by coordinates rather than through the node.
+     *
+     * `UiObject2.click` re-reads the accessibility node when it runs, so the node has to survive the whole
+     * gesture. On a screen that recomposes continuously - the Dana overview updates as the pump talks - it
+     * often does not, and every attempt throws StaleObjectException, so even ten retries all fail (seen in
+     * CI as DanaRsEmulatorUiTest dying in returnToDanaOverview). Reading the bounds can still go stale and
+     * is retried, but once the Rect is in hand the tap itself cannot.
+     */
+    protected fun click(label: String) = withStaleRetry {
+        val node = find(label)
+        val bounds = node.visibleBounds
+        device.click(bounds.centerX(), bounds.centerY())
+    }
 
     /**
      * Opens the Manage sheet and taps [action], scrolling the sheet to reach it.
