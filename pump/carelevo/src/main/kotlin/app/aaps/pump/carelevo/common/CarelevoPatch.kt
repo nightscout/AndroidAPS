@@ -667,7 +667,7 @@ class CarelevoPatch @Inject constructor(
         // Main-thread subscribe, and SharedPreferences reads on the main thread risk an ANR.
         infoDisposable += Single.fromCallable {
             CarelevoUserSettingInfoRequestModel(
-                lowInsulinNoticeAmount = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key, 30),
+                lowInsulinNoticeAmount = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key, 30),
                 maxBasalSpeed = 15.0,
                 maxBolusDose = preferences.get(DoubleKey.SafetyMaxBolus)
             )

@@ -245,23 +245,23 @@ class CarelevoAlarmNotifierTest {
 
     @Test
     fun `showTopNotification for low-insulin notice reads the low-insulin reminder preference`() {
-        whenever(sp.getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key), any()))
+        whenever(sp.getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key), any()))
             .thenReturn(25)
 
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LOW_INSULIN)))
 
-        verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key), eq(30))
+        verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key), eq(30))
         verifyPosted(NotificationLevel.NORMAL)
     }
 
     @Test
     fun `showTopNotification for out-of-insulin alert reads the low-insulin reminder preference`() {
-        whenever(sp.getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key), any()))
+        whenever(sp.getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key), any()))
             .thenReturn(25)
 
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
 
-        verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key), eq(30))
+        verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key), eq(30))
         verifyPosted(NotificationLevel.IMPORTANT)
     }
 

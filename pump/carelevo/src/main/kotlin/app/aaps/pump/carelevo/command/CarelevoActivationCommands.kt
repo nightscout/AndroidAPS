@@ -50,7 +50,8 @@ class CmdUpdateMaxBolus(val maxBolusDose: Double) : CustomCommand {
     override val statusDescription: String = "UPDATE MAX BOLUS"
 }
 
-class CmdUpdateLowInsulinNotice(val hours: Int) : CustomCommand {
+/** [amountUnits] is how much insulin is left when the patch reminds - units, not hours. Range 20..50 U. */
+class CmdUpdateLowInsulinNotice(val amountUnits: Int) : CustomCommand {
 
     override val statusDescription: String = "UPDATE LOW INSULIN NOTICE"
 }

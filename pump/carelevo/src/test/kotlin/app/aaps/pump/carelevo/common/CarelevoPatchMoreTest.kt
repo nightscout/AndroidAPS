@@ -789,7 +789,7 @@ internal class CarelevoPatchMoreTest {
     fun `a missing user setting record seeds the defaults from the preferences`() {
         whenever(userSettingInfoMonitorUseCase.execute())
             .thenReturn(Observable.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
-        whenever(sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key, 30)).thenReturn(12)
+        whenever(sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key, 30)).thenReturn(12)
         whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(7.5)
         sut = createPatch()
 

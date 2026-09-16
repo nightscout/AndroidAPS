@@ -263,7 +263,7 @@ class CarelevoAlarmNotifier @Inject constructor(
     private fun buildDescArgsFor(alarm: CarelevoAlarmInfo): List<String> = when (alarm.cause) {
         AlarmCause.ALARM_NOTICE_LOW_INSULIN,
         AlarmCause.ALARM_ALERT_OUT_OF_INSULIN -> {
-            val lowInsulinNoticeAmount = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key, 30)
+            val lowInsulinNoticeAmount = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key, 30)
             listOf((lowInsulinNoticeAmount).toString())
         }
 

@@ -13,7 +13,7 @@ internal class CarelevoIntPreferenceKeyTest {
     fun `has exactly the two declared keys`() {
         assertThat(CarelevoIntPreferenceKey.entries).containsExactly(
             CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS,
-            CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS
+            CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS
         ).inOrder()
     }
 
@@ -35,7 +35,7 @@ internal class CarelevoIntPreferenceKeyTest {
 
     @Test
     fun `low insulin reminder metadata`() {
-        val k = CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS
+        val k = CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS
         assertThat(k.key).isEqualTo("CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS")
         assertThat(k.defaultValue).isEqualTo(30)
         assertThat(k.title).isEqualTo(TextRef.AndroidRes(R.string.carelevo_low_reservoir_reminders_title_value))

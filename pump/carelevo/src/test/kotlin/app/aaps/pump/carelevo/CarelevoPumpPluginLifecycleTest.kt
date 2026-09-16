@@ -247,7 +247,7 @@ class CarelevoPumpPluginLifecycleTest {
 
         whenever(preferences.observe(DoubleKey.SafetyMaxBolus)).thenReturn(maxBolusFlow)
         whenever(preferences.observe(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(expiryFlow)
-        whenever(preferences.observe(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS)).thenReturn(lowInsulinFlow)
+        whenever(preferences.observe(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(lowInsulinFlow)
         whenever(preferences.observe(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER)).thenReturn(buzzerFlow)
         whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(7.5)
 
@@ -660,7 +660,7 @@ class CarelevoPumpPluginLifecycleTest {
     @Test
     fun `a zero low-insulin reminder is not enqueued but a real one is`() {
         // Zero = reminder off. Enqueuing it would wake the patch over BLE just to no-op.
-        val key = CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key
+        val key = CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key
         whenever(sp.getInt(eq(key), any())).thenReturn(0)
         start()
         awaitCollector(lowInsulinFlow)
@@ -677,7 +677,7 @@ class CarelevoPumpPluginLifecycleTest {
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateLowInsulinNotice>()) }
         val pushed = capturedCommands<CmdUpdateLowInsulinNotice>()
         assertThat(pushed).hasSize(1)
-        assertThat(pushed.first().hours).isEqualTo(25)
+        assertThat(pushed.first().amountUnits).isEqualTo(25)
     }
 
     // ---- deferred settings-sync recovery --------------------------------------------------------
@@ -715,7 +715,7 @@ class CarelevoPumpPluginLifecycleTest {
         )
 
         verifyBlocking(commandQueue, timeout(2_000)) { customCommand(any<CmdUpdateLowInsulinNotice>()) }
-        assertThat(capturedCommands<CmdUpdateLowInsulinNotice>().first().hours).isEqualTo(22)
+        assertThat(capturedCommands<CmdUpdateLowInsulinNotice>().first().amountUnits).isEqualTo(22)
     }
 
     @Test

@@ -248,12 +248,12 @@ class CarelevoPumpPlugin @Inject constructor(
             }
             .launchIn(newScope)
 
-        preferences.observe(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS)
+        preferences.observe(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
             .drop(1)
             .onEach {
-                val hours = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key, 0)
+                val amountUnits = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key, 0)
                 // Zero = reminder off; skip enqueuing so the pump isn't reconnected just to no-op.
-                if (hours != 0) commandQueue.customCommand(CmdUpdateLowInsulinNotice(hours))
+                if (amountUnits != 0) commandQueue.customCommand(CmdUpdateLowInsulinNotice(amountUnits))
             }
             .launchIn(newScope)
 
@@ -282,7 +282,7 @@ class CarelevoPumpPlugin @Inject constructor(
             .subscribe { need ->
                 newScope.launch {
                     need.maxBolusDose?.let { commandQueue.customCommand(CmdUpdateMaxBolus(it)) }
-                    need.lowInsulinHours?.let { commandQueue.customCommand(CmdUpdateLowInsulinNotice(it)) }
+                    need.lowInsulinAmountUnits?.let { commandQueue.customCommand(CmdUpdateLowInsulinNotice(it)) }
                 }
             }
     }
@@ -335,7 +335,7 @@ class CarelevoPumpPlugin @Inject constructor(
         commandQueue.readStatus("Carelevo auto-resume")
     }
 
-    private data class SettingsSyncNeed(val maxBolusDose: Double?, val lowInsulinHours: Int?)
+    private data class SettingsSyncNeed(val maxBolusDose: Double?, val lowInsulinAmountUnits: Int?)
 
     /** Pure: which deferred patch settings still need pushing (flag set AND the patch is booted). */
     private fun computeSettingsSyncNeed(
@@ -349,8 +349,8 @@ class CarelevoPumpPlugin @Inject constructor(
         // which was true during a single-channel bolus and triggered a spurious mid-bolus reconnect).
         val noBolusRunning = infusion?.extendBolusInfusionInfo == null && infusion?.immeBolusInfusionInfo == null
         val maxBolusDose = if (setting.needMaxBolusDoseSyncPatch && noBolusRunning) setting.maxBolusDose ?: 0.0 else null
-        val lowInsulinHours = if (setting.needLowInsulinNoticeAmountSyncPatch) setting.lowInsulinNoticeAmount ?: 0 else null
-        return SettingsSyncNeed(maxBolusDose, lowInsulinHours)
+        val lowInsulinAmountUnits = if (setting.needLowInsulinNoticeAmountSyncPatch) setting.lowInsulinNoticeAmount ?: 0 else null
+        return SettingsSyncNeed(maxBolusDose, lowInsulinAmountUnits)
     }
 
     private fun initializeOnStart() {
@@ -551,7 +551,7 @@ class CarelevoPumpPlugin @Inject constructor(
         items = listOf(
             // Labels come from the translated unit format templates. Building them as "$it U" or
             // "$it h" in code would put text where no translator can reach it.
-            CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.withEntries(
+            CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.withEntries(
                 (20..50 step 5).associateWith { TextRef.AndroidRes(CoreUiR.string.units_format_insulin_int, listOf(it)) }
             ),
             CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.withEntries(

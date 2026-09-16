@@ -294,7 +294,7 @@ class CarelevoPumpPluginMoreTest : CarelevoPumpPluginTestBase() {
         assertThat(screen.title).isEqualTo(TextRef.AndroidRes(R.string.carelevo))
         assertThat(screen.items).hasSize(3)
         assertThat((screen.items[0] as IntPreferenceKey).key)
-            .isEqualTo(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_EXPIRATION_REMINDER_HOURS.key)
+            .isEqualTo(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key)
         assertThat((screen.items[1] as IntPreferenceKey).key)
             .isEqualTo(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key)
         assertThat(screen.items[2]).isEqualTo(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER)

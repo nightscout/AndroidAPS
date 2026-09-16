@@ -394,7 +394,7 @@ internal class CarelevoActivationExecutorTest {
 
     @Test fun `lowInsulinNotice returns no-patch-address when address missing`() {
         whenever(carelevoPatch.getPatchInfoAddress()).thenReturn(null)
-        val result = sut.execute(CmdUpdateLowInsulinNotice(hours = 30))
+        val result = sut.execute(CmdUpdateLowInsulinNotice(amountUnits = 30))
         assertThat(result?.success).isFalse()
         assertThat(result?.comment).isEqualTo("no patch address")
     }
@@ -402,7 +402,7 @@ internal class CarelevoActivationExecutorTest {
     @Test fun `lowInsulinNotice success when arrival persisted`() {
         stubRunSingle(NoticeThresholdResponse(thresholdType = 0, resultCode = 0))
         whenever(updateLowInsulinNoticeAmountUseCase.persistLowInsulinNoticeAmount(any(), any())).thenReturn(true)
-        val result = sut.execute(CmdUpdateLowInsulinNotice(hours = 30))
+        val result = sut.execute(CmdUpdateLowInsulinNotice(amountUnits = 30))
         assertThat(result?.success).isTrue()
         verify(updateLowInsulinNoticeAmountUseCase).persistLowInsulinNoticeAmount(30, synced = true)
     }
@@ -410,13 +410,13 @@ internal class CarelevoActivationExecutorTest {
     @Test fun `lowInsulinNotice fails when persist fails`() {
         stubRunSingle(NoticeThresholdResponse(thresholdType = 0, resultCode = 0))
         whenever(updateLowInsulinNoticeAmountUseCase.persistLowInsulinNoticeAmount(any(), any())).thenReturn(false)
-        val result = sut.execute(CmdUpdateLowInsulinNotice(hours = 30))
+        val result = sut.execute(CmdUpdateLowInsulinNotice(amountUnits = 30))
         assertThat(result?.success).isFalse()
     }
 
     @Test fun `lowInsulinNotice keeps value deferred and reports failure on exception`() {
         stubRunSingleThrows()
-        val result = sut.execute(CmdUpdateLowInsulinNotice(hours = 30))
+        val result = sut.execute(CmdUpdateLowInsulinNotice(amountUnits = 30))
         assertThat(result?.success).isFalse()
         assertThat(result?.comment).isEqualTo(BOOM)
         verify(updateLowInsulinNoticeAmountUseCase).persistLowInsulinNoticeAmount(30, synced = false)

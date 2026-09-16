@@ -81,10 +81,10 @@ internal class CarelevoActivationCommandsTest {
     }
 
     @Test
-    fun `CmdUpdateLowInsulinNotice exposes UPDATE LOW INSULIN NOTICE status and stores hours`() {
-        val cmd = CmdUpdateLowInsulinNotice(hours = 6)
+    fun `CmdUpdateLowInsulinNotice exposes UPDATE LOW INSULIN NOTICE status and stores the amount`() {
+        val cmd = CmdUpdateLowInsulinNotice(amountUnits = 6)
         assertThat(cmd.statusDescription).isEqualTo("UPDATE LOW INSULIN NOTICE")
-        assertThat(cmd.hours).isEqualTo(6)
+        assertThat(cmd.amountUnits).isEqualTo(6)
     }
 
     @Test

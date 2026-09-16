@@ -96,7 +96,7 @@ class CarelevoActivationExecutor @Inject constructor(
         }
 
         is CmdUpdateMaxBolus         -> runUpdateMaxBolus(command.maxBolusDose)
-        is CmdUpdateLowInsulinNotice -> runUpdateLowInsulinNotice(command.hours)
+        is CmdUpdateLowInsulinNotice -> runUpdateLowInsulinNotice(command.amountUnits)
         is CmdUpdateExpiredThreshold -> runUpdateExpiredThreshold(command.hours)
         is CmdUpdateBuzzer           -> runUpdateBuzzer(command.on)
         is CmdAlarmClear             -> runAlarmClear(command)
@@ -234,22 +234,22 @@ class CarelevoActivationExecutor @Inject constructor(
      * Persists via the use case with `synced` = arrived; on failure the value is
      * persisted deferred for the next reconnect.
      */
-    private fun runUpdateLowInsulinNotice(hours: Int): PumpEnactResult {
+    private fun runUpdateLowInsulinNotice(amountUnits: Int): PumpEnactResult {
         val result = pumpEnactResultProvider()
         val address = carelevoPatch.getPatchInfoAddress()
             ?: return result.success(false).enacted(false).comment("no patch address")
         return try {
             val response = runBlocking {
-                bleSession.runSingle(address, NoticeThresholdCommand(thresholdType = NoticeThresholdCommand.TYPE_LOW_INSULIN, value = hours))
+                bleSession.runSingle(address, NoticeThresholdCommand(thresholdType = NoticeThresholdCommand.TYPE_LOW_INSULIN, value = amountUnits))
             }
             val pushed = response.resultCode == RESULT_SUCCESS
-            val persisted = updateLowInsulinNoticeAmountUseCase.persistLowInsulinNoticeAmount(hours, synced = pushed)
-            aapsLogger.info(LTag.PUMPCOMM, "newBle.lowInsulinNotice OK hours=$hours result=${response.resultCode} persisted=$persisted")
+            val persisted = updateLowInsulinNoticeAmountUseCase.persistLowInsulinNoticeAmount(amountUnits, synced = pushed)
+            aapsLogger.info(LTag.PUMPCOMM, "newBle.lowInsulinNotice OK units=$amountUnits result=${response.resultCode} persisted=$persisted")
             val success = pushed && persisted
             result.success(success).enacted(success)
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "newBle.lowInsulinNotice FAILED", e)
-            updateLowInsulinNoticeAmountUseCase.persistLowInsulinNoticeAmount(hours, synced = false)
+            updateLowInsulinNoticeAmountUseCase.persistLowInsulinNoticeAmount(amountUnits, synced = false)
             result.success(false).enacted(false).comment(e.message ?: "error")
         }
     }
