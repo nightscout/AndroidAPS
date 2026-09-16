@@ -178,6 +178,12 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
         // through fabricPrivacy.
         fabricPrivacyImpl.start()
+        // Build identity goes on the crash report here, not in setUserStats() near the end of doInit.
+        // A crash during plugin initialization happens seconds before that runs, so those reports carried
+        // no HEAD and no Committed - exactly the ones where the build has to be known to tell a stale
+        // local build from a live bug. Collection is already gated by the call above, so an opted-out
+        // user still uploads nothing.
+        setBuildIdentityKeys()
 
         // Here should be everything injected
         aapsLogger.debug("onCreate")
@@ -367,21 +373,39 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         aapsLogger.debug("doInit end")
     }
 
-    private suspend fun setUserStats() {
-        if (!fabricPrivacy.fabricEnabled()) return
-        val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
-        val remote = config.REMOTE.lowercase(Locale.getDefault())
+    /** The build this is, in short form - "github:owner/repo". */
+    private val gitRemoteShort: String
+        get() = config.REMOTE.lowercase(Locale.getDefault())
             .replace("https://", "")
             .replace("http://", "")
             .replace(".git", "")
             .replace(".com/", ":")
             .replace(".org/", ":")
             .replace(".net/", ":")
+
+    /**
+     * Which build is running. All of it is known from BuildConfig before anything starts, so it is set as
+     * early as collection is allowed - see the call in [onCreate].
+     */
+    private fun setBuildIdentityKeys() {
+        FirebaseCrashlytics.getInstance().apply {
+            setCustomKey("HEAD", BuildConfig.HEAD)
+            setCustomKey("Version", config.VERSION_NAME)
+            setCustomKey("BuildType", config.BUILD_TYPE)
+            setCustomKey("BuildFlavor", config.FLAVOR)
+            setCustomKey("Remote", gitRemoteShort)
+            setCustomKey("Committed", config.COMMITTED)
+        }
+    }
+
+    private suspend fun setUserStats() {
+        if (!fabricPrivacy.fabricEnabled()) return
+        val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
         fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
         fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKey.GeneralLanguage) ?: Locale.getDefault().language)
         fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
         fabricPrivacy.setUserProperty("HEAD", BuildConfig.BUILDVERSION)
-        fabricPrivacy.setUserProperty("Remote", remote)
+        fabricPrivacy.setUserProperty("Remote", gitRemoteShort)
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
         activePlugin.activePumpInternal.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
@@ -389,12 +413,8 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             activePlugin.activeAPS?.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
         activePlugin.activeSensitivity.let { fabricPrivacy.setUserProperty("Sensitivity", it::class.java.simpleName) }
-        FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
-        FirebaseCrashlytics.getInstance().setCustomKey("Version", config.VERSION_NAME)
-        FirebaseCrashlytics.getInstance().setCustomKey("BuildType", config.BUILD_TYPE)
-        FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", config.FLAVOR)
-        FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
-        FirebaseCrashlytics.getInstance().setCustomKey("Committed", config.COMMITTED)
+        // HEAD/Version/BuildType/BuildFlavor/Remote/Committed are set in setBuildIdentityKeys() during
+        // onCreate. These two are not known that early.
         if (hashes.isNotEmpty()) FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
         FirebaseCrashlytics.getInstance().setCustomKey("Email", preferences.get(StringKey.MaintenanceIdentification))
     }
