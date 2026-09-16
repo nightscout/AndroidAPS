@@ -1,29 +1,27 @@
 package app.aaps.pump.carelevo.common.keys
 
 import app.aaps.core.keys.PreferenceType
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.R
 
+/**
+ * Only the parameters a key actually varies are declared. Everything else - `calculatedDefaultValue`,
+ * `engineeringModeOnly`, `defaultedBySM`, the three `showIn*` flags, both dependencies,
+ * `hideParentScreenIfHidden`, `exportable` and `entries` - already has the same default on
+ * [IntPreferenceKey] / [app.aaps.core.keys.interfaces.PreferenceKey], so restating it here was only a
+ * second place to keep in step.
+ *
+ * [min] and [max] are the exception: they are abstract on [IntPreferenceKey], so they have to be stated
+ * even though both keys are LIST preferences that never use them.
+ */
 enum class CarelevoIntPreferenceKey(
     override val key: String,
     override val defaultValue: Int,
     private val titleResId: Int = 0,
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
-    override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD,
-    private val entriesResIds: Map<Int, Int> = emptyMap(),
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
+    override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD
 ) : IntPreferenceKey {
 
     CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS(
@@ -50,5 +48,4 @@ enum class CarelevoIntPreferenceKey(
     ;
 
     override val title: TextRef = TextRef.AndroidRes(titleResId)
-    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.AndroidRes(it.value) }
 }
