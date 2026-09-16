@@ -49,6 +49,7 @@ import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
+import app.aaps.core.ui.compose.icons.IcPluginCarelevo
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
 import app.aaps.core.ui.compose.icons.IcPluginDanaI
@@ -115,6 +116,7 @@ class UserEntryPresentationHelperImpl(
         Sources.BgFragment          -> IcAaps
         Sources.CalibrationDialog   -> IcCalibration
         Sources.CarbDialog          -> IcCarbs
+        Sources.Carelevo            -> IcPluginCarelevo
         Sources.Combo               -> IcPluginCombo
         Sources.ConcentrationDialog -> IcPluginInsulin
         Sources.ConfigBuilder       -> IcPluginConfigBuilder
@@ -273,6 +275,7 @@ class UserEntryPresentationHelperImpl(
         Sources.Wear                -> ElementType.AAPS.color()
         Sources.WizardDialog        -> ElementType.BOLUS_WIZARD.color()
         Sources.Xdrip               -> ElementType.CGM_XDRIP.color()
+        Sources.Carelevo            -> ElementType.PUMP.color()
     }
 
     override fun listToPresentationString(list: List<ValueWithUnit>) =
