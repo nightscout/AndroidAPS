@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StopTempBasalTask @Inject constructor() : TaskBase(TaskFunc.STOP_TEMP_BASAL) {
+@Inject
+class StopTempBasalTask() : TaskBase(TaskFunc.STOP_TEMP_BASAL) {
 
     @Inject lateinit var tempBasalScheduleStop: TempBasalScheduleStop
 

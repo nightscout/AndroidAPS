@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     id("com.android.application")
     kotlin("plugin.serialization")

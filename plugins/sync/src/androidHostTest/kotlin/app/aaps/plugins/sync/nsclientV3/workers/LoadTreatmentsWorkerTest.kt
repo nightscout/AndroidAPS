@@ -29,7 +29,9 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -84,6 +86,15 @@ internal class LoadTreatmentsWorkerTest : TestBaseWithProfile() {
             nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, mock(), mock()
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
+    }
+
+    // The plugin starts a coroutine scope on the IO dispatcher the moment it is constructed, so a
+    // plugin built per test keeps background work alive after the test method ends. Mockito then
+    // disables the mocks, the leftover coroutine touches one, and the throw lands on whatever test
+    // runs next as UncaughtExceptionsBeforeTest. onStop cancels that scope and waits for it.
+    @AfterEach
+    fun stopPlugin() {
+        runBlocking { nsClientV3Plugin.shutdownForTest() }
     }
 
     @Test

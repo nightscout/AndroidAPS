@@ -29,7 +29,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.minutes
 
 @SingleIn(AppScope::class)
-class PauseBasalTask @Inject constructor(
+@Inject
+class PauseBasalTask(
     private val alarmRegistry: IAlarmRegistry,
     private val commandQueue: CommandQueue,
     private val pumpSync: PumpSync,

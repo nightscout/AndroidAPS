@@ -5,7 +5,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketGeneralSetHistoryUploadMode @Inject constructor(
+@Inject
+class DanaRSPacketGeneralSetHistoryUploadMode(
     private val aapsLogger: AAPSLogger
 ) : DanaRSPacket() {
 

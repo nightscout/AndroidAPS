@@ -15,7 +15,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
+@Inject
+class AlertUtils(private val rh: ResourceHelper) {
 
     fun getAlertCode(alertType: AlertType) = rh.gs(
         when (alertType) {

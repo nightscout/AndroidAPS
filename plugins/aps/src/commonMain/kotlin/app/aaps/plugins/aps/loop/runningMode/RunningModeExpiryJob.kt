@@ -25,7 +25,8 @@ import dev.zacsweers.metro.SingleIn
  * the safety net is weaker there - that gap is real and is not closed by sharing this class.
  */
 @SingleIn(AppScope::class)
-class RunningModeExpiryJob @Inject constructor(
+@Inject
+class RunningModeExpiryJob(
     private val aapsLogger: AAPSLogger,
     private val config: Config,
     private val dateUtil: DateUtil,

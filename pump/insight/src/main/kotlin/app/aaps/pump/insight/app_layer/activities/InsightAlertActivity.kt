@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.pump.insight.InsightAlertService
@@ -34,6 +35,7 @@ class InsightAlertActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var alertUtils: AlertUtils
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var snackbarHostPresence: SnackbarHostPresence
     private var alertService: InsightAlertService? = null
 
     private var state by mutableStateOf(
@@ -81,6 +83,7 @@ class InsightAlertActivity : MetroAppCompatActivity() {
                     )
                     GlobalSnackbarHost(
                         rxBus = rxBus,
+                        snackbarHostPresence = snackbarHostPresence,
                         hostState = snackbarHostState,
                         modifier = Modifier.align(Alignment.BottomCenter)
                     )

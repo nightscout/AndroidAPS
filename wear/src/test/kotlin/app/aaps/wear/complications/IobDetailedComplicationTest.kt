@@ -19,7 +19,7 @@ internal class IobDetailedComplicationTest {
     private fun sut(): IobDetailedComplication =
         Robolectric.buildService(IobDetailedComplication::class.java).get().also {
             it.aapsLogger = AAPSLoggerTest()
-            it.displayFormat = DisplayFormat().also { d -> d.sp = mock(); d.context = it }
+            it.displayFormat = DisplayFormat(mock(), it)
         }
 
     @Test

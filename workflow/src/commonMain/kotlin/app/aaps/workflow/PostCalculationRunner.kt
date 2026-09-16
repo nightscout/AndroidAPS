@@ -38,7 +38,8 @@ import kotlin.math.min
  * Used by [CalculationWorkflow.runCalculation] (MAIN only, full phases) and by
  * [CalculationWorkflow.runOnReceivedPredictions] (predictions only).
  */
-class PostCalculationRunner @Inject constructor(
+@Inject
+class PostCalculationRunner(
     private val aapsLogger: AAPSLogger,
     private val workflowChainData: WorkflowChainData,
     private val iobCobCalculator: IobCobCalculator,

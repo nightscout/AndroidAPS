@@ -13,38 +13,19 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
-import app.aaps.core.interfaces.insulin.InsulinManager
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
-import app.aaps.di.metro.MetroGraphs
-import app.aaps.implementation.plugin.PluginStore
-import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.ble.EquilBleTransport
 import app.aaps.pump.equil.compose.EquilHistoryViewModel
@@ -53,14 +34,14 @@ import app.aaps.pump.equil.compose.EquilWizardStep
 import app.aaps.pump.equil.compose.EquilWizardViewModel
 import app.aaps.pump.equil.compose.EquilWorkflow
 import app.aaps.pump.equil.data.RunMode
-import app.aaps.pump.equil.database.EquilHistoryPumpDao
-import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.EquilHistoryEntryGroup
 import app.aaps.pump.equil.emulator.EquilEmulatorBleTransport
+import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -359,7 +340,15 @@ class EquilEmulatorActivationTest {
     private fun activatePod() {
         val start = SystemClock.uptimeMillis()
         assertThat(bleTransport).isInstanceOf(EquilEmulatorBleTransport::class.java)
-        assertThat(equilManager.isActivationCompleted()).isFalse()
+        // Say WHAT leaked, not just that something did. `bringUp()` calls clearPodState() right before
+        // this, so a COMPLETED pod here means an earlier test's state came back after the reset, and the
+        // interesting question is whether it came back in memory or from preferences. Build 41310 failed
+        // here with the bare Truth message "expected to be false", which named neither.
+        assertWithMessage(
+            "pod state leaked past clearPodState(): activationProgress=%s, persisted state=%s",
+            equilManager.getActivationProgress(),
+            preferences.get(EquilStringKey.State)
+        ).that(equilManager.isActivationCompleted()).isFalse()
 
         onMain { viewModel.initializeWorkflow(EquilWorkflow.PAIR) }
         awaitStep(EquilWizardStep.ASSEMBLE)

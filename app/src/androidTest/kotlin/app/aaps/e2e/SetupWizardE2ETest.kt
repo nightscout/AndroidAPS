@@ -16,13 +16,7 @@ import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.implementation.plugin.PluginStore
-import app.aaps.plugins.aps.utils.StaticInjector
-import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

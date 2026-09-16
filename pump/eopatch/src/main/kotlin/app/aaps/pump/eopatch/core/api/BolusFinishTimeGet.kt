@@ -12,7 +12,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BolusFinishTimeGet @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BolusFinishTimeResponse>(PatchFunc.GET_BOLUS_FINISH_TIME, patch, aapsLogger) {
+@Inject
+class BolusFinishTimeGet(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BolusFinishTimeResponse>(PatchFunc.GET_BOLUS_FINISH_TIME, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): BolusFinishTimeResponse {
         val now = BytesConverter.toUInt(bytes, DATA0)
         val ext = BytesConverter.toUInt(bytes, DATA4)

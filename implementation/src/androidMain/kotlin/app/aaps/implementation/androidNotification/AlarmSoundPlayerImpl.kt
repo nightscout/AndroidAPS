@@ -36,7 +36,8 @@ import kotlin.math.pow
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class AlarmSoundPlayerImpl @Inject constructor(
+@Inject
+class AlarmSoundPlayerImpl(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,

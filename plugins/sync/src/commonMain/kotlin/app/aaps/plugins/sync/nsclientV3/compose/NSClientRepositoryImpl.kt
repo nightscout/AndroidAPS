@@ -27,7 +27,8 @@ import kotlinx.serialization.json.JsonElement
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class NSClientRepositoryImpl @Inject constructor(
+@Inject
+class NSClientRepositoryImpl(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger
 ) : NSClientRepository {

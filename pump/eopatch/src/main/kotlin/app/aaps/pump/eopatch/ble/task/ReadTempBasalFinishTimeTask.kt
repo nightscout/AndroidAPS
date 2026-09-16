@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class ReadTempBasalFinishTimeTask @Inject constructor() : TaskBase(TaskFunc.READ_TEMP_BASAL_FINISH_TIME) {
+@Inject
+class ReadTempBasalFinishTimeTask() : TaskBase(TaskFunc.READ_TEMP_BASAL_FINISH_TIME) {
 
     @Inject lateinit var tempBasalFinishTimeGet: TempBasalFinishTimeGet
     @Inject lateinit var tempBasalManager: TempBasalManager

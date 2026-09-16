@@ -5,7 +5,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BleEncryption @Inject constructor() {
+@Inject
+class BleEncryption() {
 
     val deviceName = UByteArray(10)
     val passKey = UByteArray(2)

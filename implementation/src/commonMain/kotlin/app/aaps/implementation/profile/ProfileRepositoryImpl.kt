@@ -90,7 +90,8 @@ import kotlinx.serialization.json.putJsonObject
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 
-class ProfileRepositoryImpl @Inject constructor(
+@Inject
+class ProfileRepositoryImpl(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val preferences: Preferences,

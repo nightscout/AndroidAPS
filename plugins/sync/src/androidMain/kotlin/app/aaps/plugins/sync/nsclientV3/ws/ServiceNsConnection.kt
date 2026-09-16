@@ -31,7 +31,8 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class ServiceNsConnection @Inject constructor(
+@Inject
+class ServiceNsConnection(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences

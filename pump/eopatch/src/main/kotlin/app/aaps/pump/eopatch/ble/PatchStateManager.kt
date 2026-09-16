@@ -23,7 +23,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class PatchStateManager @Inject constructor(
+@Inject
+class PatchStateManager(
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,
     private val tempBasalManager: TempBasalManager,

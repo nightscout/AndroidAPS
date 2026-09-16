@@ -15,7 +15,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class UpdateConnectionTask @Inject constructor(
+@Inject
+class UpdateConnectionTask(
     private val patchStateManager: PatchStateManager
 ) : TaskBase(TaskFunc.UPDATE_CONNECTION) {
 

@@ -17,7 +17,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.min
 
 @SingleIn(AppScope::class)
-class BasalHistoryGetExBig @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalHistoryResponse>(PatchFunc.GET_BASAL_HISTORY_EX, patch, aapsLogger) {
+@Inject
+class BasalHistoryGetExBig(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BasalHistoryResponse>(PatchFunc.GET_BASAL_HISTORY_EX, patch, aapsLogger) {
     private var mCount = 0
 
     override fun parse(bytes: ByteArray): BasalHistoryResponse {

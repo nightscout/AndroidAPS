@@ -24,7 +24,8 @@ import kotlin.system.exitProcess
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class DesktopAppExit @Inject constructor(
+@Inject
+class DesktopAppExit(
     private val aapsLogger: AAPSLogger
 ) : AppExit {
 

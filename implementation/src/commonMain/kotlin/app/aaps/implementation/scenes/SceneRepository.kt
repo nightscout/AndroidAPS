@@ -25,7 +25,8 @@ import kotlinx.coroutines.flow.StateFlow
 @ContributesBinding(AppScope::class, binding = binding<Scenes>())
 @ContributesBinding(AppScope::class, binding = binding<SceneStore>())
 @SingleIn(AppScope::class)
-class SceneRepository @Inject constructor(
+@Inject
+class SceneRepository(
     private val preferences: Preferences
 ) : Scenes, SceneStore {
 

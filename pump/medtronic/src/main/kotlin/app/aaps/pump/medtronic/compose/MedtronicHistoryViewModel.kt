@@ -23,7 +23,8 @@ data class MedtronicHistoryUiState(
 @Stable
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class MedtronicHistoryViewModel @Inject constructor(
+@Inject
+class MedtronicHistoryViewModel(
     val rh: ResourceHelper,
     private val medtronicHistoryData: MedtronicHistoryData
 ) : ViewModel() {

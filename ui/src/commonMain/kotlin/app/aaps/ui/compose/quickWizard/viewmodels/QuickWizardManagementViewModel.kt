@@ -50,7 +50,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class QuickWizardManagementViewModel @Inject constructor(
+@Inject
+class QuickWizardManagementViewModel(
     private val quickWizard: QuickWizard,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,

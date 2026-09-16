@@ -54,7 +54,8 @@ import kotlinx.coroutines.runBlocking
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(360)
 @SingleIn(AppScope::class)
-class TizenPlugin @Inject constructor(
+@Inject
+class TizenPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     private val context: Context,

@@ -61,7 +61,8 @@ import dev.zacsweers.metro.SingleIn
  * functionality added.
  */
 @SingleIn(AppScope::class)
-class MedtronicCommunicationManager @Inject constructor(
+@Inject
+class MedtronicCommunicationManager(
     private val medtronicPumpStatus: MedtronicPumpStatus,
     private val medtronicPumpPlugin: MedtronicPumpPlugin,
     private val medtronicConverter: MedtronicConverter,

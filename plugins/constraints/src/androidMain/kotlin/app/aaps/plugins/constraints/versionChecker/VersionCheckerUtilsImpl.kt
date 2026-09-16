@@ -26,7 +26,8 @@ import kotlinx.serialization.json.JsonObject
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class VersionCheckerUtilsImpl @Inject constructor(
+@Inject
+class VersionCheckerUtilsImpl(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val rh: ResourceHelper,

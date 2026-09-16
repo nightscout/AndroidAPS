@@ -22,7 +22,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class PermissionsViewModel @Inject constructor(
+@Inject
+class PermissionsViewModel(
     private val pluginPermissions: PluginPermissions,
 ) : ViewModel() {
 

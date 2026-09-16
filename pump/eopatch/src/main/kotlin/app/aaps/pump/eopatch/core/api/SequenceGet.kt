@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class SequenceGet @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<KeyResponse>(PatchFunc.GET_SEQ_NUM, patch, aapsLogger) {
+@Inject
+class SequenceGet(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<KeyResponse>(PatchFunc.GET_SEQ_NUM, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): KeyResponse = KeyResponse.create(bytes[SEQ_INDEX], bytes[SEQ_INDEX + 1])
     fun get(): Single<KeyResponse> = writeAndRead(generate())
 

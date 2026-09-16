@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -17,8 +16,6 @@ import app.aaps.pump.dana.database.DanaHistoryRecord
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.events.EventDanaRSyncStatus
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
@@ -35,16 +32,19 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 import org.mockito.kotlin.whenever
 
 /**
  * Unit test for [DanaHistoryViewModel]. The init block runs synchronously in the constructor
  * (it builds the available-type list from the active pump's [PumpType], subscribes to the
- * sync-status rx stream and issues the first record load), so every collaborator it touches must
+ * sync-status rx stream and starts the first record load), so every collaborator it touches must
  * be stubbed. The pump is set to DANA_R (neither Korean nor RS) so the full non-Korean type list
- * is produced. Only deterministic synchronous outcomes are asserted; [DanaHistoryViewModel.reload]
- * uses viewModelScope and is deferred by the StandardTestDispatcher, so it is not exercised.
+ * is produced. Only deterministic synchronous outcomes are asserted; record loading and
+ * [DanaHistoryViewModel.reload] run on viewModelScope and are deferred by the
+ * StandardTestDispatcher, so they are not exercised.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DanaHistoryViewModelTest {
@@ -58,7 +58,6 @@ internal class DanaHistoryViewModelTest {
     @Mock private lateinit var decimalFormatter: DecimalFormatter
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var rxBus: RxBus
-    @Mock private lateinit var aapsSchedulers: AapsSchedulers
 
     private val activePump: PumpWithConcentration = mock()
 
@@ -78,17 +77,16 @@ internal class DanaHistoryViewModelTest {
 
         // rx wiring touched at construction
         whenever(rxBus.toFlow(EventDanaRSyncStatus::class)).thenReturn(emptyFlow())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
 
         // First record load issued in init (and again on every selectType)
         whenever(dateUtil.now()).thenReturn(0L)
-        whenever(danaHistoryRecordDao.allFromByType(anyLong(), anyByte()))
-            .thenReturn(Single.just(emptyList()))
+        danaHistoryRecordDao.stub {
+            on { allFromByType(anyLong(), anyByte()) } doReturn emptyList()
+        }
 
         sut = DanaHistoryViewModel(
             aapsLogger, rh, activePlugin, commandQueue, danaHistoryRecordDao,
-            dateUtil, decimalFormatter, profileUtil, rxBus, aapsSchedulers
+            dateUtil, decimalFormatter, profileUtil, rxBus
         )
     }
 

@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BasalResume @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.RESUME_NORMAL_BASAL, patch, aapsLogger) {
+@Inject
+class BasalResume(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.RESUME_NORMAL_BASAL, patch, aapsLogger) {
     override fun generate(): ByteArray = allocate().putByte(DEFAULT).build()
     fun resume(): Single<PatchBooleanResponse> = writeAndRead(generate())
 

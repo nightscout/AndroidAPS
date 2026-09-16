@@ -40,7 +40,8 @@ import org.json.JSONException
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(520)
 @SingleIn(AppScope::class)
-class PatchedSinoAppPlugin @Inject constructor(
+@Inject
+class PatchedSinoAppPlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
@@ -62,7 +63,8 @@ class PatchedSinoAppPlugin @Inject constructor(
 ), BgSource {
 
 
-    class PatchedSinoAppWorker @AssistedInject constructor(
+    @AssistedInject
+    class PatchedSinoAppWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

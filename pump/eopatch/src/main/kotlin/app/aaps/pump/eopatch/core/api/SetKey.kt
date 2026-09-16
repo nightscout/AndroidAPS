@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class SetKey @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_KEY, patch, aapsLogger) {
+@Inject
+class SetKey(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_KEY, patch, aapsLogger) {
     fun setKey(): Single<PatchBooleanResponse> =
         writeAndRead(allocate().putBytes(byteArrayOf(0x00, 0x00)).putBoolean(true).build())
 }

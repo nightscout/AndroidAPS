@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -23,23 +22,22 @@ import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.Inject
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class DiaconnHistoryViewModel @Inject constructor(
+@Inject
+class DiaconnHistoryViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val commandQueue: CommandQueue,
@@ -47,14 +45,11 @@ class DiaconnHistoryViewModel @Inject constructor(
     private val dateUtil: DateUtil,
     private val decimalFormatter: DecimalFormatter,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
     private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PumpHistoryUiState<DiaconnHistoryRecord>())
     val uiState: StateFlow<PumpHistoryUiState<DiaconnHistoryRecord>> = _uiState
-
-    private val disposable = CompositeDisposable()
 
     init {
         val types = listOf(
@@ -77,12 +72,12 @@ class DiaconnHistoryViewModel @Inject constructor(
                 _uiState.update { it.copy(statusMessage = rh.gs(event.getStatus())) }
             }
 
-        types.firstOrNull()?.let { loadRecords(it.type) }
+        types.firstOrNull()?.let { type -> viewModelScope.launch { loadRecords(type.type) } }
     }
 
     fun selectType(type: PumpHistoryType) {
         _uiState.update { it.copy(selectedType = type) }
-        loadRecords(type.type)
+        viewModelScope.launch { loadRecords(type.type) }
     }
 
     fun reload() {
@@ -115,18 +110,13 @@ class DiaconnHistoryViewModel @Inject constructor(
     fun formatDailyBasal(record: DiaconnHistoryRecord): String =
         rh.gs(app.aaps.core.interfaces.R.string.format_insulin_units, record.dailyBasal)
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
-    }
-
-    private fun loadRecords(type: Byte) {
-        disposable += diaconnHistoryRecordDao
-            .allFromByType(dateUtil.now() - T.months(1).msecs(), type)
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ records ->
-                           _uiState.update { it.copy(records = records) }
-                       }, { aapsLogger.error(LTag.PUMP, "Error loading history", it) })
+    // Room runs the suspend query on its own executor, so no dispatcher switch is needed here.
+    private suspend fun loadRecords(type: Byte) {
+        try {
+            val records = diaconnHistoryRecordDao.allFromByType(dateUtil.now() - T.months(1).msecs(), type)
+            _uiState.update { it.copy(records = records) }
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMP, "Error loading history", e)
+        }
     }
 }

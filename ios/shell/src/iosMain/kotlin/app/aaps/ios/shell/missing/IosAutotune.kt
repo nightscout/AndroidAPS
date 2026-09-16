@@ -18,7 +18,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosAutotune @Inject constructor(
+@Inject
+class IosAutotune(
     private val aapsLogger: AAPSLogger
 ) : Autotune {
 

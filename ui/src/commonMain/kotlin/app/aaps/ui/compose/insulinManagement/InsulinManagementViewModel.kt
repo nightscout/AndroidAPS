@@ -62,7 +62,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @OptIn(ExperimentalAtomicApi::class)
-class InsulinManagementViewModel @Inject constructor(
+@Inject
+class InsulinManagementViewModel(
     val insulinManager: InsulinManager,
     private val preferences: Preferences,
     private val profileFunction: ProfileFunction,

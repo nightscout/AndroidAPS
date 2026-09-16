@@ -23,7 +23,8 @@ import dev.zacsweers.metro.SingleIn
  * High level decoder for data returned through MedtroniUIComm
  */
 @SingleIn(AppScope::class)
-class MedtronicConverter @Inject constructor(
+@Inject
+class MedtronicConverter(
     private val aapsLogger: AAPSLogger,
     private val medtronicUtil: MedtronicUtil
 ) {

@@ -51,7 +51,8 @@ import kotlinx.coroutines.withContext
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class ProfileHelperViewModel @Inject constructor(
+@Inject
+class ProfileHelperViewModel(
     private val persistenceLayer: PersistenceLayer,
     private val profileRepository: ProfileRepository,
     private val profileFunction: ProfileFunction,

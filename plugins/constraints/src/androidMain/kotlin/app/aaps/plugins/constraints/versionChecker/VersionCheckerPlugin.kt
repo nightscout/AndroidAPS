@@ -28,7 +28,8 @@ import dev.zacsweers.metro.binding
 @NotNSClient
 @IntKey(810)
 @SingleIn(AppScope::class)
-class VersionCheckerPlugin @Inject constructor(
+@Inject
+class VersionCheckerPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

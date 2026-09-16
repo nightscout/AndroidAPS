@@ -48,6 +48,14 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 60
 
+    # Run the pull_request event ONLY for forks; see the same guard in unit-tests.yml. A same-repo PR
+    # fires push for the identical commit, so this job was running twice per push to dev - on a
+    # macos-latest runner, which is the expensive kind. Fork PRs still run, and must: CircleCI refuses
+    # them outright, so this workflow is the only CI a fork gets.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+
     steps:
       - uses: actions/checkout@v5
         with:

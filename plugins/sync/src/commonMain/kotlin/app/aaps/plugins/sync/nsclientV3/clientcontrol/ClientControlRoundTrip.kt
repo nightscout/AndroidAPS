@@ -79,7 +79,8 @@ import kotlinx.serialization.json.JsonObject
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<ClientControlActionDispatcher>())
-class ClientControlRoundTrip @Inject constructor(
+@Inject
+class ClientControlRoundTrip(
     private val publisher: ClientControlPublisher,
     private val pairingRepository: ClientPairingRepository,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,

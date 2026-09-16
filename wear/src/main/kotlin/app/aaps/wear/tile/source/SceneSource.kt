@@ -15,7 +15,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class SceneSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
+@Inject
+class SceneSource(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
 
     override fun getSelectedActions(): List<Action> {
         if (isSceneActive()) {

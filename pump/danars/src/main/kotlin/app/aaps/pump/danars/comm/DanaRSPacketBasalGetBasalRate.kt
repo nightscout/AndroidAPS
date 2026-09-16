@@ -10,7 +10,8 @@ import app.aaps.pump.danars.encryption.BleEncryption
 import java.util.Locale
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketBasalGetBasalRate @Inject constructor(
+@Inject
+class DanaRSPacketBasalGetBasalRate(
     private val aapsLogger: AAPSLogger,
     private val notificationManager: NotificationManager,
     private val danaPump: DanaPump

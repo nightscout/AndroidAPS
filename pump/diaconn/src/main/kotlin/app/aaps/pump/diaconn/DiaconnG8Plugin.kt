@@ -76,7 +76,8 @@ import kotlin.math.max
 @PumpDriver
 @IntKey(1100)
 @SingleIn(AppScope::class)
-class DiaconnG8Plugin @Inject constructor(
+@Inject
+class DiaconnG8Plugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

@@ -23,7 +23,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosActivityStatsProvider @Inject constructor(
+@Inject
+class IosActivityStatsProvider(
     private val aapsLogger: AAPSLogger
 ) : ActivityStatsProvider {
 

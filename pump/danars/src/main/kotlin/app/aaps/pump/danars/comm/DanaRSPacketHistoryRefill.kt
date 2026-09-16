@@ -10,7 +10,8 @@ import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketHistoryRefill @Inject constructor(
+@Inject
+class DanaRSPacketHistoryRefill(
     aapsLogger: AAPSLogger,
     dateUtil: DateUtil,
     rxBus: RxBus,

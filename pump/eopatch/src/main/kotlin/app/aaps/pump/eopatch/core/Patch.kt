@@ -47,7 +47,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class Patch @Inject constructor(
+@Inject
+class Patch(
     private val aapsLogger: AAPSLogger
 ) : IBleDevice {
 

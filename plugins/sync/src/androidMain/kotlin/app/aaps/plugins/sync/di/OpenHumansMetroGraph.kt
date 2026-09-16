@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.MetroWorkerCreator
@@ -76,6 +77,7 @@ internal interface OpenHumansMetroGraph : MetroViewModelMultibindings {
             @Provides persistenceLayerRef: DeferredRef<PersistenceLayer>,
             @Provides notificationManagerRef: DeferredRef<NotificationManager>,
             @Provides rxBusRef: DeferredRef<RxBus>,
+            @Provides snackbarHostPresenceRef: DeferredRef<SnackbarHostPresence>,
             @Provides fabricPrivacyRef: DeferredRef<FabricPrivacy>
         ): OpenHumansMetroGraph
     }
@@ -87,6 +89,7 @@ internal interface OpenHumansMetroGraph : MetroViewModelMultibindings {
     @Provides fun persistenceLayer(r: DeferredRef<PersistenceLayer>): PersistenceLayer = r.get()
     @Provides fun notificationManager(r: DeferredRef<NotificationManager>): NotificationManager = r.get()
     @Provides fun rxBus(r: DeferredRef<RxBus>): RxBus = r.get()
+    @Provides fun snackbarHostPresence(r: DeferredRef<SnackbarHostPresence>): SnackbarHostPresence = r.get()
     @Provides fun fabricPrivacy(r: DeferredRef<FabricPrivacy>): FabricPrivacy = r.get()
 
     // Moved here from OpenHumansModule, which no longer exists. These are the Open Humans project's

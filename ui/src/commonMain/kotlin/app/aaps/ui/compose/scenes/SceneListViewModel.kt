@@ -51,7 +51,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class SceneListViewModel @Inject constructor(
+@Inject
+class SceneListViewModel(
     private val sceneRepository: SceneStore,
     private val activeSceneManager: ActiveSceneSync,
     private val persistenceLayer: PersistenceLayer,

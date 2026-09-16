@@ -14,7 +14,8 @@ import java.io.InputStreamReader
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class FileStorage @Inject constructor() : Storage {
+@Inject
+class FileStorage() : Storage {
 
     override fun getFileContents(file: File): String {
         return file.readText()

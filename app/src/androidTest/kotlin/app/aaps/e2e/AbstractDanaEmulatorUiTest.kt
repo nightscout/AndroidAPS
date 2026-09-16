@@ -13,26 +13,16 @@ import androidx.work.WorkManager
 import app.aaps.di.testGraphs
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.ExternalOptions
-import app.aaps.core.interfaces.insulin.InsulinManager
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
 import app.aaps.e2e.AbstractDanaEmulatorUiTest.Companion.BOLUS_UNITS
-import app.aaps.implementation.plugin.PluginStore
-import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.pump.dana.DanaPump
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
@@ -476,7 +466,20 @@ abstract class AbstractDanaEmulatorUiTest {
         error("Timed out after ${timeout}ms looking for '$label'")
     }
 
-    protected fun click(label: String) = withStaleRetry { find(label).click() }
+    /**
+     * Taps [label] by coordinates rather than through the node.
+     *
+     * `UiObject2.click` re-reads the accessibility node when it runs, so the node has to survive the whole
+     * gesture. On a screen that recomposes continuously - the Dana overview updates as the pump talks - it
+     * often does not, and every attempt throws StaleObjectException, so even ten retries all fail (seen in
+     * CI as DanaRsEmulatorUiTest dying in returnToDanaOverview). Reading the bounds can still go stale and
+     * is retried, but once the Rect is in hand the tap itself cannot.
+     */
+    protected fun click(label: String) = withStaleRetry {
+        val node = find(label)
+        val bounds = node.visibleBounds
+        device.click(bounds.centerX(), bounds.centerY())
+    }
 
     /**
      * Opens the Manage sheet and taps [action], scrolling the sheet to reach it.

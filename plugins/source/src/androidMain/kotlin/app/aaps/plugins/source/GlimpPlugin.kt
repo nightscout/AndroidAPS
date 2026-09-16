@@ -38,7 +38,8 @@ import kotlinx.coroutines.Dispatchers
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(430)
 @SingleIn(AppScope::class)
-class GlimpPlugin @Inject constructor(
+@Inject
+class GlimpPlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
@@ -61,7 +62,8 @@ class GlimpPlugin @Inject constructor(
 
     // cannot be inner class because of needed injection
 
-    class GlimpWorker @AssistedInject constructor(
+    @AssistedInject
+    class GlimpWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

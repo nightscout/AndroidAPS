@@ -26,7 +26,8 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 @SingleIn(AppScope::class)
-class AutotunePrep @Inject constructor(
+@Inject
+class AutotunePrep(
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val autotuneFS: AutotuneFS,

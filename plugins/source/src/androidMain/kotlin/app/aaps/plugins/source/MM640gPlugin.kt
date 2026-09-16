@@ -41,7 +41,8 @@ import org.json.JSONException
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(420)
 @SingleIn(AppScope::class)
-class MM640gPlugin @Inject constructor(
+@Inject
+class MM640gPlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
@@ -64,7 +65,8 @@ class MM640gPlugin @Inject constructor(
 
     // cannot be inner class because of needed injection
 
-    class MM640gWorker @AssistedInject constructor(
+    @AssistedInject
+    class MM640gWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

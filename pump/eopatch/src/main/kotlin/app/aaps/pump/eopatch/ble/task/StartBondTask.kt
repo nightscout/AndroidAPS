@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StartBondTask @Inject constructor() : TaskBase(TaskFunc.START_BOND) {
+@Inject
+class StartBondTask() : TaskBase(TaskFunc.START_BOND) {
 
     @Inject lateinit var startBond: StartBonding
 

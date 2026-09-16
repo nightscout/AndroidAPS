@@ -15,7 +15,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BolusStart @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BolusResponse>(PatchFunc.START_NOW_BOLUS, patch, aapsLogger) {
+@Inject
+class BolusStart(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<BolusResponse>(PatchFunc.START_NOW_BOLUS, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): BolusResponse {
         val resultCode = if (bytes[DATA0].toInt() != 0) PatchBleResultCode.BOLUS_OTHER_RUNNING else PatchBleResultCode.SUCCESS
         val id = BytesConverter.toUInt(bytes[DATA1], bytes[DATA2])

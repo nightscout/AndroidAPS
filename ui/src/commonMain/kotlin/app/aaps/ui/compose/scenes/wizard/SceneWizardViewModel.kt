@@ -44,7 +44,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 @Stable
-class SceneWizardViewModel @AssistedInject constructor(
+@AssistedInject
+class SceneWizardViewModel(
     @Assisted savedStateHandle: SavedStateHandle,
     private val sceneRepository: SceneStore,
     private val profileRepository: ProfileRepository,

@@ -36,7 +36,8 @@ import kotlinx.coroutines.flow.StateFlow
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosBgQualityCheck @Inject constructor() : BgQualityCheck {
+@Inject
+class IosBgQualityCheck() : BgQualityCheck {
 
     override var state: BgQualityCheck.State
         get() = BgQualityCheck.State.UNKNOWN

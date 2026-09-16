@@ -36,7 +36,8 @@ import kotlinx.serialization.json.JsonObject
  * difference is that it is now visible, and each action's constructor states its own needs.
  */
 @SingleIn(AppScope::class)
-class ActionFactory @Inject constructor(
+@Inject
+class ActionFactory(
     private val triggerDeps: TriggerDeps,
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,

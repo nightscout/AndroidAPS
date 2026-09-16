@@ -11,6 +11,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StartNeedleCheck @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.START_NEEDLE_CHECK, patch, aapsLogger) {
+@Inject
+class StartNeedleCheck(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.START_NEEDLE_CHECK, patch, aapsLogger) {
     fun start(): Single<PatchBooleanResponse> = writeAndRead(generate())
 }

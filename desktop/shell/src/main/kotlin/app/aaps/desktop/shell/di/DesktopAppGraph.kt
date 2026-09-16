@@ -1,6 +1,7 @@
 package app.aaps.desktop.shell.di
 
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -41,6 +42,7 @@ import app.aaps.ui.search.BuiltInSearchables
 import dev.zacsweers.metrox.viewmodel.MetroViewModelMultibindings
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.maintenance.PeriodicMaintenance
+import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.shared.clientbindings.ClientGraphBindings
 import kotlinx.coroutines.CoroutineScope
 import app.aaps.database.AppRepository
@@ -107,6 +109,7 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val visibilityContext: VisibilityContext
     val nsClient: NsClient
     val rxBus: RxBus
+    val snackbarHostPresence: SnackbarHostPresence
     val clientControlActionDispatcher: ClientControlActionDispatcher
 
     // Everything appNavGraph takes.
@@ -116,6 +119,8 @@ interface DesktopAppGraph : MetroViewModelMultibindings {
     val configBuilder: ConfigBuilder
     // The periodic housekeeping shared with Android, and the scope the shell drives it on.
     val periodicMaintenance: PeriodicMaintenance
+    // Turns a snackbar into a notification when no screen is up to show it. Shared with Android.
+    val snackbarNotificationFallback: SnackbarNotificationFallback
     val appScope: CoroutineScope
 
     /** Collected by the composition root, which rebuilds when it moves. */

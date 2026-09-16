@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetTemperature @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<TemperatureResponse>(PatchFunc.GET_TEMPERATURE, patch, aapsLogger) {
+@Inject
+class GetTemperature(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<TemperatureResponse>(PatchFunc.GET_TEMPERATURE, patch, aapsLogger) {
     override fun parse(bytes: ByteArray) = TemperatureResponse(bytes[DATA0].toInt())
     fun get(): Single<TemperatureResponse> = writeAndRead(generate())
 }

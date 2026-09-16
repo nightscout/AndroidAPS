@@ -107,7 +107,8 @@ sealed interface ImportStep {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class ImportViewModel @Inject constructor(
+@Inject
+class ImportViewModel(
     private val aapsLogger: AAPSLogger,
     private val importExportPrefs: ImportExportPrefs,
     private val prefFileList: PrefsFileInfo,

@@ -125,6 +125,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
 
     IosNotificationDelegate.install()
 
+    // A snackbar sent while no screen is up becomes a notification instead of being lost. Shared
+    // with Android and desktop; started after the delegate above, because it posts through it.
+    graph.snackbarNotificationFallback.start()
+
     // Same placement and the same reason: this touches UIKit, so it cannot live in the graph or in
     // `IosAppStartup`. Until this ran, Nightscout sync was blocked forever - see `startBatteryWatch`.
     graph.receiverStatusStore.startBatteryWatch()
@@ -179,6 +183,7 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 visibilityContext = graph.visibilityContext,
                 nsClient = graph.nsClient,
                 rxBus = graph.rxBus,
+                snackbarHostPresence = graph.snackbarHostPresence,
                 clientControlActionDispatcher = graph.clientControlActionDispatcher,
                 // The real app icon, so the About dialog and the drawer show what the home screen
                 // shows. Icon() would tint a logo to one flat colour, so Image() draws it.

@@ -55,7 +55,8 @@ import kotlinx.coroutines.launch
 @NotNSClient
 @IntKey(320)
 @SingleIn(AppScope::class)
-class TidepoolPlugin @Inject constructor(
+@Inject
+class TidepoolPlugin(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,

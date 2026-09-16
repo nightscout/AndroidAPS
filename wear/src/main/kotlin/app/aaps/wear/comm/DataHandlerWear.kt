@@ -73,7 +73,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 @SingleIn(AppScope::class)
-class DataHandlerWear @Inject constructor(
+@Inject
+class DataHandlerWear(
     private val context: Context,
     private val rxBus: RxBus,
     private val sp: SP,

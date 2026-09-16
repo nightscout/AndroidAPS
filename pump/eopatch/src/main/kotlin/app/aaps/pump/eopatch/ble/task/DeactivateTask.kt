@@ -19,7 +19,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class DeactivateTask @Inject constructor(
+@Inject
+class DeactivateTask(
     private val stopBasalTask: StopBasalTask,
     private val tempBasalManager: TempBasalManager,
     private val aapsSchedulers: AapsSchedulers

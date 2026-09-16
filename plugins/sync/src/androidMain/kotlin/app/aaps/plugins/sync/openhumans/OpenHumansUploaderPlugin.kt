@@ -65,7 +65,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 @SingleIn(OpenHumansScope::class)
-class OpenHumansUploaderPlugin @Inject internal constructor(
+@Inject
+class OpenHumansUploaderPlugin internal constructor(
     override val rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,

@@ -24,7 +24,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class DataSyncSelectorV3 @Inject constructor(
+@Inject
+class DataSyncSelectorV3(
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,

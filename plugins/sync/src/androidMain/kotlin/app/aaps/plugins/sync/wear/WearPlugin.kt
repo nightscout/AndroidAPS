@@ -70,7 +70,8 @@ import kotlinx.coroutines.withContext
 @SingleIn(AppScope::class)
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(350)
-class WearPlugin @Inject constructor(
+@Inject
+class WearPlugin(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,

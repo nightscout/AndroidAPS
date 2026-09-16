@@ -86,6 +86,15 @@ class EmulatorBleTransport(
     private val readBuffer = ByteArray(1024)
     private var bufferLength = 0
     @Volatile private var connectionGeneration = 0
+
+    /**
+     * Held while the generation is read-and-acted-on, and while it is bumped.
+     *
+     * The generation alone is not enough. A deferred sender that checks it and then delivers can be
+     * interrupted between the two, and the app disconnects in that gap - so the packet still arrives
+     * at a `BLEComm` that has torn down, which is the crash the check was added to prevent.
+     */
+    private val connectionLock = Any()
     private var v3PairingRequested = false // true after TIME_INFO with requestNewPairing=1
 
     // Track background threads so tests can wait for them to finish
@@ -104,7 +113,17 @@ class EmulatorBleTransport(
     }
 
     private fun launchAsync(block: () -> Unit) {
-        val t = Thread(block)
+        // Raw threads, so an exception here reaches the default handler and takes the whole app with
+        // it - a test harness killing the process it is meant to be testing, and reporting the crash
+        // to the production dashboard on the way out. Whatever went wrong, log it and let the run
+        // continue; the test that cares will fail on its own assertion instead.
+        val t = Thread {
+            try {
+                block()
+            } catch (e: Throwable) {
+                aapsLogger?.error(LTag.PUMPEMULATOR, "emulator async callback failed: ${e.message}", e)
+            }
+        }
         synchronized(pendingThreads) {
             pendingThreads.removeAll { !it.isAlive }
             pendingThreads.add(t)
@@ -191,7 +210,7 @@ class EmulatorBleTransport(
             pumpEncryption.connectionState = 0
             pumpEncryption.setEnhancedEncryption(EncryptionType.ENCRYPTION_DEFAULT)
             bufferLength = 0
-            connectionGeneration++
+            synchronized(connectionLock) { connectionGeneration++ }
             v3PairingRequested = false
             characteristicsFound = false
             connected = true
@@ -204,13 +223,13 @@ class EmulatorBleTransport(
         override fun disconnect() {
             connected = false
             characteristicsFound = false
-            connectionGeneration++
+            synchronized(connectionLock) { connectionGeneration++ }
         }
 
         override fun close() {
             connected = false
             characteristicsFound = false
-            connectionGeneration++
+            synchronized(connectionLock) { connectionGeneration++ }
         }
 
         override fun discoverServices() {
@@ -622,10 +641,15 @@ class EmulatorBleTransport(
      * directly without connecting still gets its responses.
      */
     private fun sendResponse(responseBytes: ByteArray, generation: Int = connectionGeneration) {
-        if (generation != connectionGeneration) {
-            aapsLogger?.debug(LTag.PUMPEMULATOR, "ignoring stale response (gen=$generation, current=$connectionGeneration)")
-            return
+        // Checked and delivered under the lock: a disconnect landing between the two would put the
+        // packet into a BLEComm that has already torn down, and it would throw
+        // "Null decryptedInputBuffer" on a thread nobody owns.
+        synchronized(connectionLock) {
+            if (generation != connectionGeneration) {
+                aapsLogger?.debug(LTag.PUMPEMULATOR, "ignoring stale response (gen=$generation, current=$connectionGeneration)")
+                return
+            }
+            listener?.onCharacteristicChanged(responseBytes)
         }
-        listener?.onCharacteristicChanged(responseBytes)
     }
 }

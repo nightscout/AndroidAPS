@@ -48,7 +48,8 @@ import dev.zacsweers.metro.SingleIn
  * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
 @SingleIn(AppScope::class)
-class RileyLinkBLE @Inject constructor(
+@Inject
+class RileyLinkBLE(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val rileyLinkServiceData: RileyLinkServiceData,

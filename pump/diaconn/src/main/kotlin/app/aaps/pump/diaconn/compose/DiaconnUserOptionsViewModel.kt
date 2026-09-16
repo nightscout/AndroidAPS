@@ -40,7 +40,8 @@ sealed class DiaconnUserOptionsEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class DiaconnUserOptionsViewModel @Inject constructor(
+@Inject
+class DiaconnUserOptionsViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val commandQueue: CommandQueue,

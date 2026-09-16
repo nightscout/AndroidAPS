@@ -25,7 +25,8 @@ import kotlinx.coroutines.sync.withLock
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class CalculationWorkflowImpl @Inject constructor(
+@Inject
+class CalculationWorkflowImpl(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val workflowChainData: WorkflowChainData,

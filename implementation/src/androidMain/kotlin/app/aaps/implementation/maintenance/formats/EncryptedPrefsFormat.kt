@@ -33,7 +33,8 @@ import java.io.IOException
  * years now guards the shared codec through it.
  */
 @SingleIn(AppScope::class)
-class EncryptedPrefsFormat @Inject constructor(
+@Inject
+class EncryptedPrefsFormat(
     private val rh: ResourceHelper,
     private val storage: Storage,
     private val context: Context,

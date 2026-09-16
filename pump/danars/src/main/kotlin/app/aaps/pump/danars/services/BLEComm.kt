@@ -44,7 +44,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class BLEComm @Inject constructor(
+@Inject
+class BLEComm(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val context: Context,
@@ -67,6 +68,9 @@ class BLEComm @Inject constructor(
         private const val PACKET_END_BYTE = 0x5A.toByte()
         private const val BLE5_PACKET_START_BYTE = 0xAA.toByte()
         private const val BLE5_PACKET_END_BYTE = 0xEE.toByte()
+
+        // How many failed packets in a row before the log says the keys are the likely cause.
+        private const val DECRYPT_FAILURE_WARN_THRESHOLD = 5
     }
 
     private var scheduledDisconnection: ScheduledFuture<*>? = null
@@ -295,6 +299,11 @@ class BLEComm @Inject constructor(
     private val readBuffer = ByteArray(1024)
     @Volatile private var bufferLength = 0
 
+    // How many packets in a row failed the integrity check in getDecryptedPacket. A single failure is
+    // normal on a radio link; a long run means the keys no longer match the pump (it was re-paired),
+    // and the log has to tell those two apart.
+    private var consecutiveDecryptFailures = 0
+
     private fun addToReadBuffer(buffer: ByteArray) {
         //log.debug("addToReadBuffer " + DanaRS_Packet.toHexString(buffer));
         if (buffer.isEmpty()) return
@@ -316,10 +325,8 @@ class BLEComm @Inject constructor(
 
     private fun readDataParsing(receivedData: ByteArray) {
         //aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< readDataParsing " + DanaRS_Packet.toHexString(receivedData))
-        var packetIsValid = false
         var isProcessing: Boolean
         isProcessing = true
-        var inputBuffer: ByteArray?
 
         // decrypt 2nd level after successful connection
         val incomingBuffer =
@@ -333,6 +340,9 @@ class BLEComm @Inject constructor(
         //aapsLogger.debug(LTag.PUMPBTCOMM, "incomingBuffer " + DanaRS_Packet.toHexString(incomingBuffer))
 
         while (isProcessing) {
+            // The packet taken out of readBuffer this round, or null if there was no whole valid one.
+            // Filled in under the lock below.
+            var extracted: ByteArray? = null
             var length = 0
             synchronized(readBuffer) {
                 // Find packet start [A5 A5] or [AA AA]
@@ -360,7 +370,18 @@ class BLEComm @Inject constructor(
                             if (readBuffer[length + 5] == PACKET_END_BYTE && readBuffer[length + 6] == PACKET_END_BYTE ||
                                 readBuffer[length + 5] == BLE5_PACKET_END_BYTE && readBuffer[length + 6] == BLE5_PACKET_END_BYTE
                             ) {
-                                packetIsValid = true
+                                // Cut the packet out under the SAME lock that validated it. This used
+                                // to run after the lock was released, so addToReadBuffer - on the BLE
+                                // callback thread - could zero bufferLength through its overflow guard
+                                // in between. The second copy then got a negative length and threw
+                                // ArrayIndexOutOfBoundsException "srcPos=10 ... length=-10".
+                                val packet = ByteArray(length + 7)
+                                System.arraycopy(readBuffer, 0, packet, 0, length + 7)
+                                // Cut the message off the front of readBuffer. length + 7 <= bufferLength
+                                // is checked above and can no longer change, so this cannot go negative.
+                                System.arraycopy(readBuffer, length + 7, readBuffer, 0, bufferLength - (length + 7))
+                                bufferLength -= length + 7
+                                extracted = packet
                             } else {
                                 aapsLogger.error(LTag.PUMPBTCOMM, "Error in input data. Resetting buffer.")
                                 bufferLength = 0
@@ -374,21 +395,11 @@ class BLEComm @Inject constructor(
                     }
                 }
             }
-            if (packetIsValid) {
-                inputBuffer = ByteArray(length + 7)
-                // copy packet to input buffer
-                System.arraycopy(readBuffer, 0, inputBuffer, 0, length + 7)
-                // Cut off the message from readBuffer
-                try {
-                    System.arraycopy(readBuffer, length + 7, readBuffer, 0, bufferLength - (length + 7))
-                } catch (e: Exception) {
-                    aapsLogger.error(LTag.PUMPBTCOMM, "length: " + length + "bufferLength: " + bufferLength)
-                    throw e
-                }
-                bufferLength -= length + 7
-                // now we have encrypted packet in inputBuffer
-
-                // decrypt the packet
+            val inputBuffer = extracted
+            if (inputBuffer != null) {
+                // Decryption and dispatch stay OUTSIDE the lock on purpose: processMessage runs the
+                // reply handlers, and holding readBuffer across that would block the BLE callback
+                // thread that feeds addToReadBuffer.
                 val decrypted = bleEncryption.getDecryptedPacket(inputBuffer)
                 decrypted?.let { decryptedBuffer ->
                     if (decryptedBuffer[0] == BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte()) {
@@ -425,9 +436,24 @@ class BLEComm @Inject constructor(
                         processMessage(decryptedBuffer)
                     }
                 }
-                checkNotNull(decrypted) { "Null decryptedInputBuffer" }
-                packetIsValid = false
-                if (bufferLength < 6) {
+                if (decrypted == null) {
+                    // getDecryptedPacket returns null only when the packet fails its own integrity
+                    // checks: the length byte disagreeing with the decrypted size, or a bad CRC. That
+                    // is exactly what a checksum is for, and it happens on a radio link. This used to
+                    // be checkNotNull, so one corrupt packet killed the app - and with it the loop.
+                    // Drop the packet instead. The command waiting for a reply times out and retries,
+                    // which is what the driver already does for a packet that never arrives.
+                    consecutiveDecryptFailures++
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Packet failed the integrity check, dropping it (failure #$consecutiveDecryptFailures)")
+                    if (consecutiveDecryptFailures == DECRYPT_FAILURE_WARN_THRESHOLD)
+                        aapsLogger.warn(
+                            LTag.PUMPBTCOMM,
+                            "$DECRYPT_FAILURE_WARN_THRESHOLD packets in a row failed to decrypt. The pairing keys probably no longer match the pump."
+                        )
+                } else {
+                    consecutiveDecryptFailures = 0
+                }
+                if (synchronized(readBuffer) { bufferLength } < 6) {
                     // stop the loop
                     isProcessing = false
                 }

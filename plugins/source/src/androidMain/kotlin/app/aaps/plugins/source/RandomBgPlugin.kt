@@ -51,7 +51,8 @@ import dev.zacsweers.metro.IntKey as MetroIntKey
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @MetroIntKey(550)
 @SingleIn(AppScope::class)
-class RandomBgPlugin @Inject constructor(
+@Inject
+class RandomBgPlugin(
     private val context: Context,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,

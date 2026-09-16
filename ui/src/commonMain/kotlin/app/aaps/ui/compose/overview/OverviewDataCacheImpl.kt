@@ -143,7 +143,8 @@ private const val WARN_BATTERY_VOLTAGE = 1.35
 private const val URGENT_BATTERY_VOLTAGE = 1.3
 
 @OptIn(FlowPreview::class)
-class OverviewDataCacheImpl @AssistedInject constructor(
+@AssistedInject
+class OverviewDataCacheImpl(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val profileUtil: ProfileUtil,
@@ -261,6 +262,17 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     // NSClient status
     private val _nsClientStatusFlow = MutableStateFlow(AapsClientStatusData())
     override val nsClientStatusFlow: StateFlow<AapsClientStatusData> = _nsClientStatusFlow.asStateFlow()
+
+    // Declared HERE, above init, on purpose. Kotlin runs property initialisers and init blocks in
+    // declaration order, and the init below starts flow collectors that call the rebuild functions
+    // these locks guard. Declared further down the file - which is where they used to be, next to
+    // the functions that use them - they were still null when a debounced emission arrived before
+    // construction finished, and the collector died with
+    // "NullPointerException: ... Mutex.lock(...) on a null object reference".
+    // What the locks are for is explained on rebuildBasalGraph.
+    private val runningModeRebuildMutex = Mutex()
+    private val targetLineRebuildMutex = Mutex()
+    private val basalRebuildMutex = Mutex()
 
     init {
         // Scope-agnostic: always bridge calculation progress into the flow.
@@ -920,9 +932,6 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             }
     }
 
-    /** Same last-writer-wins hazard as [basalRebuildMutex], across three triggers. */
-    private val runningModeRebuildMutex = Mutex()
-
     private suspend fun rebuildRunningModeGraph() = runningModeRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val endTime = graphEndTime(toTime)
@@ -952,9 +961,6 @@ class OverviewDataCacheImpl @AssistedInject constructor(
 
         _runningModeGraphFlow.value = RunningModeGraphData(segments = segments)
     }
-
-    /** Same last-writer-wins hazard as [basalRebuildMutex], across four triggers. */
-    private val targetLineRebuildMutex = Mutex()
 
     private suspend fun rebuildTargetLine() = targetLineRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
@@ -1000,8 +1006,6 @@ class OverviewDataCacheImpl @AssistedInject constructor(
      * the freshest range always wins. Reading the range before taking the lock would leave the bug
      * in place.
      */
-    private val basalRebuildMutex = Mutex()
-
     private suspend fun rebuildBasalGraph() = basalRebuildMutex.withLock {
         val (fromTime, toTime) = graphTimeRange() ?: return
         val endTime = graphEndTime(toTime)

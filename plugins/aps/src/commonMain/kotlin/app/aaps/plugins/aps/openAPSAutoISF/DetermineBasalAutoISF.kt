@@ -25,7 +25,8 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 @SingleIn(AppScope::class)
-class DetermineBasalAutoISF @Inject constructor(
+@Inject
+class DetermineBasalAutoISF(
     private val profileUtil: ProfileUtil
 ) {
 

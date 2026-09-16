@@ -19,8 +19,17 @@ tasks.withType<Test>().configureEach {
     failOnNoDiscoveredTests = false
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
     maxHeapSize = "1536m"
+
+    // No JaCoCo settings here on purpose: `isIncludeNoLocationClasses`, which Robolectric tests need
+    // in order to record anything, is set once for every project in the root build file. Copying it
+    // into a convention is how it came to be missing from the multiplatform modules in the first
+    // place.
     testLogging {
-        events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
+        // See the same block in `test-module-dependencies` for why CI drops the passing tests' stdout.
+        events = if (providers.environmentVariable("CI").isPresent)
+            setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED)
+        else
+            setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_OUT)
         exceptionFormat = TestExceptionFormat.FULL
     }
 }

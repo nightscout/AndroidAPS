@@ -29,7 +29,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     api(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
 
     testImplementation(project(":shared:tests"))

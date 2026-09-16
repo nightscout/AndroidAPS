@@ -17,7 +17,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.wear.R
 import dev.zacsweers.metro.Inject
 
-class SimpleUi @Inject constructor(
+@Inject
+class SimpleUi(
     private val context: Context,
     private val sp: SP,
     private val dateUtil: DateUtil

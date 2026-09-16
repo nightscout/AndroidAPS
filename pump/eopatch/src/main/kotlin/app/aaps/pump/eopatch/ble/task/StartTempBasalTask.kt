@@ -14,7 +14,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StartTempBasalTask @Inject constructor(
+@Inject
+class StartTempBasalTask(
     private val tempBasalManager: TempBasalManager,
     private val aapsSchedulers: AapsSchedulers
 ) : TaskBase(TaskFunc.START_TEMP_BASAL) {

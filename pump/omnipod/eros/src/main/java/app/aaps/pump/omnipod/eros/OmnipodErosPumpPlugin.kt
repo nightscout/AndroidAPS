@@ -134,7 +134,8 @@ import dev.zacsweers.metro.SingleIn
 @PumpDriver
 @MetroIntKey(1070)
 @SingleIn(AppScope::class)
-class OmnipodErosPumpPlugin @Inject constructor(
+@Inject
+class OmnipodErosPumpPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
     preferences: Preferences,

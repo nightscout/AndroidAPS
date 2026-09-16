@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class SetLowReservoirLevelAndExpireAlert @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_LOW_RESERVOIR, patch, aapsLogger) {
+@Inject
+class SetLowReservoirLevelAndExpireAlert(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_LOW_RESERVOIR, patch, aapsLogger) {
     fun set(level: Int, expireTime: Int): Single<PatchBooleanResponse> =
         writeAndRead(allocate().putByte(level).putByte(expireTime).build())
 }

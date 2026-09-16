@@ -26,7 +26,8 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.minutes
 
 
-class InstaraStaleCheckWorker @AssistedInject constructor(
+@AssistedInject
+class InstaraStaleCheckWorker(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     aapsLogger: AAPSLogger,

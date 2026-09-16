@@ -40,7 +40,8 @@ import org.json.JSONException
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(500)
 @SingleIn(AppScope::class)
-class SyaiPlugin @Inject constructor(
+@Inject
+class SyaiPlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
@@ -62,7 +63,8 @@ class SyaiPlugin @Inject constructor(
 ), BgSource {
 
 
-    class SyaiWorker @AssistedInject constructor(
+    @AssistedInject
+    class SyaiWorker(
         @Assisted context: Context,
         @Assisted params: WorkerParameters,
         aapsLogger: AAPSLogger,

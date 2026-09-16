@@ -68,7 +68,8 @@ import kotlin.time.Instant
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class TddCalculatorImpl @Inject constructor(
+@Inject
+class TddCalculatorImpl(
     private val aapsLogger: AAPSLogger,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,

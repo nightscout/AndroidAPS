@@ -10,7 +10,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class IconsProviderImplementation @Inject constructor(private val config: Config) : IconsProvider {
+@Inject
+class IconsProviderImplementation(private val config: Config) : IconsProvider {
 
     override fun getIcon(): Int =
         when {

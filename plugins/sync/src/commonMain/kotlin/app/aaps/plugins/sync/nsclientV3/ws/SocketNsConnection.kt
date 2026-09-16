@@ -79,7 +79,8 @@ import kotlinx.serialization.json.put
  * either point both have long existed.
  */
 @SingleIn(AppScope::class)
-class SocketNsConnection @Inject constructor(
+@Inject
+class SocketNsConnection(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val config: Config,

@@ -72,7 +72,8 @@ sealed class MedtronicOverviewEvent {
 @Stable
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
-class MedtronicOverviewViewModel @Inject constructor(
+@Inject
+class MedtronicOverviewViewModel(
     private val rh: ResourceHelper,
     private val ch: ConcentrationHelper,
     private val medtronicPumpPlugin: MedtronicPumpPlugin,

@@ -11,7 +11,8 @@ import app.aaps.core.ui.compose.preference.InlineStringListPreferenceItem
 import app.aaps.core.ui.compose.stringResource
 import dev.zacsweers.metro.Inject
 
-class SWRadioButton @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
+@Inject
+class SWRadioButton(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var labelsArray: Array<CharSequence> = emptyArray()
     private var valuesArray: Array<CharSequence> = emptyArray()

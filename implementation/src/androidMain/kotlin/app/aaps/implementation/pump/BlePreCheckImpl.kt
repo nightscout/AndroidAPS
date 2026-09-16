@@ -22,7 +22,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class BlePreCheckImpl @Inject constructor(
+@Inject
+class BlePreCheckImpl(
     private val context: Context,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,

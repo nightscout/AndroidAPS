@@ -35,7 +35,8 @@ import kotlinx.serialization.json.put
  * embedded under `envelope`.
  */
 @SingleIn(AppScope::class)
-class ClientControlPublisher @Inject constructor(
+@Inject
+class ClientControlPublisher(
     private val pairingRepository: ClientPairingRepository,
     private val nsClientV3Plugin: () -> NSClientV3Plugin,
     private val nsClientRepository: NSClientRepository,

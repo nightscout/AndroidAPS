@@ -33,7 +33,8 @@ import kotlin.reflect.KClass
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class UiInteractionImpl @Inject constructor(
+@Inject
+class UiInteractionImpl(
     private val context: Context,
     private val alarmNotificationManager: AlarmNotificationManager,
     private val notificationManager: () -> NotificationManager,

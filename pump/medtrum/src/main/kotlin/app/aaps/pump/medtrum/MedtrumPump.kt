@@ -43,7 +43,8 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.round
 
 @SingleIn(AppScope::class)
-class MedtrumPump @Inject constructor(
+@Inject
+class MedtrumPump(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val preferences: Preferences,

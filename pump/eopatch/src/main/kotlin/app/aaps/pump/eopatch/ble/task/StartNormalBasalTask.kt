@@ -14,7 +14,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class StartNormalBasalTask @Inject constructor(
+@Inject
+class StartNormalBasalTask(
     val patchStateManager: PatchStateManager,
     val aapsSchedulers: AapsSchedulers,
 ) : TaskBase(TaskFunc.START_NORMAL_BASAL) {

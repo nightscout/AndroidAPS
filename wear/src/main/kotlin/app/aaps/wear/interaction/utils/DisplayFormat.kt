@@ -11,7 +11,11 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 
 @SingleIn(AppScope::class)
-class DisplayFormat @Inject internal constructor() {
+@Inject
+class DisplayFormat internal constructor(
+    private val sp: SP,
+    private val context: Context
+) {
 
     companion object {
 
@@ -20,9 +24,6 @@ class DisplayFormat @Inject internal constructor() {
         const val MIN_FIELD_LEN_COB = 3 // since carbs are usually 0..99g
         const val MIN_FIELD_LEN_IOB = 3 // IoB can range from like .1U to 99U
     }
-
-    @Inject lateinit var sp: SP
-    @Inject lateinit var context: Context
 
     /**
      * Maximal and minimal lengths of fields/labels shown in complications, in characters

@@ -15,7 +15,8 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.stringResource
 import dev.zacsweers.metro.Inject
 
-class SWHtmlLink @Inject constructor(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
+@Inject
+class SWHtmlLink(aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
 
     private var textLabel: String? = null
     private var visibilityValidator: (() -> Boolean)? = null

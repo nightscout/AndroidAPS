@@ -13,7 +13,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class ReadBolusFinishTimeTask @Inject constructor() : BolusTask(TaskFunc.READ_BOLUS_FINISH_TIME) {
+@Inject
+class ReadBolusFinishTimeTask() : BolusTask(TaskFunc.READ_BOLUS_FINISH_TIME) {
 
     @Inject lateinit var bolusFinishTimeGet: BolusFinishTimeGet
 

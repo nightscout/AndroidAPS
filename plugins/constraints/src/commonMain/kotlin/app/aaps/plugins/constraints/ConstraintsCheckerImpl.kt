@@ -20,7 +20,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class ConstraintsCheckerImpl @Inject constructor(
+@Inject
+class ConstraintsCheckerImpl(
     private val activePlugin: ActivePlugin,
     private val aapsLogger: AAPSLogger,
     private val ch: ConcentrationHelper,

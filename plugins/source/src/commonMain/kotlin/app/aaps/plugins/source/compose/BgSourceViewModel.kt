@@ -45,7 +45,8 @@ import kotlinx.coroutines.launch
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class BgSourceViewModel @Inject constructor(
+@Inject
+class BgSourceViewModel(
     private val persistenceLayer: PersistenceLayer,
     internal val rh: TextResolver,
     internal val dateUtil: DateUtil,

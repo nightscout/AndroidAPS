@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class InfoReminderSet @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_INFO_REMINDER, patch, aapsLogger) {
+@Inject
+class InfoReminderSet(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.SET_INFO_REMINDER, patch, aapsLogger) {
     fun set(isInfoReminder: Boolean): Single<PatchBooleanResponse> =
         writeAndRead(allocate().putBoolean(isInfoReminder).putBoolean(false).build())
 }

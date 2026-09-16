@@ -28,7 +28,8 @@ import java.util.concurrent.TimeUnit
  * expiry job at a time. Gated by `config.APS`.
  */
 @SingleIn(AppScope::class)
-class RunningModeExpiryScheduler @Inject constructor(
+@Inject
+class RunningModeExpiryScheduler(
     private val persistenceLayer: PersistenceLayer,
     private val workManager: WorkManager,
     private val config: Config,

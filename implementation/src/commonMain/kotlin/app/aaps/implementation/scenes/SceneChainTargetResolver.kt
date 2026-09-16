@@ -33,7 +33,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class SceneChainTargetResolver @Inject constructor(
+@Inject
+class SceneChainTargetResolver(
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,

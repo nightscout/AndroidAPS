@@ -55,7 +55,8 @@ import platform.darwin.dispatch_get_main_queue
 @OptIn(ExperimentalForeignApi::class)
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosReceiverStatusStore @Inject constructor(
+@Inject
+class IosReceiverStatusStore(
     private val aapsLogger: AAPSLogger
 ) : ReceiverStatusStore {
 

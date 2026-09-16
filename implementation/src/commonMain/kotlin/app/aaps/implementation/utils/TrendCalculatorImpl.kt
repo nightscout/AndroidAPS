@@ -13,7 +13,8 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class TrendCalculatorImpl @Inject constructor(
+@Inject
+class TrendCalculatorImpl(
     private val rh: TextResolver
 ) : TrendCalculator {
 

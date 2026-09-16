@@ -32,7 +32,8 @@ import kotlin.reflect.KClass
 
 @ContributesBinding(AppScope::class, binding = binding<ActivePlugin>())
 @SingleIn(AppScope::class)
-class PluginStore @Inject constructor(
+@Inject
+class PluginStore(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val pumpWithConcentration: () -> PumpWithConcentration,

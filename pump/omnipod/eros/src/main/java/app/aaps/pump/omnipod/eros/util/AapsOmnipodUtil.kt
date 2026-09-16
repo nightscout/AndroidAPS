@@ -22,7 +22,8 @@ import dev.zacsweers.metro.SingleIn
  * swapping the serializer would change what is written to disk.
  */
 @SingleIn(AppScope::class)
-class AapsOmnipodUtil @Inject constructor(
+@Inject
+class AapsOmnipodUtil(
     private val rh: ResourceHelper
 ) {
 

@@ -5,21 +5,15 @@ import android.os.SystemClock
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
-import app.aaps.di.ResetGraphRule
-import app.aaps.di.testGraphs
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.di.EmulatedOptions
-import app.aaps.di.metro.MetroGraphs
-import app.aaps.implementation.plugin.PluginStore
-import app.aaps.plugins.aps.utils.StaticInjector
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
@@ -170,12 +164,12 @@ class DanaREmulatorPumpTest {
         assertThat(awaitTrue(HISTORY_TIMEOUT_MS) { emulatorState.bolusHistoryRequestCount > 0 }).isTrue()
         assertThat(
             awaitTrue(HISTORY_TIMEOUT_MS) {
-                danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS).blockingGet()
+                runBlocking { danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS) }
                     .any { it.timestamp == timestamp }
             }
         ).isTrue()
-        val record = danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS)
-            .blockingGet().first { it.timestamp == timestamp }
+        val record = runBlocking { danaHistoryRecordDao.allFromByType(timestamp, RecordTypes.RECORD_TYPE_BOLUS) }
+            .first { it.timestamp == timestamp }
         assertThat(record.value).isWithin(0.001).of(1.5)
         assertThat(record.bolusType).isEqualTo("S")
         assertThat(danaPump.historyDoneReceived).isTrue() // the 0x31F1 MsgHistoryDone should end the stream
@@ -220,13 +214,13 @@ class DanaREmulatorPumpTest {
         t.join(HISTORY_TIMEOUT_MS) // loadHistory returns when the 0x31F1 done arrives; bound it per type
         assertThat(
             awaitTrue(HISTORY_TIMEOUT_MS) {
-                danaHistoryRecordDao.allFromByType(timestamp, type).blockingGet().any { it.timestamp == timestamp }
+                runBlocking { danaHistoryRecordDao.allFromByType(timestamp, type) }.any { it.timestamp == timestamp }
             }
         ).isTrue()
     }
 
     private fun recordAt(type: Byte, timestamp: Long) =
-        danaHistoryRecordDao.allFromByType(timestamp, type).blockingGet().first { it.timestamp == timestamp }
+        runBlocking { danaHistoryRecordDao.allFromByType(timestamp, type) }.first { it.timestamp == timestamp }
 
     /**
      * Brings [plugin] up against the emulated [variant] and requires it to connect.

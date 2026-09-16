@@ -8,7 +8,8 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import dev.zacsweers.metro.Inject
 
-class DanaRSPacketOptionSetPumpUTCAndTimeZone @Inject constructor(
+@Inject
+class DanaRSPacketOptionSetPumpUTCAndTimeZone(
     private val aapsLogger: AAPSLogger,
     dateUtil: DateUtil
 ) : DanaRSPacket() {

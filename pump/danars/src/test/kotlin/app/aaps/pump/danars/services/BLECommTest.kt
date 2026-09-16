@@ -27,6 +27,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
+import java.util.concurrent.atomic.AtomicReference
 
 class BLECommTest : TestBase() {
 
@@ -171,5 +174,81 @@ class BLECommTest : TestBase() {
         bleComm.onDescriptorWritten()
 
         verify(bleTransport, times(2)).updatePairingState(PairingState(step = PairingStep.HANDSHAKE_IN_PROGRESS))
+    }
+
+    /** A well framed packet: A5 A5 LEN ... 5A 5A, the shape readDataParsing accepts. */
+    private fun framedPacket(): ByteArray {
+        val length = 3
+        return ByteArray(length + 7).apply {
+            this[0] = 0xA5.toByte()
+            this[1] = 0xA5.toByte()
+            this[2] = length.toByte()
+            this[length + 5] = 0x5A.toByte()
+            this[length + 6] = 0x5A.toByte()
+        }
+    }
+
+    /**
+     * A packet that fails its integrity check is dropped, not fatal.
+     *
+     * `BleEncryption.getDecryptedPacket` returns null for exactly two reasons: the length byte
+     * disagreeing with the decrypted size, or a bad CRC. Both are ordinary events on a radio link -
+     * that is what a checksum is for. `readDataParsing` used to end with
+     * `checkNotNull(decrypted) { "Null decryptedInputBuffer" }`, so one corrupt packet threw
+     * IllegalStateException out of the BLE callback and killed the app, taking the loop with it. Seen
+     * in the field on 4.0.0-dev-c.
+     */
+    @Test
+    fun aPacketThatFailsItsIntegrityCheckIsDroppedNotFatal() {
+        whenever(bleEncryption.getDecryptedPacket(any())).thenReturn(null)
+
+        bleComm.onCharacteristicChanged(framedPacket())
+
+        verify(bleEncryption, times(1)).getDecryptedPacket(any())
+    }
+
+    /** Dropping the packet must not wedge the stream - the next one is still parsed. */
+    @Test
+    fun theNextPacketIsStillParsedAfterOneIsDropped() {
+        whenever(bleEncryption.getDecryptedPacket(any())).thenReturn(null)
+
+        bleComm.onCharacteristicChanged(framedPacket())
+        bleComm.onCharacteristicChanged(framedPacket())
+
+        // Two calls means the first packet was consumed from readBuffer rather than left to block it.
+        verify(bleEncryption, times(2)).getDecryptedPacket(any())
+    }
+
+    /**
+     * The packet must be cut out under the same lock that validated it.
+     *
+     * The length check and the copy out of `readBuffer` used to sit on opposite sides of
+     * `synchronized(readBuffer)`. Two notifications arriving together could then both pass the
+     * "is there a whole packet" check, and the second copy ran after the first had already consumed
+     * the bytes - with a negative length:
+     * "src.length=1024 srcPos=10 dst.length=1024 dstPos=0 length=-10", as reported on 4.0.0-dev-c.
+     */
+    @Test
+    fun concurrentNotificationsNeverCopyANegativeLength() {
+        // Decryption must SUCCEED here, or the integrity-check path above would throw first on the old
+        // code and hide the race this test is about. An encryption response with an opcode no branch
+        // matches is dispatched nowhere, so only the buffer handling is under test.
+        whenever(bleEncryption.getDecryptedPacket(any()))
+            .thenReturn(byteArrayOf(BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte(), 0x7F, 0x00))
+        val failure = AtomicReference<Throwable?>(null)
+
+        val threads = (1..4).map {
+            Thread {
+                try {
+                    repeat(500) { bleComm.onCharacteristicChanged(framedPacket()) }
+                } catch (t: Throwable) {
+                    failure.compareAndSet(null, t)
+                }
+            }
+        }
+        threads.forEach { it.start() }
+        threads.forEach { it.join() }
+
+        assertThat(failure.get()).isNull()
     }
 }

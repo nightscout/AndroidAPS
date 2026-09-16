@@ -42,7 +42,8 @@ import kotlinx.coroutines.runBlocking
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @IntKey(480)
 @SingleIn(AppScope::class)
-class GlunovoPlugin @Inject constructor(
+@Inject
+class GlunovoPlugin(
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,

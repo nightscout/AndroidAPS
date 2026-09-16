@@ -43,7 +43,8 @@ import kotlin.math.abs
 @ContributesBinding(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<PrefsFileInfo>())
 @SingleIn(AppScope::class)
-class FileListProviderImpl @Inject constructor(
+@Inject
+class FileListProviderImpl(
     private val rh: ResourceHelper,
     private val config: () -> Config,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,

@@ -19,7 +19,8 @@ import dev.zacsweers.metro.Inject
 /**
  * Created by geoff on 5/30/16.
  */
-class RadioResponse @Inject constructor(
+@Inject
+class RadioResponse(
     private val aapsLogger: AAPSLogger,
     private val rileyLinkServiceData: RileyLinkServiceData,
     private val rileyLinkUtil: RileyLinkUtil

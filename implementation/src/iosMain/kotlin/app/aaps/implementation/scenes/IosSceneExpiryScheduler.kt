@@ -37,7 +37,8 @@ import dev.zacsweers.metro.SingleIn
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class IosSceneExpiryScheduler @Inject constructor(
+@Inject
+class IosSceneExpiryScheduler(
     private val aapsLogger: AAPSLogger
 ) : SceneExpiryScheduler {
 

@@ -77,7 +77,8 @@ import kotlinx.coroutines.launch
  */
 @Suppress("SpellCheckingInspection")
 @SingleIn(AppScope::class)
-class NSDeviceStatusHandler @Inject constructor(
+@Inject
+class NSDeviceStatusHandler(
     private val preferences: Preferences,
     private val config: Config,
     private val dateUtil: DateUtil,

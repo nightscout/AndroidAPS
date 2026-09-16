@@ -47,7 +47,8 @@ sealed class UserOptionsEvent {
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 @ViewModelKey
 @Stable
-class DanaUserOptionsViewModel @Inject constructor(
+@Inject
+class DanaUserOptionsViewModel(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val danaPump: DanaPump,

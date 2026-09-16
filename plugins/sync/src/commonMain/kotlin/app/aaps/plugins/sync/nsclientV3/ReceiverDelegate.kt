@@ -24,7 +24,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @SingleIn(AppScope::class)
-class ReceiverDelegate @Inject constructor(
+@Inject
+class ReceiverDelegate(
     private val aapsLogger: AAPSLogger,
     private val rh: TextResolver,
     private val preferences: Preferences,

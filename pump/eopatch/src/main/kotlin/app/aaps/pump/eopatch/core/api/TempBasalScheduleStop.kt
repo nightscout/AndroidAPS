@@ -11,6 +11,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class TempBasalScheduleStop @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.STOP_TEMP_BASAL, patch, aapsLogger) {
+@Inject
+class TempBasalScheduleStop(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseBooleanAPI(PatchFunc.STOP_TEMP_BASAL, patch, aapsLogger) {
     fun stop(): Single<PatchBooleanResponse> = writeAndRead(generate())
 }

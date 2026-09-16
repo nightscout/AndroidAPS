@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
@@ -36,6 +37,9 @@ class OHLoginActivity : MetroAppCompatActivity() {
 
     @Inject
     lateinit var rxBus: RxBus
+
+    @Inject
+    lateinit var snackbarHostPresence: SnackbarHostPresence
 
     private val viewModel by viewModels<OHLoginViewModel> {
         (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
@@ -69,6 +73,7 @@ class OHLoginActivity : MetroAppCompatActivity() {
                         )
                         GlobalSnackbarHost(
                             rxBus = rxBus,
+                            snackbarHostPresence = snackbarHostPresence,
                             hostState = snackbarHostState,
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )

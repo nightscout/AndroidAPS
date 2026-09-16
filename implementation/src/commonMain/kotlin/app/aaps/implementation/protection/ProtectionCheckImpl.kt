@@ -29,7 +29,8 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 @OptIn(ExperimentalAtomicApi::class)
-class ProtectionCheckImpl @Inject constructor(
+@Inject
+class ProtectionCheckImpl(
     private val preferences: Preferences,
     private val passwordCheck: PasswordCheck,
     private val dateUtil: DateUtil

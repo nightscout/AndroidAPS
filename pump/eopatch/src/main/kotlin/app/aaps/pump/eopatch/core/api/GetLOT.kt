@@ -11,7 +11,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class GetLOT @Inject constructor(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<LotNumberResponse>(PatchFunc.GET_LOT_NUMBER, patch, aapsLogger) {
+@Inject
+class GetLOT(patch: IBleDevice, aapsLogger: AAPSLogger) : BaseAPI<LotNumberResponse>(PatchFunc.GET_LOT_NUMBER, patch, aapsLogger) {
     override fun parse(bytes: ByteArray): LotNumberResponse {
         if (bytes[DATA0].toInt() == 0) {
             val part = if (bytes[DATA1].toInt() != 0) String(bytes, DATA1, 8, Charsets.UTF_8) else ""

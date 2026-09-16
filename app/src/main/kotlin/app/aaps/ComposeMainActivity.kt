@@ -74,6 +74,7 @@ import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -86,6 +87,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.MetroAppCompatActivity
+import app.aaps.core.ui.compose.FallbackViewModelFactory
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
@@ -137,6 +139,7 @@ import app.aaps.core.ui.R as CoreUiR
 class ComposeMainActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var snackbarHostPresence: SnackbarHostPresence
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
@@ -181,7 +184,14 @@ class ComposeMainActivity : MetroAppCompatActivity() {
      * The factory `by viewModels()` uses.
      */
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-        get() = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+        get() = FallbackViewModelFactory(
+            primary = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory,
+            // Anything the graph does not contribute still has to be buildable. AndroidX creates its
+            // own view models through this activity - BiometricPrompt makes a BiometricViewModel -
+            // and handing out the Metro factory alone made that throw, taking the biometric prompt
+            // down and with it the Configuration screen and profile editing.
+            fallback = super.defaultViewModelProviderFactory
+        )
 
     // View models, built by Metro - each carries @ContributesIntoMap and @ViewModelKey.
     private val mainViewModel: MainViewModel by viewModels()
@@ -300,6 +310,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             visibilityContext = visibilityContext,
             nsClient = nsClient,
             rxBus = rxBus,
+            snackbarHostPresence = snackbarHostPresence,
             clientControlActionDispatcher = clientControlActionDispatcher,
             // The two per-build bitmaps the shared root cannot paint itself.
             appIcon = { modifier -> Image(painterResource(iconsProvider.getIcon()), null, modifier) },

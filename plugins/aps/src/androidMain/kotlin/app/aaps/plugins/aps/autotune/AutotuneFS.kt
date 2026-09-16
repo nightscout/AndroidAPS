@@ -24,7 +24,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
-class AutotuneFS @Inject constructor(
+@Inject
+class AutotuneFS(
     private val rh: ResourceHelper,
     private val loggerUtils: LoggerUtils
 ) {
