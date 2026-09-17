@@ -18,6 +18,8 @@ android {
 }
 
 dependencies {
+    api(project(":pump:carelevo:protocol"))
+    implementation(project(":pump:carelevo:emulator"))
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:utils"))
