@@ -273,8 +273,17 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         assertThat(profileFunction.runningICfg.value).isEqualTo(activated)
     }
 
+    /**
+     * Waits for a value that lands asynchronously.
+     *
+     * The mirror is refreshed off the EPS observer, so the chain behind it is: profile switch, EPS row,
+     * observer, cache invalidation, a fresh getProfile() read. On a CI box running three emulators the
+     * old 10s budget was not always enough and the test failed with a null mirror, which reads as a
+     * broken feature rather than a slow machine. STEP_TIMEOUT for the UI waits in this suite is 30s, so
+     * use the same. A mirror that never populates still fails, just not merely because the box is busy.
+     */
     private fun <T> awaitMirror(supplier: () -> T?): T? {
-        val deadline = System.currentTimeMillis() + 10_000
+        val deadline = System.currentTimeMillis() + 30_000
         while (System.currentTimeMillis() < deadline) {
             supplier()?.let { return it }
             Thread.sleep(100)
