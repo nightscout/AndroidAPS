@@ -69,7 +69,13 @@ private val DEFAULT_METRO_ANNOTATIONS = listOf(
  *
  * `java.class.path` is what the Gradle test worker was launched with, so it holds every module output
  * and dependency jar - the pump modules included, which is the point.
+ *
+ * Public so a guard can ask what is actually on this build's classpath rather than restating a list.
+ * A test that names the modules it expects fails to compile the moment one is removed from
+ * `settings.gradle`, which makes the list of modules a dependency of the app's own tests.
  */
+fun aapsClassesOnClasspath(anchors: List<Class<*>>): List<Class<*>> = classesOnClasspath(anchors)
+
 private fun classesOnClasspath(anchors: List<Class<*>>): List<Class<*>> {
     val loader = anchors.firstOrNull()?.classLoader ?: ClassLoader.getSystemClassLoader()
     val roots = System.getProperty("java.class.path").orEmpty()
