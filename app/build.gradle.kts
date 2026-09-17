@@ -257,7 +257,7 @@ dependencies {
     // Remote config
     api(libs.com.google.firebase.config)
     // Navigation Compose
-    api(libs.androidx.compose.navigation)
+    api(libs.jetbrains.androidx.compose.navigation)
 }
 
 
