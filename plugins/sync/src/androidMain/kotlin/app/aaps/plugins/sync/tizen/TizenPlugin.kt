@@ -135,6 +135,9 @@ class TizenPlugin(
     }
 
     private fun sendData(event: Event) {
+        // prepareData reads the active pump (basalStatus + pumpStatus). Until ConfigBuilder.initialize()
+        // has run verifySelectionInCategories() there is none and PluginStore throws "No pump selected".
+        if (!config.appInitialized) return
         val bundle = Bundle()
         prepareData(event, bundle)
 
