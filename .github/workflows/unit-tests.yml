@@ -38,15 +38,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
-    # Run the pull_request event ONLY for forks. A same-repo PR - the long-lived `dev` -> `master`
-    # one, for instance - already fires the push trigger for the very same commit, so without this
-    # every push to dev ran the whole suite twice: once as push, once as pull_request. The two do not
-    # cancel each other either, because the concurrency group keys on github.ref and those differ
-    # (refs/heads/dev vs refs/pull/N/merge). A fork PR has no push trigger on this repo, so it still
-    # needs the pull_request event - which is the reason that event is here at all.
+    # Skip the pull_request event ONLY where the push trigger already covers the same commit, which is
+    # exactly a same-repo PR opened FROM `dev` or `master` - the long-lived `dev` -> `master` one. Without
+    # that skip every push to dev ran the whole suite twice: once as push, once as pull_request, and the
+    # two do not cancel each other because the concurrency group keys on github.ref and those differ
+    # (refs/heads/dev vs refs/pull/N/merge).
+    #
+    # Everything else needs the pull_request event and must NOT be skipped:
+    # - a fork PR has no push trigger on this repo at all;
+    # - a same-repo PR from a FEATURE branch has none either, because `push` above lists only dev and
+    #   master. This guard used to be fork-only, which meant a long-lived branch like `carelevo` got no
+    #   unit run from either event - 83 commits with the suite never executed once.
     if: >-
       github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name != github.repository
+      github.event.pull_request.head.repo.full_name != github.repository ||
+      (github.event.pull_request.head.ref != 'dev' && github.event.pull_request.head.ref != 'master')
 
     # At job level so the coverage steps can ask whether a token exists at all. GitHub withholds
     # secrets from pull_request runs on forks - deliberately, since a fork's workflow must not be able

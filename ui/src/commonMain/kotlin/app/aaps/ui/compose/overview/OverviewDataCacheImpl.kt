@@ -95,7 +95,6 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -936,30 +935,31 @@ class OverviewDataCacheImpl(
         val (fromTime, toTime) = graphTimeRange() ?: return
         val endTime = graphEndTime(toTime)
 
-        // Batch query all RM records in range (instead of per-slot getRunningModeActiveAt)
         val rmRecords = persistenceLayer.getRunningModesFromTimeToTime(fromTime, endTime, true)
 
-        // Get mode active at fromTime for the initial segment
-        val initialMode = persistenceLayer.getRunningModeActiveAt(fromTime)
-
-        // Build segments from sorted records
-        val segments = mutableListOf<RunningModeSegment>()
-        var currentMode = initialMode.mode
-        var currentRecordEnd = initialMode.timestamp + initialMode.duration
-        var segmentStart = fromTime
-
-        for (rm in rmRecords) {
-            if (rm.timestamp > segmentStart && rm.mode != currentMode) {
-                segments.add(RunningModeSegment(currentMode, segmentStart, rm.timestamp))
-                currentMode = rm.mode
-                currentRecordEnd = rm.timestamp + rm.duration
-                segmentStart = rm.timestamp
+        // Every moment the effective mode can change: the start of the window, each record, and the
+        // planned end of each temporary record. Nothing is written when a temporary mode runs out - that
+        // moment exists only as timestamp + duration - so without those boundaries a finished suspend
+        // stayed on the belt until the next record arrived.
+        val boundaries = buildList {
+            add(fromTime)
+            for (rm in rmRecords) {
+                if (rm.timestamp in fromTime..endTime) add(rm.timestamp)
+                if (rm.isTemporary()) {
+                    val expiry = rm.timestamp + rm.duration
+                    if (expiry in fromTime..endTime) add(expiry)
+                }
             }
-        }
-        // Final segment capped by record's planned end time
-        segments.add(RunningModeSegment(currentMode, segmentStart, min(currentRecordEnd, endTime)))
+        }.distinct().sorted()
 
-        _runningModeGraphFlow.value = RunningModeGraphData(segments = segments)
+        // Ask the resolver the rest of the app uses instead of flattening the records here. A running
+        // mode is two layers - a permanent mode with an optional temporary one over it, newest wins -
+        // and that rule lives in getRunningModeActiveAt. Sampling it keeps the belt from disagreeing
+        // with what the loop thinks it is doing, and brings back the permanent mode by itself once a
+        // temporary one has run out.
+        val samples = boundaries.map { it to persistenceLayer.getRunningModeActiveAt(it).mode }
+
+        _runningModeGraphFlow.value = RunningModeGraphData(segments = mergeRunningModeSegments(samples, endTime))
     }
 
     private suspend fun rebuildTargetLine() = targetLineRebuildMutex.withLock {
@@ -1272,3 +1272,26 @@ internal fun profileBoundariesIn(switches: List<EPS>, fromTime: Long): List<Long
  */
 internal fun graphEndTime(latestPredictionsTime: Long?, toTime: Long): Long =
     max(latestPredictionsTime ?: 0L, toTime)
+
+/**
+ * Turns running mode samples into bands for the treatment belt.
+ *
+ * Each sample holds from its own time until the next one, and the last runs to [endTime]; neighbours
+ * with the same mode become one band. Kept separate from the database work above so the rule can be
+ * tested on its own.
+ *
+ * @param samples mode at each boundary, in ascending time order
+ * @param endTime right edge of the graph - where the last band stops
+ */
+internal fun mergeRunningModeSegments(samples: List<Pair<Long, RM.Mode>>, endTime: Long): List<RunningModeSegment> {
+    val segments = mutableListOf<RunningModeSegment>()
+    for ((index, sample) in samples.withIndex()) {
+        val (start, mode) = sample
+        val end = samples.getOrNull(index + 1)?.first ?: endTime
+        if (end <= start) continue
+        val last = segments.lastOrNull()
+        if (last != null && last.mode == mode) segments[segments.lastIndex] = last.copy(endTime = end)
+        else segments.add(RunningModeSegment(mode, start, end))
+    }
+    return segments
+}
