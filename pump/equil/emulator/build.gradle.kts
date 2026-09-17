@@ -11,9 +11,9 @@ android {
 
 dependencies {
     implementation(project(":core:interfaces"))
-    implementation(project(":pump:equil"))
+    implementation(project(":pump:equil:protocol"))
     implementation(libs.kotlinx.datetime)
 
     testImplementation(project(":shared:tests"))
-
+
 }

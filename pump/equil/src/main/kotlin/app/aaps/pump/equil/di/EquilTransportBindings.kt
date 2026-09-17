@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.equil.di
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -20,6 +20,10 @@ import dev.zacsweers.metro.SingleIn
  * Picks the Equil transport: the in-tree emulator when that option is on, otherwise the real BLE one.
  * `EquilBleTransportImpl` carries `@SingleIn(AppScope::class)` but no `@ContributesBinding` - the
  * binding for `EquilBleTransport` has to be this function, or the emulator branch would be bypassed.
+ *
+ * Lives in the driver rather than in the app's `withPumps` source set, where it used to be. It can,
+ * because `:pump:equil:emulator` sits on `:pump:equil:protocol` rather than on the driver, so the
+ * driver is free to depend on the emulator without a cycle. The app now names no Equil type at all.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
