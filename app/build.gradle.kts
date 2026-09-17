@@ -189,6 +189,26 @@ android {
         getByName("pumpcontrol") { kotlin.directories.add("src/withPumps/kotlin") }
         getByName("aapsclient2") { kotlin.directories.add("src/aapsclient/kotlin") }
         getByName("aapsclient3") { kotlin.directories.add("src/aapsclient/kotlin") }
+
+        // Instrumented tests that drive one pump, added only where that pump is in the build. An e2e
+        // test for a Dana emulator has nothing to test without :pump:danar, so it should not compile
+        // there - and before this it did not compile for a follower either, it just failed unnoticed
+        // because CI only builds `full`: :app:compileAapsclientDebugAndroidTestKotlin was red on dev
+        // with "Unresolved reference 'dana'".
+        //
+        // Keyed on the module being in settings.gradle, the same single source of truth the driver
+        // dependencies above are derived from, so removing a pump takes its tests with it.
+        val pumpTestSources = mapOf(
+            ":pump:danar" to "src/androidTestPumps/dana/kotlin",
+            ":pump:equil" to "src/androidTestPumps/equil/kotlin"
+        )
+        listOf("androidTestFull", "androidTestPumpcontrol").forEach { name ->
+            findByName(name)?.let { set ->
+                pumpTestSources.forEach { (path, dir) ->
+                    if (rootProject.findProject(path) != null) set.kotlin.directories.add(dir)
+                }
+            }
+        }
     }
 }
 
