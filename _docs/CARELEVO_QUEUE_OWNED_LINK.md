@@ -57,7 +57,21 @@ loop quiet the link is down for minutes at a time — up to `KeepAliveWorker.STA
 This is accepted, not overlooked. A resting link or a keepalive would make CareLevo the only pump in
 AAPS that holds one, and it costs battery and BLE stability for every user.
 
-What recovers state instead, on every reconnect:
+**The frame is lost; the state behind it is not.** That distinction is what makes the model workable, and
+CareMedi confirmed it in [#4993](https://github.com/nightscout/AndroidAPS/issues/4993) with a log from a
+real patch:
+
+- **An alarm is patch state, not an edge.** It stays raised on the patch until the app clears it with
+  `CMD_ALARM_CLEAR_REQ` (`0x47`), so one raised while no link was up is still raised on the next connect
+  and comes back through `0x43`. That is why `applyActiveAlarmSnapshots` does its own edge detection over
+  a level poll — the same active alarm reappears in every snapshot until it is cleared.
+- Between `0x43` and `0x31`/`0x91` there is **no patch state a push would have told us about that those
+  two reads miss**.
+- `0x98` `PULSE_FINISH_RPT` and `0x9A` `PULSE_PRESSURE_RPT` are the exception, and deliberately so: they
+  are test instrumentation for comparing delivered pulses against delivered insulin. Neither is parsed,
+  and neither should be.
+
+What does the recovering, on every reconnect:
 
 - `CarelevoPumpPlugin.startReconnectAlarmSnapshotObserving` → `readActiveAlarmSnapshots` (`0x43`), diffed
   against a persisted baseline so acknowledged alarms are not resurrected. Level-triggered: it reports
@@ -66,10 +80,27 @@ What recovers state instead, on every reconnect:
 - `CarelevoPumpPlugin.startAutoResumeWatchdog` for the end of a timed pump stop, which is driven by a
   local timer rather than by the patch's push.
 
-The open question this leaves is tracked in
-[#4993](https://github.com/nightscout/AndroidAPS/issues/4993): a threshold **crossing** (the low-insulin
-notice) is an edge, and a level-triggered snapshot cannot replay an edge — so whether it is recoverable
-at all depends on whether the patch reports it as active state.
+**What the model does cost is latency, and it is uneven.** An alarm raised while the link is down is not
+seen until the queue next connects. For low insulin that is fine - insulin is still being delivered. The
+same tiers also carry occlusion, patch error, self-diagnosis failure and auto-off, where delivery has
+**already stopped** when the alarm is raised. That is the real trade-off of not holding a link open, and
+it is worth re-reading before anyone widens the gap between connects.
+
+### Low insulin is not a notice
+
+Easy to get wrong, because every name on the path says "notice" -
+`NoticeThresholdCommand(TYPE_LOW_INSULIN)` sets the threshold, and `AlarmCause` has an
+`ALARM_NOTICE_LOW_INSULIN`. The patch does not use it:
+
+| Reservoir | Tier | Flag |
+|---|---|---|
+| crosses the configured threshold (20..50 U) | **advisory** `0xA5` | `OUT_OF_INSULIN` |
+| below 10 U | **critical** `0xA4` | `OUT_OF_INSULIN` |
+| notification `0xA6` | — | slot `[2]` is `unused` |
+
+The three tiers are stages on one reservoir axis, not three different conditions. So
+`ActiveAlarmSnapshotTier.NOTIFICATION` carrying only `OPERATING_LIFE_EXPIRED` is correct: there is no
+low-insulin alarm at notice level to leave out, and the crossing is recovered from the advisory tier.
 
 ## Invariants worth not breaking
 
