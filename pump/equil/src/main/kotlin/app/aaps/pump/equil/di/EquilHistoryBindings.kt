@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.equil.di
 
 import android.content.Context
 import app.aaps.pump.equil.database.EquilHistoryDatabase

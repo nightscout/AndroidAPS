@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.eopatch.di
 
 import app.aaps.pump.eopatch.vo.Alarms
 import app.aaps.pump.eopatch.vo.NormalBasalManager

@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.insight.di
 
 import android.content.Context
 import app.aaps.pump.insight.database.InsightDatabase

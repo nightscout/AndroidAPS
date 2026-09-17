@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.omnipod.eros.di
 
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger

@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.danars.di
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager

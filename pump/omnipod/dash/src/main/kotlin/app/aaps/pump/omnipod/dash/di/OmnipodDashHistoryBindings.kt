@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.omnipod.dash.di
 
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger

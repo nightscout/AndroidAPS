@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.omnipod.common.di
 
 import android.content.Context
 import app.aaps.core.interfaces.configuration.Config

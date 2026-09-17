@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.dana.di
 
 import android.content.Context
 import app.aaps.pump.dana.database.DanaHistoryDatabase
@@ -10,7 +10,11 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
 /**
- * The Dana history database, provided from `:app` rather than from `:pump:dana`.
+ * The Dana history database.
+ *
+ * Lives in this module rather than in the app's `withPumps` source set, where it used to be. Nothing
+ * here needs the app - it only provides types this module owns - and keeping it here means the app
+ * names no Dana type, so removing `:pump:dana` from `settings.gradle` cannot break the app's build.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer

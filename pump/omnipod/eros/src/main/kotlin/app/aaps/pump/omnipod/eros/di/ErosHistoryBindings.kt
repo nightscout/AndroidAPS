@@ -1,4 +1,4 @@
-package app.aaps.di.pump
+package app.aaps.pump.omnipod.eros.di
 
 import android.content.Context
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
