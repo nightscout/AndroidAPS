@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.pump.equil.di.EquilAccessors
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -81,12 +82,12 @@ class EquilEmulatorActivationTest {
     private val aapsLogger get() = testGraphs.aapsLogger
     private val preferences get() = testGraphs.preferences
     private val commandQueue get() = testGraphs.commandQueue
-    private val equilPumpPlugin get() = testGraphs.pumps.equilPumpPlugin
-    private val equilManager get() = testGraphs.pumps.equilManager
+    private val equilPumpPlugin get() = (testGraphs.rootGraph as EquilAccessors).equilPumpPlugin
+    private val equilManager get() = (testGraphs.rootGraph as EquilAccessors).equilManager
     private val pumpSync get() = testGraphs.pumpSync
     private val persistenceLayer get() = testGraphs.persistenceLayer
-    private val equilHistoryRecordDao get() = testGraphs.pumps.equilHistoryRecordDao
-    private val equilHistoryPumpDao get() = testGraphs.pumps.equilHistoryPumpDao
+    private val equilHistoryRecordDao get() = (testGraphs.rootGraph as EquilAccessors).equilHistoryRecordDao
+    private val equilHistoryPumpDao get() = (testGraphs.rootGraph as EquilAccessors).equilHistoryPumpDao
     private val profileUtil get() = testGraphs.profileUtil
     private val constraintsChecker get() = testGraphs.constraintsChecker
     private val ch get() = testGraphs.concentrationHelper
@@ -94,7 +95,7 @@ class EquilEmulatorActivationTest {
     private val profileRepository get() = testGraphs.profileRepository
     private val rxBus get() = testGraphs.rxBus
     private val insulinManager get() = testGraphs.insulinManager
-    private val bleTransport get() = testGraphs.pumps.equilBleTransport
+    private val bleTransport get() = (testGraphs.rootGraph as EquilAccessors).equilBleTransport
     private val hardLimits get() = testGraphs.hardLimits
 
     // Test-harness singletons (active-pump selection, profile activation, teardown).

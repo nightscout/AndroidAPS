@@ -4,6 +4,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.pump.danars.di.DanaRSAccessors
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginType
@@ -72,8 +73,8 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
     // RetryRule outermost: a flaky UI timeout self-heals on a fresh attempt; see [RetryRule].
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    private val bleTransport get() = testGraphs.pumps.bleTransport
-    private val danaRSPlugin get() = testGraphs.pumps.danaRSPlugin
+    private val bleTransport get() = (testGraphs.rootGraph as DanaRSAccessors).bleTransport
+    private val danaRSPlugin get() = (testGraphs.rootGraph as DanaRSAccessors).danaRSPlugin
 
     private lateinit var emulator: EmulatorBleTransport
 

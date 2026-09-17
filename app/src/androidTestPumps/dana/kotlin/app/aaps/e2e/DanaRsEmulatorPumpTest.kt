@@ -7,6 +7,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.WorkManager
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.pump.danars.di.DanaRSAccessors
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -49,8 +50,8 @@ class DanaRsEmulatorPumpTest {
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
     private val preferences get() = testGraphs.preferences
-    private val bleTransport get() = testGraphs.pumps.bleTransport
-    private val danaRSPlugin get() = testGraphs.pumps.danaRSPlugin
+    private val bleTransport get() = (testGraphs.rootGraph as DanaRSAccessors).bleTransport
+    private val danaRSPlugin get() = (testGraphs.rootGraph as DanaRSAccessors).danaRSPlugin
     private val pluginStore get() = testGraphs.pluginStore
     private val commandQueue get() = testGraphs.commandQueue
     private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)

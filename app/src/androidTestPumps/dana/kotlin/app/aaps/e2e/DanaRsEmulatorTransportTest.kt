@@ -3,6 +3,7 @@ package app.aaps.e2e
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.pump.danars.di.DanaRSAccessors
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.di.EmulatedOptions
@@ -33,7 +34,7 @@ class DanaRsEmulatorTransportTest {
     // RetryRule outermost: a flaky timeout self-heals on a fresh attempt; see [RetryRule].
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
-    private val bleTransport get() = testGraphs.pumps.bleTransport
+    private val bleTransport get() = (testGraphs.rootGraph as DanaRSAccessors).bleTransport
     private val config get() = testGraphs.config
 
     @Before

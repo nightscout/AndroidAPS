@@ -192,13 +192,20 @@ import kotlin.reflect.KClass
  * what the history browser needs and what the same test verifies.
  */
 /**
- * [PumpAccessors] is a supertype rather than a `@ContributesTo` interface: a contributed interface
- * reaches the *generated* graph, so `root as PumpAccessors` would only work at runtime. Extending it
- * makes the accessors part of this type, and it compiles for every flavour because both flavour source
- * sets declare a `PumpAccessors` - empty in a follower, which has no pump module on its classpath.
+ * Pump accessors are NOT a supertype here. They used to be: a `PumpAccessors` interface in
+ * `src/withPumps` named the Dana and Equil types so instrumented tests could reach the app's own
+ * instances at compile time, with an empty copy in `src/aapsclient` so this file still compiled for a
+ * follower. But `src/withPumps` is part of the `full` and `pumpcontrol` MAIN source sets, so that made
+ * those pump modules a compile-time dependency of the app itself - removing `:pump:equil` from
+ * `settings.gradle` failed `:app:compileFullDebugKotlin` and produced no APK at all.
+ *
+ * Each pump module now declares its own accessor interface and contributes it, so the accessors exist
+ * exactly when their module does and nothing here names a pump. See `DanaAccessors` in `:pump:dana` for
+ * what that costs - a test resolves them with a cast rather than at compile time, and their accessors
+ * become roots that every `AppScope` graph on the same classpath has to satisfy.
  */
 @DependencyGraph(AppScope::class)
-interface AppRootGraph : MetroViewModelMultibindings, PumpAccessors {
+interface AppRootGraph : MetroViewModelMultibindings {
 
     // Both of the graphs below are extensions rather than roots of their own. A second
     // `@DependencyGraph(AppScope::class)` is unsafe: two graphs both declaring `AppScope` get a

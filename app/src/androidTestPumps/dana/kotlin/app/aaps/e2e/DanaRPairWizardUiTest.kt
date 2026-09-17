@@ -14,6 +14,7 @@ import androidx.test.uiautomator.UiObject2
 import androidx.work.WorkManager
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.pump.danar.di.DanaRAccessors
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
@@ -70,7 +71,7 @@ class DanaRPairWizardUiTest {
     private val preferences get() = testGraphs.preferences
     private val pluginStore get() = testGraphs.pluginStore
     private val commandQueue get() = testGraphs.commandQueue
-    private val danaRv2Plugin get() = testGraphs.pumps.danaRv2Plugin
+    private val danaRv2Plugin get() = (testGraphs.rootGraph as DanaRAccessors).danaRv2Plugin
     private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
     private val configBuilder get() = testGraphs.configBuilder
     private val profileFunction get() = testGraphs.profileFunction

@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.di.EmulatedOptions
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.pump.danar.di.DanaRAccessors
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
@@ -50,17 +51,17 @@ class DanaREmulatorPumpTest {
 
     // Read from the graph so the test drives the same instance the app does - a second copy would mean
     // asserting against a plugin the running app has never heard of.
-    private val danaRPlugin get() = testGraphs.pumps.danaRPlugin
-    private val danaRKoreanPlugin get() = testGraphs.pumps.danaRKoreanPlugin
-    private val danaRv2Plugin get() = testGraphs.pumps.danaRv2Plugin
-    private val danaPump get() = testGraphs.pumps.danaPump
-    private val danaHistoryRecordDao get() = testGraphs.pumps.danaHistoryRecordDao
+    private val danaRPlugin get() = (testGraphs.rootGraph as DanaRAccessors).danaRPlugin
+    private val danaRKoreanPlugin get() = (testGraphs.rootGraph as DanaRAccessors).danaRKoreanPlugin
+    private val danaRv2Plugin get() = (testGraphs.rootGraph as DanaRAccessors).danaRv2Plugin
+    private val danaPump get() = (testGraphs.rootGraph as DanaRAccessors).danaPump
+    private val danaHistoryRecordDao get() = (testGraphs.rootGraph as DanaRAccessors).danaHistoryRecordDao
 
     // Resolved per access, not once: `provideRfcommTransport` enables the target plugin (storeSettings),
     // which needs `pluginStore.plugins` - set only after the graph is built. Reading it after connect
     // returns the scoped instance the execution service already built by then. This is what the old
     // `Provider<RfcommTransport>` was for.
-    private val rfcommTransport get() = testGraphs.pumps.rfcommTransport
+    private val rfcommTransport get() = (testGraphs.rootGraph as DanaRAccessors).rfcommTransport
 
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
 

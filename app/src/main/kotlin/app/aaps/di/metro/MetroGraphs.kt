@@ -128,7 +128,18 @@ class MetroGraphs(
      * Declared in the flavour source sets rather than here, because `src/main` has no pump module on
      * its classpath. Empty in a follower.
      */
-    val pumps: PumpAccessors get() = root
+    /**
+     * The root graph itself, for instrumented tests that need a pump's own objects.
+     *
+     * A pump module contributes an accessor interface (`DanaRAccessors`, `EquilAccessors`, ...), so the
+     * generated graph implements it and a test casts to the one it needs:
+     * `(testGraphs.rootGraph as EquilAccessors).equilManager`. That keeps `:app` free of pump types -
+     * the accessors exist exactly when their module is in the build.
+     *
+     * Not for production code: anything in the app that needs a binding should be injected, not fished
+     * out of the graph by hand.
+     */
+    val rootGraph: AppRootGraph get() = root
 
     private val source: SourceMetroGraph get() = root.sourceGraph
 

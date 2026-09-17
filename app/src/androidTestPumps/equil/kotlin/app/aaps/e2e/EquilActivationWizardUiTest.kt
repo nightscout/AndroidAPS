@@ -14,6 +14,7 @@ import androidx.test.uiautomator.UiObject2
 import androidx.work.WorkManager
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.pump.equil.di.EquilAccessors
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
@@ -71,11 +72,10 @@ class EquilActivationWizardUiTest {
     @get:Rule val rules: RuleChain = RuleChain.outerRule(RetryRule()).around(ResetGraphRule())
 
     private val preferences get() = testGraphs.preferences
-    private val bleTransport get() = testGraphs.pumps.bleTransport
     private val pluginStore get() = testGraphs.pluginStore
     private val commandQueue get() = testGraphs.commandQueue
-    private val equilPumpPlugin get() = testGraphs.pumps.equilPumpPlugin
-    private val equilManager get() = testGraphs.pumps.equilManager
+    private val equilPumpPlugin get() = (testGraphs.rootGraph as EquilAccessors).equilPumpPlugin
+    private val equilManager get() = (testGraphs.rootGraph as EquilAccessors).equilManager
     private val pluginList get() = testGraphs.allPlugins(testGraphs.aapsLogger)
     private val configBuilder get() = testGraphs.configBuilder
     private val profileFunction get() = testGraphs.profileFunction

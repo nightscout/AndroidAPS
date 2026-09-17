@@ -4,6 +4,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
+import app.aaps.pump.danar.di.DanaRAccessors
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -51,8 +52,8 @@ class DanaREmulatorUiTest : AbstractDanaEmulatorUiTest() {
     // A Provider, not the transport directly: provideRfcommTransport enables the target plugin
     // (storeSettings), which needs pluginStore.plugins - set only after the graph is built. Resolving it
     // lazily (first state read, well after bringUp) returns the @Singleton the service already built.
-    private val rfcommTransport get() = testGraphs.pumps.rfcommTransport
-    private val danaRv2Plugin get() = testGraphs.pumps.danaRv2Plugin
+    private val rfcommTransport get() = (testGraphs.rootGraph as DanaRAccessors).rfcommTransport
+    private val danaRv2Plugin get() = (testGraphs.rootGraph as DanaRAccessors).danaRv2Plugin
 
     // The emulated pump's state, resolved lazily: the transport is an EmulatorRfcommTransport whose
     // `emulator` (a DanaRPumpEmulator) holds the `state` the driver reads and writes.
