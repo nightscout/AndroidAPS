@@ -178,7 +178,6 @@ internal fun isBasalProtocol(command: Int) = when (command) {
     0xA7 -> false
 
     0x9C -> false
-    0x4D -> false
 
     0x4A -> false
     0xBA -> false
@@ -274,7 +273,6 @@ internal fun isBolusProtocol(command: Int) = when (command) {
     0xA7 -> false
 
     0x9C -> false
-    0x4D -> false
 
     0x4A -> false
     0xBA -> false
