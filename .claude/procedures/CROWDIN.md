@@ -30,6 +30,15 @@ repo's `values-xx/` files** (which would conflict with Crowdin's own sync).
 - Project has **"Export only approved"** enabled. Downloads hide unapproved translations
   even when they exist. To see all (approved + unapproved), query the REST API:
   `GET /api/v2/projects/309752/languages/{lang}/translations?fileId={id}`.
+- Sources reach Crowdin through Crowdin's GitHub integration, not through the CLI. It syncs `dev` a
+  few minutes after a push and reads **only the paths listed in `crowdin.yml`**. Translations come
+  back as "New Crowdin updates" pull requests, which hold the last approved export - so the repo's
+  `values-xx/` files are a record of what was approved.
+- **The integration owns `crowdin.yml`.** Saving its settings in the Crowdin web UI rewrites the
+  file and strips every comment (commit "Update Crowdin configuration file [ci skip]", e.g.
+  `2be1bd2831`). Keep notes in commit messages or here, never in `crowdin.yml`.
+- Some `values-xx/` folders in the repo are for languages that are not Crowdin target languages
+  (in 2026-09: `cy`, `fi`, `sl`, `ta`). `upload translations` skips them without a message.
 
 ## Workflow — translate without touching the repo
 
@@ -127,25 +136,91 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 
 ## Moving a source file
 
-Changing the path in `crowdin.yml` is not enough. A source that just disappears from the repo stays
-on Crowdin as a stale copy beside the new one. `pump/omnipod-dash` and `pump/omnipod-eros` sat there
-from their 2025 move until 2026-09, when a comparison of Crowdin's file list with `crowdin.yml`
-found them.
+What Crowdin does, as seen when the Dana strings moved in 2026-09:
 
-1. Move the file and change its path in `crowdin.yml`, in one commit. Keep this commit a pure move
-   (no file left at the old path), so git records a rename and `git log --follow` keeps working.
-2. In a second commit, create an empty file at each old path and list it in a
-   `# TEMPORARY` comment at the top of `crowdin.yml`. Do not add the old path back as an entry. Push
-   both together - Crowdin syncs `dev` a few minutes after a push. The Dana and Omnipod files in
-   2026-09 were zero bytes; the KMP move before them used `<resources></resources>`. Step 4 is
-   where you find out whether the one you used worked.
-3. On that sync Crowdin sees a source with no strings and drops it. The new path is a new file on
-   Crowdin; translation memory fills it again, approvals included - the 2026-09 KMP move came back
-   fully translated and approved. Comments on strings do not carry over.
-4. When Crowdin no longer shows the old paths, delete the empty files and the comment.
+- **The new path is a new file** on Crowdin, with a new id. Translation memory fills it within a
+  few minutes (18% → 70% → 100%), approvals included - **but not all of them.** Where the memory
+  holds more than one translation of the same English text (from other files), it can pick one
+  that is not approved. `pump/dana/common` lost approval on 22 strings in 8 languages that way.
+  Only approved translations are exported, so those strings would have dropped out of the app with
+  the next "New Crowdin updates" PR. Comments on strings do not carry over.
+- **The old file** was deleted at the sync of the push that took its path out of `crowdin.yml`.
+  Do not rely on it: `pump/omnipod-dash` and `pump/omnipod-eros` left `crowdin.yml` in 2025 and
+  their files stayed on Crowdin, unchanged, until 2026-09.
+- **An empty file at the old path works only if it is listed and is a valid resource file.** The
+  integration only reads listed paths, so an unlisted file is never seen. Tried on the stale
+  `omnipod-dash` and `omnipod-eros` files in 2026-09-18:
+  - a zero-byte file, listed: ignored - no change after a quarter of an hour;
+  - `<resources></resources>`, listed: the old Crowdin file had 0 strings a minute and a half after
+    the push. The live `omnipod/dash` and `omnipod/eros` files were not affected.
 
-To find stale files, compare the paths from the file list request below (without the `/dev`
-prefix) with the `source:` lines in `crowdin.yml`. Every Crowdin file should have a line.
+Steps:
+
+1. Move the file and change its path in `crowdin.yml`, in one commit. Keep the commit a pure move -
+   nothing left at the old path - so git records a rename and `git log --follow` keeps working.
+   Push, and wait a few minutes for the sync.
+2. **Check that the old file is gone** (the script in the next section, no arguments needed). If
+   it is still there, either:
+   - put `<resources></resources>` at the old path and list it in `crowdin.yml` for one sync, which
+     empties the old file; then take both out again, or
+   - delete it: `crowdin file delete <path on Crowdin, without /dev> -b dev`.
+
+   Nothing is lost either way - the new file has its own translations, and translation memory
+   keeps the old ones. Check the new file with step 3 afterwards all the same.
+3. **Check that no string drops out** (the same script, with the new file's id and `res` folder).
+   Do it before the next "New Crowdin updates" PR is merged.
+4. If any do, upload the repo's translations of that file with auto-approve, in a temp workspace
+   as in the workflow above (a `crowdin.yml` listing only that file, the source and all its
+   `values-xx/` folders copied in):
+
+   ```bash
+   crowdin upload translations -b dev --base-path=<dir> -c <dir>/crowdin.yml --auto-approve-imported --no-progress --plain
+   ```
+
+   The repo holds the last approved export, so this approves exactly what was approved before.
+   Strings already approved with the same text are left alone. Run step 3 again - it must print
+   nothing.
+
+## Checking for stale files and strings that would drop out
+
+Save as a `.js` file in a scratch directory and run with `node` from the repo root. It prints the
+Crowdin files that have no `source:` line in `crowdin.yml` (and the other way round). With
+`<fileId>:<res dir>` arguments it also prints, per language, the strings that the repo has
+translated but Crowdin has not approved - the ones the next export would drop. No output means
+everything is fine.
+
+```js
+// node crowdin-check.js [<fileId>:<res dir> ...]   e.g. 5881:pump/dana/common/src/main/res
+const fs = require('fs'), os = require('os'), path = require('path')
+const token = /api_token:\s*"([^"]+)"/.exec(fs.readFileSync(path.join(os.homedir(), '.crowdin.yml'), 'utf8'))[1]
+const base = 'https://api.crowdin.com/api/v2/projects/309752'
+const get = async url => (await fetch(url, { headers: { Authorization: `Bearer ${token}` } })).json()
+const names = xml => [...xml.matchAll(/<string\s+name="([^"]+)"/g)].map(m => m[1])
+
+;(async () => {
+  const onCrowdin = (await get(`${base}/files?branchId=1&recursion=1&limit=500`)).data.map(x => x.data.path.replace(/^\/dev/, ''))
+  const listed = [...fs.readFileSync('crowdin.yml', 'utf8').matchAll(/^\s*- source:\s*(\S+)/gm)].map(m => m[1])
+  onCrowdin.filter(p => !listed.includes(p)).forEach(p => console.log('only on Crowdin:', p))
+  listed.filter(p => !onCrowdin.includes(p)).forEach(p => console.log('not on Crowdin yet:', p))
+
+  const languages = (await get(base)).data.targetLanguages
+  for (const arg of process.argv.slice(2)) {
+    const [fileId, dir] = arg.split(':')
+    const strings = (await get(`${base}/strings?fileId=${fileId}&limit=500`)).data.map(x => x.data)
+    const nameOf = new Map(strings.map(s => [s.id, s.identifier]))
+    for (const l of languages) {
+      const repoFile = path.join(dir, `values-${l.androidCode}`, 'strings.xml')
+      if (!fs.existsSync(repoFile)) continue
+      const approved = new Set((await get(`${base}/approvals?fileId=${fileId}&languageId=${l.id}&limit=500`)).data.map(x => nameOf.get(x.data.stringId)))
+      const lost = names(fs.readFileSync(repoFile, 'utf8')).filter(n => strings.some(s => s.identifier === n) && !approved.has(n))
+      if (lost.length) console.log(`${dir} ${l.id}: ${lost.join(', ')}`)
+    }
+  }
+})()
+```
+
+It reads 500 strings and 500 approvals per file and language, which covers every file today; a
+bigger file needs `offset` paging.
 
 ## Finding file IDs in the project
 

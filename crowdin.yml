@@ -75,10 +75,6 @@ files:
     translation: /pump/omnipod/dash/src/main/res/values-%android_code%/strings.xml
   - source: /pump/omnipod/eros/src/main/res/values/strings.xml
     translation: /pump/omnipod/eros/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/omnipod-dash/src/main/res/values/strings.xml
-    translation: /pump/omnipod-dash/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/omnipod-eros/src/main/res/values/strings.xml
-    translation: /pump/omnipod-eros/src/main/res/values-%android_code%/strings.xml
   - source: /pump/common/src/main/res/values/strings.xml
     translation: /pump/common/src/main/res/values-%android_code%/strings.xml
   - source: /pump/rileylink/src/main/res/values/strings.xml
