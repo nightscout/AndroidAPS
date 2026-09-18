@@ -13,7 +13,7 @@
     <string name="danar_setbasalstep001">Imposta incremento basale a 0.01 U/h</string>
     <string name="resetpairing">Resettare le informazioni di associazione?</string>
     <string name="dana_model">%1$s\nModello: %2$02X\nProtocollo: %3$02X\nCodice: %4$02X</string>
-    <string name="processinghistory">Evento di elaborazione</string>
+    <string name="processinghistory">Elaborazione</string>
     <string name="danar_enableextendedbolus">Abilita bolo esteso sul micro</string>
     <string name="danar_disablebolusblock">Il blocco bolo è abilitato sul micro. AAPS non può erogare insulina mentre è attivo. Disabilita il blocco bolo nelle impostazioni del microinfusore.</string>
     <string name="overview_bolusprogress_stoped">Stoppato</string>
@@ -40,7 +40,7 @@
     <string name="gettingpumptime">Ricezione ora micro</string>
     <string name="largetimedifftitle">Grande differenza oraria</string>
     <string name="largetimediff">Grande differenza oraria:\nL\'ora nel micro differisce per più di 1h e 30m. \nRegola l\'ora manualmente e assicurati che la lettura dello storico dal micro non causi comportamenti imprevisti.\nSe possibile, cancella lo storico del micro prima di cambiare l\'ora oppure disabilita il loop chiuso per un tempo corrispondente al tuo valore DIA.</string>
-    <string name="pairfirst">Associa il micro col tuo telefono!</string>
+    <string name="pairfirst">Associa il micro con il tuo telefono!</string>
     <string name="approachingdailylimit">Si avvicina il limite giornaliero di insulina</string>
     <string name="startingbolus">Avvio erogazione bolo</string>
     <string name="waitingforestimatedbolusend">In attesa della fine del bolo. Rimangono %1$d sec.</string>
