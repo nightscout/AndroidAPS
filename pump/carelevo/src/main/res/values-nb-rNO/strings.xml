@@ -123,11 +123,18 @@
     <string name="carelevo_toast_msg_not_connected_waiting_retry">Patch er ikke tilkoblet ennå. Prøv igjen om et øyeblikk.</string>
     <string name="carelevo_toast_msg_scan_failed">Skanning mislyktes. Prøv igjen.</string>
     <string name="carelevo_toast_msg_patch_not_found">Fant ikke noe patch. Prøv igjen.</string>
+    <string name="carelevo_toast_msg_connect_failed">Tilkobling til patch mislyktes. Prøv igjen.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profil er ikke angitt.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Kontroll av nålen mislyktes.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Kassering av patch mislyktes. Prøv igjen.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Forespørsel om basaltilførsel mislyktes. Prøv igjen.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Kunne ikke gjenoppta tilførselen. Prøv igjen.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Kunne ikke pause tilførselen. Prøv igjen.</string>
     <!-- Safety Check -->
     <!-- Warning Titles -->
     <!-- Warning Descriptions -->
