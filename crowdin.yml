@@ -1,17 +1,3 @@
-# TEMPORARY - delete the files listed below, and this comment, once Crowdin has dropped them.
-#
-# These string files moved. Changing the path alone leaves Crowdin showing the old source AND the
-# new one. So each old location keeps an empty file: Crowdin sees a source with no strings and drops
-# it, leaving only the new path. They are not part of any build.
-#
-#   pump/dana/src/main/res/values/strings.xml    (moved to pump/dana/common)
-#   pump/danar/src/main/res/values/strings.xml   (moved to pump/dana/danar)
-#
-# The two below moved in 2025 without this step and were still on Crowdin, unchanged since then.
-#
-#   pump/omnipod-dash/src/main/res/values/strings.xml   (moved to pump/omnipod/dash)
-#   pump/omnipod-eros/src/main/res/values/strings.xml   (moved to pump/omnipod/eros)
-
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/values-%android_code%/strings.xml
