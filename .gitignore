@@ -29,10 +29,9 @@ wear/aapsclient/*
 wear/aapsclient2/*
 wear/aapsclient3/*
 wear/pumpcontrol/*
-wear/watchfacepush/aapsclient/*
-wear/watchfacepush/aapsclient2/*
-wear/watchfacepush/aapsclient3/*
-wear/watchfacepush/pumpcontrol/*
+# Android Studio "Build APK" output of :wear:watchfacepush, one folder per variant (fullWfs, aapsclientCwf, ...)
+wear/watchfacepush/*Wfs/*
+wear/watchfacepush/*Cwf/*
 .kotlin/*
 /*.log
 *.preferences_pb

@@ -1,5 +1,6 @@
 package app.aaps.wear.interaction.utils
 
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -109,8 +110,18 @@ abstract class MenuListActivity : WearMetroActivity() {
         super.onDestroy()
     }
 
-    /** [iconTint] (ARGB) overrides the drawable's own colors; null draws the icon as-is. */
-    class MenuItem(val actionIcon: Int, val actionItem: String, val iconTint: Int? = null)
+    /**
+     * One row of the menu.
+     *
+     * [actionImage] lets a row show a picture the app was given rather than one it ships - the Custom
+     * watch face entry uses it to show the design the wearer actually sent, instead of the built-in
+     * artwork that looks nothing like their watch. Null everywhere else, and [actionIcon] is still
+     * required as the fallback for when no zip is loaded.
+     *
+     * [iconTint] (ARGB) overrides the drawable's own colors; null draws the icon as-is. It applies to
+     * [actionIcon] only - a picture given through [actionImage] is drawn as it is.
+     */
+    class MenuItem(val actionIcon: Int, val actionItem: String, val actionImage: Bitmap? = null, val iconTint: Int? = null)
 }
 
 private val MenuItemBg = Color.White.copy(alpha = 0.15f)
@@ -180,6 +191,7 @@ private fun MenuListScreen(
                     icon = {
                         MenuIcon(
                             iconRes = item.actionIcon,
+                            image = item.actionImage,
                             contentDescription = item.actionItem,
                             tintArgb = item.iconTint
                         )
@@ -220,17 +232,21 @@ private fun MenuTitle(title: String, titleIcon: Int?) {
 }
 
 @Composable
-private fun MenuIcon(iconRes: Int, contentDescription: String, tintArgb: Int? = null) {
+private fun MenuIcon(iconRes: Int, image: Bitmap?, contentDescription: String, tintArgb: Int? = null) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val sizePx = with(density) { 35.dp.toPx() }.toInt()
-    val painter = remember(iconRes, sizePx, tintArgb) {
-        val drawable = ContextCompat.getDrawable(context, iconRes)!!.mutate()
-        if (tintArgb != null) drawable.setTint(tintArgb)
-        val bitmap = createBitmap(sizePx, sizePx)
-        drawable.setBounds(0, 0, sizePx, sizePx)
-        drawable.draw(Canvas(bitmap))
-        BitmapPainter(bitmap.asImageBitmap())
+    val painter = remember(iconRes, image, sizePx, tintArgb) {
+        // A picture the app was given wins over the one it ships: on the Custom watch face row that
+        // is the wearer's own design rather than artwork that looks nothing like their watch.
+        image?.let { BitmapPainter(it.asImageBitmap()) } ?: run {
+            val drawable = ContextCompat.getDrawable(context, iconRes)!!.mutate()
+            if (tintArgb != null) drawable.setTint(tintArgb)
+            val bitmap = createBitmap(sizePx, sizePx)
+            drawable.setBounds(0, 0, sizePx, sizePx)
+            drawable.draw(Canvas(bitmap))
+            BitmapPainter(bitmap.asImageBitmap())
+        }
     }
     Icon(
         painter = painter,

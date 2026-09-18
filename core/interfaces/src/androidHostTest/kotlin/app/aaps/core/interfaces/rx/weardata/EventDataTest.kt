@@ -161,6 +161,10 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
+        EventData.WatchFacePushStatus(supported = true, installedFace = "wfs").let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
         EventData.Status(
             dataset = 0, externalStatus = "st", iobSum = "1", iobDetail = "2", cob = "3", currentBasal = "4",
             battery = "5", rigBattery = "6", openApsStatus = 7L, bgi = "8", batteryLevel = 9, patientName = "p",

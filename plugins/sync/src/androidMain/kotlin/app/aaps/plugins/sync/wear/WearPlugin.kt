@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
@@ -103,8 +104,17 @@ class WearPlugin(
     private val _savedCustomWatchface = MutableStateFlow<CwfData?>(null)
     val savedCustomWatchface: StateFlow<CwfData?> = _savedCustomWatchface.asStateFlow()
 
+    /**
+     * What the watch last said about Watch Face Push: whether it has it, and which face it holds.
+     * Null until the watch reports, and again when it disconnects - a fresh watch must speak for
+     * itself, since the answer differs from one watch to the next.
+     */
+    private val _watchFacePushStatus = MutableStateFlow<EventData.WatchFacePushStatus?>(null)
+    val watchFacePushStatus: StateFlow<EventData.WatchFacePushStatus?> = _watchFacePushStatus.asStateFlow()
+
     fun updateConnectedDevice(deviceName: String?) {
         _connectedDevice.value = deviceName
+        if (deviceName == null) _watchFacePushStatus.value = null
     }
 
     fun updateSavedCustomWatchface(cwfData: CwfData?) {
@@ -153,6 +163,8 @@ class WearPlugin(
             preferences.observe(StringNonKey.WearCwfWatchfaceName).drop(1).map {},
             preferences.observe(StringNonKey.WearCwfAuthorVersion).drop(1).map {},
             preferences.observe(StringNonKey.WearCwfFileName).drop(1).map {},
+            // Which Watch Face Format face the watch installs; the watch swaps its slot on arrival
+            preferences.observe(StringKey.WearPushedWatchface).drop(1).map {},
         ).collectResilient(newScope, aapsLogger, LTag.WEAR) {
             dataHandlerMobile.resendData("PreferenceChange")
             checkCustomWatchfacePreferences()
@@ -200,6 +212,7 @@ class WearPlugin(
                             checkCustomWatchfacePreferences()
                         }
                     }
+                    event.watchFacePushStatus?.let { _watchFacePushStatus.value = it }
                 }
             }
         rxBus.toFlow(EventMobileToWear::class)
