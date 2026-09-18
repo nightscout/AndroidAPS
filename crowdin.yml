@@ -53,6 +53,8 @@ files:
     translation: /plugins/sync/src/androidMain/res/values-%android_code%/oh_strings.xml
   - source: /plugins/sync/src/androidMain/res/values/strings.xml
     translation: /plugins/sync/src/androidMain/res/values-%android_code%/strings.xml
+  - source: /pump/carelevo/src/main/res/values/strings.xml
+    translation: /pump/carelevo/src/main/res/values-%android_code%/strings.xml
   - source: /pump/combov2/src/main/res/values/strings.xml
     translation: /pump/combov2/src/main/res/values-%android_code%/strings.xml
   - source: /pump/dana/common/src/main/res/values/strings.xml
