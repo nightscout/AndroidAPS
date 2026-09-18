@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">Avslutt deaktiveringsveiviseren? Patch kan forbli aktiv og fortsette å tilføre insulin.</string>
     <string name="patch_force_reset">Tving tilbakestilling</string>
     <string name="patch_force_reset_confirm">Dette vil fjerne patch-statusen lokalt uten å sende kommandoer til patchen. Bruk den kun hvis normal deaktivering mislykkes. Patchen vil fortsette å levere til batteriet går tomt eller den slås av manuelt.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Eksakte alarmer</string>
-    <string name="permission_exact_alarm_description">Appen trenger tillatelse til å planlegge nøyaktige alarmer for patchadministrasjon</string>
 </resources>
