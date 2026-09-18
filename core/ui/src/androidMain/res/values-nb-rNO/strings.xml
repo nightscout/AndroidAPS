@@ -245,6 +245,8 @@
     <string name="location_permission_not_granted">Lokasjonstillatelse er ikke gitt. Tillat i android-innstillinger.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-versjon:</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
+    <string name="not_implemented_yet">Denne funksjonen er ikke klar på denne plattformen ennå</string>
+    <string name="not_available_on_platform">Denne funksjonen er ikke tilgjengelig på denne plattformen</string>
     <string name="engineering_mode_enabled">Engineering mode aktivert</string>
     <string name="back">Tilbake</string>
     <string name="next">Neste</string>
@@ -257,6 +259,7 @@
     <string name="pin_dont_match">PIN-kodene samsvarer ikke</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Start profil %1$d%% for %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Avbryt midl. basal</string>
     <string name="let_temp_basal_run">Fortsett midl. basal</string>
@@ -635,6 +638,7 @@
     <string name="uel_scene_deactivated">SCENE DEAKTIVERT</string>
     <string name="uel_remote_config_changed">FJERNKONFIGURASJON ENDRET</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Midlertidig mål nedre verdi</string>
     <string name="temp_target_high_target">Øvre grense for midlertidig mål</string>
     <string name="temp_target_value">Midlertidig målverdi</string>
     <string name="insulin_dia">Insulin DIA-verdi</string>
@@ -861,6 +865,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Brukerforespørsel</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Koble sammen</string>
     <string name="pump_unpair">Opphev paring</string>
     <string name="pump_unpair_confirm_title">Fjern paring av pumpen?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
@@ -957,6 +962,7 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS spiller av lyd"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">MÅL</string>
     <string name="profile_name">Profilnavn:</string>
     <string name="edit_profile_name">Rediger profilnavn</string>
@@ -1018,6 +1024,14 @@
     <string name="import_wrong_password">Feil passord</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Importer uansett</string>
+    <string name="import_apply_title">Innstillinger importert</string>
+    <string name="import_apply_message">De importerte innstillingene vil nå bli tatt i bruk. Tillegg som er endret, vil bli startet på nytt.</string>
+    <string name="import_apply_waiting">Venter på pumpen…</string>
+    <string name="import_apply_pump_busy">Pumpen er fortsatt opptatt, så innstillingene ble ikke tatt i bruk.</string>
+    <string name="import_apply_retry_question">Prøve på nytt nå?</string>
+    <string name="import_applied_title">Innstillinger tatt i bruk</string>
+    <string name="import_applied_message">De importerte innstillingene er nå i bruk.</string>
+    <string name="import_apply_pump_changed">Avbrutt: pumpen ble endret av innstillingsimporten</string>
     <string name="import_source_local">Lokal</string>
     <string name="import_source_cloud">Sky</string>
     <string name="import_load_more">Last inn mer</string>
@@ -1030,6 +1044,7 @@
     <string name="nav_resetdb">Tilbakestill databaser</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Finn pumpe</string>
+    <string name="ble_scan_select_pump">Velg pumpen din fra listen nedenfor</string>
     <string name="ble_scan_scanning">Skanner etter enheter…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Legg til graf</string>

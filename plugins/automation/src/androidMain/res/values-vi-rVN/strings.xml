@@ -151,6 +151,11 @@
     <string name="on">BẬT</string>
     <string name="off">TẮT</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Thay đổi làm mượt</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Thay đổi làm mượt thành %1$s</string>
+    <string name="smoothing_label">Làm mượt</string>
+    <string name="precondition_smoothing_not_active_name">Tính năng làm mượt không hoạt động</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Tính năng làm mượt %1$s không hoạt động</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Chọn từ bản đồ</string>
     <string name="tap_to_select_location">Chạm vào bản đồ để chọn vị trí</string>

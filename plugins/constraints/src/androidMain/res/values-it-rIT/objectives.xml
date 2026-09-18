@@ -53,7 +53,7 @@
     <string name="objectives_exam_learned_isf">Hai imparato il significato del valore ISF e come influisce sulla quantità di insulina utilizzata per la correzione della glicemia.</string>
     <string name="objectives_exam_learned_ic">Hai imparato il significato del valore IC e come influisce sulla quantità di insulina necessaria per \"coprire\" i CHO.</string>
     <string name="objectives_exam_learned_hypott">Il target temporaneo \"ipoglicemia\" è usato solo per prevenire la sovracorrezione dopo l\'ipo, quando c\'è di solito un IOB negativo. Dovrebbero essere valutate ulteriori azioni per evitare che questa situazione si ripeta in futuro.</string>
-    <string name="objectives_exam_learned_profileswitch">L\'utilizzo della percentuale non influisce sui target glicemici. Ma basale, ISF e IC sono regolati per fornire più insulina (sopra il 100%%) o meno insulina (sotto il 100%%).</string>
+    <string name="objectives_exam_learned_profileswitch">L\'utilizzo della percentuale non influisce sui target glicemici. Ma basale, ISF e IC sono regolati per fornire più insulina (sopra il 100%%) o meno insulina (sotto il 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Usando il timeshift nel cambio profilo puoi adattare il profilo circadiano a irregolarità come il risveglio tardivo.</string>
     <string name="objectives_exam_learned_profileswitch4">La modifica del profilo in sé non è sufficiente per apportare una modifica. Hai ancora bisogno di fare un cambio profilo per attivare le modifiche.</string>
     <string name="objectives_exam_learned_exercise">Dovresti ridurre la quantità di insulina nell’organismo almeno 1 ora prima di iniziare l’esercizio fisico selezionando il profilo al di sotto del 100%.</string>
