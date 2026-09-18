@@ -118,6 +118,10 @@
     <string name="wear_general_settings">Generelle innstillinger</string>
     <string name="wear_custom_watchface_settings">Innstillinger for tilpasset urskive</string>
     <string name="wear_custom_watchface">Tilpasset urskive: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Installerer…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Klokken viser komplikasjons-urskive. Velg Egendefinert urskive for å vise %1$s på klokken.</string>
+    <string name="wear_pushed_watchface_confirm_title">Endre urskive på klokken?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s erstatter %2$s på klokken.</string>
     <string name="wear_load_watchface">Last inn urskive</string>
     <string name="wear_infos_watchface">Info urskive</string>
     <string name="wear_export_watchface">Eksporter mal</string>
