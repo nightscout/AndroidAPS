@@ -7,13 +7,13 @@
     <string name="maxbolusviolation">Violation bolus Max</string>
     <string name="commanderror">Erreur de commande</string>
     <string name="speederror">Erreur de vitesse</string>
-    <string name="insulinlimitviolation">Violation de limite d\'insuline</string>
+    <string name="insulinlimitviolation">Violation limite d\'insuline</string>
     <string name="boluserrorcode">Demandé : %1$.2fU Injecté : %2$.2fU code d’erreur : %3$s</string>
     <string name="danar_valuenotsetproperly">Valeur incorrecte définie</string>
     <string name="danar_setbasalstep001">Régler incrément basal à 0,01 U/h</string>
-    <string name="resetpairing">Réinitialiser les informations d\'appairage ?</string>
+    <string name="resetpairing">Réinitialiser l\'appairage ?</string>
     <string name="dana_model">%1$s\nModèle : %2$02X\nProtocole : %3$02X\nCode : %4$02X</string>
-    <string name="processinghistory">Traitement de l\'événement</string>
+    <string name="processinghistory">Traitement d\'événement</string>
     <string name="danar_enableextendedbolus">Activer les bolus étendus dans la pompe</string>
     <string name="danar_disablebolusblock">Le blocage du bolus est activé sur la pompe. AAPS ne peut pas délivrer d\'insuline tant qu\'il est actif. Désactiver le blocage du bolus dans les paramètres de la pompe.</string>
     <string name="overview_bolusprogress_stoped">Arrêté</string>
@@ -32,6 +32,7 @@
     <string name="remaininsulinalert">Niveau d\'insuline restant</string>
     <string name="missedbolus">Bolus manqués</string>
     <string name="invalidpairing">Appairage invalide. Demande de nouvel appairage</string>
+    <string name="gettingpumpstatus">Obtenir l\'état de pompe</string>
     <string name="gettingextendedbolusstatus">Obtenir l\'état du bolus étendu</string>
     <string name="gettingbolusstatus">Obtenir l\'état du bolus</string>
     <string name="gettingtempbasalstatus">Obtenir l\'état du basal temporaire</string>
@@ -43,6 +44,7 @@
     <string name="approachingdailylimit">Limite quotidienne d\'insuline proche</string>
     <string name="startingbolus">Injection du bolus démarrée</string>
     <string name="waitingforestimatedbolusend">Bolus en cours. %1$d sec. restantes.</string>
+    <string name="stoppingtempbasal">Arrêter basal temp</string>
     <string name="settingextendedbolus">Définir bolus étendu</string>
     <string name="stoppingextendedbolus">Arrêter bolus étendu</string>
     <string name="updatingbasalrates">Mise à jour des débits basal</string>
