@@ -374,9 +374,13 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
                 }
             }
             setState(if (connectionRequests.isNotEmpty()) InsightState.RECOVERING else InsightState.DISCONNECTED)
-            if (e is ConnectionFailedException) {
-                cleanup(e.durationOfConnectionAttempt <= 1000)
-            } else cleanup(true)
+            // Always drop the socket, whatever the attempt cost. A BluetoothSocket cannot be
+            // connected twice: once connect() has failed the socket is spent, and calling connect()
+            // on it again fails with "read failed, socket might closed or timeout, read ret: -1".
+            // The old rule only dropped it when the attempt failed within a second, and measured on
+            // a real pump no failure is ever that quick - the fastest of 579 took 2.0 s - so the
+            // spent socket was kept and reused for every retry of a series.
+            cleanup(true)
             messageQueue.completeActiveRequest(e)
             messageQueue.completePendingRequests(e)
             if (connectionRequests.isNotEmpty()) {
