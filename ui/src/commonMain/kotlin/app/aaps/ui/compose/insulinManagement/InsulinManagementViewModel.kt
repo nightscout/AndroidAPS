@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.BatchAction
@@ -19,8 +17,8 @@ import app.aaps.core.interfaces.db.compensateForClockSkew
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.insulin.InsulinManager
+import app.aaps.core.interfaces.insulin.InsulinManager.UpdateResult
 import app.aaps.core.interfaces.insulin.InsulinType
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.resources.TextResolver
@@ -69,7 +67,6 @@ class InsulinManagementViewModel(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val hardLimits: HardLimits,
-    private val uel: UserEntryLogger,
     val rh: TextResolver,
     private val rxBus: RxBus,
     private val persistenceLayer: PersistenceLayer,
@@ -208,9 +205,10 @@ class InsulinManagementViewModel(
         // external (client→master) push arrives via putRemote and never sets it, so it still falls through.
         if (incoming == lastAppliedConfig || incoming == insulinManager.lastStoredConfiguration) return
         lastAppliedConfig = incoming
-        // reload = true: the apply that triggered this ran insulinManager.loadSettings()/reloadInternalState()
-        // on a background (WS) thread, so the in-memory list isn't reliably visible here — re-read the
-        // pref via the synchronized loadSettings(). lastAppliedConfig keeps the re-store from looping.
+        // InsulinImpl adopts this change by itself, but on the app scope, so it may not have run yet.
+        // loadSettings() re-reads the pref under the manager's lock, so the list below matches the value
+        // just seen. On the master, InsulinImpl may then store a normalized form; that comes here as one
+        // more change and is loaded the same way. lastAppliedConfig keeps the re-store from looping.
         when {
             // Client defers to the master: adopt the new definitions silently (discards unsaved edits).
             config.AAPSCLIENT   -> loadData(reload = true)
@@ -399,31 +397,8 @@ class InsulinManagementViewModel(
             return false
         }
 
-        // Resolve the write target in the AUTHORITATIVE live list by the identity (label) of the entry
-        // the editor was bound to — never by a raw index into the UI snapshot. An external sync push the
-        // master chose to keep editing over can have reordered or removed entries underneath us, so an
-        // index into the stale snapshot could otherwise redirect the edit onto a different insulin or
-        // drop it silently. buildFullName/uniqueness below use this same live-list index.
-        val originalLabel = state.insulins.getOrNull(state.currentCardIndex)?.insulinLabel
-        val targetIndex = insulinManager.insulins.indexOfFirst { it.insulinLabel == originalLabel }
-        if (targetIndex < 0) {
-            // The insulin we were editing no longer exists (removed by an external sync). Surface it and
-            // reload rather than silently reporting success on a write that goes nowhere.
-            showSnackbar(rh.gs(UiStrings.insulin_edit_target_gone))
-            loadData(reload = true)
-            return false
-        }
-
-        val fullName = insulinManager.buildFullName(
-            nickname = nickname,
-            peak = state.editorPeakMinutes,
-            dia = state.editorDiaHours,
-            concentration = state.editorConcentration.value,
-            excludeIndex = targetIndex
-        )
-
         val editedICfg = ICfg(
-            insulinLabel = fullName,
+            insulinLabel = "", // the manager builds the label
             insulinEndTime = 0,
             insulinPeakTime = 0,
             concentration = state.editorConcentration.value
@@ -442,26 +417,28 @@ class InsulinManagementViewModel(
             return false
         }
 
-        // Check name uniqueness against the live list (same source as the write target).
-        val existingIndex = insulinManager.insulins.indexOfFirst { it.insulinLabel == editedICfg.insulinLabel }
-        if (existingIndex >= 0 && existingIndex != targetIndex) {
-            showSnackbar(rh.gs(UiStrings.insulin_name_exists, editedICfg.insulinLabel))
-            return false
+        // The target is the insulin the editor was bound to, found by its label - never by an index into
+        // the UI snapshot. A sync can replace the manager's list at any moment (on the master too, and also
+        // while the user keeps editing over an external change), so the manager finds it, builds the new
+        // label and stores the result in one step.
+        val originalLabel = state.insulins.getOrNull(state.currentCardIndex)?.insulinLabel
+        val result = originalLabel?.let { insulinManager.updateInsulin(it, editedICfg) } ?: UpdateResult.NotFound
+        when (result) {
+            is UpdateResult.Updated    -> Unit
+            // Removed by a sync. Say so and reload, rather than report success on a write that went nowhere.
+            UpdateResult.NotFound      -> {
+                showSnackbar(rh.gs(UiStrings.insulin_edit_target_gone))
+                loadData(reload = true)
+                return false
+            }
+
+            is UpdateResult.LabelTaken -> {
+                showSnackbar(rh.gs(UiStrings.insulin_name_exists, result.label))
+                return false
+            }
         }
 
-        // Apply to plugin
-        val stored = insulinManager.insulins[targetIndex]
-        stored.insulinLabel = editedICfg.insulinLabel
-        stored.insulinEndTime = editedICfg.insulinEndTime
-        stored.insulinPeakTime = editedICfg.insulinPeakTime
-        stored.concentration = editedICfg.concentration
-        stored.insulinNickname = editedICfg.insulinNickname
-
-        // Sync UI state before store to avoid FAB lag/blocking and ensure hasUnsavedChanges() is false
         _uiState.update { it.copy(insulins = insulinManager.insulins.map { it.deepClone() }) }
-
-        uel.log(Action.STORE_INSULIN, Sources.Insulin, value = ValueWithUnit.SimpleString(editedICfg.insulinLabel))
-        insulinManager.storeSettings()
         lastAppliedConfig = preferences.get(StringNonKey.InsulinConfiguration) // mark as our own write
         loadData(reload = false)
         return true
@@ -494,7 +471,9 @@ class InsulinManagementViewModel(
             return false
         }
 
-        insulinManager.removeInsulin(state.currentCardIndex) // persists internally (storeSettings)
+        // By label, not by index, for the same reason as in saveCurrentInsulin. If a sync already removed
+        // it, this does nothing and the reload below shows the list as it is.
+        insulinManager.removeInsulin(currentICfg.insulinLabel) // persists internally
 
         lastAppliedConfig = preferences.get(StringNonKey.InsulinConfiguration) // mark as our own write
         // Full resync in one atomic update: insulins + coerced index + editor for the new current card.

@@ -9,20 +9,23 @@ import app.aaps.core.data.model.ICfg
  */
 interface InsulinManager {
 
-    /** All configured insulins */
+    /**
+     * All configured insulins. Read it, do not change it: a sync can replace the whole list at any
+     * moment. Change the catalogue only through [addNewInsulin], [updateInsulin] and [removeInsulin],
+     * which find their target and store the result in one step. For the same reason, do not keep an
+     * index into this list across calls.
+     */
     val insulins: ArrayList<ICfg>
 
     /** Reload insulin list from persisted settings */
     fun loadSettings()
 
-    /** Persist current insulin list */
-    fun storeSettings()
-
     /**
-     * The exact serialized configuration string of the most recent LOCAL [storeSettings] write.
-     * Lets a UI observing `InsulinConfiguration` recognize its own echoes (which equal this) and
-     * tell them apart from a genuine external (client→master) push — which arrives via putRemote and
-     * never updates this — independent of write-ordering / coroutine-dispatch timing.
+     * The exact serialized configuration string of the most recent LOCAL edit ([addNewInsulin],
+     * [updateInsulin], [removeInsulin]). Lets a UI observing `InsulinConfiguration` recognize its own
+     * echoes (which equal this) and tell them apart from a genuine external (client→master) push —
+     * which arrives via putRemote and never updates this — independent of write-ordering /
+     * coroutine-dispatch timing.
      */
     val lastStoredConfiguration: String
 
@@ -30,13 +33,31 @@ interface InsulinManager {
     fun addNewInsulin(newICfg: ICfg, ue: Boolean = true, keepName: Boolean = false): ICfg
 
     /**
-     * Remove the insulin at [index]. No-op for an out-of-range [index], and on a single-element list —
-     * the list is never emptied.
+     * Replace the insulin labelled [originalLabel] with the curve, concentration and nickname of
+     * [edited], under a new label built from them, and store the list. The label of [edited] is ignored.
+     */
+    fun updateInsulin(originalLabel: String, edited: ICfg): UpdateResult
+
+    sealed interface UpdateResult {
+
+        /** Stored under [label]. */
+        data class Updated(val label: String) : UpdateResult
+
+        /** No insulin has the original label any more: a sync removed or renamed it. Nothing was stored. */
+        data object NotFound : UpdateResult
+
+        /** Another insulin already has [label]. Nothing was stored. */
+        data class LabelTaken(val label: String) : UpdateResult
+    }
+
+    /**
+     * Remove the insulin labelled [label]. No-op when no insulin has that label, and on a
+     * single-element list — the list is never emptied.
      *
      * Which insulin is "selected" is the caller's business: this is a catalogue, and the insulin actually
      * in use is derived from the running profile, never from a position in this list.
      */
-    fun removeInsulin(index: Int)
+    fun removeInsulin(label: String)
 
     /** Available insulin type presets (templates) */
     fun insulinTemplateList(): List<InsulinType>

@@ -263,12 +263,12 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
 
         // Appending to the catalogue leaves the in-use insulin alone (no "current entry" any more).
         val before = insulinManager.insulins.size
-        insulinManager.addNewInsulin(ICfg("OnDeviceProbe", 55, 7.0, 1.0), ue = false)
+        val probe = insulinManager.addNewInsulin(ICfg("OnDeviceProbe", 55, 7.0, 1.0), ue = false)
         assertThat(insulinManager.insulins).hasSize(before + 1)
         assertThat(profileFunction.runningICfg.value).isEqualTo(activated)
 
-        // …and removing it by index takes out the one asked for, not a positional guess.
-        insulinManager.removeInsulin(insulinManager.insulins.lastIndex)
+        // …and removing it by label takes out the one asked for, not a positional guess.
+        insulinManager.removeInsulin(probe.insulinLabel)
         assertThat(insulinManager.insulins).hasSize(before)
         assertThat(insulinManager.insulins.none { it.insulinNickname == "OnDeviceProbe" }).isTrue()
         assertThat(profileFunction.runningICfg.value).isEqualTo(activated)
