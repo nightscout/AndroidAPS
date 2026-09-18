@@ -125,6 +125,28 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 - **`crowdin file list` prints only "Fetching project info"** unless you pass
   `-c <yml> --base-path=<dir>`.
 
+## Moving a source file
+
+Changing the path in `crowdin.yml` is not enough. A source that just disappears from the repo stays
+on Crowdin as a stale copy beside the new one. `pump/omnipod-dash` and `pump/omnipod-eros` sat there
+from their 2025 move until 2026-09, when a comparison of Crowdin's file list with `crowdin.yml`
+found them.
+
+1. Move the file and change its path in `crowdin.yml`, in one commit. Keep this commit a pure move
+   (no file left at the old path), so git records a rename and `git log --follow` keeps working.
+2. In a second commit, create an empty file at each old path and list it in a
+   `# TEMPORARY` comment at the top of `crowdin.yml`. Do not add the old path back as an entry. Push
+   both together - Crowdin syncs `dev` a few minutes after a push. The Dana and Omnipod files in
+   2026-09 were zero bytes; the KMP move before them used `<resources></resources>`. Step 4 is
+   where you find out whether the one you used worked.
+3. On that sync Crowdin sees a source with no strings and drops it. The new path is a new file on
+   Crowdin; translation memory fills it again, approvals included - the 2026-09 KMP move came back
+   fully translated and approved. Comments on strings do not carry over.
+4. When Crowdin no longer shows the old paths, delete the empty files and the comment.
+
+To find stale files, compare the paths from the file list request below (without the `/dev`
+prefix) with the `source:` lines in `crowdin.yml`. Every Crowdin file should have a line.
+
 ## Finding file IDs in the project
 
 ```bash

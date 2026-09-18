@@ -6,6 +6,11 @@
 #
 #   pump/dana/src/main/res/values/strings.xml    (moved to pump/dana/common)
 #   pump/danar/src/main/res/values/strings.xml   (moved to pump/dana/danar)
+#
+# The two below moved in 2025 without this step and were still on Crowdin, unchanged since then.
+#
+#   pump/omnipod-dash/src/main/res/values/strings.xml   (moved to pump/omnipod/dash)
+#   pump/omnipod-eros/src/main/res/values/strings.xml   (moved to pump/omnipod/eros)
 
 files:
   - source: /app/src/main/res/values/strings.xml
