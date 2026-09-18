@@ -204,6 +204,33 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
         return messageRequest
     }
 
+    /**
+     * Writes several configuration blocks inside ONE write session: one open, every write, one
+     * close. [requestMessage] gives each write its own session, which is not safe when the writes
+     * belong together - the pump commits each session on its own, so a connection lost between two
+     * of them leaves half the change applied.
+     *
+     * The writes are sent in the order given: [MessageQueue] sorts by priority only, and that sort
+     * is stable, so same priority messages keep the order they were enqueued in.
+     */
+    @Synchronized fun requestConfigurationWrites(messages: List<WriteConfigurationBlockMessage>): ConfigurationWriteSessionRequest {
+        val openRequest = MessageRequest(OpenConfigurationWriteSessionMessage())
+        val writeRequests = messages.map { MessageRequest(it) }
+        val closeRequest = MessageRequest(CloseConfigurationWriteSessionMessage())
+        if (state !== InsightState.CONNECTED) {
+            val exception = DisconnectedException()
+            openRequest.exception = exception
+            writeRequests.forEach { it.exception = exception }
+            closeRequest.exception = exception
+            return ConfigurationWriteSessionRequest(openRequest, writeRequests, closeRequest)
+        }
+        messageQueue.enqueueRequest(openRequest)
+        writeRequests.forEach { messageQueue.enqueueRequest(it) }
+        messageQueue.enqueueRequest(closeRequest)
+        requestNextMessage()
+        return ConfigurationWriteSessionRequest(openRequest, writeRequests, closeRequest)
+    }
+
     private fun requestNextMessage() {
         while (messageQueue.activeRequest == null && messageQueue.hasPendingMessages()) {
             messageQueue.nextRequest()

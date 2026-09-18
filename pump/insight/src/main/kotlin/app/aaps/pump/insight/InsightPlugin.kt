@@ -468,24 +468,22 @@ class InsightPlugin(
         }
         connectionService?.let { service ->
             try {
-                // Write the new rates first, then switch the pump to PROFILE_1.
+                // Both blocks go into ONE write session, rates first and activation second.
                 //
-                // The other order was not safe. Each writeConfigurationBlock call opens and closes its
-                // own write session, so the switch was already committed before the rates were sent. If
-                // the rate write then failed - timeout, lost connection, pump error - the pump was left
-                // running PROFILE_1 while PROFILE_1 still held the OLD rates, and AAPS only reported a
-                // failure. On a real pump that window was measured at 200-330 ms between the two
-                // sessions, plus the whole of the second session.
+                // The pump only applies a write session when it is closed, so nothing at all is
+                // committed until both blocks have been written. A connection lost anywhere in
+                // between leaves the pump exactly as it was, instead of switched to PROFILE_1 while
+                // PROFILE_1 still holds the old rates - which is what the previous two-session
+                // version did, with nothing to warn the user.
                 //
-                // With this order no failure point leaves a wrong basal rate running: if the rate write
-                // fails the pump stays on the profile it was on, and if the activation fails PROFILE_1
-                // holds correct rates but was never switched to.
+                // The order still matters as a second line of defence: if the pump ever rejects the
+                // second write while the link is up, the close is still sent, so the rates must be
+                // the block that is already in.
                 val profileBlock: BRProfileBlock = BRProfile1Block()
                 profileBlock.profileBlocks = profileBlocks
-                ParameterBlockUtil.writeConfigurationBlock(service, profileBlock)
                 val activeBRProfileBlock = ActiveBRProfileBlock()
                 activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
-                ParameterBlockUtil.writeConfigurationBlock(service, activeBRProfileBlock)
+                ParameterBlockUtil.writeConfigurationBlocks(service, profileBlock, activeBRProfileBlock)
                 activeBasalProfile = BasalProfile.PROFILE_1
                 // PROFILE_SET_OK posted (and FAILED cleared) centrally on the return value.
                 result.success(true)

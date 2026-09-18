@@ -7,9 +7,12 @@ import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.insight.app_layer.AppLayerMessage
+import app.aaps.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
+import app.aaps.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
 import app.aaps.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage
 import app.aaps.pump.insight.app_layer.parameter_blocks.ActiveBRProfileBlock
 import app.aaps.pump.insight.app_layer.parameter_blocks.BRProfile1Block
+import app.aaps.pump.insight.connection_service.ConfigurationWriteSessionRequest
 import app.aaps.pump.insight.connection_service.InsightConnectionService
 import app.aaps.pump.insight.connection_service.MessageRequest
 import app.aaps.pump.insight.database.InsightDatabase
@@ -30,10 +33,16 @@ import org.mockito.kotlin.whenever
 /**
  * Covers how [InsightPlugin.setNewBasalProfile] writes a profile to the pump.
  *
- * The order of the two writes is the point. Each one is committed on its own, so writing the
- * activation first left the pump switched to `PROFILE_1` while `PROFILE_1` still held the old
- * rates whenever the second write failed - a wrong basal rate with nothing to warn the user.
- * Writing the rates first makes every failure point safe, so the order is pinned here.
+ * Two things are pinned here, and both are about what a lost connection leaves behind.
+ *
+ * The two blocks must go into ONE write session: the pump only applies a session when it is
+ * closed, so grouping them means a link lost part way through changes nothing at all. Written as
+ * two sessions, the pump committed the switch to `PROFILE_1` on its own, and a failure after that
+ * left it running `PROFILE_1` while `PROFILE_1` still held the old rates - a wrong basal rate with
+ * nothing to warn the user.
+ *
+ * Inside that session the rates are written before the activation, so that even if the pump
+ * rejected the second write while the link was up, the block already in is the harmless one.
  */
 class InsightPluginBasalProfileTest : TestBaseWithProfile() {
 
@@ -47,8 +56,8 @@ class InsightPluginBasalProfileTest : TestBaseWithProfile() {
 
     private lateinit var sut: InsightPlugin
 
-    /** Every message the plugin handed to the connection service, in the order it did so. */
-    private val sent = mutableListOf<AppLayerMessage>()
+    /** One entry per write session the plugin opened, holding the blocks written inside it. */
+    private val sessions = mutableListOf<List<WriteConfigurationBlockMessage>>()
 
     /** Three basal blocks covering the whole day: 00:00, 06:00 and 18:00. */
     private val profile: PumpProfile = mock<PumpProfile>().also {
@@ -61,6 +70,10 @@ class InsightPluginBasalProfileTest : TestBaseWithProfile() {
         )
     }
 
+    /** A request the caller can `await()` without blocking, answered with the message itself. */
+    private fun <T : AppLayerMessage> answered(message: T) =
+        MessageRequest(message).also { it.response = message }
+
     @BeforeEach
     fun setUp() {
         sut = InsightPlugin(
@@ -70,25 +83,38 @@ class InsightPluginBasalProfileTest : TestBaseWithProfile() {
             CoroutineScope(Dispatchers.Unconfined), aapsSchedulers, blePreCheck
         )
         sut.connectionService = connectionService
-        // Answer every request straight away with the request itself as the response, so `await()`
-        // returns instead of blocking. Good enough here: the writes ignore the response, and the
-        // status read that follows is wrapped in its own catch inside setNewBasalProfile.
+        whenever(connectionService.requestConfigurationWrites(any())).thenAnswer { invocation ->
+            @Suppress("UNCHECKED_CAST")
+            val messages = invocation.getArgument<List<WriteConfigurationBlockMessage>>(0)
+            sessions += messages
+            ConfigurationWriteSessionRequest(
+                answered(OpenConfigurationWriteSessionMessage()),
+                messages.map { answered(it) },
+                answered(CloseConfigurationWriteSessionMessage())
+            )
+        }
+        // The status read that follows the write goes through requestMessage. Answer it so it does
+        // not block; whatever it makes of the answer is caught inside setNewBasalProfile anyway.
         whenever(connectionService.requestMessage(any<AppLayerMessage>())).thenAnswer { invocation ->
-            val message = invocation.getArgument<AppLayerMessage>(0)
-            sent += message
-            MessageRequest(message).also { it.response = message }
+            answered(invocation.getArgument<AppLayerMessage>(0))
         }
     }
 
-    private fun writtenBlocks() =
-        sent.filterIsInstance<WriteConfigurationBlockMessage>().map { it.parameterBlock }
+    private fun writtenBlocks() = sessions.single().map { it.parameterBlock }
+
+    @Test
+    fun bothBlocksAreWrittenInASingleSession() = runBlocking {
+        sut.setNewBasalProfile(profile)
+
+        assertThat(sessions).hasSize(1)
+        assertThat(sessions.single()).hasSize(2)
+    }
 
     @Test
     fun theRatesAreWrittenBeforeTheProfileIsActivated() = runBlocking {
         sut.setNewBasalProfile(profile)
 
         val blocks = writtenBlocks()
-        assertThat(blocks).hasSize(2)
         assertThat(blocks[0]).isInstanceOf(BRProfile1Block::class.java)
         assertThat(blocks[1]).isInstanceOf(ActiveBRProfileBlock::class.java)
     }
@@ -116,7 +142,7 @@ class InsightPluginBasalProfileTest : TestBaseWithProfile() {
 
         val result = sut.setNewBasalProfile(profile)
 
-        assertThat(sent).isEmpty()
+        assertThat(sessions).isEmpty()
         // Not a real failure - the profile is pushed again on reconnect, so this must not raise the
         // central "profile update failed" alarm.
         assertThat(result.success).isTrue()
