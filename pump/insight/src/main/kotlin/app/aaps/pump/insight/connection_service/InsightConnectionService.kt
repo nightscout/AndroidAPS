@@ -345,6 +345,10 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
         }
     }
 
+    /** " (cause: ...)" when the exception carries one, empty otherwise. */
+    private fun causeText(e: Exception): String =
+        e.cause?.let { " (cause: ${it.javaClass.simpleName}: ${it.message})" } ?: ""
+
     @Synchronized private fun handleException(e: Exception) {
         when (state) {
             InsightState.NOT_PAIRED,
@@ -353,7 +357,14 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
 
             else                    -> Unit
         }
-        aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
+        // Say what the platform reported, not just the class name. A connection failure is by far the
+        // most common one, and "out of range", "socket already used" and "refused" all looked the same
+        // before - which made connection trouble impossible to diagnose from a log.
+        val detail = when {
+            e is ConnectionFailedException -> " after ${e.durationOfConnectionAttempt} ms" + causeText(e)
+            else                           -> causeText(e).ifEmpty { e.message?.let { ": $it" } ?: "" }
+        }
+        aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName + detail)
         if (pairingDataStorage.paired) {
             if (e is TimeoutException && (state === InsightState.SATL_SYN_REQUEST || state === InsightState.APP_CONNECT_MESSAGE)) {
                 if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
@@ -731,7 +742,7 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
     }
 
     @Synchronized override fun onConnectionFail(e: Exception?, duration: Long) {
-        handleException(ConnectionFailedException(duration))
+        handleException(ConnectionFailedException(duration, e))
     }
 
     @Synchronized override fun onErrorWhileReading(e: Exception) {
