@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
+import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
@@ -98,6 +99,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -186,15 +189,39 @@ class AutomationRuntime(
      */
     private val eventsLock = AapsLock()
 
+    /**
+     * One [processActions] run at a time. A rule's [AutomationEventObject.lastRun] is set only after all
+     * of its actions finished, and the actions suspend (temp targets, profile switches, pump commands).
+     * Two overlapping runs would both see the rule as due and execute it twice.
+     *
+     * Before 3.1.0 `processActions()` was `@Synchronized`. That was dropped to fix an ANR - it held the
+     * instance monitor for the whole run, and the UI took the same monitor - and nothing replaced it.
+     * A separate suspending lock serializes the runs without blocking any thread or touching
+     * [eventsLock], which the UI takes. Overlaps became more likely once new BG data started runs too.
+     */
+    private val processActionsMutex = Mutex()
+
     // AnnotatedString, not HTML in a String: the only entry that carries formatting is built below, and
     // the screen renders this list directly. Nothing here ever leaves the app.
     var executionLog: MutableList<AnnotatedString> = ArrayList()
 
-    /** BT connect/disconnect events accumulated between processActions() runs (master only). The
-     *  single external reader is TriggerBTDevice, via [recentBtConnects]. */
-    private val btConnects: MutableList<EventBTChange> = ArrayList()
+    /**
+     * Adds a status line that every run repeats while the state lasts (loop suspended, loop not enabled,
+     * a constraint). Skipped when it is already among the last few entries: runs now come with every BG
+     * calculation too, and a loop disabled for days would otherwise fill the log. Checking a few
+     * entries, not only the last one, covers two or three of these lines alternating.
+     */
+    private fun addStatusToLog(text: String) {
+        if (executionLog.takeLast(3).none { it.text == text }) executionLog.add(AnnotatedString(text))
+    }
 
-    override fun recentBtConnects(): List<EventBTChange> = ArrayList(btConnects)
+    /** BT connect/disconnect events accumulated between processActions() runs (master only). The
+     *  single external reader is TriggerBTDevice, via [recentBtConnects]. Guarded by [btConnectsLock]:
+     *  the BT collector adds on one thread while a run reads and trims on another. */
+    private val btConnects: MutableList<EventBTChange> = ArrayList()
+    private val btConnectsLock = AapsLock()
+
+    override fun recentBtConnects(): List<EventBTChange> = btConnectsLock.withLock { ArrayList(btConnects) }
 
     /**
      * Snapshot stream of [automationEvents]. Replaces the old `EventAutomationDataChanged` RxBus
@@ -337,6 +364,10 @@ class AutomationRuntime(
         // location service, no event processing.
         if (!config.APS) return
 
+        // The timer below is not enough on its own. delay() runs on a clock that stops while the phone is
+        // in deep sleep, so with the screen off 150 seconds can take ten minutes and more, and a
+        // fixed-time rule's 5-minute window closes unchecked (issue #5137). The new-BG subscription
+        // further down is what keeps rules checked at CGM pace.
         newScope.launch {
             delay(1.minutes)
             while (isActive) {
@@ -366,11 +397,9 @@ class AutomationRuntime(
             updateLocationService()
         }.launchIn(newScope)
 
-        // processActions() stays launched rather than called inline. A Flow collector is sequential, so
-        // calling it directly would serialize rule processing, which the Rx version did not do - it
-        // fired scope.launch and returned. That may well be an improvement, but changing when
-        // automation rules can run concurrently is not something to do as a side effect of swapping
-        // the subscription mechanism.
+        // processActions() stays launched rather than called inline, so a slow run never holds up the
+        // collector that delivers the next event. Runs do not overlap: processActionsMutex serializes
+        // them.
         rxBus.toFlow(EventLocationChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.position.latitude} ${it.position.longitude} Provider: ${it.provider}")
@@ -379,7 +408,16 @@ class AutomationRuntime(
         rxBus.toFlow(EventBTChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
                 aapsLogger.debug(LTag.AUTOMATION, "Grabbed new BT event: $it")
-                btConnects.add(it)
+                btConnectsLock.withLock { btConnects.add(it) }
+                scope?.launch { processActions() }
+            }
+        // New BG data. Every new reading ends in a calculation that sends this event, in the background
+        // too - it is the one wake-up that is always there while the loop runs. Automation listened to it
+        // until 3.1.0, when the calculation moved into a workflow and this subscription was dropped
+        // without a replacement; since then only the timer above and the odd charging, network,
+        // location or BT event started runs, and fixed-time rules were missed in deep sleep.
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOMATION, start = CoroutineStart.UNDISPATCHED) {
                 scope?.launch { processActions() }
             }
     }
@@ -477,8 +515,14 @@ class AutomationRuntime(
     }
 
     internal suspend fun processActions() {
+        processActionsMutex.withLock { processActionsLocked() }
+    }
+
+    private suspend fun processActionsLocked() {
         if (!config.appInitialized) return
         if (!config.APS) return // execution is master-only — clients never run automation
+        // BT events this run is responsible for; see the end of the run.
+        val seenBtConnects = btConnectsLock.withLock { btConnects.size }
         // Reconcile the location service each tick: retries a start that earlier no-op'd because the
         // location permission wasn't granted yet, and stops it if the last location event was removed.
         updateLocationService()
@@ -493,7 +537,7 @@ class AutomationRuntime(
         val runningMode = loop.runningMode()
         if (runningMode.pausesLoopExecution() || !runningMode.isLoopRunning()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop suspended")
-            executionLog.add(AnnotatedString(rh.gs(InterfacesStrings.loopsuspended)))
+            addStatusToLog(rh.gs(InterfacesStrings.loopsuspended))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -502,7 +546,7 @@ class AutomationRuntime(
          */
         if (!(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop not enabled")
-            executionLog.add(AnnotatedString(rh.gs(CoreUiStrings.disconnected)))
+            addStatusToLog(rh.gs(CoreUiStrings.disconnected))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -511,8 +555,7 @@ class AutomationRuntime(
          */
         val enabled = constraintChecker.isAutomationEnabled()
         if (!enabled.value()) {
-            val reason = enabled.getMostLimitedReasons()
-            if (executionLog.lastOrNull()?.text != reason) executionLog.add(AnnotatedString(reason))
+            addStatusToLog(enabled.getMostLimitedReasons())
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -533,10 +576,16 @@ class AutomationRuntime(
          * So, let's collect all connection/disconnections between 2 runs of processActions()
          * TriggerBTDevice can pick up and process these events
          * after processing clear events to prevent repeated actions
+         *
+         * Only the events that were there when this run started. One that arrived during the run
+         * belongs to the run waiting behind this one on processActionsMutex - clearing everything
+         * would leave that run an empty list, and the connect would never fire its rule.
          */
-        btConnects.clear()
-
-        requestPersist() // persist last-run time (edit-driven trigger; master only)
+        btConnectsLock.withLock { btConnects.subList(0, seenBtConnects).clear() }
+        // No persist here. lastRun is not part of the stored JSON, so a write after every run stored
+        // the same definitions again - and each write of this synced key moves its "last modified"
+        // stamp, which made a client's automation edit lose to the master more often. A run that does
+        // change a definition persists it where it happens (processEvent, remove).
     }
 
     override suspend fun processEvent(someEvent: AutomationEvent) {
@@ -555,6 +604,7 @@ class AutomationRuntime(
                 executionLog.add(AnnotatedString("Invalid action: ${action.shortDescription()}"))
                 aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
             }
+            markEdited() // the rule is now disabled - store that and refresh the list
             rxBus.send(EventAutomationUpdateGui())
             return
         }
