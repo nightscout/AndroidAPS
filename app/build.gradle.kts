@@ -185,8 +185,6 @@ android {
 
 
     sourceSets {
-        getByName("full") { kotlin.directories.add("src/withPumps/kotlin") }
-        getByName("pumpcontrol") { kotlin.directories.add("src/withPumps/kotlin") }
         getByName("aapsclient2") { kotlin.directories.add("src/aapsclient/kotlin") }
         getByName("aapsclient3") { kotlin.directories.add("src/aapsclient/kotlin") }
 
@@ -197,9 +195,13 @@ android {
         // with "Unresolved reference 'dana'".
         //
         // Keyed on the module being in settings.gradle, the same single source of truth the driver
-        // dependencies above are derived from, so removing a pump takes its tests with it.
+        // dependencies above are derived from, so removing a pump takes its tests with it. Dana R and
+        // Dana RS are separate keys so either one can be removed alone; `dana` holds the base class
+        // both use and needs only :pump:dana.
         val pumpTestSources = mapOf(
-            ":pump:danar" to "src/androidTestPumps/dana/kotlin",
+            ":pump:dana" to "src/androidTestPumps/dana/kotlin",
+            ":pump:danar" to "src/androidTestPumps/danar/kotlin",
+            ":pump:danars" to "src/androidTestPumps/danars/kotlin",
             ":pump:equil" to "src/androidTestPumps/equil/kotlin"
         )
         listOf("androidTestFull", "androidTestPumpcontrol").forEach { name ->
@@ -243,9 +245,9 @@ dependencies {
     // buildFile.exists() skips the phantom :pump:omnipod container Gradle auto-creates from the
     // nested :pump:omnipod:* includes (it has no build script / no consumable variant).
     //
-    // Support modules nested under a driver (:pump:combov2:comboctl, :pump:omnipod:common,
-    // :pump:carelevo:protocol, :pump:carelevo:emulator) need NO exception. They arrive transitively
-    // through their driver anyway, and naming the same project path twice resolves to one node in the
+    // Support modules nested under a driver (:pump:combov2:comboctl, :pump:omnipod:common, and the
+    // nested :protocol and :emulator modules of carelevo, equil and the Dana drivers) need NO
+    // exception. They arrive transitively through their driver anyway, and naming the same project path twice resolves to one node in the
     // graph rather than two copies - verified by building an APK with comboctl un-excluded. Keeping
     // them out of this list would only be tidiness, and it is tidiness that has to be maintained by
     // hand every time a module is added.

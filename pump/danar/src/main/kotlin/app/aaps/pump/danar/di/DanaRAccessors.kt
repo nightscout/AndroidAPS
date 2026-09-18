@@ -13,7 +13,7 @@ import dev.zacsweers.metro.ContributesTo
  * read from the app's graph rather than built by the test, and what contributing them costs.
  *
  * Extends [DanaAccessors] so a Dana R test gets the shared pieces from one cast. [rfcommTransport] is a
- * core type but a Dana binding: `DanaTransportBindings` decides between the real transport and the
+ * core type but a Dana binding: [DanaRTransportBindings] decides between the real transport and the
  * emulator, so this is where a test can see which one it got.
  */
 @ContributesTo(AppScope::class)

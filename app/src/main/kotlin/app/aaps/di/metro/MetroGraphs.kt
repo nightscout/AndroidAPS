@@ -123,12 +123,6 @@ class MetroGraphs(
     }
 
     /**
-     * The pump types, for code outside `src/withPumps`.
-     *
-     * Declared in the flavour source sets rather than here, because `src/main` has no pump module on
-     * its classpath. Empty in a follower.
-     */
-    /**
      * The root graph itself, for instrumented tests that need a pump's own objects.
      *
      * A pump module contributes an accessor interface (`DanaRAccessors`, `EquilAccessors`, ...), so the

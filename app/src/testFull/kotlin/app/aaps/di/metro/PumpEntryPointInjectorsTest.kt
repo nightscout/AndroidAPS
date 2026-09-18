@@ -1,20 +1,13 @@
 package app.aaps.di.metro
 
-import app.aaps.pump.danar.services.DanaRExecutionService
-import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
-import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
-import app.aaps.pump.diaconn.service.DiaconnG8Service
-import app.aaps.pump.insight.InsightAlertService
-import app.aaps.pump.insight.app_layer.activities.InsightAlertActivity
-import app.aaps.pump.insight.connection_service.InsightConnectionService
-import app.aaps.pump.common.hw.rileylink.service.RileyLinkBluetoothStateReceiver
-import app.aaps.pump.common.hw.rileylink.service.RileyLinkBroadcastReceiver
-import app.aaps.pump.danars.services.DanaRSService
-import app.aaps.pump.medtrum.services.MedtrumService
-import app.aaps.pump.medtronic.service.RileyLinkMedtronicService
-import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
+import android.app.Activity
+import android.app.Service
+import android.content.BroadcastReceiver
+import app.aaps.shared.tests.aapsClassesOnClasspath
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Inject
 import org.junit.jupiter.api.Test
+import java.lang.reflect.Modifier
 
 /**
  * The pump entry points Android constructs must have a member injector entry.
@@ -24,72 +17,45 @@ import org.junit.jupiter.api.Test
  * there, and that only happens when the service actually starts - which for these is when the phone
  * connects to the pump. A DanaR user would see the driver fail at connect time.
  *
- * All three subclass `AbstractDanaRExecutionService`, and the fields they need are declared on that
- * base. The entry still has to name each concrete class: the lookup uses the runtime class, so the
- * base's entry would never be found. That is the trap `ReceiverInjectorsTest` spells out for
- * `SmsReceiver`, and it applies here three times over.
+ * The lookup uses the runtime class, so the entry has to name each concrete class. An entry for a base
+ * class is never found: the three DanaR execution services all subclass `AbstractDanaRExecutionService`
+ * and still need one entry each. That is the trap `ReceiverInjectorsTest` spells out for `SmsReceiver`.
+ *
+ * ## The expectation is found, not written down
+ *
+ * It used to name thirteen classes from seven pump modules. That made those modules a compile-time
+ * dependency of this test - removing `:pump:danar` from `settings.gradle` stopped
+ * `:app:testFullDebugUnitTest` compiling - and it only checked the thirteen. A new pump service that
+ * forgot its entry is exactly the case this file exists to catch, and a list cannot catch it.
+ *
+ * It now looks for them: every concrete activity, service or receiver in a pump package that has a
+ * field Metro fills, declared on the class or on any of its bases. Such a class gets those fields only
+ * through this map, so one without an entry fails when Android starts it.
  */
 class PumpEntryPointInjectorsTest {
 
-    @Test
-    fun `each DanaR execution service has its own injector`() {
-        val injectors = testRoot().contributedMemberInjectors
+    private val androidEntryPoints = listOf(Activity::class.java, Service::class.java, BroadcastReceiver::class.java)
 
-        assertThat(injectors.keys).containsAtLeast(
-            DanaRExecutionService::class,
-            DanaRKoreanExecutionService::class,
-            DanaRv2ExecutionService::class
-        )
-    }
+    /** Concrete Android entry points belonging to a pump module that need their fields filled. */
+    private fun pumpEntryPoints(): List<Class<*>> =
+        aapsClassesOnClasspath(listOf(AppRootGraph::class.java))
+            .filter { it.name.startsWith("app.aaps.pump.") || it.name.startsWith("info.nightscout.pump.") }
+            .filter { type -> androidEntryPoints.any { it.isAssignableFrom(type) } }
+            // Android never builds a base class on its own; only the concrete one is looked up.
+            .filterNot { it.isInterface || Modifier.isAbstract(it.modifiers) }
+            .filter { it.hasInjectedField() }
 
-    @Test
-    fun `the other converted pump services have injectors`() {
-        val injectors = testRoot().contributedMemberInjectors
-
-        assertThat(injectors.keys).containsAtLeast(MedtrumService::class, DiaconnG8Service::class)
-    }
+    private fun Class<*>.hasInjectedField(): Boolean =
+        generateSequence(this) { it.superclass }
+            .any { type -> type.declaredFields.any { it.isAnnotationPresent(Inject::class.java) } }
 
     @Test
-    fun `the rileylink entry points have injectors`() {
-        val injectors = testRoot().contributedMemberInjectors
+    fun `every pump entry point has its own injector`() {
+        val expected = pumpEntryPoints()
+        check(expected.isNotEmpty()) { "Found no pump entry points on the classpath - the scan broke" }
 
-        // RileyLinkService is abstract; the entry has to name the concrete subclass, which lives in
-        // :pump:medtronic - the lookup uses the runtime class.
-        assertThat(injectors.keys).containsAtLeast(
-            RileyLinkBluetoothStateReceiver::class,
-            RileyLinkBroadcastReceiver::class,
-            RileyLinkMedtronicService::class,
-            // Eros's entry is hand written (the service is Java, which crashes Metro's codegen) - so it is
-            // the one that most needs asserting, because nothing else checks it exists.
-            RileyLinkOmnipodService::class
-        )
-    }
+        val contributed = testRoot().contributedMemberInjectors.keys.map { it.java }
 
-    @Test
-    fun `the danars service has an injector`() {
-        val injectors = testRoot().contributedMemberInjectors
-
-        assertThat(injectors.keys).contains(DanaRSService::class)
-    }
-
-    @Test
-    fun `the insight entry points have injectors`() {
-        val injectors = testRoot().contributedMemberInjectors
-
-        assertThat(injectors.keys).containsAtLeast(
-            InsightAlertActivity::class,
-            InsightAlertService::class,
-            InsightConnectionService::class
-        )
-    }
-
-    @Test
-    fun `the three services get separate injectors, not one shared base entry`() {
-        val injectors = testRoot().contributedMemberInjectors
-
-        assertThat(injectors[DanaRExecutionService::class])
-            .isNotSameInstanceAs(injectors[DanaRKoreanExecutionService::class])
-        assertThat(injectors[DanaRKoreanExecutionService::class])
-            .isNotSameInstanceAs(injectors[DanaRv2ExecutionService::class])
+        assertThat(contributed).containsAtLeastElementsIn(expected)
     }
 }

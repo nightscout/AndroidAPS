@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":pump:dana"))
+    implementation(project(":pump:danars:emulator"))
 
     testImplementation(project(":shared:tests"))
 

@@ -24,13 +24,10 @@ class ViewModelOwnershipTest {
 
     @Test
     fun `every singleton a view model injects is owned by Metro`() {
-        // Anchored on AppRootGraph rather than a pump class: `:app` compiles `src/main` and the flavour
-        // source set into one output, so this reaches every withPumps binding container.
-        // Both graphs, not just the root. `CoreObjectsGraph` is reached through `@Includes` on the
-        // factory rather than from `AppRootGraph` itself, so a scan anchored only on the root cannot
-        // see its scoped providers - it reported `QuickWizard` as unowned when it is `@SingleIn` at
-        // `CoreObjectsGraph`. The old pump-only filter never reached a type bound there, which is why
-        // the blind spot survived.
+        // The scan covers the whole test classpath, so it reaches the binding containers in every pump
+        // module and in `CoreObjectsGraph` alike - the anchors only give it a class loader. It used to
+        // scan only the anchors' own output, which missed `CoreObjectsGraph` (it reported `QuickWizard`
+        // as unowned) and, once the pump bindings moved into their modules, every pump container too.
         val owned = metroScopedProviderTypes(anchors = listOf(AppRootGraph::class.java, CoreObjectsGraph::class.java))
         check(owned.isNotEmpty()) { "Found no scoped container providers - the scan broke" }
 

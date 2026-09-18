@@ -11,11 +11,9 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
 /**
- * The Insight pump's own database, provided to the graph.
- *
- * Here rather than in the pump module because it is built from the application `Context`, and in the
- * `withPumps` source set so a follower build - which has no pump drivers on its classpath - does not
- * carry it.
+ * The Insight pump's own database, provided to the graph. It is built from the application `Context`,
+ * which the graph provides, so it can live in the pump module and a follower build - which has no pump
+ * drivers on its classpath - does not carry it.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer

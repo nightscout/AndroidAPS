@@ -1,26 +1,21 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.metro)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
+    alias(libs.plugins.metro)
 }
 
 android {
-    namespace = "app.aaps.pump.danar"
+    namespace = "app.aaps.pump.danars.emulator"
 }
 
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:objects"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:ui"))
     implementation(project(":pump:dana"))
-    implementation(project(":pump:danar:emulator"))
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.kotlinx.datetime)
 
     testImplementation(project(":shared:tests"))
 

@@ -10,7 +10,7 @@ import dev.zacsweers.metro.ContributesTo
  * What an instrumented test needs from the Dana RS driver - see [DanaAccessors] for why these are read
  * from the app's graph rather than built by the test, and what contributing them costs.
  *
- * [bleTransport] is a core type but a Dana binding: `DanaTransportBindings` decides between the real
+ * [bleTransport] is a core type but a Dana binding: [DanaRSTransportBindings] decides between the real
  * transport and the emulator, so this is where a test can see which one it got.
  */
 @ContributesTo(AppScope::class)

@@ -40,10 +40,10 @@ annotation class CarelevoTxCharacteristic
  * binding for [CarelevoBleTransport] has to be [provideCarelevoBleTransport] - otherwise the emulator
  * branch would be bypassed.
  *
- * This lives in the driver rather than in the app's `withPumps` source set, where Dana and Equil still
- * keep theirs. It can, because `:pump:carelevo-emulator` sits on `:pump:carelevo-protocol` rather than
- * on the driver, so the driver is free to depend on the emulator without a cycle. The app names no
- * CareLevo type at all.
+ * This lives in the driver rather than in the app's `withPumps` source set, where it used to be. It
+ * can, because `:pump:carelevo:emulator` sits on `:pump:carelevo:protocol` rather than on the driver,
+ * so the driver is free to depend on the emulator without a cycle. The app names no CareLevo type at
+ * all.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
