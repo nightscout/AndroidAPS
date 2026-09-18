@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">Thoát trình hướng dẫn hủy kích hoạt? Miếng dán có thể vẫn hoạt động và tiếp tục bơm insulin.</string>
     <string name="patch_force_reset">Đặt lại ngay</string>
     <string name="patch_force_reset_confirm">Điều này sẽ xóa trạng thái miếng dán trên thiết bị mà không gửi lệnh tới miếng dán. Chỉ sử dụng nếu hủy kích hoạt bình thường thất bại. Miếng dán sẽ tiếp tục bơm insulin cho đến khi hết pin hoặc bị tắt thủ công.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Báo động chính xác</string>
-    <string name="permission_exact_alarm_description">Ứng dụng cần quyền để lập lịch báo động chính xác cho quản lý miếng dán</string>
 </resources>
