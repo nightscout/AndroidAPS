@@ -207,7 +207,9 @@ class InsightPlugin(
         private set
     private var alertService: InsightAlertService? = null
     var connectionService: InsightConnectionService? = null
-        private set
+        // internal rather than private so a test can stand in a fake connection service. Still not
+        // settable from outside the module - only the service connection below assigns it for real.
+        internal set
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             if (binder is InsightConnectionService.LocalBinder) {
