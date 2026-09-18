@@ -50,6 +50,37 @@
     <string name="carelevo_state_none_value">Không có miếng dán hoạt động</string>
     <string name="carelevo_state_disconnected_value">Đã ngắt kết nối</string>
     <string name="carelevo_state_connected_value">Đã kết nối</string>
+    <string name="carelevo_overview_connect_btn_label">Kích hoạt Patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Hủy Patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Tạm dừng truyền insulin</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Tiếp tục truyền Insulin</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Chọn lượng insulin đã nạp.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Phạm vi: %1$d ~ %2$d U</string>
+    <string name="carelevo_insulin_refill_step1">1. Bóc lớp giấy bảo vệ ở mặt sau của vỉ miếng dán.</string>
+    <string name="carelevo_insulin_refill_step2">2. Khử trùng nắp cao su của lọ insulin bằng miếng gạc tẩm cồn.</string>
+    <string name="carelevo_insulin_refill_step3">3. Tháo nắp bảo vệ kim của ống tiêm insulin bằng cách kéo thẳng nắp ra.</string>
+    <string name="carelevo_insulin_refill_step4">4. Kéo pít-tông ống tiêm về sau để hút khoảng 2 mL không khí vào ống tiêm.</string>
+    <string name="carelevo_insulin_refill_step5">5. Đưa ống tiêm đã chứa không khí vào lọ insulin và bơm không khí vào lọ.</string>
+    <string name="carelevo_insulin_refill_step6">6. Trong khi vẫn giữ ống tiêm cắm trong lọ, lật ngược cả lọ insulin và ống tiêm, sau đó sử dụng áp suất để hút khoảng 2 mL insulin vào ống tiêm.</string>
+    <string name="carelevo_insulin_refill_step7">7. Cắm kim ống tiêm theo chiều dọc vào cổng nạp insulin của miếng dán (①) cho đến khi chạm đáy. Kéo pít-tông lên hết cỡ, sau đó thả ra. Rút ống tiêm khỏi cổng nạp.</string>
+    <string name="carelevo_insulin_refill_step8">8. Giữ ống tiêm theo chiều thẳng đứng và nhẹ nhàng gõ vào thành ống để gom tất cả bọt khí lên phía trên.</string>
+    <string name="carelevo_insulin_refill_step9">9. Cắm lại kim vào lọ insulin, đẩy toàn bộ không khí vào lọ, sau đó hút lượng insulin cụ thể mà bạn sẽ sử dụng trong suốt thời gian sử dụng miếng dán.</string>
+    <string name="carelevo_insulin_refill_step10">10. Rút ống tiêm khỏi lọ. Nếu có bọt khí, giữ ống tiêm theo chiều thẳng đứng, gõ nhẹ vào thành ống để đưa bọt khí lên trên, sau đó đẩy hết không khí ra khỏi ống tiêm.</string>
+    <string name="carelevo_insulin_refill_step11">11. Căn phần đầu của pít-tông với vạch chia độ để điều chỉnh chính xác liều insulin.</string>
+    <string name="carelevo_insulin_refill_step12">→ 12. Cắm kim theo chiều dọc vào cổng nạp insulin của miếng dán (①) cho đến khi chạm đáy, sau đó từ từ đẩy pít-tông để bơm toàn bộ insulin vào miếng dán.</string>
+    <string name="carelevo_connect_prepare_title">Miếng dán đã bắt đầu hoạt động</string>
+    <string name="carelevo_connect_patch_title">Kết nối miếng dán</string>
+    <string name="carelevo_connect_safety_check_title">Kiểm tra an toàn</string>
+    <string name="carelevo_connect_patch_attach_title">Dán miếng dán</string>
+    <string name="carelevo_connect_needle_check_title">Đưa kim vào</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Cảnh báo thông tin miếng dán</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Cài đặt thông báo insulin sắp hết</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Cài đặt thông báo thời gian sử dụng miếng dán</string>
+    <string name="carelevo_title_fill_insulin">Nạp insulin vào miếng dán</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Nạp insulin vào miếng dán (%1$d–%2$d U), dựa trên thời gian sử dụng (tối đa 168 giờ). Nhấn [Lượng nạp] để nhập lượng insulin đã nạp.</string>
+    <string name="carelevo_patch_step_1">BƯỚC 1.</string>
+    <string name="carelevo_patch_step_2">BƯỚC 2.</string>
+    <string name="carelevo_patch_step_3">BƯỚC 3.</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
