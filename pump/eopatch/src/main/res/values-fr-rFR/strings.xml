@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">Quitter l\'assistant de désactivation ? Le Patch peut rester actif et continuer à injecter de l\'insuline.</string>
     <string name="patch_force_reset">Forcer la réinitialisation</string>
     <string name="patch_force_reset_confirm">Cela effacera localement l\'état du Patch sans lui envoyer de commandes. À utiliser uniquement si la désactivation normale échoue. Le Patch continuera à injecter de l\'insuline jusqu\'à ce que sa batterie soit épuisée ou qu\'il soit éteint manuellement.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Alarmes exactes</string>
-    <string name="permission_exact_alarm_description">L\'application a besoin d\'une autorisation pour planifier les alarmes exactes pour la gestion du Patch</string>
 </resources>
