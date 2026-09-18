@@ -133,6 +133,12 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
   suggests `--dest`, which is a different option for file rename).
 - **`crowdin file list` prints only "Fetching project info"** unless you pass
   `-c <yml> --base-path=<dir>`.
+- **`upload translations` skips a translation that is the same as the English text** (names, units,
+  "STEP 1."), so the count on Crowdin comes out lower than the file. That is expected;
+  `--import-eq-suggestions` would import them too.
+- **A hand-written translation in a short folder** (e.g. `values-ko` next to Crowdin's
+  `values-ko-rKR`) is not what Crowdin reads or writes. To bring it in, copy it into the temp
+  workspace under the Crowdin folder name (`values-ko-rKR`) and upload with `-l <lang>`.
 
 ## Moving a source file
 
