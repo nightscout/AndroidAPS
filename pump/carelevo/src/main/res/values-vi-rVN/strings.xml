@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Tích hợp với bơm carelevo</string>
+    <string name="carelevo_alarm_channel_name">Cảnh báo Carelevo</string>
+    <string name="carelevo_alarm_channel_description">Thông báo về cảnh báo của miếng dán Carelevo</string>
+    <string name="common_btn_ok">Đồng ý</string>
+    <string name="carelevo_bluetooth_state_key">Trạng thái Bluetooth</string>
+    <string name="carelevo_serial_number_key">Số Serial.</string>
+    <string name="carelevo_boot_date_time_key">Thời gian kích hoạt</string>
+    <string name="carelevo_expiration_key">Hết hạn</string>
+    <string name="carelevo_basal_rate_key">Tỷ lệ liều nền</string>
+    <string name="carelevo_temp_basal_rate_key">Tỷ lệ liều nền tạm thời</string>
+    <string name="carelevo_insulin_remain_key">Insulin còn lại</string>
+    <string name="carelevo_running_remain_time">Thời gian còn lại của miếng dán</string>
+    <string name="carelevo_total_insulin_key">Tổng lượng insulin đã dùng</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d giờ %d phút</string>
+    <string name="common_label_unit_value_minute">%d phút</string>
+    <string name="common_label_unit_value_duration_hour">%d giờ</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/giờ</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Bạn có muốn tiếp tục truyền insulin không?</string>
+    <string name="carelevo_pump_resume_description">Sẽ tiếp tục truyền insulin khi bạn nhấn Xác nhận.</string>
+    <string name="carelevo_pump_stop_duration_title">Vui lòng đặt thời gian tạm dừng truyền insulin.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 phút</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 giờ</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 giờ 30 phút</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 giờ</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 giờ 30 phút</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 giờ</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 giờ 30 phút</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 giờ</string>
+    <string name="common_unit_value_day_hour_min">%1$d ngày %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">Còn %d phút %02d giây</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Hướng dẫn insulin</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Huỷ kích hoạt miếng dán</string>
+    <string name="carelevo_btn_input_search_patch">Tìm miếng dán</string>
+    <string name="carelevo_btn_retry">Thử lại</string>
+    <string name="carelevo_btn_next">Tiếp theo</string>
+    <string name="carelevo_btn_safety_check">Kiểm tra an toàn</string>
+    <string name="carelevo_btn_cancel">Hủy</string>
+    <string name="carelevo_btn_confirm">Xác nhận</string>
+    <string name="carelevo_btn_research">Quét lại</string>
+    <string name="carelevo_btn_needle_insert_check">Xác nhận lắp đặt</string>
+    <string name="carelevo_state_none_value">Không có miếng dán hoạt động</string>
+    <string name="carelevo_state_disconnected_value">Đã ngắt kết nối</string>
+    <string name="carelevo_state_connected_value">Đã kết nối</string>
+    <!-- Connection -->
+    <!-- Profile -->
+    <!-- Needle Insertion -->
+    <!-- Patch Discard -->
+    <!-- Basal Delivery -->
+    <!-- Delivery Resume/Suspend -->
+    <!-- Safety Check -->
+    <!-- Warning Titles -->
+    <!-- Warning Descriptions -->
+    <!-- Alert Titles -->
+    <!-- Alert Descriptions -->
+    <!-- Notice Titles -->
+    <!-- Notice Descriptions -->
+    <!-- Action Buttons -->
+    <!-- General Messages -->
+    <!--    notification -->
+</resources>
