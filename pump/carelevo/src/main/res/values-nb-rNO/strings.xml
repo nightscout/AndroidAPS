@@ -77,7 +77,52 @@
     <string name="carelevo_low_reservoir_reminders_title_value">Varsel-innstilling for lavt insulin</string>
     <string name="carelevo_patch_expiration_reminders_title_value">Varsel-innstilling for patchbruk</string>
     <string name="carelevo_title_fill_insulin">Fyll patch med insulin</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Fyll patchen med insulin (%1$d–%2$d E), og ta hensyn til bruksperioden (opptil 168 timer). Trykk på [Fyllmengde] for insulinet som er fylt på.</string>
+    <string name="carelevo_patch_step_1">TRINN 1.</string>
+    <string name="carelevo_patch_step_2">TRINN 2.</string>
+    <string name="carelevo_patch_step_3">TRINN 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Fjern nålehetten</string>
+    <string name="carelevo_patch_connect_step_1_desc">Ta patchen ut av pakningen og fjern nålehetten.</string>
+    <string name="carelevo_patch_connect_step_2_title">Slå på og koble til</string>
+    <string name="carelevo_patch_connect_step_2_desc">Hold inne av/på-knappen i mer enn ett sekund. Etter pipelyden trykker du på knappen [Søk etter patch] nedenfor.</string>
+    <string name="carelevo_patch_safety_check_start_title">Sikkerhetskontroll</string>
+    <string name="carelevo_patch_safety_check_end_title">Sikkerhetskontroll fullført</string>
+    <string name="carelevo_patch_safety_check_start_desc">Patchen er vellykket tilkoblet.\nTrykk på knappen [Sikkerhetskontroll].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Sikkerhetskontroll pågår.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Sikkerhetssjekk fullført.\nVennligst trykk på Neste-knappen.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Kontroller om det har dannet seg en dråpe insulin på nålespissen.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Hvis ingen insulindråpe er synlig, trykk på [Prøv igjen]-knappen.</string>
+    <string name="carelevo_patch_attach_step1_title">Desinfiser patchstedet</string>
+    <string name="carelevo_patch_attach_step1_desc">Rengjør grundig med en spritserviett.</string>
+    <string name="carelevo_patch_attach_step2_title">Fjern beskyttelsesfilmen</string>
+    <string name="carelevo_patch_attach_step2_desc">Ta patchen ut av pakningen og fjern nålehetten.</string>
+    <string name="carelevo_patch_attach_step3_title">Fest patch</string>
+    <string name="carelevo_patch_attach_step3_desc">Fest patchen på huden med det merkede punktet vendt opp.</string>
+    <string name="carelevo_patch_attach_step4_desc">Når patchen er festet, trykker du på knappen Klar.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Fjern sikkerhetshetten</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Vri sikkerhetshetten i pilens retning og fjern den.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Sett inn nål</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Trykk applikatorknappen helt ned. Det høres et pip når innsettingen er fullført.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Trykk og hold inne i 10 sekunder.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">%d gjenværende forsøk på nåleinnføring.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Deaktivere patch og starte et nytt patch?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Hvis du trykker på [OK], stoppes insulintilførselen.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Avslutte uten å starte insulintilførsel?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Hvis du trykker på [OK], blir dette patch ubrukelig.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Avbryt aktivering av patch?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Hvis du trykker på [OK], forkastes det du har angitt.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Hvis oppdateringen nedenfor er riktig, vennligst trykk på Bekreft-knappen.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Nåleinnsetting fullført og applikator fjernes</string>
+    <string name="carelevo_dialog_connect_detached">Applikator fjernet</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">        Trykk på gripeflatene på begge sider av applikatoren for å løsne den fra plasteret, \n
+        og trykk deretter på knappen «Applikator fjernet». Insulinleveringen starter.
+    </string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth er ikke aktivert. Kontroller dette.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Ingen patch tilkoblet.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Patch er ikke tilkoblet ennå. Prøv igjen om et øyeblikk.</string>
+    <string name="carelevo_toast_msg_scan_failed">Skanning mislyktes. Prøv igjen.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Fant ikke noe patch. Prøv igjen.</string>
     <!-- Profile -->
     <!-- Needle Insertion -->
     <!-- Patch Discard -->
