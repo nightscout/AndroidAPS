@@ -466,13 +466,25 @@ class InsightPlugin(
         }
         connectionService?.let { service ->
             try {
+                // Write the new rates first, then switch the pump to PROFILE_1.
+                //
+                // The other order was not safe. Each writeConfigurationBlock call opens and closes its
+                // own write session, so the switch was already committed before the rates were sent. If
+                // the rate write then failed - timeout, lost connection, pump error - the pump was left
+                // running PROFILE_1 while PROFILE_1 still held the OLD rates, and AAPS only reported a
+                // failure. On a real pump that window was measured at 200-330 ms between the two
+                // sessions, plus the whole of the second session.
+                //
+                // With this order no failure point leaves a wrong basal rate running: if the rate write
+                // fails the pump stays on the profile it was on, and if the activation fails PROFILE_1
+                // holds correct rates but was never switched to.
+                val profileBlock: BRProfileBlock = BRProfile1Block()
+                profileBlock.profileBlocks = profileBlocks
+                ParameterBlockUtil.writeConfigurationBlock(service, profileBlock)
                 val activeBRProfileBlock = ActiveBRProfileBlock()
                 activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
                 ParameterBlockUtil.writeConfigurationBlock(service, activeBRProfileBlock)
                 activeBasalProfile = BasalProfile.PROFILE_1
-                val profileBlock: BRProfileBlock = BRProfile1Block()
-                profileBlock.profileBlocks = profileBlocks
-                ParameterBlockUtil.writeConfigurationBlock(service, profileBlock)
                 // PROFILE_SET_OK posted (and FAILED cleared) centrally on the return value.
                 result.success(true)
                     .enacted(true)
