@@ -33,11 +33,11 @@ import dev.zacsweers.metro.SingleIn
  * Builds and posts Android notifications for AAPS alarms. Replaces the old `AlarmSoundService` /
  * `AlarmSoundServiceHelper` foreground-service-based path.
  * Two alarm modalities:
- *  - [postFullScreenAlarm]: posts an FSI notification on a sound-bearing channel; Android auto-launches
- *    ErrorActivity when the device is idle AND the FSI permission is held, otherwise shows a heads-up.
- *    The channel always carries the sound so the alarm is audible even when the activity can't launch
- *    (e.g. USE_FULL_SCREEN_INTENT denied — the default on Android 14+). When the activity does launch it
- *    takes over with looping/ramped audio, deferring its loop past the channel one-shot to avoid overlap.
+ *  - [postFullScreenAlarm]: posts a notification on a sound-bearing channel and starts the looping
+ *    [AlarmSoundPlayer], so the alarm is audible even when no activity can launch. It no longer uses a
+ *    full-screen intent. When exact alarms are allowed it also wakes the screen and launches ErrorActivity
+ *    through two `setAlarmClock` alarms (`scheduleScreenWakeAndLaunch`); without that permission only the
+ *    screen stays dark. When the activity does launch it takes over the looping/ramped audio.
  *  - [postSoundOnlyAlarm]: posts on a sound-bearing channel chosen by the
  *    [BooleanKey.AlertOverrideDoNotDisturb] preference. No activity, system plays channel sound.
  * Channels are created on the first post rather than at construction - see the `channels` field. Both
@@ -167,12 +167,11 @@ class AlarmNotificationManager(
         // one routed to STREAM_NOTIFICATION (respects DND/silent). Picked at post time based on
         // the user's AlertOverrideDoNotDisturb preference.
         //
-        // Both `runAlarm` (full-screen) and `startAlarm` (sound-only) use these channels. For the
-        // FSI path, the channel's one-shot sound covers the "user is active, FSI downgrades to
-        // heads-up" case so the user always hears an audio cue at post time, not only after they
-        // tap the notification. When the FSI does auto-launch (lockscreen/idle), ErrorActivity's
-        // looping ramped audio takes over — its volume ramp starts at 0 so the overlap with the
-        // channel one-shot is inaudible.
+        // Both `runAlarm` (full-screen) and `startAlarm` (sound-only) use these channels. On the
+        // full-screen path the channel's one-shot sound gives an audio cue at post time, before the
+        // screen wake has brought up ErrorActivity - or when it cannot (no exact alarms, another app
+        // on top). When ErrorActivity does come up, its looping ramped audio takes over — its volume
+        // ramp starts at 0 so the overlap with the channel one-shot is inaudible.
         for ((sound, displayName) in DISPLAY_NAMES) {
             val uri: Uri = Uri.parse("android.resource://${context.packageName}/${sound.rawRes}")
 
@@ -227,10 +226,10 @@ class AlarmNotificationManager(
     }
 
     /**
-     * Post a full-screen-intent alarm notification.
-     * The notification carries an FSI to [UiInteraction.errorHelperActivity]; Android either
-     * launches it full-screen (device idle / lock screen) or shows a heads-up notification.
-     * The activity is responsible for sound playback.
+     * Raise an alarm while AAPS is in the background: a sound-bearing notification, the looping
+     * [AlarmSoundPlayer], and - when exact alarms are allowed - a screen wake that brings up
+     * [UiInteraction.errorHelperActivity]. Without that permission the alarm still rings; only the screen
+     * stays dark.
      */
     fun postFullScreenAlarm(status: String, title: String, sound: AlarmSound?) {
         channels // created on first post, see the field
@@ -240,7 +239,8 @@ class AlarmNotificationManager(
         // (Google Play silently re-revokes it on every update for a sideloaded, non-alarm app, and it
         // only auto-launches on a locked screen anyway). Instead scheduleScreenWakeAndLaunch() below
         // fires two setAlarmClock alarms — one powers the display on (AlarmScreenWakeReceiver), one
-        // launches ErrorActivity — both permission-free.
+        // launches ErrorActivity. Both need SCHEDULE_EXACT_ALARM; without it that step is skipped and
+        // the notification and the sound below still ring.
         //
         // The sound-bearing notification posted here rings via the system channel one-shot (instant,
         // reliable) and is the lock-screen fallback UI when the activity can't be brought to the
@@ -268,7 +268,7 @@ class AlarmNotificationManager(
 
         val overrideDnd = preferences.get(BooleanKey.AlertOverrideDoNotDisturb)
         // Always a sound-bearing channel (matching the requested sound + DND preference) so the alarm
-        // is audible from the notification regardless of whether the FSI activity ever launches.
+        // is audible from the notification regardless of whether the alarm activity ever launches.
         val channelId = channelIdForSound(sound ?: AlarmSound.ERROR, overrideDnd)
 
         // Mute action so the user can silence the looping alarm straight from the lock-screen
@@ -311,8 +311,8 @@ class AlarmNotificationManager(
         // muteAllAlarms() / ErrorActivity acknowledge, both of which stop OWNER_FULLSCREEN.
         sound?.let { alarmSoundPlayer.play(it, AlarmSoundPlayer.OWNER_FULLSCREEN, postedAt) }
 
-        // Permission-free screen-wake + activity launch (independent of the notification above, so it
-        // still runs even if POST_NOTIFICATIONS was revoked and mgr.notify threw).
+        // Screen-wake + activity launch (independent of the notification above, so it still runs even if
+        // POST_NOTIFICATIONS was revoked and mgr.notify threw).
         scheduleScreenWakeAndLaunch(pendingIntent)
     }
 
@@ -325,11 +325,23 @@ class AlarmNotificationManager(
      *     the screen on;
      *  2. [activityPendingIntent] (a `getActivity` at ErrorActivity), which the OS holds until the
      *     screen is on and then presents — over the keyguard when AAPS is the foreground task.
-     * A small delay lets the alarms register before firing. `setAlarmClock` does not require
-     * `SCHEDULE_EXACT_ALARM` (alarm clocks are exempt).
+     * A small delay lets the alarms register before firing.
+     *
+     * `setAlarmClock` needs `SCHEDULE_EXACT_ALARM` from targetSdk 31 on, unless AAPS is excluded from
+     * battery optimization; Android 14 and later deny the permission by default on a new install.
+     * `canScheduleExactAlarms()` is true in either case. Without it this step is skipped rather than
+     * letting a `SecurityException` reach whoever raised the alarm - the notification and the sound
+     * already started, so the alarm still rings. `PluginPermissionsImpl` asks the user for it.
+     *
+     * Internal rather than private so a test can reach it: [postFullScreenAlarm] builds notification
+     * channels, which a plain JVM test cannot construct.
      */
-    private fun scheduleScreenWakeAndLaunch(activityPendingIntent: PendingIntent) {
+    internal fun scheduleScreenWakeAndLaunch(activityPendingIntent: PendingIntent) {
         val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (!am.canScheduleExactAlarms()) {
+            aapsLogger.warn(LTag.NOTIFICATION, "Exact alarms not allowed - alarm rings, but the screen is not woken")
+            return
+        }
         val triggerAt = System.currentTimeMillis() + SCREEN_WAKE_DELAY_MS
         val show = PendingIntent.getActivity(
             context, WAKE_REQUEST_CODE,
@@ -341,8 +353,14 @@ class AlarmNotificationManager(
             Intent(context, AlarmScreenWakeReceiver::class.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        am.setAlarmClock(AlarmManager.AlarmClockInfo(triggerAt, show), wakeOp)
-        am.setAlarmClock(AlarmManager.AlarmClockInfo(triggerAt, show), activityPendingIntent)
+        try {
+            am.setAlarmClock(AlarmManager.AlarmClockInfo(triggerAt, show), wakeOp)
+            am.setAlarmClock(AlarmManager.AlarmClockInfo(triggerAt, show), activityPendingIntent)
+        } catch (e: SecurityException) {
+            // The permission was taken away between the check above and this call.
+            aapsLogger.error(LTag.NOTIFICATION, "Exact alarms revoked - alarm rings, but the screen is not woken", e)
+            return
+        }
         aapsLogger.debug(LTag.NOTIFICATION, "Scheduled screen-wake + activity launch in ${SCREEN_WAKE_DELAY_MS}ms")
     }
 

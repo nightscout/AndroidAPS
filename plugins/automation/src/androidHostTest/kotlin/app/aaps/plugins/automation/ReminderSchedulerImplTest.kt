@@ -33,9 +33,13 @@ import org.mockito.kotlin.whenever
  * The point of this class is *which* AlarmManager call it makes. Reminders used to be handed to the
  * system Clock app with `startActivity(ACTION_SET_TIMER)`, which Android blocks from the background,
  * so a reminder scheduled while AAPS was backgrounded - e.g. a Bolus-Wizard "Set alarm" relayed from
- * a client and delivered on the master - was silently lost. `setAlarmClock` is exact, fires while the
- * device is idle, and needs no SCHEDULE_EXACT_ALARM permission. Anything weaker quietly breaks the
- * feature again, and nothing else in the tree pins it.
+ * a client and delivered on the master - was silently lost. `setAlarmClock` is exact and fires while the
+ * device is idle. Anything weaker quietly breaks the feature again, and nothing else in the tree pins it.
+ *
+ * `setAlarmClock` does need SCHEDULE_EXACT_ALARM unless AAPS is excluded from battery optimization, and
+ * Android 14 and later deny the permission by default on a new install. Without either the call throws.
+ * The class checks `canScheduleExactAlarms()` first, so it does not make a call it knows will fail; the
+ * user sees the same "cannot set reminder" message the catch gave before.
  */
 class ReminderSchedulerImplTest : TestBase() {
 
@@ -53,12 +57,13 @@ class ReminderSchedulerImplTest : TestBase() {
     @BeforeEach
     fun prepare() {
         whenever(dateUtil.now()).thenReturn(1_000_000L)
-        sut = ReminderSchedulerImpl(context, rh, bus, dateUtil)
+        sut = ReminderSchedulerImpl(context, rh, bus, dateUtil, aapsLogger)
     }
 
     @Test
     fun usesSetAlarmClockSoTheReminderSurvivesTheBackground() {
         whenever(context.getSystemService(Context.ALARM_SERVICE)).thenReturn(alarmManager)
+        whenever(alarmManager.canScheduleExactAlarms()).thenReturn(true)
 
         // Constructors of framework classes throw "Stub!" under the unit-test Android jar - only
         // methods get defaulted - so both of these have to be mocked or the class falls into its own
@@ -93,6 +98,33 @@ class ReminderSchedulerImplTest : TestBase() {
         val events = argumentCaptor<Event>()
         sut.scheduleReminder(60, "Time to eat")
 
+        verify(bus).send(events.capture())
+        val event = events.allValues.filterIsInstance<EventShowSnackbar>().single()
+        assertThat(event.message).isEqualTo("Cannot set reminder")
+        assertThat(event.type).isEqualTo(EventShowSnackbar.Type.Error)
+    }
+
+    @Test
+    fun withoutExactAlarmsSetAlarmClockIsNotCalledAndTheUserIsTold() {
+        // Neither the permission nor the battery-optimization exemption: setAlarmClock would throw.
+        whenever(context.getSystemService(Context.ALARM_SERVICE)).thenReturn(alarmManager)
+        whenever(alarmManager.canScheduleExactAlarms()).thenReturn(false)
+        doAnswer { "Cannot set reminder" }.whenever(rh).gs(any<TextRef>())
+
+        // Same mocks as in the first test. Without them the chained framework calls return null, the
+        // class ends up in its catch before it reaches setAlarmClock, and this test would pass without
+        // any guard at all - which is what happened the first time it was written.
+        val intentInit = MockInitializer<Intent> { mock, _ ->
+            whenever(mock.putExtra(anyString(), anyString())).thenReturn(mock)
+        }
+        val events = argumentCaptor<Event>()
+        mockConstruction(Intent::class.java, intentInit).use {
+            mockConstruction(AlarmManager.AlarmClockInfo::class.java).use {
+                sut.scheduleReminder(60, "Time to eat")
+            }
+        }
+
+        verify(alarmManager, never()).setAlarmClock(anyOrNull(), anyOrNull())
         verify(bus).send(events.capture())
         val event = events.allValues.filterIsInstance<EventShowSnackbar>().single()
         assertThat(event.message).isEqualTo("Cannot set reminder")

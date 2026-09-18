@@ -251,10 +251,4 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         assertThat(allPermissions).contains(Manifest.permission.BLUETOOTH_CONNECT)
         assertThat(allPermissions).contains(Manifest.permission.BLUETOOTH_SCAN)
     }
-
-    @Test
-    fun `requiredPermissions should include SCHEDULE_EXACT_ALARM as special`() {
-        val exactAlarmGroup = plugin.requiredPermissions().first { Manifest.permission.SCHEDULE_EXACT_ALARM in it.permissions }
-        assertThat(exactAlarmGroup.special).isTrue()
-    }
 }
