@@ -209,9 +209,15 @@ internal fun WearMainContent(
     var pendingWatchface by remember { mutableStateOf<String?>(null) }
     pendingWatchface?.let { face ->
         val current = if (uiState.customWatchfaceSelected) PushedWatchfaceId.CWF else PushedWatchfaceId.WFS
+        // Leaving the complications face loses what was edited on it in the watch face editor:
+        // the runtime drops a face's user configuration when a face of another package name takes
+        // the slot. Leaving the custom face loses nothing worth a warning, so only one way says so.
+        val message =
+            if (current == PushedWatchfaceId.WFS) SyncStrings.wear_pushed_watchface_confirm_message_from_complications
+            else SyncStrings.wear_pushed_watchface_confirm_message
         OkCancelDialog(
             title = stringResource(SyncStrings.wear_pushed_watchface_confirm_title),
-            message = stringResource(SyncStrings.wear_pushed_watchface_confirm_message, pushedWatchfaceLabel(face), pushedWatchfaceLabel(current)),
+            message = stringResource(message, pushedWatchfaceLabel(face), pushedWatchfaceLabel(current)),
             onConfirm = {
                 onSelectPushedWatchface(face)
                 pendingWatchface = null
