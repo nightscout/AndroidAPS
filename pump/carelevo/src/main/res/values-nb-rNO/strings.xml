@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <!-- Connection -->
+    <!-- Profile -->
+    <!-- Needle Insertion -->
+    <!-- Patch Discard -->
+    <!-- Basal Delivery -->
+    <!-- Delivery Resume/Suspend -->
+    <!-- Safety Check -->
+    <!-- Warning Titles -->
+    <!-- Warning Descriptions -->
+    <!-- Alert Titles -->
+    <!-- Alert Descriptions -->
+    <!-- Notice Titles -->
+    <!-- Notice Descriptions -->
+    <!-- Action Buttons -->
+    <!-- General Messages -->
+    <!--    notification -->
+</resources>
