@@ -41,10 +41,10 @@ files:
     translation: /plugins/sync/src/androidMain/res/values-%android_code%/strings.xml
   - source: /pump/combov2/src/main/res/values/strings.xml
     translation: /pump/combov2/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/dana/src/main/res/values/strings.xml
-    translation: /pump/dana/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/danar/src/main/res/values/strings.xml
-    translation: /pump/danar/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/dana/common/src/main/res/values/strings.xml
+    translation: /pump/dana/common/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/dana/danar/src/main/res/values/strings.xml
+    translation: /pump/dana/danar/src/main/res/values-%android_code%/strings.xml
   - source: /pump/diaconn/src/main/res/values/strings.xml
     translation: /pump/diaconn/src/main/res/values-%android_code%/strings.xml
   - source: /pump/eopatch/src/main/res/values/strings.xml

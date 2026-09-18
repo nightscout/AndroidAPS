@@ -14,8 +14,8 @@ import dev.zacsweers.metro.ContributesTo
  * Read from the app's own graph rather than built by the test, because a test that builds its own
  * `EquilManager` is watching an object the pump never writes to. Declared in this module rather than in
  * `:app`, so that removing `:pump:equil` from `settings.gradle` takes the accessors with it instead of
- * failing the app's main compilation - `DanaAccessors` in `:pump:dana` carries the longer version of
- * both arguments, and of what contributing them costs.
+ * failing the app's main compilation - `DanaAccessors` in `:pump:dana:common` carries the longer
+ * version of both arguments, and of what contributing them costs.
  */
 @ContributesTo(AppScope::class)
 interface EquilAccessors {

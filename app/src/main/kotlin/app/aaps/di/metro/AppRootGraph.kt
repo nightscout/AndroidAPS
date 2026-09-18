@@ -200,9 +200,10 @@ import kotlin.reflect.KClass
  * `settings.gradle` failed `:app:compileFullDebugKotlin` and produced no APK at all.
  *
  * Each pump module now declares its own accessor interface and contributes it, so the accessors exist
- * exactly when their module does and nothing here names a pump. See `DanaAccessors` in `:pump:dana` for
- * what that costs - a test resolves them with a cast rather than at compile time, and their accessors
- * become roots that every `AppScope` graph on the same classpath has to satisfy.
+ * exactly when their module does and nothing here names a pump. See `DanaAccessors` in
+ * `:pump:dana:common` for what that costs - a test resolves them with a cast rather than at compile
+ * time, and their accessors become roots that every `AppScope` graph on the same classpath has to
+ * satisfy.
  */
 @DependencyGraph(AppScope::class)
 interface AppRootGraph : MetroViewModelMultibindings {

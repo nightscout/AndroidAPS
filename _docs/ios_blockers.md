@@ -1023,7 +1023,7 @@ at, which is most of what `IosExportPasswordPlatformTest` covers.
 
 Both cost a false alarm today, so they are worth writing down even though neither is ours:
 
-- `SerialIOThreadTest.testThreadLifecycle` (`:pump:danar`, unit) failed one full gate run and passed
+- `SerialIOThreadTest.testThreadLifecycle` (`:pump:dana:danar`, unit) failed one full gate run and passed
   the four runs after it, on a tree whose only changes were iOS files.
 - `EquilEmulatorActivationTest.activatedPod_readsCancelsAndTogglesMode` (instrumented, CI shard C)
   failed on a push whose only non-desktop change was a markdown file and a test moving between source

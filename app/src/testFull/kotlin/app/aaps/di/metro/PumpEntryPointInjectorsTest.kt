@@ -24,7 +24,7 @@ import java.lang.reflect.Modifier
  * ## The expectation is found, not written down
  *
  * It used to name thirteen classes from seven pump modules. That made those modules a compile-time
- * dependency of this test - removing `:pump:danar` from `settings.gradle` stopped
+ * dependency of this test - removing `:pump:dana:danar` from `settings.gradle` stopped
  * `:app:testFullDebugUnitTest` compiling - and it only checked the thirteen. A new pump service that
  * forgot its entry is exactly the case this file exists to catch, and a list cannot catch it.
  *

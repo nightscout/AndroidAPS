@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test
  * ## Pump accessors get a rule, not a list
  * The accessors a pump module contributes (`DanaRAccessors`, `EquilAccessors`, ...) exist only when
  * that module is in the build. Pinning them by name made `settings.gradle` a dependency of this test:
- * removing `:pump:danar` failed it. They are there so an instrumented test can watch the object the pump
- * writes to, and a second instance would be an object the pump never writes to - so the rule is that
- * every one of them is a single instance, whichever pumps are in the build. Only [PUMP_UNREADABLE] is
- * named, and only checked when that accessor is present.
+ * removing `:pump:dana:danar` failed it. They are there so an instrumented test can watch the object
+ * the pump writes to, and a second instance would be an object the pump never writes to - so the rule
+ * is that every one of them is a single instance, whichever pumps are in the build. Only
+ * [PUMP_UNREADABLE] is named, and only checked when that accessor is present.
  */
 class GraphScopeStabilityTest {
 
