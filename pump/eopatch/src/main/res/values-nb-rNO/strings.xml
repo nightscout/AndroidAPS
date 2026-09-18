@@ -27,7 +27,7 @@
     <string name="patch_change_confirm_bolus_is_active_desc">En bolus leveres akkurat nå. Ønsker du virkelig å avbryte insulinleveringen og kaste plasteret?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">En midlertidig basal leveres akkurat nå. Ønsker du virkelig å avbryte insulinleveringen og kaste plasteret?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">En bolus- og midlertidig basal leveres akkurat nå. Ønsker du virkelig å avbryte insulinleveringen og kaste plasteret?</string>
-    <string name="patch_change_confirm_desc">Er du sikker på at du vil forkaste plasteret?</string>
+    <string name="patch_change_confirm_desc">Er du sikker på at du vil forkaste patch?</string>
     <string name="patch_forced_discard">Forkast</string>
     <string name="patch_comm_error_during_discard_desc_2">For unilateral deaktivering, trykk \"Discard\".</string>
     <string name="patch_manually_turning_off_alarm_title">Slå av Patch\'s Alarm manuelt</string>
@@ -78,9 +78,9 @@
     <string name="string_discard_patch">Forkast Patch</string>
     <string name="string_running">Kjører</string>
     <string name="retry">Prøv igjen</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Er du sikker på at du vil forkaste plasteret?</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Er du sikker på at du vil forkaste patch?</string>
     <string name="needle_insertion_error_1">Feil ved innsetting av kanyle.</string>
-    <string name="needle_insertion_error_3">Trykk på \'Discard\' for å deaktivere plasteret.</string>
+    <string name="needle_insertion_error_3">Trykk på \'Forkast\' for å deaktivere patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal pausetid</string>
     <string name="string_resume_insulin_delivery_title">Gjenoppta insulinlevering</string>
     <string name="string_resume_insulin_delivery_message">Slutt på pause av insulintilførsel.\nTrykk på «Bekreft» for å gjenoppta insulintilførselen.\n\nInsulintilførselen vil ikke gjenopptas før du trykker på «Bekreft».\nHvis du ikke trykker på «Bekreft», kan du utvikle hyperglykemi.</string>
