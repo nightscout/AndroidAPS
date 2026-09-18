@@ -11,7 +11,7 @@
     <string name="boluserrorcode">已请求: %1$.2fU 已输注: %2$.2fU 错误代码: %3$s</string>
     <string name="danar_valuenotsetproperly">数值设定的不正确</string>
     <string name="danar_setbasalstep001">将基础率的步进值设定为 0.01 U/小时</string>
-    <string name="resetpairing">重置配对信息？</string>
+    <string name="resetpairing">重置配对信息?</string>
     <string name="dana_model">%1$s\n型号: %2$02X\n协议: %3$02X\n代码: %4$02X</string>
     <string name="processinghistory">正在处理事件</string>
     <string name="danar_enableextendedbolus">在泵上启用扩展大剂量</string>
