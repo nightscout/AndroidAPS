@@ -2,5 +2,4 @@
 <resources>
     <string name="patch_start_pairing">Pokreni uparivanje</string>
     <string name="patch_cancel_pairing">Otkaži uparivanje</string>
-    <!-- Permission rationales -->
 </resources>
