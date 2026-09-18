@@ -2,6 +2,81 @@
 <resources>
     <string name="carelevo">Carelevo</string>
     <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Pumpeintegrasjon for Carelevo</string>
+    <string name="carelevo_alarm_channel_name">Carelevo-alarmer</string>
+    <string name="carelevo_alarm_channel_description">Varsler for Carelevo-patchalarmer</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Bluetooth-status</string>
+    <string name="carelevo_serial_number_key">Serienr.</string>
+    <string name="carelevo_boot_date_time_key">Aktiveringstid</string>
+    <string name="carelevo_expiration_key">Utløp</string>
+    <string name="carelevo_basal_rate_key">Basaldose</string>
+    <string name="carelevo_temp_basal_rate_key">Midlertidig basaldose</string>
+    <string name="carelevo_insulin_remain_key">Gjenværende insulin</string>
+    <string name="carelevo_running_remain_time">Gjenstående tid på patchen</string>
+    <string name="carelevo_total_insulin_key">Totalt levert insulin</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d timer %d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d timer</string>
+    <string name="common_label_unit_value_dose_with_space">%s E</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f E/t</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Vil du gjenoppta infusjonen?</string>
+    <string name="carelevo_pump_resume_description">Infusjonen gjenopptas når du trykker på Bekreft.</string>
+    <string name="carelevo_pump_stop_duration_title">Angi hvor lenge infusjonen skal pauses.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minutter</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 time</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 time 30 minutter</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 timer</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 timer 30 minutter</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 timer</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 timer 30 minutter</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 timer</string>
+    <string name="common_unit_value_day_hour_min">%1$d dager %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">%d min %02d sek gjenstår</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Insulinveiledning</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Deaktiver patch</string>
+    <string name="carelevo_btn_input_search_patch">Søk etter patch</string>
+    <string name="carelevo_btn_retry">Prøv igjen</string>
+    <string name="carelevo_btn_next">Neste</string>
+    <string name="carelevo_btn_safety_check">Sikkerhetskontroll</string>
+    <string name="carelevo_btn_cancel">Avbryt</string>
+    <string name="carelevo_btn_confirm">Bekreft</string>
+    <string name="carelevo_btn_research">Skann på nytt</string>
+    <string name="carelevo_btn_needle_insert_check">Bekreft innsetting</string>
+    <string name="carelevo_state_none_value">Inget aktivt patch</string>
+    <string name="carelevo_state_disconnected_value">Frakoblet</string>
+    <string name="carelevo_state_connected_value">Tilkoblet</string>
+    <string name="carelevo_overview_connect_btn_label">Aktiver patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Forkast patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Pause infusjon</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Gjenoppta infusjon</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Velg fylt mengde.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Rekkevidde : %1$d ~ %2$d E</string>
+    <string name="carelevo_insulin_refill_step1">1. Fjern beskyttelsespapiret fra patchpakningen.</string>
+    <string name="carelevo_insulin_refill_step2">2. Desinfiser gummiproppen på insulinhetteglasset med en spritserviett.</string>
+    <string name="carelevo_insulin_refill_step3">3. Fjern beskyttelseshetten på insulinsprøyten ved å trekke den rett av.</string>
+    <string name="carelevo_insulin_refill_step4">4. Trekk sprøytestempelet tilbake slik at sprøyten fylles med omtrent 2 mL luft.</string>
+    <string name="carelevo_insulin_refill_step5">5. Stikk den luftfylte sprøyten inn i insulinhetteglasset og sprøyt luften inn i hetteglasset.</string>
+    <string name="carelevo_insulin_refill_step6">6. Mens sprøyten fortsatt står i hetteglasset, snu både hetteglasset og sprøyten opp ned, og bruk trykket til å fylle sprøyten med omtrent 2 mL insulin.</string>
+    <string name="carelevo_insulin_refill_step7">7. Før sprøytenålen loddrett inn i plasterets insulinpåfyllingsport (①) til den når bunnen. Trekk stempelet helt opp, og slipp det deretter. Fjern sprøyten fra påfyllingsporten.</string>
+    <string name="carelevo_insulin_refill_step8">8. Hold sprøyten loddrett og bank forsiktig på siden slik at alle luftbobler samler seg øverst.</string>
+    <string name="carelevo_insulin_refill_step9">9. Stikk nålen tilbake i insulinhetteglasset, sprøyt all luften inn i hetteglasset, og trekk deretter opp den mengden insulin du skal bruke i plasterets bruksperiode.</string>
+    <string name="carelevo_insulin_refill_step10">10. Fjern sprøyten fra hetteglasset. Hvis det er luftbobler, hold sprøyten loddrett, bank på siden slik at boblene flyttes til toppen, og press ut all luften fra sprøyten.</string>
+    <string name="carelevo_insulin_refill_step11">11. Juster toppen av stempelet mot skalamerket for å stille inn insulindosen nøyaktig.</string>
+    <string name="carelevo_insulin_refill_step12">12. Før nålen loddrett inn i plasterets insulinpåfyllingsport (①) til den når bunnen, og trykk stempelet sakte ned for å sprøyte alt insulinet inn i plasteret.</string>
+    <string name="carelevo_connect_prepare_title">Patch startet</string>
+    <string name="carelevo_connect_patch_title">Koble til patch</string>
+    <string name="carelevo_connect_safety_check_title">Sikkerhetskontroll</string>
+    <string name="carelevo_connect_patch_attach_title">Fest patch</string>
+    <string name="carelevo_connect_needle_check_title">Sett inn nål</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Patchinfo alarm</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Varsel-innstilling for lavt insulin</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Varsel-innstilling for patchbruk</string>
+    <string name="carelevo_title_fill_insulin">Fyll patch med insulin</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
