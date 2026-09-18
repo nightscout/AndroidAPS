@@ -129,20 +129,119 @@
     <!-- Needle Insertion -->
     <string name="carelevo_toast_msg_needle_check_failed">Kontroll av nålen mislyktes.</string>
     <!-- Patch Discard -->
-    <string name="carelevo_toast_msg_discard_failed">Kassering av patch mislyktes. Prøv igjen.</string>
+    <string name="carelevo_toast_msg_discard_failed">Forkasting av patch mislyktes. Prøv igjen.</string>
     <!-- Basal Delivery -->
     <string name="carelevo_toast_msg_set_basal_failed">Forespørsel om basaltilførsel mislyktes. Prøv igjen.</string>
     <!-- Delivery Resume/Suspend -->
     <string name="carelevo_toast_mag_set_basal_resume_fail">Kunne ikke gjenoppta tilførselen. Prøv igjen.</string>
     <string name="carelevo_toast_mag_set_basal_suspend_fail">Kunne ikke pause tilførselen. Prøv igjen.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Sikkerhetskontroll mislyktes.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Lite insulin</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch utløpt</string>
+    <string name="alarm_feat_title_warning_low_battery">Lavt batteri</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">For høy/lav temperatur</string>
+    <string name="alarm_feat_title_warning_not_used_app">Automatisk avslåing</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE ikke tilkoblet</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Tidsavbrudd for patchpåføring</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Selvtest mislyktes</string>
+    <string name="alarm_feat_title_warning_patch_error">Patchfeil</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Okklusjon</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Feil ved nåleinnsetting</string>
     <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[Mindre enn <b>10 E</b> insulin gjenstår; insulintilførselen er stoppet.<br><b>Trykk på knappen [Deaktiver patch] og bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[Patch har utløpt; insulintilførselen er stoppet.<br><b>Trykk på knappen [Deaktiver patch] og bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Lavt batterinivå; insulintilførselen er stoppet.<br><b>Trykk på knappen [Forkast patch] og bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[Insulintilførselen er stoppet.<br><b>Flytt deg til et sted med passende temperatur nå (4.4 °C to 37.2 °C).</b>]]></string>
+    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[Insulintilførselen er stoppet.<br><b>Trykk på knappen [Start insulin] for å starte basaltilførselen på nytt.</b>]]></string>
+    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[Tiden for bruk av patch har utløpt.<br><b>Trykk på knappen [Deaktiver patch] og bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[Selvdiagnose mislyktes.<br><b>Trykk på knappen [Deaktiver patch] og bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[Insulintilførselen er stoppet på grunn av en uventet feil.<br><b>Trykk på knappen [Deaktiver patch] og bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[Insulintilførselen er stoppet på grunn av en blokkering.<br><b>Trykk på knappen [Deaktiver patch] og bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Klarte ikke å sette inn nålen.<br><b>Trykk på knappen [Deaktiver patch] og bytt patch nå.</b>]]></string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Lite insulin</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Patch sin brukstid er utløpt</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Patch utløper snart</string>
+    <string name="alarm_feat_title_alert_low_battery">Lavt batteri</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">For høy/lav temperatur</string>
+    <string name="alarm_feat_title_alert_not_used_app">Automatisk avslåing</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE ikke tilkoblet</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Patchaktivering ikke fullført</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Start insulin</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Slå på Bluetooth</string>
     <!-- Alert Descriptions -->
+    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[Mindre enn <b>%s E</b> insulin igjen.<br><b>Forbered deg på å bytte patch.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_phase2"><![CDATA[Patch har utløpt.<br><b>Bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_phase1"><![CDATA[Patch utløper snart.<br><b>Bytt patch nå.</b>]]></string>
+    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[Lavt batterinivå.<br><b>Gjør deg klar til å bytte patch.</b>]]></string>
+    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[Insulintilførselen er satt på pause på grunn av ekstrem temperatur.</b><br>Flytt enheten til et sted med temperatur mellom 4,4 °C og 37,2 °C for å gjenoppta tilførselen.]]></string>
+    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[Trykk på [OK].<br>Hvis varselet ignoreres, eskalerer det til en kritisk alarm, og <b>insulintilførselen stoppes.</b>]]></string>
+    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[Trykk på [OK]-knappen for å fullføre aktiveringen av oppdateringen.]]></string>
+    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[Insulinpausen er avsluttet.<br><b>Trykk på [Start insulin] for å starte.</b>]]></string>
+    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[Bluetooth kreves for å bruke patch.<br><b>Trykk på [OK] og slå på Bluetooth.</b>]]></string>
     <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Lite insulin</string>
+    <string name="alarm_feat_title_notice_expired_patch">Varsel om patch sin brukstid</string>
+    <string name="alarm_feat_title_notice_check_patch">Varsel om kontroll av patch</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Tidssoneendring</string>
+    <string name="alarm_feat_title_notice_check_bg">Kontroller blodsukker</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS startet</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS avsluttet</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS ikke tilgjengelig</string>
+    <string name="alarm_feat_title_notice_unknown">Patchfeil</string>
     <!-- Notice Descriptions -->
+    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Mindre enn %s E insulin igjen.<br><b>Forbered deg på å bytte patch.</b>]]></string>
+    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Brukstiden for patch er <b>%s dager og %s timer.</b><br>Husk på dette under bruk.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Tidssonen er endret fra <b>%s (UTC %s) til %s (UTC %s)</b>.]]></string>
+    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[Det har gått %s siden bolusen din.<br>Vennligst sjekk blodsukkeret ditt.]]></string>
+    <string name="alarm_feat_desc_notice_lgs_started">LGS startet.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS avsluttet på grunn av frakobling av patch/CGM.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS avsluttet på grunn av LGS-pause.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_time_over">LGS avsluttet fordi den planlagte tiden er utløpt.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS avsluttet fordi LGS ble slått av.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">LGS avsluttet fordi CGM-nivået overskred den angitte grensen.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_unknown">LGS avsluttet av ukjent årsak.</string>
+    <string name="alarm_feat_desc_notice_lgs_error">Kontroller tilkoblingen til patch og CGM.</string>
+    <string name="alarm_feat_desc_unknown">Uventet patchfeil.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Deaktiver patch</string>
+    <string name="alarm_feat_btn_patch_force_discard">Forkast patch</string>
+    <string name="alarm_feat_btn_resume_infusion">Start insulin</string>
     <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Kontroller patchtilkoblingen.</string>
     <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Mindre enn 10 E insulin gjenstår; insulintilførselen er stoppet. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Patch sin levetid er utløpt; insulintilførselen er stoppet. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Lavt batterinivå; insulintilførselen er stoppet. Trykk på knappen [Forkast patch] og bytt patch nå.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Insulintilførselen er stoppet. Flytt enheten til et sted med passende temperatur (4,4 °C og 37,2 °C) nå.</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Insulintilførselen er stoppet. Trykk på knappen [Start insulin] og start basaltilførselen på nytt.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Tiden for bruk av patch har utløpt. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Selvdiagnose mislyktes. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Insulintilførselen er stoppet på grunn av en uventet feil. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Insulintilførselen er stoppet på grunn av en okklusjon. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Innsetting av nålen mislyktes. Trykk på knappen [Deaktiver patch] og bytt patch nå.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Mindre enn %s E insulin igjen. Gjør klar til å bytte patch.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Patch er utløpt. Bytt patch nå.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Patch utløper snart. Bytt patch nå.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Batteriet er lavt. Gjør klar til å bytte patch.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Insulintilførselen er satt på pause på grunn av ekstrem temperatur. Flytt enheten til et sted med temperatur mellom 4,4 °C og 37,2 °C for å gjenoppta tilførselen.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Trykk på [OK]. Hvis varselet ignoreres, eskalerer det til en kritisk alarm, og insulintilførselen stoppes.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Trykk på [OK]-knappen for å fullføre aktiveringen av patch.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Insulinpausen er avsluttet. Trykk på [Start insulin] for å starte.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Bluetooth kreves for å bruke patch. Trykk på [OK] og slå på Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Mindre enn %s E insulin gjenstår. Gjør deg klar til å bytte patch.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Brukstiden for patch er %s dager og %s timer. Husk på dette under bruk.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Tidssonen er endret fra %s (UTC %s) til %s (UTC %s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Det har gått %s siden bolusen din. Vennligst sjekk blodsukkeret ditt.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS startet.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS avsluttet på grunn av frakobling av patch/CGM.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS avsluttet på grunn av LGS-pause.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS avsluttet fordi den planlagte tiden er utløpt.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS avsluttet fordi LGS ble slått av.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS avsluttet fordi CGM-nivået overskred den angitte grensen.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS avsluttet av ukjent årsak.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Kontroller tilkoblingen til patch og CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">Hoppet over: oppdatering for tidlig.</string>
 </resources>
