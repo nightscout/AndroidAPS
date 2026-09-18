@@ -136,50 +136,53 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 
 ## Moving a source file
 
-What Crowdin does, as seen when the Dana strings moved in 2026-09:
+The version that worked, on the stale Omnipod files in 2026-09-18. Each sync came a minute or
+two after the push.
 
-- **The new path is a new file** on Crowdin, with a new id. Translation memory fills it within a
-  few minutes (18% → 70% → 100%), approvals included - **but not all of them.** Where the memory
-  holds more than one translation of the same English text (from other files), it can pick one
-  that is not approved. `pump/dana/common` lost approval on 22 strings in 8 languages that way.
-  Only approved translations are exported, so those strings would have dropped out of the app with
-  the next "New Crowdin updates" PR. Comments on strings do not carry over.
-- **The old file** was deleted at the sync of the push that took its path out of `crowdin.yml`.
-  Do not rely on it: `pump/omnipod-dash` and `pump/omnipod-eros` left `crowdin.yml` in 2025 and
+1. **Move.** Move the file and change its path in `crowdin.yml`, in one commit. Keep it a pure
+   move - nothing left at the old path - so git records a rename and `git log --follow` keeps
+   working.
+2. **Placeholder.** In a second commit, put a file containing exactly `<resources></resources>` at
+   the old path, and list the old path in `crowdin.yml` again. Push both commits. At the sync
+   Crowdin empties the old file to 0 strings. Say in the commit message that the entry is
+   temporary - not in a comment in `crowdin.yml`, which the integration strips.
+3. **Check that no string drops out** of the new file (the script in the next section, with the
+   new file's id and `res` folder). If any do, restore them - see below. Do it before the next
+   "New Crowdin updates" PR is merged.
+4. **Cleanup.** Once the old file has 0 strings, remove the placeholder and its `crowdin.yml`
+   entry, and push. At the sync Crowdin deletes the empty old file.
+5. **Check** with the script and no arguments: it must print nothing.
+
+Restoring approvals (step 3): upload the repo's translations of that file with auto-approve, in a
+temp workspace as in the workflow above (a `crowdin.yml` listing only that file, with the source
+and all its `values-xx/` folders copied in):
+
+```bash
+crowdin upload translations -b dev --base-path=<dir> -c <dir>/crowdin.yml --auto-approve-imported --no-progress --plain
+```
+
+The repo holds the last approved export, so this approves exactly what was approved before.
+Strings already approved with the same text are left alone. Then run the script again - it must
+print nothing.
+
+Why each step is there:
+
+- **The new path is a new file** on Crowdin, with a new id. Translation memory refills it within a
+  few minutes (18% → 70% → 100%) - **but not all approvals come back.** Where the memory holds more
+  than one translation of the same English text (from other files), it can pick one that is not
+  approved. `pump/dana/common` lost approval on 22 strings in 8 languages that way, and only
+  approved translations are exported. Comments on strings do not carry over.
+- **Only changing the path is not enough.** The Dana files were deleted at the sync that took their
+  paths out of `crowdin.yml`, but `pump/omnipod-dash` and `pump/omnipod-eros` left it in 2025 and
   their files stayed on Crowdin, unchanged, until 2026-09.
-- **An empty file at the old path works only if it is listed and is a valid resource file.** The
-  integration only reads listed paths, so an unlisted file is never seen. Tried on the stale
-  `omnipod-dash` and `omnipod-eros` files in 2026-09-18:
-  - a zero-byte file, listed: ignored - no change after a quarter of an hour;
-  - `<resources></resources>`, listed: the old Crowdin file had 0 strings a minute and a half after
-    the push. The live `omnipod/dash` and `omnipod/eros` files were not affected.
+- **The placeholder must be listed, and must be a valid resource file.** The integration reads
+  only listed paths, so an unlisted file is never seen. A zero-byte file was ignored even when
+  listed - no change after a quarter of an hour.
+- The live `omnipod/dash` and `omnipod/eros` files were not affected by emptying and deleting the
+  old ones.
 
-Steps:
-
-1. Move the file and change its path in `crowdin.yml`, in one commit. Keep the commit a pure move -
-   nothing left at the old path - so git records a rename and `git log --follow` keeps working.
-   Push, and wait a few minutes for the sync.
-2. **Check that the old file is gone** (the script in the next section, no arguments needed). If
-   it is still there, either:
-   - put `<resources></resources>` at the old path and list it in `crowdin.yml` for one sync, which
-     empties the old file; then take both out again, or
-   - delete it: `crowdin file delete <path on Crowdin, without /dev> -b dev`.
-
-   Nothing is lost either way - the new file has its own translations, and translation memory
-   keeps the old ones. Check the new file with step 3 afterwards all the same.
-3. **Check that no string drops out** (the same script, with the new file's id and `res` folder).
-   Do it before the next "New Crowdin updates" PR is merged.
-4. If any do, upload the repo's translations of that file with auto-approve, in a temp workspace
-   as in the workflow above (a `crowdin.yml` listing only that file, the source and all its
-   `values-xx/` folders copied in):
-
-   ```bash
-   crowdin upload translations -b dev --base-path=<dir> -c <dir>/crowdin.yml --auto-approve-imported --no-progress --plain
-   ```
-
-   The repo holds the last approved export, so this approves exactly what was approved before.
-   Strings already approved with the same text are left alone. Run step 3 again - it must print
-   nothing.
+If a stale file is found some other time, the same steps 2, 4 and 5 remove it. The CLI can also
+delete it directly: `crowdin file delete <path on Crowdin, without /dev> -b dev`.
 
 ## Checking for stale files and strings that would drop out
 
