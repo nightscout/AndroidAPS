@@ -11,14 +11,14 @@
     <string name="boluserrorcode">Стартирано: %1$.2fЕ Доставено: %2$.2fЕ Код на грешка: %3$s</string>
     <string name="danar_valuenotsetproperly">Неправилна стойност</string>
     <string name="danar_setbasalstep001">Задайте стъпка на базала 0.01 Е/ч</string>
-    <string name="resetpairing">Да нулирам ли информацията за сдвояване?</string>
+    <string name="resetpairing">Нулиране на сдвояването?</string>
     <string name="dana_model">%1$s\nМодел: %2$02X\nПротокол: %3$02X\nКод: %4$02X</string>
     <string name="processinghistory">Обработва се събитие</string>
     <string name="danar_enableextendedbolus">Разрешете удължените болуси в настройките на помпата</string>
     <string name="danar_disablebolusblock">Блокиране на болус е включено на помпата. AAPS не може да пуска инсулин когато е активно това. Изключете блокирането на инсулин в настройките на помпата.</string>
     <string name="overview_bolusprogress_stoped">Спрян</string>
     <string name="unsupportedfirmware">Неподдържан фърмуер на помпата</string>
-    <string name="pumperror">Грешка в помпата</string>
+    <string name="pumperror">Грешка в промпата</string>
     <string name="lowbattery">Изтощена батерия</string>
     <string name="basalcompare">Доставяне на по-малко от предварително зададена базал</string>
     <string name="pumpshutdown">Помпата е изключена</string>
@@ -34,7 +34,7 @@
     <string name="invalidpairing">Невалидна информация при сдвояване. Нов опит </string>
     <string name="gettingpumpstatus">Получава статус на помпата</string>
     <string name="gettingextendedbolusstatus">Получава статус на удължен болус</string>
-    <string name="gettingbolusstatus">Взема болус статус</string>
+    <string name="gettingbolusstatus">Получава болус статус</string>
     <string name="gettingtempbasalstatus">Получава статус на временен базал</string>
     <string name="gettingpumpsettings">Получава настройките на помпата</string>
     <string name="gettingpumptime">Получава времето на помпата</string>
