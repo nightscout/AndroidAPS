@@ -393,15 +393,17 @@ private fun SceneCard(scene: ActiveSceneInfo) {
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
-                val remainingMinutes = scene.endTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() }
+                // A local, because a property from another module cannot be smart-cast
+                val endTime = scene.endTime
+                val remainingMinutes = endTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() } ?: 0
                 val timeLine = when {
-                    scene.endTime == null                     -> stringResource(R.string.loop_status_scene_until_ended)
-                    remainingMinutes != null && remainingMinutes > 0 -> {
-                        val endTimeStr = remember(scene.endTime) { DateFormat.getTimeFormat(context).format(Date(scene.endTime)) }
+                    endTime == null      -> stringResource(R.string.loop_status_scene_until_ended)
+                    remainingMinutes > 0 -> {
+                        val endTimeStr = remember(endTime) { DateFormat.getTimeFormat(context).format(Date(endTime)) }
                         stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr)
                     }
                     // Expired, banner still up on the phone: it can still be ended from the tile
-                    else                                      -> stringResource(R.string.loop_status_scene_ended)
+                    else                 -> stringResource(R.string.loop_status_scene_ended)
                 }
                 Text(
                     text = timeLine,
