@@ -145,6 +145,10 @@
     <string name="pref_title_wear_wizard_cob">Bao gồm COB trong wizard</string>
     <string name="pref_title_wear_wizard_iob">Bao gồm IOB trong wizard</string>
     <string name="pref_title_wear_custom_watchface_authorization">Cho phép mặt đồng hồ tùy chỉnh</string>
+    <string name="pref_title_wear_pushed_watchface">Đã cài mặt đồng hồ trên Watch</string>
+    <string name="pref_summary_wear_pushed_watchface">Chỉ dành cho Wear OS 6 trở lên. AAPS chỉ có thể cài đặt một mặt đồng hồ trên thiết bị: mặt đồng hồ có Tiện ích hoặc mặt đồng hồ tùy chỉnh. Các thiết bị đời cũ sẽ bỏ qua cài đặt này.</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Mặt đồng hồ tích hợp Tiện ích</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Mặt đồng hồ tùy chỉnh</string>
     <string name="pref_title_wear_notify_on_smb">Thông báo khi có SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Gửi thông báo đến đồng hồ khi SMB được thực hiện.</string>
     <string name="pref_title_wear_broadcast_data">Gửi dữ liệu tới đồng hồ</string>

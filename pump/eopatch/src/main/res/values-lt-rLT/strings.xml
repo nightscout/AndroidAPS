@@ -80,5 +80,4 @@
     <string name="string_resumed_insulin_delivery_message">Insulino tiekimas atnaujintas.</string>
     <string name="string_temp_basal_remained_hhmm">liko laiko: %1$s:%2$s</string>
     <string name="string_resume_failed">Atnaujinti nepavyko.</string>
-    <!-- Permission rationales -->
 </resources>

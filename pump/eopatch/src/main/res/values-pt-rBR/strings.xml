@@ -40,5 +40,4 @@
     <string name="string_are_you_sure_to_discard_current_patch">Tem certeza de que deseja descartar este Patch?</string>
     <string name="needle_insertion_error_1">Erro de inserção de Agulha.</string>
     <string name="string_suspended_insulin_delivery_message">A administração da insulina está suspensa.</string>
-    <!-- Permission rationales -->
 </resources>

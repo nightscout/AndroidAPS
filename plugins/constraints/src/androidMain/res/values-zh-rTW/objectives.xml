@@ -53,6 +53,7 @@
     <string name="objectives_exam_learned_isf">您已學會ISF值的含義及其如何影響用於血糖修正的胰島素量。</string>
     <string name="objectives_exam_learned_ic">您已學會IC值的含義及其如何影響覆蓋碳水化合物所需的胰島素量。</string>
     <string name="objectives_exam_learned_hypott">低血糖臨時目標僅用於防止低血糖後的過度修正，通常這時有疊加的負IOB。應評估額外措施以防止未來再次發生這種情況。</string>
+    <string name="objectives_exam_learned_profileswitch">使用百分比不會影響目標血糖值，但會調整基礎率、 ISF 與 IC，使在超過 100% 時給予較多胰島素，低於 100% 時給予較少胰島素。</string>
     <string name="objectives_exam_learned_profileswitchtime">通過在設定檔切換中使用時間偏移，您可以將日夜節律設定檔適應不規則情況，如晚起床。</string>
     <string name="objectives_exam_learned_profileswitch4">編輯設定檔本身不足以進行更改。您仍然需要進行設定檔切換以啟用更改。</string>
     <string name="objectives_exam_learned_exercise">您應該在運動開始前至少1小時減少體內的胰島素量，選擇低於100%的設定檔。</string>

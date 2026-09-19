@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Tích hợp với bơm carelevo</string>
+    <string name="carelevo_alarm_channel_name">Cảnh báo Carelevo</string>
+    <string name="carelevo_alarm_channel_description">Thông báo về cảnh báo của miếng dán Carelevo</string>
+    <string name="common_btn_ok">Đồng ý</string>
+    <string name="carelevo_bluetooth_state_key">Trạng thái Bluetooth</string>
+    <string name="carelevo_serial_number_key">Số Serial.</string>
+    <string name="carelevo_boot_date_time_key">Thời gian kích hoạt</string>
+    <string name="carelevo_expiration_key">Hết hạn</string>
+    <string name="carelevo_basal_rate_key">Tỷ lệ liều nền</string>
+    <string name="carelevo_temp_basal_rate_key">Tỷ lệ liều nền tạm thời</string>
+    <string name="carelevo_insulin_remain_key">Insulin còn lại</string>
+    <string name="carelevo_running_remain_time">Thời gian còn lại của miếng dán</string>
+    <string name="carelevo_total_insulin_key">Tổng lượng insulin đã dùng</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d giờ %d phút</string>
+    <string name="common_label_unit_value_minute">%d phút</string>
+    <string name="common_label_unit_value_duration_hour">%d giờ</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/giờ</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Bạn có muốn tiếp tục truyền insulin không?</string>
+    <string name="carelevo_pump_resume_description">Sẽ tiếp tục truyền insulin khi bạn nhấn Xác nhận.</string>
+    <string name="carelevo_pump_stop_duration_title">Vui lòng đặt thời gian tạm dừng truyền insulin.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 phút</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 giờ</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 giờ 30 phút</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 giờ</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 giờ 30 phút</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 giờ</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 giờ 30 phút</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 giờ</string>
+    <string name="common_unit_value_day_hour_min">%1$d ngày %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">Còn %d phút %02d giây</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Hướng dẫn insulin</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Huỷ kích hoạt miếng dán</string>
+    <string name="carelevo_btn_input_search_patch">Tìm miếng dán</string>
+    <string name="carelevo_btn_retry">Thử lại</string>
+    <string name="carelevo_btn_next">Tiếp theo</string>
+    <string name="carelevo_btn_safety_check">Kiểm tra an toàn</string>
+    <string name="carelevo_btn_cancel">Hủy</string>
+    <string name="carelevo_btn_confirm">Xác nhận</string>
+    <string name="carelevo_btn_research">Quét lại</string>
+    <string name="carelevo_btn_needle_insert_check">Xác nhận lắp đặt</string>
+    <string name="carelevo_state_none_value">Không có miếng dán hoạt động</string>
+    <string name="carelevo_state_disconnected_value">Đã ngắt kết nối</string>
+    <string name="carelevo_state_connected_value">Đã kết nối</string>
+    <string name="carelevo_overview_connect_btn_label">Kích hoạt Patch</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Hủy Patch</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Tạm dừng truyền insulin</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Tiếp tục truyền Insulin</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Chọn lượng insulin đã nạp.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Phạm vi: %1$d ~ %2$d U</string>
+    <string name="carelevo_insulin_refill_step1">1. Bóc lớp giấy bảo vệ ở mặt sau của vỉ miếng dán.</string>
+    <string name="carelevo_insulin_refill_step2">2. Khử trùng nắp cao su của lọ insulin bằng miếng gạc tẩm cồn.</string>
+    <string name="carelevo_insulin_refill_step3">3. Tháo nắp bảo vệ kim của ống tiêm insulin bằng cách kéo thẳng nắp ra.</string>
+    <string name="carelevo_insulin_refill_step4">4. Kéo pít-tông ống tiêm về sau để hút khoảng 2 mL không khí vào ống tiêm.</string>
+    <string name="carelevo_insulin_refill_step5">5. Đưa ống tiêm đã chứa không khí vào lọ insulin và bơm không khí vào lọ.</string>
+    <string name="carelevo_insulin_refill_step6">6. Trong khi vẫn giữ ống tiêm cắm trong lọ, lật ngược cả lọ insulin và ống tiêm, sau đó sử dụng áp suất để hút khoảng 2 mL insulin vào ống tiêm.</string>
+    <string name="carelevo_insulin_refill_step7">7. Cắm kim ống tiêm theo chiều dọc vào cổng nạp insulin của miếng dán (①) cho đến khi chạm đáy. Kéo pít-tông lên hết cỡ, sau đó thả ra. Rút ống tiêm khỏi cổng nạp.</string>
+    <string name="carelevo_insulin_refill_step8">8. Giữ ống tiêm theo chiều thẳng đứng và nhẹ nhàng gõ vào thành ống để gom tất cả bọt khí lên phía trên.</string>
+    <string name="carelevo_insulin_refill_step9">9. Cắm lại kim vào lọ insulin, đẩy toàn bộ không khí vào lọ, sau đó hút lượng insulin cụ thể mà bạn sẽ sử dụng trong suốt thời gian sử dụng miếng dán.</string>
+    <string name="carelevo_insulin_refill_step10">10. Rút ống tiêm khỏi lọ. Nếu có bọt khí, giữ ống tiêm theo chiều thẳng đứng, gõ nhẹ vào thành ống để đưa bọt khí lên trên, sau đó đẩy hết không khí ra khỏi ống tiêm.</string>
+    <string name="carelevo_insulin_refill_step11">11. Căn phần đầu của pít-tông với vạch chia độ để điều chỉnh chính xác liều insulin.</string>
+    <string name="carelevo_insulin_refill_step12">→ 12. Cắm kim theo chiều dọc vào cổng nạp insulin của miếng dán (①) cho đến khi chạm đáy, sau đó từ từ đẩy pít-tông để bơm toàn bộ insulin vào miếng dán.</string>
+    <string name="carelevo_connect_prepare_title">Miếng dán đã bắt đầu hoạt động</string>
+    <string name="carelevo_connect_patch_title">Kết nối miếng dán</string>
+    <string name="carelevo_connect_safety_check_title">Kiểm tra an toàn</string>
+    <string name="carelevo_connect_patch_attach_title">Dán miếng dán</string>
+    <string name="carelevo_connect_needle_check_title">Đưa kim vào</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Cảnh báo thông tin miếng dán</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Cài đặt thông báo insulin sắp hết</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Cài đặt thông báo thời gian sử dụng miếng dán</string>
+    <string name="carelevo_title_fill_insulin">Nạp insulin vào miếng dán</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Nạp insulin vào miếng dán (%1$d–%2$d U), dựa trên thời gian sử dụng (tối đa 168 giờ). Nhấn [Lượng nạp] để nhập lượng insulin đã nạp.</string>
+    <string name="carelevo_patch_step_1">BƯỚC 1.</string>
+    <string name="carelevo_patch_step_2">BƯỚC 2.</string>
+    <string name="carelevo_patch_step_3">BƯỚC 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Tháo nắp kim</string>
+    <string name="carelevo_patch_connect_step_1_desc">Lấy miếng dán ra khỏi vỉ và tháo nắp kim.</string>
+    <string name="carelevo_patch_connect_step_2_title">Bật thiết bị và kết nối</string>
+    <string name="carelevo_patch_connect_step_2_desc">Nhấn nút nguồn trong hơn 1 giây. Sau khi nghe tiếng bíp, nhấn nút [Tìm miếng dán] bên dưới.</string>
+    <string name="carelevo_patch_safety_check_start_title">Kiểm tra an toàn</string>
+    <string name="carelevo_patch_safety_check_end_title">Đã hoàn tất kiểm tra an toàn</string>
+    <string name="carelevo_patch_safety_check_start_desc">Đã kết nối miếng dán thành công.\nVui lòng nhấn nút [Kiểm tra an toàn].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Đang kiểm tra an toàn.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Đã hoàn tất kiểm tra an toàn.\nVui lòng nhấn nút Tiếp theo.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Vui lòng kiểm tra xem có giọt insulin ở đầu kim hay không.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Nếu không thấy giọt insulin, hãy nhấn nút [Thử lại].</string>
+    <string name="carelevo_patch_attach_step1_title">Sát khuẩn vị trí dán</string>
+    <string name="carelevo_patch_attach_step1_desc">Làm sạch kỹ bằng miếng bông tẩm cồn.</string>
+    <string name="carelevo_patch_attach_step2_title">Tháo lớp màng bảo vệ</string>
+    <string name="carelevo_patch_attach_step2_desc">Lấy miếng dán ra khỏi vỉ và tháo nắp kim.</string>
+    <string name="carelevo_patch_attach_step3_title">Dán miếng dán</string>
+    <string name="carelevo_patch_attach_step3_desc">Dán miếng dán lên da sao cho chấm đánh dấu hướng lên trên.</string>
+    <string name="carelevo_patch_attach_step4_desc">Sau khi dán miếng dán, nhấn nút Sẵn sàng.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Tháo nắp bảo vệ</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Xoay nắp theo hướng mũi tên và tháo nắp.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Đưa kim vào</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Nhấn nút đẩy của dụng cụ đặt xuống hết cỡ. Khi kim được đưa vào thành công, thiết bị sẽ phát ra tiếng bíp.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Nhấn và giữ trong 10 giây.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Còn %d lần thử lại để đưa kim vào.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Hủy kích hoạt miếng dán và bắt đầu sử dụng miếng dán mới?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Nhấn nút [ĐỒNG Ý] sẽ ngừng phân phối insulin.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Hoàn tất mà không bắt đầu phân phối insulin?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Nhấn nút [ĐỒNG Ý] sẽ khiến miếng dán này không thể sử dụng được nữa.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Hủy kích hoạt miếng dán?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Nhấn nút [ĐỒNG Ý] sẽ hủy các thông tin bạn đã nhập.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Nếu miếng dán được phát hiện bên dưới là đúng, vui lòng nhấn nút Xác nhận.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Đã hoàn tất đưa kim vào và tháo dụng cụ</string>
+    <string name="carelevo_dialog_connect_detached">Đã tháo dụng cụ</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+Nhấn vào hai chỗ cầm ở hai bên dụng cụ đặt để tháo dụng cụ khỏi miếng dán,\n
+        và sau đó nhấn nút \'Đã tháo dụng cụ\'. Quá trình phân phối insulin sẽ bắt đầu.
+    </string>
+    <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth chưa được bật. Vui lòng kiểm tra.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Chưa kết nối miếng dán.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Miếng dán chưa được kết nối. Vui lòng thử lại sau một lát.</string>
+    <string name="carelevo_toast_msg_scan_failed">Quá trình quét thất bại. Vui lòng thử lại.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Không tìm thấy miếng dán. Vui lòng thử lại.</string>
+    <string name="carelevo_toast_msg_connect_failed">Kết nối miếng dán không thành công. Vui lòng thử lại.</string>
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Chưa thiết lập cấu hình.</string>
+    <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Kiểm tra kim không thành công.</string>
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Không thể hủy bỏ miếng dán. Vui lòng thử lại.</string>
+    <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Yêu cầu phân phối liều nền không thành công. Vui lòng thử lại.</string>
+    <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Không thể tiếp tục phân phối insulin. Vui lòng thử lại.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Không thể tạm dừng phân phối insulin. Vui lòng thử lại.</string>
+    <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Kiểm tra an toàn không thành công.</string>
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Sắp hết insulin</string>
+    <string name="alarm_feat_title_warning_expired_patch">Miếng dán đã hết hạn</string>
+    <string name="alarm_feat_title_warning_low_battery">Sắp hết Pin</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Nhiệt độ Cao/Thấp</string>
+    <string name="alarm_feat_title_warning_not_used_app">Tự động tắt</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">Chưa kết nối Bluetooth</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Hết thời gian chờ khi dán miếng dán</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Tự chẩn đoán không thành công</string>
+    <string name="alarm_feat_title_warning_patch_error">Miếng dán lỗi</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Tắc nghẽn</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Lỗi cắm kim</string>
+    <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[Còn ít hơn <b>10 U</b> insulin; phân phối insulin đã dừng.<br><b>Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[Miếng dán đã hết hạn; phân phối insulin đã dừng.<br><b>Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Pin yếu; phân phối insulin đã dừng.<br><b>Nhấn nút [Hủy bỏ miếng dán] và thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[Phân phối insulin đã dừng.<br><b>Hãy di chuyển đến môi trường có nhiệt độ phù hợp ngay (40℉ ~ 99℉).</b>]]></string>
+    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[Phân phối insulin đã dừng.<br><b>Nhấn nút [Bắt đầu insulin] và khởi động lại phân phối liều nền.</b>]]></string>
+    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[Đã hết thời gian dán miếng dán.<br><b>Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[Tự chẩn đoán không thành công.<br><b>Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[Phân phối insulin đã dừng do lỗi không mong muốn.<br><b>Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[Phân phối insulin đã dừng do tắc nghẽn.<br><b>Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Không thể đưa kim vào.<br><b>Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</b>]]></string>
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Sắp hết insulin</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Miếng dán đã hết thời gian hoạt động</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Miếng dán sẽ sớm hết hạn</string>
+    <string name="alarm_feat_title_alert_low_battery">Pin yếu</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Nhiệt độ Cao/Thấp</string>
+    <string name="alarm_feat_title_alert_not_used_app">Tự động tắt</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">Chưa kết nối Bluetooth</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Kích hoạt miếng dán chưa hoàn tất</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Bắt đầu dùng insulin</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Bật Bluetooth</string>
+    <!-- Alert Descriptions -->
+    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[Còn ít hơn <b>%s U</b> insulin.<br><b>Hãy chuẩn bị thay miếng dán.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_phase2"><![CDATA[Miếng dán đã hết hạn.<br><b>Hãy thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_phase1"><![CDATA[Miếng dán sắp hết hạn.<br><b>Hãy thay miếng dán ngay.</b>]]></string>
+    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[Pin yếu.<br><b>Hãy chuẩn bị thay miếng dán.</b>]]></string>
+    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[Phân phối insulin đã tạm dừng do nhiệt độ quá cao hoặc quá thấp.</b><br>Hãy di chuyển đến nơi có nhiệt độ từ 40℉–99℉ để tiếp tục.]]></string>
+    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[Vui lòng nhấn [ĐỒNG Ý].<br>Nếu bỏ qua, cảnh báo sẽ chuyển thành báo động nghiêm trọng và <b>phân phối insulin sẽ bị dừng.</b>]]></string>
+    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[Nhấn nút [ĐỒNG Ý] để hoàn tất kích hoạt miếng dán.]]></string>
+    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[Đã kết thúc tạm dừng insulin.<br><b>Nhấn [Bắt đầu insulin] để bắt đầu.</b>]]></string>
+    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[Cần bật Bluetooth để sử dụng miếng dán.<br><b>Nhấn [ĐỒNG Ý] và bật Bluetooth.</b>]]></string>
+    <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Sắp hết insulin</string>
+    <string name="alarm_feat_title_notice_expired_patch">Thông báo thời gian sử dụng miếng dán</string>
+    <string name="alarm_feat_title_notice_check_patch">Thông báo kiểm tra miếng dán</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Thay đổi múi giờ</string>
+    <string name="alarm_feat_title_notice_check_bg">Kiểm tra đường huyết</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS đã bắt đầu</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS đã kết thúc</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS không khả dụng</string>
+    <string name="alarm_feat_title_notice_unknown">Miếng dán lỗi</string>
+    <!-- Notice Descriptions -->
+    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Còn ít hơn %s U insulin.<br><b>Hãy chuẩn bị thay miếng dán.</b>]]></string>
+    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Thời gian sử dụng miếng dán là <b>%s ngày %s giờ.</b><br>Hãy lưu ý điều này trong quá trình sử dụng.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Múi giờ đã thay đổi từ <b>%s (UTC %s) sang %s (UTC %s)</b>.]]></string>
+    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[Đã %s kể từ khi bạn bolus.<br>Vui lòng kiểm tra đường huyết.]]></string>
+    <string name="alarm_feat_desc_notice_lgs_started">LGS đã bắt đầu.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS đã kết thúc do mất kết nối với miếng dán/CGM.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS đã kết thúc do tạm dừng LGS.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_time_over">LGS đã kết thúc vì đã hết thời gian theo lịch.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS đã kết thúc do LGS bị tắt.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">LGS đã kết thúc vì giá trị CGM vượt quá ngưỡng đã đặt.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_unknown">LGS đã kết thúc do một nguyên nhân không xác định.</string>
+    <string name="alarm_feat_desc_notice_lgs_error">Vui lòng kiểm tra kết nối miếng dán và CGM.</string>
+    <string name="alarm_feat_desc_unknown">Đã xảy ra lỗi không mong muốn với miếng dán.</string>
+    <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Huỷ kích hoạt miếng dán</string>
+    <string name="alarm_feat_btn_patch_force_discard">Hủy miếng dán</string>
+    <string name="alarm_feat_btn_resume_infusion">Bắt đầu dùng insulin</string>
+    <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Vui lòng kiểm tra kết nối miếng dán.</string>
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Còn ít hơn 10 U insulin; phân phối insulin đã dừng. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Miếng dán đã hết hạn; phân phối insulin đã dừng. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Pin yếu; việc bơm insulin đã dừng. Nhấn nút [Hủy miếng dán] và thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Việc bơm insulin đã dừng. Hãy chuyển đến nơi có nhiệt độ phù hợp ngay (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Việc bơm insulin đã dừng. Nhấn nút [Khởi động insulin] và khởi động lại việc bơm liều nền.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Thời gian sử dụng miếng dán đã hết. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Tự chẩn đoán không thành công. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Đã dừng cấp insulin do lỗi không mong muốn. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Đã dừng cấp insulin do tắc nghẽn. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Không thể đưa kim vào. Nhấn nút [Hủy kích hoạt miếng dán] và thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Còn ít hơn %s U insulin. Hãy chuẩn bị thay miếng dán.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Miếng dán đã hết hạn. Hãy thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">Miếng dán sắp hết hạn. Hãy thay miếng dán ngay.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Pin yếu. Hãy chuẩn bị thay miếng dán.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Phân phối insulin đã tạm dừng do nhiệt độ quá cao hoặc quá thấp. Hãy di chuyển đến nơi có nhiệt độ từ 40℉–99℉ để tiếp tục.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Vui lòng nhấn [ĐỒNG Ý]. Nếu không xử lý, cảnh báo sẽ chuyển thành cảnh báo nghiêm trọng và việc cấp insulin sẽ bị dừng.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Nhấn nút [ĐỒNG Ý] để hoàn tất kích hoạt miếng dán.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Thời gian tạm dừng insulin đã kết thúc. Nhấn [Bắt đầu insulin] để bắt đầu.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Cần bật Bluetooth để sử dụng miếng dán. Nhấn [ĐỒNG Ý] và bật Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Còn ít hơn %s U insulin. Hãy chuẩn bị thay miếng dán.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Thời gian sử dụng miếng dán là %s ngày %s giờ. Hãy lưu ý điều này trong quá trình sử dụng.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Múi giờ đã thay đổi từ %s (UTC %s) sang %s (UTC %s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Đã %s kể từ khi bạn bolus. Vui lòng kiểm tra đường huyết.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS đã bắt đầu.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS đã kết thúc do mất kết nối với miếng dán/CGM.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS đã kết thúc do tạm dừng LGS.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS đã kết thúc vì đã hết thời gian theo lịch.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS đã kết thúc do LGS bị tắt.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS đã kết thúc vì giá trị CGM vượt quá ngưỡng đã đặt.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS đã kết thúc do một nguyên nhân không xác định.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Vui lòng kiểm tra kết nối miếng dán và CGM.</string>
+    <string name="carelevo_profile_update_skip_comment">Đã bỏ qua: chưa đến thời điểm cập nhật.</string>
+</resources>

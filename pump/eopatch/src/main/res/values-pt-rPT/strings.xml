@@ -6,5 +6,4 @@
     <string name="string_running">A correr</string>
     <string name="retry">Tentar Novamente</string>
     <string name="string_suspended_insulin_delivery_message">A entrega de insulina está suspensa.</string>
-    <!-- Permission rationales -->
 </resources>

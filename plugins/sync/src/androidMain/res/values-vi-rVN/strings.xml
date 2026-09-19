@@ -118,6 +118,10 @@
     <string name="wear_general_settings">Cài đặt chung</string>
     <string name="wear_custom_watchface_settings">Cài đặt mặt đồng hồ tùy chỉnh</string>
     <string name="wear_custom_watchface">Mặt đồng hồ tùy chỉnh: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Đang cài đặt…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Đồng hồ đang hiển thị mặt đồng hồ có Tiện ích. Chọn Mặt đồng hồ tùy chỉnh để xem %1$s trên đồng hồ.</string>
+    <string name="wear_pushed_watchface_confirm_title">Thay đổi mặt đồng hồ trên đồng hồ?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s sẽ thay thế cho %2$s hiện tại trên đồng hồ.</string>
     <string name="wear_load_watchface">Tải mặt đồng hồ</string>
     <string name="wear_infos_watchface">Mặt đồng hồ thông tin</string>
     <string name="wear_export_watchface">Xuất mẫu</string>

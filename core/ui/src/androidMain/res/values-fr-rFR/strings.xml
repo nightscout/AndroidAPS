@@ -173,6 +173,7 @@
     <string name="pump_running">Pompe en fonctionnement</string>
     <string name="notconfigured">Non configuré</string>
     <string name="loop_suspended_by_dst">Boucle suspendue par le changement d\'heure</string>
+    <string name="required">requis</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
     <string name="a11y_arrow_single_down">en baisse</string>
     <string name="a11y_arrow_forty_five_down">en baisse lente</string>
@@ -244,6 +245,8 @@
     <string name="location_permission_not_granted">Autorisation de localisation non accordée. À autoriser dans les paramètres Android.</string>
     <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
     <string name="not_available_full">Non disponible</string>
+    <string name="not_implemented_yet">Cette fonction n\'est pas encore prête sur cette plateforme</string>
+    <string name="not_available_on_platform">Cette fonction n\'est pas encore prête sur cette plateforme</string>
     <string name="engineering_mode_enabled">Mode ingénierie actif</string>
     <string name="back">Précédent</string>
     <string name="next">Suivant</string>
@@ -256,6 +259,7 @@
     <string name="pin_dont_match">Les codes PIN ne correspondent pas</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Annuler Basal Temp</string>
     <string name="let_temp_basal_run">Laisser démarrer le Basal Temp</string>
@@ -283,6 +287,7 @@
     <string name="veryHigh" comment="above 13.9">Très haut</string>
     <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
     <string name="detailed_14_days">Détail de 14 jours</string>
+    <string name="day_tir">TIR du jour</string>
     <string name="night_tir">TIR Nuit</string>
     <string name="hba1c">HbA1c : </string>
     <string name="std_deviation">SD : %1$s</string>

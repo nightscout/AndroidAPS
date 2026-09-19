@@ -80,5 +80,4 @@
     <string name="string_resumed_insulin_delivery_message">Insulinetoediening is hervat.</string>
     <string name="string_temp_basal_remained_hhmm">resterende tijd: %1$s:%2$s</string>
     <string name="string_resume_failed">Hervatten mislukt.</string>
-    <!-- Permission rationales -->
 </resources>

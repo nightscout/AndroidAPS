@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Hình nền</string>
     <string name="cwf_comment_chart">Biểu đồ (đường huyết, liều nền, đường dự đoán...)</string>
     <string name="cwf_comment_cover_chart">Hình ảnh phía trước biểu đồ và phía sau các ô nhập liệu</string>
+    <string name="cwf_comment_complication">Vùng chứa cho Tiện ích</string>
     <string name="cwf_comment_freetext1">Ghi chú 1</string>
     <string name="cwf_comment_freetext2">Ghi chú 2</string>
     <string name="cwf_comment_freetext3">Ghi chú 3</string>

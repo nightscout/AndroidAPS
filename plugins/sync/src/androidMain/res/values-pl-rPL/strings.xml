@@ -152,7 +152,7 @@
     <string name="smscommunicator_profile_reply_with_code">Aby przełączyć profil na %1$s %2$d%% odpowiedz kodem %3$s</string>
     <string name="smscommunicator_extended_reply_with_code">Aby rozpocząć bolus przedłużony %1$.2f U przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">Aby wprowadzić %1$dg o %2$s odeślij w SMS kod %3$s</string>
-    <string name="smscommunicator_basal_pct_reply_with_code">Aby rozpocząć bolus przedłużony %1$d%% przez %2$d min. odpowiedz kodem %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Aby rozpocząć bazę %1$d%% przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Aby wstrzymać pętle na %1$d minut odpowiedz kodem %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Aby wznowić pętlę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Aby wyłączyć pętlę odpowiedz kodem %1$s</string>

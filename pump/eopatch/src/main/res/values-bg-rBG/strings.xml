@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">Изход от съветника? Помпата може да остане активна и да пуска инсулин.</string>
     <string name="patch_force_reset">Форирано нулиране</string>
     <string name="patch_force_reset_confirm">Това ще изчисти статуса на пача локално и без да изпрати команда до помпата. Използвай само ако нормалната деактивация е невъзможна. Помпата ще доставя инсулин докато не свърши батерията или е ръчно изключена.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Точни аларми</string>
-    <string name="permission_exact_alarm_description">Нуждая се от разрешение да пускам точни аларми за управление на пачовете</string>
 </resources>
