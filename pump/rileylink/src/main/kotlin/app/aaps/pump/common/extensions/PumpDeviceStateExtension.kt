@@ -11,6 +11,6 @@ fun PumpDeviceState.stringResource() =
         PumpDeviceState.Active                   -> R.string.pump_status_active
         PumpDeviceState.ErrorWhenCommunicating   -> R.string.pump_status_error_comm
         PumpDeviceState.TimeoutWhenCommunicating -> R.string.pump_status_timeout_comm
-        PumpDeviceState.PumpUnreachable          -> R.string.pump_status_pump_unreachable
+        PumpDeviceState.PumpUnreachable          -> app.aaps.core.ui.R.string.pump_unreachable
         PumpDeviceState.InvalidConfiguration     -> R.string.pump_status_invalid_config
     }

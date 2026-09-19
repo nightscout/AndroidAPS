@@ -11,9 +11,9 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 import java.util.stream.IntStream
+import kotlin.time.Duration.Companion.seconds
 
 class PatchState : IPreference<PatchState> {
 
@@ -172,7 +172,7 @@ class PatchState : IPreference<PatchState> {
         get() {
             val remainedPumpCycle = remainedPumpCycle()
             return if (remainedPumpCycle > 0) {
-                FloatAdjusters.FLOOR2_INSULIN.apply(
+                FloatAdjusters.FLOOR2_INSULIN(
                     remainedPumpCycle * AppConstant.INSULIN_UNIT_P
                 )
             } else {
@@ -283,7 +283,7 @@ class PatchState : IPreference<PatchState> {
     fun convertHumanTimeWithStandard(timeSec: Int): String {
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-        calendar.timeInMillis = TimeUnit.SECONDS.toMillis(timeSec.toLong())
+        calendar.timeInMillis = timeSec.toLong().seconds.inWholeMilliseconds
         return dateFormat.format(calendar.time)
     }
 

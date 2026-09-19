@@ -10,14 +10,14 @@ import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.shared.impl.extensions.safeGetPackageInfo
 import app.aaps.wear.R
-import dagger.android.DaggerActivity
-import javax.inject.Inject
+import app.aaps.wear.di.WearMetroActivity
+import dev.zacsweers.metro.Inject
 
 /**
  * Send a snooze request to silence any alarm. Designed to be bound to a button for fast access
  */
 
-class QuickSnoozeActivity : DaggerActivity() {
+class QuickSnoozeActivity : WearMetroActivity() {
 
     @Inject lateinit var rxBus: RxBus
 

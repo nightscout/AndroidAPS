@@ -6,7 +6,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.util.AlertUtil
 import app.aaps.pump.omnipod.common.bledriver.pod.util.byValue
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.EnumSet
 import kotlin.experimental.and
 
 class DefaultStatusResponse(

@@ -16,10 +16,7 @@
     <string name="not_inserted">Neįvestas</string>
     <string name="tdd_bolus">BPD bolusai</string>
     <string name="tdd_basal">BPD bazė</string>
-    <string name="tbr_formatter">%1$d%% - %2$d / %3$d min</string>
     <string name="multiwave_bolus">Daugiabangis bolusas</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f vv per %3$d min</string>
-    <string name="insight_last_bolus">Paskutinis bolusas</string>
     <string name="searching_for_devices">Ieškoma įrenginių…</string>
     <string name="pairing_completed">Sėkmingai susieta</string>
     <string name="code_compare">Ar kodas, kurį matote įrenginyje, sutampa su pompos kodu?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">Pompa sustabdyta</string>
     <string name="pump_started">Pompa paleista</string>
     <string name="release_software_version">Išleistos programinės įrangos versija</string>
-    <string name="ui_processor_software_version">UI procesoriaus programinės įrangos versija</string>
-    <string name="pc_processor_software_version">PC procesoriaus programinės įrangos versija</string>
-    <string name="md_tel_processor_software_version">MD tel procesoriaus programinės įrangos versija</string>
-    <string name="safety_processor_software_version">Saugos procesoriaus programinės įrangos versija</string>
-    <string name="bt_info_page_version">BT info puslapio versija</string>
     <string name="bluetooth_address">Bluetooth adresas</string>
-    <string name="system_id_appendix">Sistemos ID priedėlis</string>
     <string name="manufacturing_date">Pagaminimo data</string>
-    <string name="delete_pairing">Panaikinti susiejimą</string>
     <string name="log_site_changes">Įrašyti adatos pakeitimą</string>
     <string name="log_reservoir_changes">Įrašyti rezervuaro keitimus</string>
     <string name="log_tube_changes">Įrašyti infuzijos vamzdelio pakeitimą</string>
@@ -58,6 +48,5 @@
     <string name="max_recovery_duration">Didž. atkūrimo trukmė [s]</string>
     <string name="min_recovery_duration">Min. atkūrimo trukmė [s]</string>
     <string name="pump_alert">Pompos aliarmas</string>
-    <string name="pairing_information">Susiejimo informacija</string>
     <string name="last_connection">%1$s (%2$s)</string>
 </resources>

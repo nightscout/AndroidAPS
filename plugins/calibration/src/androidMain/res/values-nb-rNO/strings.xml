@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="calibration_shortname">KAL</string>
+    <string name="no_calibration_name">Ingen kalibrering</string>
+    <string name="description_no_calibration">"Ingen kalibreringsoverstyring er brukt. Sensorverdiene brukes som de er. Bruk dette når sensoren allerede er fabrikkalibrert og gir nøyaktige verdier."</string>
+    <string name="linear_calibration_name">Lineær kalibrering</string>
+    <string name="description_linear_calibration">"Lineær kalibreringsoverstyring per sensor (stigningstall og konstantledd) beregnet fra dine blodsukkermålinger. Nyere målinger vektes høyere. Overstyringen brukes etter at den aktive sensorsesjonen er startet; de første 2 timene hoppes over som oppvarming."</string>
+    <string name="sensor_change_detected_text">Mulig sensorbytte oppdaget %1$s. Merke som ny sensor?</string>
+    <string name="sensor_change_detected_action">Registrer sensorbytte</string>
+    <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Registrer et sensorbytte for å kunne kalibrere.</string>
+    <string name="cal_status_warmup">Sensoroppvarming – kalibrering aktiv etter %1$s.</string>
+    <string name="cal_status_need_more_entries">Krever minst 2 fingerstikkmålinger (nå %1$d).</string>
+    <string name="cal_status_unsafe_fit">Tilpasningen er utenfor trygt område – kalibreringen ble ikke tatt i bruk.</string>
+    <string name="cal_status_applied">Kalibrering tatt i bruk.</string>
+    <string name="cal_status_applied_offset_only">Bare forskyvning kalibrert – sensorområdet er for smalt til å beregne stigningstall.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibrering brukt — stigningstallet er begrenset til et trygt område. Legg til flere målinger for å tillate et større område.</string>
+    <string name="cal_slope_offset">Stigningstall %1$.2f, korreksjon i mellomområdet %2$s</string>
+    <string name="cal_session_started">Økt startet: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Logg sensorbytte</string>
+    <string name="cal_add_calibration">Legg til kalibrering</string>
+    <string name="cal_entries_header">Blodsukkermålinger (%1$d)</string>
+    <string name="cal_no_entries">Ingen blodsukkermålinger ennå.</string>
+    <string name="cal_entry_pair">Fingerstikk %1$s → sensor %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Fjern måling?</string>
+    <string name="cal_remove_entry_message">Dette vil ugyldiggjøre målingen. Beregningen vil bli gjort på nytt.</string>
+    <string name="cal_chart_entry_readout">Måling %1$d/%2$d · %3$s · sensor %4$s → BG %5$s</string>
+</resources>

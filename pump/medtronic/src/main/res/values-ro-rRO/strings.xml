@@ -9,26 +9,39 @@
     <string name="medtronic_pump_bolus_delay">Întârziere până la pornirea bolusului (s)</string>
     <string name="medtronic_pump_max_bolus">Bolusul maxim în pompă (U)</string>
     <string name="medtronic_pump_max_basal">Bazală maximă în pompă (U/h)</string>
-    <string name="medtronic_pump_encoding">Criptare Medtronic</string>
-    <string name="medtronic_custom_action_wake_and_tune">Pornește și sincronizează</string>
-    <string name="medtronic_custom_action_clear_bolus_block">Șterge blocajul de bolus</string>
-    <string name="medtronic_custom_action_reset_rileylink">Resetează configurația RileyLink</string>
+    <string name="medtronic_custom_action_wake_and_tune">Porniți și reglați</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Ștergeți blocajul de bolus</string>
+    <string name="medtronic_custom_action_reset_rileylink">Resetați dispozitivull RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipul bateriei (Afișare avansată)</string>
     <string name="medtronic_pump_battery_no">Fără selecție (Afișare simplificată)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalină (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_lithium">Litiu (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Afișare extinsă)</string>
+    <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Altele (neacceptate)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A sau mai mic)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A sau mai mic)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
+    <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 sec</string>
+    <string name="medtronic_bolus_delay_10s">10 sec</string>
+    <string name="medtronic_bolus_delay_15s">15 sec</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Baterie RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Erori</string>
-    <string name="medtronic_error_serial_not_set">Număr serial nesetat.</string>
     <string name="medtronic_error_serial_invalid">Număr serial invalid.</string>
     <string name="medtronic_error_pump_type_not_set">Tipul pompei nesetat.</string>
     <string name="medtronic_error_pump_type_invalid">Tip de pompă nesuportat.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Frecvența pompei nesetată.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frecvența pompei nesuportată.</string>
     <string name="medtronic_error_rileylink_address_invalid">Adresa RileyLink invalidă.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Tipul de pompă detectat nu corespunde cu cel configurat.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Setările de profil/șablon bazale nu sunt activate în pompă. Vă rugăm să le activați din pompă.</string>
@@ -45,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Istoric pompă Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Ați anulat un bolus după ce a fost deja transmis către pompă. Deoarece pompa Medtronic nu permite o anulare de bolus, va trebui să faceți acest lucru în mod manual, din pompă. Puneți pompa în modul Suspend și apoi Repornire (dacă totuși doriți să anulați bolusul). Aplicația se va sincroniza automat cu pompa la următoarea contactare a acesteia (în mai puțin de 5 minute).</string>
     <string name="medtronic_cmd_cant_read_tbr">Nu a putut fi citită RBT.</string>
@@ -57,35 +69,27 @@
     <string name="medtronic_cmd_cant_cancel_tbr">Nu a putut fi anulată RBT curentă.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Profilul bazal nu a putut fi stabilit.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Profilul bazal existent deja este existent, nu va fi reintrodus.</string>
-    <string name="medtronic_cmd_desc_get_history">Preia istoricul - Pagina %1$d (%2$d/16)</string>
-    <string name="medtronic_cmd_desc_get_history_request">Preia istoricul - Pagina %1$d</string>
-    <string name="medtronic_cmd_desc_get_time">Preia timpul din pompă</string>
-    <string name="medtronic_cmd_desc_set_time">Setează timpul pe pompa</string>
-    <string name="medtronic_cmd_desc_get_battery_status">Obține starea bateriei</string>
-    <string name="medtronic_cmd_desc_get_settings">Preia setările</string>
-    <string name="medtronic_cmd_desc_get_model">Preia modelul de pompă</string>
-    <string name="medtronic_cmd_desc_get_basal_profile">Preia profilul bazalelor</string>
-    <string name="medtronic_cmd_desc_set_basal_profile">Setează profilul bazalelor</string>
-    <string name="medtronic_cmd_desc_get_tbr">Preia bazala temporară</string>
-    <string name="medtronic_cmd_desc_set_tbr">Setează bazala temporară</string>
-    <string name="medtronic_cmd_desc_cancel_tbr">Anulează Bazala Temporară</string>
-    <string name="medtronic_cmd_desc_set_bolus">Setează bolusul</string>
-    <string name="medtronic_cmd_desc_get_remaining_insulin">Obţine insulina rămasă</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pompă indisponibilă</string>
-    <string name="medtronic_warning">Atenție</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Acum</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">în trecut</string>
+    <string name="medtronic_cmd_desc_get_history">Preluați istoricul - Pagina %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Preluați istoricul - Pagina %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Preluați timpul din pompă</string>
+    <string name="medtronic_cmd_desc_set_time">Setați timpul pe pompă</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Obțineți starea bateriei</string>
+    <string name="medtronic_cmd_desc_get_settings">Preluați setările</string>
+    <string name="medtronic_cmd_desc_get_model">Preluați modelul de pompă</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Preluați profilul bazalelor</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Setați profilul bazalelor</string>
+    <string name="medtronic_cmd_desc_get_tbr">Preluați bazala temporară</string>
+    <string name="medtronic_cmd_desc_set_tbr">Setați bazala temporară</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Anulați Bazala Temporară</string>
+    <string name="medtronic_cmd_desc_set_bolus">Setați bolusul</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obțineți insulina rămasă</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Acum</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">în trecut</string>
     <string name="medtronic_notification_check_time_date">Ceasul pompei trebuie ajustat</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Timpul din pompă a fost actualizat</string>
     <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
     <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min ramase)</string>
-    <string name="invalid_history_data">Au fost detectate date nevalide din istoricul pompei. Deschideți o nouă problemă și furnizați jurnalele.</string>
+    <string name="invalid_history_data">Au fost detectate date nevalide din istoricul pompei. Deschide o sesizare nouă și trimite jurnalul de activitate.</string>
     <string name="riley_statistics">Statistici RL</string>
-    <string name="medtronic_history_type">Tip:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Reîmprospătare apăsată</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Reîmprospătare stare programată</string>
 </resources>

@@ -1,0 +1,27 @@
+// Signing for the iOS app.
+//
+// A team id belongs to one Apple account, so committing one would break the device
+// build for everybody else. Put yours in Signing.local.xcconfig instead, which git
+// ignores:
+//
+//     DEVELOPMENT_TEAM = YOURTEAMID
+//
+// Find the id in Xcode under Settings > Accounts: pick your Apple ID and read the
+// ten character id beside the team. Selecting the team in the target's
+// Signing & Capabilities tab also creates the signing certificate, which does not
+// exist until you do that.
+//
+// The include below is optional, the `?` is what makes it so. A clone without that
+// file still builds for the simulator, which does not sign at all. Only a device
+// build needs a team, and without one it stops with "requires a development team".
+//
+// This file itself must stay committed. Xcode treats a missing base configuration
+// as an error, not a warning, so pointing the project straight at an ignored file
+// would break every fresh clone.
+#include? "Signing.local.xcconfig"
+
+// The generated version numbers, from :ios:shell:generateIosVersionXcconfig. Optional for the same
+// reason as the file above: a clone that has never run Gradle still builds, using the project's own
+// MARKETING_VERSION and CURRENT_PROJECT_VERSION. Only an upload to App Store Connect needs real
+// ones, because it rejects a build number it has already seen.
+#include? "Version.xcconfig"

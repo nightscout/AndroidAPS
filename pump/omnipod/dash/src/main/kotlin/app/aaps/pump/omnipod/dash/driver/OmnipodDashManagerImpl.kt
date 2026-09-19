@@ -49,11 +49,17 @@ import java.util.Date
 import java.util.EnumSet
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metro.Inject
+import kotlin.time.Duration.Companion.hours
 
-@Singleton
-class OmnipodDashManagerImpl @Inject constructor(
+@ContributesBinding(AppScope::class, binding = binding<OmnipodDashManager>())
+@SingleIn(AppScope::class)
+@Inject
+class OmnipodDashManagerImpl(
     private val logger: AAPSLogger,
     private val podStateManager: OmnipodDashPodStateManager,
     private val bleManager: OmnipodDashBleManager,
@@ -434,9 +440,9 @@ class OmnipodDashManagerImpl @Inject constructor(
                 AlertConfiguration(
                     AlertType.EXPIRATION,
                     enabled = expirationAlarmEnabled,
-                    durationInMinutes = (TimeUnit.HOURS.toMinutes(
+                    durationInMinutes = ((
                         userConfiguredExpirationAlarmHours ?: POD_EXPIRATION_ALERT_HOURS_REMAINING_DEFAULT
-                    ) - 60).toShort(),
+                        ).hours.inWholeMinutes - 60).toShort(),
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
                         expirationAlarmDelay.toMinutes().toShort()

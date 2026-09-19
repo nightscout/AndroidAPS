@@ -16,10 +16,7 @@
     <string name="not_inserted">Não inserido</string>
     <string name="tdd_bolus">DDT de Bolus</string>
     <string name="tdd_basal">DDT Basal</string>
-    <string name="tbr_formatter">%1$d%% para %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bólus Multi-Onda</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
-    <string name="insight_last_bolus">Último bolus</string>
     <string name="searching_for_devices">A pesquisar dispositivos…</string>
     <string name="pairing_completed">Emparelhamento concluído</string>
     <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
@@ -35,15 +32,8 @@
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
     <string name="release_software_version">Lançar versão de software</string>
-    <string name="ui_processor_software_version">Versão de software do processador de interface do utilizador</string>
-    <string name="pc_processor_software_version">Versão do software do processador de PC</string>
-    <string name="md_tel_processor_software_version">Versão do software do processador MD tel</string>
-    <string name="safety_processor_software_version">Versão de software do processador de segurança</string>
-    <string name="bt_info_page_version">Página de informação da versão do BT</string>
     <string name="bluetooth_address">Endereço Bluetooth</string>
-    <string name="system_id_appendix">Apêndice do ID de sistema</string>
     <string name="manufacturing_date">Data de fabrico</string>
-    <string name="delete_pairing">Eliminar emparelhamento</string>
     <string name="log_site_changes">Registar alterações de local</string>
     <string name="log_reservoir_changes">Número de unidades do reservatório alteradas</string>
     <string name="log_tube_changes">Registar alterações de tubo</string>
@@ -56,5 +46,4 @@
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="pump_alert">Alerta da Bomba</string>
-    <string name="pairing_information">Informações de emparelhamento</string>
 </resources>

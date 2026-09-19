@@ -6,23 +6,19 @@ import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.LongTextComplicationData
 import androidx.wear.watchface.complications.data.PlainComplicationText
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.AndroidInjection
 
 /**
  * Long Status Complication
  *
- * Shows comprehensive glucose and status information in long text format
- * Title: Glucose value, arrow, delta, and time
- * Text: COB, IOB, and basal rate
+ * Shows comprehensive glucose and status information as a single long text line:
+ * COB, IOB, and basal rate, then glucose value, arrow, auto-updating time, and delta.
+ *
+ * Everything lives in the text field (no title) so the separator between status and
+ * glucose is ours — watch faces join text and title with their own separator (often "/").
  *
  */
 class LongStatusComplication : ModernBaseComplicationProviderService() {
 
-    // Not derived from DaggerService, do injection here
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
-    }
 
     override fun buildComplicationData(
         type: ComplicationType,
@@ -32,17 +28,18 @@ class LongStatusComplication : ModernBaseComplicationProviderService() {
         return when (type) {
             ComplicationType.LONG_TEXT      -> {
                 // Pass EventData arrays directly to DisplayFormat
-                val singleBg = arrayOf(data.bgData, data.bgData1, data.bgData2)
                 val status = arrayOf(data.statusData, data.statusData1, data.statusData2)
 
-                val glucoseLine = displayFormat.longGlucoseLine(singleBg, 0)
+                val bgData = data.bgData
+                val glucose = bgData.sgvString + bgData.slopeArrow
                 val detailsLine = displayFormat.longDetailsLine(status, 0)
+                val sep = displayFormat.fieldSeparator()
 
                 LongTextComplicationData.Builder(
-                    text = PlainComplicationText.Builder(text = detailsLine).build(),
-                    contentDescription = PlainComplicationText.Builder(text = "Status: $glucoseLine $detailsLine").build()
+                    // Age + delta formatted like SgvComplication's title ("5m +0.1")
+                    text = buildCountUpText(bgData.timeStamp, "$detailsLine$sep$glucose ^1 ${bgData.delta}"),
+                    contentDescription = PlainComplicationText.Builder(text = "Status: $detailsLine $glucose ${bgData.delta}").build()
                 )
-                    .setTitle(PlainComplicationText.Builder(text = glucoseLine).build())
                     .setTapAction(complicationPendingIntent)
                     .build()
             }

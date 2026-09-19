@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPSClient -->
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <string name="connection_settings_title">Definições de ligação</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="unsupported_ns_version">Versão sem suporte do Nightscout</string>
+    <!-- AAPSClient -->
+    <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <!-- Pair with master (client side PIN entry) -->
+    <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="ns_client">ClienteNS</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="deliver_now">Administrar agora</string>
+    <string name="queue">Fila de espera:</string>
+    <string name="clear_log">Limpar Registo</string>
+    <string name="full_sync">Sincronização completa</string>
+    <string name="full_sync_comment">Sincronização completa? Pode levar muitas horas até terminar e não irá ver dados novos no NS.</string>
+    <string name="ns_sync_options">Sincronização</string>
+    <string name="ns_alarm_options">Opções Alarme</string>
+    <!-- Tidepool -->
+    <string name="title_tidepool_dev_servers">Utilizar servidores de integração (teste)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Enviar dados para Tidepool</string>
+    <string name="upload_now">Fazer o upload agora</string>
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip_not_installed">xDrip+ não está instalado</string>
+    <string name="calibration_sent">Calibração enviada para xDrip+</string>
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="description_wear">Monitorizar e controlar a AndroidAPS utilizando o seu relógio WearOS.</string>
+    <string name="no_watch_connected">(Nenhum relógio Conectado)</string>
+    <string name="pump_status">Estado da Bomba</string>
+    <string name="loop_status">Estado do loop</string>
+    <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
+    <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
+    <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
+    <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
+    <string name="wear_general_settings">Definições Gerais</string>
+    <string name="wear_custom_watchface_settings">Definições da watchface predefinida</string>
+    <string name="wear_custom_watchface">Watchface Predefinida: %1$s</string>
+    <string name="wear_load_watchface">Carregar Watchface</string>
+    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_export_watchface">Exportar modelo</string>
+    <string name="wear_new_custom_watchface_exported">Modelo de Watchface Predefinida exportado</string>
+    <string name="resend_all_data">Reenviar Todos os Dados</string>
+    <string name="open_settings_on_wear">Abrir Definições no Relógio</string>
+    <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
+    <string name="cwf_infos_pref_required">Lista de preferências necessárias para a Watchface</string>
+    <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
+    <string name="pump_old_data">TID: Ainda dados antigos! Não é possível carregar a partir da bomba.</string>
+    <string name="units_short">U</string>
+    <string name="hour_short">h</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="today">Hoje</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicador SMS</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Controle remotamente a AndroidAPS usando comandos SMS.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app Authenticator para: %1$s seguido pelo PIN</string>
+    <string name="smscommunicator_tab_otp_label">Configuração do Autenticador</string>
+    <string name="smscommunicator_code_verify_label">Código para verificar:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">O código de verificação consiste em 6 dígitos exibidos pela app Authenticator (conhecido como OTP) seguido de 3 ou mais dígitos de PIN obrigatório.</string>
+    <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
+    <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>
+    <string name="smscommunicator_otp_reset_prompt">Tem certeza de redefinir chave Authenticador? Ele tornará todos os Authenticators configurados actualmente como inválidos, e precisará de os configurar novamente.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Digitalize o código para configurar os códigos OTP AAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única (OTP)</string>
+    <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
+    <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
+    <string name="smscommunicator_otp_reset_warning">Ao repor o autenticador, torna inválidos todos os autenticadores já inseridos. Precisará de os configurar novamente!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">TAMANHO INVÁLIDO!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN ERRADO</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP ERRADO</string>
+    <string name="sms_wrong_code">Código errado. Comando cancelado.</string>
+    <string name="sms_timeout_while_waiting">Tempo limite de espera para conclusão da comunicação com a bomba</string>
+    <string name="smscommunicator_bolus_reply_with_code">Para administrar bólus %1$.2fU responder com código %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Para administrar bólus %1$.2fU responder com código %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Para definir o Alvo Temporário %1$s responda com o código %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Para cancelar Alvo Temporário responda com o código %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Para desactivar o Serviço Remoto SMS de responda com o código %1$s.\n\nTenha em mente que será capaz de o reactivar directamente apenas a partir do telemóvel mestre do AAPS.</string>
+    <string name="smscommunicator_stopped_sms">SMS Serviço Remoto interrompido. Para reactivá-lo, use o AAPS no telemóvel mestre.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Para enviar calibração %1$.2f responder com código %2$s</string>
+    <string name="smscommunicator_bolus_delivered">Bólus %1$.2f U administrado com sucesso</string>
+    <string name="smscommunicator_meal_bolus_delivered">Bólus de Refeição %1$.2f U administrado com sucesso</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Alvo %1$s para %2$d minutos</string>
+    <string name="smscommunicator_tt_set">Alvo %1$s para %2$d minutos definido com sucesso</string>
+    <string name="smscommunicator_tt_canceled">Alvo Temporário cancelado com êxito</string>
+    <string name="smscommunicator_loop_has_been_disabled">Loop foi desactivado</string>
+    <string name="smscommunicator_loop_is_enabled">Loop activado</string>
+    <string name="smscommunicator_pump_connect_with_code">Para ligar a bomba responda com o código %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">Ligação à bomba falhou</string>
+    <string name="smscommunicator_pump_disconnect_with_code">Para remover a bomba por %1$d minutos responda com o código %2$s</string>
+    <string name="smscommunicator_pump_disconnected">Bomba removida</string>
+    <string name="smscommunicator_reconnect">Bomba ligada novamente</string>
+    <string name="smscommunicator_remote_command_not_allowed">O comando remoto não é permitido</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">O bólus remoto não está disponível. Tente novamente mais tarde.</string>
+    <string name="smscommunicator_basal_reply_with_code">Para iniciar basal %1$.2f U/h por %2$d min responda com o código %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">Para mudar o perfil para %1$s %2$d%% responda com o código %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Para iniciar bólus prolongado %1$.2f U por %2$d min responda com o código %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Para inserir %1$dg em %2$s responda com código %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Para começar a basal %1$d%% U/h durante %2$d min responda com o código %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Para retomar o loop responda com o código %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Para desativar o loop responda com o código %1$s</string>
+    <string name="smscommunicator_tempbasal_set">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
+    <string name="smscommunicator_extended_set">Bólus prolongado %1$.2fU/h para %2$d min iniciado com êxito</string>
+    <string name="smscommunicator_carbs_set">Hidratos %1$d  g inseridos com sucesso</string>
+    <string name="smscommunicator_carbs_failed">Introdução de %1$dg de hidratos falhou</string>
+    <string name="smscommunicator_tempbasal_set_percent">Basal temporária %1$d%% U/h durante%2$d min iniciada com êxito</string>
+    <string name="smscommunicator_tempbasal_failed">Início basal temporária falhou</string>
+    <string name="smscommunicator_extended_failed">Falha ao iniciar o bólus prolongado</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Para parar a basal temporária responda com o código %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Para parar o bólus prolongado responda com o código %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Basal temporária cancelada</string>
+    <string name="smscommunicator_extended_canceled">Bólus prolongado cancelado</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Não foi possível cancelar a basal temporária</string>
+    <string name="smscommunicator_extended_cancel_failed">Falhou a cancelar bólus prolongado</string>
+    <string name="smscommunicator_unknown_command">Comando desconhecido ou resposta errada</string>
+    <string name="smscommunicator_another_bolus_in_queue">Existe outro bólus em espera. Tente novamente mais tarde.</string>
+    <string name="smscommunicator_wrong_duration">Duração errada</string>
+    <string name="smscommunicator_loop_suspended">Loop suspenso</string>
+    <string name="smscommunicator_loop_resumed">Loop retomado</string>
+    <string name="smscommunicator_invalid_phone_number">Número de telefone de SMS inválido</string>
+    <string name="smscommunicator_calibration_sent">Calibração enviada. Receção tem de estar ativada na xDrip+.</string>
+    <string name="smscommunicator_calibration_failed">O xDrip+ não está a receber as calibrações</string>
+    <string name="smscommunicator_message_body">Corpo da mensagem inválido</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o tipo de Loop para SGB (Baixa Suspensão por Glicose Baixa) responda com o código %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">De forma a mudar o Loop para Loop Fechado responda com o código %1$s</string>
+    <string name="wrong_format">Formato incorrecto</string>
+    <string name="sms_actual_bg">GLIC:</string>
+    <string name="sms_last_bg">Ultima GLIC:</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IA:</string>
+    <string name="sms_bolus">Bólus:</string>
+    <string name="sms_basal">Basal:</string>
+    <string name="sms_min_ago">%1$dmin atrás</string>
+    <string name="sms_loop_suspended_for">Suspendido (%1$d m)</string>
+    <string name="sms_read_status_failed">Erro na leitura de estado</string>
+    <string name="sms_profile_switch_created">Troca de perfil criada</string>
+    <string name="sms_wrong_tbr_duration">A duração do DBT deve ser de um múltiplo de %1$d minutos e maior que 0.</string>
+    <string name="a11y_otp_qr_code">Código QR para configuração da senha única</string>
+</resources>

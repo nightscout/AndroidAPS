@@ -1,6 +1,6 @@
 package app.aaps.pump.eopatch.code
 
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 
 @Suppress("unused")
 enum class BolusExDuration(val index: Int, val minute: Int, val hour: Float) {
@@ -24,7 +24,7 @@ enum class BolusExDuration(val index: Int, val minute: Int, val hour: Float) {
     MINUTE_480(16, 480, 8.0f);
 
     fun milli(): Long {
-        return TimeUnit.MINUTES.toMillis(this.minute.toLong())
+        return this.minute.toLong().minutes.inWholeMilliseconds
     }
 
     companion object {

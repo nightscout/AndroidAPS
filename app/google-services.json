@@ -3,7 +3,7 @@
     "project_number": "477603612366",
     "firebase_url": "https://androidaps-c34f8.firebaseio.com",
     "project_id": "androidaps-c34f8",
-    "storage_bucket": "androidaps-c34f8.appspot.com"
+    "storage_bucket": "androidaps-c34f8.firebasestorage.app"
   },
   "client": [
     {
@@ -21,7 +21,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
+          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
         }
       ],
       "services": {
@@ -50,7 +50,36 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
+          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:477603612366:android:6037b6edcc8afd3ffcb29f",
+        "android_client_info": {
+          "package_name": "info.nightscout.aapsclient3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
         }
       ],
       "services": {
@@ -79,7 +108,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
+          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
         }
       ],
       "services": {
@@ -108,7 +137,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
+          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
         }
       ],
       "services": {
@@ -137,7 +166,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
+          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
         }
       ],
       "services": {
@@ -166,7 +195,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
+          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
         }
       ],
       "services": {

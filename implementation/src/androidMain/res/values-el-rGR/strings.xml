@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Η εντολή εκτελείται τώρα</string>
+    <string name="basal_value_below_minimum">Τιμή βασικού κάτω από το ελάχιστο. Δεν έχει ρυθμιστεί το προφίλ!</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Υδατάνθρακες</string>
+    <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported">Επιλογές εξήχθησαν</string>
+    <string name="filenotfound">Μη εύρεση φακέλου</string>
+    <string name="ue_exported">Καταχωρήσεις χρηστών που εξάγονται</string>
+    <string name="exported_at" comment="at placeholder we add export date">εξαγωγή στις %1$s</string>
+    <string name="exported_less_than_hour_ago">η εξαγωγή έγινε από λιγότερο από μία ώρα πριν</string>
+    <string name="metadata_warning_different_flavour">Οι προτιμήσεις δημιουργήθηκαν με διαφορετική έκδοση του AAPS (%1$s) ενώ έχετε: %2$s.\n\nΟρισμένες ρυθμίσεις ενδέχεται να λείπουν ή να μην είναι έγκυρες - μετά την εισαγωγή παρακαλώ ελέγξτε και ενημερώστε τις προτιμήσεις σας.</string>
+    <string name="metadata_warning_different_device">Οι προτιμήσεις δημιουργήθηκαν σε διαφορετική συσκευή. Είναι εντάξει αν κάνετε εισαγωγή από παλαιότερο/διαφορετικό τηλέφωνο, αλλά βεβαιωθείτε ότι οι εισαγόμενες προτιμήσεις είναι σωστές!</string>
+    <string name="metadata_warning_old_export">Οι εισαγόμενες προτιμήσεις είναι ήδη %1$s ημέρών! Ίσως έχετε πιο πρόσφατες-ενημερωμένες προτιμήσεις ή επιλέξατε λάθος αρχείο; Θυμηθείτε να εξάγετε τακτικά τις προτιμήσεις σας!</string>
+    <string name="metadata_warning_date_format">Μη έγκυρη μορφή ημερομηνίας-ώρας!</string>
+    <string name="metadata_warning_different_version">Προτιμήσεις από διαφορετική δευτερεύουσα έκδοση της εφαρμογής. Είναι εντάξει αν εισάγετε μετά από αναβάθμιση, αλλά ελέγξτε μετά την εισαγωγή αν οι προτιμήσεις είναι ακόμα σωστές!</string>
+    <string name="metadata_urgent_different_version">Προτιμήσεις από διαφορετική σημαντική έκδοση της εφαρμογής. Οι μεγάλες εκδόσεις διαφέρουν σημαντικά και μπορεί να έχουν μη-συμβατές προτιμήσεις! Βεβαιωθείτε μετά την εισαγωγή ότι οι προτιμήσεις είναι ακόμα σωστές!</string>
+    <string name="prefdecrypt_settings_tampered">Το αρχείο ρυθμίσεων έχει αλλοιωθεί</string>
+    <string name="prefdecrypt_settings_secure">Το αρχείο ρυθμίσεων είναι ασφαλές</string>
+    <string name="prefdecrypt_settings_unencrypted">Χρήση μη ασφαλούς, μη κρυπτογραφημένης μορφής ρυθμίσεων</string>
+    <string name="prefdecrypt_wrong_json">Σφάλμα μορφής JSON, λείπει απαιτούμενο πεδίο (μορφή, περιεχόμενο, μεταδεδομένα ή ασφάλεια)</string>
+    <string name="prefdecrypt_wrong_password">Σφάλμα αποκρυπτογράφησης, ο κωδικός πρόσβασης δεν μπορεί να αποκρυπτογραφήσει το αρχείο</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Λείπει το άθροισμα ελέγχου αρχείου (hash), δεν μπορεί να επαληθεύτεί η αυθεντικότητα των ρυθμίσεων!</string>
+    <string name="prefdecrypt_issue_modified">Το αρχείο τροποποιήθηκε μετά την εξαγωγή!</string>
+    <string name="prefdecrypt_issue_parsing">Σφάλμα αποκρυπτογράφησης, η ανάλυση των προτιμήσεων απέτυχε!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Σφάλμα αποκρυπτογράφησης, ο παρεχόμενος κωδικός πρόσβασης δεν είναι έγκυρος ή το αρχείο ρυθμίσεων τροποποιήθηκε! Μπορεί να συμβεί ότι το εισαγόμενο αρχείο εξήχθη με διαφορετικό Κύριο κωδικό πρόσβασης.</string>
+    <string name="prefdecrypt_issue_wrong_format">Λείπει η διαμόρφωση κρυπτογράφησης, η μορφή των ρυθμίσεων δεν είναι έγκυρη!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Μη υποστηριζόμενο ή μη καθορισμένος αλγόριθμος κρυπτογράφησης!</string>
+    <string name="metadata_label_created_at">Δημιουργήθηκε στις</string>
+    <string name="metadata_label_aaps_version">Έκδοση AAPS</string>
+    <string name="metadata_label_aaps_flavour">Δημιουργία Παραλλαγής</string>
+    <string name="metadata_label_device_name">Εξαγωγή ονόματος συσκευής ασθενούς </string>
+    <string name="metadata_label_device_model">Εξαγωγή μοντέλου συσκευής</string>
+    <string name="metadata_label_encryption">Κρυπτογράφηση αρχείων</string>
+    <string name="metadata_format_new">Νέα κρυπτογραφημένη μορφή</string>
+    <string name="metadata_format_other">Άγνωστη μορφή εξαγωγής</string>
+</resources>
