@@ -165,6 +165,16 @@
     <string name="pref_complication_3">Thông tin tiện ích 3</string>
     <string name="pref_complication_4">Thông tin tiện ích 4</string>
     <string name="pref_complication_5">Thông tin tiện ích 5</string>
+    <string name="complication_summary_none">Nhấn để chọn nguồn dữ liệu</string>
+    <string name="pref_complication_type_priority">Ưu tiên loại Tiện ích</string>
+    <string name="pref_complication_type_priority_all">Mặc định cho tất cả</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Thay đổi tại đây sẽ được áp dụng vào lần tiếp theo bạn chọn nguồn dữ liệu. Chọn lại cùng một nguồn là chưa đủ: trước tiên hãy chọn một nguồn dữ liệu khác, sau đó chọn nguồn bạn muốn.</string>
+    <string name="complication_type_priority_value">Giá trị hoặc chỉ báo</string>
+    <string name="complication_type_priority_text">Văn bản</string>
+    <string name="complication_type_priority_icon">Biểu tượng</string>
+    <string name="complication_type_priority_use_default">Sử dụng mặc định</string>
+    <string name="cwf_complication_layout">Bố cục Tiện ích</string>
+    <string name="cwf_complication_layout_description">Vị trí và kích thước của các Tiện ích, được lấy từ mặt đồng hồ tùy chỉnh đã tải.</string>
     <string name="pref_include_external">Thêm các hiển thị bên ngoài vào mẫu</string>
     <string name="pref_switch_external">Chuyển đổi dữ liệu bên ngoài trên mặt đồng hồ</string>
     <string name="custom_pref_show_seconds">Hiển thị giây</string>
@@ -237,6 +247,12 @@
     <string name="complication_blood_glucose_ext1">Đường huyết Ext1</string>
     <string name="complication_blood_glucose_ext2">Đường huyết Ext2</string>
     <string name="complication_bg_graph">Đồ thị BG</string>
+    <string name="complication_cwf_image">Mặt đồng hồ tùy chỉnh</string>
+    <string name="complication_cwf_ambient_bg">Đường huyết Ambient trên mặt đồng hồ tùy chỉnh</string>
+    <string name="complication_cwf_ambient_status">Trạng thái Ambient của mặt đồng hồ tùy chỉnh</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s %2$s</string>
+    <string name="complication_cwf_lower">Hình nền của mặt đồng hồ tùy chỉnh</string>
+    <string name="complication_cwf_upper">Thời gian trên mặt đồng hồ tùy chỉnh</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
