@@ -165,7 +165,16 @@
     <string name="pref_complication_3">Complication 3</string>
     <string name="pref_complication_4">Complication 4</string>
     <string name="pref_complication_5">Complication 5</string>
+    <string name="complication_summary_none">Appuyez pour sélectionner une complication</string>
     <string name="pref_complication_type_priority">Priorité du type de complication</string>
+    <string name="pref_complication_type_priority_all">Par défaut pour tous</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Un changement ici s\'applique la prochaine fois que vous choisissez une source de données. Choisir le même ne suffit pas : choisir une source de données différente, puis choisir celle que vous voulez.</string>
+    <string name="complication_type_priority_value">Valeur ou jauge</string>
+    <string name="complication_type_priority_text">Texte</string>
+    <string name="complication_type_priority_icon">Icône</string>
+    <string name="complication_type_priority_use_default">Choix par défaut</string>
+    <string name="cwf_complication_layout">Mise en page des complications</string>
+    <string name="cwf_complication_layout_description">Position et taille des complications, prises à partir du cadran de montre chargé.</string>
     <string name="pref_include_external">Inclure les vues externes dans le modèle</string>
     <string name="pref_switch_external">Intervertir les données externes sur le cadran</string>
     <string name="custom_pref_show_seconds">Afficher les secondes</string>
@@ -238,6 +247,10 @@
     <string name="complication_blood_glucose_ext1">Glycémie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glycémie Ext2</string>
     <string name="complication_bg_graph">Graphique Gly</string>
+    <string name="complication_cwf_image">Cadran personnalisé</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Arrière-plan du cadran personnalisé</string>
+    <string name="complication_cwf_upper">Horloge du cadran personnalisé</string>
     <string name="complication_br_cob_iob">DB, GA &amp; IA</string>
     <string name="complication_br_cob_iob_ext1">DB, GA &amp; IA Ext1</string>
     <string name="complication_br_cob_iob_ext2">DB, GA &amp; IA Ext2</string>
