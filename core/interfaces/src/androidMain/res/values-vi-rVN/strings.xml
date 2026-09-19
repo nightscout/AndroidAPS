@@ -84,6 +84,11 @@
     <string name="pref_show_week_number">Hiển thị số tuần</string>
     <string name="pref_show_date">Hiển thị ngày</string>
     <string name="pref_show_seconds">Hiển thị giây</string>
+    <string name="pref_show_complication1">Hiển thị thông tin tiện ích 1</string>
+    <string name="pref_show_complication2">Hiển thị thông tin 2</string>
+    <string name="pref_show_complication3">Hiển thị thông tin tiện ích 3</string>
+    <string name="pref_show_complication4">Hiển thị thông tin tiện ích 4</string>
+    <string name="pref_show_complication5">Hiển thị thông tin tiện ích 5</string>
     <string name="default_custom_watchface_comment">Mặt đồng hồ mặc định, bạn có thể nhấn nút EXPORT WATCHFACE để tạo mẫu</string>
     <string name="default_custom_watchface_external_comment">Mặt đồng hồ mặc định bao gồm cả chế độ xem bên ngoài cho người theo dõi, bạn có thể nhấn nút EXPORT WATCHFACE để tạo mẫu</string>
     <string name="wear_default_watchface">Mặt đồng hồ mặc định</string>
