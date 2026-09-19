@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Vòng tròn)</string>
     <string name="label_watchface_digital_style">AAPS(Kỹ thuật số)</string>
     <string name="label_watchface_custom">AAPS(Tùy chỉnh)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Tùy chỉnh) – luôn bật</string>
     <string name="label_actions_tile">Hành động</string>
     <string name="label_temp_target_tile">Mục tiêu tạm thời</string>
     <string name="label_quick_wizard_tile">Thiết lập nhanh</string>
@@ -60,7 +61,7 @@
     <string name="pref_prime_in_menu">Prime trong menu</string>
     <string name="pref_single_target">Mục tiêu đơn lẻ</string>
     <string name="pref_wizard_percentage">Tính toán theo phần trăm</string>
-    <string name="pref_complication_tap_action">Hoạt động khi chạm vào ô hiển thị</string>
+    <string name="pref_complication_tap_action">Thao tác chạm vào Complication</string>
     <string name="pref_complication_bg_graph_hours">Khoảng thời gian hiển thị biểu đồ đường huyết</string>
     <string name="duration_1_hour">1 giờ</string>
     <string name="duration_3_hours">3 giờ</string>
@@ -159,6 +160,11 @@
     <string name="pref_simplify_ui">Giao diện đơn giản</string>
     <string name="pref_vibrate_hourly">Rung báo theo giờ</string>
     <string name="pref_show_weeknumber">Hiển thị số tuần</string>
+    <string name="pref_complication_1">Thông tin tiện ích 1</string>
+    <string name="pref_complication_2">Thông tin tiện ích 2</string>
+    <string name="pref_complication_3">Thông tin tiện ích 3</string>
+    <string name="pref_complication_4">Thông tin tiện ích 4</string>
+    <string name="pref_complication_5">Thông tin tiện ích 5</string>
     <string name="pref_include_external">Thêm các hiển thị bên ngoài vào mẫu</string>
     <string name="pref_switch_external">Chuyển đổi dữ liệu bên ngoài trên mặt đồng hồ</string>
     <string name="custom_pref_show_seconds">Hiển thị giây</string>
