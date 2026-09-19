@@ -358,6 +358,9 @@
     <string name="scene_active">Active</string>
     <string name="scene_ended">Scene ended</string>
     <string name="scene_end_active">End active scene</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Skip to</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Follow-up %1$s will not start</string>
+    <string name="scene_follow_up_format" comment="%1$s=name of the follow-up scene that starts when this scene ends">Follow-up: %1$s</string>
     <string name="scene_confirm_activate">Activate scene \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">End scene \"%1$s\" and revert changes?</string>
     <string name="scene_conflict_active_tt">Active temporary target will be replaced</string>

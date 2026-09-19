@@ -193,10 +193,14 @@ class WearPlugin(
             .drop(1) // Skip initial emission on collection start
             .debounce(2_000L)
             .collectResilient(newScope, aapsLogger, LTag.WEAR) { dataHandlerMobile.resendData("RunningModeChange") }
-        // Refresh wear scene tile whenever the scene list changes (add / update / delete)
+        // Refresh wear scene tile whenever the scene list changes (add / update / delete). The
+        // active state goes too: an edited follow-up changes which button the tile offers.
         scenes.scenesFlow
             .drop(1) // Skip initial replay on subscribe
-            .collectResilient(newScope, aapsLogger, LTag.WEAR) { dataHandlerMobile.sendScenes() }
+            .collectResilient(newScope, aapsLogger, LTag.WEAR) {
+                dataHandlerMobile.sendScenes()
+                dataHandlerMobile.sendActiveSceneState(scenes.hasSceneToStop())
+            }
         // Push active-scene flag to wear so the tile can swap between scene list and STOP button
         scenes.activeFlow
             .collectResilient(newScope, aapsLogger, LTag.WEAR) { dataHandlerMobile.sendActiveSceneState(it) }

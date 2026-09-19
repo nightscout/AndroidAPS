@@ -144,14 +144,37 @@ sealed class EventData : Event() {
     @Serializable
     class ActionSceneStop : EventData()
 
+    /**
+     * The watch asks for the confirmation before ending the active scene. With [triggerChain] the
+     * wearer chose "Skip to" the scene's follow-up rather than plain "End"; the phone builds the
+     * matching confirmation and echoes the flag in [ActionSceneStopConfirmed].
+     */
     @Serializable
-    class ActionSceneStopPreCheck : EventData()
+    data class ActionSceneStopPreCheck(val triggerChain: Boolean = false) : EventData()
 
+    /** The wearer confirmed. [triggerChain] as in [ActionSceneStopPreCheck]; the master re-derives the target itself. */
     @Serializable
-    class ActionSceneStopConfirmed : EventData()
+    data class ActionSceneStopConfirmed(val triggerChain: Boolean = false) : EventData()
 
+    /**
+     * What the phone knows about the active scene, for the scene tile and Loop Status.
+     *
+     * Everything after [active] is defaulted: a phone from before these fields sends only the
+     * boolean, and the watch then behaves as it did, with no name, no end and no Skip button. Keep
+     * new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
+     *
+     * @param sceneName the active scene's name, null when none is active or the phone is old
+     * @param endTime when the scene ends, epoch ms; null for an indefinite scene
+     * @param chainTargetName the follow-up scene that would start on "Skip to", resolved on the
+     *   phone with the master's runtime checks or the client's catalog; null when there is none
+     */
     @Serializable
-    data class ActiveSceneState(val active: Boolean) : EventData()
+    data class ActiveSceneState(
+        val active: Boolean,
+        val sceneName: String? = null,
+        val endTime: Long? = null,
+        val chainTargetName: String? = null
+    ) : EventData()
 
     @Serializable
     data class RunningModeRequest(val timeStamp: Long) : EventData()

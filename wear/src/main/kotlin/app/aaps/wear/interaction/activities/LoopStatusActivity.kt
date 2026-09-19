@@ -52,6 +52,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
 import app.aaps.core.interfaces.rx.weardata.OapsResultInfo
@@ -63,6 +64,7 @@ import app.aaps.wear.interaction.actions.InsulinBlue
 import app.aaps.wear.interaction.actions.LoopClosedColor
 import app.aaps.wear.interaction.actions.LoopDisabledColor
 import app.aaps.wear.interaction.actions.LoopUnknownColor
+import app.aaps.wear.interaction.actions.ScenePurple
 import app.aaps.wear.interaction.actions.TempTargetYellow
 import app.aaps.wear.interaction.actions.WearDivider
 import app.aaps.wear.interaction.actions.WearSecondaryText
@@ -81,6 +83,7 @@ import kotlinx.coroutines.CoroutineStart
 private val TempBasalColor         = Color(0xFFFF9800)
 private val TargetsAccentColor     = Color(0xFF1E88E5)
 private val TempTargetBg           = Color(0x1AF4D700)
+private val SceneBg                = Color(0x1ACE93D8)
 private val AutosensTargetBg       = Color(0x1A77DD77)
 
 private fun loopAgeColor(ageMs: Long): Color {
@@ -203,6 +206,7 @@ private fun LoopStatusContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HeaderCard(mode = data.loopMode, apsName = data.apsName, modeEndTime = data.modeEndTime)
+        data.activeScene?.let { SceneCard(scene = it) }
         ResultCard(
             lastRun = data.lastRun,
             lastEnact = data.lastEnact,
@@ -357,6 +361,59 @@ private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndT
                     .fillMaxWidth()
                     .padding(top = 2.dp)
             )
+        }
+    }
+}
+
+// ─── Scene Card ───────────────────────────────────────────────────────────────
+
+/**
+ * The active scene: its name, how long it still runs, and the follow-up that starts when it ends.
+ * Right under the header, because a scene is the reason the loop looks the way it does, and the
+ * phone shows it the same way, as a banner at the top.
+ */
+@Composable
+private fun SceneCard(scene: ActiveSceneInfo) {
+    val context = LocalContext.current
+
+    StatusCard {
+        CardTitle(stringResource(R.string.label_scene_tile), ScenePurple)
+        Spacer(Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(4.dp))
+                .background(SceneBg)
+                .padding(8.dp)
+        ) {
+            Column {
+                Text(
+                    text = scene.name,
+                    color = ScenePurple,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                val remainingMinutes = scene.endTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() }
+                val timeLine = when {
+                    scene.endTime == null                     -> stringResource(R.string.loop_status_scene_until_ended)
+                    remainingMinutes != null && remainingMinutes > 0 -> {
+                        val endTimeStr = remember(scene.endTime) { DateFormat.getTimeFormat(context).format(Date(scene.endTime)) }
+                        stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr)
+                    }
+                    // Expired, banner still up on the phone: it can still be ended from the tile
+                    else                                      -> stringResource(R.string.loop_status_scene_ended)
+                }
+                Text(
+                    text = timeLine,
+                    color = WearSecondaryText,
+                    fontSize = 11.sp,
+                    modifier = Modifier.padding(top = 3.dp)
+                )
+                scene.chainTargetName?.let {
+                    Spacer(Modifier.height(4.dp))
+                    InfoRow(label = stringResource(R.string.loop_status_scene_follow_up), value = it, valueColor = ScenePurple)
+                }
+            }
         }
     }
 }

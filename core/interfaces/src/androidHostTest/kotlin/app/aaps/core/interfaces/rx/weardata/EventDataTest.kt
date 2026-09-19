@@ -246,6 +246,40 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
+        // Scene follow-up on the watch: the Skip flag both ways, and the state that offers it
+        EventData.ActionSceneStopPreCheck(triggerChain = true).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.ActionSceneStopConfirmed(triggerChain = true).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.ActiveSceneState(active = true, sceneName = "Sleep", endTime = 1_000L, chainTargetName = "Wake up").let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.LoopStatusResponse(
+            timeStamp = 1L,
+            data = LoopStatusData(
+                0L, LoopStatusData.LoopMode.CLOSED, null, null, null, null, null, TargetRange("a", "b", "c", "u"), null,
+                activeScene = ActiveSceneInfo(name = "Sleep", endTime = null, chainTargetName = "Wake up")
+            )
+        ).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+    }
+
+    @Test
+    fun activeSceneStateFromAnOlderPhoneDecodesWithoutTheFollowUpFields() {
+        // A phone from before the follow-up fields sends only the boolean; the watch must not
+        // fall back to Error, and must see "no name, no end, no follow-up"
+        val decoded = EventData.deserialize("""{"type":"app.aaps.core.interfaces.rx.weardata.EventData.ActiveSceneState","active":true}""")
+        assertThat(decoded).isEqualTo(EventData.ActiveSceneState(active = true))
+        // And the other way round: an older watch reads a parameterless stop as "no chain"
+        val stop = EventData.deserialize("""{"type":"app.aaps.core.interfaces.rx.weardata.EventData.ActionSceneStopConfirmed"}""")
+        assertThat(stop).isEqualTo(EventData.ActionSceneStopConfirmed(triggerChain = false))
     }
 
     @Test

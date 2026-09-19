@@ -9,6 +9,7 @@ import android.content.res.Configuration
 import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -16,6 +17,7 @@ import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.Scene
+import app.aaps.core.data.model.SceneLifecycle
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
@@ -60,6 +62,7 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableRunningMode
@@ -67,9 +70,11 @@ import app.aaps.core.interfaces.rx.weardata.LoopStatusData
 import app.aaps.core.interfaces.rx.weardata.OapsResultInfo
 import app.aaps.core.interfaces.rx.weardata.TargetRange
 import app.aaps.core.interfaces.rx.weardata.TempTargetInfo
+import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
+import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -162,6 +167,8 @@ class DataHandlerMobile(
     @Inject lateinit var automation: Automation
     @Inject lateinit var scenes: SceneAutomationApi
     @Inject lateinit var sceneActions: SceneActions
+    @Inject lateinit var activeSceneSync: ActiveSceneSync
+    @Inject lateinit var sceneChainResolver: SceneChainResolver
 
     // App lifetime: this is a @Singleton that subscribes in init and
     // never tears down. Dispatchers.IO because that is what the io scheduler gave these handlers, and
@@ -355,11 +362,12 @@ class DataHandlerMobile(
         }
         onEvent<EventData.ActionSceneStopPreCheck> {
             if (rejectIfNotReady()) return@onEvent
-            handleSceneStopPreCheck()
+            handleSceneStopPreCheck(it)
         }
         onEvent<EventData.ActionSceneStopConfirmed> {
             if (rejectIfNotReady()) return@onEvent
-            onCommitResult(sceneActions.stop(triggerChain = false))
+            // The master re-derives the follow-up itself and falls back to a plain stop if it is gone
+            onCommitResult(sceneActions.stop(triggerChain = it.triggerChain))
         }
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }
@@ -548,7 +556,8 @@ class DataHandlerMobile(
             autosensTarget = autosensTarget,
             defaultRange = defaultRange,
             oapsResult = oapsResultInfo,
-            modeEndTime = modeEndTime
+            modeEndTime = modeEndTime,
+            activeScene = activeSceneInfo()
         )
     }
 
@@ -720,21 +729,51 @@ class DataHandlerMobile(
         }
     }
 
-    private fun handleSceneStopPreCheck() {
+    // internal (not private) so DataHandlerMobileSceneTest can drive it without RxBus scaffolding.
+    internal suspend fun handleSceneStopPreCheck(command: EventData.ActionSceneStopPreCheck) {
         // Build confirm locally — no master round-trip needed before showing "End active scene".
         // The watch waits for RemoteDelivered (deferConfirm) while the stop relays to master.
         // Wider than "a scene is running": ending an expired-but-undismissed scene from the watch is a
         // valid stop (stopActiveScene dismisses it), and it is the only remote way to clear that banner.
         if (!scenes.hasSceneToStop()) return sendError(rh.gs(CoreUiStrings.scene_ended))
+        val state = activeSceneSync.getActiveState()
+        val chainTarget = state?.let { chainTargetOf(it) }
+        // Skip was offered for a follow-up that can have been disabled or deleted since the tile
+        // was drawn; with nothing to skip to, this is a plain End and the confirm says so
+        val triggerChain = command.triggerChain && chainTarget != null
+        val lines = buildList {
+            state?.let { add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, it.scene.name)) }
+            if (triggerChain) {
+                add(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_skip_to_label)))
+                add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, chainTarget!!.name))
+            } else {
+                add(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_end_active)))
+                // The phone's own dialog offers the follow-up next to End; the watch has one button
+                // per choice, so the End confirm says what the other button would have done
+                chainTarget?.let { add(EventData.ConfirmActionLine(ConfirmationRole.INFO.name, rh.gs(CoreUiStrings.scene_end_follow_up_not_started, it.name))) }
+            }
+        }
         sendToWear(
             EventData.ConfirmAction(
                 title = rh.gs(CoreUiStrings.scenes),
                 message = "",
-                returnCommand = EventData.ActionSceneStopConfirmed(),
-                lines = listOf(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_end_active))),
+                returnCommand = EventData.ActionSceneStopConfirmed(triggerChain = triggerChain),
+                lines = lines,
                 deferConfirm = config.AAPSCLIENT
             )
         )
+    }
+
+    /**
+     * The follow-up the active scene would start, resolved the way the phone's own End dialog does
+     * it: the master checks that the target can run right now, a client only that it exists and
+     * is enabled, since the master re-validates on commit. Null once the scene has expired: the
+     * master's expiry already dealt with the follow-up, so there is nothing left to skip to.
+     */
+    private suspend fun chainTargetOf(state: ActiveSceneState): Scene? = when {
+        state.lifecycle != SceneLifecycle.ACTIVE -> null
+        config.AAPSCLIENT                       -> sceneChainResolver.resolveCatalogChainTarget(state.scene)
+        else                                    -> sceneChainResolver.resolveRunnableChainTarget(state.scene)
     }
 
     // internal (not private) so DataHandlerMobileWearBolusTest can drive it without RxBus scaffolding.
@@ -1197,9 +1236,29 @@ class DataHandlerMobile(
         sendToWear(EventData.SceneList(ArrayList(enabled.map { it.toWear(now) })))
     }
 
-    fun sendActiveSceneState(active: Boolean) {
-        sendToWear(EventData.ActiveSceneState(active))
+    /**
+     * What the watch shows for the active scene: the tile's End button, its Skip button when a
+     * follow-up can start, and the Loop Status card. [active] comes from the caller so this agrees
+     * with `scenes.activeFlow`, which is wider than "running": an expired scene whose banner is
+     * still up can be ended too, and then carries its name but no follow-up.
+     */
+    suspend fun sendActiveSceneState(active: Boolean) {
+        val state = if (active) activeSceneSync.getActiveState() else null
+        sendToWear(
+            EventData.ActiveSceneState(
+                active = active,
+                sceneName = state?.scene?.name,
+                endTime = state?.endsAt,
+                chainTargetName = state?.let { chainTargetOf(it) }?.name
+            )
+        )
     }
+
+    /** The active scene for Loop Status, or null; same source and same follow-up rule as [sendActiveSceneState] */
+    private suspend fun activeSceneInfo(): ActiveSceneInfo? =
+        activeSceneSync.getActiveState()?.takeIf { scenes.hasSceneToStop() }?.let { state ->
+            ActiveSceneInfo(name = state.scene.name, endTime = state.endsAt, chainTargetName = chainTargetOf(state)?.name)
+        }
 
     private suspend fun sendTreatments() {
         val now = System.currentTimeMillis()
