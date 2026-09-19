@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS (Cercle)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
     <string name="label_watchface_custom">AAPS (perso)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Personnalisé) toujours visible</string>
     <string name="label_actions_tile">Actions</string>
     <string name="label_temp_target_tile">Cible Temp</string>
     <string name="label_quick_wizard_tile">Assistant</string>
@@ -159,6 +160,12 @@
     <string name="pref_simplify_ui">Interface simplifiée</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
     <string name="pref_show_weeknumber">Afficher numéro semaine</string>
+    <string name="pref_complication_1">Complication 1</string>
+    <string name="pref_complication_2">Complication 2</string>
+    <string name="pref_complication_3">Complication 3</string>
+    <string name="pref_complication_4">Complication 4</string>
+    <string name="pref_complication_5">Complication 5</string>
+    <string name="pref_complication_type_priority">Priorité du type de complication</string>
     <string name="pref_include_external">Inclure les vues externes dans le modèle</string>
     <string name="pref_switch_external">Intervertir les données externes sur le cadran</string>
     <string name="custom_pref_show_seconds">Afficher les secondes</string>
