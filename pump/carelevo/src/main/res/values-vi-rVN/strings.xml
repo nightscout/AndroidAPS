@@ -81,6 +81,31 @@
     <string name="carelevo_patch_step_1">BƯỚC 1.</string>
     <string name="carelevo_patch_step_2">BƯỚC 2.</string>
     <string name="carelevo_patch_step_3">BƯỚC 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">Tháo nắp kim</string>
+    <string name="carelevo_patch_connect_step_1_desc">Lấy miếng dán ra khỏi vỉ và tháo nắp kim.</string>
+    <string name="carelevo_patch_connect_step_2_title">Bật thiết bị và kết nối</string>
+    <string name="carelevo_patch_connect_step_2_desc">Nhấn nút nguồn trong hơn 1 giây. Sau khi nghe tiếng bíp, nhấn nút [Tìm miếng dán] bên dưới.</string>
+    <string name="carelevo_patch_safety_check_start_title">Kiểm tra an toàn</string>
+    <string name="carelevo_patch_safety_check_end_title">Đã hoàn tất kiểm tra an toàn</string>
+    <string name="carelevo_patch_safety_check_start_desc">Đã kết nối miếng dán thành công.\nVui lòng nhấn nút [Kiểm tra an toàn].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Đang kiểm tra an toàn.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Đã hoàn tất kiểm tra an toàn.\nVui lòng nhấn nút Tiếp theo.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Vui lòng kiểm tra xem có giọt insulin ở đầu kim hay không.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Nếu không thấy giọt insulin, hãy nhấn nút [Thử lại].</string>
+    <string name="carelevo_patch_attach_step1_title">Sát khuẩn vị trí dán</string>
+    <string name="carelevo_patch_attach_step1_desc">Làm sạch kỹ bằng miếng bông tẩm cồn.</string>
+    <string name="carelevo_patch_attach_step2_title">Tháo lớp màng bảo vệ</string>
+    <string name="carelevo_patch_attach_step2_desc">Lấy miếng dán ra khỏi vỉ và tháo nắp kim.</string>
+    <string name="carelevo_patch_attach_step3_title">Dán miếng dán</string>
+    <string name="carelevo_patch_attach_step3_desc">Dán miếng dán lên da sao cho chấm đánh dấu hướng lên trên.</string>
+    <string name="carelevo_patch_attach_step4_desc">Sau khi dán miếng dán, nhấn nút Sẵn sàng.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Tháo nắp bảo vệ</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Xoay nắp theo hướng mũi tên và tháo nắp.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Đưa kim vào</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Nhấn nút đẩy của dụng cụ đặt xuống hết cỡ. Khi kim được đưa vào thành công, thiết bị sẽ phát ra tiếng bíp.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Nhấn và giữ trong 10 giây.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Còn %d lần thử lại để đưa kim vào.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Hủy kích hoạt miếng dán và bắt đầu sử dụng miếng dán mới?</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
@@ -89,8 +114,13 @@
     <!-- Delivery Resume/Suspend -->
     <!-- Safety Check -->
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_not_used_app">Tự động tắt</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">Chưa kết nối Bluetooth</string>
     <!-- Warning Descriptions -->
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_battery">Pin yếu</string>
+    <string name="alarm_feat_title_alert_not_used_app">Tự động tắt</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">Chưa kết nối Bluetooth</string>
     <!-- Alert Descriptions -->
     <!-- Notice Titles -->
     <!-- Notice Descriptions -->
