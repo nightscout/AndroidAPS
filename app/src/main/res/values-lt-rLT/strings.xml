@@ -4,4 +4,12 @@
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
     <string name="select">Pasirinkti</string>
     <string name="set">Nustatyti</string>
+    <string name="migrating_preferences">Perkeliamos nuostatos…</string>
+    <string name="optimizing_database">Optimizuojama duomenų bazė…</string>
+    <string name="initializing_plugins">Inicijuojami papildiniai…</string>
+    <string name="initializing">Inicijuojama…</string>
+    <string name="migrating_profile_switches">Perkeliami profilio perjungimai…</string>
+    <string name="migrating_effective_profile_switches">Perkeliami pritaikyti profilio perjungimai…</string>
+    <string name="migrating_boluses">Perkeliami bolusai…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">Senesniuose įrašuose nebuvo insulino konfigūracijos ir nebuvo aktyvaus profilio, todėl jiems naudotas %1$s. Patikrinkite insulino nustatymus — jau perkelti įrašai vėliau neatnaujinami.</string>
 </resources>
