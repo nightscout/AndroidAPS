@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Kurie teiginiai apie IVT yra teisingi?</string>
     <string name="dia_label_exam">Insulino veikimo trukmė (IVT)</string>
-    <string name="dia_profile">Insulino konfigūracijoje turėtumėte nustatyti DIA reikšmę.</string>
     <string name="dia_minimumis5h">Mažiausia IVT reikšmė - 5 valandos.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Jei IVT reikšmė, kurią naudojote pompoje prieš pradedant naudotis AndroidAPS, tiko - jos nereikia keisti.</string>
@@ -63,7 +62,6 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="prerequisites_label">Būtinosios sąlygos</string>
     <string name="prerequisites_what">Ko reikia norint įvesti nustatymus ir pradėti naudoti AndroidAPS?</string>
-    <string name="prerequisites_build">Būdas sukurti AAPS naudojant naršyklę arba kompiuterį, kuriame įdiegta „Android Studio“.</string>
     <string name="prerequisites_pump">Tinkamos insulino pompos, jei ketinate naudoti uždarą ciklą.</string>
     <string name="prerequisites_nightscout">Nightscout, kad galima būtų išsaugoti ir peržiūrėti visų duomenų bei nustatymų istoriją.</string>
     <string name="prerequisites_beanandroiddeveloper">Turėti programavimo ar kodo redagavimo patirties.</string>
@@ -76,9 +74,7 @@
     <string name="prerequisites2_supportedcgm">Palaikomo sensoriaus ir tinkamos programėlės glikemijos duomenims registruoti.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">AAPS naujinimas</string>
-    <string name="update_git">Kompiuteryje turi būti įdiegta ir sukonfigūruota Git arba AAPS turite kurti naršyklėje.</string>
     <string name="update_asap">Išleidus AndroidAPS naujinį, ankstesnių versijų veikimas po tam tikro laiko gali būti nuotoliniu būdu apribotas.</string>
-    <string name="update_keys">Jei kuriate naudodami „Android Studio“, išsaugokite raktų saugyklą, pasižymėkite jos vietą ir naujinimams naudokite tą patį pasirašymo raktą kaip ankstesniam diegimui.</string>
     <string name="update_askfriend">Jei kyla sunkumų kuriant apk failą, galite instaliuoti apk failą, kurį sukūrė draugas.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Trikčių šalinimas</string>
@@ -97,7 +93,6 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid® / Humulin R® / trumpo veikimo žmogaus insulinas.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="sensitivity_label">Jautrumo įskiepiai</string>
     <string name="sensitivity_adjust">Jautrumo įskiepiai leidžia AndroidAPS prisitaikyti prie laikinų ar trumpalaikių jautrumo insulinui pokyčių (pavyzdžiui, hormoninių pokyčių ar absorbcijos problemų infuzijos vietoje).</string>
@@ -196,20 +191,6 @@
     <string name="other_medication_label">Kiti vaistai. Prašome perskaityti toliau pateiktą pranešimą ir pažymėti langelį, kad patvirtintumėte sutikimą.</string>
     <string name="other_medication_text">AAPS sumažina bazę ar sustabdo insulino tiekimą, kad neištiktų hipoglikemija. SGLT2 inhibitorių grupės vaistai (gliflozinai) gali neleisti glikemijai padidėti, todėl dėl sistemos veiksmų gali atsirasti pavojingas insulino trūkumas ir diabetinė ketoacidozė.
  \nPrekių ženklų pavadinimai apima: „Invokana®“, „Forxiga®“, „Jardiance®“, „Steglatro®“, „Suglat®“, „Apleway®“, „Deberza®“, „Synjardy®“, „Vokanamet®“, „Xigduo®“.\n\n Pažadu nevartoti tokių vaistų naudodamas AAPS, arba prieš vartojant juos, išjungti uždarą ciklą.</string>
-    <string name="concentration_feature_label">Insulino koncentracijos valdymas</string>
-    <string name="u200_with_profile">Kol AAPS nepalaikė skirtingų insulino koncentracijų, naudotojai U200 naudojo nustatę 50 % profilį, kad visos reikšmės būtų sumažintos perpus. Kurie teiginiai apie tokį nustatymą yra teisingi?</string>
-    <string name="u200_with_profile_reports">AAPS vidinės duomenų bazės ir NS ataskaitų duomenys tampa neteisingi. Norint matyti tikrąją būseną, ypač gydytojams ir sveikatos priežiūros komandai, visas reikšmes (bolusus, greičius ir TDD) reikia padauginti iš 2.</string>
-    <string name="u200_with_profile_pens">Jei išoriniam bolusui suleisti naudoju U200 švirkštiklį, man nereikia perskaičiuoti AAPS ir švirkštiklio reikšmių.</string>
-    <string name="u200_with_profile_pens2">Nepriklausomai nuo išoriniam bolusui naudojamo švirkštiklio (U100 ar U200), kiekvienam išoriniam bolusui turiu perskaičiuoti AAPS apskaičiuotą kiekį į švirkštiklyje pasirenkamą kiekį.</string>
-    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
     <string name="switch_u200_profile">Iki šiol su U200 insulinu naudojote 50 % profilio metodą, o dabar norite pereiti prie naujos insulino koncentracijos funkcijos. Kurie iš šių teiginių yra teisingi?</string>
-    <string name="switch_u200_profile_any_time">Galiu pereiti bet kuriuo metu, nes pompoje jau yra tinkamas U200 insulinas.</string>
     <string name="switch_u200_profile_ps">Turiu sukurti dvigubai agresyvesnį profilį (200 % dabartinio profilio) ir, pasirinkus U200 insuliną, jį sinchronizuoti po kito pompos rezervuaro keitimo.</string>
-    <string name="switch_u200_profile_dynisf">Turiu bent savaitei išjungti DynISF, kad TDD visiškai atitiktų faktinę tarptautiniais vienetais apskaičiuotą TDD reikšmę.</string>
-    <string name="switch_u200_profile_mental">Pakeitus koncentraciją, kelias savaites reikės skirti ypatingą dėmesį, kol bolusus, bazinius greičius ir TDD įprasite vertinti tarptautiniais vienetais.</string>
-    <string name="switch_u100_u200">Šiuo metu naudojate U100 ir, pasitelkę naują insulino koncentracijos funkciją, planuojate pereiti prie kitos koncentracijos. Ką turėtumėte daryti?</string>
-    <string name="switch_u100_u200_profile">Turiu pakeisti savo profilį.</string>
-    <string name="switch_u100_u200_tube">Vamzdelinėse pompose bolusui suleisti niekada neturėčiau naudoti pačios pompos naudotojo sąsajos.</string>
-    <string name="switch_u100_u200_pen">Po pakeitimo vis tiek turiu perskaičiuoti AAPS ir švirkštikliu leidžiamų išorinių bolusų reikšmes.</string>
-    <string name="switch_u100_u200_change">Insulino koncentraciją galima pakeisti tik keičiant insuliną rezervuare arba keičiant pleistrą ar Pod.</string>
 </resources>
