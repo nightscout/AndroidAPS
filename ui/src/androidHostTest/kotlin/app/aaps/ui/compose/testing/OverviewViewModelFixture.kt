@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.GraphConfig
@@ -89,6 +90,7 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
     val processedDeviceStatusData: ProcessedDeviceStatusData = mock()
     val iobCobCalculator: IobCobCalculator = mock()
     val constraintChecker: ConstraintsChecker = mock()
+    val sensitivityOverview: SensitivityOverview = mock()
     val graphConfigRepository: GraphConfigRepository = mock()
     val nsClient: NsClient = mock()
     val visibilityContext: VisibilityContext = mock()
@@ -170,11 +172,7 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
     }
 
     val chipsViewModel: ChipsViewModel by lazy {
-        ChipsViewModel(
-            cache, iobCobCalculator, loop, screen.config, persistenceLayer, constraintChecker, profileFunction,
-            processedDeviceStatusData, screen.profileUtil, activePlugin, rh, decimalFormatter, screen.dateUtil,
-            aapsLogger, screen.preferences, rxBus
-        )
+        ChipsViewModel(cache, iobCobCalculator, loop, screen.config, persistenceLayer, sensitivityOverview, rh, decimalFormatter, rxBus)
     }
 
     val statusViewModel: StatusViewModel by lazy {

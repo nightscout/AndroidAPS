@@ -62,6 +62,7 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -170,6 +171,7 @@ class DataHandlerMobile(
     @Inject lateinit var sceneActions: SceneActions
     @Inject lateinit var activeSceneSync: ActiveSceneSync
     @Inject lateinit var sceneChainResolver: SceneChainResolver
+    @Inject lateinit var sensitivityOverview: SensitivityOverview
 
     // App lifetime: this is a @Singleton that subscribes in init and
     // never tears down. Dispatchers.IO because that is what the io scheduler gave these handlers, and
@@ -564,7 +566,8 @@ class DataHandlerMobile(
             modeEndTime = modeEndTime,
             activeScene = activeSceneInfo(),
             profile = profileInfo(dateUtil.now(), sceneRecords),
-            modeFromScene = runningModeRecord.id == sceneRecords?.rmId
+            modeFromScene = runningModeRecord.id == sceneRecords?.rmId,
+            sensitivity = sensitivityOverview.build().lines
         )
     }
 

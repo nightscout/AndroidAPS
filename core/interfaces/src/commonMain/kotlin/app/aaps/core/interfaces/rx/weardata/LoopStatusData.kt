@@ -20,7 +20,9 @@ data class LoopStatusData(
     /** The profile in force, null when none is set. Defaulted and last, like [activeScene]. */
     val profile: ProfileInfo? = null,
     /** Whether the active scene set the running mode, so the watch can mark it. Defaulted and last. */
-    val modeFromScene: Boolean = false
+    val modeFromScene: Boolean = false,
+    /** The sensitivity lines the phone's Overview dialog shows, translated; empty when unknown. Defaulted and last. */
+    val sensitivity: List<String> = emptyList()
 ) {
 
     @Serializable

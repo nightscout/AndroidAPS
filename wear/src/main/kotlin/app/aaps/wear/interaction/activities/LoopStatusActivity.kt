@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -92,6 +92,7 @@ private val SceneBg                = Color(0x1ACE93D8)
 // small screen read as the same thing
 private val ProfileAccentColor     = Color(0xFF26A69A)
 private val ProfileBg              = Color(0x1A26A69A)
+private val SensitivityAccentColor = Color(0xFFEC407A)
 private val AutosensTargetBg       = Color(0x1A77DD77)
 
 private fun loopAgeColor(ageMs: Long): Color {
@@ -223,6 +224,8 @@ private fun LoopStatusContent(
         data.activeScene?.let { SceneCard(scene = it) }
         TargetsCard(tempTarget = data.tempTarget, autosensTarget = data.autosensTarget, defaultRange = data.defaultRange, dateUtil = dateUtil)
         ProfileCard(profile = data.profile)
+        // Last: the longest card, and what profile runs matters more than how sensitive it is
+        if (data.sensitivity.isNotEmpty()) SensitivityCard(lines = data.sensitivity)
         RefreshButton(onClick = onRefresh)
     }
 }
@@ -835,5 +838,24 @@ private fun ProfileModifierRows(profile: ProfileInfo) {
             label = stringResource(R.string.loop_status_profile_timeshift),
             value = stringResource(R.string.loop_status_profile_timeshift_value, profile.timeshiftHours)
         )
+    }
+}
+
+// ─── Sensitivity Card ─────────────────────────────────────────────────────────
+
+/**
+ * The lines the phone's sensitivity dialog shows, as the phone built them: autosens, the ISF from
+ * the profile and the one in use. Finished text, so nothing is formatted here and the watch
+ * cannot disagree with the phone.
+ */
+@Composable
+private fun SensitivityCard(lines: List<String>) {
+    StatusCard {
+        CardTitle(stringResource(R.string.loop_status_sensitivity), SensitivityAccentColor)
+        Spacer(Modifier.height(8.dp))
+        lines.forEachIndexed { index, line ->
+            if (index > 0) Spacer(Modifier.height(3.dp))
+            Text(text = line, color = Color.White, fontSize = 12.sp)
+        }
     }
 }
