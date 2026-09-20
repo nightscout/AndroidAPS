@@ -15,7 +15,6 @@
     <string name="dana_model">%1$s\nModelis: %2$02X\nProtokolas: %3$02X\nKodas: %4$02X</string>
     <string name="processinghistory">Apdorojama</string>
     <string name="danar_enableextendedbolus">Aktyvuoti ištęstinius bolusus pompoje</string>
-    <string name="danar_disablebolusblock">Pompoje įjungtas boluso blokavimas. Kol jis aktyvus, AAPS negali suleisti insulino. Pompos nustatymuose išjunkite boluso blokavimą.</string>
     <string name="overview_bolusprogress_stoped">Sustabdyta</string>
     <string name="unsupportedfirmware">Pompos programinės įrangos versija nepalaikoma</string>
     <string name="pumperror">Pompos klaida</string>
@@ -38,7 +37,6 @@
     <string name="gettingtempbasalstatus">Gaunamas laikinos bazės statusas</string>
     <string name="gettingpumpsettings">Gaunami pompos nustatymai</string>
     <string name="gettingpumptime">Gaunamas pompos laikas</string>
-    <string name="largetimedifftitle">Didelis laiko skirtumas</string>
     <string name="largetimediff">Didelis laiko skirtumas:\nLaikas pompoje skiriasi daugiau nei 1,5 val.\nNustatykite laiką pompoje rankiniu būdu ir įsitikinkite, kad įrašai iš pompos istorijos nesukelia netikėtų sistemos veiksmų.\nJei įmanoma, ištrinkite istoriją pompoje prieš keisdami laiką arba atjunkite uždarąjį ciklą vienai IVT po paskutinio neteisingo istorijos įrašo ar mažiausiai vienai IVT nuo dabar.</string>
     <string name="pairfirst">Susiekite pompą su telefonu!</string>
     <string name="approachingdailylimit">Artėja paros insulino limitas</string>
@@ -93,9 +91,6 @@
     <string name="danars_password_title">Pompos slaptažodis (tik v1)</string>
     <string name="danar_password_title">Pompos slaptažodis</string>
     <string name="danar_useextended_title">Naudoti ištęstinį bolusą &gt;200%</string>
-    <string name="bolus_speed_12">12 s/U</string>
-    <string name="bolus_speed_30">30 s/U</string>
-    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="rs_loginsulinchange_title">Įrašyti rezervuaro keitimą</string>
     <string name="rs_loginsulinchange_summary">Įtraukti į terapijos skiltį įvykį „Insulino pakeitimas“, jei jis aptinkamas istorijoje</string>
@@ -105,18 +100,4 @@
     <string name="num1pin">1: (12 skaitmenų)</string>
     <string name="num2pin">2: (8 skaitmenys)</string>
     <string name="basal_bolus_step">Bazės / boluso žingsnis</string>
-    <string name="connecting_to_pump">Jungiamasi prie pompos…</string>
-    <string name="pairing_successful">Sėkmingai susieta!</string>
-    <string name="pairing_successful_message">Pompa prijungta ir paruošta naudoti.</string>
-    <string name="cancel_pairing_title">Atšaukti susiejimą?</string>
-    <string name="cancel_pairing_message">Susiejimas bus nutrauktas.</string>
-    <string name="done">Baigta</string>
-    <string name="open_bluetooth_settings">Atverti Bluetooth nustatymus</string>
-    <string name="enter_pump_password">Įveskite pompos slaptažodį</string>
-    <string name="select_paired_device">Pasirinkite susietą įrenginį</string>
-    <string name="no_paired_devices">Susietų Dana įrenginių nerasta. Pirmiausia susiekite pompą Android Bluetooth nustatymuose.</string>
-    <string name="password_hint">4 skaitmenų slaptažodis (0–9999)</string>
-    <string name="connecting_verifying">Jungiamasi ir tikrinamas slaptažodis…</string>
-    <string name="password_ok">Slaptažodis sėkmingai patvirtintas!</string>
-    <string name="password_wrong">Slaptažodis neteisingas. Grįžkite ir pataisykite.</string>
 </resources>
