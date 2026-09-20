@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="ns_client_bg">NSClient</string>
-    <string name="ns_client_bg_short">NS Glik</string>
+    <string name="ns_client_bg">NSClient glikemija</string>
+    <string name="ns_client_bg_short">NS KG</string>
     <string name="description_source_ns_client">Gauti glikemijos duomenis iš Nightscout</string>
     <string name="source_xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Gauti BG reikšmes iš xDrip+ ir suderinamų programų (Juggluco ir kt.).</string>
+    <string name="description_source_xdrip">Gauti glikemijos reikšmes iš xDrip+ ir suderinamų programų (Juggluco ir kt.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Gauti glikemijos duomenis iš \'Build Your Own Dexcom App\'</string>
@@ -24,7 +24,7 @@
     <string name="description_source_tomato">Gauti glikemijos duomenis iš Tomato (MiaoMiao)</string>
     <string name="random_bg">Atsitiktinė glikemija</string>
     <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
-    <string name="random_bg_short">AG</string>
+    <string name="random_bg_short">KG</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Gauti gliukozės duomenis iš Syai/Ottai App.</string>
@@ -36,7 +36,7 @@
     <string name="description_source_patched_sino_app">Gauti gliukozės duomenis iš Patched Sino App.</string>
     <!-- Instara App -->
     <string name="instara_app">Instara</string>
-    <string name="description_source_instara_app">Gauti BG reikšmes iš Instara App.</string>
+    <string name="description_source_instara_app">Gauti glikemijos reikšmes iš Instara App.</string>
     <!-- Instara preferences -->
     <string name="pref_title_instara_history_request">Instara istorinių duomenų užklausa</string>
     <string name="pref_summary_instara_history_request">Fone užklausti galimai trūkstamų istorinių duomenų</string>
