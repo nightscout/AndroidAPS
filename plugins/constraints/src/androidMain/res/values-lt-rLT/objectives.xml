@@ -16,12 +16,9 @@
     <string name="objectives_maxbasal">Atlikite veiksmą, kad įvykdytumėte rekomendaciją</string>
     <string name="objectives_maxbasal_learned">Būkite dėmesingi nustatydami saugumo parametrus ir derinkite juos, kai reikia.</string>
     <string name="objectives_maxiobzero_objective">Pradėkite uždaro ciklo režimą su pompos stabdymu esant žemai glikemijai</string>
-    <string name="objectives_maxiobzero_gate">Kelias dienas naudokite uždarą ciklą insulino tiekimo sustabdymo esant žemam gliukozės kiekiui (LGS) režimu (t. y. didžiausias IOB = 0 nustatomas automatiškai), nepatirdami per daug LGS įvykių.</string>
     <string name="objectives_maxiobzero_learned">Nustačius nulinį MaksAIO, sistema saugos Jus nuo hipoglikemijų ir nedidins nustatytos bazės (išskyrus tas situacijas, kai AIO yra minusinis)</string>
     <string name="objectives_maxiob_objective">Koreguokite savo uždarąjį ciklą po truputį didindami maks AIO ir mažindami tikslinę glikemijos reikšmę</string>
     <string name="objectives_maxiob_gate">Praleiskite keletą dienų ir bent vieną naktį be hipoglikemijos aliarmų</string>
-    <string name="objectives_maxiob_learned">Vaikui augant atnaujinkite didžiausią IOB. Neleiskite sistemai suleisti daugiau insulino, nei galite kompensuoti maistu — labai didelė reikšmė yra blogas pasirinkimas. Paprastuoju režimu didžiausias IOB apskaičiuojamas automatiškai</string>
-    <string name="maxiobset">Didžiausias IOB nustatytas tinkamai (paprastuoju režimu nebūtina)</string>
     <string name="objectives_autosens_objective">Jei reikia, paderinkite valandines bazės vertes bei pagrindinius parametrus ir įgalinkite Autosens funkciją</string>
     <string name="objectives_autosens_gate">1 savaitę praleiskite sėkmingai naudodami uždarąjį ciklą dienos metu ir įvesdami visus valgomus angliavandenius</string>
     <string name="objectives_autosens_learned">Jei Jūsų autosens rezultatai nesvyruoja apie 100%, tikėtina, kad profilis turi klaidų.</string>
@@ -38,10 +35,7 @@
     <string name="objectives_usage_objective">Išmokite valdyti AAPS</string>
     <string name="objectives_usage_gate">Atlikite įvairius veiksmus su AAPS</string>
     <string name="objectives_usage_learned">Sužinojote AAPS valdymo pagrindus. Pagrindiniai valdikliai yra Pradžios lange, pasiekiami spustelėjus arba ilgai spustelėjus. Daugiau valdiklių yra Veiksmų lange. Sužinojote, kaip iškelti įskiepio langą į viršutinį slenkantį meniu arba leisti jį rodyti viršutiniame kairiajame įgalintų įskiepių sąraše.</string>
-    <string name="objectives_useprofileswitch">10 min. nustatykite 90 % profilį</string>
-    <string name="objectives_usedisconnectpump">Imituokite dušą. Atjunkite pompą 1 val.</string>
     <string name="objectives_usereconnectpump">... ir iš naujo prijunkite tuo pačiu būdu</string>
-    <string name="objectives_usetemptarget">Sukurkite pasirinktinį laikiną tikslą, galiojantį 10 min.</string>
     <string name="objectives_useloop">Peržiūrėkite Ciklo įskiepio turinį</string>
     <string name="objectives_usescale">Slinkti arba keisti gliukozės grafiko mastelį</string>
     <string name="objectives_exam_objective">Pasitikrinkite žinias</string>
@@ -70,9 +64,6 @@
     <string name="objectives_exam_learned_breadgrams">Angliavandeniai įvedami tik gramais.</string>
     <string name="objectives_exam_learned_ecarbs">Ištęsti AV pakeičia pompose įprastai naudojamus ištęstus bolusus.</string>
     <string name="objectives_exam_learned_nsclient">Nuotolinis stebėjimas ir valdymas galimi, bet kai kurios funkcijos neveikia.</string>
-    <string name="objectives_exam_learned_concentration1">Naudojant U200 insuliną su 50 % profiliu, reikšmes reikės nuolat perskaičiuoti: išoriniams bolusams švirkštikliais ir visoms standartinėms AAPS ar NS ataskaitoms, kurių duomenys taps neteisingi ir sveikatos priežiūros komandai turės būti perskaičiuoti į IU.</string>
-    <string name="objectives_exam_learned_concentration2">Pereinant nuo U200 su 50 % profiliu prie U200 su insulino koncentracijos funkcija reikės sukurti naują stipresnį profilį, savaitei išjungti DynISF ir įprasti vertinti dozes tarptautiniais vienetais.</string>
-    <string name="objectives_exam_learned_concentration3">Insulino koncentraciją galima keisti tik keičiant insuliną arba pleistrą. Svarbiausia, ypač naudojant vamzdelines pompas, bolusų niekada neleiskite tiesiogiai per pompos naudotojo sąsają.</string>
     <string name="answerdisabledto">Atsakymas sustabdytas: %1$s</string>
     <string name="wronganswer">Neteisingas atsakymas!</string>
     <string name="unfinshed_button">Kitas neužbaigtas</string>
@@ -87,14 +78,4 @@
     <string name="requirementnotmet">Tikslo reikalavimai neįvykdyti</string>
     <string name="what_i_ve_learned">Ką išmokote:</string>
     <string name="verify_master_password">Pasitikrinkite, ar žinote pagrindinį slaptažodį</string>
-    <string name="objectives_collapse">Mažiau</string>
-    <string name="objectives_expand">Daugiau</string>
-    <string name="objectives_no_learned">Šiam tikslui neįrašyta jokių pamokų.</string>
-    <string name="objectives_open_exam">Atverti egzaminą</string>
-    <string name="objectives_exam_question_progress">%1$d klausimas iš %2$d</string>
-    <string name="objectives_exam_reset">Pradėti iš naujo</string>
-    <string name="objectives_exam_previous">Ankstesnis</string>
-    <string name="objectives_exam_next">Kitas</string>
-    <string name="objectives_exam_next_unanswered">Kitas neatsakytas</string>
-    <string name="objectives_show_hint">Užuomina</string>
 </resources>
