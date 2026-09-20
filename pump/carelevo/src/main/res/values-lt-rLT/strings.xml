@@ -202,7 +202,7 @@
     <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS baigtas, nes buvo pristabdytas.</string>
     <string name="alarm_feat_desc_notice_lgs_ended_time_over">LGS baigtas, nes praėjo nustatytas laikas.</string>
     <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS baigtas, nes buvo išjungtas.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">LGS baigtas, nes CGM reikšmė viršijo nustatytą ribą.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">Stabdymo prie žemos glikemijos režimas išjungtas, nes gliukozės reikšmė pakilo virš nustatytos ribos.</string>
     <string name="alarm_feat_desc_notice_lgs_ended_unknown">LGS baigtas dėl nežinomos priežasties.</string>
     <string name="alarm_feat_desc_notice_lgs_error">Patikrinkite pompos modulio ir CGM ryšį.</string>
     <string name="alarm_feat_desc_unknown">Netikėta pompos modulio klaida.</string>
@@ -241,7 +241,7 @@
     <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS baigtas, nes buvo pristabdytas.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS baigtas, nes praėjo nustatytas laikas.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS baigtas, nes buvo išjungtas.</string>
-    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS baigtas, nes CGM reikšmė viršijo nustatytą ribą.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">Stabdymo prie žemos glikemijos režimas išjungtas, nes gliukozės reikšmė pakilo virš nustatytos ribos.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS baigtas dėl nežinomos priežasties.</string>
     <string name="alarm_notification_desc_notice_lgs_error">Patikrinkite pompos modulio ir CGM ryšį.</string>
     <string name="carelevo_profile_update_skip_comment">Praleista: nuo ankstesnio naujinimo praėjo per mažai laiko.</string>
