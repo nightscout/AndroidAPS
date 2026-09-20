@@ -20,22 +20,39 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
     <string name="syncinfotext">Sinchronizuokite duomenis debesyje. Jūs galite kol kas praleisti šį veiksmą, bet negalėsite baigti mokymosi programos, kol nenustatysite duomenų perdavimo į Nightscout arba Tidepool.</string>
+    <string name="status_label">Būsena:</string>
     <string name="diawarning">Svarbu: DKS profiliuose IVT turi būti bent 5 val. Tai atitinka 3 val. IVT įprastoje pompos terapijoje.</string>
     <string name="profile">Profilis</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Pasirinkite vieną iš galimų algoritmų. Jie surikiuoti nuo seniausio iki naujausio. Naujesnis algoritmas paprastai yra pajėgesnis. Prieš naudodami būtinai perskaitykite OpenAPS dokumentaciją ir sukonfigūruokite algoritmą.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Nustatykite RileyLink. Pasirinkę RileyLink, galėsite tęsti sąranką, kai tik RileyLink statusas bus „Prisijungta“. Tai gali užtrukti apie minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galėsite tęsti, kai prijungsite pompą.\n</string>
     <string name="startobjective">Pradėti Jūsų pirmąjį tikslą</string>
+    <string name="open_objectives">Atverti tikslus</string>
+    <string name="setupwizard_permissions">Leidimai</string>
+    <string name="setupwizard_profile_info">Sukurkite profilį su baziniais greičiais, IC, ISF ir tikslinėmis reikšmėmis. Vėliau galėsite pridėti daugiau profilių.</string>
+    <string name="setupwizard_permissions_info">Kad AAPS veiktų tinkamai, reikia prieigos prie saugyklos ir kitų leidimų. Toliau suteikite reikiamus leidimus.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
+    <string name="setupwizard_client_control_title">Kliento valdymas</string>
+    <string name="setupwizard_client_control_info">Susiekite kliento įrenginius, kad jie per Nightscout galėtų siųsti pasirašytas komandas šiam pagrindiniam įrenginiui. Tai naujas rekomenduojamas nuotolinio AAPS valdymo būdas.</string>
+    <string name="setupwizard_ns_receive_info">Tiesioginis gydymo įrašų ir duomenų priėmimas iš Nightscout (mažiau saugus būdas) dabar pagal numatytuosius nustatymus išjungtas. Toliau pateiktus nustatymus atverkite tik jei ši funkcija vis dar reikalinga. Ji būtina norint įvesti duomenis per NS arba 3-iųjų šalių programas.</string>
+    <string name="setupwizard_open_ns_receive_settings">Nightscout duomenų priėmimas</string>
+    <string name="setupwizard_pair_with_master_info">Susiekite šį klientą su pagrindiniu AAPS įrenginiu, kad jis galėtų saugiu kanalu siųsti komandas.</string>
+    <string name="setupwizard_pairing_ws_warning">Norint susieti, būtinas Nightscout WebSocket ryšys. Grįžkite į ankstesnį veiksmą ir pirmiausia jį įjunkite.</string>
+    <string name="setupwizard_pairing_status_master">Susietų klientų: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Klientų dar nesusieta</string>
+    <string name="setupwizard_pairing_status_client_paired">Susieta su pagrindiniu įrenginiu</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Dar nesusieta</string>
     <string name="readstatus">Statuso nuskaitymas</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Kokią pompą naudosite su AAPS?</string>
     <string name="configbuilder_aps_description">Kuris DKS algoritmas turėtų koreguoti terapiją?</string>
+    <string name="configbuilder_sync_description">Duomenų įkėlimo, sinchronizavimo ir ryšio papildiniai.</string>
     <string name="configbuilder_bgsource_description">Iš kur AAPS gaus duomenis?</string>
     <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudosite?</string>
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite realią pompą, AAPS nukopijuos bazės nustatymus iš profilio į pompą, todėl nustatymai pompoje gali pasikeisti. Įsitikinkite, kad bazės nustatymai AAPS yra teisingi. Jei nesate tikri arba nenorite keisti bazės nustatymų jūsų pompoje, paspauskite Atšaukti ir atlikite prijungimą prie pompos vėliau.</string>
@@ -50,6 +67,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Įkeliama…</string>
+    <string name="warning_wrong_directory_selected">Pasirinktas netinkamas aplankas</string>
+    <string name="warning_wrong_directory_message">Pasirinkote poaplankį „%1$s“, o ne pagrindinį AAPS aplanką. Pasirinkite aukštesnio lygio AAPS aplanką. Programa automatiškai sukurs ir tvarkys poaplankius.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
