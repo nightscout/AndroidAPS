@@ -5,9 +5,33 @@
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">AV</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Paskutinis ryšys: prieš %1$d min</string>
+    <string name="short_status_last_bolus">Paskutinis bolusas: %1$s U @ %2$s</string>
+    <string name="short_status_temp_basal">Laikinas bazinis: %1$s</string>
+    <string name="short_status_battery">Baterija: %1$d%%</string>
+    <string name="short_status_not_initialized">Pompa neinicializuota</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Akumuliatoriaus optimizavimas</string>
+    <string name="permission_battery_description">Kad programa patikimai veiktų fone, jai turi būti netaikomas akumuliatoriaus optimizavimas</string>
+    <string name="permission_directory_title">AAPS aplankas</string>
+    <string name="permission_directory_description">Pasirinkite programos nustatymų ir žurnalo failų aplanką</string>
+    <string name="permission_notifications_title">Pranešimai</string>
+    <string name="permission_notifications_description">Šis leidimas būtinas įspėjimams, pavojaus signalams ir pompos būsenos pranešimams rodyti</string>
+    <string name="permission_schedule_exact_alarm_title">Signalai ir priminimai</string>
+    <string name="permission_schedule_exact_alarm_description">Būtina, kad AAPS veikiant fone signalai galėtų įjungti ekraną, o priminimai suskambėtų laiku</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Nustatymai sėkmingai eksportuoti į debesies saugyklą</string>
+    <string name="export_to_cloud_failed">Nepavyko eksportuoti į debesies saugyklą</string>
+    <string name="csv_uploaded_to_cloud">Naudotojo įrašų CSV sėkmingai įkeltas į debesies saugyklą</string>
     <string name="exported">Nustatymai eksportuoti</string>
     <string name="exported_failed">Nustatymų eksportavimas nepavyko!</string>
     <string name="filenotfound">Failas nerastas</string>
@@ -40,4 +64,27 @@
     <string name="metadata_format_new">Naujas šifruotas formatas</string>
     <string name="metadata_format_other">Nežinomas eksporto formatas</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Klaida pasiekiant failų sistemą. Tinkamai pasirinkite AAPS katalogą.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Kurti atsarginę kopiją „Google Drive“ saugykloje</string>
+    <string name="csv_upload_failed">Nepavyko įkelti naudotojo įrašų CSV į debesies saugyklą</string>
+    <string name="csv_upload_error">Įkeliant CSV į debesį įvyko klaida</string>
+    <string name="uploading_to_cloud">Įkeliama į debesį...</string>
+    <string name="cloud_directory_path">Debesies aplankas: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Nepavyko atnaujinti „Google Drive“ prieigos rakto</string>
+    <string name="google_drive_token_refresh_error">Nepavyko atnaujinti „Google Drive“ prieigos rakto: %1$s</string>
+    <string name="google_drive_connection_test_failed">Nepavyko patikrinti ryšio su „Google Drive“</string>
+    <string name="google_drive_connect_error">Nepavyko prisijungti prie „Google Drive“: %1$s</string>
+    <string name="google_drive_list_folders_failed">Nepavyko gauti „Google Drive“ aplankų sąrašo</string>
+    <string name="google_drive_list_folders_error">Gaunant aplankų sąrašą įvyko klaida: %1$s</string>
+    <string name="google_drive_upload_no_id">Failas įkeltas, bet identifikatorius negrąžintas</string>
+    <string name="google_drive_upload_verify_failed">Nepavyko patikrinti, ar failas įkeltas</string>
+    <string name="google_drive_upload_failed">Nepavyko įkelti: %1$s</string>
+    <string name="google_drive_upload_error">Įkeliant failą įvyko klaida: %1$s</string>
+    <string name="google_drive_folder_access_error">Nepavyko sukurti arba pasiekti paskirties aplanko: %1$s</string>
+    <string name="google_drive_list_settings_failed">Nepavyko gauti nustatymų failų sąrašo</string>
+    <string name="google_drive_list_settings_error">Gaunant nustatymų failų sąrašą įvyko klaida: %1$s</string>
+    <string name="google_drive_download_failed">Nepavyko atsisiųsti failo</string>
+    <string name="google_drive_download_error">Atsisiunčiant failą įvyko klaida: %1$s</string>
+    <string name="google_drive_authorized">Suteikta prieiga prie „Google Drive“</string>
+    <string name="google_drive_reauth_required">Išvalykite nustatymus ir iš naujo suteikite „Google Drive“ prieigą</string>
 </resources>
