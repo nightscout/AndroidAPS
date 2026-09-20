@@ -49,7 +49,4 @@
     <string name="min_recovery_duration">Min. atkūrimo trukmė [s]</string>
     <string name="pump_alert">Pompos aliarmas</string>
     <string name="last_connection">%1$s (%2$s)</string>
-    <string name="unpair">Atsieti</string>
-    <string name="reset_pairing">Iš naujo nustatyti susiejimo informaciją?</string>
-    <string name="reservoir_level">Rezervuaro lygis</string>
 </resources>
