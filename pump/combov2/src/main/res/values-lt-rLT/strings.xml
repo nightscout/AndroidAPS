@@ -39,6 +39,8 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
 3. Bandykite susieti dar kartą</string>
     <string name="combov2_enter_pin">Įveskite PIN</string>
     <string name="combov2_cancel_pairing">Atšaukti susiejimą</string>
+    <string name="combov2_confirm_cancel_pairing_message">Ar tikrai norite atšaukti susiejimą?</string>
+    <string name="combov2_confirm_unpair_message">Ar tikrai norite atsieti pompą?</string>
     <string name="combov2_pin_hint">10 skaitmenų PIN</string>
     <string name="combov2_pairing_finished_successfully">Combo sėkmingai susieta</string>
     <string name="combov2_pairing_cancelled">Combo susiejimą nutraukė naudotojas</string>
@@ -87,6 +89,9 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (liko mažiau nei 1 min)</string>
     <string name="combov2_load_tdds_cancelled">BPD įkėlimas atšauktas</string>
     <string name="combov2_retrieving_tdds_failed">Nepavyko įkelti BPD</string>
+    <string name="combov2_battery_empty">Išsikrovusi</string>
+    <string name="combov2_battery_low">Senka</string>
+    <string name="combov2_battery_full">Įkrauta</string>
     <string name="combov2_battery_low_warning">Pompos baterija baigia išsikrauti</string>
     <string name="combov2_reservoir_low_warning">Pompos rezervuaras beveik tuščias</string>
     <string name="combov2_setting_tbr_succeeded">Laikina bazė nustatyta</string>
