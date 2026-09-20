@@ -48,7 +48,8 @@ internal class ChipsViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         whenever(cache.iobGraphFlow).thenReturn(MutableStateFlow(IobGraphData(emptyList(), emptyList())))
         whenever(cache.cobGraphFlow).thenReturn(MutableStateFlow(CobGraphData(emptyList(), emptyList())))
-        sut = ChipsViewModel(cache, iobCobCalculator, loop, config, persistenceLayer, sensitivityOverview, rh, decimalFormatter, rxBus)
+        whenever(cache.predictionsFlow).thenReturn(MutableStateFlow(emptyList()))
+        sut =ChipsViewModel(cache, iobCobCalculator, loop, config, persistenceLayer, sensitivityOverview, rh, decimalFormatter, rxBus)
     }
 
     @AfterEach

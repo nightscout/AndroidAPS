@@ -97,7 +97,11 @@ class ChipsViewModel(
         initialValue = CobUiState()
     )
 
-    val sensitivityUiState: StateFlow<SensitivityUiState> = iobCobTicker.combine(cache.iobGraphFlow) { _, _ ->
+    // The IOB graph is published before the loop runs in the same calculation chain, so on its
+    // own it would show the previous loop's ratio and variable ISF. Predictions are published
+    // right after the loop ran on the master, and right after a device status came in on a
+    // client, so they carry the fresh values on both sides.
+    val sensitivityUiState: StateFlow<SensitivityUiState> = combine(iobCobTicker, cache.iobGraphFlow, cache.predictionsFlow) { _, _, _ ->
         buildSensitivityUiState()
     }.stateIn(
         scope = viewModelScope,
