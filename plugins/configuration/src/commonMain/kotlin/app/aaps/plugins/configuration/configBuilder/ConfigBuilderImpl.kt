@@ -196,7 +196,14 @@ class ConfigBuilderImpl(
         val composed = composedKeyFor(p, type)
         val existing = preferences.getIfExists(BooleanComposedKey.ConfigBuilderEnabled, composed)
         val job =
-            if (existing != null) p.setPluginEnabled(type, existing)
+            if (existing == true && type == PluginType.LOOP && !p.pluginDescription.alwaysEnabled && !p.showInList(type)) {
+                // A stored flag can come from imported master settings. This build has no loop of its
+                // own, so the flag is dropped instead of adopted. Only the loop is treated this way:
+                // other plugins can be hidden and enabled on purpose, the virtual pump for one.
+                aapsLogger.debug(LTag.CONFIGBUILDER, "Ignoring stored enabled flag for ${p.pluginId}: not available in this build")
+                preferences.put(BooleanComposedKey.ConfigBuilderEnabled, composed, value = false)
+                p.setPluginEnabled(type, false)
+            } else if (existing != null) p.setPluginEnabled(type, existing)
             else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) p.setPluginEnabled(type, true)
             else null
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + BooleanComposedKey.ConfigBuilderEnabled.composeKey(composed) + ":" + p.isEnabled(type))

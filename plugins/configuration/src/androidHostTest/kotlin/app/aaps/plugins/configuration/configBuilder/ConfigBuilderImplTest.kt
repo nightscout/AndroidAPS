@@ -34,6 +34,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -202,6 +203,32 @@ internal class ConfigBuilderImplTest {
     }
 
     /** Startup keeps the old behaviour: it schedules the plugin starts and does not wait for them. */
+    /**
+     * A client can carry the master's Loop enabled flag in imported settings. The loop is not listed
+     * on a client, so the flag is dropped and stored as off instead of switching the plugin on.
+     */
+    @Test
+    fun `a stored enabled flag for a loop that is not listed in this build is dropped`() {
+        stubKeyObservation(MutableStateFlow(""))
+        val loop: PluginBase = mock()
+        val loopDesc: PluginDescription = mock()
+        whenever(loop.getType()).thenReturn(PluginType.LOOP)
+        whenever(loop.pluginId).thenReturn("Loop")
+        whenever(loop.pluginDescription).thenReturn(loopDesc)
+        whenever(loopDesc.alwaysEnabled).thenReturn(false)
+        whenever(loop.showInList(PluginType.LOOP)).thenReturn(false)
+        whenever(activePlugin.getPluginsList()).thenReturn(arrayListOf<PluginBase>(sens2, loop))
+        whenever(preferences.getIfExists(eq(BooleanComposedKey.ConfigBuilderEnabled), any())).thenReturn(true)
+
+        sut.initialize()
+
+        verify(loop).setPluginEnabled(PluginType.LOOP, false)
+        verify(loop, never()).setPluginEnabled(PluginType.LOOP, true)
+        verify(preferences).put(eq(BooleanComposedKey.ConfigBuilderEnabled), any(), value = eq(false))
+        // The listed plugin keeps its stored flag
+        assertThat(sensEnabled).isTrue()
+    }
+
     @Test
     fun `initialize does not wait for the plugins to start`() {
         stubKeyObservation(MutableStateFlow(""))
