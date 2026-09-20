@@ -36,6 +36,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -281,7 +282,7 @@ internal class ImportViewModelTest {
         sut.onApplyConfirmed()
         advanceUntilIdle()
 
-        verify(commandQueue, never()).completeAllAsNoOp(any())
+        verify(commandQueue, never()).cancelAll(any(), any())
     }
 
     @Test
@@ -308,7 +309,7 @@ internal class ImportViewModelTest {
         sut.onApplyConfirmed()
         advanceUntilIdle()
 
-        verify(commandQueue).completeAllAsNoOp(any())
+        verify(commandQueue).cancelAll(any(), eq(false))
     }
 
     /**

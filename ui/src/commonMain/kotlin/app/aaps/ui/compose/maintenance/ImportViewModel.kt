@@ -415,9 +415,10 @@ class ImportViewModel(
         if (!pumpSync.verifyPumpIdentification(pump.pumpDescription.pumpType, pump.serialNumber())) {
             pumpSync.connectNewPump()
             // Anything still queued was meant for the pump that was active a moment ago. Running it
-            // against a different one is the worst outcome available here, so finish those commands
-            // instead - as a no-op, so a caller waiting on one is told it did not happen.
-            commandQueue.completeAllAsNoOp(CoreUiStrings.import_apply_pump_changed)
+            // against a different one is the worst outcome available here, so drop those commands
+            // and report failure, so a caller waiting on one is told it did not happen. It used to
+            // report success, which let the loop carry on as if its temp basal had been set.
+            commandQueue.cancelAll(CoreUiStrings.import_apply_pump_changed, success = false)
         }
 
         // The same reset `resetDatabases` does: the imported profile, units and targets change what

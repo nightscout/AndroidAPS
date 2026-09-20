@@ -1291,7 +1291,10 @@ class WizardBolusExecutorImpl(
                 // the single, reliable master-side alarm for EVERY bolus path, regardless of which UI started it.
                 // SMB stays silent (the loop self-corrects next cycle). onError still fires so the initiating
                 // transport relays too (the watch's sendError today; a client's late ack in phase 1b).
-                if (detailedBolusInfo.bolusType != BS.Type.SMB)
+                // A command dropped on purpose (an import, a cleared queue) is not an alarm either,
+                // for the same reason a bolus the user stopped is not. It must still reach onError
+                // below, or the caller is told a dose was delivered that never was.
+                if (detailedBolusInfo.bolusType != BS.Type.SMB && !result.cancelled)
                     notificationManager.post(NotificationId.BOLUS_DELIVERY_FAILED, errorText, validMinutes = 0, sound = AlarmSound.BOLUS_ERROR)
                 onError(errorText)
             } else

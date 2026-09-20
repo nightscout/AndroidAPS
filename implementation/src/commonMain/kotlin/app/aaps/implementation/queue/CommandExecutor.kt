@@ -171,7 +171,10 @@ class CommandExecutor(
                 val pump = activePlugin.activePump
                 if (!pump.isConfigured()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - completing queue as no-op")
-                    queue.completeAllAsNoOp(CoreUiStrings.pump_not_configured)
+                    // success = true keeps today's meaning on purpose. Reporting failure here would
+                    // raise the pump-failure alarm every time a pump is selected but not paired,
+                    // which is a change worth making on its own and not inside this one.
+                    queue.cancelAll(CoreUiStrings.pump_not_configured, success = true)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                     return
                 }
