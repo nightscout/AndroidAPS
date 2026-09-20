@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="calibration_shortname">KAL</string>
-    <string name="no_calibration_name">Be kalibravimo</string>
+    <string name="no_calibration_name">Kalibracijos nėra</string>
     <string name="description_no_calibration">"Kalibravimo korekcija netaikoma. Jutiklio reikšmės naudojamos nepakeistos. Naudokite, kai jutiklis jau sukalibruotas gamykloje ir yra tikslus."</string>
     <string name="linear_calibration_name">Tiesinė kalibracija</string>
     <string name="description_linear_calibration">"Kiekvieno jutiklio tiesinės kalibracijos korekcija (nuolydis ir poslinkis) apskaičiuojama pagal matavimus iš piršto. Naujesni įrašai turi didesnį svorį. Korekcija taikoma tik duomenims po dabartinio jutiklio seanso pradžios; pirmos 2 valandos praleidžiamos kaip įšilimo laikotarpis."</string>
