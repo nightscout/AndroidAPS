@@ -13,6 +13,7 @@
     <string name="patch_not_active">Rezervuaras neaktyvus</string>
     <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
     <string name="pump_sync_error">Klaida įkeliant pompos istoriją, įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar rezervuarą.</string>
+    <string name="patch_reset_after_primed_error">Pompos modulis savaime persikrovė ir prarado seansą. Jis nebegali tiekti insulino. Nuimkite pompos modulį ir pradėkite naudoti naują.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktyvus bolusas</string>
     <string name="pump_state_label">Pompos būsena</string>
@@ -22,6 +23,7 @@
     <string name="fw_version_label">FW versija</string>
     <string name="patch_no_label">Rezervuaro nr.</string>
     <string name="patch_expiry_label">Rezerv. gal. baigsis</string>
+    <string name="patch_activation_time_label">Aktyvinimas</string>
     <string name="reset_alarms_label">Atstatyti aliarmus</string>
     <string name="change_patch_label">Keisti rezerv.</string>
     <string name="requested_by_user" comment="26 characters max for translation">Inicijuota naudotojo</string>
@@ -48,10 +50,19 @@
     <string name="pump_time_update_failed">Laiko juosta pompoje neatnaujinta, nutildykite ir atnaujinkite rankiniu būdu.</string>
     <string name="bolus_error">Boluso klaida</string>
     <!-- Status strings -->
+    <string name="status_idle">Neaktyvi</string>
+    <string name="status_filled">Pripildyta</string>
+    <string name="status_priming">Pildoma</string>
+    <string name="status_primed">Užpildyta</string>
+    <string name="status_ejecting">Išstumiama</string>
+    <string name="status_ejected">Išstumta</string>
+    <string name="status_active">Aktyvi</string>
+    <string name="status_stopped">Sustabdyta</string>
     <!-- wizard-->
     <string name="retry">Kartoti</string>
     <string name="step_prepare_patch">Įjungti rezervuarą</string>
     <string name="step_prepare_patch_connect">Prijungti ir užpildyti</string>
+    <string name="step_select_insulin">Pasirinkite insuliną</string>
     <string name="step_prime">Pildyti</string>
     <string name="step_priming">Pildoma</string>
     <string name="step_priming_complete">Užpildyta</string>
@@ -61,9 +72,12 @@
     <string name="step_deactivate">Išjungti rezervuarą</string>
     <string name="step_deactivating">Išjungiama...</string>
     <string name="step_deactivate_complete">Išjungta</string>
+    <string name="unpair_confirm_message">Bus ištrintas išsaugotas pompos serijos numeris ir ryšys nutrauktas. Aktyvinkite naują pompos modulį, kad būtų ieškoma pompos.</string>
     <string name="step_retry_activation">Įjungiama</string>
     <string name="unexpected_state">Netikėta būsena: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Prijunkite pompos pagrindą prie naujo pompos modulio, kad pompa įsijungtų, tada pasirinkite ją toliau pateiktame sąraše.</string>
     <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Toliau</b> ir pradėkite aktyvavimą.</string>
+    <string name="connect_pump_base">Įsitikinkite, kad pompos pagrindas prijungtas prie pompos modulio, pašalinkite likusį orą, pripildykite insulino ir paspauskite <b>Toliau</b>.</string>
     <string name="note_min_70_units">Svarbu: būtina užpildyti bent 70 v.</string>
     <string name="reservoir_text_and_level">Rezervuaras: %.2f vv</string>
     <string name="do_not_attach_to_body">Kol kas neklijuokite pompos prie kūno.</string>
@@ -91,6 +105,14 @@
     <!-- settings-->
     <string name="alarm_setting_title">Aliarmų nustatymai</string>
     <string name="alarm_setting_summary">Pasirinkite pompos aliarmų nustatymus</string>
+    <string name="alarm_setting_light_vibrate_beep">Šviesos signalas, vibracija ir garsas</string>
+    <string name="alarm_setting_light_vibrate">Šviesos signalas ir vibracija</string>
+    <string name="alarm_setting_light_beep">Šviesos ir garso signalai</string>
+    <string name="alarm_setting_light">Šviesos signalas</string>
+    <string name="alarm_setting_vibrate_beep">Vibracija ir garsas</string>
+    <string name="alarm_setting_vibrate">Vibracija</string>
+    <string name="alarm_setting_beep">Garso signalas</string>
+    <string name="alarm_setting_silent">Be garso</string>
     <string name="pump_warning_notification_title">Pompos pranešimas apie įspėjimą</string>
     <string name="pump_warning_notification_summary">Rodyti pranešimą apie nekritinius pompos įspėjimus: senkanti baterija, tuščias rezervuaras (20 vv) ir artėjantis galiojimo laikas. Rekomenduojama palikti įjungtus, ypač kai pompos signalai nustatyti tyliajame režime.</string>
     <string name="pump_warning_expiry_hour_title">Įspėjimas apie pompos galiojimo laiką [valandos]</string>
