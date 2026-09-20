@@ -39,7 +39,7 @@
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
     <string name="bg_mgdl">%1$d mg/dL</string>
-    <string name="bg_mmol">%1$.1f mmol/L</string>
+    <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Išsaugoti</string>
     <string name="skip">Praleisti</string>
     <string name="switch_to_edit">Redaguoti</string>
@@ -167,7 +167,7 @@
     <string name="calibration">Kalibravimas</string>
     <string name="cgm">NGJ</string>
     <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą insulino kiekį ir įvestą angliavandenių skaičių</string>
-    <string name="bolus_reminder">Priminti apie bolusą, kai BG atsistato</string>
+    <string name="bolus_reminder">Priminti apie bolusą, kai glikemija atsistato</string>
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>
     <string name="pump_running">Pompa veikia</string>
@@ -298,7 +298,7 @@
     <!--    Translator-->
     <string name="careportal">CarePortal</string>
     <string name="careportal_bgcheck">Gliukomatis</string>
-    <string name="careportal_mbg">Gliukomačio rodmenys</string>
+    <string name="careportal_mbg">Kalibracija</string>
     <string name="careportal_announcement">Pranešimas</string>
     <string name="careportal_settings_export">Nustatymų eksportavimas</string>
     <string name="careportal_note">Pastaba</string>
@@ -320,7 +320,7 @@
     <string name="profile_management">Profilis</string>
     <string name="careportal_snackbolus">Bolusas užkandžiui</string>
     <string name="careportal_mealbolus">Bolusas valgiui</string>
-    <string name="careportal_correctionbolus">Bolusas korekcijai</string>
+    <string name="careportal_correctionbolus">Korekcinis bolusas</string>
     <string name="careportal_combobolus">Kombinuotas bolusas</string>
     <string name="careportal_tempbasalstart">Pradėta laikina bazė</string>
     <string name="careportal_tempbasalend">Užbaigta laikina bazė</string>
@@ -453,7 +453,7 @@
     <string name="treatment_question_desc">Užregistruoti klausimą gydymo komandai</string>
     <string name="treatment_cgm_desc">Atverti CGM programą</string>
     <string name="treatment_calibration_desc">Kalibruoti CGM jutiklį</string>
-    <string name="treatment_bg_check_desc">Registruoti gliukozės kiekio kraujyje patikrą</string>
+    <string name="treatment_bg_check_desc">Įrašyti gliukozės matavimą</string>
     <string name="treatment_exercise_desc">Registruoti fizinį aktyvumą</string>
     <string name="treatment_announcement_desc">Paskelbti pranešimą</string>
     <string name="treatment_sensor_insert_desc">Registruoti CGM jutiklio įvedimą</string>
@@ -469,7 +469,7 @@
     <string name="unknown">Nežinoma</string>
     <string name="eatingsoon">Netrukus valgysiu</string>
     <string name="hypo">Hipo</string>
-    <string name="activity">Aktyvumas</string>
+    <string name="activity">Fizinis aktyvumas</string>
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="automation">Automatizacija</string>
     <string name="automation_management_desc">Kurti taisykles, kurios pagal paleidiklius automatiškai vykdo veiksmus</string>
@@ -690,7 +690,7 @@
     <string name="basalpct">Valandinė bazė %</string>
     <string name="sensitivity">Jautrumas insulinui</string>
     <string name="isf_for_carbs">Vidutinis boluso skaičiuoklės ir angliavandenių įsisavinimo ISF: %1$.1f</string>
-    <string name="isf_profile">Profilio ISF: %1$.1f</string>
+    <string name="isf_profile">Profilio JIF: %1$.1f</string>
     <string name="isf_variable">Kintamasis ISF: %1$.1f</string>
     <string name="isf_effective">Efektyvusis ISF: %1$.1f</string>
     <string name="autosens_long">Autosens vertė: %.0f%%</string>
@@ -706,8 +706,8 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Boluso patarėjas</string>
     <string name="bolus_advisor_message">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
-    <string name="wizard_bg_label">BG</string>
-    <string name="wizard_correction">Korekcija</string>
+    <string name="wizard_bg_label">KG</string>
+    <string name="wizard_correction">Taisymas</string>
     <string name="wizard_subtotal">Tarpinė suma</string>
     <string name="carbs_type_bread">Duona, nesaldūs kepiniai, jogurtas, vaisiai (obuoliai, bananai, kriaušės), bulvės, ryžiai, grikiai, avižinė košė, lėtai pasisavinamas ir mažai angliavandenių turintis maistas, daržovės</string>
     <string name="carbs_type_cake">Koldūnai, makaronai, daug angliavandenių ir riebalų turinti Azijos virtuvė, saldūs ir mieliniai kepiniai, dribsniai, grūdų košės, medus, uogienė</string>
@@ -720,7 +720,7 @@
     <string name="set">Nustatyti</string>
     <string name="wizard_set_alarm">Nustatyti žadintuvą</string>
     <string name="wizard_use_percentage">Naudoti procentą</string>
-    <string name="wizard_include_bg">Įtraukti BG</string>
+    <string name="wizard_include_bg">Įtraukti glikemiją</string>
     <string name="wizard_include_tt">Įtraukti laikiną tikslą</string>
     <string name="wizard_include_trend">Įtraukti tendenciją</string>
     <string name="wizard_include_iob">Įtraukti IOB</string>
@@ -729,7 +729,7 @@
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Daugiausia galima pašalinti: %1$d g (aktyvūs angliavandeniai)</string>
     <string name="wizard_no_insulin_required">Insulino nereikia</string>
-    <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
+    <string name="wizard_no_actual_bg">Nėra naujausių glikemijos duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="wizard_carbs_constraint">AV apribojimų pažeidimas!</string>
     <string name="wizard_trend_detail">15 min. tendencija (%1$s %2$s)</string>
@@ -1059,14 +1059,14 @@
     <string name="graph_add">Pridėti grafiką</string>
     <string name="graph_new">Naujas grafikas</string>
     <string name="graph_number">%1$d grafikas</string>
-    <string name="graph_bg">BG grafikas</string>
+    <string name="graph_bg">KG grafikas</string>
     <string name="graph_height">Grafiko aukštis [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
     <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
-    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-KGĮ</string>
     <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
     <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
     <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
