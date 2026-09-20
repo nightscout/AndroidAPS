@@ -1,6 +1,6 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "9.4.0"
+gradlePlugin = "9.4.1"
 kotlin = "2.4.20"
 room = "2.8.5"
 # A release again. The snapshot was taken because 1.4.2 had a member-injection codegen bug
