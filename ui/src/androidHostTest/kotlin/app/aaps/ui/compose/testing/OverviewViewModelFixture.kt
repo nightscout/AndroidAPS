@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.SensitivityOverview
+import app.aaps.core.interfaces.overview.SensitivityOverviewData
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.GraphConfig
@@ -90,7 +91,11 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
     val processedDeviceStatusData: ProcessedDeviceStatusData = mock()
     val iobCobCalculator: IobCobCalculator = mock()
     val constraintChecker: ConstraintsChecker = mock()
-    val sensitivityOverview: SensitivityOverview = mock()
+    // A fake, not a mock: the chip collects this on every screen, and an unstubbed mock hands
+    // back null for the data class
+    val sensitivityOverview: SensitivityOverview = object : SensitivityOverview {
+        override suspend fun build() = SensitivityOverviewData()
+    }
     val graphConfigRepository: GraphConfigRepository = mock()
     val nsClient: NsClient = mock()
     val visibilityContext: VisibilityContext = mock()

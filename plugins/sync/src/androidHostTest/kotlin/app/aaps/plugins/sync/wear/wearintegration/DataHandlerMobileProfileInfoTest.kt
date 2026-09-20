@@ -53,7 +53,7 @@ class DataHandlerMobileProfileInfoTest : TestBaseWithProfile() {
 
     private lateinit var sut: DataHandlerMobile
 
-    private val now = 10_000_000L
+    // `now` comes from the shared test base
 
     @BeforeEach
     fun prepare() {
@@ -88,7 +88,9 @@ class DataHandlerMobileProfileInfoTest : TestBaseWithProfile() {
 
     @Test
     fun `a permanent switch is the name and its modifiers, with no end`() = runTest {
-        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(now)).thenReturn(effectiveSwitch("Default", percentage = 90, timeshiftHours = 1))
+        // Built before the stubbing call: a mock made inside thenReturn() is a stubbing inside a stubbing
+        val switch = effectiveSwitch("Default", percentage = 90, timeshiftHours = 1)
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(now)).thenReturn(switch)
 
         assertThat(sut.profileInfo(now, null))
             .isEqualTo(ProfileInfo(name = "Default", percentage = 90, timeshiftHours = 1, endTime = null, returnsTo = null, fromScene = false))
@@ -98,7 +100,8 @@ class DataHandlerMobileProfileInfoTest : TestBaseWithProfile() {
     fun `a temporary switch ends at start plus duration and names the profile that returns`() = runTest {
         val start = now - T.mins(10).msecs()
         val duration = T.hours(1).msecs()
-        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(now)).thenReturn(effectiveSwitch("Night", percentage = 120, timeshiftHours = -2, durationMs = duration))
+        val switch = effectiveSwitch("Night", percentage = 120, timeshiftHours = -2, durationMs = duration)
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(now)).thenReturn(switch)
         val underlying = mock<PS>().also { whenever(it.profileName).thenReturn("Default") }
         // The one in force one millisecond after the temporary switch ends
         whenever(persistenceLayer.getProfileSwitchActiveAt(start + duration + 1)).thenReturn(underlying)
@@ -114,7 +117,8 @@ class DataHandlerMobileProfileInfoTest : TestBaseWithProfile() {
      */
     @Test
     fun `a switch the active scene made is marked`() = runTest {
-        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(now)).thenReturn(effectiveSwitch("Sport", durationMs = T.hours(1).msecs()))
+        val switch = effectiveSwitch("Sport", durationMs = T.hours(1).msecs())
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(now)).thenReturn(switch)
         val inForce = mock<PS>().also { whenever(it.id).thenReturn(42L) }
         whenever(persistenceLayer.getProfileSwitchActiveAt(now)).thenReturn(inForce)
 

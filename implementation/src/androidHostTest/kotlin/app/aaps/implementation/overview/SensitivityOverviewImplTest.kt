@@ -15,8 +15,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyVararg
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -24,6 +22,9 @@ import org.mockito.kotlin.whenever
  * The sensitivity lines as the Overview chip dialog and the watch's Loop Status show them. The
  * rules moved here from the chips ViewModel unchanged; these tests pin the standard autosens
  * branch, which is what most users run.
+ *
+ * The shared test base formats a stubbed template with the call's arguments, so the strings are
+ * stubbed as templates on the plain lookup, not on the call with arguments.
  */
 class SensitivityOverviewImplTest : TestBaseWithProfile() {
 
@@ -48,10 +49,11 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
             whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
             whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         }
-        whenever(rh.gs(eq(CoreUiStrings.autosens_short), anyVararg())).thenReturn("120%")
-        whenever(rh.gs(eq(CoreUiStrings.autosens_long), anyVararg())).thenReturn("Autosens Value: 120%")
-        whenever(rh.gs(eq(CoreUiStrings.isf_profile), anyVararg())).thenReturn("ISF (profile): 50")
-        whenever(rh.gs(eq(CoreUiStrings.isf_effective), anyVararg())).thenReturn("ISF (effective): 42")
+        whenever(rh.gs(CoreUiStrings.autosens_short)).thenReturn("%.0f%%")
+        whenever(rh.gs(CoreUiStrings.autosens_long)).thenReturn("Autosens Value: %.0f%%")
+        // The ISF values come from the test profile and are not the point here
+        whenever(rh.gs(CoreUiStrings.isf_profile)).thenReturn("ISF (profile)")
+        whenever(rh.gs(CoreUiStrings.isf_effective)).thenReturn("ISF (effective)")
     }
 
     private fun autosensRatio(ratio: Double) {
@@ -68,7 +70,7 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
         assertThat(data.hasData).isFalse()
         assertThat(data.ratio).isEqualTo(1.0)
         assertThat(data.asText).isEmpty()
-        assertThat(data.lines).containsExactly("ISF (profile): 50")
+        assertThat(data.lines).containsExactly("ISF (profile)")
         assertThat(data.isEnabled).isTrue()
     }
 
@@ -81,13 +83,12 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
         assertThat(data.hasData).isTrue()
         assertThat(data.ratio).isEqualTo(1.2)
         assertThat(data.asText).isEqualTo("120%")
-        assertThat(data.lines).containsExactly("Autosens Value: 120%", "ISF (profile): 50", "ISF (effective): 42").inOrder()
+        assertThat(data.lines).containsExactly("Autosens Value: 120%", "ISF (profile)", "ISF (effective)").inOrder()
     }
 
     @Test
     fun `a ratio of exactly 100 percent stays out of the chip but in the lines`() = runBlocking {
         autosensRatio(1.0)
-        whenever(rh.gs(eq(CoreUiStrings.autosens_long), anyVararg())).thenReturn("Autosens Value: 100%")
 
         val data = sut.build()
 
