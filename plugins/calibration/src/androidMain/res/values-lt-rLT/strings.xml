@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="calibration_shortname">KAL</string>
+    <string name="no_calibration_name">Be kalibravimo</string>
+    <string name="description_no_calibration">"Kalibravimo korekcija netaikoma. Jutiklio reikšmės naudojamos nepakeistos. Naudokite, kai jutiklis jau sukalibruotas gamykloje ir yra tikslus."</string>
+    <string name="linear_calibration_name">Tiesinė kalibracija</string>
+    <string name="description_linear_calibration">"Kiekvieno jutiklio tiesinės kalibracijos korekcija (nuolydis ir poslinkis) apskaičiuojama pagal matavimus iš piršto. Naujesni įrašai turi didesnį svorį. Korekcija taikoma tik duomenims po dabartinio jutiklio seanso pradžios; pirmos 2 valandos praleidžiamos kaip įšilimo laikotarpis."</string>
+    <string name="sensor_change_detected_text">Galimas jutiklio pakeitimas aptiktas %1$s. Pažymėti kaip naują jutiklį?</string>
+    <string name="sensor_change_detected_action">Pažymėti jutiklio pakeitimą</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Užregistruokite jutiklio pakeitimą, kad galėtumėte naudoti kalibravimą.</string>
+    <string name="cal_status_warmup">Jutiklis įšyla — kalibravimas bus aktyvus po %1$s.</string>
+    <string name="cal_status_need_more_entries">Reikia bent 2 matavimų iš piršto įrašų (dabar %1$d).</string>
+    <string name="cal_status_unsafe_fit">Kalibravimo modelis nepatenka į saugų intervalą — kalibracija netaikoma.</string>
+    <string name="cal_status_applied">Kalibracija pritaikyta.</string>
+    <string name="cal_status_applied_offset_only">Pritaikyta tik poslinkio kalibracija — jutiklio reikšmių diapazonas per siauras nuolydžiui apskaičiuoti.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibracija pritaikyta — nuolydis apribotas iki saugaus intervalo. Pridėkite daugiau įrašų, kad ribojimą būtų galima sušvelninti.</string>
+    <string name="cal_slope_offset">Nuolydis %1$.2f, vidurinio diapazono korekcija %2$s</string>
+    <string name="cal_session_started">Seansas pradėtas: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Registruoti jutiklio pakeitimą</string>
+    <string name="cal_add_calibration">Pridėti kalibravimą</string>
+    <string name="cal_entries_header">Matavimų iš piršto įrašai (%1$d)</string>
+    <string name="cal_no_entries">Matavimų iš piršto įrašų dar nėra.</string>
+    <string name="cal_entry_pair">Matavimas iš piršto %1$s → jutiklis %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Pašalinti įrašą?</string>
+    <string name="cal_remove_entry_message">Įrašas taps negaliojantis. Kalibravimo modelis bus perskaičiuotas.</string>
+    <string name="cal_chart_entry_readout">Įrašas %1$d/%2$d · %3$s · jutiklis %4$s → BG %5$s</string>
 </resources>
