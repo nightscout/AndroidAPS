@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Fono paveiksliukas</string>
     <string name="cwf_comment_chart">Grafikai (glikemija, bazė, prognozės...)</string>
     <string name="cwf_comment_cover_chart">Paveiksliukas už teksto ir prieš grafiką</string>
+    <string name="cwf_comment_complication">Komplikacijos konteineris</string>
     <string name="cwf_comment_freetext1">Laisvas tekstas 1</string>
     <string name="cwf_comment_freetext2">Laisvas tekstas 2</string>
     <string name="cwf_comment_freetext3">Laisvas tekstas 3</string>
