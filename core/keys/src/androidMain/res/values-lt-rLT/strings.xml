@@ -184,7 +184,7 @@
     <string name="pref_title_protection_type_application">0 lygis: programos apsauga</string>
     <string name="pref_summary_protection_type_application">Paleidžiant programą ir į ją grįžtant. Nepriklauso nuo kitų lygių</string>
     <string name="pref_title_protection_type_bolus">1 lygis: boluso apsauga</string>
-    <string name="pref_summary_protection_type_bolus">Gydymo veiksmai ir profilio aktyvinimas. Reikalingas 2 lygis</string>
+    <string name="pref_summary_protection_type_bolus">Terapija ir profilio aktyvavimas. Reikalingas 2 lygis</string>
     <string name="pref_title_protection_type_settings">2 lygis: nustatymų apsauga</string>
     <string name="pref_summary_protection_type_settings">Profilių ir nuostatų keitimas</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
