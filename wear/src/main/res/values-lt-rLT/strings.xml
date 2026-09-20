@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_watchface_circle">AAPS(Apvalus)</string>
+    <string name="label_watchface_circle">AAPS(apskritimas)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
-    <string name="label_watchface_custom">AAPS(suasmeninta)</string>
+    <string name="label_watchface_custom">AAPS(pasirinktinis)</string>
     <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (pasirinktinis), visada rodomas</string>
     <string name="label_actions_tile">Veiksmai</string>
     <string name="label_temp_target_tile">Laikinas tikslas</string>
@@ -12,7 +12,7 @@
     <string name="msg_warning_sync">Nėra duomenų nuo %1$s! Patikrinkite, ar AAPS telefone siunčia duomenis laikrodžiui</string>
     <string name="msg_warning_old">AAPS duomenys yra %1$s senumo! Patikrinkite sensorių, xDrip+, NS, AAPS konfigūratorių ar kt.!</string>
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
-    <string name="units_short">v</string>
+    <string name="units_short">V</string>
     <string name="pref_display_settings">Ekranas</string>
     <string name="pref_graph_settings">Grafikas</string>
     <string name="pref_interface_settings">Sąsaja</string>
@@ -33,7 +33,7 @@
     <string name="pref_show_reservoir_level">Rodyti rezervuaro lygį</string>
     <string name="pref_show_loop_status">Rodyti Ciklo statusą</string>
     <string name="pref_show_bg">Rodyti KG</string>
-    <string name="pref_show_bgi">Rodyti GĮ</string>
+    <string name="pref_show_bgi">Rodyti KGĮ</string>
     <string name="pref_show_direction_arrow">Rodyti krypties rodyklę</string>
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
     <string name="pref_show_temp_basal">Rodyti LB</string>
@@ -43,7 +43,7 @@
     <string name="pref_highlight_basals">Paryškinti valandines bazes</string>
     <string name="pref_prediction_lines">Rodyti prognozes</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Vienodos spalvos skirtukas</string>
-    <string name="pref_chart_timeframe">Diagramos laikotarpis</string>
+    <string name="pref_chart_timeframe">Grafiko laikotarpis</string>
     <string name="pref_1_hour">1 val.</string>
     <string name="pref_2_hours">2 val.</string>
     <string name="pref_3_hours">3 val.</string>
@@ -53,7 +53,7 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_big_numbers">Dideli Skaičiai</string>
+    <string name="pref_big_numbers">Dideli skaičiai</string>
     <string name="pref_ring_history">Glikemijos istorija</string>
     <string name="pref_light_ring_history">Glikemijos istorija - šviesi</string>
     <string name="pref_animations">Animacijos</string>
@@ -62,10 +62,10 @@
     <string name="pref_single_target">Pavienis tikslas</string>
     <string name="pref_wizard_percentage">Skaičiuotuvas proc.</string>
     <string name="pref_complication_tap_action">Elementų skirtuko veiksmai</string>
-    <string name="pref_complication_bg_graph_hours">BG grafiko laiko intervalas</string>
-    <string name="duration_1_hour">1 valanda</string>
-    <string name="duration_3_hours">3 valandos</string>
-    <string name="duration_6_hours">6 valandos</string>
+    <string name="pref_complication_bg_graph_hours">KG grafiko laiko intervalas</string>
+    <string name="duration_1_hour">1 val.</string>
+    <string name="duration_3_hours">3 val.</string>
+    <string name="duration_6_hours">6 val.</string>
     <string name="pref_unicode_in_complications">Unikodas elementuose</string>
     <string name="pref_version">Versija:</string>
     <string name="pref_moreWatchfaceSettings">Daugiau laikrodžio ekrano nustatymų</string>
@@ -79,10 +79,10 @@
     <string name="menu_bolus">Bolusas</string>
     <string name="menu_carb">AV</string>
     <string name="menu_ecarb">iAV</string>
-    <string name="menu_settings">Parametrai</string>
+    <string name="menu_settings">Nustatymai</string>
     <string name="menu_status">Statusas</string>
-    <string name="menu_bg_graph">BG grafikas</string>
-    <string name="menu_resync">Suderinti dar kartą</string>
+    <string name="menu_bg_graph">KG grafikas</string>
+    <string name="menu_resync">Sinchronizuoti dar kartą</string>
     <string name="menu_prime_fill">Užpildymas</string>
     <string name="menu_install_watchface">Įdiegti ciferblatą</string>
     <string name="menu_installing_watchface">Diegiamas ciferblatas…</string>
@@ -279,7 +279,7 @@
     <string name="title_activity_disconnect_pump">Atjungti pompą</string>
     <string name="title_activity_suspend_loop">Sustabdyti ciklą</string>
     <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
-    <string name="insulin_unit_short">U</string>
+    <string name="insulin_unit_short">V</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Išsiųsta</string>
