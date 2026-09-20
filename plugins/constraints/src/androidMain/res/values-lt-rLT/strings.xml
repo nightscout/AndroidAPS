@@ -42,5 +42,5 @@
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
-    <string name="bg_doubled_lgs">LGS režimas įjungtas dėl padvigubėjusių BG šaltinio reikšmių</string>
+    <string name="bg_doubled_lgs">Įjungtas stabdymo prie žemos glikemijos režimas dėl dubliuojamų gliukozės duomenų</string>
 </resources>
