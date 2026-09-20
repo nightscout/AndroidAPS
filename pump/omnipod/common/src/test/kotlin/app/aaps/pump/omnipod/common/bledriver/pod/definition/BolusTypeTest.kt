@@ -1,5 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.definition
 
+import app.aaps.core.data.model.BS
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
 import org.junit.jupiter.api.Test
@@ -28,5 +29,9 @@ class BolusTypeTest {
 
     @Test fun `DEFAULT still serializes to DEFAULT`() {
         assertThat(gson.toJson(BolusType.DEFAULT)).isEqualTo("\"DEFAULT\"")
+    }
+
+    @Test fun `BASAL_CORRECTION reports to AAPS as a plain NORMAL bolus`() {
+        assertThat(BolusType.BASAL_CORRECTION.toBolusInfoBolusType()).isEqualTo(BS.Type.NORMAL)
     }
 }

@@ -4,5 +4,5 @@ import app.aaps.core.interfaces.queue.CustomCommand
 
 class CommandDeliverBasalCorrection : CustomCommand {
 
-    override val statusDescription = "BASAL COMPENSATION BOLUS"
+    override val statusDescription = "BASAL CORRECTION"
 }
