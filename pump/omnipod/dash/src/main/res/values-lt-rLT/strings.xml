@@ -30,7 +30,7 @@
     <string name="requested_by_user" comment="26 characters max for translation">Naudotojo užklausa</string>
     <string name="suspend_delivery_is_unconfirmed">Insulino tiekimo sustabdymas nepatvirtintas! Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke ir, jei reikia, atnaujinkite insulino tiekimą.</string>
     <string name="insulin_delivery_suspended">Insulino tiekimas sustabdytas</string>
-    <string name="timezone_on_pod_is_different_from_the_timezone">Pod laiko zona skiriasi nuo telefono. Bazė neteisinga. Atlikite profilio keitimą</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Pod laiko juosta skiriasi nuo telefono. Bazė neteisinga. Atlikite profilio keitimą</string>
     <string name="failed_to_set_the_new_basal_profile">Klaida nustatant naują bazės profilį. Insulinas netiekiamas</string>
     <string name="setting_basal_profile_might_have_failed">Gali būti, kad bazės profilis nebuvo nustatytas. Insulino tiekimas gali būti nutrauktas! Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke ir, jei reikia, atnaujinkite insulino tiekimą.</string>
     <string name="bolus_delivery_status_uncertain">Boluso suleidimo statusas nežinomas. Atnaujinkite Pod statusą patvirtinimui ar atmetimui.</string>
