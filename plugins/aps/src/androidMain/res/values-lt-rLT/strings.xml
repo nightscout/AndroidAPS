@@ -16,6 +16,7 @@
     <string name="description_ama">2017 m. algoritmas</string>
     <string name="description_smb">Naujausias algoritmas patyrusiems naudotojams</string>
     <string name="description_smb_dynamic_isf">Naujausias algoritmas patyrusiems naudotojams su dinaminiu/automatiniu JIF</string>
+    <string name="description_auto_isf">Eksperimentinis algoritmas patyrusiems naudotojams su AutoISF plėtiniais</string>
     <string name="openapsma_last_run_label">Paskutinis veiksmas</string>
     <string name="openapsma_input_parameters_label">Įvesties parametrai</string>
     <string name="openapsma_glucose_status_label">Glikemijos statusas</string>
@@ -39,6 +40,7 @@
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
     <string name="hardlimit">Nekeičiama riba</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Pikas</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Bolusas buvo suleistas per paskutines 3 minutes, SMB praleidžiamas</string>
     <string name="pump_not_initialized">Pompa neprijungta!</string>
