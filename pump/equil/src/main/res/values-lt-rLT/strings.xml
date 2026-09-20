@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="equil_name">Equil</string>
     <string name="equil_pump_description">Equil Patch 5.3 ar naujesnė pompa </string>
     <!--  start  -->
     <string name="equil_basal_speed">Bazinis insulinas</string>
@@ -16,19 +15,12 @@
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Sėkmingai</string>
     <string name="equil_title_dressing">Pakeiskite rezervuarą</string>
-    <string name="equil_title_assemble">Surinkti pompą</string>
-    <string name="equil_title_serial">Susieti įrenginį</string>
-    <string name="equil_title_fill">Paruošti / pripildyti</string>
-    <string name="equil_title_attach">Pritvirtinti pompą</string>
-    <string name="equil_title_air">Užpildyti kaniulę</string>
-    <string name="equil_title_unpair_detach">Atjungti pompą</string>
     <string name="equil_title_history_events">Istorijos įrašai</string>
     <string name="equil_tone">Perspėjimo tonas</string>
     <string name="equil_tone_mode_mute">Nutildyti</string>
     <string name="equil_tone_mode_shake">Tik vibravimas</string>
     <string name="equil_tone_mode_tone">Tik garsas</string>
     <string name="equil_tone_mode_tone_and_shake">Vibracija ir garsas</string>
-    <string name="equil_unbind_content">Ši operacija sustabdys insulino infuziją ir atitrauks pompos stūmoklį iki apatinės padėties! Taip pat bus panaikintas susiejimas!</string>
     <string name="equil_ble_config_confirmation_title">Suporuoti Equil patch pompą</string>
     <string name="equil_error">Sujungimo klaida</string>
     <string name="equil_change">Pakeisti pompą</string>
@@ -81,7 +73,6 @@
     <string name="equil_command_connect_error">Pompos prisijungimo klaida</string>
     <string name="equil_command_connect_no_response">Nėra atsakymo iš pompos</string>
     <string name="equil_command__unknown">Nežinoma komandos būklė</string>
-    <string name="equil_install">Pritvirtinti pompą prie kūno</string>
     <string name="equil_settings_alarm_battery">Įspėjimas apie senkančią bateriją</string>
     <string name="equil_settings_alarm_insulin">Įspėjimas apie mažą insulino likutį</string>
     <string name="equil_init_insulin_error">Rezervuaro inicijavimas nebaigtas</string>
@@ -117,18 +108,14 @@
     <string name="equil_common_wizard_exit_confirmation_text">Dar nesate užbaigę visų žingsnių. Ar tikrai norite išeiti?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Išeiti</string>
     <string name="equil_support_error">Programinės įrangos versija per žema. Nepalaikoma</string>
-    <string name="equil_password_tips">Pasirinktinai nustatykite susiejimo su Equil v5.3 pompa slaptažodį. Šis slaptažodis ateityje taip pat bus naudojamas atsiejant, todėl būtinai jį įsiminkite. Slaptažodžio taisyklė: jį turi sudaryti 4 simboliai, pasirinkti iš ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Nustatyti suporavimo slaptažodį</string>
     <string name="equil_hint1">Po to, kai uždėsite pompą ant pagrindo plokštės, pasirinkite, ar norite išstumti orą iš įvestos adatos.</string>
     <string name="equil_unbind">Atsieti įrenginį</string>
-    <string name="equil_device_unpaired">Įrenginys atsietas</string>
     <string name="equil_assemble">Prašome surinkti pompą, pripildytą rezervuarą ir įkrautą bateriją</string>
-    <string name="equil_pair_password_title">Įveskite %1$s slaptažodį</string>
     <string name="equil_insert">Prašome užpildyti rezervuarą iki kol ant adatos galo pasirodys insulino lašelis</string>
     <string name="equil_insert2">Pompa neturi būti ant pompos pagrindo.</string>
     <string name="equil_attach">Prijunkite pompą prie jos pagrindo</string>
     <string name="equil_hint2">Užpildyti kaniulę</string>
     <string name="equil_pump_updated">Pompa atnaujinta</string>
     <string name="equil_replace_reservoir">Rezervuaras tuščias. Pakeiskite rezervuarą</string>
-    <string name="equil_removed_anyway">Atsieti nepavyko. Pompa vis tiek bus pašalinta. Susiejant nustatytas slaptažodis iš pompos nepašalintas.</string>
 </resources>
