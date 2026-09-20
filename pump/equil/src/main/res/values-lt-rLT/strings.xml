@@ -38,7 +38,7 @@
     <string name="equil_record_basal_temp">Laikina valandinė bazė %1$s vv/val.</string>
     <string name="equil_record_bolus">Bolusas %1$s vv</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR trukmė turi būti didesnė už nulį ir būti %1$s minučių kartotinis.</string>
-    <string name="equil_basal_exceeds_max">Profilio bazinis greitis %1$s U/h viršija didžiausią pompos bazinį greitį %2$s U/h. Padidinkite didžiausio bazinio greičio nustatymą ir iš naujo prijunkite pompą.</string>
+    <string name="equil_basal_exceeds_max">Profilio valandinė bazė %1$s V/val. viršija didžiausią pompos valandinę bazę %2$s U/h. Padidinkite didžiausios valandinė bazės nustatymą ir iš naujo prijunkite pompą.</string>
     <string name="equil_not_enough_insulin">Rezervuare nepakanka insulino</string>
     <string name="equil_low_battery">Žemas baterijos lygis</string>
     <string name="equil_low_insulin">Rezervuare nepakanka insulino</string>
