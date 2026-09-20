@@ -2,9 +2,9 @@
 <resources>
     <string name="calibration_shortname">KAL</string>
     <string name="no_calibration_name">Kalibracijos nėra</string>
-    <string name="description_no_calibration">"Kalibravimo korekcija netaikoma. Jutiklio reikšmės naudojamos nepakeistos. Naudokite, kai jutiklis jau sukalibruotas gamykloje ir yra tikslus."</string>
+    <string name="description_no_calibration">"Kalibravimo korekcija netaikoma – naudojamos tokios sensoriaus reikšmės, kokios jos yra. Šį nustatymą rinkitės, jei sensorius yra gamykliškai sukalibruotas ir rodo tiksliai."</string>
     <string name="linear_calibration_name">Tiesinė kalibracija</string>
-    <string name="description_linear_calibration">"Kiekvieno jutiklio tiesinės kalibracijos korekcija (nuolydis ir poslinkis) apskaičiuojama pagal matavimus iš piršto. Naujesni įrašai turi didesnį svorį. Korekcija taikoma tik duomenims po dabartinio jutiklio seanso pradžios; pirmos 2 valandos praleidžiamos kaip įšilimo laikotarpis."</string>
+    <string name="description_linear_calibration">"Kiekvienam sensoriui atskirai apskaičiuojama tiesinė kalibravimo korekcija (nuolydis ir poslinkis), naudojant jūsų gliukomačiu įvestas reikšmes. Naujesniems matavimams suteikiamas didesnis svoris. Korekcija taikoma tik po dabartinės sensoriaus sesijos pradžios, o pirmosios 2 valandos praleidžiamos kaip įšilimo laikotarpis."</string>
     <string name="sensor_change_detected_text">Galimas jutiklio pakeitimas aptiktas %1$s. Pažymėti kaip naują jutiklį?</string>
     <string name="sensor_change_detected_action">Pažymėti jutiklio pakeitimą</string>
     <!-- Calibration management screen -->
@@ -24,5 +24,5 @@
     <string name="cal_entry_pair">Matavimas iš piršto %1$s → jutiklis %2$s (Δ %3$s)</string>
     <string name="cal_remove_entry_title">Pašalinti įrašą?</string>
     <string name="cal_remove_entry_message">Įrašas taps negaliojantis. Kalibravimo modelis bus perskaičiuotas.</string>
-    <string name="cal_chart_entry_readout">Įrašas %1$d/%2$d · %3$s · jutiklis %4$s → BG %5$s</string>
+    <string name="cal_chart_entry_readout">Įrašas %1$d/%2$d · %3$s · jutiklis %4$s → KG %5$s</string>
 </resources>
