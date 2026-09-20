@@ -137,7 +137,7 @@
     <string name="disabled">Išjungta</string>
     <string name="pump_fetching_data">Bandoma įkelti pompos duomenis</string>
     <string name="pump_old_data">BPD: seni duomenys! Nepavyksta nuskaityti pompos.</string>
-    <string name="units_short">v</string>
+    <string name="units_short">V</string>
     <string name="hour_short">val</string>
     <string name="no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="target_only_aps_mode">Tikslai galioja tik APS režime!</string>
