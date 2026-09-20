@@ -3,12 +3,37 @@
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
     <!--    Events-->
+    <string name="bolus_delivering">Leidžiama %1$.2f U</string>
+    <string name="bolus_delivered_so_far">Suleista %1$.2f U iš %2$.2f U</string>
+    <string name="bolus_delivered_successfully">Sėkmingai suleistas %1$.2f U bolusas</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
     <!--    DateUtil-->
+    <string name="secago">prieš %1$d s</string>
+    <string name="min_plus">(+%1$d min)</string>
+    <string name="sec_plus">(+%1$d s)</string>
     <string name="minago_long">Prieš %1$d min.</string>
     <string name="days_ago">Prieš %1$s d.</string>
     <string name="days_ago_round">Prieš %1$.0f d.</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">prieš %1$s dieną ir %2$s h</item>
+        <item quantity="few">prieš %1$s dienas ir %2$s h</item>
+        <item quantity="many">prieš %1$s dienos ir %2$s h</item>
+        <item quantity="other">prieš %1$s dienų ir %2$s h</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="one">prieš %1$s valandą</item>
+        <item quantity="few">prieš %1$s valandas</item>
+        <item quantity="many">prieš %1$s valandos</item>
+        <item quantity="other">prieš %1$s valandų</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">prieš akimirką</item>
+        <item quantity="few">prieš %1$s minutes</item>
+        <item quantity="many">prieš %1$s minutės</item>
+        <item quantity="other">prieš %1$s minučių</item>
+    </plurals>
+    <string name="seconds_ago">prieš kelias sekundes</string>
     <string name="in_days">Po %1$.0f d.</string>
     <string name="in_days_round">Po %1$.0f d.</string>
     <string name="shorthour">val.</string>
@@ -26,6 +51,8 @@
     <string name="unit_weeks">savaičių</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">liko %1$d val. %2$d min</string>
+    <string name="time_remaining_m">liko %1$d min</string>
     <string name="later_today">Šiandien vėliau</string>
     <string name="tomorrow">Rytoj</string>
     <string name="today">Šiandien</string>
@@ -34,6 +61,7 @@
     <string name="connecting_for">Jungiamasi %1$d s</string>
     <string name="handshaking">Ryšio užmezgimas</string>
     <string name="connected">Prisijungta</string>
+    <string name="authorized">Prieiga suteikta</string>
     <string name="disconnecting">Atsijungiama</string>
     <string name="waiting_for_disconnection">Laukiama atsijungimo</string>
     <!-- Custom Watchface -->
@@ -63,6 +91,11 @@
     <string name="pref_show_week_number">Rodyti savaitės numerį</string>
     <string name="pref_show_date">Rodyti datą</string>
     <string name="pref_show_seconds">Rodyti sekundes</string>
+    <string name="pref_show_complication1">Rodyti 1-ąją komplikaciją</string>
+    <string name="pref_show_complication2">Rodyti 2-ąją komplikaciją</string>
+    <string name="pref_show_complication3">Rodyti 3-iąją komplikaciją</string>
+    <string name="pref_show_complication4">Rodyti 4-ąją komplikaciją</string>
+    <string name="pref_show_complication5">Rodyti 5-ąją komplikaciją</string>
     <string name="default_custom_watchface_comment">Numatytasis ekranas. Paspaudus EKSPORTUOTI, bus sukurtas ruošinys</string>
     <string name="default_custom_watchface_external_comment">Numatytasis laikrodžio ciferblatas, įskaitant peržiūrą sekėjams. Galite spustelėti mygtuką EKSPORTUOTI CIFERBLATĄ, kad sugeneruotumėte šabloną</string>
     <string name="wear_default_watchface">Numatytasis ekranas</string>
@@ -70,15 +103,31 @@
     <string name="temp_basal_absolute_rate">%1$.2f V/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">Neribotai</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Kad galėtų susisiekti su pompa, programai reikia leidimo naudoti „Bluetooth“</string>
     <!-- Insulin -->
+    <string name="unknown">Nežinomas</string>
+    <string name="rapid_acting_oref">Novorapid</string>
     <string name="free_peak_oref">Oref be piko</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Piko laikas [min]</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
     <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Angliavandeniai</string>
     <string name="alarminxmin">Pranešti po %1$d min</string>
     <string name="pumpsuspended">Pompa sustabdyta</string>
@@ -88,6 +137,7 @@
     <string name="maximumbasalvaluereplaced">Nustatyta didžiausia galima valandinės bazės vertė: %1$s</string>
     <string name="profile_ins_units_per_hour">v/val</string>
     <string name="profile_carbs_per_unit">g/v</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Įrašas</string>
     <string name="bolus">Bolusas</string>
     <string name="uel_extended_carbs">IŠTĘSTI AV</string>
@@ -98,8 +148,10 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f viršija griežtą limitą</string>
     <string name="basal_value">Valandinė bazė</string>
     <string name="cobvsiob">AAO prieš AIO</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Aptiktas lėtas angliavandenių įsisavinimas: %1$d%% laiko. Dar kartą patikrinkite skaičiavimus. COB gali būti pervertintas, todėl gali būti suleista daugiau insulino !!!!!</string>
     <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
+    <string name="wizard_ecarbs">eCarbs %1$d g / %2$d val. (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f V</string>
 </resources>
