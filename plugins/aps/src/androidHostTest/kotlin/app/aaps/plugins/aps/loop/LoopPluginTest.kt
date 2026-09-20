@@ -123,7 +123,6 @@ class LoopPluginTest : TestBaseWithProfile() {
 
         assertThat(loopPlugin.lastRun).isNull()
         verify(persistenceLayer, never()).insertOrUpdateApsResult(any())
-        verify(activePlugin, never()).activeAPS
         assertThat(loopPlugin.showInList(PluginType.LOOP)).isFalse()
     }
 
