@@ -168,7 +168,8 @@ class SceneExecutor(
         if (durationMinutes > 0)
             add(ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.duration), formatMinutesAsDuration(durationMinutes, rh))))
         scene.actions.forEach { add(ConfirmationLine(ConfirmationRole.NORMAL, sceneActionLine(it))) }
-        sceneChainResolver.resolveCatalogChainTarget(scene)?.let { add(ConfirmationLine(ConfirmationRole.INFO, rh.gs(CoreUiStrings.scene_follow_up_format, it.name))) }
+        // The same "→ X" the Scenes list shows, in the scene colour on both the phone and the watch
+        sceneChainResolver.resolveCatalogChainTarget(scene)?.let { add(ConfirmationLine(ConfirmationRole.SCENE, rh.gs(CoreUiStrings.scene_chain_indicator, it.name))) }
     }
 
     private fun sceneActionLine(action: SceneAction): String = when (action) {

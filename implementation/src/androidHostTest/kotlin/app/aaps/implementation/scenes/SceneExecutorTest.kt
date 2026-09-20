@@ -149,13 +149,15 @@ class SceneExecutorTest : TestBaseWithProfile() {
 
         val result = sut.prepareScene(smbScene, durationMinutes = 0) as WizardBolusExecutor.PrepareResult.Preview
 
-        assertThat(result.lines).contains(ConfirmationLine(ConfirmationRole.INFO, "Follow-up: Cooldown"))
+        // Last, and in the scene colour like the name above it
+        assertThat(result.lines.last()).isEqualTo(ConfirmationLine(ConfirmationRole.SCENE, "→ Cooldown"))
     }
 
     @Test fun `prepare says nothing about a follow-up when there is none`() = runBlocking {
         val result = sut.prepareScene(smbScene, durationMinutes = 0) as WizardBolusExecutor.PrepareResult.Preview
 
-        assertThat(result.lines.map { it.role }).doesNotContain(ConfirmationRole.INFO)
+        // The scene's name is the only scene-coloured line
+        assertThat(result.lines.count { it.role == ConfirmationRole.SCENE }).isEqualTo(1)
     }
 
     // Ending a scene early has to drop the pending expiry, or it fires later against whatever is active then.
