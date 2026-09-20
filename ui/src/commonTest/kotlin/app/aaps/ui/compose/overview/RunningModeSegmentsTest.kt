@@ -33,7 +33,7 @@ class RunningModeSegmentsTest {
 
     /** The reported bug: the mode switched to a few minutes ago has to be visible. */
     @Test
-    fun `the mode in use now is drawn, not just the one before it`() {
+    fun `the mode in use now is drawn - not just the one before it`() {
         val switched = start + 4 * HOUR
         val segments = mergeRunningModeSegments(
             listOf(start to RM.Mode.DISABLED_LOOP, switched to RM.Mode.OPEN_LOOP),

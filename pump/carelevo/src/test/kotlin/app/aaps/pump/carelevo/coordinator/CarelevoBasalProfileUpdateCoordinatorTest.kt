@@ -336,6 +336,7 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         override var isTempCancel: Boolean = false
         override var bolusDelivered: Double = 0.0
         override var queued: Boolean = false
+        override var cancelled: Boolean = false
 
         override fun success(success: Boolean): PumpEnactResult = apply { this.success = success }
         override fun enacted(enacted: Boolean): PumpEnactResult = apply { this.enacted = enacted }
@@ -348,5 +349,6 @@ internal class CarelevoBasalProfileUpdateCoordinatorTest {
         override fun isTempCancel(isTempCancel: Boolean): PumpEnactResult = apply { this.isTempCancel = isTempCancel }
         override fun bolusDelivered(bolusDelivered: Double): PumpEnactResult = apply { this.bolusDelivered = bolusDelivered }
         override fun queued(queued: Boolean): PumpEnactResult = apply { this.queued = queued }
+        override fun cancelled(cancelled: Boolean): PumpEnactResult = apply { this.cancelled = cancelled }
     }
 }
