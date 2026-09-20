@@ -36,6 +36,7 @@
     <string name="exported_failed">Nustatymų eksportavimas nepavyko!</string>
     <string name="filenotfound">Failas nerastas</string>
     <string name="ue_exported">Naudotojo įrašai eksportuoti</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportuota prieš %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">eksportuota %1$s</string>
     <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
     <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), Jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
@@ -55,6 +56,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Iššifravimas klaida, slaptažodis yra neteisingas arba nustatymų failas buvo pakeistas! Taip nutinka, jei importuotas failas buvo eksportuotas su kitu slaptažodžiu.</string>
     <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
+    <string name="metadata_label_format">Failo formatas</string>
     <string name="metadata_label_created_at">Sukurta</string>
     <string name="metadata_label_aaps_version">AAPS versija</string>
     <string name="metadata_label_aaps_flavour">Versijos variantas</string>
