@@ -2,7 +2,7 @@
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
     <string name="no_temp_basal_running">Laikinas bazinis greitis neaktyvus</string>
-    <string name="start_activity_tt">Pradėti Aktyvumo LT</string>
+    <string name="start_activity_tt">Pradėti Sporto LT</string>
     <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
     <string name="start_hypo_tt">Pradėti \"Hipo\" LT</string>
     <string name="time_offset">Laiko poslinkis</string>
@@ -10,7 +10,7 @@
     <string name="configure">Derinti skaidrumą</string>
     <string name="widget_description">AAPS valdiklis</string>
     <string name="widget_bg_graph_description">AAPS gliukozės grafikas</string>
-    <string name="widget_compact_bg_description">AAPS gliukozė + IOB + COB (kompaktiškas)</string>
+    <string name="widget_compact_bg_description">AAPS gliukozė + AIO + AAO (kompaktiškas)</string>
     <string name="widget_small_description">AAPS mažas</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktyvumo stebėjimas</string>
@@ -52,10 +52,10 @@
     <string name="record_insulin_cartridge_change">Įrašas apie rezervuaro keitimą</string>
     <string name="fill_prime_amount">Užpildymo kiekis</string>
     <string name="fill_pump_units_note">Užpildymo kiekis nurodytas pompos vienetais</string>
-    <string name="fill_insulin_change">Pakeisti insuliną į: %1$s (bus pritaikytas profilio perjungimas)</string>
+    <string name="fill_insulin_change">Pakeisti insuliną į: %1$s (bus pritaikytas profilio keitimas)</string>
     <!-- Scene -->
     <string name="scene_cat_aaps">AAPS</string>
-    <string name="scene_cat_activity">Veikla</string>
+    <string name="scene_cat_activity">Sportas</string>
     <string name="scene_cat_health">Sveikata</string>
     <string name="scene_cat_food">Maistas</string>
     <string name="scene_cat_sleep">Miegas</string>
@@ -63,7 +63,7 @@
     <string name="scene_cat_wellness">Gera savijauta</string>
     <string name="scene_cat_general">Bendra</string>
     <string name="aaps_tt_high_icon_label">Laikinas tikslas</string>
-    <string name="aaps_tt_activity_icon_label">TT veiklai</string>
+    <string name="aaps_tt_activity_icon_label">LT sportas</string>
     <string name="aaps_tt_eating_icon_label">TT prieš valgį</string>
     <string name="aaps_tt_hypo_icon_label">TT hipoglikemijai</string>
     <string name="aaps_tt_manual_icon_label">Rankinis TT</string>
@@ -73,7 +73,7 @@
     <string name="aaps_bolus_icon_label">Bolusas</string>
     <string name="aaps_carbs_icon_label">Angliavandeniai</string>
     <string name="aaps_tbr_icon_label">Laikinas bazinis greitis</string>
-    <string name="aaps_activity_icon_label">Mankšta</string>
+    <string name="aaps_activity_icon_label">Sportas</string>
     <string name="aaps_note_icon_label">Pastaba</string>
     <string name="aaps_automation_icon_label">Automatizavimas</string>
     <string name="aaps_calibration_icon_label">Kalibravimas</string>
@@ -166,7 +166,7 @@
     <string name="missing_carbs">Trūksta %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% angliavandenių iš karto, be ištęstinių angliavandenių</string>
     <string name="wizard_carbs_type_desc">Angliavandeniai sumažinti %1$d%%, pridėta %2$d%% eCarbs, atidėtų %3$dmin ir paskirstytų per %4$dh</string>
-    <string name="wizard_include_info">Bakstelėkite, kad įtrauktumėte į skaičiavimą arba pašalintumėte iš jo:\n• BG — gliukozės kiekis kraujyje (pradžioje ĮJUNGTA)\n• TT — laikinas tikslas (pradžioje ĮJUNGTA)\n• Tendencija — BG tendencija (įsimenama paskutinė būsena)\n• IOB — aktyvus insulinas (pradžioje ĮJUNGTA)\n• COB — aktyvūs angliavandeniai (įsimenama paskutinė būsena)</string>
+    <string name="wizard_include_info">Bakstelėkite, kad įtrauktumėte į skaičiavimą arba pašalintumėte iš jo:\n• KG — kraujo gliukozė (pradžioje ĮJUNGTA)\n• LT — laikinas tikslas (pradžioje ĮJUNGTA)\n• Tendencija — KG tendencija (įsimenama paskutinė būsena)\n• AIO — aktyvus insulinas organizme (pradžioje ĮJUNGTA)\n• AAO — aktyvūs angliavandeniai organizme (įsimenama paskutinė būsena)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
     <string name="treatments_iob_label_string">AIO:</string>
@@ -194,7 +194,7 @@
     <string name="profile_parameters">Profilio parametrai</string>
     <string name="active_profile">Aktyvus profilis</string>
     <string name="available_profiles">Galimi profiliai</string>
-    <string name="profile_switches">Profilio keitimai</string>
+    <string name="profile_switches">Profilio keitimas</string>
     <string name="basal_pct_from_tdd_label">% bazės</string>
     <string name="selected_profile">Parinkta:</string>
     <string name="comparation">Palyginimas</string>
@@ -221,7 +221,7 @@
     <string name="a11y_history_next_window">Kitas langas</string>
     <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
     <string name="calculator_options">Skaičiuoklės parinktys</string>
-    <string name="use_bg">Naudoti BG</string>
+    <string name="use_bg">Naudoti KG</string>
     <string name="use_cob">Naudoti COB</string>
     <string name="use_iob">Naudoti IOB</string>
     <string name="use_trend">Naudoti tendenciją</string>
@@ -296,7 +296,7 @@
     <string name="widget_rm_suspended">Sustabdyta</string>
     <string name="widget_rm_resume">Tęsti</string>
     <!-- Calibration entry rejection reasons -->
-    <string name="cal_reject_delta_too_high">Kalibravimas neįrašytas: BG kinta per greitai (Δ %1$s %3$s per 5 min., riba %2$s). Bandykite dar kartą, kai gliukozės kiekis bus stabilus.</string>
+    <string name="cal_reject_delta_too_high">Kalibravimas neįrašytas: gliukozė kinta per greitai (Δ %1$s %3$s per 5 min., riba %2$s). Bandykite dar kartą, kai gliukozė bus stabili.</string>
     <string name="cal_reject_no_pair">Kalibravimas neįrašytas: per pastarąsias 10 minučių nerastas nė vienas CGM rodmuo.</string>
     <string name="cal_reject_warmup">Kalibravimas neįrašytas: jutiklis vis dar veikia 2 val. įšilimo laikotarpiu.</string>
     <string name="cal_reject_no_session">Kalibravimas neįrašytas: nėra aktyvaus jutiklio seanso. Pirmiausia pažymėkite jutiklio pakeitimą.</string>
