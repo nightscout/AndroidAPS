@@ -111,8 +111,8 @@
     <string name="scene_not_available">Scenarijus %1$s nebepasiekiamas. Atnaujinkite plytelę</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Nuotolinės insulino komandos išjungtos kliento režimu</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
-    <string name="wear_action_tempt_min_bg_error">Min. cukraus kiekis nepatenka į diapozoną!</string>
-    <string name="wear_action_tempt_max_bg_error">Max. cukraus kiekis nepatenka į diapozoną!</string>
+    <string name="wear_action_tempt_min_bg_error">Minimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
+    <string name="wear_action_tempt_max_bg_error">Maksimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
     <string name="wear_action_tempt_range_error">Netinkamas diapazonas: apatinis tikslas (%1$s) negali būti didesnis už viršutinį tikslą (%2$s)</string>
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukiami į rezultatą:</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
@@ -248,8 +248,8 @@
     <string name="smscommunicator_set_closed_loop_reply_with_code">Norėdami pakeisti ciklo režimą į Uždarą ciklą, atsakykite kodu %1$s</string>
     <string name="smscommunicator_current_loop_mode">Dabartinis veikimo režimas: %1$s</string>
     <string name="wrong_format">Neteisingas formatas</string>
-    <string name="sms_actual_bg">BG:</string>
-    <string name="sms_last_bg">Pask. glikemija:</string>
+    <string name="sms_actual_bg">KG:</string>
+    <string name="sms_last_bg">Paskutinė KG:</string>
     <string name="sms_delta">Pokytis:</string>
     <string name="sms_iob">AIO:</string>
     <string name="sms_bolus">Bolusas:</string>
