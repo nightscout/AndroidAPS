@@ -170,7 +170,7 @@ class EventDataTest {
             battery = "5", rigBattery = "6", openApsStatus = 7L, bgi = "8", batteryLevel = 9, patientName = "p",
             tempTarget = "t", tempTargetLevel = 1, tempTargetDuration = 10L, reservoirString = "r",
             reservoir = 11.0, reservoirLevel = 0, cobValue = 12.0, loopMode = LoopStatusData.LoopMode.SUSPENDED,
-            modeEndTime = 13L
+            modeEndTime = 13L, modeFromScene = true
         ).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)

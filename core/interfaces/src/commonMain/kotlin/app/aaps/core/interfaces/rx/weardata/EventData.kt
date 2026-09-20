@@ -417,7 +417,9 @@ sealed class EventData : Event() {
         // Keep new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
         val loopMode: LoopStatusData.LoopMode = LoopStatusData.LoopMode.UNKNOWN,
         // End time (epoch ms) of a temporary running mode (suspend/disconnect/superbolus); null when permanent or older sender
-        val modeEndTime: Long? = null
+        val modeEndTime: Long? = null,
+        // Whether the active scene set the running mode, so the picker can mark it; false from an older sender
+        val modeFromScene: Boolean = false
     ) : EventData(), EventDataSet
 
     @Serializable

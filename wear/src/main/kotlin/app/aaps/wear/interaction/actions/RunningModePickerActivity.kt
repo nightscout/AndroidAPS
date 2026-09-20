@@ -71,6 +71,8 @@ class RunningModePickerActivity : MenuListActivity() {
             subtitleSecondary = if (modeLabel != null && remaining != null)
                 getString(R.string.loop_status_duration_remaining, formatDurationMinutes(this@RunningModePickerActivity, remaining))
             else null
+            // The scene icon after the remaining time when the active scene set this mode, as in Loop Status
+            subtitleSecondaryIcon = if (subtitleSecondary != null && status.modeFromScene) R.drawable.ic_scene_purple else null
         }
     }
 
