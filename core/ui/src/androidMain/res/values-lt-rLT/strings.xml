@@ -183,6 +183,7 @@
     <string name="a11y_arrow_double_up">greitai didėja</string>
     <string name="a11y_arrow_none">nėra</string>
     <string name="a11y_arrow_unknown">nežinoma</string>
+    <string name="a11y_high">aukšta</string>
     <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
     <string name="remove_label">Pašalinti</string>
@@ -884,6 +885,7 @@
     <string name="nav_history_browser_desc">Naršyti ankstesnius grafikus</string>
     <string name="appearance">Išvaizda</string>
     <string name="manage">Tvarkyti</string>
+    <string name="localprofile">Profilis</string>
     <string name="nav_setupwizard">Sąrankos vedlys</string>
     <string name="nav_setupwizard_desc">Žingsnis po žingsnio konfigūruoti AAPS</string>
     <string name="statistics">Statistika</string>
