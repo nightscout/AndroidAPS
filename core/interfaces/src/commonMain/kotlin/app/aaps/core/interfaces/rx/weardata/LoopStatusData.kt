@@ -16,7 +16,9 @@ data class LoopStatusData(
     /** End time (epoch ms) of a temporary running mode (suspend/disconnect/superbolus), null when the mode is permanent */
     val modeEndTime: Long? = null,
     /** The active scene, null when none. Defaulted and last, so an older peer decodes without it. */
-    val activeScene: ActiveSceneInfo? = null
+    val activeScene: ActiveSceneInfo? = null,
+    /** The profile in force, null when none is set. Defaulted and last, like [activeScene]. */
+    val profile: ProfileInfo? = null
 ) {
 
     @Serializable
@@ -40,7 +42,30 @@ data class TempTargetInfo(
     val targetDisplay: String,
     val endTime: Long,
     val durationMinutes: Int,
-    val units: String
+    val units: String,
+    /** Set by the active scene, so the watch can mark it as the scene's doing. Defaulted and last. */
+    val fromScene: Boolean = false
+)
+
+/**
+ * The profile in force, as the watch's Loop Status shows it.
+ *
+ * @param name the profile's own name, without the percentage and timeshift the phone folds into
+ *   its customized name; the watch shows those as rows of their own
+ * @param percentage 100 when unchanged
+ * @param timeshiftHours 0 when unchanged
+ * @param endTime when a temporary switch ends, epoch ms; null for a permanent one
+ * @param returnsTo the profile that is in force again after [endTime], null for a permanent switch
+ * @param fromScene whether the active scene made this switch
+ */
+@Serializable
+data class ProfileInfo(
+    val name: String,
+    val percentage: Int,
+    val timeshiftHours: Int,
+    val endTime: Long?,
+    val returnsTo: String?,
+    val fromScene: Boolean = false
 )
 
 @Serializable

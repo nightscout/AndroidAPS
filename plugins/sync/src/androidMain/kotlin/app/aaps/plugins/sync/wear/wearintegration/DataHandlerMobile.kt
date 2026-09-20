@@ -68,6 +68,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableRunningMode
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
 import app.aaps.core.interfaces.rx.weardata.OapsResultInfo
+import app.aaps.core.interfaces.rx.weardata.ProfileInfo
 import app.aaps.core.interfaces.rx.weardata.TargetRange
 import app.aaps.core.interfaces.rx.weardata.TempTargetInfo
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
@@ -393,6 +394,9 @@ class DataHandlerMobile(
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         val profile = profileFunction.getProfile()
         val usedAPS = activePlugin.activeAPS
+        // The records the active scene created, so the watch can mark a temp target or a profile
+        // switch as the scene's doing. Read once: the same answer serves both cards.
+        val sceneRecords = activeSceneSync.getActiveState()?.scopedRecords
 
         // Get data based on app type
         val (lastRunTimestamp, lastEnactTimestamp, apsResult) = if (config.APS) {
@@ -447,7 +451,8 @@ class DataHandlerMobile(
                 targetDisplay = targetString,
                 endTime = it.end,
                 durationMinutes = durationMin,
-                units = units
+                units = units,
+                fromScene = it.id == sceneRecords?.ttId
             )
         }
 
@@ -557,7 +562,8 @@ class DataHandlerMobile(
             defaultRange = defaultRange,
             oapsResult = oapsResultInfo,
             modeEndTime = modeEndTime,
-            activeScene = activeSceneInfo()
+            activeScene = activeSceneInfo(),
+            profile = profileInfo(dateUtil.now(), sceneRecords)
         )
     }
 
@@ -1251,6 +1257,29 @@ class DataHandlerMobile(
                 endTime = state?.endsAt,
                 chainTargetName = state?.let { chainTargetOf(it) }?.name
             )
+        )
+    }
+
+    /**
+     * The profile in force for Loop Status, or null when none is set.
+     *
+     * A temporary switch ends at its start plus its duration - not at the stored end, which the
+     * sync paths leave at zero - and the profile that returns is whichever switch is in force one
+     * millisecond after that, the same rule the phone's profile management uses. A switch the
+     * active scene made is marked, so the watch can show the scene's icon beside it.
+     *
+     * internal so DataHandlerMobileProfileInfoTest can drive it without the whole status builder.
+     */
+    internal suspend fun profileInfo(now: Long, sceneRecords: ActiveSceneState.ScopedRecords?): ProfileInfo? {
+        val switch = persistenceLayer.getEffectiveProfileSwitchActiveAt(now) ?: return null
+        val end = if (switch.originalDuration > 0) switch.timestamp + switch.originalDuration else null
+        return ProfileInfo(
+            name = switch.originalProfileName,
+            percentage = switch.originalPercentage,
+            timeshiftHours = T.msecs(switch.originalTimeshift).hours().toInt(),
+            endTime = end,
+            returnsTo = end?.let { persistenceLayer.getProfileSwitchActiveAt(it + 1)?.profileName },
+            fromScene = switch.originalPsId != null && switch.originalPsId == sceneRecords?.psId
         )
     }
 
