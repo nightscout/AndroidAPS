@@ -11,24 +11,6 @@
     <string name="pump_status_suspended">Sustabdyta</string>
     <string name="pump_status_executing_command">Komanda vykdoma</string>
     <!-- Commands -->
-    <string name="pump_cmd_desc_get_settings">Gauti nustatymus</string>
-    <string name="pump_cmd_desc_get_firmware">Gauti pompos programinės įrangos versiją</string>
-    <string name="pump_cmd_desc_get_basal_profile">Gauti bazinį profilį</string>
-    <string name="pump_cmd_desc_set_basal_profile">Nustatyti bazinį profilį</string>
-    <string name="pump_cmd_desc_get_tbr">Gauti laikiną bazinį greitį</string>
-    <string name="pump_cmd_desc_cancel_tbr">Atšaukti laikiną bazinį greitį</string>
-    <string name="pump_cmd_desc_set_tbr">Nustatyti laikiną bazinį greitį</string>
-    <string name="pump_cmd_desc_set_bolus">Nustatyti bolusą</string>
-    <string name="pump_cmd_desc_get_bolus">Gauti boluso duomenis</string>
-    <string name="pump_cmd_desc_cancel_bolus">Atšaukti bolusą</string>
-    <string name="pump_cmd_desc_get_remaining_insulin">Gauti likusį insulino kiekį</string>
-    <string name="pump_cmd_desc_get_battery_status">Gauti baterijos būseną</string>
-    <string name="pump_cmd_desc_get_time">Gauti laiką</string>
-    <string name="pump_cmd_desc_set_time">Nustatyti laiką</string>
-    <string name="pump_cmd_desc_get_pump_status">Gauti pompos būseną</string>
-    <string name="pump_cmd_desc_get_history">Gauti istoriją</string>
-    <string name="pump_cmd_desc_get_history_params">Gauti istoriją: %s</string>
-    <string name="pump_cmd_desc_custom">Pasirinktinė komanda</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazė</string>
     <string name="history_group_configuration">Nustatymai</string>
@@ -50,7 +32,6 @@
     <string name="time_last_3_hours">Pask. 3 val.</string>
     <string name="time_last_6_hours">Pask. 6 val.</string>
     <string name="time_last_12_hours">Pask. 12 val.</string>
-    <string name="time_last_24_hours">Pastarosios 24 valandos</string>
     <string name="time_last_2_days">Pask. 2 d.</string>
     <string name="time_last_4_days">Pask. 4 d.</string>
     <string name="time_last_week">Praėjusią savaitę</string>
