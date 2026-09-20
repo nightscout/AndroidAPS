@@ -138,8 +138,8 @@ class DataHandlerMobileSceneTest : TestBaseWithProfile() {
         activeScene()
         whenever(sceneChainResolver.resolveRunnableChainTarget(any())).thenReturn(null)
         val sent = captured { sut.handleSceneStopPreCheck(EventData.ActionSceneStopPreCheck()) } as EventData.ConfirmAction
-        assertThat(sent.roles()).containsExactly(ConfirmationRole.SCENE.name, ConfirmationRole.NORMAL.name).inOrder()
-        assertThat(sent.texts()).containsExactly("Sleep", "End active scene").inOrder()
+        assertThat(sent.roles()).containsExactly(ConfirmationRole.NORMAL.name, ConfirmationRole.SCENE.name).inOrder()
+        assertThat(sent.texts()).containsExactly("End active scene", "Sleep").inOrder()
         assertThat(sent.returnCommand).isEqualTo(EventData.ActionSceneStopConfirmed(triggerChain = false))
     }
 
@@ -148,8 +148,8 @@ class DataHandlerMobileSceneTest : TestBaseWithProfile() {
         activeScene()
         whenever(sceneChainResolver.resolveRunnableChainTarget(any())).thenReturn(wakeUp)
         val sent = captured { sut.handleSceneStopPreCheck(EventData.ActionSceneStopPreCheck()) } as EventData.ConfirmAction
-        assertThat(sent.roles()).containsExactly(ConfirmationRole.SCENE.name, ConfirmationRole.NORMAL.name, ConfirmationRole.INFO.name).inOrder()
-        assertThat(sent.texts()).containsExactly("Sleep", "End active scene", "Follow-up Wake up will not start").inOrder()
+        assertThat(sent.roles()).containsExactly(ConfirmationRole.NORMAL.name, ConfirmationRole.SCENE.name, ConfirmationRole.INFO.name).inOrder()
+        assertThat(sent.texts()).containsExactly("End active scene", "Sleep", "Follow-up Wake up will not start").inOrder()
         assertThat(sent.returnCommand).isEqualTo(EventData.ActionSceneStopConfirmed(triggerChain = false))
     }
 
@@ -158,8 +158,8 @@ class DataHandlerMobileSceneTest : TestBaseWithProfile() {
         activeScene()
         whenever(sceneChainResolver.resolveRunnableChainTarget(any())).thenReturn(wakeUp)
         val sent = captured { sut.handleSceneStopPreCheck(EventData.ActionSceneStopPreCheck(triggerChain = true)) } as EventData.ConfirmAction
-        assertThat(sent.roles()).containsExactly(ConfirmationRole.SCENE.name, ConfirmationRole.NORMAL.name, ConfirmationRole.SCENE.name).inOrder()
-        assertThat(sent.texts()).containsExactly("Sleep", "Skip to", "Wake up").inOrder()
+        assertThat(sent.roles()).containsExactly(ConfirmationRole.NORMAL.name, ConfirmationRole.SCENE.name, ConfirmationRole.NORMAL.name, ConfirmationRole.SCENE.name).inOrder()
+        assertThat(sent.texts()).containsExactly("End active scene", "Sleep", "Skip to", "Wake up").inOrder()
         assertThat(sent.returnCommand).isEqualTo(EventData.ActionSceneStopConfirmed(triggerChain = true))
     }
 
@@ -169,7 +169,7 @@ class DataHandlerMobileSceneTest : TestBaseWithProfile() {
         activeScene()
         whenever(sceneChainResolver.resolveRunnableChainTarget(any())).thenReturn(null)
         val sent = captured { sut.handleSceneStopPreCheck(EventData.ActionSceneStopPreCheck(triggerChain = true)) } as EventData.ConfirmAction
-        assertThat(sent.texts()).containsExactly("Sleep", "End active scene").inOrder()
+        assertThat(sent.texts()).containsExactly("End active scene", "Sleep").inOrder()
         assertThat(sent.returnCommand).isEqualTo(EventData.ActionSceneStopConfirmed(triggerChain = false))
     }
 
@@ -179,7 +179,7 @@ class DataHandlerMobileSceneTest : TestBaseWithProfile() {
         activeScene()
         whenever(sceneChainResolver.resolveCatalogChainTarget(any())).thenReturn(wakeUp)
         val sent = captured { sut.handleSceneStopPreCheck(EventData.ActionSceneStopPreCheck(triggerChain = true)) } as EventData.ConfirmAction
-        assertThat(sent.texts()).containsExactly("Sleep", "Skip to", "Wake up").inOrder()
+        assertThat(sent.texts()).containsExactly("End active scene", "Sleep", "Skip to", "Wake up").inOrder()
         assertThat(sent.deferConfirm).isTrue()
         verifyBlocking(sceneChainResolver, never()) { resolveRunnableChainTarget(any()) }
     }

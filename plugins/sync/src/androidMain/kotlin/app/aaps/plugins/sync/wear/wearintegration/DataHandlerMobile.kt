@@ -749,14 +749,15 @@ class DataHandlerMobile(
         // was drawn; with nothing to skip to, this is a plain End and the confirm says so
         val triggerChain = command.triggerChain && chainTarget != null
         val lines = buildList {
+            // Both confirms open the same way, "End active scene" over the scene's name, then say what
+            // differs: Skip names the scene that starts, End says which follow-up will not start -
+            // the phone's own dialog offers the two side by side, the watch has one button per choice
+            add(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_end_active)))
             state?.let { add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, it.scene.name)) }
             if (triggerChain) {
                 add(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_skip_to_label)))
                 add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, chainTarget!!.name))
             } else {
-                add(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_end_active)))
-                // The phone's own dialog offers the follow-up next to End; the watch has one button
-                // per choice, so the End confirm says what the other button would have done
                 chainTarget?.let { add(EventData.ConfirmActionLine(ConfirmationRole.INFO.name, rh.gs(CoreUiStrings.scene_end_follow_up_not_started, it.name))) }
             }
         }
