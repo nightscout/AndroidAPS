@@ -96,10 +96,7 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Patvirtinimo signalai</string>
     <string name="omnipod_common_preferences_category_notifications">Pranešimai</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Įjungtas garsas neaiškiems laikinos bazės perspėjimams</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Garsas pranešant apie neaiškų SMB</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Įjungtas garsas neaiškiems bolusų perspėjimams</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Garsas pranešant apie sustabdytą insulino tiekimą</string>
-    <string name="omnipod_dash_use_bonding">Susieti BT įrenginį naudojant Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nėra aktyvaus Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Nustatoma (laukiama Pod aktyvavimo)</string>
@@ -122,8 +119,6 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Nustatyti bazės tvarkaraštį</string>
     <string name="omnipod_common_cmd_set_bolus">Nustatyti bolusą</string>
     <string name="omnipod_common_cmd_cancel_bolus">Atšaukti bolusą</string>
-    <string name="omnipod_common_cmd_set_tbr">Nustatyti TBR</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Atšaukti TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Išjungti Pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Gauti Pod statusą</string>
     <string name="omnipod_common_cmd_set_time">Nustatyti laiką</string>
@@ -132,17 +127,10 @@
     <string name="omnipod_common_cmd_read_pulse_log">Skaityti Pulse žurnalą</string>
     <string name="omnipod_common_cmd_suspend_delivery">Sustabdyti insulino tiekimą</string>
     <string name="omnipod_common_cmd_resume_delivery">Atnaujinti insulino tiekimą</string>
-    <string name="omnipod_common_cmd_cancel_tbr">Atšaukti TBR (naudotojo veiksmas)</string>
     <string name="omnipod_common_cmd_get_pod_info">Gauti Pod informaciją</string>
-    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nustatyti fiktyvų sustabdymo TBR</string>
-    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Atšaukti fiktyvų sustabdymo TBR</string>
-    <string name="omnipod_common_cmd_split_tbr">Padalyti TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Paleisti bandomąjį signalą</string>
     <string name="omnipod_common_cmd_unknown_entry">Nežinomas įrašas</string>
-    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Išjungti sustabdymo įspėjimus</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">Priminimas užbaigti susiejimą</string>
-    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Priminimas užbaigti sąranką</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Neseniai</string>
@@ -173,5 +161,4 @@
         <item quantity="many">Pod aliarmai: %1$s</item>
         <item quantity="other">Pod aliarmai: %1$s</item>
     </plurals>
-    <string name="omnipod_common_overview_pod_hard_end_date">Galutinė Pod veikimo pabaiga</string>
 </resources>
