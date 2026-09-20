@@ -26,34 +26,11 @@
     <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
     <string name="random_bg_short">KG</string>
     <!-- Patched Syai Tag App -->
-    <string name="syai_tag_app">Syai</string>
-    <string name="description_source_patched_syai_tag_app">Gauti gliukozės duomenis iš Syai/Ottai App.</string>
     <!-- Patched SI App -->
-    <string name="patched_si_app">SI App</string>
-    <string name="description_source_patched_si_app">Gauti gliukozės duomenis iš Patched Sibionic SI App arba Sibionics App.</string>
     <!-- Patched Sino App -->
-    <string name="patched_sino_app">Sino App</string>
-    <string name="description_source_patched_sino_app">Gauti gliukozės duomenis iš Patched Sino App.</string>
     <!-- Instara App -->
-    <string name="instara_app">Instara</string>
     <string name="description_source_instara_app">Gauti glikemijos reikšmes iš Instara App.</string>
     <!-- Instara preferences -->
-    <string name="pref_title_instara_history_request">Instara istorinių duomenų užklausa</string>
-    <string name="pref_summary_instara_history_request">Fone užklausti galimai trūkstamų istorinių duomenų</string>
     <!-- Notification Reader -->
-    <string name="notification_reader">Pranešimų skaitytuvas</string>
-    <string name="description_source_notification_reader">Skaityti gliukozės reikšmes iš oficialių CGM programų (Dexcom, Medtronic, Eversense ir kt.) paskelbtų pranešimų.</string>
     <!-- Permission rationales -->
-    <string name="permission_dexcom_title">Dexcom CGM</string>
-    <string name="permission_dexcom_description">Programai reikia leidimo gauti CGM duomenis iš Dexcom programos</string>
-    <string name="permission_notification_listener_title">Prieiga prie pranešimų</string>
-    <string name="permission_notification_listener_description">Reikalinga gliukozės reikšmėms skaityti iš CGM programos pranešimų</string>
-    <string name="aidex">MicroTech CGM App</string>
-    <string name="aidex_short">CGM App</string>
-    <string name="description_source_aidex">Gauti CGM reikšmes iš LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 ir kt.</string>
-    <string name="aidex_sensor_expired">Baigėsi jutiklio naudojimo laikas. Pakeiskite jį nauju jutikliu</string>
-    <string name="aidex_sensor_error">Jutiklio klaida. Patikrinkite jutiklio būseną</string>
-    <string name="aidex_sensor_stabilizing">Jutiklis stabilizuojasi, palaukite…</string>
-    <string name="aidex_sensor_replace">Jutiklį būtina pakeisti. Kuo greičiau pakeiskite jį nauju jutikliu</string>
-    <string name="aidex_signal_lost">Prarastas jutiklio signalas. Patikrinkite ryšį</string>
 </resources>
