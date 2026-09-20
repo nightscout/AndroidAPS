@@ -68,7 +68,7 @@ class DataHandlerMobileProfileInfoTest : TestBaseWithProfile() {
     }
 
     /** An effective switch as the database hands it out; the blocks do not matter here, so a mock stands in */
-    private fun effectiveSwitch(name: String, percentage: Int = 100, timeshiftHours: Int = 0, durationMs: Long = 0L, psId: Long? = null): EPS =
+    private fun effectiveSwitch(name: String, percentage: Int = 100, timeshiftHours: Int = 0, durationMs: Long = 0L): EPS =
         mock<EPS>().also {
             whenever(it.timestamp).thenReturn(now - T.mins(10).msecs())
             whenever(it.originalProfileName).thenReturn(name)
@@ -77,7 +77,6 @@ class DataHandlerMobileProfileInfoTest : TestBaseWithProfile() {
             whenever(it.originalDuration).thenReturn(durationMs)
             // Left at zero by the sync paths, which is why the builder must not read it
             whenever(it.originalEnd).thenReturn(0L)
-            whenever(it.originalPsId).thenReturn(psId)
         }
 
     @Test
@@ -108,9 +107,16 @@ class DataHandlerMobileProfileInfoTest : TestBaseWithProfile() {
             .isEqualTo(ProfileInfo(name = "Night", percentage = 120, timeshiftHours = -2, endTime = start + duration, returnsTo = "Default", fromScene = false))
     }
 
+    /**
+     * The mark compares the scene's profile switch id with the switch in force now, not with the
+     * link stored on the effective switch: on a client that link is the master's id from
+     * Nightscout, while the scene's id is resolved to a local one.
+     */
     @Test
     fun `a switch the active scene made is marked`() = runTest {
-        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(now)).thenReturn(effectiveSwitch("Sport", durationMs = T.hours(1).msecs(), psId = 42L))
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(now)).thenReturn(effectiveSwitch("Sport", durationMs = T.hours(1).msecs()))
+        val inForce = mock<PS>().also { whenever(it.id).thenReturn(42L) }
+        whenever(persistenceLayer.getProfileSwitchActiveAt(now)).thenReturn(inForce)
 
         val marked = sut.profileInfo(now, ActiveSceneState.ScopedRecords(psId = 42L))
         val other = sut.profileInfo(now, ActiveSceneState.ScopedRecords(psId = 7L))

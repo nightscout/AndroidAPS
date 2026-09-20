@@ -1278,13 +1278,18 @@ class DataHandlerMobile(
     internal suspend fun profileInfo(now: Long, sceneRecords: ActiveSceneState.ScopedRecords?): ProfileInfo? {
         val switch = persistenceLayer.getEffectiveProfileSwitchActiveAt(now) ?: return null
         val end = if (switch.originalDuration > 0) switch.timestamp + switch.originalDuration else null
+        // The scene's profile switch id is a local id on both sides: the client resolves it by
+        // Nightscout id. The link stored on the effective switch is not: a client gets the master's
+        // id from Nightscout. So the mark compares against the profile switch in force now instead.
+        val scenePsId = sceneRecords?.psId
+        val fromScene = scenePsId != null && persistenceLayer.getProfileSwitchActiveAt(now)?.id == scenePsId
         return ProfileInfo(
             name = switch.originalProfileName,
             percentage = switch.originalPercentage,
             timeshiftHours = T.msecs(switch.originalTimeshift).hours().toInt(),
             endTime = end,
             returnsTo = end?.let { persistenceLayer.getProfileSwitchActiveAt(it + 1)?.profileName },
-            fromScene = switch.originalPsId != null && switch.originalPsId == sceneRecords?.psId
+            fromScene = fromScene
         )
     }
 
