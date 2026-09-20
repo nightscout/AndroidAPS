@@ -62,10 +62,12 @@ interface WizardBolusExecutor {
      * Decision-B order: target-RAISING TT (unconditional) → bolus/carbs → target-LOWERING TT (only if the bolus passed
      * the synchronous gate) → ProfileSwitch / RunningMode / InsulinActivate. [onError] reports only SYNCHRONOUS failures
      * (the running-mode gate or a record-only persist error); an async pump-delivery failure is surfaced by the
-     * executor's URGENT alarm, NOT via [onError]. [asAdvisor] delivers the correction-only advisor bolus (high-BG "eat
-     * later" branch) instead of the carb wizard bolus.
+     * executor's URGENT alarm, NOT via [onError]. A pump command dropped from the queue on purpose also reports its
+     * comment through [onError], but returns [ConfirmResult.Cancelled] so the caller can tell it apart from a real
+     * failure. [asAdvisor] delivers the correction-only advisor bolus (high-BG "eat later" branch) instead of the
+     * carb wizard bolus.
      */
-    suspend fun confirm(bolusId: Long, source: Sources, onError: (String) -> Unit, asAdvisor: Boolean = false, correctionU: Double = 0.0): ConfirmResult
+    suspend fun confirm(bolusId: Long, source: Sources, onError: (Failure) -> Unit, asAdvisor: Boolean = false, correctionU: Double = 0.0): ConfirmResult
 
     /**
      * Canonical wizard / quick-wizard bolus — a type-specific entry point taking exactly the wizard
@@ -80,7 +82,7 @@ interface WizardBolusExecutor {
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (String) -> Unit
+        onError: (Failure) -> Unit
     )
 
     /**
@@ -94,7 +96,7 @@ interface WizardBolusExecutor {
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (String) -> Unit
+        onError: (Failure) -> Unit
     )
 
     /**
@@ -107,7 +109,7 @@ interface WizardBolusExecutor {
         insulin: Double,
         note: String?,
         source: Sources,
-        onError: (String) -> Unit,
+        onError: (Failure) -> Unit,
         timestamp: Long? = null,
         treatmentNote: String? = null,
         recordOnly: Boolean = false,
@@ -121,7 +123,7 @@ interface WizardBolusExecutor {
      * For QuickWizard CARBS buttons and remote carb posts. [carbs] may be negative (COB correction).
      * The caller is responsible for any carbs constraint cap. [onSuccess] runs after a successful queue submit.
      */
-    suspend fun deliverCarbs(carbs: Int, note: String?, source: Sources, onError: (String) -> Unit, onSuccess: () -> Unit = {})
+    suspend fun deliverCarbs(carbs: Int, note: String?, source: Sources, onError: (Failure) -> Unit, onSuccess: () -> Unit = {})
 
     /**
      * Build + queue a generic bolus/carbs treatment. [onError] receives the mode-rejection and the async
@@ -138,7 +140,7 @@ interface WizardBolusExecutor {
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (String) -> Unit,
+        onError: (Failure) -> Unit,
         eventType: TE.Type? = null,
         recordOnly: Boolean = false,
         iCfg: ICfg? = null,
@@ -151,14 +153,14 @@ interface WizardBolusExecutor {
      * treatment and logged on the user entry; [onSuccess] runs after a successful queue submit (e.g. the
      * fill dialog's chained profile switch on insulin change).
      */
-    suspend fun deliverFillBolus(amount: Double, notes: String?, source: Sources, onError: (String) -> Unit, onSuccess: () -> Unit = {})
+    suspend fun deliverFillBolus(amount: Double, notes: String?, source: Sources, onError: (Failure) -> Unit, onSuccess: () -> Unit = {})
 
     /**
      * Extended/delayed carbs (zero insulin) — recorded once with the eCarbs timestamp. [delayMinutes] is the
      * delay from now used in the user entry (0 = no `Minute` value); [onSuccess] runs after a successful queue
      * submit. The single audited eCarbs path for the wizard, quick-wizard and wear.
      */
-    suspend fun deliverECarbs(carbs: Int, carbsTime: Long, duration: Int, delayMinutes: Int, notes: String?, source: Sources, onError: (String) -> Unit, onSuccess: () -> Unit = {})
+    suspend fun deliverECarbs(carbs: Int, carbsTime: Long, duration: Int, delayMinutes: Int, notes: String?, source: Sources, onError: (Failure) -> Unit, onSuccess: () -> Unit = {})
 
     sealed interface PrepareResult {
 
@@ -187,6 +189,19 @@ interface WizardBolusExecutor {
         data object NoAction : PrepareResult
     }
 
+    /**
+     * Why a delivery did not happen, handed to every `onError` callback.
+     *
+     * [cancelled] separates a command **dropped on purpose** — the command queue was cleared, today only by a
+     * settings import — from a real pump failure. Nothing was sent and nothing went wrong on the pump, so the
+     * caller must NOT raise the delivery alarm for it. It must still say something: unlike a temp basal, which
+     * the loop re-issues on its next cycle, nothing re-sends a bolus.
+     *
+     * [comment] is ready to show: already localized, and already phrased for the case (the executor picks the
+     * cancelled wording itself). Callers display it as-is and use [cancelled] only to choose how loudly.
+     */
+    data class Failure(val comment: String, val cancelled: Boolean = false)
+
     sealed interface ConfirmResult {
 
         /** Bolus started (async). */
@@ -194,6 +209,14 @@ interface WizardBolusExecutor {
 
         /** Slot empty or id mismatch — nothing delivered (idempotent retry / stale confirm). */
         data object NoPending : ConfirmResult
+
+        /**
+         * A pump command of the batch was dropped from the command queue on purpose — the queue was cleared,
+         * today only by a settings import. Nothing was sent to the pump, and nothing failed on it, so the caller
+         * must report this as a plain "cancelled" message and NEVER as the delivery alarm. The dropped command
+         * still reports its comment through [confirm]'s `onError`, so the caller is not told it was applied.
+         */
+        data object Cancelled : ConfirmResult
     }
 
     /**

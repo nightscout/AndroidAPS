@@ -501,7 +501,7 @@ class WizardBolusExecutorImpl(
         return WizardBolusExecutor.PrepareResult.Preview(insulin, carbs, bolusId, lines = lines, advisorApplies = false, advisorLines = emptyList())
     }
 
-    override suspend fun confirm(bolusId: Long, source: Sources, onError: (String) -> Unit, asAdvisor: Boolean, correctionU: Double): WizardBolusExecutor.ConfirmResult {
+    override suspend fun confirm(bolusId: Long, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, asAdvisor: Boolean, correctionU: Double): WizardBolusExecutor.ConfirmResult {
         // Atomic consume-once: remove(bolusId) returns the parked dose and removes it in one step, so two
         // concurrent commits of the same id can't both deliver (the loser gets null → NoPending). A non-matching
         // id removes nothing, leaving other actors' parked doses intact.
@@ -524,7 +524,7 @@ class WizardBolusExecutorImpl(
             // BOLUS_DELIVERY_FAILED alarm, NOT by reverting the steps below. Consequence: a target-LOWERING TT / PS / RM
             // can still apply when the bolus was queued but later failed on the pump (the alarm is the mitigation).
             var accepted = true
-            val wrapped: (String) -> Unit = { accepted = false; onError(it) }
+            val wrapped: (WizardBolusExecutor.Failure) -> Unit = { accepted = false; onError(it) }
             when {
                 p.recordOnly                     -> {
                     // Record-only (a pen bolus, or a master that can't deliver): persist insulin AND carbs as given,
@@ -579,15 +579,19 @@ class WizardBolusExecutorImpl(
             // A running-mode change is likewise independent of any dose (an RM-only batch no-ops the deliver(0,0)).
             p.runningMode?.let { applyRunningMode(it, source) }
             // Pump-direct manual actions (relayed from a client, or a master-local dialog) — independent of any dose.
-            p.tempBasal?.let { applyTempBasal(it, source, onError) }
-            p.extendedBolus?.let { applyExtendedBolus(it, source, onError) }
-            if (p.cancelTempBasal) applyCancelTempBasal(source, onError)
-            if (p.cancelExtendedBolus) applyCancelExtendedBolus(source, onError)
+            // These four await the command queue, so a command dropped from it (a settings import clears the queue)
+            // is visible HERE, unlike the asynchronous bolus. `cancelled` carries that to the caller, which must
+            // then show a plain message instead of the delivery alarm — nothing was sent to the pump.
+            var cancelled = false
+            p.tempBasal?.let { cancelled = applyTempBasal(it, source, onError) || cancelled }
+            p.extendedBolus?.let { cancelled = applyExtendedBolus(it, source, onError) || cancelled }
+            if (p.cancelTempBasal) cancelled = applyCancelTempBasal(source, onError) || cancelled
+            if (p.cancelExtendedBolus) cancelled = applyCancelExtendedBolus(source, onError) || cancelled
             // QuickWizard INSULIN/CARBS: mark the originating entry used HERE on the master (SOT) — the lastUsed write
             // republishes to clients via the cold-doc sync. The client must NOT do this itself (it would push the synced
             // QuickWizard pref back over the round-trip and collide with this commit → "Update settings … Busy").
             p.entry?.markAsUsed()
-            return WizardBolusExecutor.ConfirmResult.Delivered
+            return if (cancelled) WizardBolusExecutor.ConfirmResult.Cancelled else WizardBolusExecutor.ConfirmResult.Delivered
         }
 
         // High-BG advisor branch (user chose "correct now, eat later"): a correction-only CORRECTION_BOLUS —
@@ -920,9 +924,12 @@ class WizardBolusExecutorImpl(
         RM.Mode.SUPER_BOLUS, RM.Mode.SUSPENDED_BY_PUMP, RM.Mode.SUSPENDED_BY_DST -> rh.gs(CoreUiStrings.running_mode)
     }
 
-    /** Apply a batch temp basal on the master's pump (already capped + style-validated in prepareBatch). */
-    private suspend fun applyTempBasal(tb: BatchAction.TempBasal, source: Sources, onError: (String) -> Unit) {
-        val profile = profileFunction.getProfile() ?: return
+    /**
+     * Apply a batch temp basal on the master's pump (already capped + style-validated in prepareBatch).
+     * Returns true when the command was dropped from the queue on purpose (see `ConfirmResult.Cancelled`).
+     */
+    private suspend fun applyTempBasal(tb: BatchAction.TempBasal, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit): Boolean {
+        val profile = profileFunction.getProfile() ?: return false
         val result = if (tb.isPercent) {
             uel.log(action = Action.TEMP_BASAL, source = source, listValues = listOf(ValueWithUnit.Percent(tb.rate.toInt()), ValueWithUnit.Minute(tb.durationMinutes)))
             commandQueue.tempBasalPercent(tb.rate.toInt(), tb.durationMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
@@ -930,7 +937,8 @@ class WizardBolusExecutorImpl(
             uel.log(action = Action.TEMP_BASAL, source = source, listValues = listOf(ValueWithUnit.Insulin(tb.rate), ValueWithUnit.Minute(tb.durationMinutes)))
             commandQueue.tempBasalAbsolute(tb.rate, tb.durationMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL)
         }
-        if (!result.success) onError(result.comment)
+        if (!result.success) onError(WizardBolusExecutor.Failure(result.comment, result.cancelled))
+        return result.cancelled
     }
 
     /** The TBR line(s) — rate (percent or absolute) + duration, with a cap warning when reduced. */
@@ -943,11 +951,15 @@ class WizardBolusExecutorImpl(
         return out
     }
 
-    /** Apply a batch extended bolus on the master's pump (already capped in prepareBatch). */
-    private suspend fun applyExtendedBolus(eb: BatchAction.ExtendedBolus, source: Sources, onError: (String) -> Unit) {
+    /**
+     * Apply a batch extended bolus on the master's pump (already capped in prepareBatch).
+     * Returns true when the command was dropped from the queue on purpose (see `ConfirmResult.Cancelled`).
+     */
+    private suspend fun applyExtendedBolus(eb: BatchAction.ExtendedBolus, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit): Boolean {
         uel.log(action = Action.EXTENDED_BOLUS, source = source, listValues = listOf(ValueWithUnit.Insulin(eb.insulin), ValueWithUnit.Minute(eb.durationMinutes)))
         val result = commandQueue.extendedBolus(eb.insulin, eb.durationMinutes)
-        if (!result.success) onError(result.comment)
+        if (!result.success) onError(WizardBolusExecutor.Failure(result.comment, result.cancelled))
+        return result.cancelled
     }
 
     /** The extended-bolus line(s) — insulin + duration, with a cap warning when reduced. */
@@ -959,18 +971,20 @@ class WizardBolusExecutorImpl(
         return out
     }
 
-    /** Cancel a running temp basal on the master's pump. */
-    private suspend fun applyCancelTempBasal(source: Sources, onError: (String) -> Unit) {
+    /** Cancel a running temp basal on the master's pump. Returns true when the command was dropped on purpose. */
+    private suspend fun applyCancelTempBasal(source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit): Boolean {
         uel.log(action = Action.CANCEL_TEMP_BASAL, source = source)
         val result = commandQueue.cancelTempBasal(enforceNew = true)
-        if (!result.success) onError(result.comment)
+        if (!result.success) onError(WizardBolusExecutor.Failure(result.comment, result.cancelled))
+        return result.cancelled
     }
 
-    /** Cancel a running extended bolus on the master's pump. */
-    private suspend fun applyCancelExtendedBolus(source: Sources, onError: (String) -> Unit) {
+    /** Cancel a running extended bolus on the master's pump. Returns true when the command was dropped on purpose. */
+    private suspend fun applyCancelExtendedBolus(source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit): Boolean {
         uel.log(action = Action.CANCEL_EXTENDED_BOLUS, source = source)
         val result = commandQueue.cancelExtended()
-        if (!result.success) onError(result.comment)
+        if (!result.success) onError(WizardBolusExecutor.Failure(result.comment, result.cancelled))
+        return result.cancelled
     }
 
     /** The single cancel line — "Cancel: Temp basal" / "Cancel: Extended bolus" ([labelRes] = the cancelled action). */
@@ -992,9 +1006,9 @@ class WizardBolusExecutorImpl(
      * `FillDialogViewModel.reportInsulinActivation` already funnels every non-success outcome to the user -
      * it just never heard about this one.
      */
-    private suspend fun applyInsulinActivate(ia: BatchAction.InsulinActivate, source: Sources, onError: (String) -> Unit) {
+    private suspend fun applyInsulinActivate(ia: BatchAction.InsulinActivate, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit) {
         if (!profileFunction.createProfileSwitchWithNewInsulin(ia.iCfg, source))
-            onError(rh.gs(CoreUiStrings.insulin_activation_failed))
+            onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.insulin_activation_failed)))
     }
 
     /** The careportal-event confirmation line (rarely surfaced — careportal auto-commits without showing the batch preview). */
@@ -1051,11 +1065,11 @@ class WizardBolusExecutorImpl(
      * since-deleted event must surface, not vanish). [note] is applied verbatim (incl. null) so clearing a note works.
      * A relayed edit is logged with the executor-provided [source].
      */
-    private suspend fun applyTherapyEventEdit(te: BatchAction.TherapyEventEdit, source: Sources, onError: (String) -> Unit) {
+    private suspend fun applyTherapyEventEdit(te: BatchAction.TherapyEventEdit, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit) {
         val existing = persistenceLayer.getTherapyEventDataFromToTime(te.timestamp, te.timestamp).firstOrNull { it.type == te.teType }
         if (existing == null) {
             aapsLogger.warn(LTag.DATABASE, "TherapyEvent edit target not found at ${te.timestamp} ${te.teType}")
-            onError(rh.gs(CoreUiStrings.clientcontrol_fail_site_entry_not_found))
+            onError(WizardBolusExecutor.Failure(rh.gs(CoreUiStrings.clientcontrol_fail_site_entry_not_found)))
             return
         }
         val updated = existing.copy(location = te.location, arrow = te.arrow, note = te.note) // keep ids → NS PUT-updates the same record (no duplicate)
@@ -1076,7 +1090,7 @@ class WizardBolusExecutorImpl(
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (String) -> Unit
+        onError: (WizardBolusExecutor.Failure) -> Unit
     ) {
         // Type-specific entry point: build the canonical BOLUS_WIZARD end state from the wizard inputs,
         // then funnel into the shared core. Phone (WizardDialog) and watch (QuickWizard) differ only in
@@ -1113,7 +1127,7 @@ class WizardBolusExecutorImpl(
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (String) -> Unit
+        onError: (WizardBolusExecutor.Failure) -> Unit
     ) {
         // Correction-only advisor bolus (BG high, carbs imminent): canonical CORRECTION_BOLUS end state,
         // and the eat reminder is scheduled on delivery success. The BCR rides the DBI but is not persisted
@@ -1144,7 +1158,7 @@ class WizardBolusExecutorImpl(
         insulin: Double,
         note: String?,
         source: Sources,
-        onError: (String) -> Unit,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
         timestamp: Long?,
         treatmentNote: String?,
         recordOnly: Boolean,
@@ -1176,7 +1190,7 @@ class WizardBolusExecutorImpl(
         }
     }
 
-    override suspend fun deliverCarbs(carbs: Int, note: String?, source: Sources, onError: (String) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun deliverCarbs(carbs: Int, note: String?, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
         // Instant carbs at now (zero insulin): CARBS_CORRECTION + CARBS user entry; note on the entry only.
         val detailedBolusInfo = DetailedBolusInfo().apply {
             eventType = TE.Type.CARBS_CORRECTION
@@ -1205,7 +1219,7 @@ class WizardBolusExecutorImpl(
         bolusCalculatorResult: BCR?,
         notes: String?,
         source: Sources,
-        onError: (String) -> Unit,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
         eventType: TE.Type?,
         recordOnly: Boolean,
         iCfg: ICfg?,
@@ -1250,7 +1264,7 @@ class WizardBolusExecutorImpl(
         note: String?,
         bolusCalculatorResult: BCR?,
         source: Sources,
-        onError: (String) -> Unit,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
         onSuccess: () -> Unit = {},
         recordOnly: Boolean = false,
         iCfg: ICfg? = null
@@ -1278,7 +1292,7 @@ class WizardBolusExecutorImpl(
         }
         if (detailedBolusInfo.insulin > 0) {
             runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let {
-                onError(it)
+                onError(WizardBolusExecutor.Failure(it))
                 return
             }
         }
@@ -1286,24 +1300,31 @@ class WizardBolusExecutorImpl(
         appScope.launch {
             val result = commandQueue.bolus(detailedBolusInfo)
             if (!result.success && !bolusProgressData.isStopPressed) {
-                val errorText = rh.gs(CoreUiStrings.treatmentdeliveryerror) + "\n" + result.comment
-                // Async delivery failure: the entry dialog is long gone, so surface it as an URGENT notification —
-                // the single, reliable master-side alarm for EVERY bolus path, regardless of which UI started it.
-                // SMB stays silent (the loop self-corrects next cycle). onError still fires so the initiating
-                // transport relays too (the watch's sendError today; a client's late ack in phase 1b).
-                // A command dropped on purpose (an import, a cleared queue) is not an alarm either,
-                // for the same reason a bolus the user stopped is not. It must still reach onError
-                // below, or the caller is told a dose was delivered that never was.
-                if (detailedBolusInfo.bolusType != BS.Type.SMB && !result.cancelled)
-                    notificationManager.post(NotificationId.BOLUS_DELIVERY_FAILED, errorText, validMinutes = 0, sound = AlarmSound.BOLUS_ERROR)
-                onError(errorText)
+                // Async delivery failure: the entry dialog is long gone, so surface it here — the single, reliable
+                // master-side message for EVERY bolus path, regardless of which UI started it. SMB stays silent
+                // (the loop self-corrects next cycle). onError still fires so the initiating transport relays too
+                // (the watch's sendError today; a client's late ack in phase 1b).
+                //
+                // Two different things, two different messages. A command DROPPED ON PURPOSE (a settings import
+                // clears the queue) is not a pump failure, so it must not ring the alarm. But it must still be
+                // said: the user pressed bolus, no insulin was given, and nothing re-sends it — a temp basal the
+                // loop re-issues next cycle, a bolus nobody does. Hence a silent IMPORTANT notification, not
+                // silence. Either way it reaches onError below, or the caller is told a dose was delivered.
+                val errorText =
+                    if (result.cancelled) rh.gs(CoreUiStrings.bolus_cancelled_no_insulin, result.comment)
+                    else rh.gs(CoreUiStrings.treatmentdeliveryerror) + "\n" + result.comment
+                if (detailedBolusInfo.bolusType != BS.Type.SMB) {
+                    if (result.cancelled) notificationManager.post(NotificationId.BOLUS_CANCELLED, errorText)
+                    else notificationManager.post(NotificationId.BOLUS_DELIVERY_FAILED, errorText, validMinutes = 0, sound = AlarmSound.BOLUS_ERROR)
+                }
+                onError(WizardBolusExecutor.Failure(errorText, result.cancelled))
             } else
                 onSuccess()
         }
         bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) }
     }
 
-    override suspend fun deliverFillBolus(amount: Double, notes: String?, source: Sources, onError: (String) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun deliverFillBolus(amount: Double, notes: String?, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
         // Prime/fill now rides the shared core (one audited path). PRIMING type keeps it out of IOB/TDD.
         val detailedBolusInfo = DetailedBolusInfo().apply {
             insulin = amount
@@ -1324,7 +1345,7 @@ class WizardBolusExecutorImpl(
         }
     }
 
-    override suspend fun deliverECarbs(carbs: Int, carbsTime: Long, duration: Int, delayMinutes: Int, notes: String?, source: Sources, onError: (String) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun deliverECarbs(carbs: Int, carbsTime: Long, duration: Int, delayMinutes: Int, notes: String?, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, onSuccess: () -> Unit) {
         // Funnel straight through the shared core (not via deliver) so the UEL is logged exactly once with
         // the eCarbs Timestamp; routing via deliver would re-log [Gram, Hour] as a second, duplicate row.
         val detailedBolusInfo = DetailedBolusInfo().apply {

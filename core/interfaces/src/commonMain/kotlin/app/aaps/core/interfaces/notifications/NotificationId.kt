@@ -54,6 +54,11 @@ enum class NotificationId(
     // A user/remote (non-SMB) bolus failed to deliver — surfaced once, here, from the executor (the entry
     // dialog is gone by the time the async result arrives). SMB failures stay silent (the loop self-corrects).
     BOLUS_DELIVERY_FAILED(URGENT, PUMP),
+
+    // The same bolus never reached the pump, but because the queue was cleared on purpose (a settings import) —
+    // nothing failed on the pump, so this is NOT the alarm tier. It still has to be said: the user pressed bolus,
+    // no insulin was given, and nobody re-sends it (unlike a temp basal, which the loop re-issues next cycle).
+    BOLUS_CANCELLED(IMPORTANT, PUMP),
     WRONG_SERIAL_NUMBER(NORMAL, PUMP),
     WRONG_BASAL_STEP(NORMAL, PUMP),
     WRONG_DRIVER(NORMAL, PUMP),

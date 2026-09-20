@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.compensateForClockSkew
@@ -501,7 +501,7 @@ class InsulinManagementViewModel(
                     // Offline block (and a master-local failure, e.g. no active profile) surface here; a client round-trip
                     // failure already showed on the app-level modal.
                     is ActionProgress.Rejected ->
-                        if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled) showSnackbar(rh.gs(prepared.reason.failText()))
+                        if (prepared.reason.isNotDeliveryError()) showSnackbar(rh.gs(prepared.reason.failText()))
                         else prepared.detail?.let { showSnackbar(it) }
 
                     else                       -> Unit // Unconfirmed → app-level modal
@@ -522,7 +522,7 @@ class InsulinManagementViewModel(
                     refreshData()
                 }
 
-                result is ActionProgress.Rejected && (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled) -> showSnackbar(rh.gs(result.reason.failText()))
+                result is ActionProgress.Rejected && (result.reason.isNotDeliveryError()) -> showSnackbar(rh.gs(result.reason.failText()))
                 result is ActionProgress.Rejected                                                -> result.detail?.let { showSnackbar(it) }
             }
         }

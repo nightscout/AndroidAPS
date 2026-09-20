@@ -484,7 +484,7 @@ class ClientControlReceiver(
     private suspend fun onVerifiedSceneCommit(entry: AuthorizedClient, envelope: SignedEnvelope, message: ClientControlMessage.SceneCommit, now: Long): AckOutcome {
         authorizedRepository.bumpLastSeen(entry.clientId, envelope.counter, now)
         var err: String? = null
-        val result = sceneAutomationApi.commitScene(message.bolusId) { err = it }
+        val result = sceneAutomationApi.commitScene(message.bolusId) { err = it.comment }
         val activated = result is WizardBolusExecutor.ConfirmResult.Delivered
         nsClientRepository.addLog("◄ CLIENTCTL", "scene.commit id=${message.bolusId} from ${entry.name}: ${if (activated) "activated" else "no-pending"}")
         return when {
@@ -587,22 +587,33 @@ class ClientControlReceiver(
         progressArmedGeneration = bolusProgressData.currentGeneration
         progressClientId.store(entry.clientId)
         val syncDone = AtomicBoolean(false)
-        val result = wizardBolusExecutor.confirm(message.bolusId, Sources.NSClient, { comment ->
+        val result = wizardBolusExecutor.confirm(message.bolusId, Sources.NSClient, { failure ->
             // Delivery failed. If no frame ever streamed for this arm (the bolus never started — e.g. the master was
             // already bolusing, so the queue rejected this one), disarm now so a LATER unrelated master bolus isn't
             // mirrored to this client during the remaining arm-TTL. Skip if it IS streaming (its terminal Cleared
             // frame disarms instead); compareAndSet so a newer commit's arm is never clobbered (fires sync OR async).
             if (!progressDelivering) progressClientId.compareAndSet(entry.clientId, null)
-            if (syncDone.load()) appScope.launch { writeDeliveryFailureAck(entry, envelope.counter, comment) }
-            else deliverError.store(comment)
+            // The reason travels with the late ack: a command dropped on purpose must not ring the client's alarm,
+            // and this callback is the only place that knows — by now confirm() has long returned.
+            val reason = if (failure.cancelled) FailureReason.Cancelled else FailureReason.ExecutionFailed
+            if (syncDone.load()) appScope.launch { writeDeliveryFailureAck(entry, envelope.counter, failure.comment, reason) }
+            else deliverError.store(failure.comment)
         }, message.asAdvisor, correctionU = message.correctionU)
         syncDone.store(true)
         val delivered = result is WizardBolusExecutor.ConfirmResult.Delivered
-        if (!delivered) progressClientId.store(null) // NoPending → nothing starts → don't mirror a future bolus to this client
-        nsClientRepository.addLog("◄ CLIENTCTL", "bolus.commit id=${message.bolusId}${if (message.asAdvisor) " advisor" else ""} from ${entry.name}: ${if (delivered) "delivered" else "no-pending"}")
+        if (!delivered) progressClientId.store(null) // NoPending / Cancelled → nothing starts → don't mirror a future bolus to this client
+        val outcome = when (result) {
+            WizardBolusExecutor.ConfirmResult.Delivered -> "delivered"
+            WizardBolusExecutor.ConfirmResult.NoPending -> "no-pending"
+            WizardBolusExecutor.ConfirmResult.Cancelled -> "cancelled"
+        }
+        nsClientRepository.addLog("◄ CLIENTCTL", "bolus.commit id=${message.bolusId}${if (message.asAdvisor) " advisor" else ""} from ${entry.name}: $outcome")
         val err = deliverError.load()
         return when {
             result is WizardBolusExecutor.ConfirmResult.NoPending -> AckOutcome(AckStatus.Failed, FailureReason.NoPendingBolus.name)
+            // Dropped from the queue on purpose (a settings import on the master). The client must show the plain
+            // "cancelled" message, not the delivery alarm — so the reason travels, not the generic failure.
+            result is WizardBolusExecutor.ConfirmResult.Cancelled -> AckOutcome(AckStatus.Failed, FailureReason.Cancelled.name, err)
             err != null                                           -> AckOutcome(AckStatus.Failed, FailureReason.ExecutionFailed.name, err)
             else                                                  -> AckOutcome(AckStatus.Ok, null)
         }
@@ -827,14 +838,19 @@ class ClientControlReceiver(
 
     /**
      * Relay an ASYNC bolus delivery failure (the pump failed AFTER the Done ack already said "queued") to the
-     * initiating client as a late [AckPhase.Delivery]/[AckStatus.Failed] ack — the client turns it into an URGENT
-     * alarm. Re-resolves the client + secret since the async failure fires long after [verifyAndAck] returned;
-     * best-effort + exception-safe (writeAck swallows write failures). [comment] is the pump's error detail.
+     * initiating client as a late [AckPhase.Delivery]/[AckStatus.Failed] ack. Re-resolves the client + secret
+     * since the async failure fires long after [verifyAndAck] returned; best-effort + exception-safe (writeAck
+     * swallows write failures). [comment] is the pump's error detail.
+     *
+     * [reason] decides how loud the client is: [FailureReason.ExecutionFailed] turns into its URGENT alarm,
+     * [FailureReason.Cancelled] into a silent notice, because a command dropped on purpose did not fail. An
+     * older client ignores the reason on this phase and always alarms — that is a version-skew limit, not a
+     * reason to keep sending the wrong code.
      */
-    private suspend fun writeDeliveryFailureAck(entry: AuthorizedClient, commandCounter: Long, comment: String) {
+    private suspend fun writeDeliveryFailureAck(entry: AuthorizedClient, commandCounter: Long, comment: String, reason: FailureReason) {
         val client = nsClientV3Plugin().nsAndroidClient ?: return
         val secret = authorizedRepository.secretLookup(entry.clientId)?.secretBytes ?: return
-        writeAck(client, secret, entry.clientId, commandCounter, AckPhase.Delivery, AckStatus.Failed, FailureReason.ExecutionFailed.name, comment, dateUtil.now())
+        writeAck(client, secret, entry.clientId, commandCounter, AckPhase.Delivery, AckStatus.Failed, reason.name, comment, dateUtil.now())
     }
 
     /**

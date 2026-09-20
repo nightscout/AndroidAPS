@@ -185,13 +185,17 @@ class ClientControlRoundTrip(
         // raise an URGENT alarm here. It is NOT a round-trip response (the commit already terminated), so it does
         // not feed ackEvents; the master itself alarmed locally too (executor, phase 1a).
         if (ack.phase == AckPhase.Delivery) {
-            if (ack.status == AckStatus.Failed)
-                notificationManager.post(
-                    NotificationId.BOLUS_DELIVERY_FAILED,
-                    // payload is the master-authored full text ("title\n<pump detail>"); show it as-is, don't re-prefix the title.
-                    ack.payload ?: rh.gs(CoreUiStrings.treatmentdeliveryerror),
-                    validMinutes = 0, sound = AlarmSound.BOLUS_ERROR
-                )
+            if (ack.status == AckStatus.Failed) {
+                // payload is the master-authored full text ("title\n<pump detail>"); show it as-is, don't re-prefix the title.
+                val text = ack.payload ?: rh.gs(CoreUiStrings.treatmentdeliveryerror)
+                // A command the master dropped on purpose (its queue was cleared by a settings import) did not fail
+                // on the pump, so it must not alarm here either — the master itself only posts a silent notice. It
+                // still has to be shown: nothing re-sends a bolus.
+                if (ack.reason.toFailureReason() == FailureReason.Cancelled)
+                    notificationManager.post(NotificationId.BOLUS_CANCELLED, text)
+                else
+                    notificationManager.post(NotificationId.BOLUS_DELIVERY_FAILED, text, validMinutes = 0, sound = AlarmSound.BOLUS_ERROR)
+            }
             return
         }
         ackEvents.tryEmit(ack)
