@@ -4,82 +4,30 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Ryšio nustatymai</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="description_ns_client_v3">Sinchronizuoja jūsų duomenis su Nightscout naudodamas v3 API</string>
     <string name="blocked_by_charging">Užblokuota dėl įkrovimo parinkčių</string>
     <string name="blocked_by_connectivity">Užblokuota dėl ryšio parinkčių</string>
     <string name="no_connectivity">Nėra ryšio</string>
     <string name="unsupported_ns_version">Nepalaikoma Nightscout versija</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
-    <string name="authorized_clients_title">Įgalioti klientai</string>
-    <string name="authorized_clients_add">Pridėti klientą</string>
-    <string name="authorized_clients_comm_switch_title">Leisti valdyti iš kliento</string>
-    <string name="authorized_clients_comm_switch_summary">Leisti susietiems klientams per Nightscout siųsti pasirašytas komandas. Išjunkite, kad sustabdytumėte ryšį jų nepašalindami.</string>
-    <string name="authorized_clients_needs_websocket">WebSocket ryšys išjungtas, todėl klientų komandų gauti negalima. Kol neįjungsite WebSocket ryšio, klientai matys, kad šis pagrindinis įrenginys nepriima komandų.</string>
-    <string name="authorized_clients_state_active">Aktyvus</string>
-    <string name="authorized_clients_state_pending">Laukiama</string>
-    <string name="authorized_clients_last_seen">Paskutinį kartą matytas %1$s</string>
-    <string name="authorized_clients_never_seen">Niekada nenaudotas</string>
-    <string name="authorized_clients_pending_expires_in">Susiejimas baigs galioti po %1$ss</string>
-    <string name="authorized_clients_empty_title">Nėra įgaliotų klientų</string>
-    <string name="authorized_clients_empty_subtitle">Susiekite kliento įrenginį, kad jis galėtų siųsti pasirašytas komandas šiam pagrindiniam įrenginiui.</string>
-    <string name="authorized_clients_name_dialog_title">Naujas klientas</string>
-    <string name="authorized_clients_name_placeholder">Įrenginio pavadinimas</string>
-    <string name="authorized_clients_delete_dialog_title">Atšaukti prieigą?</string>
-    <string name="authorized_clients_delete_dialog_message">%1$s nebegalės siųsti komandų.</string>
-    <string name="authorized_clients_pin_dialog_title">Susieti klientą</string>
-    <string name="authorized_clients_pin_instructions">Įveskite šį PIN kliento įrenginyje. Kodas galioja tik vienam susiejimui.</string>
-    <string name="authorized_clients_pin_expires_in">Baigs galioti po %1$ss</string>
-    <string name="authorized_clients_pin_done">Atlikta</string>
-    <string name="authorized_clients_pin_publishing">Susiejimo pasiūlymas siunčiamas į Nightscout…</string>
-    <string name="authorized_clients_pin_published">Susiejimo pasiūlymas paruoštas sistemoje Nightscout.</string>
-    <string name="authorized_clients_pin_publish_failed">Nepavyko įkelti susiejimo pasiūlymo į Nightscout.</string>
-    <string name="authorized_clients_pin_retry">Bandyti dar kartą</string>
     <!-- Pair with master (client side PIN entry) -->
-    <string name="pair_with_master_title">Susieti su pagrindiniu įrenginiu</string>
-    <string name="pair_with_master_pin_entry_title">Įveskite susiejimo PIN</string>
-    <string name="pair_with_master_pin_entry_message">Pagrindiniame įrenginyje atverkite Įgaliotus klientus ir pridėkite šį klientą. Įveskite ten rodomą 8 skaitmenų PIN.</string>
-    <string name="pair_with_master_pin_entry_label">8 skaitmenų PIN</string>
-    <string name="pair_with_master_pin_entry_submit">Susieti</string>
-    <string name="pair_with_master_fetching">Ieškoma susiejimo…</string>
-    <string name="pair_with_master_confirm_title">Susieti su šiuo pagrindiniu įrenginiu?</string>
-    <string name="pair_with_master_confirm_master">Pagrindinis įrenginys: %1$s</string>
-    <string name="pair_with_master_confirm_warning">Susiejus šis pagrindinis įrenginys galės siųsti pasirašytas komandas į šį įrenginį.</string>
-    <string name="pair_with_master_confirm_pair">Susieti</string>
-    <string name="pair_with_master_error_title">Susieti nepavyko</string>
-    <string name="pair_with_master_error_wrong_pin">Pagal šį PIN susiejimas nerastas. Patikrinkite PIN pagrindiniame įrenginyje ir bandykite dar kartą.</string>
-    <string name="pair_with_master_error_ambiguous_pin">Šį PIN atitiko keli susiejimai. Pagrindiniame įrenginyje sugeneruokite naują PIN ir bandykite dar kartą.</string>
-    <string name="pair_with_master_error_expired">Šio susiejimo galiojimas baigėsi. Pagrindiniame įrenginyje sugeneruokite naują PIN.</string>
-    <string name="pair_with_master_error_network">Nepavyksta pasiekti Nightscout. Patikrinkite ryšį ir bandykite dar kartą.</string>
-    <string name="pair_with_master_retry">Bandyti dar kartą</string>
-    <string name="pair_with_master_already_paired_title">Jau susieta</string>
-    <string name="pair_with_master_already_paired_master">Šiuo metu susieta su pagrindiniu įrenginiu %1$s. Norėdami įvesti naują PIN, pirmiausia atsiekite.</string>
-    <string name="pair_with_master_unpair">Atsieti</string>
-    <string name="pair_with_master_sending">Siunčiamas susiejimo pranešimas…</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
-    <string name="clientcontrol_orphan_notification">Pagrindinis AAPS įrenginys šio įrenginio nebeatpažįsta. Atverkite valdymo skydą → Susieti su pagrindiniu įrenginiu ir susiekite iš naujo.</string>
     <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
     <string name="ns_client_v3_title">NSClientV3</string>
     <string name="deliver_now">Suleisti dabar</string>
     <string name="queue">Eilė:</string>
-    <string name="status_label">Būsena:</string>
     <string name="clear_log">Ištrinti įrašą</string>
     <string name="full_sync">Pilna sinchronizacija</string>
     <string name="full_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai valandų ir kol ji nebus užbaigta, nematysite atnaujintų NS duomenų.</string>
     <string name="ns_sync_options">Sinchronizacija</string>
     <string name="ns_alarm_options">Aliarmų nustatymai</string>
-    <string name="ns_remote_control_options">Nuotolinis valdymas</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_dev_servers">Įjungus duomenys bus įkeliami į bandomuosius, o ne įprastus serverius</string>
     <string name="title_tidepool_dev_servers">Naudoti integracijos (test) serverius</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Sinchronizuoti duomenis su Tidepool</string>
     <string name="upload_now">Įkelti dabar</string>
-    <string name="tidepool_purge_data">Išvalyti visus duomenis</string>
-    <string name="tidepool_purge_data_confirm">Ištrinti VISUS duomenis, kuriuos AAPS įkėlė į Tidepool? Šio veiksmo atšaukti negalima. Naudokite šią funkciją senesnės versijos sugadintiems duomenims pašalinti, tada paleiskite „Visą sinchronizavimą“, kad įkeltumėte duomenis iš naujo.</string>
     <string name="not_connected">Neprisijungta</string>
     <string name="read_only">Tik skaityti</string>
     <string name="working">Dirbama</string>
@@ -93,9 +41,6 @@
     <string name="xdrip_local_broadcasts_summary">Siųsti glikemijos ir terapijos duomenis į xDrip+. Turi būti pasirinktas duomenų šaltinis „xDrip+ Sync Follower“, o duomenų priėmimas turi būti įjungtas skiltyje Nustatymai – Programų sąveikos nustatymai – Priimti glikemiją/terapiją</string>
     <string name="xdrip_local_broadcasts_title">Įjungti duomenų perdavimą į xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="tizen">Išorinės papildomos programos</string>
-    <string name="tizen_short">CAB</string>
-    <string name="tizen_description">Įjungia duomenų transliavimą įvairioms išorinėms papildomoms programoms</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Susiejimas su Garmin (Fenix, Edge, …)</string>
@@ -108,20 +53,13 @@
     <string name="pump_status">Pompos statusas</string>
     <string name="loop_status">Ciklo statusas</string>
     <string name="user_action_not_available">Pasirinktas naudotojo veiksmas %1$s nebepasiekiamas, atnaujinkite savo valdiklį</string>
-    <string name="scene_not_available">Scenarijus %1$s nebepasiekiamas. Atnaujinkite plytelę</string>
-    <string name="wear_remote_insulin_not_allowed_in_client">Nuotolinės insulino komandos išjungtos kliento režimu</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
     <string name="wear_action_tempt_min_bg_error">Minimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
     <string name="wear_action_tempt_max_bg_error">Maksimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
-    <string name="wear_action_tempt_range_error">Netinkamas diapazonas: apatinis tikslas (%1$s) negali būti didesnis už viršutinį tikslą (%2$s)</string>
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukiami į rezultatą:</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
     <string name="wear_custom_watchface_settings">Pasirinktiniai laikrodžio ekrano nustatymai</string>
     <string name="wear_custom_watchface">Pasirinktinis ekranas: %1$s</string>
-    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Diegiama…</string>
-    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Laikrodyje rodomas Komplikacijų ciferblatas. Pasirinkite Pasirinktinį ciferblatą, kad laikrodyje matytumėte %1$s.</string>
-    <string name="wear_pushed_watchface_confirm_title">Pakeisti laikrodžio ciferblatą?</string>
-    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s laikrodyje pakeis %2$s.</string>
     <string name="wear_load_watchface">Įkelti laikrodžio ekraną</string>
     <string name="wear_infos_watchface">Ekrano info</string>
     <string name="wear_export_watchface">Eksportuoti šabloną</string>
@@ -129,12 +67,9 @@
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
     <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
-    <string name="wear_import_custom_watchface_title">Pasirinkti pasirinktinį ciferblatą</string>
     <string name="cwf_infos_pref_locked">Užrakintų nustatymų sąrašas</string>
     <string name="cwf_infos_pref_required">Ekranui reikalingų nustatymų sąrašas</string>
     <string name="cwf_infos_view_title">Į ekraną įtrauktų laukų sąrašas</string>
-    <string name="enabled">Įjungta</string>
-    <string name="disabled">Išjungta</string>
     <string name="pump_fetching_data">Bandoma įkelti pompos duomenis</string>
     <string name="pump_old_data">BPD: seni duomenys! Nepavyksta nuskaityti pompos.</string>
     <string name="units_short">V</string>
@@ -152,7 +87,6 @@
     <string name="last_aps_result_na">Paskutinis rezultatas nežinomas!</string>
     <string name="loop_status_closed">UŽDARAS CIKLAS</string>
     <string name="loop_status_open">ATVIRAS CIKLAS</string>
-    <string name="loop_status_lgs">LGS</string>
     <string name="loop_status_disabled">CIKLAS IŠJUNGTAS</string>
     <string name="aps">APS</string>
     <string name="last_run">Paskutinis veiksmas</string>
@@ -161,10 +95,6 @@
     <string name="today">Šiandien</string>
     <string name="weighted">svertinis</string>
     <string name="full_xdrip_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai laiko ir kol ji nebus užbaigta, nematysite atnaujintų xDrip+.</string>
-    <string name="wear_action_loop_state_unauthorized">Bandykite dar kartą.</string>
-    <string name="wear_action_loop_state_invalid">Paprašyta netinkamos ciklo būsenos</string>
-    <string name="wear_action_running_mode_title">Veikimo režimas</string>
-    <string name="garmin_request_key">Užklausos raktas</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS komandos</string>
     <string name="smscommunicator_shortname">SMS</string>
@@ -210,7 +140,6 @@
     <string name="smscommunicator_pump_disconnected">Pompa atjungta</string>
     <string name="smscommunicator_reconnect">Pompa prijungta</string>
     <string name="smscommunicator_remote_command_not_allowed">Nuotolinis valdymas negalimas</string>
-    <string name="smscommunicator_remote_command_not_possible">Nuotolinės komandos vykdyti negalima</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Nuotolinis bolusas negalimas. Bandykite vėliau.</string>
     <string name="smscommunicator_basal_reply_with_code">Norėdami aktyvuoti %1$.2f vv/val bazę, kurios trukmė %2$d min, atsakykite kodu %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Norėdami perjungti profilį %1$s %2$d%%, atsakykite kodu %3$s</string>
@@ -220,8 +149,6 @@
     <string name="smscommunicator_suspend_reply_with_code">Norėdami sustabdyti Ciklą %1$d min., atsakykite kodu %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Ciklo atnaujinimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Ciklo išjungimui atsakykite su kodu %1$s</string>
-    <string name="smscommunicator_restart_reply_with_code">Norėdami iš naujo paleisti AAPS, atsakykite kodu %1$s</string>
-    <string name="smscommunicator_restarting">AAPS paleidžiama iš naujo</string>
     <string name="smscommunicator_tempbasal_set">%1$.2f vv/val laikina bazė, kurios trukmė %2$d min., aktyvuota sėkmingai</string>
     <string name="smscommunicator_extended_set">%1$.2f vv ištęstas bolusas, kurio trukmė %2$d min., aktyvuotas sėkmingai</string>
     <string name="smscommunicator_carbs_set">%1$d g angliavandenių įrašyti sėkmingai</string>
@@ -246,7 +173,6 @@
     <string name="smscommunicator_message_body">Neteisingas pranešimas</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Norėdami pakeisti ciklo režimą į Stabdymą esant žemai glikemijai, atsakykite kodu %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Norėdami pakeisti ciklo režimą į Uždarą ciklą, atsakykite kodu %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Dabartinis veikimo režimas: %1$s</string>
     <string name="wrong_format">Neteisingas formatas</string>
     <string name="sms_actual_bg">KG:</string>
     <string name="sms_last_bg">Paskutinė KG:</string>
@@ -260,6 +186,4 @@
     <string name="sms_profile_switch_created">Profilio perjungimas sukurtas</string>
     <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti kartotinė %1$d minučių ir didesnė nei 0.</string>
     <string name="a11y_otp_qr_code">QR kodas vienkartinio slaptažodžio nustatymui</string>
-    <string name="permission_sms_title">SMS</string>
-    <string name="permission_sms_description">Programai reikia SMS leidimo nuotoliniam valdymui tekstinėmis žinutėmis</string>
 </resources>
