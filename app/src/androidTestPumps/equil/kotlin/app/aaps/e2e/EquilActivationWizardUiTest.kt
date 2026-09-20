@@ -285,7 +285,9 @@ class EquilActivationWizardUiTest {
     private fun waitForOverview() {
         val end = SystemClock.uptimeMillis() + INIT_TIMEOUT
         while (SystemClock.uptimeMillis() < end) {
-            runCatching { device.findObject(byDesc("Close sheet"))?.click() }
+            // Back, not a scrim tap: the tap goes to the scrim node centre, which is ON the sheet once it is
+            // tall enough (see AbstractDanaEmulatorUiTest). The find guards it, so Back needs a sheet to be up.
+            runCatching { if (device.findObject(byDesc("Close sheet")) != null) device.pressBack() }
             if (device.findObject(byDesc("Open navigation")) != null) return
             device.waitForIdle(IDLE_MS)
         }

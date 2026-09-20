@@ -324,10 +324,17 @@ abstract class AbstractDanaEmulatorUiTest {
     }
 
     private fun dismissBlockingSheetIfPresent() {
-        // The sheet animates in/out, so the node can invalidate between find and click — swallow the
+        // "Close sheet" is Material3's own description for the scrim - the dim strip above the sheet -
+        // so finding it means a modal bottom sheet is up. Do NOT tap it: the tap lands on the scrim's
+        // centre, and once the sheet is tall enough (a small screen, or one permission row more) that
+        // centre is on the sheet itself and nothing is dismissed. Adding a row to the permissions sheet
+        // broke every UI test this way. Back dismisses a modal sheet whatever its height. It is guarded
+        // by the find, so on a screen with no sheet Back is never pressed and cannot walk the wizard back.
+        //
+        // The sheet animates in/out, so the node can invalidate between find and press — swallow the
         // stale hit and let waitForOverview's loop retry rather than fail the whole test on it. (Seen
         // only under package-run load; harmless in isolation.)
-        runCatching { device.findObject(byDesc("Close sheet"))?.click() }
+        runCatching { if (device.findObject(byDesc("Close sheet")) != null) device.pressBack() }
     }
 
     /**
