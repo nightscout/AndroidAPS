@@ -563,7 +563,8 @@ class DataHandlerMobile(
             oapsResult = oapsResultInfo,
             modeEndTime = modeEndTime,
             activeScene = activeSceneInfo(),
-            profile = profileInfo(dateUtil.now(), sceneRecords)
+            profile = profileInfo(dateUtil.now(), sceneRecords),
+            modeFromScene = runningModeRecord.id == sceneRecords?.rmId
         )
     }
 

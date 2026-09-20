@@ -213,7 +213,7 @@ private fun LoopStatusContent(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HeaderCard(mode = data.loopMode, apsName = data.apsName, modeEndTime = data.modeEndTime)
+        HeaderCard(mode = data.loopMode, apsName = data.apsName, modeEndTime = data.modeEndTime, modeFromScene = data.modeFromScene)
         ResultCard(
             lastRun = data.lastRun,
             lastEnact = data.lastEnact,
@@ -345,7 +345,7 @@ private fun RowDivider() {
 // ─── Header Card ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndTime: Long?) {
+private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndTime: Long?, modeFromScene: Boolean) {
     val context = LocalContext.current
 
     StatusCard {
@@ -370,19 +370,34 @@ private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndT
         )
         // Remaining duration of a temporary mode (suspend/disconnect/superbolus); hidden once expired
         val remainingMinutes = modeEndTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() } ?: 0
-        if (modeEndTime != null && remainingMinutes > 0) {
+        val durationText = if (modeEndTime != null && remainingMinutes > 0) {
             val endTimeStr = remember(modeEndTime) {
                 DateFormat.getTimeFormat(context).format(Date(modeEndTime))
             }
-            Text(
-                text = stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr),
-                color = WearSecondaryText,
-                fontSize = 11.sp,
-                textAlign = TextAlign.Center,
+            stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr)
+        } else null
+        // The header is centred, unlike the cards below, so the scene mark sits beside the text
+        // rather than at the row's end. Shown on its own when a scene set a mode with no duration.
+        if (durationText != null || modeFromScene) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 2.dp)
-            )
+                    .padding(top = 2.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (durationText != null) {
+                    Text(text = durationText, color = WearSecondaryText, fontSize = 11.sp)
+                }
+                if (modeFromScene) {
+                    if (durationText != null) Spacer(Modifier.width(4.dp))
+                    Image(
+                        painter = painterResource(R.drawable.ic_scene_purple),
+                        contentDescription = stringResource(R.string.loop_status_set_by_scene),
+                        modifier = Modifier.size(12.dp)
+                    )
+                }
+            }
         }
         if (apsName != null) {
             Text(

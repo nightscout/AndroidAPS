@@ -55,7 +55,8 @@ class LoopStatusDataTest {
             defaultRange = TargetRange("70", "180", "110", "mg/dl"),
             oapsResult = null,
             activeScene = ActiveSceneInfo(name = "Sleep", endTime = 9000L, chainTargetName = null),
-            profile = ProfileInfo(name = "Night", percentage = 120, timeshiftHours = -2, endTime = 9000L, returnsTo = "Default", fromScene = true)
+            profile = ProfileInfo(name = "Night", percentage = 120, timeshiftHours = -2, endTime = 9000L, returnsTo = "Default", fromScene = true),
+            modeFromScene = true
         )
         val restored = json.decodeFromString(LoopStatusData.serializer(), json.encodeToString(LoopStatusData.serializer(), data))
         assertThat(restored).isEqualTo(data)
@@ -70,6 +71,7 @@ class LoopStatusDataTest {
         val decoded = json.decodeFromString(LoopStatusData.serializer(), legacy)
         assertThat(decoded.profile).isNull()
         assertThat(decoded.tempTarget?.fromScene).isFalse()
+        assertThat(decoded.modeFromScene).isFalse()
     }
 
     @Test

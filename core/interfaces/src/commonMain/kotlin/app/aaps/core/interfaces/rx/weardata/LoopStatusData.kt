@@ -18,7 +18,9 @@ data class LoopStatusData(
     /** The active scene, null when none. Defaulted and last, so an older peer decodes without it. */
     val activeScene: ActiveSceneInfo? = null,
     /** The profile in force, null when none is set. Defaulted and last, like [activeScene]. */
-    val profile: ProfileInfo? = null
+    val profile: ProfileInfo? = null,
+    /** Whether the active scene set the running mode, so the watch can mark it. Defaulted and last. */
+    val modeFromScene: Boolean = false
 ) {
 
     @Serializable
