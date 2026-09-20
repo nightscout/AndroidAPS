@@ -13,6 +13,7 @@
     <string name="patch_not_active">贴片未激活</string>
     <string name="pump_setting_failed">将用户设置同步到泵时失败！</string>
     <string name="pump_sync_error">同步泵历史记录时出错，一条记录被跳过。请检查“治疗”选项卡，确认推注剂量是否已正确同步。请暂停，如果错误持续出现，请更换贴片或泵底座。</string>
+    <string name="patch_reset_after_primed_error">贴片自行重启并丢失了会话。它已无法再输注胰岛素。请移除该贴片并启用一个新的。</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">活性大剂量</string>
     <string name="pump_state_label">泵状态</string>
