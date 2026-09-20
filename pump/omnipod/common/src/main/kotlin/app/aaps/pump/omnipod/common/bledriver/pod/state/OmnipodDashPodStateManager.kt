@@ -1,12 +1,12 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
-import app.aaps.core.data.model.BS
 import app.aaps.pump.omnipod.common.bledriver.comm.Id
 import app.aaps.pump.omnipod.common.bledriver.comm.pair.PairResult
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.SoftwareVersion
@@ -110,7 +110,7 @@ interface OmnipodDashPodStateManager {
     fun observeNoActiveCommand(): Completable
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
-    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BS.Type)
+    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BolusType)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
 
@@ -166,7 +166,7 @@ interface OmnipodDashPodStateManager {
         var bolusUnitsRemaining: Double,
         var deliveryComplete: Boolean,
         val historyId: Long,
-        val bolusType: BS.Type
+        val bolusType: BolusType
     ) {
 
         fun deliveredUnits(): Double? {

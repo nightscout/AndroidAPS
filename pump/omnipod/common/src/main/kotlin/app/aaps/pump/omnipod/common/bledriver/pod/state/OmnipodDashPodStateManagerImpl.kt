@@ -1,7 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
 import android.os.SystemClock
-import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -17,6 +16,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
@@ -501,7 +501,7 @@ class OmnipodDashPodStateManagerImpl(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BS.Type) {
+    override fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BolusType) {
         podState.lastBolus = OmnipodDashPodStateManager.LastBolus(
             startTime = System.currentTimeMillis(),
             requestedUnits = requestedUnits,
