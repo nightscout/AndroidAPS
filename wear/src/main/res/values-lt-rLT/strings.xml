@@ -3,12 +3,6 @@
     <string name="label_watchface_circle">AAPS(apskritimas)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(pasirinktinis)</string>
-    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (pasirinktinis), visada rodomas</string>
-    <string name="label_actions_tile">Veiksmai</string>
-    <string name="label_temp_target_tile">Laikinas tikslas</string>
-    <string name="label_quick_wizard_tile">Greitasis vedlys</string>
-    <string name="label_user_action_tile">Naudotojo veiksmas</string>
-    <string name="label_scene_tile">Scenarijus</string>
     <string name="msg_warning_sync">Nėra duomenų nuo %1$s! Patikrinkite, ar AAPS telefone siunčia duomenis laikrodžiui</string>
     <string name="msg_warning_old">AAPS duomenys yra %1$s senumo! Patikrinkite sensorių, xDrip+, NS, AAPS konfigūratorių ar kt.!</string>
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
@@ -16,7 +10,6 @@
     <string name="pref_display_settings">Ekranas</string>
     <string name="pref_graph_settings">Grafikas</string>
     <string name="pref_interface_settings">Sąsaja</string>
-    <string name="pref_tile_settings">Plytelės</string>
     <string name="pref_others_settings">Kiti</string>
     <string name="pref_complication_settings">Ekrano elementas</string>
     <string name="pref_show_date">Rodyti datą</string>
@@ -71,7 +64,6 @@
     <string name="pref_moreWatchfaceSettings">Daugiau laikrodžio ekrano nustatymų</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Prašom žiūrėti Watchface konfigūraciją.</string>
     <string name="menu_tempt">LaikinasTikslas</string>
-    <string name="menu_tempt_long">Laikinas tikslas</string>
     <string name="menu_wizard">Skaičiuotuvas</string>
     <string name="menu_wizard_short">Skaič.</string>
     <string name="menu_treatment">Terapija</string>
@@ -84,40 +76,25 @@
     <string name="menu_bg_graph">KG grafikas</string>
     <string name="menu_resync">Sinchronizuoti dar kartą</string>
     <string name="menu_prime_fill">Užpildymas</string>
-    <string name="menu_install_watchface">Įdiegti ciferblatą</string>
-    <string name="menu_installing_watchface">Diegiamas ciferblatas…</string>
-    <string name="watchface_installed_active">Ciferblatas įdiegtas ir nustatytas kaip aktyvus</string>
-    <string name="watchface_installed_select">Ciferblatas įdiegtas. Pasirinkite jį ciferblatų parinkiklyje</string>
-    <string name="watchface_install_failed">Ciferblato įdiegti nepavyko</string>
     <string name="menu_none">Nėra</string>
     <string name="menu_default">Numatytasis</string>
     <string name="menu_menu">Meniu</string>
     <string name="action_tempt_confirmation">Laikino tikslo užklausa</string>
     <string name="action_quick_wizard_confirmation">Greitojo vedlio užklausa</string>
     <string name="action_user_action_confirmation">Reikalingas vartotojo veiksmas</string>
-    <string name="action_scene_confirmation">Scenarijaus užklausa išsiųsta</string>
-    <string name="scene_end">Baigti</string>
     <string name="action_treatment_confirmation">Terapijos užklausa</string>
     <string name="action_bolus_confirmation">Boluso užklausa</string>
     <string name="action_wizard_confirmation">Skaičiavimo užklausa</string>
     <string name="action_fill_confirmation">Pildymo užklausa</string>
     <string name="action_ecarb_confirmation">AV užklausa</string>
     <string name="action_profile_switch_confirmation">Profilio keitimo užklausa</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Tikslas [%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Apatinė riba [%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Viršutinė riba [%s]</string>
     <string name="action_carbs">AV</string>
-    <string name="action_carbs_gram">Angliavandeniai [g]</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Daugiausia galima pašalinti: %1$d g (AAO)</string>
     <string name="action_ecarbs">iAV</string>
-    <string name="action_percentage">Procentai\n[%]</string>
-    <string name="action_start_minutes">Pradžia\n[minutės]</string>
-    <string name="action_duration_hours">Trukmė\n[valandos]</string>
     <string name="action_duration_hours_format">%1$d val.</string>
     <string name="action_duration_hours_minutes_format">%1$d val. %2$d min.</string>
     <string name="action_minutes_format">%1$d min.</string>
     <string name="ecarbs_start_format">%1$d min.</string>
-    <string name="action_confirm_timeshift">Laiko poslinkis: %1$s</string>
     <string name="action_insulin">Insulinas</string>
     <string name="action_insulin_units">Insulinas [V]</string>
     <string name="action_preset_1">Ruošinys 1</string>
@@ -165,26 +142,17 @@
     <string name="pref_complication_3">3 elementas</string>
     <string name="pref_complication_4">4 elementas</string>
     <string name="pref_complication_5">5 elementas</string>
-    <string name="complication_summary_none">Bakstelėkite, kad pasirinktumėte duomenų šaltinį</string>
     <string name="pref_complication_type_priority">Elementų tipų prioritetas</string>
-    <string name="pref_complication_type_priority_all">Numatytasis visiems laukams</string>
     <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Šis pakeitimas įsigalios kitą kartą pasirenkant duomenų šaltinį. Vien iš naujo pasirinkti tą patį šaltinį nepakanka – pirmiausia pasirinkite kitą duomenų šaltinį, o tada vėl tą, kurį norite naudoti.</string>
-    <string name="complication_type_priority_value">Reikšmė arba indikatorius</string>
-    <string name="complication_type_priority_text">Tekstas</string>
-    <string name="complication_type_priority_icon">Piktograma</string>
-    <string name="complication_type_priority_use_default">Naudoti numatytąjį</string>
     <string name="cwf_complication_layout">Elementų išdėstymas</string>
     <string name="cwf_complication_layout_description">Iš įkelto pasirinktinio ciferblato paimtų elementų vieta ir dydis.</string>
     <string name="pref_include_external">Įtraukti išorinius rodinius į šabloną</string>
     <string name="pref_switch_external">Įjungti išorinius duomenis ciferblate</string>
     <string name="custom_pref_show_seconds">Rodyti sekundes</string>
-    <string name="digitalstyle_pref_your_style">Jūsų stilius</string>
     <string name="digitalstyle_style_none">jokio stiliaus</string>
     <string name="digitalstyle_style_minimal">minimalus stilius</string>
     <string name="digitalstyle_style_shape">formos stilius</string>
     <string name="digitalstyle_style_full">pilnas stilius</string>
-    <string name="digitalstyle_pref_your_color">Jūsų spalva</string>
-    <string name="digitalstyle_pref_your_color_saturation">Jūsų spalvos sodrumas</string>
     <string name="digitalstyle_pref_your_color_opacity">Jūsų spalvos permatomumas</string>
     <string name="bolus_progress_channel_name">AAPS boluso eiga</string>
     <string name="bolus_progress_silent_channel_name">AAPS boluso eiga be garso</string>
@@ -218,7 +186,6 @@
     <string name="minute_short">min.</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="error">Klaida</string>
     <string name="pref_heartRateSampling">Pulsas</string>
     <string name="pref_heartRateSmoothing">Pulso glodinimas</string>
     <string name="pref_stepsSampling">Įjungti žingsnių skaičiavimą</string>
@@ -234,8 +201,6 @@
     <string name="tile_scene_2">Scenarijus 2</string>
     <string name="tile_scene_3">Scenarijus 3</string>
     <string name="tile_scene_4">Scenarijus 4</string>
-    <string name="tile_scene_auto">Automatiškai</string>
-    <string name="tile_scene_unavailable">Nepasiekiama</string>
     <string name="datalayer_notification_title">Duomenų sluoksnio priekinio plano paslauga</string>
     <string name="datalayer_notification_text">AAPS veikia priekiniame plane. Jei norite paslėpti šį pranešimą, eikite į Kūrėjo parinktys - Programėlių pranešimai - Leidžiamos laikrodžio programėlės - AAPS ir išjunkite Duomenų sluoksnio priekinio plano paslaugos pranešimus.</string>
     <string name="on">ĮJUNGTA</string>
@@ -247,49 +212,27 @@
     <string name="complication_blood_glucose_ext1">Kraujo gliukozė Ext1</string>
     <string name="complication_blood_glucose_ext2">Kraujo gliukozė Ext2</string>
     <string name="complication_bg_graph">KG grafikas</string>
-    <string name="complication_cwf_image">Pasirinktinis ciferblatas</string>
     <string name="complication_cwf_ambient_bg">Gliukozės rodymas pasirinktinio ciferblato budėjimo režime</string>
     <string name="complication_cwf_ambient_status">Pasirinktinio ciferblato būsena budėjimo režime</string>
-    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
-    <string name="complication_cwf_lower">Pasirinktinio ciferblato fonas</string>
-    <string name="complication_cwf_upper">Pasirinktinio ciferblato laikrodis</string>
     <string name="complication_br_cob_iob">VB, AAO &amp; AIO</string>
     <string name="complication_br_cob_iob_ext1">VB, AAO &amp; AIO Ext1</string>
     <string name="complication_br_cob_iob_ext2">VB, AAO &amp; AIO Ext2</string>
     <string name="complication_br_iob">VB &amp; AIO</string>
     <string name="complication_br">Valandinė bazė</string>
     <string name="complication_br_tt">VB &amp; tikslas</string>
-    <string name="complication_target">Tikslas</string>
     <string name="complication_cob_iob">AAO &amp; AIO</string>
     <string name="complication_cob_icon">AAO ikonėlė</string>
     <string name="complication_cob_detailed">AAO detaliai</string>
     <string name="complication_iob_icon">AIO ikonėlė</string>
     <string name="complication_iob_detailed">AIO detaliai</string>
     <string name="complication_uploader_phone_battery">Telefono baterija</string>
-    <string name="running_mode_resume">Atnaujinti ciklą</string>
-    <string name="running_mode_reconnect">Iš naujo prijungti pompą</string>
-    <string name="label_running_mode_title">Veikimo režimas</string>
     <string name="label_bg_graph_tile">KG grafikas</string>
     <string name="tile_tap_action">Veiksmas palietus</string>
-    <string name="tile_graph_time_range">Laiko intervalas</string>
     <string name="tile_tap_bg_graph">KG grafikas</string>
-    <string name="tile_tap_main_menu">Pagrindinis meniu</string>
-    <string name="tile_tap_loop_status">Ciklo būsena</string>
-    <string name="action_running_mode_selected">Veikimo režimo užklausa išsiųsta</string>
-    <string name="title_activity_disconnect_pump">Atjungti pompą</string>
     <string name="title_activity_suspend_loop">Pristabdyti ciklą</string>
-    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">V</string>
-    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f V</string>
-    <string name="wizard_confirmation_sent">Išsiųsta</string>
-    <string name="contacting_master">Jungiamasi prie pagrindinio įrenginio…</string>
-    <string name="contacting_master_unknown">Būsena nežinoma — patikrinkite telefoną</string>
-    <string name="tile_settings">Plytelės nustatymai</string>
-    <string name="loop_status_error">Nepavyko įkelti būsenos</string>
-    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f V/val. (%2$d%%)</string>
-    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">Liko %1$s</string>
     <string name="loop_status_tbr_continues">Laikina bazė tęsiama</string>
     <string name="loop_status_tbr_cancel">Nustatoma įprasta bazė</string>
     <string name="loop_status_smb">%1$.2f V</string>
@@ -297,33 +240,11 @@
     <string name="loop_status_closed">Uždaras ciklas</string>
     <string name="loop_status_open">Atviras ciklas</string>
     <string name="loop_status_lgs">Stabdymas esant žemai glikemijai</string>
-    <string name="loop_status_disabled">Ciklas išjungtas</string>
-    <string name="loop_status_suspended">Ciklas sustabdytas</string>
-    <string name="loop_status_pump_suspended">Pompa sustabdyta</string>
-    <string name="loop_status_dst_suspended">Sustabdyta dėl vasaros laiko</string>
-    <string name="loop_status_disconnected">Pompa atjungta</string>
-    <string name="loop_status_superbolus">Superbolusas</string>
-    <string name="loop_status_unknown">Nežinoma</string>
-    <string name="loop_status_result">Ciklo rezultatas</string>
     <string name="loop_status_last_run_enact">Paskutinis ciklas&amp; įvykdymas</string>
     <string name="loop_status_last_run">Paskutinis ciklas</string>
     <string name="loop_status_last_enact">Paskutinis įvykdymas</string>
-    <string name="loop_status_smb_text">SMB</string>
     <string name="loop_status_basal_rate">Bazė</string>
-    <string name="loop_status_duration">Trukmė</string>
-    <string name="loop_status_oaps_reason">OpenAPS priežastis</string>
-    <string name="loop_status_targets">Tikslai</string>
-    <string name="loop_status_temp_target">Laikinas tikslas</string>
-    <string name="loop_status_target_range">Diapazonas</string>
-    <string name="loop_status_target">Tikslas</string>
-    <string name="loop_status_adjusted_target">Pakoreguotas tikslas</string>
-    <string name="loop_status">Ciklo būsena</string>
-    <string name="loop_status_refresh">Atnaujinti</string>
-    <string name="confirm">Patvirtinti</string>
     <string name="request">Užklausa</string>
-    <string name="constraint_applied">Pritaikytas saugos ribojimas!</string>
-    <string name="wizard_total_insulin">Bendras insulino kiekis</string>
-    <string name="wizard_calculation">Skaičiavimas</string>
     <string name="wizard_settings_format">IA: %1$s | JIF: %2$s</string>
     <string name="wizard_result_bg">KG</string>
     <string name="wizard_result_bg_tt">KG (LT: %1$s)</string>
@@ -331,12 +252,6 @@
     <string name="wizard_result_iob">AIO</string>
     <string name="wizard_result_new_iob">Naujas AIO: %1$s V</string>
     <string name="wizard_result_cob">AAO (%1$.1f g)</string>
-    <string name="wizard_result_carbs">Angliavandeniai (%1$d g)</string>
-    <string name="wizard_result_subtotal">Tarpinė suma</string>
     <string name="wizard_result_correction">Taisymas</string>
-    <string name="wizard_result_total">Iš viso</string>
     <string name="wizard_insulin_format">%1$s V</string>
-    <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
-    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>
