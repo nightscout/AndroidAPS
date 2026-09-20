@@ -113,6 +113,21 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun `a client never runs the loop, even with the plugin enabled`() = runTest {
+        // The plugin was built as always enabled above; only the build flavor changes here, as it does
+        // on a client that imported the master's settings.
+        whenever(config.APS).thenReturn(false)
+        whenever(config.AAPSCLIENT).thenReturn(true)
+
+        loopPlugin.invoke("Calculation for test", allowNotification = false)
+
+        assertThat(loopPlugin.lastRun).isNull()
+        verify(persistenceLayer, never()).insertOrUpdateApsResult(any())
+        verify(activePlugin, never()).activeAPS
+        assertThat(loopPlugin.showInList(PluginType.LOOP)).isFalse()
+    }
+
+    @Test
     fun iobShouldBeLimited() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn("Low Glucose Suspend")
         whenever(rh.gs(app.aaps.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend))).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")

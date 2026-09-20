@@ -81,6 +81,9 @@ class PostCalculationRunner(
      * reset, so each BG timestamp can drive at most one automatic loop run.
      */
     private suspend fun invokeLoop() {
+        // Only a master runs the algorithm. A client mirrors the master's result from the device
+        // status; a loop run of its own would be uploaded and replace the master's result.
+        if (!config.APS) return
         val glucoseValue = iobCobCalculator.ads.actualBg() ?: return
         if (glucoseValue.timestamp <= loop.lastBgTriggeredRun) return
         loop.lastBgTriggeredRun = glucoseValue.timestamp

@@ -58,7 +58,27 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         whenever(workerParameters.inputData).thenReturn(workDataOf())
+        whenever(config.APS).thenReturn(true)
+    }
+
+    @Test
+    fun `full phase never invokes loop on a client`() = runTest {
         whenever(config.APS).thenReturn(false)
+        whenever(config.AAPSCLIENT).thenReturn(true)
+        val ads = mock<AutosensDataStore>()
+        val bg = mock<InMemoryGlucoseValue>()
+        whenever(bg.timestamp).thenReturn(5000L)
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(bg)
+        whenever(loop.lastBgTriggeredRun).thenReturn(0L)
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+
+        val result = run()
+
+        Assertions.assertEquals(WorkOutcome.Success, result)
+        verify(loop, never()).invoke(any(), any(), any())
+        verify(widgetUpdater).update("WorkFlow")
     }
 
     @Test

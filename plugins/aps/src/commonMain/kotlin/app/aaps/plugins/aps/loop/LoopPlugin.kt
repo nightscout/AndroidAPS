@@ -147,6 +147,7 @@ class LoopPlugin(
         .pluginName(CoreUiStrings.loop)
         .shortName(ApsStrings.loop_shortname)
         .alwaysEnabled(config.APS)
+        .showInList { config.APS }   // a client mirrors the master's loop and has no switch for one of its own
         .description(ApsStrings.description_loop),
     aapsLogger, rh
 ), Loop, PluginConstraints {
@@ -518,6 +519,13 @@ class LoopPlugin(
     }
 
     override suspend fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean): Unit = withContext(Dispatchers.Default) {
+        // Only a master runs the algorithm. A client can still have the plugin enabled from imported
+        // settings; a run there would be uploaded as a device status and replace the master's result
+        // on every client that reads it.
+        if (!config.APS) {
+            aapsLogger.debug(LTag.APS, "invoke from $initiator ignored: not a master build")
+            return@withContext
+        }
         // Restores master's @Synchronized contract: serialize loop runs so they cannot overlap.
         invokeMutex.lock()
         try {
