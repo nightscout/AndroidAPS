@@ -55,7 +55,7 @@
     <string name="configbuilder_sync_description">Duomenų įkėlimo, sinchronizavimo ir ryšio papildiniai.</string>
     <string name="configbuilder_bgsource_description">Iš kur AAPS gaus duomenis?</string>
     <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudosite?</string>
-    <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite realią pompą, AAPS nukopijuos bazės nustatymus iš profilio į pompą, todėl nustatymai pompoje gali pasikeisti. Įsitikinkite, kad bazės nustatymai AAPS yra teisingi. Jei nesate tikri arba nenorite keisti bazės nustatymų jūsų pompoje, paspauskite Atšaukti ir atlikite prijungimą prie pompos vėliau.</string>
+    <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite realią pompą, AAPS nukopijuos bazės nustatymus iš profilio į pompą, todėl nustatymai pompoje gali pasikeisti. Įsitikinkite, kad bazės nustatymai AAPS yra teisingi. Jei nesate tikri arba nenorite keisti bazės nustatymų pompoje, paspauskite Atšaukti ir pompą prijunkite vėliau.</string>
     <string name="nsclient_version_does_not_match">AAPSClient ir AAPS versijos nesutampa. Atnaujinkite.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
