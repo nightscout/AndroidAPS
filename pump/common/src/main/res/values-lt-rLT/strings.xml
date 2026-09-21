@@ -11,6 +11,7 @@
     <string name="pump_status_suspended">Sustabdyta</string>
     <string name="pump_status_executing_command">Komanda vykdoma</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_firmware">Gauti pompos programinės įrangos versiją</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazė</string>
     <string name="history_group_configuration">Nustatymai</string>
