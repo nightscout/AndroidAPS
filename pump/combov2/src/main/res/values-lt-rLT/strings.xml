@@ -39,6 +39,7 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
 3. Bandykite susieti dar kartą</string>
     <string name="combov2_enter_pin">Įveskite PIN</string>
     <string name="combov2_cancel_pairing">Atšaukti susiejimą</string>
+    <string name="combov2_confirm_cancel_pairing_message">Ar tikrai norite atšaukti susiejimą?</string>
     <string name="combov2_pin_hint">10 skaitmenų PIN</string>
     <string name="combov2_pairing_finished_successfully">Combo sėkmingai susieta</string>
     <string name="combov2_pairing_cancelled">Combo susiejimą nutraukė naudotojas</string>
@@ -96,7 +97,7 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignoruoti perteklines 100% bazės užklausas</string>
     <string name="combov2_hit_unexpected_tbr_limit">Nustatant laikiną bazę pasiektas nenumatytas limitas: LB tikslas %1$d%%, limitas %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Negalima nustatyti absoliučios laikinos bazės, jei pagrindinė bazė yra nulinė</string>
-    <string name="combov2_unpair_pump_summary">Atsieti AndroidAPS ir Android nuo dabartinės susietos Accu-Chek Combo pompos</string>
+    <string name="combov2_unpair_pump_summary">Atsieti AAPS ir Android nuo dabartinės susietos Accu-Chek Combo pompos</string>
     <string name="combov2_unknown_tbr_detected">Aptikta ir sustabdyta nežinoma laikina bazė: %1$d%%; likęs laikas: %2$s</string>
     <string name="combov2_connection_error">Sujungimo klaida: %1$s</string>
     <string name="combov2_short_status_alert">Perspėjimas: %s</string>
