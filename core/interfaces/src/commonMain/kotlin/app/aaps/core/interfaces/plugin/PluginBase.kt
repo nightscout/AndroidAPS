@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationHandle
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
@@ -66,6 +67,17 @@ abstract class PluginBase(
     @Volatile
     var lastStartFailed: Boolean = false
         private set
+
+    /**
+     * The card [runPhase] posted for this plugin's own failure, so it can take back that one and no other.
+     *
+     * [NotificationId.PLUGIN_START_FAILED] is shared by every plugin, and `dismiss(id)` removes every card
+     * carrying it. Dismissing by id here would mean one plugin starting cleanly clears the alarm of another
+     * that is still broken, while its [lastStartFailed] stays set - a pump that quietly refuses to dose with
+     * nothing on screen to say why.
+     */
+    @Volatile
+    private var startFailureCard: NotificationHandle? = null
 
     /** The previous transition. Start and stop of one plugin must not run at the same time. */
     private var lastTransition: Job? = null
@@ -203,10 +215,11 @@ abstract class PluginBase(
         try {
             if (starting) {
                 onStart()
-                // A clean start clears both the flag and the card from the previous failure.
+                // A clean start clears both the flag and this plugin's own card from the previous failure.
                 if (lastStartFailed) {
                     lastStartFailed = false
-                    notificationManager.dismiss(NotificationId.PLUGIN_START_FAILED)
+                    startFailureCard?.let { notificationManager.dismiss(it) }
+                    startFailureCard = null
                 }
             } else {
                 onStop()
@@ -219,7 +232,9 @@ abstract class PluginBase(
             aapsLogger.error(LTag.CORE, "${if (starting) "onStart" else "onStop"} failed: $name", e)
             if (starting) {
                 lastStartFailed = true
-                notificationManager.post(
+                // Replace this plugin's own previous card, so repeated failed starts do not stack up.
+                startFailureCard?.let { notificationManager.dismiss(it) }
+                startFailureCard = notificationManager.post(
                     NotificationId.PLUGIN_START_FAILED,
                     rh.gs(InterfacesStrings.plugin_start_failed, name),
                     validMinutes = 0,

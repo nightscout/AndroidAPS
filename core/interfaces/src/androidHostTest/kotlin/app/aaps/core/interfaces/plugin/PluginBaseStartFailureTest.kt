@@ -38,10 +38,15 @@ class PluginBaseStartFailureTest {
     /** Records what was posted instead of mocking it, so the level and the sound can be asserted. */
     private class RecordingNotifications : NotificationManager {
 
-        data class Posted(val id: NotificationId, val level: NotificationLevel, val sound: AlarmSound?)
+        data class Posted(val id: NotificationId, val text: String, val level: NotificationLevel, val sound: AlarmSound?, val handle: NotificationHandle)
 
         val posted = mutableListOf<Posted>()
         val dismissed = mutableListOf<NotificationId>()
+        val dismissedHandles = mutableListOf<NotificationHandle>()
+
+        /** What is still on screen: posted, minus anything dismissed by id or by handle. */
+        val live: List<Posted>
+            get() = posted.filterNot { it.id in dismissed || it.handle in dismissedHandles }
 
         override val notifications: StateFlow<List<AapsNotification>> = MutableStateFlow(emptyList())
 
@@ -55,10 +60,7 @@ class PluginBaseStartFailureTest {
             sound: AlarmSound?,
             actions: List<NotificationAction>,
             validityCheck: (() -> Boolean)?
-        ): NotificationHandle {
-            posted += Posted(id, level, sound)
-            return NotificationHandle(posted.size)
-        }
+        ): NotificationHandle = record(id, text, level, sound)
 
         override fun post(
             id: NotificationId,
@@ -69,10 +71,7 @@ class PluginBaseStartFailureTest {
             sound: AlarmSound?,
             actions: List<NotificationAction>,
             validityCheck: (() -> Boolean)?
-        ): NotificationHandle {
-            posted += Posted(id, level, sound)
-            return NotificationHandle(posted.size)
-        }
+        ): NotificationHandle = record(id, text, level, sound)
 
         override fun post(
             id: NotificationId,
@@ -84,25 +83,47 @@ class PluginBaseStartFailureTest {
             sound: AlarmSound?,
             actions: List<NotificationAction>,
             validityCheck: (() -> Boolean)?
-        ): NotificationHandle {
-            posted += Posted(id, level, sound)
-            return NotificationHandle(posted.size)
+        ): NotificationHandle = record(id, "ref", level, sound)
+
+        private var nextKey = 10_000
+
+        /**
+         * Mirrors `CommonNotificationManager.postInternal`, and the mirroring is the point: without
+         * [NotificationId.allowMultiple] the real manager keys the card by `id.ordinal` and REPLACES any
+         * card already carrying that id. A fake that always hands out a fresh handle would make this test
+         * pass against the very bug it exists to catch.
+         */
+        private fun record(id: NotificationId, text: String, level: NotificationLevel, sound: AlarmSound?): NotificationHandle {
+            val handle: NotificationHandle
+            if (id.allowMultiple) {
+                handle = NotificationHandle(nextKey++)
+            } else {
+                handle = NotificationHandle(id.ordinal)
+                posted.removeAll { it.id == id }
+            }
+            posted += Posted(id, text, level, sound, handle)
+            return handle
         }
 
         override fun dismiss(id: NotificationId) {
             dismissed += id
         }
 
-        override fun dismiss(handle: NotificationHandle) {}
+        override fun dismiss(handle: NotificationHandle) {
+            dismissedHandles += handle
+        }
 
         override fun muteAllAlarms() {}
     }
 
-    /** A mock would hand back null for [TextResolver.gs], and the notification text may not be null. */
+    /**
+     * A mock would hand back null for [TextResolver.gs], and the notification text may not be null.
+     * The arguments are kept in the result so a test can tell which plugin a card is about.
+     */
     private class FixedText : TextResolver {
 
         override fun gs(ref: TextRef): String = "text"
-        override fun gs(ref: TextRef, vararg args: Any?): String = "text"
+        override fun gs(ref: TextRef, vararg args: Any?): String = "failed: " + args.joinToString()
         override fun gsNotLocalised(ref: TextRef): String = "text"
         override fun shortTextMode(): Boolean = false
     }
@@ -110,7 +131,8 @@ class PluginBaseStartFailureTest {
     private class TestPlugin(
         aapsLogger: AAPSLogger,
         rh: TextResolver,
-        notificationManager: NotificationManager
+        notificationManager: NotificationManager,
+        override val name: String = "Test plugin"
     ) : PluginBase(PluginDescription().mainType(PluginType.GENERAL), aapsLogger, rh, notificationManager) {
 
         var failStart = false
@@ -137,7 +159,7 @@ class PluginBaseStartFailureTest {
     }
 
     private val notifications = RecordingNotifications()
-    private fun plugin() = TestPlugin(mock<AAPSLogger>(), FixedText(), notifications)
+    private fun plugin(name: String = "Test plugin") = TestPlugin(mock<AAPSLogger>(), FixedText(), notifications, name)
 
     @Test
     fun `a failing onStart does not throw out of the transition`() = runBlocking {
@@ -195,11 +217,30 @@ class PluginBaseStartFailureTest {
 
         // Ends on a void-returning assertion on purpose: a `runBlocking` test whose last expression has a
         // value is not void, and JUnit 5 skips it without a word. `containsExactly` returns `Ordered`.
-        assertThat(notifications.dismissed).containsExactly(NotificationId.PLUGIN_START_FAILED)
+        assertThat(notifications.live).isEmpty()
         assertThat(sut.lastStartFailed).isFalse()
     }
 
-    /** Nothing is dismissed when there was no failure, so a plugin cannot clear another one's card. */
+    /**
+     * By handle, never by id. `dismiss(id)` removes every card carrying that id, and
+     * [NotificationId.PLUGIN_START_FAILED] is shared by every plugin - see the two-plugin test below.
+     */
+    @Test
+    fun `a clean start dismisses its own card by handle`() = runBlocking {
+        val sut = plugin()
+        sut.failStart = true
+        withTimeout(5.seconds) { sut.setPluginEnabledAwaiting(PluginType.GENERAL, true) }
+        val card = notifications.posted.single().handle
+
+        sut.failStart = false
+        withTimeout(5.seconds) { sut.setPluginEnabledAwaiting(PluginType.GENERAL, false) }
+        withTimeout(5.seconds) { sut.setPluginEnabledAwaiting(PluginType.GENERAL, true) }
+
+        assertThat(notifications.dismissedHandles).containsExactly(card)
+        assertThat(notifications.dismissed).isEmpty()
+    }
+
+    /** Nothing is dismissed when this plugin never failed. */
     @Test
     fun `a clean start dismisses nothing when nothing had failed`() = runBlocking {
         val sut = plugin()
@@ -207,6 +248,39 @@ class PluginBaseStartFailureTest {
         withTimeout(5.seconds) { sut.setPluginEnabledAwaiting(PluginType.GENERAL, true) }
 
         assertThat(notifications.dismissed).isEmpty()
+        assertThat(notifications.dismissedHandles).isEmpty()
+    }
+
+    /**
+     * The one that matters, and the one the first version of this file got wrong.
+     *
+     * `ConfigBuilderImpl` and `PluginStore` start every elected plugin in the same pass, so a systemic cause
+     * - a revoked Bluetooth permission, say - takes down more than one. Each failure must keep its own card,
+     * and a plugin that recovers must not take down the alarm of one that has not.
+     */
+    @Test
+    fun `two failed plugins keep separate cards and one recovering leaves the other's alone`() = runBlocking {
+        val pump = plugin("Pump driver")
+        val bgSource = plugin("BG source")
+        pump.failStart = true
+        bgSource.failStart = true
+
+        withTimeout(5.seconds) { pump.setPluginEnabledAwaiting(PluginType.GENERAL, true) }
+        withTimeout(5.seconds) { bgSource.setPluginEnabledAwaiting(PluginType.GENERAL, true) }
+
+        // Two failures, two cards, each naming its own plugin.
+        assertThat(notifications.live.map { it.text }).containsExactly("failed: Pump driver", "failed: BG source")
+
+        // The BG source is fixed and restarted; the pump is still broken.
+        bgSource.failStart = false
+        withTimeout(5.seconds) { bgSource.setPluginEnabledAwaiting(PluginType.GENERAL, false) }
+        withTimeout(5.seconds) { bgSource.setPluginEnabledAwaiting(PluginType.GENERAL, true) }
+
+        assertThat(pump.lastStartFailed).isTrue()
+        assertThat(bgSource.lastStartFailed).isFalse()
+        // The pump's alarm survives. Losing it would leave a pump that refuses to dose and says nothing.
+        // isEqualTo, not containsExactly: the latter returns Ordered, which would make JUnit skip this test.
+        assertThat(notifications.live.single().text).isEqualTo("failed: Pump driver")
     }
 
     /**
