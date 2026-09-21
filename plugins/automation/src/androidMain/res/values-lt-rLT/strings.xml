@@ -16,7 +16,7 @@
     <string name="profilename">Pakeisti profilį</string>
     <string name="changengetoprofilename">Pakeisti profilį %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Paskutinis prisijungimas prie pompos</string>
-    <string name="automation_trigger_pump_last_connection_compared">Paskutinis prijungimas prie pompos prieš %1$s%2$s min.</string>
+    <string name="automation_trigger_pump_last_connection_compared">Paskutinis prijungimas prie pompos prieš %1$s%2$s min</string>
     <string name="alreadyset">Jau nustatyta</string>
     <string name="profilepercentage">Profilio procentas</string>
     <string name="startprofileforever">Pradėti profilį %1$d%%</string>
@@ -65,7 +65,7 @@
     <string name="currentlocation">Dabartinė vieta</string>
     <string name="location">Vieta</string>
     <string name="lastboluslabel">Paskutinis bolusas</string>
-    <string name="lastboluscompared">Paskutinis Bolusas prieš %1$s %2$s min</string>
+    <string name="lastboluscompared">Paskutinis bolusas prieš %1$s %2$s min</string>
     <string name="triggercoblabel">AAO</string>
     <string name="cobcompared">AAO %1$s %2$.0f</string>
     <string name="triggerHeartRate">Pulsas</string>
@@ -98,7 +98,7 @@
     <string name="add_automation">Pridėti taisyklę</string>
     <string name="stop_processing">Stabdyti apdorojimą</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
+    <string name="time_to_eat">Laikas valgyti!\nNaudokite skaičiuotuvą.</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="error_setting_reminder">Klaida nustatant ateities perspėjimus</string>
     <!--    Autotune-->
