@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatizacija</string>
+    <string name="automation_discard_title">Atmesti pakeitimus?</string>
+    <string name="automation_discard_message">Taisyklė nebaigta, todėl jos įrašyti negalima. Atmesti pakeitimus?</string>
+    <string name="automation_discard_confirm">Atmesti</string>
     <string name="automation_missing_task_name">Įveskite užduoties pavadinimą.</string>
     <string name="automation_missing_trigger">Nurodykite mažiausiai vieną sąlygą.</string>
     <string name="automation_missing_action">Nurodykite mažiausiai vieną veiksmą.</string>
