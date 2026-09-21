@@ -535,6 +535,29 @@ Each of these changes what gets built, and none of them is a coding question.
      no Close button, after the settings are already on disk. It also re-introduces exactly what
      `ImportViewModel.finishApply` already defers `uiRestart.request()` to avoid.
 
+     **The mechanism, traced 2026-09-21 - it is `CoroutineStart.UNDISPATCHED`, and that opens a second,
+     much cheaper candidate fix.** `PersistentNotificationPlugin.onStart` does not call
+     `triggerNotificationUpdate` directly; it subscribes three collectors with
+     `collectResilient(..., start = CoroutineStart.UNDISPATCHED)`. That parameter's own KDoc in
+     `ResilientCollect.kt` says why it matters: *"if the source does emit during subscribe ... that
+     first block runs on the caller's thread - which is why this is opt-in rather than the default."*
+     So the collector body can execute INSIDE `onStart`, on `setPluginEnabled`'s coroutine - which is
+     exactly the frame order in the crash stack (`onStart` directly above `triggerNotificationUpdate`,
+     with `PluginBase$setPluginEnabled$1.invokeSuspend` beneath). `RxBus` publishes with `replay = 0`,
+     so this needs an event genuinely in flight at subscribe time, and an import supplies one: it stops
+     and restarts pump drivers, and the drivers send `EventInitializationChanged` on connect/init
+     (ComboV2Plugin, DanaRExecutionService, DanaRKoreanExecutionService and others).
+
+     UNDISPATCHED was added deliberately, to close the lost-event window that `replay = 0` creates, so
+     do not simply drop it. But it means the cheap local fix is available: stop that block from reading
+     plugin state synchronously during `onStart` - either by not passing UNDISPATCHED on these three
+     specific collectors and accepting a possible missed refresh (the next event triggers one anyway),
+     or by having the body hop off the caller's thread before touching `activePlugin`. **Confidence:
+     the mechanism is established from the KDoc and the stack; the exact emission that lands during
+     subscribe is inferred from the sender list and has not been reproduced.** Reproduce it before
+     choosing between the local fix and the `reconfiguring` flag - the flag is still the general answer,
+     this is the one that would stop today's 6 users crashing.
+
      **Constraints on the build, from the same analysis:**
      - the restore must be a `finally` INSIDE `applySettings()`, ideally a scoped
        `config.whileApplyingSettings { }` so it cannot be forgotten, and a counter rather than a boolean;
