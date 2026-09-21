@@ -406,6 +406,9 @@
     <string name="clientcontrol_fail_scene_disabled">La scena è disabilitata.</string>
     <string name="clientcontrol_fail_partial">Alcune azioni non possono essere applicate.</string>
     <string name="clientcontrol_fail_execution">Il master non può applicare questa richiesta.</string>
+    <string name="clientcontrol_fail_cancelled">Il comando è stato annullato prima che fosse eseguito. Nulla è stato inviato all micro.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolo annullato. Non è stata somministrata insulina.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Annullato</string>
     <string name="clientcontrol_fail_control_disabled">Il controllo remoto sul master è spento.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Il bolo preparato è scaduto o è stato sostituito. Tocca nuovamente il pulsante.</string>
     <string name="clientcontrol_fail_bolus_compute">Il master non è riuscito a calcolare il bolo (mancanza di glucosio / profilo, o pompa non pronta).</string>
