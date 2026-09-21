@@ -68,7 +68,8 @@ Useful commands on the Mac:
 
 **A real body of tests runs on the simulator** - `iosTest` and `commonTest` source sets both execute
 under `iosSimulatorArm64Test`, so a change to shared code is genuinely run on Apple, not merely
-cross-compiled to a klib. As of 2026-09-21 there are 18 populated test source sets in 14 modules:
+cross-compiled to a klib. Measured on 2026-09-21 at `7e303d9bb5`: **714 tests, 0 failures, across all
+14 modules below** (4m 11s). There are 18 populated test source sets in those 14 modules:
 
 - `commonTest`: `core/data`, `core/interfaces`, `core/nssdk`, `core/objects`, `core/utils`,
   `database/persistence`, `implementation`, `plugins/aps`, `plugins/sync`, `shared/clientbindings`,
