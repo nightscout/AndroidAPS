@@ -115,6 +115,7 @@
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>
     <string name="notconfigured">Nesukonfigūruota</string>
+    <string name="loop_suspended_by_dst">Ciklas sustabdytas dėl laiko persukimo</string>
     <string name="required">reikal.</string>
     <string name="a11y_arrow_double_down">greitai mažėja</string>
     <string name="a11y_arrow_single_down">mažėja</string>
