@@ -204,7 +204,7 @@
     <!--    Translator-->
     <string name="careportal">Terapija</string>
     <string name="careportal_bgcheck">Gliukomatis</string>
-    <string name="careportal_mbg">Kalibracija</string>
+    <string name="careportal_mbg">Kalibravimas</string>
     <string name="careportal_announcement">Pranešimas</string>
     <string name="careportal_settings_export">Nustatymų eksportavimas</string>
     <string name="careportal_note">Pastaba</string>
