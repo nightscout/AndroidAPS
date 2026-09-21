@@ -124,6 +124,7 @@ import app.aaps.pump.insight.keys.InsightLongNonKey
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -215,6 +216,13 @@ class InsightPlugin(
             if (binder is InsightConnectionService.LocalBinder) {
                 connectionService = binder.service
                 connectionService?.registerStateCallback(this@InsightPlugin)
+                // Follow the connection service, which stamps this every time the pump answers
+                // anything. Reading it only while fetching the pump status left it standing still
+                // between status reads, and the "pump unreachable" alarm is timed off it.
+                lastDataTimeJob?.cancel()
+                lastDataTimeJob = connectionService?.let { service ->
+                    appScope.launch { service.lastDataTimeFlow.collect { _lastDataTime.value = it } }
+                }
             } else if (binder is InsightAlertService.LocalBinder) {
                 alertService = binder.service
             }
@@ -224,7 +232,13 @@ class InsightPlugin(
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
+            lastDataTimeJob?.cancel()
+            lastDataTimeJob = null
             connectionService = null
+            // Without a service there is nothing to report. Say "just now" rather than leave an old
+            // stamp behind, so a pump that is merely unbound does not raise the unreachable alarm -
+            // that is what the previous getter did.
+            _lastDataTime.value = dateUtil.now()
         }
     }
     private var timeOffset: Long = 0
@@ -339,7 +353,6 @@ class InsightPlugin(
                 aapsLogger.error("Exception while fetching status", e)
             }
         }
-        _lastDataTime.value = if (connectionService == null || alertService == null) dateUtil.now() else connectionService?.lastDataTime ?: 0
     }
 
     @Throws(Exception::class) private fun updatePumpTimeIfNeeded() {
@@ -533,7 +546,8 @@ class InsightPlugin(
         return true
     }
 
-    private val _lastDataTime = MutableStateFlow(0L)
+    private var lastDataTimeJob: Job? = null
+    private val _lastDataTime = MutableStateFlow(dateUtil.now())
     override val lastDataTime: StateFlow<Long> = _lastDataTime
 
     private val _lastBolusTime = MutableStateFlow<Long?>(null)

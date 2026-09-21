@@ -90,6 +90,9 @@ import app.aaps.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import app.aaps.pump.insight.utils.crypto.KeyPair
 import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.security.SecureRandom
 import dev.zacsweers.metro.Inject
 import kotlin.math.max
@@ -123,12 +126,30 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
         private set
     private val messageQueue = MessageQueue()
     private val activatedServices: MutableList<Service?> = ArrayList()
-    var lastDataTime: Long = 0
-        private set
+    /**
+     * When the pump last answered anything, as a flow so a reader always sees the live value.
+     *
+     * The plugin used to expose this through a getter, so every reader got the current value. Moving
+     * the Pump interface to flows turned that getter into a StateFlow the plugin only pushed while
+     * reading the pump status, so between two status reads it stood still even though the pump was
+     * answering commands - and the "pump unreachable" alarm, which is timed off it, fired on a pump
+     * that was perfectly reachable.
+     */
+    private val _lastDataTimeFlow = MutableStateFlow(0L)
+    val lastDataTimeFlow: StateFlow<Long> = _lastDataTimeFlow.asStateFlow()
+    var lastDataTime: Long
+        get() = _lastDataTimeFlow.value
+        private set(value) {
+            _lastDataTimeFlow.value = value
+        }
     var lastConnected: Long = 0
         private set
     @get:Synchronized var recoveryDuration: Long = 0
         private set
+
+    /** Attempts made in the current connection series, and when the series started. */
+    private var connectionAttempts = 0
+    private var connectionSeriesStart = 0L
     private var timeoutDuringHandshakeCounter = 0
     private var intKeyPair: KeyPair? = null
     val keyPair: KeyPair = intKeyPair ?: generateRSAKey().also { intKeyPair = it }
@@ -280,6 +301,7 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
         disconnectTimer = null
         if (state === InsightState.DISCONNECTED && pairingDataStorage.paired) {
             recoveryDuration = 0
+            connectionAttempts = 0
             timeoutDuringHandshakeCounter = 0
             connect()
         }
@@ -289,6 +311,17 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
         if (!connectionRequests.contains(lock)) return
         connectionRequests.remove(lock)
         if (connectionRequests.isEmpty()) {
+            // The other half of that line: nobody wants the pump any more and it was never reached.
+            // connectionAttempts is cleared on success, so anything left here means the series ended
+            // without one - between attempts or inside one, which is where the command queue's own
+            // budget usually runs out.
+            if (connectionAttempts > 0) {
+                aapsLogger.info(
+                    LTag.PUMP,
+                    "Gave up after $connectionAttempts attempt(s) in ${System.currentTimeMillis() - connectionSeriesStart} ms"
+                )
+                connectionAttempts = 0
+            }
             if (state === InsightState.RECOVERING) {
                 recoveryTimer?.interrupt()
                 recoveryTimer = null
@@ -429,6 +462,8 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
     @Synchronized private fun connect() {
         bluetoothAdapter?.let { bluetoothAdapter ->
             if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.macAddress)
+            if (connectionAttempts == 0) connectionSeriesStart = System.currentTimeMillis()
+            connectionAttempts++
             setState(InsightState.CONNECTING)
             bluetoothDevice?.let { bluetoothDevice ->
                 connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage.paired, bluetoothAdapter, bluetoothDevice, bluetoothSocket).also {
@@ -444,6 +479,13 @@ class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Ca
 
     @Synchronized override fun onConnectionSucceed() {
         try {
+            // One line per connection series, so a log says straight away how hard the pump was to
+            // reach. Reconstructing that from the state changes takes a script.
+            aapsLogger.info(
+                LTag.PUMP,
+                "Connected after $connectionAttempts attempt(s) in ${System.currentTimeMillis() - connectionSeriesStart} ms"
+            )
+            connectionAttempts = 0
             recoveryDuration = 0
             inputStreamReader = InputStreamReader(bluetoothSocket!!.inputStream, this).also { it.start() }
             outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this).also { it.start() }
