@@ -30,7 +30,7 @@
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galėsite tęsti, kai prijungsite pompą.\n</string>
     <string name="startobjective">Pradėti Jūsų pirmąjį tikslą</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink būklė:</string>
-    <string name="readstatus">Statuso nuskaitymas</string>
+    <string name="readstatus">Būsenos nuskaitymas</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <!--    ConfigBuilder-->
