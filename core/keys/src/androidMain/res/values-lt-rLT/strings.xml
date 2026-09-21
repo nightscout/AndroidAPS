@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Paprastasis režimas</string>
     <!-- Overview preferences -->
     <string name="pref_summary_show_calibration_button">Siunčia kalibravimo duomenis į xDrip+ (įsitikinkite, kad xDrip+ skiltyje Programų sąveikos nustatymai įjungta parinktis Priimti kalibracijas).</string>
     <string name="pref_title_use_bolus_reminder">Naudoti boluso priminimą</string>
@@ -50,7 +51,7 @@
     <string name="pref_title_smb_max_minutes">Maksimalus bazės minučių skaičius SMB ribai</string>
     <string name="pref_title_uam_smb_max_minutes">Maksimalus bazės minučių skaičius NDM SMB ribai</string>
     <string name="uam_smb_max_minutes">NDM SMB maks. minutės</string>
-    <string name="carbs_req_threshold_summary">Minimalus angliavandenių kiekis gramais, apie kurį reikia įspėti. Angliavandenių pasiūlymai, mažesni už šį kiekį, nėra pranešami.</string>
+    <string name="carbs_req_threshold_summary">Minimalus angliavandenių kiekis gramais, apie kurį reikia įspėti. Angliavandenių pasiūlymai, mažesni už šį kiekį, nebus pranešami.</string>
     <string name="half_basal_exercise_target_summary">Nustatykite skaičių, pvz., 8,0, kuris reiškia, kad kai laikinas tikslas yra 8,0 mmol/l ir aukštas laikinas tikslas padidina jautrumą = TAIP, nustatykite 50%% laikiną bazę šiame lygyje (6,0 = 75%%; 4,8 = 60%%).</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Didžiausio AIO procentas, virš kurio SMB yra išjungiami.\nNumatytoji reikšmė: 100%\nEsant 100%, ši funkcija yra išjungta.</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Dinaminio JIF derinimo faktorius. Nustatykite daugiau nei 100% agresyvesniam koregavimui arba mažiau nei 100% švelnesniam koregavimui.</string>
@@ -118,7 +119,7 @@
     <string name="pref_title_high_bg_weight">Aukštos gliukozės intervalo svoris</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Tai svoris, kuris taikomas, kai glikemija didesnė už tikslinę, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Gliukozės intervalas SMB dozavimo santykiui</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Numatytoji reikšmė: 0. Linijiškai didėjantis SMB leidimo santykis yra susietas su gliukozės diapazonu [target_bg, target_bg+bg_range].\nTies target_bg SMB dydis yra smb_delivery_ratio_min, ties target_bg+bg_range yra smb_delivery_ratio_max\nTies 0, linijiškai didėjantis SMB leidimo santykis yra išjungiamas ir naudojamas fiksuotas smb_delivery_ratio dydis.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Numatytoji reikšmė: 0. Tiesiškai didėjanti SMB dozės dalis taikoma gliukozės intervale nuo target_bg iki target_bg + bg_range.\nKai gliukozė lygi target_bg, naudojama smb_delivery_ratio_min reikšmė, o pasiekus target_bg + bg_range – smb_delivery_ratio_max.\nNustačius 0, tiesinis SMB dozės dalies didinimas išjungiamas ir naudojama fiksuota smb_delivery_ratio reikšmė.</string>
     <string name="openapsama_pp_ISF_weight_summary">Tai svoris, kuris taikomas, kai glikemija kyla, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
     <string name="openapsama_dura_ISF_weight_summary">Tai svoris, kuris taikomas per ilgesnės trukmės aukštą glikemiją, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
     <string name="openapsama_smb_delivery_ratio_summary">Numatytoji reikšmė: 0,5. Tai yra dar vienas svarbus OpenAPS saugos apribojimas, kuris nurodo, kokią dalį viso reikalingo insulino galima skirti kaip SMB. Šis apribojimas skirtas išvengti pavojingų situacijų, kai SMB užklausos siunčiamos tuo pačiu metu sekėjo globėjo telefono. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
@@ -130,7 +131,7 @@
     <string name="pref_title_low_mark">Žemos KG žyma</string>
     <string name="pref_title_high_mark">Aukštos KG žyma</string>
     <!-- UnitDoubleKey: APS preferences -->
-    <string name="pref_title_lgs_threshold">LGS riba</string>
+    <string name="pref_title_lgs_threshold">LGS slenkstis</string>
     <string name="lgs_threshold_summary">Gliukozės reikšmė, žemiau kurios insulino tiekimas sustabdomas. Numatytoji reikšmė nustatoma pagal standartinį tikslinės gliukozės modelį. Galima pasirinkti reikšmę nuo 60 mg/dl (3,3 mmol/l) iki 100 mg/dl (5,5 mmol/l). Nustačius mažesnę nei 65 mg/dl (3,6 mmol/l) reikšmę, bus naudojamas numatytasis modelis.</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
