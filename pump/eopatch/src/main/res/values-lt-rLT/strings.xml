@@ -9,9 +9,11 @@
     <string name="eopatch_ble_status">BLE būklė</string>
     <string name="eopatch_serial_number">Serijos nr.</string>
     <string name="eopatch_expiration_time">Galiojimo laikas</string>
+    <string name="eopatch_not_activated">Neaktyvuota</string>
     <string name="eopatch_base_basal_rate">Pagrindinė bazė</string>
     <string name="eopatch_temp_basal_rate">Laikina bazė</string>
     <string name="invalid_basal_rate">Profilio valandinė bazė yra mažesnė nei 0,05 V/val. Mažiausia EOPatch leidžiama dozė yra 0,05 V. Nustatykite profilio valandinę bazę ne mažesnę už šią ribą ir bandykite dar kartą.</string>
+    <string name="no_profile_selected_try_again">Profilis nepasirinktas. Pasirinkite profilį ir bandykite dar kartą.</string>
     <string name="symbol_day">d.</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -36,6 +38,7 @@
     <string name="patch_wake_up">Pildomas insulinas</string>
     <string name="patch_wake_up_desc_1">Užpildykite naują rezervuarą kambario temperatūros insulinu. Patikrinkite švirkšto kampą.</string>
     <string name="patch_wake_up_desc_2">Sulaukite 1 pyptelėjimo.</string>
+    <string name="patch_wake_up_pairing_info">Susiejant bus parodyti du Android sistemos iškylantieji langai. Kad Bluetooth susiejimas būtų baigtas, turite patvirtinti abu.</string>
     <string name="patch_start_pairing">Pradėti susiejimą</string>
     <string name="patch_connect_new">Rezervuaras susiejamas</string>
     <string name="patch_connect_new_desc">Naujas rezervuaras susietas.\nLaikykite telefoną ir rezervuarą taip arti, kaip tik įmanoma.</string>
@@ -49,6 +52,7 @@
     <string name="patch_start_safety_check">Pradėti saugos patikrą</string>
     <string name="patch_safety_check">Saugos patikra…</string>
     <string name="patch_safety_check_desc_1">Tai trunka apie 30 sek.</string>
+    <string name="patch_safety_check_desc_2">Saugos sumetimais nepašalinkite adatos įvedimo svirtelės, kol saugos patikra nebaigta!</string>
     <string name="patch_rotate_knob">Adatos įvedimas</string>
     <string name="patch_rotate_knob_desc_1">Norėdami įdurti adatą, pasukite adatos įvedimo svirtelę daugiau 100 °, po to pilnai pasukite ir pašalinkite ją</string>
     <string name="patch_rotate_knob_desc_2">Sulaukite 1 pyptelėjimo ir spauskite \'Toliau\'.</string>
@@ -60,6 +64,7 @@
     <string name="patch_activate_reminder_desc">Rezervuaro aktyvavimas neužbaigtas.\n Tęsti.</string>
     <string name="patch_communication_check_helper_1">Laikykite telefoną arčiau rezervuaro.</string>
     <string name="patch_communication_check_helper_2">Pakeiskite vietą ir bandykite dar kartą.</string>
+    <string name="patch_safety_check_failed_desc">Saugos patikra nepavyko. Bandykite dar kartą.</string>
     <string name="patch_communication_failed">Ryšio klaida</string>
     <string name="patch_communication_succeed">Ryšys sėkmingas</string>
     <string name="patch_communication_succeed_message">Rezervuaras susietas.</string>
@@ -78,8 +83,14 @@
     <string name="needle_insertion_error_3">Norėdami pašalinti rezervuarą spauskite \'Pašalinti\'.</string>
     <string name="string_suspend_time_insulin_delivery_title">Bazės sustabdymo laikas</string>
     <string name="string_resume_insulin_delivery_title">Atnaujinti insulino tiekimą</string>
+    <string name="string_resume_insulin_delivery_message">Insulino tiekimo sustabdymas baigėsi.\nPaspauskite \'Patvirtinti\', kad atnaujintumėte insulino tiekimą.\n\nKol to nepadarysite, insulino tiekimas nebus atnaujintas.\nGali išsivystyti hiperglikemija.</string>
     <string name="string_suspended_insulin_delivery_message">Insulino tiekimas sustabdytas.</string>
     <string name="string_resumed_insulin_delivery_message">Insulino tiekimas atnaujintas.</string>
     <string name="string_temp_basal_remained_hhmm">liko laiko: %1$s:%2$s</string>
+    <string name="string_pause_failed">Nepavyko sustabdyti insulino tiekimo.</string>
     <string name="string_resume_failed">Atnaujinti nepavyko.</string>
+    <string name="wizard_exit_activation_warning">Išeiti iš vedlio? Pompa gali likti nebaigtos aktyvavimo būsenos, todėl gali tekti naudoti naują.</string>
+    <string name="wizard_exit_deactivation_warning">Išeiti iš vedlio? Pompa gali likti aktyvi ir toliau tiekti insuliną.</string>
+    <string name="patch_force_reset">Priverstinai nustatyti iš naujo</string>
+    <string name="patch_force_reset_confirm">Tai išvalys pompos būseną tik programėlėje, nesiunčiant jokių komandų pačiai pompai. Naudokite tik tada, jei įprastas išjungimas nepavyksta. Pompa toliau tieks insuliną, kol išsikraus baterija arba ją išjungsite rankiniu būdu.</string>
 </resources>
