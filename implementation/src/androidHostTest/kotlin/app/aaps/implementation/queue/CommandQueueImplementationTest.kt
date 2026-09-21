@@ -1060,6 +1060,23 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     /**
+     * What the `success` flag actually costs. `CommandExecutor` drops the queue when the pump is not
+     * configured - selected but never paired - and it used to do that with `success = true`. [bolus]
+     * persists the accompanying carbs on a successful result, so the carbs were written for insulin
+     * that never left the pump, and the loop then counted them.
+     */
+    @Test
+    fun `carbs are not persisted when the bolus was dropped`() = runTest {
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0; carbs = 20.0 }) }
+        yield()
+
+        commandQueue.cancelAll(TextRef.Literal("pump not configured"), success = false)
+        yield()
+
+        verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+    }
+
+    /**
      * Dropping is not failing. The alarm in `WizardBolusExecutorImpl` fires on `!success`, so
      * without this flag the import would start raising BOLUS_DELIVERY_FAILED where nothing failed -
      * the same reason a bolus the user stopped does not alarm.
@@ -1075,7 +1092,10 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         var noOp: PumpEnactResult? = null
         backgroundScope.launch { noOp = commandQueue.bolus(DetailedBolusInfo()) }
         yield()
-        commandQueue.cancelAll(TextRef.Literal("pump not configured"), success = true)
+        // A drain that still reports success. No production caller passes true any more - the last one,
+        // CommandExecutor's "pump not configured", was flipped to false - but the flag is part of the
+        // API, and the point here is that `cancelled` is set either way.
+        commandQueue.cancelAll(TextRef.Literal("drained, reported as success"), success = true)
         yield()
 
         assertThat(failed!!.cancelled).isTrue()

@@ -170,11 +170,13 @@ class CommandExecutor(
                 val secondsElapsed = (Clock.System.now().toEpochMilliseconds() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 if (!pump.isConfigured()) {
-                    aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - completing queue as no-op")
-                    // success = true keeps today's meaning on purpose. Reporting failure here would
-                    // raise the pump-failure alarm every time a pump is selected but not paired,
-                    // which is a change worth making on its own and not inside this one.
-                    queue.cancelAll(CoreUiStrings.pump_not_configured, success = true)
+                    aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - dropping the queue")
+                    // success = false: nothing reached the pump, so no caller may be told it did.
+                    // `cancelAll` passes cancelled = true, and that is what keeps this quiet - a pump
+                    // selected but not yet paired is a normal setup state, not a delivery failure. The
+                    // older comment here kept success = true to avoid the alarm; that reason went away
+                    // when PumpEnactResult.cancelled arrived and the consumers learned to check it.
+                    queue.cancelAll(CoreUiStrings.pump_not_configured, success = false)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                     return
                 }

@@ -497,8 +497,18 @@ Each of these changes what gets built, and none of them is a coding question.
    Two very different pieces of work; phase 1 cannot start without the answer.
 2. **What is the quiet point**, given that nothing can stop the loop between the temp basal and the
    SMB (8.A)? Until this is answered, "nothing runs now" is a wish.
-3. **What does "cancel the queued commands" mean**, given that `completeAllAsNoOp` reports
-   `success = true` and the loop reads that as enacted (8.A)?
+3. ~~**What does "cancel the queued commands" mean**, given that `completeAllAsNoOp` reports
+   `success = true` and the loop reads that as enacted (8.A)?~~ **SETTLED AND BUILT.**
+   `completeAllAsNoOp` no longer exists. `16147121cc` replaced it with
+   `CommandQueue.cancelAll(comment, success)` routed through `Command.cancel`, exactly as the
+   recommendation below proposed, and the import passes `success = false`
+   (`ImportViewModel.applySettings`). `clear()` deliberately keeps `cancelled = false`, because a
+   connection timeout IS a delivery failure and must still raise its alarm.
+   One correction to the recommendation below: it says the alarm cannot be suppressed because
+   "`PumpEnactResult` holds a resolved `String` and every consumer branches on `success`". That was
+   overtaken by `8f13138e29`, which added `PumpEnactResult.cancelled` - a dropped command is now told
+   apart from a failed one, and `CommandQueueImplementation.postProfileWriteResult` returns early on
+   it rather than posting `FAILED_UPDATE_PROFILE`.
 4. **Replace or merge?** Dropping `sp.clear()` changes what an import means, and the removal rule is
    not written anywhere (8.B).
 5. **ComboV2: device state or pump configuration?** 3.1.3 and 3.1.4 say different things, and the
