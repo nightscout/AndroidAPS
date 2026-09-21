@@ -95,4 +95,5 @@
     <!-- Calibration entry rejection reasons -->
     <string name="cal_reject_delta_too_high">Kalibravimas neįrašytas: gliukozė kinta per greitai (Δ %1$s %3$s per 5 min., riba %2$s). Bandykite dar kartą, kai gliukozė bus stabili.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_no_pair">Per pastarąsias 10 minučių negauta CGM rodmenų. Patikrinkite jutiklio ryšį.</string>
 </resources>
