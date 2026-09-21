@@ -656,6 +656,22 @@ Each of these changes what gets built, and none of them is a coding question.
        A flag still set there fails every import - into `ImportStep.ApplyFailed` with the settings
        already written to disk, which is the half-applied state the comment above it warns about.
 
+     **This window is not Android-only.** `ImportViewModel` is `commonMain`, and the iOS shell uses the
+     same one - `AapsAppHost.kt`, `metroViewModel<ImportViewModel>()` - so an iOS import opens and
+     closes the window through `IosClientConfig` exactly as Android does through `ConfigImpl`. The
+     "No pump selected" exposure is therefore a cross-platform bug and this is a cross-platform fix;
+     verified by the `ios` session on 2026-09-21 at `fbdb19c8e0` (`iosSimulatorArm64Test` 720 tests,
+     0 failures, plus `linkDebugFrameworkIosArm64`).
+
+     **And the depth counter is load-bearing on iOS specifically.** iOS starts at
+     `InitProgress(done = true)` and never runs Android's start-up sequence, so it has nothing that
+     would put the state right again: a window left open there would leave `appInitialized` false for
+     the rest of the process, with no second chance to clear it. Two things protect it and both must
+     stay - `whileReconfiguring`'s `finally`, and `leavingReconfigure`'s clamp at zero. For the same
+     reason `updateInitProgress` / `initCompleted` / `initFailed` on the iOS and desktop configs carry
+     `reconfiguringDepth` through: they replace the whole value rather than copying it, and would
+     otherwise close a window its owner still believes is open.
+
      **The flag is cheap, and cheaper than it looked.** `Config.appInitialized` is a derived property
      defined in exactly one place (`Config.kt`, `get() = initProgressFlow.value.done`). Making it
      `done && !reconfiguring` closes about 35 existing `if (!config.appInitialized)` gates across `app`,
