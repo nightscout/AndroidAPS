@@ -110,7 +110,15 @@ abstract class PluginBase(
         )
     }
 
-    /** The previous transition. Start and stop of one plugin must not run at the same time. */
+    /**
+     * The previous transition. Start and stop of one plugin must not run at the same time.
+     *
+     * [Volatile] so a transition queued on one thread is seen by the next one on another. It does not make
+     * the read-then-write in [schedule] atomic: two callers arriving together can still both queue behind
+     * the same predecessor. Ordering here is best effort, and better than what it replaced - before this
+     * there was no ordering at all - but a caller that must not overlap should await the returned job.
+     */
+    @Volatile
     private var lastTransition: Job? = null
 
     enum class State {
