@@ -24,7 +24,7 @@
     <string name="boluses">Bolusai</string>
     <string name="extended_boluses">Ištęsti bolusai</string>
     <string name="carbohydrates">AV</string>
-    <string name="careportal_events">Priežiūros įrašai (išskyrus pastabas)</string>
+    <string name="careportal_events">Terapijos įrašai (išskyrus pastabas)</string>
     <string name="profile_switches">Profilio keitimas</string>
     <string name="total_daily_doses">Bendra Paros Dozė</string>
     <string name="temporary_basal_rates">Laikina bazė</string>
