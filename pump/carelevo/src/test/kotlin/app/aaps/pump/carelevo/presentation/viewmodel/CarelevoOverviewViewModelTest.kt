@@ -161,6 +161,21 @@ class CarelevoOverviewViewModelTest {
     private val connectedFlow = MutableStateFlow(false)
     private val lastConnectedFlow = MutableStateFlow(0L)
 
+    /**
+     * What `carelevoPatch.isBluetoothEnabled()` / `resolvePatchState()` answer. Assign these in a test
+     * instead of calling `whenever` again - both are stubbed once in [setUp] to read these fields.
+     *
+     * Re-stubbing mid-test was a real race, not a style point: the view model's `init` starts an endless
+     * second-tick collector, and with `UnconfinedTestDispatcher` its body resumes on the
+     * `flowOn(Dispatchers.Default)` emitter thread. So `clearExpiredInfusions()` reads `carelevoPatch`
+     * from a background thread while the test thread stubs it, and Mockito's stubbing is not thread safe:
+     * the in-flight `infusionInfo` read came back with the Boolean meant for `isBluetoothEnabled`, as
+     * `ClassCastException: Boolean cannot be cast to BehaviorSubject`. It failed about one CI run in two.
+     */
+    @Volatile private var bluetoothEnabled: Boolean = false
+
+    @Volatile private var resolvedPatchState: PatchState? = null
+
     private val events = CopyOnWriteArrayList<Event>()
     private lateinit var collectorScope: CoroutineScope
 
@@ -295,6 +310,11 @@ class CarelevoOverviewViewModelTest {
         whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
         whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
 
+        // Answered from a field rather than re-stubbed per test: the init second-tick collector reads
+        // carelevoPatch from a Dispatchers.Default thread, and Mockito stubbing is not thread safe, so a
+        // whenever() running at the same time could hand the Boolean back to the infusionInfo read.
+        whenever(carelevoPatch.isBluetoothEnabled()).thenAnswer { bluetoothEnabled }
+        whenever(carelevoPatch.resolvePatchState()).thenAnswer { resolvedPatchState }
         whenever(carelevoPatch.patchInfo).thenReturn(patchInfoSubject)
         whenever(carelevoPatch.patchState).thenReturn(patchStateSubject)
         whenever(carelevoPatch.infusionInfo).thenReturn(infusionSubject)
@@ -768,7 +788,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `clearInfusionInfo refreshes the patch status through the queue on success`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
 
         sut.clearInfusionInfo(CarelevoDeleteInfusionRequestModel(true, false, true))
 
@@ -778,7 +798,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `clearInfusionInfo does not refresh when the delete stream errors`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         whenever(deleteInfusionInfoUseCase.execute(any())).thenReturn(Single.error(RuntimeException("db down")))
 
         sut.clearInfusionInfo(CarelevoDeleteInfusionRequestModel(true, true, true))
@@ -788,7 +808,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `refreshPatchInfusionInfo reads the status through the queue when bluetooth is on`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
 
         sut.refreshPatchInfusionInfo()
 
@@ -797,7 +817,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `refreshPatchInfusionInfo is a no-op while bluetooth is off`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(false)
+        bluetoothEnabled = false
 
         sut.refreshPatchInfusionInfo()
 
@@ -882,7 +902,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `stop-resume click reports the patch is not connected when there is no patch`() {
-        whenever(carelevoPatch.resolvePatchState()).thenReturn(PatchState.NotConnectedNotBooting)
+        resolvedPatchState = PatchState.NotConnectedNotBooting
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
 
@@ -891,7 +911,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `stop-resume click offers the resume dialog for a stopped pump`() {
-        whenever(carelevoPatch.resolvePatchState()).thenReturn(PatchState.ConnectedBooted)
+        resolvedPatchState = PatchState.ConnectedBooted
         patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = true)))
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
@@ -901,7 +921,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `stop-resume click offers the stop-duration dialog for a running pump`() {
-        whenever(carelevoPatch.resolvePatchState()).thenReturn(PatchState.ConnectedBooted)
+        resolvedPatchState = PatchState.ConnectedBooted
         patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = false)))
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
@@ -911,7 +931,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `stop-resume click assumes running when the stop flag is unknown`() {
-        whenever(carelevoPatch.resolvePatchState()).thenReturn(PatchState.NotConnectedBooted)
+        resolvedPatchState = PatchState.NotConnectedBooted
         patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = null)))
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
@@ -922,7 +942,7 @@ class CarelevoOverviewViewModelTest {
     @Test
     fun `stop-resume click assumes running when no patch report has arrived`() {
         // patchInfo never emitted → `.value` is null → the `?: false` default.
-        whenever(carelevoPatch.resolvePatchState()).thenReturn(PatchState.ConnectedBooted)
+        resolvedPatchState = PatchState.ConnectedBooted
 
         sut.triggerEvent(CarelevoOverviewEvent.ClickPumpStopResumeBtn)
 
@@ -1023,7 +1043,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess reports bluetooth off and never touches the queue`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(false)
+        bluetoothEnabled = false
 
         sut.startPumpStopProcess(30)
 
@@ -1034,7 +1054,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess stops an idle pump and syncs the suspension`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-0001")))
         stubCustomCommand(success = true)
 
@@ -1058,7 +1078,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess cancels a running temp basal before stopping`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal())))
         stubCancelTempBasal(success = true)
         stubCustomCommand(success = true)
@@ -1075,7 +1095,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess cancels a running extended bolus before stopping`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolus())))
         stubCancelExtended(success = true)
         stubCustomCommand(success = true)
@@ -1092,7 +1112,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess cancels both running infusions before stopping`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         infusionSubject.onNext(
             Optional.of(
                 CarelevoInfusionInfoDomainModel(
@@ -1115,7 +1135,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess aborts when the temp basal cannot be cancelled`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(tempBasalInfusionInfo = tempBasal())))
         stubCancelTempBasal(success = false)
 
@@ -1128,7 +1148,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess aborts when the extended bolus cannot be cancelled`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolus())))
         stubCancelExtended(success = false)
 
@@ -1141,7 +1161,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess reports failure when the queued stop frame fails`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         stubCustomCommand(success = false)
 
         sut.startPumpStopProcess(30)
@@ -1157,7 +1177,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpStopProcess syncs an empty serial when no patch report has arrived`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         infusionSubject.onNext(Optional.of(CarelevoInfusionInfoDomainModel(extendBolusInfusionInfo = extendBolus())))
         stubCancelExtended(success = true)
         stubCustomCommand(success = true)
@@ -1176,7 +1196,7 @@ class CarelevoOverviewViewModelTest {
      */
     @Test
     fun `startPumpStopProcess ignores a second tap while the first is still in flight`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         val result = mock<PumpEnactResult>()
         whenever(result.success).thenReturn(true)
         whenever { commandQueue.customCommand(any()) }.thenAnswer {
@@ -1200,7 +1220,7 @@ class CarelevoOverviewViewModelTest {
      */
     @Test
     fun `startDiscardProcess is refused while a suspend is still in flight`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
         val result = mock<PumpEnactResult>()
         whenever(result.success).thenReturn(true)
@@ -1220,7 +1240,7 @@ class CarelevoOverviewViewModelTest {
     /** One instant for the record and for its dedup key, so the two cannot drift apart. */
     @Test
     fun `startPumpStopProcess writes the suspension with one instant for timestamp and pump id`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         stubCustomCommand(success = true)
 
         sut.startPumpStopProcess(30)
@@ -1237,7 +1257,7 @@ class CarelevoOverviewViewModelTest {
     /** A throwing DB write must not leave the screen behind the Loading scrim, nor hold the lock. */
     @Test
     fun `startPumpStopProcess releases the screen when the suspension sync throws`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         stubCustomCommand(success = true)
         whenever { pumpSync.syncTemporaryBasalWithPumpId(any(), any(), any(), any(), anyOrNull(), any(), any(), any()) }
             .thenThrow(RuntimeException("database unavailable"))
@@ -1254,7 +1274,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpResume reports bluetooth off and never touches the queue`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(false)
+        bluetoothEnabled = false
 
         sut.startPumpResume()
 
@@ -1272,7 +1292,7 @@ class CarelevoOverviewViewModelTest {
      */
     @Test
     fun `startPumpResume goes through the coordinator instead of queueing its own frame`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         patchInfoSubject.onNext(Optional.of(patchInfo(manufactureNumber = "SN-0001", isStopped = true)))
         stubResumeInfusion(success = true)
 
@@ -1287,7 +1307,7 @@ class CarelevoOverviewViewModelTest {
 
     @Test
     fun `startPumpResume reports failure and leaves the TBR alone when the resume fails`() {
-        whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
+        bluetoothEnabled = true
         stubResumeInfusion(success = false)
 
         sut.startPumpResume()
@@ -1523,7 +1543,7 @@ class CarelevoOverviewViewModelTest {
         sut.observePatchState()
         patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = false)))
         patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
-        whenever(carelevoPatch.resolvePatchState()).thenReturn(PatchState.ConnectedBooted)
+        resolvedPatchState = PatchState.ConnectedBooted
 
         sut.overviewUiState.value.managementActions[1].onClick()
 
@@ -1536,7 +1556,7 @@ class CarelevoOverviewViewModelTest {
         sut.observePatchState()
         patchInfoSubject.onNext(Optional.of(patchInfo(isStopped = true)))
         patchStateSubject.onNext(Optional.of(PatchState.ConnectedBooted))
-        whenever(carelevoPatch.resolvePatchState()).thenReturn(PatchState.ConnectedBooted)
+        resolvedPatchState = PatchState.ConnectedBooted
 
         sut.overviewUiState.value.managementActions[1].onClick()
 
