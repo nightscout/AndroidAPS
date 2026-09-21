@@ -51,7 +51,7 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_pairing_pump_requests_pin">Pompa prašo 10 skaitmenų PIN</string>
     <string name="combov2_pairing_finishing">Baigiamas susiejimas</string>
     <string name="combov2_no_connection_for_n_mins">Nėra ryšio su pompa %1$d min</string>
-    <string name="combov2_less_than_one_minute_ago">Mažiau nei prieš minutę</string>
+    <string name="combov2_less_than_one_minute_ago">Mažiau nei prieš 1 min</string>
     <string name="combov2_setting_current_pump_time">Nustatomas laikas pompoje</string>
     <string name="combov2_setting_current_pump_date">Nustatoma data pompoje</string>
     <string name="combov2_not_initialized">Neinicializuota</string>
@@ -62,11 +62,11 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_executing_command">Komanda vykdoma</string>
     <string name="combov2_getting_basal_profile_cmddesc">Nuskaitomas bazės profilis</string>
     <string name="combov2_setting_basal_profile_cmddesc">Nustatyti bazės profilį</string>
-    <string name="combov2_setting_tbr_cmddesc">Nustatoma %1$d%% laikina bazė %2$d min.</string>
+    <string name="combov2_setting_tbr_cmddesc">Nustatoma %1$d%% laikina bazė %2$d min</string>
     <string name="combov2_cancelling_tbr">Atšaukiama dabartinė laikina bazė</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Įkeliama BPD istorija</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Atnaujinamas laikas ir data pompoje</string>
-    <string name="combov2_updating_pump_status_cmddesc">Gaunamas pompos statusas</string>
+    <string name="combov2_updating_pump_status_cmddesc">Gaunama pompos būklė</string>
     <string name="combov2_pairing_pin_failure">PIN netinka. Patikrinkite, ar visi skaičiai teisingi. Jei problema kartojasi, atšaukite ir pakartokite susiejimą.</string>
     <string name="combov2_discovery_duration">Aptikimo trukmė (sekundėmis)</string>
     <string name="combov2_verbose_logging">Įgalinti išsamius Combo įrašus</string>
@@ -107,7 +107,7 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_dst_started">Prasidėjo vasaros laikas</string>
     <string name="combov2_dst_ended">Pasibaigė vasaros laikas</string>
     <string name="combov2_cannot_connect_pump_error_observed">Neįmanoma prisijungti prie pompos dėl pompos klaidos. Turite išspręsti klaidą ir palaukti 5 min, arba paspausti mygtuką Atnaujinti valdiklio skirtuke.</string>
-    <string name="combov2_refresh_pump_status_after_error">Atnaujinamas pompos statusas po klaidos pranešimo</string>
+    <string name="combov2_refresh_pump_status_after_error">Atnaujinama pompos būklė po klaidos pranešimo</string>
     <string name="combov2_go_back">Grįžti atgal</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Neįmanoma susieti pompos, nes nenustatytas valdiklis. Dažniausiai taip nutinka, kai nesuteiktas Bluetooth leidimas. Grįžkite atgal, įgalinkite Bluetooth ir bandykite vėl.</string>
     <string name="combov2_bluetooth_disabled">Įskiepis nepaleistas - Bluetooth išjungtas</string>
