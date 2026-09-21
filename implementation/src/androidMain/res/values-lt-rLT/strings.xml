@@ -7,6 +7,8 @@
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported">Nustatymai eksportuoti</string>
     <string name="exported_failed">Nustatymų eksportavimas nepavyko!</string>
