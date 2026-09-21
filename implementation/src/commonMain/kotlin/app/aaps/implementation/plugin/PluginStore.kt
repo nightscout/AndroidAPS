@@ -29,6 +29,7 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.Job
+import kotlin.concurrent.Volatile
 import kotlin.reflect.KClass
 
 @ContributesBinding(AppScope::class, binding = binding<ActivePlugin>())
@@ -44,12 +45,30 @@ class PluginStore(
     lateinit var plugins: List<PluginBase>
 
 
-    private var activeBgSourceStore: BgSource? = null
-    private var activePumpStore: Pump? = null
-    private var activeAPSStore: APS? = null
-    private var activeSensitivityStore: Sensitivity? = null
-    private var activeSmoothingStore: Smoothing? = null
-    private var activeCalibrationStore: Calibration? = null
+    /**
+     * The elected plugin per category. Written by [verifySelectionInCategories], read from everywhere.
+     *
+     * [Volatile] because the write and the reads are on different threads and nothing else orders them:
+     * the election runs on the import screen's dispatcher (and on the start-up scope), while the
+     * accessors below are read by the loop, the queue, the UI and the wear handlers. Without it there is
+     * no happens-before edge, so a reader has no guarantee of seeing the elected value at all, or of
+     * seeing the two writes in [verifySelectionInCategories] in the order they were made.
+     *
+     * **This does NOT make the election atomic, and it is not meant to.** Each category is written
+     * twice there - once with the result of `getTheOneEnabledInArray`, which can be null, and again with
+     * the default if it was. A reader landing between those two writes still sees null and still falls
+     * through to the assertion. [Volatile] only narrows that window from "unbounded, by the memory
+     * model" to the handful of instructions it appears to be in the source. Closing it properly means
+     * not reading plugin state while the election runs - see `Config.appInitialized` and the
+     * reconfiguring window - not holding a value over, which would hand the reader a stale disabled
+     * plugin instead.
+     */
+    @Volatile private var activeBgSourceStore: BgSource? = null
+    @Volatile private var activePumpStore: Pump? = null
+    @Volatile private var activeAPSStore: APS? = null
+    @Volatile private var activeSensitivityStore: Sensitivity? = null
+    @Volatile private var activeSmoothingStore: Smoothing? = null
+    @Volatile private var activeCalibrationStore: Calibration? = null
 
     private fun getDefaultPlugin(type: PluginType): PluginBase {
         for (p in plugins)
