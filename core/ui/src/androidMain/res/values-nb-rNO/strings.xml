@@ -406,6 +406,9 @@
     <string name="clientcontrol_fail_scene_disabled">Scenen er deaktivert.</string>
     <string name="clientcontrol_fail_partial">Noen handlinger kunne ikke utføres.</string>
     <string name="clientcontrol_fail_execution">Hovedenheten kunne ikke utføre handlingen.</string>
+    <string name="clientcontrol_fail_cancelled">Kommandoen ble avbrutt før den ble kjørt. Ingenting ble sendt til pumpen.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus avbrutt. Ingen insulin ble gitt.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Avbrutt</string>
     <string name="clientcontrol_fail_control_disabled">Fjernstyring er slått av på hovedenheten.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Den forberedte bolusen utløp eller ble erstattet. Trykk på knappen igjen.</string>
     <string name="clientcontrol_fail_bolus_compute">Hovedenheten kunne ikke beregne bolusen (mangler glukoseverdi/profil, eller pumpen er ikke klar).</string>
