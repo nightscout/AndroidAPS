@@ -21,7 +21,7 @@
     <string name="cwf_comment_status_ext">Apibendrinta būsena (iš AAPSClient ar AAPSClient2)</string>
     <string name="cwf_comment_loop_ext">Ciklo būklė ir praėjęs laikas (iš AAPSClient ar AAPSClient2)</string>
     <string name="cwf_comment_direction_ext">Tendencijos kryptis (iš AAPSClient ar AAPSClient2)</string>
-    <string name="cwf_comment_timestamp_ext">Paskutinės gautos KG laikas, minutėmis (iš AAPSClient arba AAPSClient2)</string>
+    <string name="cwf_comment_timestamp_ext">Paskutinės gautos gliukozės reikšmės laikas, minutėmis (iš AAPSClient arba AAPSClient2)</string>
     <string name="cwf_comment_sgv_ext">KG reikšmė (iš AAPSClient ar AAPSClient2)</string>
     <string name="cwf_comment_patient_name">Paciento vardas</string>
     <string name="cwf_comment_iob1">Sudėtinis arba detalus AIO</string>
@@ -37,7 +37,7 @@
     <string name="cwf_comment_basalRate">Bazė</string>
     <string name="cwf_comment_bgi">KGĮ </string>
     <string name="cwf_comment_status">Apibendrinta būsena</string>
-    <string name="cwf_comment_time">Laikas (val:min arba val:min:sek)</string>
+    <string name="cwf_comment_time">Laikas (val:min arba val:min:s)</string>
     <string name="cwf_comment_hour">Val.</string>
     <string name="cwf_comment_minute">min</string>
     <string name="cwf_comment_second">Sek.</string>
@@ -48,7 +48,7 @@
     <string name="cwf_comment_month">Mėnuo (sutrump.)</string>
     <string name="cwf_comment_loop">Ciklo būsena</string>
     <string name="cwf_comment_direction">Tendencijos rodyklė</string>
-    <string name="cwf_comment_timestamp">Prieš kiek minučių nuskaityta glikemija</string>
+    <string name="cwf_comment_timestamp">Prieš kiek minučių gauta glikemijos reikšmė</string>
     <string name="cwf_comment_sgv">Glikemija</string>
     <string name="cwf_comment_cover_plate">Paveiksliukas prieš tekstą (skambučius...)</string>
     <string name="cwf_comment_hour_hand">Analoginio laikrodžio valandinė rodyklė</string>
