@@ -1,5 +1,13 @@
 # iOS blockers
 
+> **Audited 2026-09-21 at `7e303d9bb5`, on macOS.** Only the claims below were checked against the
+> tree; everything else in this file is as it was and may be older than it looks. Corrected: the
+> alarm entry in "Known gaps" said iOS alarms are silent and they are not, and two rows of the
+> "Open" table were already done. Verified unchanged in the same pass: `compileKotlinIosArm64`,
+> `:ios:shell:linkDebugFrameworkIosArm64` and `iosSimulatorArm64Test` are all green (714 tests, 0
+> failures, 14 modules). **Not checked:** the three dependency cycles, the `BtConnectionSource`
+> note, and the remaining four rows of the "Open" table.
+
 Things the iOS branch needs from the phone side. Written by the macOS session, for the Windows
 session to pick up. Newest findings at the top of each list.
 
@@ -320,8 +328,8 @@ wrong. What is actually left:
 | Missing binding | Whose | Note |
 |---|---|---|
 | `Autotune` | yours | 3 methods, but the Android class is portable Kotlin computation, not platform. Worth porting rather than stubbing - a no-op would quietly do nothing when a user runs it. |
-| `ExportPasswordDataStore` | yours | see the request section above |
-| `ImportExportPrefs` | yours | 37 methods, document picker on both sides |
+| ~~`ExportPasswordDataStore`~~ | done | Shared `ExportPasswordDataStoreImpl` is in commonMain and the iOS half is `IosExportPasswordPlatform`. This section already says so further down ("`ExportPasswordDataStore` - iOS side done"); the table simply was not updated. Checked 2026-09-21. |
+| ~~`ImportExportPrefs`~~ | done | `LocalImportExportPrefs` in commonMain serves iOS and desktop; settings export and import were run end to end on the simulator, including Google Drive. A document picker is still missing, but that is a directory-chooser gap, not a missing binding. Checked 2026-09-21. |
 | `IobCobCalculator` | yours | still needs a home outside `:app` |
 | `UiInteraction` | shared | the interface is in commonMain already; only `UiInteractionImpl` is in `:app`. The iOS side is ours and is being written - see below. |
 | `NsSocketFactory` | ours | wiring only, see the gaps section |
@@ -564,14 +572,16 @@ Not blockers, and not for the Windows session to fix. Listed so nobody is surpri
   `socket.io-client-java` Android uses, which is what keeps both platforms speaking to Nightscout
   identically. The graph has to take it as a factory parameter from the app at start up.
 
-- `IosSystemNotificationPlatform.setAudibleAlarm` only logs, so **an urgent alarm makes no sound on
-  iOS today**. There are two separate paths and they are easy to confuse:
-  - *While the app is alive* - an `AVAudioPlayer` on an `AVAudioSession` with category `.playback`,
-    which ignores the hardware mute switch. **No entitlement needed.** This is the counterpart of
-    `AlarmSoundPlayerImpl`, and it is the missing piece: writing an iOS `AlarmSoundPlayer` and
-    driving it from `setAudibleAlarm` would make alarms work whenever AAPS is running. The four
-    sounds live in `core/ui/res/raw` as Android resources, so they would first have to reach the iOS
-    bundle.
+- **FIXED, and this entry used to say the opposite.** Until 2026-09-21 this said `setAudibleAlarm`
+  only logs and that an urgent alarm makes no sound on iOS. That is no longer true, and reading it
+  as current would mean either redoing finished work or shipping an URGENT notification believing it
+  will be silent. `IosSystemNotificationPlatform.setAudibleAlarm` drives
+  `alarmSoundPlayer.play/stop`, guarded on `instanceKey == soundingKey` so a second alarm does not
+  cut the first off. `IosAlarmSoundPlayer` is real `AVFAudio.AVAudioPlayer`: it resolves the sound
+  with `NSBundle.mainBundle.URLForResource(..., withExtension = "mp3")`, sets `numberOfLoops = -1`
+  for a continuous alarm, ramps the volume, and logs diagnostics when `AVAudioPlayer` refuses to
+  start. Last changed `e1fa702fc3`, 2026-09-11. Verified by reading the code at `7e303d9bb5`.
+  Only the second path below is still a project decision:
   - *While the app is not running* - only a Critical Alerts entitlement lets a notification break
     through silent and Focus. Apple grants it to medical apps on application. This is a project
     decision, not code.
