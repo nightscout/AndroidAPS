@@ -857,16 +857,30 @@ This is the group that reorders the work (4.2 step 1). All of it is about 3.5 st
 - **Stopping `PersistentNotificationPlugin` stops the foreground service.** `onStop()` calls
   `dummyServiceHelper.stopService(context)`, and `DummyService` is what keeps AAPS out of the
   background execution limits. The plugin is `alwaysEnabled`, so "stop every enabled plugin"
-  includes it, and `onStart` does not start the service again.
+  includes it, and `onStart` does not start the service again. **Done**: `onStart` now starts it,
+  deferred and idempotent - the missing half of this plugin's own `onStop`. Exempting `alwaysEnabled`
+  plugins from the sweep was the alternative and was rejected: it would leave the plugin running while
+  everything it reports on is restarting, and the asymmetry would still be there for anything else
+  that stops a service.
 - **`verifySelectionInCategories` starts plugins itself and drops the jobs**, for six categories. So
   "start every plugin, awaited" is unreachable however the calls are ordered, and the note added
   earlier to 3.5 was wrong to suggest that reordering alone fixes it. It has to return its jobs, and
-  `activePumpInternal`'s fallback has to stop enabling plugins from inside a getter.
-- **The scan test looks in the wrong place.** The work that survives a stop is launched from ordinary
-  methods, not from `onStart`: `LoopPlugin.invoke` ends its SMB branch with
+  `activePumpInternal`'s fallback has to stop **disabling** plugins from inside a getter. (Corrected
+  2026-09-21: this bullet said "enabling". The fallback calls `getTheOneEnabledInArray`, which keeps
+  the first enabled pump and disables every later one - a write, and dropped `onStop` jobs, during a
+  property read.) **Both done**: `verifySelectionInCategories` returns `List<Job>`, `loadSettings`
+  adds them to the list `applyConfiguration` already waits on, and the getter is a pure read.
+- **No scan test exists.** 3.5 step 3 and an earlier version of this bullet read as though one did.
+  When it is written it must scan the whole plugin class, not `onStart`: the work that survives a stop
+  is launched from ordinary methods, and `LoopPlugin.invoke` ends its SMB branch with
   `appScope.launch { delay(1000); invoke(...) }`, which lands inside or just after the restart window
-  and queues pump commands. Scan the whole plugin class for `appScope`, `postDelayed`, `Handler`,
-  `Thread(` and raw `CoroutineScope(`.
+  and queues pump commands. **Done**: `PluginLifetimeWorkScanTest` in `:app/src/testFull`. It looks for
+  `appScope`, `GlobalScope`, `postDelayed`, `Handler(`/`Thread(` across the whole class and makes every
+  hit declare itself either reviewed-safe or survives-stop. Two limits worth knowing: it reads source
+  text, so it cannot see work a helper class schedules on the plugin's behalf, and it does not look at
+  `WorkManager` or `AlarmManager`, which outlive the process and are a separate problem. Raw
+  `CoroutineScope(` is deliberately not matched - created in `onStart` and cancelled in `onStop` is the
+  correct idiom that 25 plugins already use, and flagging it buried the real hits in noise.
 - **Two pump-safety singletons outside plugins are missing from the reload list** (3.5 step 2):
   `PumpSyncStorage`, guarded by a one-shot `storageInitialized` flag, and
   `DetailedBolusInfoStorageImpl`.
