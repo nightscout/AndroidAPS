@@ -65,15 +65,19 @@ class ConfigBuilderImpl(
 
     private val scope = CoroutineScope(Dispatchers.Default + Job())
 
-    override fun initialize() {
-        loadSettings()
-        setAlwaysEnabledPluginsEnabled()
+    override fun initialize(): List<Job> {
+        // Collected and returned, not dropped: these are only scheduled, so without waiting for them the
+        // caller carries on against plugins that are enabled but not yet started. That is the difference
+        // that made the two start paths give different guarantees (plan bug 12) - applyConfiguration below
+        // waits, this one left it to the caller and nobody did it.
+        val started = loadSettings() + setAlwaysEnabledPluginsEnabled()
         // Seed the synthetic ActivePlugin mirror from the local selection — MASTER ONLY. On a client this is
         // intentionally skipped: now that these keys are Bidirectional, a startup put would publish the
         // client's (possibly stale) local selection and clobber the master. The client's mirror is instead
         // driven by the master's push and by the client's own gated switches (both already non-clobbering).
         if (!config.AAPSCLIENT) regenerateActivePluginKeys()
         startActivePluginObservers()   // adopt sync-driven selection changes (master↔client)
+        return started
     }
 
     override suspend fun applyConfiguration() {

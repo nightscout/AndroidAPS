@@ -77,6 +77,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
@@ -88,8 +89,19 @@ import java.util.Locale
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
+
+    companion object {
+
+        /**
+         * How long start up waits for the plugins to finish starting before carrying on regardless.
+         * Matches `ConfigBuilderImpl.PLUGIN_SETTLE_WAIT`, which bounds the same wait on the import path -
+         * the two start paths should behave the same, which is the whole point of waiting here at all.
+         */
+        private val PLUGIN_START_WAIT = 30.seconds
+    }
 
     override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
 
@@ -221,7 +233,13 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // Register and initialize plugins
                 config.updateInitProgress(getString(R.string.initializing_plugins))
                 pluginStore.plugins = plugins
-                configBuilder.initialize()
+                // Wait for the plugins to actually start, not just to be marked enabled. initialize()
+                // only schedules onStart, and everything below reads plugin state - the reconciler asks
+                // for the active pump on the next line. Bounded for the same reason applyConfiguration
+                // bounds it: a driver whose onStart will not settle must not hold up start up for ever.
+                val started = configBuilder.initialize()
+                if (withTimeoutOrNull(PLUGIN_START_WAIT) { started.joinAll() } == null)
+                    aapsLogger.warn(LTag.CORE, "Plugins did not finish starting within $PLUGIN_START_WAIT")
 
                 // Running-mode reconciler + expiry scheduler. Start after plugins are registered:
                 // the reconciler's startup-drift check reads the active pump, which requires

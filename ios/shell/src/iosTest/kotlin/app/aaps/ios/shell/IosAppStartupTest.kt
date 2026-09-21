@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.test.Test
@@ -100,8 +101,9 @@ class IosAppStartupTest {
             registered = plugins
         }
 
-        override fun initializeConfig() {
+        override fun initializeConfig(): List<Job> {
             calls.add("initialize")
+            return emptyList()
         }
     }
 
