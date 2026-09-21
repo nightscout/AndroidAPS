@@ -26,7 +26,7 @@ pump changed with `verifyPumpIdentification(type, pump.serialNumber())`, right a
 answer it with a `reset()`. The reset itself is fine: it clears the in-memory copy, and the next
 connection reads it again. But until then the live serial is `""`, so at that moment the check
 cannot tell an unchanged pump from a new one and may report "changed": `connectNewPump()` ends the
-running temporary basal in the database, and `completeAllAsNoOp()` drops the queued commands. The
+running temporary basal in the database, and `cancelAll()` drops the queued commands. The
 next loop cycle and the next connection heal both, so the effect is small. Dev only (`dee57d5` is
 not released).
 
@@ -392,8 +392,8 @@ The one thing a plugin really must do itself is in 3.6.
    2. Stop `AutomationRuntime` and wait for a run in progress (its run mutex).
    3. Cancel or wait for the running calculation.
    4. Nothing runs now and nothing can queue a command: cancel every queued command
-      (`completeAllAsNoOp()`), write the store (3.4 step 6), then `reloadFromStore()` (step 1
-      above).
+      (`cancelAll(comment, success = false)` - `completeAllAsNoOp()` is gone, see 4.1 decision 3),
+      write the store (3.4 step 6), then `reloadFromStore()` (step 1 above).
    5. Start every enabled plugin, awaited, in order (`setPluginEnabledAwaiting`), then
       `AutomationRuntime.start()`, which re-reads the rules.
    6. Trigger a new calculation.
@@ -746,15 +746,39 @@ already stands, and only removes a clause from 3.1.3.
 
 ### 4.2 The order
 
-0. **Re-derive bug 5.11 before spending anything on it.** The Crashlytics path cited there runs
-   through `PersistentNotificationPlugin`, which has been gated by `config.appInitialized` since
-   2026-08-19, so the 19 events may all predate the gate. Check the build ids on the open issue
-   first; if it is already fixed, the finding is a test, not a change.
+0. ~~**Re-derive bug 5.11 before spending anything on it.**~~ **DONE 2026-09-21, and the guess in this
+   step was wrong.** The build ids were checked in the Firebase console. The issue is
+   `PluginStore.getActivePumpInternal` - "No pump selected", **13 events / 6 users**, versions
+   `4.0.0-dev`..`dev-c`, newest event 2026-09-16, tagged "Regressed issue". `4.0.0-dev-c` was created
+   2026-09-08, **after** the 2026-08-19 gate, and 8 of the 13 events are on it - so the events do NOT
+   predate the gate. Reading the crashing source at that tag, the `if (!config.appInitialized) return`
+   guard was present and was PASSED, i.e. the flag was true: this is a plugin restarted during a
+   settings import, not a start up. **So it is a change, not a test** - see 4.1 decision 2 for the
+   design. A test was added anyway (`PluginStoreActivePumpTest`), but it pins only that the getter
+   answers without writing; it does not fix this crash and says so.
 1. **Make the plugin lifecycle honest.** `SupervisorJob` and a lifetime scope on `PluginBase`;
    `onStop` undoing `onStart` for the plugins that do not; `verifySelectionInCategories` returning
    its jobs; the foreground-service case; the scan test widened past `onStart` (all of 8.A). This
    was phase 4 and has to come first: the stop/write/start primitive, the import and the restart all
    stand on it, and today it cannot carry them.
+
+   **Status 2026-09-21 - mostly built, one item left.** Done and CI-green on `dev`: the private
+   `lifecycleScope` with a `SupervisorJob` and a handler, plus a handler on `pluginScope`
+   (`3761a48629`, `430982af5f`); `verifySelectionInCategories` returning its jobs and no longer
+   writing from a getter (`a37f6e81e1`); the foreground-service restart (`133e9f875b`); the scan test
+   widened, including a `pluginScope.launch` inventory with a per-site decision and a launch count
+   (`6951fb7a7e`, `1cc844c8e4`); transitions serialised under a lock (`9344233e5b`); plan bug 12
+   (`ea560ad5e8`); the three `isHeld()` guards (`21570ca902`).
+
+   **Left:** (a) the plugin-state quiet point - 4.1 decision 2, the one users are hitting; (b) four
+   `survivesStop` entries in `PluginLifetimeWorkScanTest`, worst `LoopPlugin#invoke`'s
+   `appScope.launch { delay(1000); invoke(...) }`, which reschedules a loop run into the restart
+   window. Note (a) is a *blocker for 3.5 step 3*, so step 3 is still gated.
+
+   **Settled while doing this, and not to be re-opened:** making `pluginScope` per-enable was proposed
+   and rejected - cancelling it does not withdraw a queued command, so 12 of the 14 launch sites would
+   lose their result without preventing anything, and `OmnipodDashPumpPlugin.handleCommandConfirmation`
+   must not be cancelled at all. The reasoning is on the `pluginScope` declaration.
 2. **Keys: registration and classification, with `kind` enforced by the build.** The `exportable`
    audit, the allowlist, the commit write (3.1); the three pump-state keys that live in `:core:keys`
    and that a module-owner classifier cannot see (8.B); CareLevo and ComboV2 off the raw store
@@ -784,25 +808,46 @@ allowed; shipping 3 before 1 and 2 is not.
    After this plan: pump state only through the checkbox, identity and cursors never.
 6. Today's import decides "pump changed" from a live serial that Dana and Diaconn keep empty until
    the next connection, so it may take that path for an unchanged pump (section 1; small effect).
-7. `LoopPlugin` and `OmnipodErosPumpPlugin` leak background work on a stop and start.
+7. **PARTLY FIXED.** `LoopPlugin` and `OmnipodErosPumpPlugin` leak background work on a stop and
+   start. Done: `LoopPlugin`'s collectors are held in `collectors` and cancelled in `onStop`
+   (`bec12877b2`); `OmnipodErosPumpPlugin.onStop` removes its `loopHandler` callbacks, deliberately
+   without quitting the looper (`4d8d7e2ff3`); `XdripPlugin` removes callbacks before `quitSafely`
+   (`334b25b628`). **Still leaking:** the four entries in
+   `PluginLifetimeWorkScanTest.survivesStop` - worst `LoopPlugin#invoke`'s
+   `appScope.launch { delay(1000); invoke(...) }`, which reschedules a loop run one second later,
+   inside the restart window. That list is the worklist and should only ever get shorter.
 8. `DesktopSp.persist()` rewrites the file in place; a crash can leave it truncated.
 9. `InstaraStringKey.DeviceMetaJson` KDoc versus its `exportable`; `GoogleDriveRefreshToken` is
    exported (check whether intended).
 10. Stale comments: `PluginBaseWithPreferences.beforeImport`/`afterImport` KDoc says the app
     restarts after an import; the `MainApp` comment about field injection before `doMigrations`;
     the `IntentKey` KDoc list (`SmsIntentKey` is in `:plugins:sync` now).
-11. `ConfigBuilderImpl.loadSettings()` launches every plugin's `onStart` before
+11. **STILL LIVE, and re-measured 2026-09-21 - the cause below was only half right.**
+    `ConfigBuilderImpl.loadSettings()` launches every plugin's `onStart` before
     `activePlugin.verifySelectionInCategories()` picks the active plugins, so a plugin that reads
     the active pump in `onStart` can hit `PluginStore.activePumpInternal`'s "No pump selected".
-    Live: Crashlytics `PluginStore.getActivePumpInternal`, 19 events on 9 users, 4.0.0-dev to
-    4.0.0-dev-c, last seen 2026-09-16, through `PersistentNotificationPlugin.onStart` ->
-    `triggerNotificationUpdate` -> `ProcessedTbrEbData` ->
-    `PumpWithConcentrationImpl.isFakingTempsByExtendedBoluses`. `PersistentNotificationPlugin`,
-    `XdripPlugin` and `TizenPlugin` guard it with `config.appInitialized`, which helps at startup
-    only - during an import the flag is already true (3.5 step 3).
-12. The two start paths give different guarantees: `initialize()` does not wait for the plugin
-    start jobs, `applyConfiguration()` does (bounded by `PLUGIN_SETTLE_WAIT`). The lifecycle
-    contract in 3.5 should hold for both, or startup keeps the race that 11 describes.
+    Crashlytics `PluginStore.getActivePumpInternal`: **13 events on 6 users** (not 19/9 - that
+    figure was from a wider window), `4.0.0-dev`..`dev-c`, newest 2026-09-16, through
+    `PersistentNotificationPlugin.onStart` -> `triggerNotificationUpdate` -> `ProcessedTbrEbData` ->
+    `PumpWithConcentrationImpl.isFakingTempsByExtendedBoluses`.
+
+    What the build ids showed: the `config.appInitialized` guard was PRESENT in the crashing builds
+    and was **passed**, so this is **not** the start-up ordering above - it is the import window,
+    where the flag is already true. The last sentence of the original entry was the right half.
+    The fix is 4.1 decision 2, and it is **not** to soften `PluginStore`'s assertions (deliberate -
+    see the comment block above the interface section there) nor to clear `initProgressFlow.done`
+    (that is the splash gate; seven blockers). Blocker for 3.5 step 3.
+12. ~~The two start paths give different guarantees.~~ **FIXED, `ea560ad5e8`.** `initialize()` now
+    returns its start jobs instead of dropping them, and `MainApp` waits on them bounded by 30 s -
+    matching `applyConfiguration`'s `PLUGIN_SETTLE_WAIT`. It could not wait internally: it is not
+    `suspend`, and several instrumented tests call it, so the contract is that it hands the jobs back.
+    The wait sits immediately before `runningModeReconciler.start()`, whose startup-drift check reads
+    the active pump - previously against plugins that were enabled but not started. Pinned by
+    `ConfigBuilderImplTest.initialize hands back the jobs its plugins are starting on`, beside the
+    existing `applying the configuration waits for the plugins to start`, so the pair reads as one
+    contract. Note this does **not** fix 11: `loadSettings` still schedules `onStart` before electing,
+    so the ordering is unchanged - what changed is that "plugins have started" is now true when
+    `initialize()` returns.
 
 ## 6. Open questions
 
