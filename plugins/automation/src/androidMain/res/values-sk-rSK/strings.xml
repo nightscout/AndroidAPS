@@ -151,6 +151,11 @@
     <string name="on">ZAP</string>
     <string name="off">VYP</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Zmeniť vyhladzovanie</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Zmeniť vyhladzovanie na %1$s</string>
+    <string name="smoothing_label">Vyhladzovanie</string>
+    <string name="precondition_smoothing_not_active_name">Vyhladzovanie nie je aktívne</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Vyhladzovanie %1$s nie je aktívne</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Vyber z mapy</string>
     <string name="tap_to_select_location">Ťukni na mapu a vyber miesto</string>
