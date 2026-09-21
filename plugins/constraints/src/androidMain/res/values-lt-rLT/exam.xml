@@ -97,7 +97,7 @@
     <string name="sensitivity_label">Jautrumo įskiepiai</string>
     <string name="sensitivity_adjust">Jautrumo įskiepiai leidžia AndroidAPS prisitaikyti prie laikinų ar trumpalaikių jautrumo insulinui pokyčių (pavyzdžiui, hormoninių pokyčių ar absorbcijos problemų infuzijos vietoje).</string>
     <string name="sensitivity_edit">Jautrumo įskiepiai pateikia bazės, IA ir JIF pakeitimų pasiūlymus, kuriais remiantis galima redaguoti profilį.</string>
-    <string name="sensitivity_cannula">Pažymėjus kateterio keitimą, Autosens santykis vėl bus grąžintas į 100%.</string>
+    <string name="sensitivity_cannula">Pažymėjus kaniulės keitimą, Autosens vėl bus grąžintas į 100%.</string>
     <string name="sensitivity_time">Kai kurios įskiepio parinktys turi konfigūruojamus laiko intervalus, kuriuos gali nustatyti naudotojas.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
@@ -108,7 +108,7 @@
     <string name="wrongcarbs_donothing">Nedaryti nieko - AndroidAPS padarys atitinkamus pakeitimus.</string>
     <string name="wrongcarbs_bolus">Suleisti bolusą, naudojant mygtuką Insulinas, esantį pagrindiniame lange.</string>
     <string name="wronginsulin_label">Insulino suleidimo / įrašymo klaidos</string>
-    <string name="wronginsulin_whattodo">Ką daryti, jei buvo suleista mažiau insulino nei rodo pompos istorija, pvz. dėl užsikimšimo, blogo kateterio ar pamiršus po dušo vėl prijungti pompą?</string>
+    <string name="wronginsulin_whattodo">Ką daryti, jei buvo suleista mažiau insulino nei rodo pompos istorija, pvz. dėl užsikimšimo, užlinkusios kaniulės ar pamiršus po dušo vėl prijungti pompą?</string>
     <string name="wronginsulin_careportal">Ištrinti insulino suleidimo įrašą per Nightscout Careportal, kad jis būtų pašalintas iš pompos istorijos.</string>
     <string name="wronginsulin_compare">Palyginti įrašus AndroidAPS ir pompos istorijoje (jei tai įmanoma).</string>
     <string name="wronginsulin_prime">Susileisti trūkstamą insulino kiekį švirkštu ar naudojantis infuzinės sistemos užpildymo funkcija.</string>
