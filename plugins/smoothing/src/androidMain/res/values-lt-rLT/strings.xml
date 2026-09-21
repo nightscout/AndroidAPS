@@ -6,4 +6,7 @@
     <string name="avg_smoothing_name">Vidutinis glodinimas</string>
     <string name="description_avg_smoothing">"Vidutinio glodinimo algoritmas, naujausios vertės neįtraukiamos"</string>
     <string name="no_smoothing_name">Be glodinimo</string>
+    <string name="description_no_smoothing">"Naudokite šią parinktį, jei duomenys jau yra filtruoti, pavyzdžiui, gaunami iš BYODA G6."</string>
+    <string name="UKF_name">Unscented Kalman Filter</string>
+    <string name="description_UKF">"Pažangus algoritmas su automatiniu triukšmo reguliavimu ir RTS glodinimu."</string>
 </resources>
