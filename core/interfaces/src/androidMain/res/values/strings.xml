@@ -163,4 +163,5 @@
     <string name="advisoralarm">Run alarm when is time to eat</string>
     <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s failed to start and may not work. Please restart AndroidAPS.</string>
 </resources>
