@@ -140,6 +140,13 @@ class PersistentNotificationPlugin(
             .debounce(10_000L)
             .collectResilient(newScope, aapsLogger, LTag.CORE) { triggerNotificationUpdate(includeAuto = true) }
         /// End Android Auto
+        // The missing half of this plugin's own onStop, which stops DummyService. Until now the service
+        // came back only when the next rxBus event reached triggerNotificationUpdate, so after a stop and
+        // start the process sat without its foreground service for however long that took - and
+        // DummyService is what keeps AAPS out of Android's background execution limits. Starting it here
+        // is idempotent (startService on a running service is a no-op) and deferred, because Android 12+
+        // forbids starting a foreground service from the background.
+        deferredStart.start { dummyServiceHelper.startService(context) }
     }
 
     override suspend fun onStop() {
