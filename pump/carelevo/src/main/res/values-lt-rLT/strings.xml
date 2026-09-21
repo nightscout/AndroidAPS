@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
     <string name="carelevo_description">Carelevo pompos integracija</string>
+    <string name="carelevo_alarm_channel_name">Carelevo signalai</string>
+    <string name="carelevo_alarm_channel_description">Pranešimai apie Carelevo pompos signalus</string>
     <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Bluetooth būsena</string>
+    <string name="carelevo_serial_number_key">Serijos Nr.</string>
+    <string name="carelevo_boot_date_time_key">Aktyvinimo laikas</string>
+    <string name="carelevo_expiration_key">Galiojimo pabaiga</string>
+    <string name="carelevo_basal_rate_key">Bazė</string>
+    <string name="carelevo_temp_basal_rate_key">Laikina bazė</string>
+    <string name="carelevo_insulin_remain_key">Likęs insulino kiekis</string>
+    <string name="carelevo_running_remain_time">Likęs pompos veikimo laikas</string>
+    <string name="carelevo_total_insulin_key">Iš viso suleista insulino</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d val. %d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d val.</string>
+    <string name="common_label_unit_value_dose_with_space">%s V</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f V/val.</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Atnaujinti insulino tiekimą?</string>
+    <string name="carelevo_pump_resume_description">Paspaudus Patvirtinti, insulino tiekimas bus atnaujintas.</string>
+    <string name="carelevo_pump_stop_duration_title">Nustatykite insulino tiekimo pristabdymo trukmę.</string>
     <string name="carelevo_pump_stop_duration_label_30_min">30 min</string>
     <string name="carelevo_pump_stop_duration_label_1_hour">1 valanda</string>
     <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 valanda 30 min</string>
@@ -10,12 +32,30 @@
     <string name="carelevo_pump_stop_duration_label_3_hour">3 valandos</string>
     <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 valandos 30 min</string>
     <string name="carelevo_pump_stop_duration_label_4_hour">4 valandos</string>
+    <string name="common_unit_value_day_hour_min">%1$d d. %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">liko %d min %02d s</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Insulino pildymo vedlys</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Išjungti rezervuarą</string>
+    <string name="carelevo_btn_input_search_patch">Ieškoti pompos</string>
+    <string name="carelevo_btn_retry">Bandyti dar kartą</string>
     <string name="carelevo_btn_next">Toliau</string>
+    <string name="carelevo_btn_safety_check">Saugos patikra</string>
     <string name="carelevo_btn_cancel">Atšaukti</string>
+    <string name="carelevo_btn_confirm">Patvirtinti</string>
+    <string name="carelevo_btn_research">Ieškoti iš naujo</string>
+    <string name="carelevo_btn_needle_insert_check">Patvirtinti adatos įvedimą</string>
     <string name="carelevo_state_none_value">Nėra aktyvaus pompos modulio</string>
     <string name="carelevo_state_disconnected_value">Atjungta</string>
     <string name="carelevo_state_connected_value">Prijungta</string>
+    <string name="carelevo_overview_connect_btn_label">Aktyvuoti</string>
     <string name="carelevo_overview_pump_discard_btn_label">Pašalinti rezervuarą</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Sustabdyti insulino tiekimą</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Atnaujinti insulino tiekimą</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Pasirinkite pripildyto insulino kiekį.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Diapazonas: %1$d–%2$d V</string>
     <string name="carelevo_patch_step_1">1 ŽINGSNIS.</string>
     <string name="carelevo_patch_step_2">2 ŽINGSNIS.</string>
     <string name="carelevo_patch_step_3">3 ŽINGSNIS.</string>
