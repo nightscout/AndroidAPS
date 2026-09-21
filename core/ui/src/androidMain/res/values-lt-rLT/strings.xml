@@ -141,6 +141,7 @@
     <string name="login">Prisijungti</string>
     <string name="logout">Atsijungti</string>
     <string name="prime_fill">Užpildymas</string>
+    <string name="site_filter_info">Pasirinkite norimą gydymo įvykio tipą: kaniulės ir (arba) jutiklio pakeitimą</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="stoptemptarget">Sustabdyti laikiną tikslą</string>
     <string name="closedloop">Uždaras Ciklas</string>
@@ -200,18 +201,23 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Terapija</string>
     <string name="careportal_bgcheck">Gliukomatis</string>
     <string name="careportal_mbg">Kalibracija</string>
     <string name="careportal_announcement">Pranešimas</string>
     <string name="careportal_settings_export">Nustatymų eksportavimas</string>
     <string name="careportal_note">Pastaba</string>
     <string name="careportal_question">Klausimas</string>
-    <string name="careportal_exercise">Aktyvumas</string>
+    <string name="careportal_exercise">Sportas</string>
     <string name="careportal_announcement_message">Pranešimas: %1$s</string>
     <string name="careportal_note_message">Pastaba: %1$s</string>
     <string name="careportal_question_message">Klausimas: %1$s</string>
-    <string name="careportal_exercise_message">Aktyvumas: %1$s</string>
-    <string name="careportal_pump_site_change">Kateterio keitimas</string>
+    <string name="careportal_exercise_message">Sportas: %1$s</string>
+    <string name="careportal_pump_site_change">Infuzijos vietos keitimas</string>
+    <string name="careportal_pump_site_management">Infuzijos vietos</string>
+    <string name="careportal_cgm_site_management">Jutiklio vietos</string>
+    <string name="careportal_cgmsensorstart">Jutiklio paleidimas</string>
+    <string name="careportal_cgm_sensor_stop">Jutiklio sustabdymas</string>
     <string name="careportal_dad_alert">D.A.D. įspėjimas</string>
     <string name="careportal_insulin_cartridge_change">Rezervuaro keitimas</string>
     <string name="careportal_profileswitch">Profilio keitimas</string>
@@ -219,20 +225,33 @@
     <string name="careportal_mealbolus">Bolusas valgiui</string>
     <string name="careportal_correctionbolus">Korekcinis bolusas</string>
     <string name="careportal_combobolus">Kombinuotas bolusas</string>
-    <string name="careportal_tempbasalstart">Pradėta laikina bazė</string>
-    <string name="careportal_tempbasalend">Užbaigta laikina bazė</string>
+    <string name="careportal_tempbasalstart">Laikinos bazės pradžia</string>
+    <string name="careportal_tempbasalend">Laikinos bazės pabaiga</string>
     <string name="careportal_carbscorrection">AV korekcijai</string>
     <string name="careportal_openapsoffline">OpenAPS neprisijungus</string>
     <string name="pump_battery_change">Baterijos keitimas</string>
     <string name="temporary_target">Laikinas tikslas</string>
     <string name="scene_conflict_active_profile">Aktyvus profilis bus pakeistas</string>
+    <string name="scene_action_careportal">Įrašas: %1$s</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="scene_careportal_no_revert">Terapijos įrašai nebus atšaukti</string>
+    <string name="careportal_sickness">Liga</string>
+    <string name="careportal_stress">Stresas</string>
+    <string name="careportal_pre_period">Prieš mėnesines</string>
+    <string name="careportal_alcohol">Alkoholis</string>
+    <string name="careportal_cortisone">Kortizolis</string>
+    <string name="careportal_feeling_low">Jaučiama hipoglikemija</string>
+    <string name="careportal_feeling_high">Jaučiama hiperglikemija</string>
+    <string name="careportal_falling_asleep">Užmigimas</string>
+    <string name="careportal_waking_up">Pabudimas</string>
     <string name="careportal_temporarytargetvalue">Laikino tikslo reikšmė</string>
     <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
     <string name="boluswizard">Boluso patarėjas</string>
     <string name="manage_temp_basal_desc">Pradėti laikiną bazinį greitį</string>
     <string name="treatment_bg_check_desc">Įrašyti gliukozės matavimą</string>
+    <string name="treatment_cannula_change_desc">Registruoti kaniulės ar infuzijos rinkinio pakeitimą</string>
+    <string name="treatment_fill_desc">Užpildyti sistemą ir kaniulę</string>
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="glucosetype_finger">Iš piršto</string>
     <string name="glucosetype_sensor">Sensorius</string>
@@ -289,19 +308,19 @@
     <string name="uel_cancel_bolus">ATŠAUKTI BOLUSĄ</string>
     <string name="uel_cancel_extended_bolus">ATŠAUKTI IŠTĘSTĄ BOLUSĄ</string>
     <string name="uel_cancel_tt">ATŠAUKTI LAIKINĄ TIKSLĄ</string>
-    <string name="uel_careportal">TERAPIJOS PORTALAS</string>
+    <string name="uel_careportal">TERAPIJA</string>
     <string name="uel_site_change">KANIULĖS KEITIMAS</string>
     <string name="uel_reservoir_change">REZERVUARO KEITIMAS</string>
     <string name="uel_calibration">KALIBRACIJA</string>
     <string name="uel_prime_bolus">PIRMINIS UŽPILDYMAS</string>
     <string name="uel_treatment">TERAPIJA</string>
-    <string name="uel_careportal_ns_refresh">ATJAUNTI TERAPIJOS PORTALĄ NS</string>
+    <string name="uel_careportal_ns_refresh">ATJAUNTI TERAPIJĄ NS</string>
     <string name="uel_profile_switch_ns_refresh">ATNAUJINTI PROFILIO KEITIMĄ NS</string>
     <string name="uel_treatments_ns_refresh">ATNAUJINTI TERAPIJĄ NS</string>
     <string name="uel_tt_ns_refresh">ATNAUJINTI LAIKINĄ TIKSLĄ NS</string>
     <string name="uel_automation_removed">AUTOMATIZAVIMAS PAŠALINTAS</string>
     <string name="uel_bg_removed">PAŠALINTA</string>
-    <string name="uel_careportal_removed">TERAPIJOS PORTALAS PAŠALINTAS</string>
+    <string name="uel_careportal_removed">TERAPIJA PAŠALINTA</string>
     <string name="uel_bolus_removed">BOLUSAS PAŠALINTAS</string>
     <string name="uel_carbs_removed">AV PAŠALINTI</string>
     <string name="uel_temp_basal_removed">LAIKINA BAZĖ PAŠALINTA</string>
