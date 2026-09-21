@@ -1,15 +1,25 @@
 package app.aaps.core.interfaces.plugin
 
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.PreferenceItem
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.concurrent.Volatile
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Created by mike on 09.06.2016.
@@ -17,10 +27,48 @@ import kotlinx.coroutines.runBlocking
 abstract class PluginBase(
     val pluginDescription: PluginDescription,
     val aapsLogger: AAPSLogger,
-    open val rh: TextResolver
+    open val rh: TextResolver,
+    protected val notificationManager: NotificationManager
 ) {
 
-    protected val pluginScope = CoroutineScope(Dispatchers.Default + Job())
+    /**
+     * Work the plugin starts. Unchanged for now, and still never cancelled - making it per-enable
+     * changes what 14 existing `pluginScope.launch` calls mean, with no compile error, and several of
+     * them queue pump commands. That is its own change with its own review.
+     *
+     * [SupervisorJob], though, because a plain `Job` made one failing child kill the scope for good and
+     * every later launch on it a silent no-op.
+     */
+    protected val pluginScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+    /**
+     * Runs [onStart] / [onStop], and nothing else.
+     *
+     * Separate from [pluginScope] so a plugin cancelling its own work can never cancel the transition
+     * that is doing the cancelling. Immortal, and safe to be: [runPhase] catches everything a phase can
+     * throw, and the handler is the last resort for anything thrown outside that try.
+     */
+    private val lifecycleScope = CoroutineScope(
+        Dispatchers.Default + SupervisorJob() +
+            CoroutineExceptionHandler { _, e -> aapsLogger.error(LTag.CORE, "Plugin lifecycle failed: $name", e) }
+    )
+
+    /**
+     * The last [onStart] threw, so this plugin is enabled but only half built.
+     *
+     * It is NOT disabled: AAPS needs a pump driver active, and disabling the failed one makes
+     * `ActivePlugin.activePumpInternal` throw "No pump selected". Instead the failure is visible - loudly
+     * to the user through an URGENT notification, and to the code through here. `PumpWithConcentrationImpl`
+     * reports a pump in this state as not initialized, because `isInitialized()` on the drivers reads
+     * device state (last connection, pod running) that survives a stop, so on a restart it would otherwise
+     * answer true for a driver whose service never came back up.
+     */
+    @Volatile
+    var lastStartFailed: Boolean = false
+        private set
+
+    /** The previous transition. Start and stop of one plugin must not run at the same time. */
+    private var lastTransition: Job? = null
 
     enum class State {
         NOT_INITIALIZED, ENABLED, DISABLED
@@ -108,18 +156,77 @@ abstract class PluginBase(
                     onStateChange(type, state, State.ENABLED)
                     state = State.ENABLED
                     aapsLogger.debug(LTag.CORE, "Starting: $name")
-                    return pluginScope.launch { onStart() }
+                    return schedule(starting = true)
                 }
             } else { // disabling plugin
                 if (state == State.ENABLED) {
                     onStateChange(type, state, State.DISABLED)
                     state = State.DISABLED
                     aapsLogger.debug(LTag.CORE, "Stopping: $name")
-                    return pluginScope.launch { onStop() }
+                    return schedule(starting = false)
                 }
             }
         }
         return null
+    }
+
+    /**
+     * Queue one transition behind the previous one, so a stop can never overtake the start it is meant to
+     * undo. `ConfigBuilderImpl.processOnEnabledCategoryChanged` disables the others and enables one in the
+     * same pass, and nothing else orders them.
+     *
+     * The wait is bounded. A driver teardown that hangs - a BLE read with no suspension point - would
+     * otherwise wedge this plugin's lifecycle for the rest of the process. After [TRANSITION_WAIT] the new
+     * transition goes ahead anyway and says so in the log: overlapping is bad, never starting again is worse.
+     */
+    private fun schedule(starting: Boolean): Job {
+        val previous = lastTransition
+        val job = lifecycleScope.launch {
+            if (previous != null && previous.isActive) {
+                val settled = withTimeoutOrNull(TRANSITION_WAIT) { previous.join() }
+                if (settled == null) aapsLogger.warn(LTag.CORE, "Previous transition of $name did not finish in $TRANSITION_WAIT, carrying on")
+            }
+            runPhase(starting)
+        }
+        lastTransition = job
+        return job
+    }
+
+    /**
+     * Run [onStart] or [onStop] and survive it throwing.
+     *
+     * Before this a throw reached no handler at all and killed the process. Catching it alone would be
+     * worse than the crash - the plugin would stay marked ENABLED, half built and silent - so the failure
+     * is recorded in [lastStartFailed] and put in front of the user at the alarm tier.
+     */
+    private suspend fun runPhase(starting: Boolean) {
+        try {
+            if (starting) {
+                onStart()
+                // A clean start clears both the flag and the card from the previous failure.
+                if (lastStartFailed) {
+                    lastStartFailed = false
+                    notificationManager.dismiss(NotificationId.PLUGIN_START_FAILED)
+                }
+            } else {
+                onStop()
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            // The throwable goes to the log, never into the notification: it is developer text, it is not
+            // translated, and it can be null or a page long.
+            aapsLogger.error(LTag.CORE, "${if (starting) "onStart" else "onStop"} failed: $name", e)
+            if (starting) {
+                lastStartFailed = true
+                notificationManager.post(
+                    NotificationId.PLUGIN_START_FAILED,
+                    rh.gs(InterfacesStrings.plugin_start_failed, name),
+                    validMinutes = 0,
+                    sound = AlarmSound.ALARM
+                )
+            }
+        }
     }
 
     /**
@@ -136,6 +243,9 @@ abstract class PluginBase(
     /**
      * Version of setPluginEnabled used for testing only.
      * OnStart/OnStop is called directly.
+     *
+     * Deliberately NOT routed through [runPhase]: a test that makes `onStart` throw must see the throw,
+     * not a swallowed one and a notification. ~30 unit tests and the pump emulator tests use this.
      */
     fun setPluginEnabledBlocking(type: PluginType, newState: Boolean) {
         if (type == pluginDescription.mainType) {
@@ -189,4 +299,10 @@ abstract class PluginBase(
      * Override in subclasses to declare permissions.
      */
     open fun requiredPermissions(): List<PermissionGroup> = emptyList()
+
+    companion object {
+
+        /** How long a transition waits for the previous one. See [schedule]. */
+        private val TRANSITION_WAIT = 30.seconds
+    }
 }

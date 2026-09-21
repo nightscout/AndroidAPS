@@ -252,7 +252,8 @@ abstract class CarelevoPumpPluginTestBase {
             tempBasalCoordinator = tempBasalCoordinator,
             connectionCoordinator = connectionCoordinator,
             settingsCoordinator = settingsCoordinator,
-            activationExecutor = activationExecutor
+            activationExecutor = activationExecutor,
+            notificationManager = mock()
         )
         plugin.bleSession = bleSession
         whenever { bleSession.readInfusionInfo(any()) }.thenReturn(

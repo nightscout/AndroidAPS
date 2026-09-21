@@ -120,7 +120,7 @@ class LoopPlugin(
     private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
     private val uiInteraction: UiInteraction,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val pumpStatusProvider: PumpStatusProvider,
@@ -148,7 +148,7 @@ class LoopPlugin(
         .shortName(ApsStrings.loop_shortname)
         .alwaysEnabled(config.APS)
         .description(ApsStrings.description_loop),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), Loop, PluginConstraints {
 
     // Volatile: this is now the only gate against a second automatic loop run for the same BG. It is

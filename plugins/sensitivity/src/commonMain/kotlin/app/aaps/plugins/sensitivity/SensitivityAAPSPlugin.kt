@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -44,7 +45,8 @@ class SensitivityAAPSPlugin(
     rh: TextResolver,
     preferences: Preferences,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    notificationManager: NotificationManager
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
@@ -52,7 +54,7 @@ class SensitivityAAPSPlugin(
         .pluginName(SensitivityStrings.sensitivity_aaps)
         .shortName(SensitivityStrings.sensitivity_plugin_shortname)
         .description(SensitivityStrings.description_sensitivity_aaps),
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ) {
 
     override fun specialShowInListCondition(): Boolean {

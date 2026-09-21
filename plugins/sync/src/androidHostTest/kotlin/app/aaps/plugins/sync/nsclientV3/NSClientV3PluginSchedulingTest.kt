@@ -55,7 +55,7 @@ class NSClientV3PluginSchedulingTest : TestBaseWithProfile() {
             aapsLogger, rh, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             mock(), mock(), decimalFormatter, l, nsClientRepository, mock(),
-            mock(), mock(), mock(), mock(), mock(), mock(), mock(), nsConnection, nsLoadExecutor
+            mock(), mock(), mock(), mock(), mock(), mock(), mock(), nsConnection, nsLoadExecutor, mock()
         )
     }
 

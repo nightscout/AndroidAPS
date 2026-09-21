@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tizen
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import android.content.Intent
@@ -72,7 +73,8 @@ class TizenPlugin(
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val pumpStatusProvider: PumpStatusProvider,
-    private val bolusProgressData: BolusProgressData
+    private val bolusProgressData: BolusProgressData,
+    notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -80,7 +82,7 @@ class TizenPlugin(
         .pluginName(SyncStrings.tizen)
         .shortName(SyncStrings.tizen_short)
         .description(SyncStrings.tizen_description),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ) {
 
     private var scope: CoroutineScope? = null

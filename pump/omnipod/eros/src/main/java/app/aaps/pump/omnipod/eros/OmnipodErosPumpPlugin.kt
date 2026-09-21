@@ -151,7 +151,7 @@ class OmnipodErosPumpPlugin(
     private val omnipodAlertUtil: OmnipodAlertUtil,
     private val pumpSync: PumpSync,
     private val uiInteraction: UiInteraction,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val erosHistoryDatabase: ErosHistoryDatabase,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck,
@@ -171,7 +171,7 @@ class OmnipodErosPumpPlugin(
         .shortName(TextRef.AndroidRes(R.string.omnipod_eros_name_short))
         .description(TextRef.AndroidRes(R.string.omnipod_eros_pump_description)),
     ownPreferences = ErosBooleanPreferenceKey.entries + ErosLongNonPreferenceKey.entries + ErosStringNonPreferenceKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, RileyLinkPumpDevice, OmnipodEros, OwnDatabasePlugin {
 
     private var scope: CoroutineScope? = null

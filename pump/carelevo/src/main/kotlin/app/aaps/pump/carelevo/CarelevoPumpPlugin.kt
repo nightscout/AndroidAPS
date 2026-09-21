@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
@@ -140,7 +141,8 @@ class CarelevoPumpPlugin @Inject constructor(
     private val tempBasalCoordinator: CarelevoTempBasalCoordinator,
     private val connectionCoordinator: CarelevoConnectionCoordinator,
     private val settingsCoordinator: CarelevoSettingsCoordinator,
-    private val activationExecutor: CarelevoActivationExecutor
+    private val activationExecutor: CarelevoActivationExecutor,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -159,7 +161,7 @@ class CarelevoPumpPlugin @Inject constructor(
         .shortName(TextRef.AndroidRes(R.string.carelevo_shortname))
         .description(TextRef.AndroidRes(R.string.carelevo_description)),
     ownPreferences = CarelevoBooleanPreferenceKey.entries + CarelevoIntPreferenceKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump {
 
     private var bleReceiverDisposable: Disposable? = null

@@ -32,6 +32,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class ObjectivesPluginTest : TestBaseWithProfile() {
@@ -66,7 +67,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
             Objective8(emulatedPreferences, rh, durationText, dateUtil),
             Objective9(emulatedPreferences, rh, durationText, dateUtil)
         )
-        objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, emulatedPreferences, config, objectives)
+        objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, emulatedPreferences, config, objectives, mock())
         runBlocking { objectivesPlugin.onStart() }
         whenever(rh.gs(ConstraintsStrings.objectivenotstarted)).thenReturn("Objective %1\$d not started")
         whenever(rh.gs(ConstraintsStrings.objectivenotfinished)).thenReturn("Objective %1\$d not finished")

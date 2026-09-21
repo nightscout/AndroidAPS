@@ -22,7 +22,7 @@ class SensitivityAAPSPluginTest : SensitivityTestBase() {
     private lateinit var sut: SensitivityAAPSPlugin
 
     @BeforeEach fun prepare() {
-        sut = SensitivityAAPSPlugin(aapsLogger, rh, preferences, dateUtil, activePlugin)
+        sut = SensitivityAAPSPlugin(aapsLogger, rh, preferences, dateUtil, activePlugin, mock())
     }
 
     private fun detect(

@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -101,7 +102,8 @@ class EopatchPumpPlugin(
     private val normalBasalManager: NormalBasalManager,
     private val protectionCheck: ProtectionCheck,
     private val blePreCheck: BlePreCheck,
-    private val bolusProgressData: BolusProgressData
+    private val bolusProgressData: BolusProgressData,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -116,7 +118,7 @@ class EopatchPumpPlugin(
         .shortName(TextRef.AndroidRes(R.string.eopatch_shortname))
         .description(TextRef.AndroidRes(R.string.eopatch_pump_description)),
     ownPreferences = EopatchIntKey.entries + EopatchBooleanKey.entries + EopatchStringNonKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump {
 
     private val mDisposables = CompositeDisposable()

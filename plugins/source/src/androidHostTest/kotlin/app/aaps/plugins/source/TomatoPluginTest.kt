@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import org.mockito.kotlin.mock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
@@ -20,7 +21,7 @@ class TomatoPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        tomatoPlugin = TomatoPlugin(rh, aapsLogger, preferences, config)
+        tomatoPlugin = TomatoPlugin(rh, aapsLogger, preferences, config, mock())
     }
 
     @Test

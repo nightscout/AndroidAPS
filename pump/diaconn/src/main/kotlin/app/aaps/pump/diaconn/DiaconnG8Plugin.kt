@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -92,7 +93,8 @@ class DiaconnG8Plugin(
     private val diaconnHistoryDatabase: DiaconnHistoryDatabase,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val bolusProgressData: BolusProgressData,
-    private val blePreCheck: BlePreCheck
+    private val blePreCheck: BlePreCheck,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -109,7 +111,7 @@ class DiaconnG8Plugin(
         .description(TextRef.AndroidRes(R.string.description_pump_diaconn_g8)),
     ownPreferences = DiaconnIntentKey.entries + DiaconnIntKey.entries + DiaconnBooleanKey.entries + DiaconnStringNonKey.entries +
         DiaconnIntNonKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, Diaconn, PumpPluginConstraints, OwnDatabasePlugin {
 
     private var scope: CoroutineScope? = null

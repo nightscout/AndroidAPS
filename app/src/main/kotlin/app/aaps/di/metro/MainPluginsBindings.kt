@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -64,10 +65,11 @@ object MainPluginsBindings {
         decimalFormatter: DecimalFormatter,
         processedTbrEbData: ProcessedTbrEbData,
         signals: CalculationSignalsEmitter,
+        notificationManager: NotificationManager,
         cache: () -> OverviewDataCache
     ): IobCobCalculatorPlugin = IobCobCalculatorPlugin(
         aapsLogger, rxBus, preferences, rh, profileFunction, activePlugin, dateUtil, persistenceLayer,
-        overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData, signals
+        overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData, signals, notificationManager
     ) { cache() }
 
     @Provides

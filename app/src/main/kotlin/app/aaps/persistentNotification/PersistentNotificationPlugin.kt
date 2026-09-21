@@ -1,6 +1,6 @@
 package app.aaps.persistentNotification
 
-import android.app.NotificationManager
+import android.app.NotificationManager as AndroidNotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -90,7 +91,8 @@ class PersistentNotificationPlugin(
     private val persistenceLayer: PersistenceLayer,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val dateUtil: DateUtil,
-    private val trendCalculator: TrendCalculator
+    private val trendCalculator: TrendCalculator,
+    notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -99,7 +101,7 @@ class PersistentNotificationPlugin(
         .alwaysEnabled(true)
         .showInList { false }
         .description(TextRef.AndroidRes(R.string.description_persistent_notification)),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ) {
 
     // For Android Auto
@@ -274,7 +276,7 @@ class PersistentNotificationPlugin(
         }
         /// End Android Auto
         builder.setContentIntent(notificationHolder.openAppIntent())
-        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
         val notification = builder.build()
         mNotificationManager.notify(notificationHolder.notificationID, notification)
         notificationHolder.notification = notification

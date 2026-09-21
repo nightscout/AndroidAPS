@@ -96,7 +96,7 @@ open class OpenAPSSMBPlugin(
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val tddCalculator: TddCalculator,
     private val bgQualityCheck: BgQualityCheck,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val determineBasalSMB: DetermineBasalSMB,
     private val profiler: Profiler,
     private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
@@ -122,7 +122,7 @@ open class OpenAPSSMBPlugin(
         .description(ApsStrings.description_smb)
         .setDefault(),
     ownPreferences = ApsIntentKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), APS, PluginConstraints {
 
     override suspend fun onStart() {

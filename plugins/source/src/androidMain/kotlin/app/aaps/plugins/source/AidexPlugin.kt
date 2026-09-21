@@ -52,7 +52,7 @@ class AidexPlugin(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -67,7 +67,7 @@ class AidexPlugin(
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_aidex)),
     ownPreferences = emptyList(),
-    aapsLogger, rh, preferences, config
+    aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
 
     @Volatile

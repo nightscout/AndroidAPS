@@ -12,6 +12,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class SensitivityOref1PluginTest : SensitivityTestBase() {
@@ -19,7 +20,7 @@ class SensitivityOref1PluginTest : SensitivityTestBase() {
     private lateinit var sut: SensitivityOref1Plugin
 
     @BeforeEach fun prepare() {
-        sut = SensitivityOref1Plugin(aapsLogger, rh, preferences, dateUtil)
+        sut = SensitivityOref1Plugin(aapsLogger, rh, preferences, dateUtil, mock())
     }
 
     private fun detect(

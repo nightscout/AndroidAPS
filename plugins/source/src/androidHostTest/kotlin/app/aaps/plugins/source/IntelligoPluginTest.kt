@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.never
@@ -40,7 +41,7 @@ class IntelligoPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        intelligoPlugin = IntelligoPlugin(rh, aapsLogger, preferences, config, context, persistenceLayer, dateUtil, fabricPrivacy)
+        intelligoPlugin = IntelligoPlugin(rh, aapsLogger, preferences, config, context, persistenceLayer, dateUtil, fabricPrivacy, mock())
 
         // Default cursor to be empty
         whenever(cursor.isAfterLast).thenReturn(true)

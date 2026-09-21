@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -54,7 +55,8 @@ class InstaraPlugin(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
-    config: Config
+    config: Config,
+    notificationManager: NotificationManager
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -69,7 +71,7 @@ class InstaraPlugin(
         .description(TextRef.AndroidRes(app.aaps.plugins.source.R.string.description_source_instara_app)),
     // Register Instara plugin-local preference/non-preference key enums
     ownPreferences = InstaraBooleanKey.entries + InstaraStringKey.entries,
-    aapsLogger, rh, preferences, config
+    aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
 
     private fun appContext(): Context = context

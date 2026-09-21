@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -100,7 +101,8 @@ open class VirtualPumpPlugin(
     private val ch: ConcentrationHelper,
     private val profileFunction: ProfileFunction,
     private val bolusProgressData: BolusProgressData,
-    private val appScope: CoroutineScope
+    private val appScope: CoroutineScope,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -124,7 +126,7 @@ open class VirtualPumpPlugin(
         .setDefault()
         .showInList { !config.AAPSCLIENT },
     ownPreferences = VirtualBooleanNonPreferenceKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, VirtualPump {
 
     private var scope: CoroutineScope? = null

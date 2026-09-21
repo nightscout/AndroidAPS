@@ -144,7 +144,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             Objective8(preferences, rh, durationText, dateUtil),
             Objective9(preferences, rh, durationText, dateUtil)
         )
-        objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, preferences, config, objectives)
+        objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, preferences, config, objectives, mock())
         runBlocking { objectivesPlugin.onStart() }
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
@@ -157,7 +157,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             OpenAPSAMAPlugin(
                 aapsLogger, rxBus, constraintChecker, rh, config, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
                 hardLimits, dateUtil, persistenceLayer, smbGlucoseStatusProvider, preferences, determineBasalAMA,
-                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider() }, ch, fabricPrivacy
+                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider() }, ch, fabricPrivacy, mock()
             )
         safetyPlugin =
             SafetyPlugin(

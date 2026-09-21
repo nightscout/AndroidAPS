@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -28,7 +29,7 @@ class RandomBgPluginTest : TestBaseWithProfile() {
     private lateinit var randomBgPlugin: RandomBgPlugin
 
     @BeforeEach fun prepare() {
-        randomBgPlugin = RandomBgPlugin(context, rh, aapsLogger, persistenceLayer, virtualPump, preferences, config)
+        randomBgPlugin = RandomBgPlugin(context, rh, aapsLogger, persistenceLayer, virtualPump, preferences, config, mock())
     }
 
     /**

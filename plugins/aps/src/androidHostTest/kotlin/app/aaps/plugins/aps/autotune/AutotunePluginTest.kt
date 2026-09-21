@@ -61,7 +61,8 @@ class AutotunePluginTest : TestBaseWithProfile() {
             uel = uel,
             loop = loop,
             profileStoreProvider = { profileStoreProvider() },
-            atProfileProvider = atProfileProvider
+            atProfileProvider = atProfileProvider,
+            notificationManager = mock()
         )
         runBlocking {
             whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)

@@ -346,7 +346,8 @@ class CarelevoPumpPluginLifecycleTest {
                 aapsSchedulers = aapsSchedulers,
                 deleteUserSettingInfoUseCase = deleteUserSettingInfoUseCase
             ),
-            activationExecutor = activationExecutor
+            activationExecutor = activationExecutor,
+            notificationManager = mock()
         )
     }
 

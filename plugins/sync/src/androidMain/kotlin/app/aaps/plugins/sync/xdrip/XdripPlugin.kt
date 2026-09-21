@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.xdrip
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
@@ -108,6 +109,7 @@ class XdripPlugin(
     private val xdripMvvmRepository: XdripMvvmRepository,
     private val dataSyncSelector: DataSyncSelectorXdrip,
     private val persistenceLayer: PersistenceLayer,
+    notificationManager: NotificationManager,
 ) : XDripBroadcast, Sync, PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -124,7 +126,7 @@ class XdripPlugin(
         .shortName(SyncStrings.xdrip_shortname)
         .description(SyncStrings.description_xdrip),
     ownPreferences = XdripLongKey.entries + XdripIntentKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ) {
 
     @Suppress("PrivatePropertyName")

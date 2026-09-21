@@ -45,7 +45,7 @@ import org.mockito.kotlin.whenever
  * both types. This test-local abstract combines them; Mockito/Objenesis bypasses the super-constructor,
  * so the `mock()` arguments are never evaluated.
  */
-internal abstract class FakePumpPlugin : PluginBase(mock<PluginDescription>(), mock<AAPSLogger>(), mock<ResourceHelper>()), Pump
+internal abstract class FakePumpPlugin : PluginBase(mock<PluginDescription>(), mock<AAPSLogger>(), mock<ResourceHelper>(), mock()), Pump
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ManageViewModelTest {

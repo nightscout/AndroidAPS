@@ -193,7 +193,14 @@ enum class NotificationId(
     SCENE_CHAIN_ERROR(IMPORTANT, AUTOMATION, allowMultiple = true),
 
     /** Bolus succeeded but the accompanying carbs could not be persisted — the user must re-enter them. */
-    CARBS_STORE_FAILED(URGENT, PUMP);
+    CARBS_STORE_FAILED(URGENT, PUMP),
+
+    // A plugin's onStart threw. It stays ENABLED on purpose - disabling a failed pump driver makes
+    // ActivePlugin.activePumpInternal throw "No pump selected" - so this alarm is how the user finds out
+    // that a plugin is running only half built. Appended at the END: the ordinal is the Android
+    // notification id (see fromOrdinal and CommonNotificationManager's instanceKey), so inserting in the
+    // middle would renumber every id after it.
+    PLUGIN_START_FAILED(URGENT, SYSTEM);
 
     companion object {
 

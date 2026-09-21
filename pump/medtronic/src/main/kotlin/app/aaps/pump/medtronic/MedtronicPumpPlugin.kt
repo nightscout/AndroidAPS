@@ -140,7 +140,7 @@ class MedtronicPumpPlugin(
     private val rileyLinkServiceData: RileyLinkServiceData,
     private val serviceTaskExecutor: ServiceTaskExecutor,
     private val uiInteraction: UiInteraction,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     dateUtil: DateUtil,
     pumpSync: PumpSync,
     pumpSyncStorage: PumpSyncStorage,
@@ -181,7 +181,8 @@ class MedtronicPumpPlugin(
     //instantiator = instantiator,
     pumpEnactResultProvider = pumpEnactResultProvider,
     bolusProgressData = bolusProgressData,
-    pumpDriverConfigurationInternal = MedtronicPumpDriverConfiguration()
+    pumpDriverConfigurationInternal = MedtronicPumpDriverConfiguration(),
+    notificationManager = notificationManager
 ), Pump, RileyLinkPumpDevice, PumpSyncEntriesCreator {
 
     private var rileyLinkMedtronicService: RileyLinkMedtronicService? = null

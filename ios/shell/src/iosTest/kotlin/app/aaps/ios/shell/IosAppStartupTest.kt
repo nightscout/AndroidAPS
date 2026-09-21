@@ -1,5 +1,12 @@
 package app.aaps.ios.shell
 
+import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.notifications.AlarmSound
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationHandle
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -7,6 +14,8 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -62,9 +71,22 @@ class IosAppStartupTest {
         override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {}
     }
 
+    /** PluginBase needs one; nothing here posts a notification, so every call is a no-op. */
+    private object NoNotifications : NotificationManager {
+
+        override val notifications: StateFlow<List<AapsNotification>> = MutableStateFlow(emptyList())
+        override fun cleanUp() {}
+        override fun post(id: NotificationId, text: String, level: NotificationLevel, validMinutes: Int, sound: AlarmSound?, actions: List<NotificationAction>, validityCheck: (() -> Boolean)?) = NotificationHandle(0)
+        override fun post(id: NotificationId, text: String, level: NotificationLevel, date: Long, validTo: Long, sound: AlarmSound?, actions: List<NotificationAction>, validityCheck: (() -> Boolean)?) = NotificationHandle(0)
+        override fun post(id: NotificationId, textRef: TextRef, level: NotificationLevel, validMinutes: Int, date: Long, validTo: Long, sound: AlarmSound?, actions: List<NotificationAction>, validityCheck: (() -> Boolean)?) = NotificationHandle(0)
+        override fun dismiss(id: NotificationId) {}
+        override fun dismiss(handle: NotificationHandle) {}
+        override fun muteAllAlarms() {}
+    }
+
     private class NamedPlugin(val id: String) : PluginBase(
         PluginDescription().also { it.mainType = PluginType.GENERAL },
-        SilentLogger, SilentText
+        SilentLogger, SilentText, NoNotifications
     )
 
     /** Records what happened and in which order, which is the whole contract under test. */

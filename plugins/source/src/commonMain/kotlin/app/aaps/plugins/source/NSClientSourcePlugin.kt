@@ -3,6 +3,7 @@ package app.aaps.plugins.source
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
@@ -28,6 +29,7 @@ class NSClientSourcePlugin(
     override val rh: TextResolver,
     aapsLogger: AAPSLogger,
     config: Config,
+    notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -42,5 +44,5 @@ class NSClientSourcePlugin(
         .description(SourceStrings.description_source_ns_client)
         .alwaysEnabled(config.AAPSCLIENT)
         .setDefault(config.AAPSCLIENT),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), BgSource, NSClientSource
