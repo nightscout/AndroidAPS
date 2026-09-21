@@ -15,6 +15,7 @@
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Sėkmingai</string>
     <string name="equil_title_dressing">Pakeiskite rezervuarą</string>
+    <string name="equil_title_air">Užpildyti kaniulę</string>
     <string name="equil_title_history_events">Istorijos įrašai</string>
     <string name="equil_tone">Perspėjimo tonas</string>
     <string name="equil_tone_mode_mute">Nutildyti</string>
@@ -108,6 +109,7 @@
     <string name="equil_common_wizard_exit_confirmation_text">Dar nesate užbaigę visų žingsnių. Ar tikrai norite išeiti?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Išeiti</string>
     <string name="equil_support_error">Programinės įrangos versija per žema. Nepalaikoma</string>
+    <string name="equil_password_tips">Pasirinktinai nustatykite susiejimo su Equil v5.3 pompa slaptažodį. Šis slaptažodis ateityje taip pat bus naudojamas atsiejant, todėl būtinai jį įsiminkite. Slaptažodį turi sudaryti 4 simboliai, pasirinkti iš ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Nustatyti suporavimo slaptažodį</string>
     <string name="equil_hint1">Po to, kai uždėsite pompą ant pagrindo plokštės, pasirinkite, ar norite išstumti orą iš įvestos adatos.</string>
     <string name="equil_unbind">Atsieti įrenginį</string>
