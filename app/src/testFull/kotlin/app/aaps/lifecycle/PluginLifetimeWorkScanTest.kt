@@ -52,6 +52,9 @@ class PluginLifetimeWorkScanTest {
         "OmnipodDashPumpPlugin#onStart" to "onStop cancels the scope and tears the handler down",
         "LoopPlugin#scheduleBuildAndStoreDeviceStatus" to "the job is held in deviceStatusJob and onStop cancels it",
         "XdripPlugin#onStart" to "onStop removes the callbacks first, then quits the looper",
+        "OmnipodErosPumpPlugin#loopHandler" to "onStop removes the callbacks; the looper stays alive on purpose, loopHandler is created once",
+        "OmnipodErosPumpPlugin#pumpDescription" to "the statusChecker chain it re-posts is removed in onStop",
+        "OmnipodErosPumpPlugin#onStart" to "the statusChecker it posts is removed in onStop",
     )
 
     /**
@@ -60,12 +63,6 @@ class PluginLifetimeWorkScanTest {
      * should only ever get shorter. Nothing may be added here without a decision recorded next to it.
      */
     private val survivesStop: Map<String, String> = mapOf(
-        "OmnipodErosPumpPlugin#loopHandler" to
-            "onStop cancels the scope and unbinds the service but never touches loopHandler, so the 1-minute status chain keeps posting",
-        "OmnipodErosPumpPlugin#pumpDescription" to
-            "the same loopHandler chain, re-posted from run(); nothing clears it on stop",
-        "OmnipodErosPumpPlugin#onStart" to
-            "onStart posts statusChecker on loopHandler every STATUS_CHECK_INTERVAL_MILLIS and onStop never removes it",
         "LoopPlugin#onStart" to
             "two collectors are launchIn(appScope); onStop cancels only deviceStatusJob, so both keep collecting after the stop",
         "LoopPlugin#invoke" to
