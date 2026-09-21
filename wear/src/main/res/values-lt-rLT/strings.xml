@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(apskritimas)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(pasirinktinis)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (pasirinktinis), visada rodomas</string>
     <string name="label_actions_tile">Veiksmai</string>
     <string name="label_temp_target_tile">Laikinas tikslas</string>
     <string name="label_quick_wizard_tile">Greitasis vedlys</string>
@@ -113,7 +114,7 @@
     <string name="action_confirm">PATVIRTINTI</string>
     <string name="action_timeshift_hours">Laiko poslinkis\n[val.]</string>
     <string name="bolus_progress">Leidžiamas bolusas</string>
-    <string name="press_to_cancel">atšaukti</string>
+    <string name="press_to_cancel">paspauskite, kad atšauktumėte</string>
     <string name="cancel_bolus">ATŠAUKTI BOLUSĄ</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Ciklas</string>
@@ -169,7 +170,7 @@
     <string name="bolus_progress_silent_channel_description">Boluso leidimas ir atšaukimas su mažiau vibracijų</string>
     <string name="simple_ui_off">Išj.</string>
     <string name="simple_ui_charging">Įkrovimo metu</string>
-    <string name="simple_ui_always_on">Režimas: visada įjungta</string>
+    <string name="simple_ui_always_on">Visada įjungta</string>
     <string name="simple_ui_always_on_charging">Režimas: visada įjungta kraunant</string>
     <string name="temp_target_eating_soon">Valgis</string>
     <string name="temp_target_hypo">Hipo</string>
@@ -251,7 +252,7 @@
     <string name="loop_status_no_last_run">N/A</string>
     <string name="loop_status_closed">Uždaras ciklas</string>
     <string name="loop_status_open">Atviras ciklas</string>
-    <string name="loop_status_lgs">Stabdymas esant žemai glikemijai</string>
+    <string name="loop_status_lgs">Stabdymas esant žemai gliukozei</string>
     <string name="loop_status_suspended">Ciklas sustabdytas</string>
     <string name="loop_status_last_run_enact">Paskutinis ciklas&amp; įvykdymas</string>
     <string name="loop_status_last_run">Paskutinis ciklas</string>
