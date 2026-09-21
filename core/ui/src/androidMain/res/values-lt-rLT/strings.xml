@@ -152,7 +152,7 @@
     <string name="isf_short">JIF</string>
     <string name="canceling_tbr_failed">Laikinos bazės atšaukti nepavyko</string>
     <string name="canceling_eb_failed">Ištęsto boluso atšaukti nepavyko</string>
-    <string name="virtualpump_uploadstatus_title">Pompos statusas perduodamas į NS arba Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">Pompos būklė perduodama į NS arba Tidepool</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <string name="loopstatus_targets">TIKSLAI:</string>
     <string name="loopstatus_OAPS_result">OAPS REZULTATAS:</string>
@@ -391,7 +391,7 @@
     <string name="extended_bolus_u_min">IŠTĘSTAS BOLUSAS %1$.2f vv %2$d min</string>
     <string name="load_events">GAUTI ĮVYKIUS</string>
     <string name="clear_alarms">IŠVALYTI ALIARMUS</string>
-    <string name="deactivate">DEAKTYVUOTI</string>
+    <string name="deactivate">IŠJUNGTI</string>
     <string name="update_time">ATNAUJINTI LAIKĄ</string>
     <string name="load_history">GAUTI ISTORIJĄ %1$d</string>
     <string name="load_tdds">GAUTI BPD</string>
@@ -402,9 +402,9 @@
     <string name="stop_pump">Sustabdyti pompą</string>
     <string name="temp_basal_absolute">LAIKINA BAZĖ %1$.2f vv/h %2$d min</string>
     <string name="temp_basal_percent">LAIKINA BAZĖ %1$d%% %2$d min</string>
-    <string name="insight_set_tbr_over_notification">INSIGHT NUSTATYTI LAIKINĄ BAZĘ PRANEŠIMU</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">STATUSAS %1$s</string>
-    <string name="keepalive_status_outdated" comment="26 characters max for translation">Tęsti. Statusas senas.</string>
+    <string name="insight_set_tbr_over_notification">PRANEŠIMAS APIE LAIKINOS BAZĖS PABAIGĄ</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">BŪKLĖ %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Tęsti. Būklė sena.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Tęsti. Bazė per sena.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="formatPercent">%1$.0f%%</string>
@@ -586,7 +586,7 @@
     <string name="target_short">TIKSLAS</string>
     <string name="profile_name">Profilio pavadinimas:</string>
     <string name="units_colon">Vienetai:</string>
-    <string name="discard">Išjungti</string>
+    <string name="discard">Pašalinti</string>
     <string name="ic_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti IA reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
     <string name="isf_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti JIF reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
     <!--    Search-->
