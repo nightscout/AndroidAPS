@@ -110,6 +110,7 @@
     <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
     <string name="scene_not_available">Scene %1$s finnes ikke lenger</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Fjernkommandoer for insulin er deaktivert i AAPSClient-modus</string>
+    <string name="wear_phone_not_ready">Telefonen starter fortsatt opp eller tar i bruk innstillinger. Prøv igjen om litt.</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BS utenfor område!</string>
     <string name="wear_action_tempt_max_bg_error">Maks-BS utenfor område!</string>
