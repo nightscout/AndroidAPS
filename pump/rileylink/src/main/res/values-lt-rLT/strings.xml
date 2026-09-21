@@ -8,6 +8,7 @@
     <string name="pump_status_error_comm">Ryšio klaida</string>
     <string name="pump_status_timeout_comm">Ryšiui skirtas laikas baigėsi</string>
     <string name="pump_status_invalid_config">Neteisinga konfigūracija</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Programinis 4b6b kodavimas</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">Skanuojama</string>
     <string name="riley_link_ble_config_connected_never">Niekada</string>
@@ -71,4 +72,5 @@
     </plurals>
     <string name="orange_use_scanning_level">Atlikti skanavimą</string>
     <string name="orange_use_scanning_level_summary">Prieš suporuodami su OrangeLink, naudokite skanavimą, tai turėtų pagerinti ryšio kokybę (jei reikia, galite jį naudoti ir kituose RileyLink klonuose)</string>
+    <string name="rileylink_pair_success">RileyLink sėkmingai susietas</string>
 </resources>
