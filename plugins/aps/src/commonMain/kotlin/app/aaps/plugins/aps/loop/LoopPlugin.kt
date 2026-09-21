@@ -660,8 +660,18 @@ class LoopPlugin(
                             }
                         }
                     }
+                    // `isHeld()` is the settings-import hold. Do NOT start an enactment under it: the
+                    // executor will not pick the commands up, so the temp basal and the SMB would sit in
+                    // the queue and both land after the hold ends - against pump drivers that were just
+                    // stopped and restarted. Waiting for a running enactment instead was tried and
+                    // refuted: `withHold` raises the flag BEFORE it waits, so the loop's second queue
+                    // call is never picked up and the import always times out.
+                    //
+                    // Skipping a loop run is cheap - the next one is five minutes away and re-decides
+                    // from fresh data. Enacting into a driver being torn down is not.
                     if (resultAfterConstraints.isChangeRequested()
                         && !commandQueue.bolusInQueue()
+                        && !commandQueue.isHeld()
                     ) {
                         val waiting = pumpEnactResultProvider()
                         waiting.queued = true
@@ -773,6 +783,13 @@ class LoopPlugin(
 
     override suspend fun acceptChangeRequest() {
         val profile = profileFunction.getProfile() ?: return
+        // Same hold as in `invoke`, and this path needs its own check: it enacts OUTSIDE `invokeMutex`
+        // and is reachable from the phone and the watch, so nothing `invoke` does protects it. The user
+        // pressed a button, so say why nothing happened rather than failing silently.
+        if (commandQueue.isHeld()) {
+            aapsLogger.debug(LTag.APS, "acceptChangeRequest: queue is held (settings being applied), not enacting")
+            return
+        }
         lastRun?.let { lastRun ->
             lastRun.constraintsProcessed?.let { constraintsProcessed ->
                 // Protected for the same reason as the enactment in `invoke`, and it matters more
