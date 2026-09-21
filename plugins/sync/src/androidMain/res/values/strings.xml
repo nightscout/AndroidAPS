@@ -119,6 +119,7 @@
     <string name="user_action_not_available">Selected User Action %1$s is no longer available, please refresh your tile</string>
     <string name="scene_not_available">Scene %1$s is no longer available, please refresh your tile</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Remote insulin commands are disabled in client mode</string>
+    <string name="wear_phone_not_ready">The phone is still starting up or applying settings. Try again in a moment.</string>
     <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
