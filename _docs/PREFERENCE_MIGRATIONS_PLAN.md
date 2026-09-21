@@ -506,11 +506,18 @@ Each of these changes what gets built, and none of them is a coding question.
    - **The plugin-state half is NOT done, and it is the one users are hitting.** The hold stops commands;
      it does nothing about a plugin reading plugin state while the selection is being rebuilt. Live
      Crashlytics `PluginStore.getActivePumpInternal` - "No pump selected", 13 events / 6 users on
-     `4.0.0-dev`..`dev-c`, newest 2026-09-16 - is `PersistentNotificationPlugin.onStart` restarting
-     during an import and reading the active pump inside the window where `loadSettings` has disabled
-     the old pump and not yet elected the new one. Its `config.appInitialized` guard was PRESENT in
-     those builds and was passed, because `appInitialized` means "start up finished once", not "plugin
-     state is valid now".
+     `4.0.0-dev`..`dev-c`, newest 2026-09-16 - happens inside the window where `loadSettings` has
+     disabled the old pump and not yet elected the new one. The `config.appInitialized` guards that
+     several plugins carry were PRESENT in those builds and were passed, because `appInitialized` means
+     "start up finished once", not "plugin state is valid now"; that is the part of the diagnosis that
+     holds, and it is what decides the fix.
+
+     **The caller that produced those events is `PersistentNotificationPlugin`, and its path is already
+     closed** - by RxJava's undeliverable-exception behaviour, not by anything anyone designed, and by
+     the Rx-to-Flow migration that removed it. Both are set out below. What is NOT established is
+     whether any *other* reader is still uncontained in this window; that is the first task of the
+     session that builds this. It does not block the design: the fix is the same wherever the read is,
+     because it is about the window, not the call site.
 
      **The answer is not to soften the throw.** `PluginStore`'s "No pump selected" and its `checkNotNull`
      siblings are deliberate assertions - no nullable variant, no default fallback, no cached
@@ -535,28 +542,128 @@ Each of these changes what gets built, and none of them is a coding question.
      no Close button, after the settings are already on disk. It also re-introduces exactly what
      `ImportViewModel.finishApply` already defers `uiRestart.request()` to avoid.
 
-     **The mechanism, traced 2026-09-21 - it is `CoroutineStart.UNDISPATCHED`, and that opens a second,
-     much cheaper candidate fix.** `PersistentNotificationPlugin.onStart` does not call
-     `triggerNotificationUpdate` directly; it subscribes three collectors with
-     `collectResilient(..., start = CoroutineStart.UNDISPATCHED)`. That parameter's own KDoc in
-     `ResilientCollect.kt` says why it matters: *"if the source does emit during subscribe ... that
-     first block runs on the caller's thread - which is why this is opt-in rather than the default."*
-     So the collector body can execute INSIDE `onStart`, on `setPluginEnabled`'s coroutine - which is
-     exactly the frame order in the crash stack (`onStart` directly above `triggerNotificationUpdate`,
-     with `PluginBase$setPluginEnabled$1.invokeSuspend` beneath). `RxBus` publishes with `replay = 0`,
-     so this needs an event genuinely in flight at subscribe time, and an import supplies one: it stops
-     and restarts pump drivers, and the drivers send `EventInitializationChanged` on connect/init
-     (ComboV2Plugin, DanaRExecutionService, DanaRKoreanExecutionService and others).
+     **A `CoroutineStart.UNDISPATCHED` mechanism was written here on 2026-09-21 and is REFUTED. There
+     is no cheap local fix; do not build one.** The claim was that
+     `PersistentNotificationPlugin.onStart` subscribes three collectors with
+     `collectResilient(..., start = CoroutineStart.UNDISPATCHED)`, so the collector body runs on the
+     caller's thread inside `onStart` and its throw escapes. The body does run on the caller's thread -
+     that part of `ResilientCollect.kt`'s KDoc is accurate - but the throw cannot escape, because
+     `collectResilient` is
 
-     UNDISPATCHED was added deliberately, to close the lost-event window that `replay = 0` creates, so
-     do not simply drop it. But it means the cheap local fix is available: stop that block from reading
-     plugin state synchronously during `onStart` - either by not passing UNDISPATCHED on these three
-     specific collectors and accepting a possible missed refresh (the next event triggers one anyway),
-     or by having the body hop off the caller's thread before touching `activePlugin`. **Confidence:
-     the mechanism is established from the KDoc and the stack; the exact emission that lands during
-     subscribe is inferred from the sender list and has not been reproduced.** Reproduce it before
-     choosing between the local fix and the `reconfiguring` flag - the flag is still the general answer,
-     this is the one that would stop today's 6 users crashing.
+         onEach { item -> try { block(item) } catch (CancellationException) { throw } catch (Throwable) { log } }
+             .retryWhen { ... }
+             .let { flow -> scope.launch(start = start) { flow.collect() } }
+
+     The try/catch is INSIDE `onEach`, upstream of the `launch`. `start` selects which thread the
+     launched coroutine runs on up to its first suspension; it does not move `block` outside that catch.
+     So a throw from `triggerNotificationUpdate()` is logged and swallowed either way, and this plugin
+     cannot be the crash source in any build that has `collectResilient` (`c42bde3538`, 2026-08-14).
+     Its `config.appInitialized` guard came from `94a43687fa`, 2023-08-21, whose commit message is
+     "fix crash" - the same bug, patched locally, three years earlier.
+
+     **The real mechanism, from the code the crashing builds actually ran: RxJava.** At `88820c9811`
+     this `onStart` was three `rxBus.toObservable(...).observeOn(aapsSchedulers.io)
+     .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)`. A throw from an
+     RxJava `onNext` lambda is **not** routed to the `onError` handler next to it - it is wrapped as an
+     `UndeliverableException` and rethrown on the scheduler thread, which on Android ends the process.
+     So `fabricPrivacy::logException` never saw it, and the "No pump selected" assertion killed the app.
+
+     **That path was closed on 2026-08-15 by `202ad40fba` ("plugins/main listens on Flow")**, which
+     replaced those three subscriptions with `collectResilient` - incidentally, not deliberately, and
+     the per-emission catch is what does it. Crash events continue to 2026-09-16, which is a month
+     later; that is consistent with users still running `dev` builds older than that commit, since the
+     affected versions are `4.0.0-dev`..`dev-c`. **Check the build ids in Crashlytics before calling
+     this path fixed** - if any event is from a build at or after `202ad40fba`, the throw is coming from
+     somewhere else and this whole entry is wrong again.
+
+     The consequence for priority: this is no longer "six users are crashing today through a path that
+     still exists". The `reconfiguring` flag remains the right general answer, because the window is
+     real and other code reads the same accessors in it, but the urgency argument has to come from those
+     readers, not from this one.
+
+     Do not write another mechanism here without checking containment first: `PluginBase.runPhase`,
+     `collectResilient`, and `pluginScope`'s `CoroutineExceptionHandler` each swallow a throw, so
+     "reads `activePump` in the window" is not by itself a crash.
+
+     **Audited 2026-09-21: all 90 production files that read the five throwing accessors, 11 surveyors
+     and 102 adversarial verifiers. Zero confirmed crashes.** 101 of the 102 "this crashes" claims were
+     refuted outright and one downgraded to a behaviour bug (below). Two structural facts did most of
+     the refuting, and both are worth knowing before reading any future report:
+
+     - **`ActivePlugin.activePump` never throws.** It is `get() = pumpWithConcentration()`, a provider
+       that builds a `PumpWithConcentrationImpl`. Only *calling a member* on the result reaches
+       `activePumpInternal` and its assertion. So `val pump = activePlugin.activePump` is safe
+       everywhere, including in the import path, and a report that points at that line is pointing one
+       line too early.
+     - **`activePumpStore` is never deliberately set to null once elected.** The only assignments are
+       the initial `null`, `= getTheOneEnabledInArray(...)` and `= getDefaultPlugin(...)`. So for most
+       of an import `activePumpInternal` keeps answering with the previously elected pump.
+
+     Read that result for what it is: the verifiers were told to default to "refuted" when they could
+     not prove a crash, so it means **nothing survived a strict refutation**, not that the app cannot
+     crash. It is consistent with the RxJava finding above - the readers that used to race are now
+     contained, so the window is currently survivable rather than closed.
+
+     **The window the audit missed, found by reading the election itself.** `getTheOneEnabledInArray`
+     disables every enabled pump after the first *as it iterates*, and `verifySelectionInCategories`
+     then does:
+
+         activePumpStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP, jobs) as Pump?
+         if (activePumpStore == null) { activePumpStore = getDefaultPlugin(PluginType.PUMP) as Pump ... }
+
+     The first line **can assign null** - that is what the `if` is for. Between the two lines both
+     `activePumpStore` and `firstEnabledIn(PluginType.PUMP)` can be null at once (nothing is enabled
+     yet, because the loop just disabled the runners-up and `loadPref` disabled the old pump), and a
+     reader on another thread hits `error("No pump selected")`. The stores are not `@Volatile` either,
+     so the visibility of these writes to other threads is unspecified. Two instructions wide, one
+     thread in a hundred - which is exactly the shape of 13 events across 6 users.
+
+     **This is not an argument for making that assignment atomic, and that fix is already rejected.**
+     Computing the election into a local and assigning once would mean a concurrent reader gets the
+     OLD, now-disabled pump - a stale pump driver, which is the silent-wrong-behaviour outcome the
+     comment block in `PluginStore` exists to prevent. The answer stays the one Miloš gave: the code
+     must not be reading plugin state in this window at all. This paragraph is evidence for the
+     `reconfiguring` flag, not an alternative to it.
+
+     **The one behaviour bug the audit did confirm:** `TriggerPumpBatteryLevel.shouldRun` (and its
+     siblings in `plugins/automation`) reads the pump during an apply and silently evaluates against
+     whichever pump is elected at that instant, so an automation rule can fire, or fail to fire, on the
+     wrong pump's battery. No crash. The flag closes it, because `AutomationRuntime` already has an
+     `if (!config.appInitialized) return`.
+
+     **What the window really is: `sp.clear()`, and it is already bracketed.**
+     `ImportExportPrefsImpl.executeImport` is `beforeImport()` / `sp.clear()` / rewrite every key /
+     `afterImport()`; `LocalImportExportPrefs.executeImport` brackets `transfer.applyImported` the same
+     way. Between the clear and the rewrite, every preference is gone - the plugin-selection keys
+     included. Both implementations delegate to `PluginStore.beforeImport()` / `afterImport()`, so that
+     pair is a single choke point for setting and clearing `reconfiguring`.
+
+     **Three constraints on the build, each found in the code on 2026-09-21:**
+
+     - **`reconfiguring` must be a `StateFlow`, not a `@Volatile Boolean`.** `Config.appInitialized` is
+       not the only consumer. `Config.awaitInitialized(timeoutMs)` returns early on `appInitialized`
+       (correct) and otherwise waits on `initProgressFlow.first { it.done }` - which is ALREADY true
+       during an import, so it returns instantly and every caller walks straight through. The callers
+       are `KeepAliveWorker`, which fires every five minutes and then calls `checkPump()`, and
+       `SceneExpiryRunner`. Give `Config` one combined ready flow and have both members read it.
+     - **The set/clear must be `try/finally`.** Neither `executeImport` has one today, so a throw from a
+       `putString` would skip `afterImport()`. A `reconfiguring` flag left set means `appInitialized` is
+       false for the rest of the process, and `WizardBolusExecutorImpl` refuses on it in two places: the
+       user cannot bolus. That is worse than the bug being fixed, and it is the evidence for the scoped
+       `config.whileApplyingSettings { }` + counter shape recommended below.
+     - **It must be cleared before `ImportViewModel.applySettings` reads the pump.** That function does
+       `val pump = activePlugin.activePump` immediately after `configBuilder.applyConfiguration()`.
+       A flag still set there fails every import - into `ImportStep.ApplyFailed` with the settings
+       already written to disk, which is the half-applied state the comment above it warns about.
+
+     **The flag is cheap, and cheaper than it looked.** `Config.appInitialized` is a derived property
+     defined in exactly one place (`Config.kt`, `get() = initProgressFlow.value.done`). Making it
+     `done && !reconfiguring` closes about 35 existing `if (!config.appInitialized)` gates across `app`,
+     `implementation/bolus`, `plugins/{automation,configuration,sync}`, `ui` and `ComposeMainActivity`,
+     with no call-site changes - and without touching `initProgressFlow`, so none of the four splash
+     blockers above apply. Ten of those gates are hand-written defences against this very bug; three of
+     them (`TizenPlugin`, `DataHandlerMobile`, `XdripPlugin`) name `verifySelectionInCategories` in
+     their comments.
 
      **Constraints on the build, from the same analysis:**
      - the restore must be a `finally` INSIDE `applySettings()`, ideally a scoped
@@ -860,6 +967,21 @@ allowed; shipping 3 before 1 and 2 is not.
     The fix is 4.1 decision 2, and it is **not** to soften `PluginStore`'s assertions (deliberate -
     see the comment block above the interface section there) nor to clear `initProgressFlow.done`
     (that is the splash gate; seven blockers). Blocker for 3.5 step 3.
+
+    **Corrected 2026-09-21 (second pass).** How the throw became a crash: those builds subscribed with
+    RxJava - `.subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)` - and a throw
+    from an RxJava `onNext` lambda does **not** reach the `onError` beside it. It is wrapped as an
+    `UndeliverableException` and rethrown on the scheduler thread, ending the process. `202ad40fba`
+    (2026-08-15) replaced those three subscriptions with `collectResilient`, whose per-emission
+    `catch (Throwable)` swallows it, so **this particular path is closed on `dev` today** - by
+    accident, as a side effect of the Rx-to-Flow migration. Verify against the Crashlytics build ids
+    that no event comes from a build at or after `202ad40fba` before treating it as fixed. The window
+    itself is untouched and decision 2 still has to be built; what changes is that the urgency must be
+    argued from whichever readers are still uncontained, not from this one.
+
+    A `CoroutineStart.UNDISPATCHED` explanation was written for this on 2026-09-21 and is wrong -
+    `collectResilient` catches inside `onEach`, upstream of the `launch`, so `start` cannot let a
+    throw escape. See 4.1 decision 2.
 12. ~~The two start paths give different guarantees.~~ **FIXED, `ea560ad5e8`.** `initialize()` now
     returns its start jobs instead of dropping them, and `MainApp` waits on them bounded by 30 s -
     matching `applyConfiguration`'s `PLUGIN_SETTLE_WAIT`. It could not wait internally: it is not
