@@ -15,6 +15,7 @@
     <string name="pump_cmd_desc_get_tbr">Gauti laikiną bazę</string>
     <string name="pump_cmd_desc_cancel_tbr">Atšaukti laikiną bazę</string>
     <string name="pump_cmd_desc_set_tbr">Nustatyti laikiną bazę</string>
+    <string name="pump_cmd_desc_cancel_bolus">Atšaukti bolusą</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazė</string>
     <string name="history_group_configuration">Nustatymai</string>
