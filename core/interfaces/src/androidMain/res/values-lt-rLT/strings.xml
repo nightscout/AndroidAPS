@@ -3,19 +3,31 @@
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
     <!--    Events-->
+    <string name="bolus_delivering">Leidžiama %1$.2f U</string>
+    <string name="bolus_delivered_so_far">Suleista %1$.2f V iš %2$.2f V</string>
+    <string name="bolus_delivered_successfully">Sėkmingai suleistas %1$.2f V bolusas</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
     <!--    DateUtil-->
+    <string name="minago">prieš %1$d min.</string>
+    <string name="secago">prieš %1$d s</string>
+    <string name="min_plus">(+%1$d min.)</string>
     <string name="minago_long">Prieš %1$d min.</string>
     <string name="days_ago">Prieš %1$s d.</string>
     <string name="days_ago_round">Prieš %1$.0f d.</string>
+    <plurals name="plurals_minute_ago">
+        <item quantity="one">ką tik</item>
+        <item quantity="few">prieš %1$s min</item>
+        <item quantity="many">prieš %1$s min</item>
+        <item quantity="other">prieš %1$s min</item>
+    </plurals>
     <string name="in_days">Po %1$.0f d.</string>
     <string name="in_days_round">Po %1$.0f d.</string>
     <string name="shorthour">val.</string>
     <string name="days">d.</string>
     <string name="hours">val.</string>
     <string name="unit_second">sek.</string>
-    <string name="unit_minute">min.</string>
+    <string name="unit_minute">min</string>
     <string name="unit_hour">val.</string>
     <string name="unit_day">d.</string>
     <string name="unit_week">sav.</string>
@@ -26,6 +38,8 @@
     <string name="unit_weeks">savaičių</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">liko %1$d val. %2$d min</string>
+    <string name="time_remaining_m">liko %1$d min</string>
     <string name="later_today">Šiandien vėliau</string>
     <string name="tomorrow">Rytoj</string>
     <string name="today">Šiandien</string>
@@ -88,6 +102,7 @@
     <string name="maximumbasalvaluereplaced">Nustatyta didžiausia galima valandinės bazės vertė: %1$s</string>
     <string name="profile_ins_units_per_hour">v/val</string>
     <string name="profile_carbs_per_unit">g/v</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Įrašas</string>
     <string name="bolus">Bolusas</string>
     <string name="uel_extended_carbs">IŠTĘSTI AV</string>
@@ -101,5 +116,6 @@
     <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
+    <string name="wizard_ecarbs">iAV %1$d g / %2$d val. (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f V</string>
 </resources>
