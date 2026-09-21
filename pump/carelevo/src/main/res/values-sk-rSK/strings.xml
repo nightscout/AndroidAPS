@@ -1,14 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">CareLevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Integrácia pumpy pre CareLevo</string>
+    <string name="carelevo_alarm_channel_name">Alarmy CareLevo</string>
+    <string name="carelevo_alarm_channel_description">Upozornenia na alarmy náplasťovej pumpy CareLevo</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Stav Bluetooth</string>
+    <string name="carelevo_serial_number_key">Sériové číslo</string>
+    <string name="carelevo_boot_date_time_key">Čas aktivácie</string>
+    <string name="carelevo_expiration_key">Expirácia</string>
+    <string name="carelevo_basal_rate_key">Bazálna dávka</string>
+    <string name="carelevo_temp_basal_rate_key">Dočasná bazálna dávka</string>
+    <string name="carelevo_insulin_remain_key">Zostávajúci inzulín</string>
+    <string name="carelevo_running_remain_time">Zostávajúci čas náplasťovej pumpy</string>
+    <string name="carelevo_total_insulin_key">Celkové množstvo podaného inzulínu</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d hod %d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d hod</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/h</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Chcete obnoviť podávanie inzulínu?</string>
+    <string name="carelevo_pump_resume_description">Podávanie inzulínu bude pokračovať po stlačení tlačidla Potvrdiť.</string>
+    <string name="carelevo_pump_stop_duration_title">Nastavte prosím čas pozastavenia podávania inzulínu.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minút</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 hodina</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 hodina 30 minút</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 hodiny</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 hodiny 30 minút</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 hodiny</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 hodiny 30 minút</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 hodiny</string>
+    <string name="common_unit_value_day_hour_min">%1$d dní %2$02d - %3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">Zostáva %d min %02d s</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Sprievodca inzulínom</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Deaktivovať náplasťovú pumpu</string>
+    <string name="carelevo_btn_input_search_patch">Vyhľadať náplasťovú pumpu</string>
+    <string name="carelevo_btn_retry">Skúsiť znova</string>
+    <string name="carelevo_btn_next">Ďalej</string>
+    <string name="carelevo_btn_safety_check">Bezpečnostná kontrola</string>
+    <string name="carelevo_btn_cancel">Zrušiť</string>
+    <string name="carelevo_btn_confirm">Potvrdiť</string>
+    <string name="carelevo_btn_research">Znova vyhľadať</string>
+    <string name="carelevo_btn_needle_insert_check">Potvrdiť zavedenie</string>
+    <string name="carelevo_state_none_value">Žiadna aktívna náplasťová pumpa</string>
+    <string name="carelevo_state_disconnected_value">Odpojený</string>
+    <string name="carelevo_state_connected_value">Pripojený</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Otočte bezpečnostný uzáver v smere šípky a odstráňte ho.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Zaveďte ihlu</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Stlačte tlačidlo aplikátora úplne nadol. Po úspešnom zavedení zaznie zvukový signál.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Stlačte a podržte 10 sekúnd.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Zostáva %d pokus(ov) o zavedenie ihly.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Deaktivovať náplasťovú pumpu a spustiť novú?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Stlačením tlačidla [OK] sa zastaví podávanie inzulínu.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Dokončiť bez spustenia podávania?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Stlačením tlačidla [OK] sa táto náplasťová pumpa stane nepoužiteľnou.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Zrušiť aktiváciu náplasťovej pumpy?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Stlačením tlačidla [OK] sa zahodí to, čo ste zadali.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Ak je nižšie uvedená náplasťová pumpa správna, klepnite na tlačidlo Potvrdiť.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Zavedenie ihly dokončené a aplikátor odstránený</string>
+    <string name="carelevo_dialog_connect_detached">Aplikátor odstránený</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+        Stlačte úchytky na oboch stranách aplikátora, aby ste ho oddelili od náplasťovej pumpy, \n        a potom stlačte tlačidlo „Aplikátor odstránený“. Spustí sa podávanie inzulínu.
+    </string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth nie je zapnutý. Skontrolujte to, prosím.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Nie je pripojená žiadna náplasťová pumpa.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Náplasťová pumpa ešte nie je pripojená. Skúste to prosím o chvíľu znova.</string>
+    <string name="carelevo_toast_msg_scan_failed">Skenovanie zlyhalo. Skúste to znova.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Nebola nájdená žiadna náplasťová pumpa. Skúste to znova.</string>
+    <string name="carelevo_toast_msg_connect_failed">Pripojenie náplasťovej pumpy zlyhalo. Skúste to znova.</string>
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profil nie je nastavený.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Kontrola ihly zlyhala.</string>
     <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Zahodenie náplasťovej pumpy zlyhalo. Skúste to znova.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Požiadavka na podávanie bazálu zlyhala. Skúste to znova.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Nepodarilo sa obnoviť podávanie. Skúste to znova.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Nepodarilo sa pozastaviť podávanie. Skúste to znova.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Bezpečnostná kontrola zlyhala.</string>
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Nízka hladina inzulínu</string>
+    <string name="alarm_feat_title_warning_expired_patch">Náplasťová pumpa expirovala</string>
+    <string name="alarm_feat_title_warning_low_battery">Nízky stav batérie</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Vysoká/Nízka teplota</string>
+    <string name="alarm_feat_title_warning_not_used_app">Automatické vypnutie</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE nie je pripojené</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Časový limit na aplikáciu náplasťovej pumpy</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Samodiagnostika zlyhala</string>
+    <string name="alarm_feat_title_warning_patch_error">Chyba náplasťovej pumpy</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Oklúzia</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Chyba vloženia ihly</string>
     <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[Zostáva menej ako <b>10 U</b>; podávanie inzulínu bolo zastavené.<br><b>Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
+    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[Platnosť náplasťovej pumpy vypršala; podávanie inzulínu sa zastavilo.<br><b>Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Nízky stav batérie; podávanie inzulínu zastavené.<br><b>Stlačte tlačidlo [Zahodiť náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
+    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[Podávanie inzulínu zastavené.<br><b>Presuňte sa do prostredia s vhodnou teplotou (4.4 °C až 37 °C).</b>]]></string>
+    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[Podávanie inzulínu zastavené.<br><b>Stlačte tlačidlo [Spustiť inzulín] a obnovte podávanie bazálnej dávky.</b>]]></string>
     <!-- Alert Titles -->
     <!-- Alert Descriptions -->
     <!-- Notice Titles -->
