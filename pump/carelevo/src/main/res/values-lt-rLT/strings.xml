@@ -10,6 +10,7 @@
     <string name="carelevo_pump_stop_duration_label_3_hour">3 valandos</string>
     <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 valandos 30 min</string>
     <string name="carelevo_pump_stop_duration_label_4_hour">4 valandos</string>
+    <string name="carelevo_btn_next">Toliau</string>
     <string name="carelevo_btn_cancel">Atšaukti</string>
     <string name="carelevo_state_none_value">Nėra aktyvaus pompos modulio</string>
     <string name="carelevo_state_disconnected_value">Atjungta</string>
@@ -18,6 +19,7 @@
     <string name="carelevo_patch_step_1">1 ŽINGSNIS.</string>
     <string name="carelevo_patch_step_2">2 ŽINGSNIS.</string>
     <string name="carelevo_patch_step_3">3 ŽINGSNIS.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Saugos patikra baigta.\nPaspauskite mygtuką \'Toliau\'.</string>
     <string name="carelevo_patch_attach_step3_desc">Priklijuokite pompos modulį prie odos taip, kad pažymėtas taškas būtų nukreiptas į viršų.</string>
     <string name="carelevo_dialog_patch_discard_message_title">Pašalinti rezervuarą ir pradėti naudoti naują?</string>
     <string name="carelevo_dialog_patch_discard_message_desc">Paspaudus [OK], insulino tiekimas bus sustabdytas.</string>
