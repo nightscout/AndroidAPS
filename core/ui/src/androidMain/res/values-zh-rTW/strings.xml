@@ -406,6 +406,9 @@
     <string name="clientcontrol_fail_scene_disabled">該情境已停用。</string>
     <string name="clientcontrol_fail_partial">部分動作無法套用。</string>
     <string name="clientcontrol_fail_execution">主裝置無法套用。</string>
+    <string name="clientcontrol_fail_cancelled">指令在執行前已取消。未傳送任何內容至幫浦。</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">大劑量已取消。未注射任何胰島素。\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">已取消</string>
     <string name="clientcontrol_fail_control_disabled">主控端已關閉遠端控制</string>
     <string name="clientcontrol_fail_no_pending_bolus">已準備的注射已失效或被取代。請再輕觸按鈕一次。</string>
     <string name="clientcontrol_fail_bolus_compute">主裝置無法計算注射（缺少血糖／設定檔，或幫浦尚未就緒）。</string>
