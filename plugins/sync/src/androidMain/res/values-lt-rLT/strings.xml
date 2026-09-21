@@ -50,8 +50,8 @@
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Stebėti ir kontroliuoti AndroidAPS naudojant WearOS laikrodį.</string>
     <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>
-    <string name="pump_status">Pompos statusas</string>
-    <string name="loop_status">Ciklo statusas</string>
+    <string name="pump_status">Pompos būklė</string>
+    <string name="loop_status">Ciklo būsena</string>
     <string name="user_action_not_available">Pasirinktas naudotojo veiksmas %1$s nebepasiekiamas, atnaujinkite savo valdiklį</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
     <string name="wear_action_tempt_min_bg_error">Minimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
@@ -184,6 +184,6 @@
     <string name="sms_loop_suspended_for">Sustabdyta (%1$d m)</string>
     <string name="sms_read_status_failed">Statuso nuskaityti nepavyko</string>
     <string name="sms_profile_switch_created">Profilio perjungimas sukurtas</string>
-    <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti kartotinė %1$d minučių ir didesnė nei 0.</string>
+    <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti %1$d min kartotinė ir didesnė nei 0.</string>
     <string name="a11y_otp_qr_code">QR kodas vienkartinio slaptažodžio nustatymui</string>
 </resources>
