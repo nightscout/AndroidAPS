@@ -154,7 +154,8 @@ class PluginBaseStartFailureTest {
             if (failStop) throw IllegalStateException("onStop boom")
         }
 
-        /** [pluginScope] is protected, and this is what the drivers do with it. */
+        /** [pluginScope] is protected, and this is what the drivers do with it. No handler here on purpose:
+         * the one on [pluginScope] is what is being tested. */
         fun launchOwnWork(block: suspend () -> Unit): Job = pluginScope.launch { block() }
     }
 
@@ -328,9 +329,6 @@ class PluginBaseStartFailureTest {
      * The other half of the same problem, and the reason [PluginBase.pluginScope] carries a supervisor job:
      * with a plain job the first failing child cancelled the scope for good, and every later `launch` on it
      * was a no-op that said nothing. The drivers launch their polling and their queue work there.
-     *
-     * The failing child prints a stack trace to stderr - that is the default handler doing its job, not the
-     * test failing.
      */
     @Test
     fun `work the plugin launched that fails does not kill the plugin scope`() = runBlocking {
@@ -341,6 +339,40 @@ class PluginBaseStartFailureTest {
         withTimeout(5.seconds) { sut.launchOwnWork { ran = true }.join() }
 
         assertThat(ran).isTrue()
+    }
+
+    /**
+     * The other half: the scope surviving is not enough if the failure is silent.
+     *
+     * Without a handler on [PluginBase.pluginScope] the throw reaches the thread's default handler, which
+     * on Android ends the process - and in a test JVM it is collected by kotlinx-coroutines-test and
+     * reported against an unrelated `runTest` somewhere else in the module, which is how this file first
+     * broke `ChunkedOnQuietPeriodTest` on CI.
+     */
+    @Test
+    fun `work the plugin launched that fails is reported, not lost`() = runBlocking {
+        val sut = plugin("Pump driver")
+
+        withTimeout(5.seconds) { sut.launchOwnWork { throw IllegalStateException("child boom") }.join() }
+
+        val card = notifications.live.single()
+        assertThat(card.id).isEqualTo(NotificationId.PLUGIN_WORK_FAILED)
+        assertThat(card.text).isEqualTo("failed: Pump driver")
+        assertThat(card.level).isEqualTo(NotificationLevel.URGENT)
+        assertThat(card.sound).isEqualTo(AlarmSound.ALARM)
+        // It did NOT start badly - that is a different state, and the pump gate must not be tripped by this.
+        assertThat(sut.lastStartFailed).isFalse()
+    }
+
+    /** Repeated failures replace this plugin's own card rather than piling up. */
+    @Test
+    fun `repeated launched-work failures leave one card`() = runBlocking {
+        val sut = plugin()
+
+        withTimeout(5.seconds) { sut.launchOwnWork { throw IllegalStateException("one") }.join() }
+        withTimeout(5.seconds) { sut.launchOwnWork { throw IllegalStateException("two") }.join() }
+
+        assertThat(notifications.live).hasSize(1)
     }
 
     /**

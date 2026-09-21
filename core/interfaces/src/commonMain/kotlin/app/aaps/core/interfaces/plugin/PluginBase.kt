@@ -39,8 +39,16 @@ abstract class PluginBase(
      *
      * [SupervisorJob], though, because a plain `Job` made one failing child kill the scope for good and
      * every later launch on it a silent no-op.
+     *
+     * And a handler, because without one a throw here reaches the thread's default handler, which on
+     * Android ends the process. The supervisor job only saved the scope; the app still died. Roughly fifteen
+     * `pluginScope.launch` calls across the pump drivers queue pump commands, so this is reachable from a
+     * failing pump.
      */
-    protected val pluginScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    protected val pluginScope = CoroutineScope(
+        Dispatchers.Default + SupervisorJob() +
+            CoroutineExceptionHandler { _, e -> onLaunchedWorkFailed(e) }
+    )
 
     /**
      * Runs [onStart] / [onStop], and nothing else.
@@ -78,6 +86,29 @@ abstract class PluginBase(
      */
     @Volatile
     private var startFailureCard: NotificationHandle? = null
+
+    /** Same idea for [pluginScope], so one plugin failing over and over leaves one card, not a pile. */
+    @Volatile
+    private var workFailureCard: NotificationHandle? = null
+
+    /**
+     * Work this plugin launched on [pluginScope] ended with an error.
+     *
+     * Nothing can be undone from here - the coroutine is gone and only the plugin knows what it was doing -
+     * so the job is to make sure it is not lost. Not routed through [lastStartFailed]: the plugin did start,
+     * and a pump that started and then lost a polling loop is a different state from one that never came up.
+     */
+    private fun onLaunchedWorkFailed(e: Throwable) {
+        // The throwable goes to the log only. It is developer text, untranslated, and can be a page long.
+        aapsLogger.error(LTag.CORE, "Work launched by $name failed", e)
+        workFailureCard?.let { notificationManager.dismiss(it) }
+        workFailureCard = notificationManager.post(
+            NotificationId.PLUGIN_WORK_FAILED,
+            rh.gs(InterfacesStrings.plugin_work_failed, name),
+            validMinutes = 0,
+            sound = AlarmSound.ALARM
+        )
+    }
 
     /** The previous transition. Start and stop of one plugin must not run at the same time. */
     private var lastTransition: Job? = null

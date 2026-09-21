@@ -204,7 +204,12 @@ enum class NotificationId(
     // replace the first one's card, and one plugin starting cleanly would dismiss the card of another that
     // is still broken - leaving a blocked pump with no alarm to explain it. Same reason EQUIL_LOW_BATTERY
     // keeps its own id above. [app.aaps.core.interfaces.plugin.PluginBase] dismisses by handle, not by id.
-    PLUGIN_START_FAILED(URGENT, SYSTEM, allowMultiple = true);
+    PLUGIN_START_FAILED(URGENT, SYSTEM, allowMultiple = true),
+
+    // Work the plugin launched itself ended with an error. Separate from PLUGIN_START_FAILED because the
+    // plugin did start - it is a polling loop or a queued command that died, so the text has to say
+    // something else. Same reasons for allowMultiple.
+    PLUGIN_WORK_FAILED(URGENT, SYSTEM, allowMultiple = true);
 
     companion object {
 
