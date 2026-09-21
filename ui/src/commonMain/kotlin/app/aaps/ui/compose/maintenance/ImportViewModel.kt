@@ -4,7 +4,9 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.configuration.whileReconfiguring
 import app.aaps.core.data.ue.Action
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -113,6 +115,7 @@ class ImportViewModel(
     private val importExportPrefs: ImportExportPrefs,
     private val prefFileList: PrefsFileInfo,
     private val configBuilder: ConfigBuilder,
+    private val config: Config,
     private val rh: TextResolver,
     private val uel: UserEntryLogger,
     private val commandQueue: CommandQueue,
@@ -130,9 +133,14 @@ class ImportViewModel(
         const val HOLD_REASON = "Import"
     }
 
-    // Where the apply work runs. Off the main thread: it walks every plugin, writes preferences and
-    // waits for drivers to stop and start. Not a constructor parameter because this class is built by
-    // the graph and CoroutineDispatcher has no binding; internal so the test can run it in virtual time.
+    // Where this screen's background work runs - decrypting a file, rewriting the preferences, and the
+    // apply itself. Off the main thread: it walks every plugin, writes preferences and waits for
+    // drivers to stop and start. Not a constructor parameter because this class is built by the graph
+    // and CoroutineDispatcher has no binding; internal so the test can run it in virtual time.
+    //
+    // One field for all three, rather than one seam and two hard-wired calls: the two that were wired
+    // straight to `aapsIoDispatcher` could not be awaited from a test at all, so the preference
+    // rewrite - which clears the whole store - had no test covering it.
     internal var applyDispatcher: CoroutineDispatcher = aapsIoDispatcher
 
     private val _importStep = MutableStateFlow<ImportStep>(ImportStep.Idle)
@@ -303,7 +311,7 @@ class ImportViewModel(
         _importStep.value = current.copy(isProcessing = true)
 
         viewModelScope.launch {
-            val result = withContext(aapsIoDispatcher) {
+            val result = withContext(applyDispatcher) {
                 importExportPrefs.decryptImportFile(current.file, password)
             }
 
@@ -347,9 +355,14 @@ class ImportViewModel(
         _importStep.value = current.copy(isProcessing = true)
 
         viewModelScope.launch {
-            withContext(aapsIoDispatcher) {
-                importExportPrefs.executeImport(result.prefs)
-                importExportPrefs.prepareImportedSettings()
+            withContext(applyDispatcher) {
+                // `executeImport` clears the preference store and rewrites it key by key, so for the
+                // length of this block every preference reads as its default - the safety limits
+                // included. Nothing may act on settings until it is finished.
+                config.whileReconfiguring {
+                    importExportPrefs.executeImport(result.prefs)
+                    importExportPrefs.prepareImportedSettings()
+                }
             }
             _importStep.value = ImportStep.ApplyConfirm
         }
@@ -406,7 +419,15 @@ class ImportViewModel(
         // plugins have actually started and stopped, which is the whole point of having waited for an
         // idle pump. Safe to run on a live app, so a plugin whose setting did not change is left alone
         // rather than cycled.
-        configBuilder.applyConfiguration()
+        //
+        // Marked as reconfiguring for its duration, and for its duration ONLY. Inside it the old pump
+        // has been disabled and the new one is not elected yet, so `PluginStore.activePumpInternal`
+        // has a window with no answer and its "No pump selected" assertion is reachable - by the
+        // roughly 35 call sites that guard on `config.appInitialized`, which this closes for them.
+        // The scope stops here on purpose: the cache refreshes below must run with the app reported as
+        // initialized, or they would skip their own guards and leave the overview showing
+        // "NO PROFILE SET" - the very thing they were added to fix.
+        config.whileReconfiguring { configBuilder.applyConfiguration() }
 
         // Asked of the pump layer rather than worked out from the preferences: it answers from what is
         // actually registered, so an unchanged pump keeps its running temporary basal instead of having

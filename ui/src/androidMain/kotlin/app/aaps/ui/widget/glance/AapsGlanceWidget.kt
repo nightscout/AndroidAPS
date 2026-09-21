@@ -38,10 +38,9 @@ import androidx.glance.text.TextAlign
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.navigation.DarkElementColors
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeoutOrNull
 
 class AapsGlanceWidget : GlanceAppWidget() {
 
@@ -58,9 +57,10 @@ class AapsGlanceWidget : GlanceAppWidget() {
         // (typical on device reboot or cold-start via broadcast), wait briefly
         // for the init flow to complete so the widget doesn't get stuck on
         // LoadingContent until the next refresh tick.
-        val ready = config.appInitialized || withTimeoutOrNull(AWAIT_INIT_TIMEOUT_MS) {
-            config.initProgressFlow.first { it.done }
-        } != null
+        // awaitInitialized, not a hand-rolled wait on `done`: during a settings import `done` is
+        // already true while plugin state is being rebuilt, so waiting on it alone returns at once and
+        // the loader below reads plugin state in exactly the window it means to avoid.
+        val ready = config.awaitInitialized(AWAIT_INIT_TIMEOUT_MS)
         if (!ready) {
             provideContent { LoadingContent() }
             return

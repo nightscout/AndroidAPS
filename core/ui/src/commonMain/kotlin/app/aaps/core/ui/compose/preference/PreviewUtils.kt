@@ -172,6 +172,8 @@ private object PreviewConfig : Config {
     override fun initCompleted() {}
     override fun initFailed(error: String) {}
     override fun showInitSnackbar(message: String) {}
+    override fun beginReconfiguring() {}
+    override fun endReconfiguring() {}
 
     override fun isDev(): Boolean = false
     override fun isEngineeringModeOrRelease(): Boolean = true

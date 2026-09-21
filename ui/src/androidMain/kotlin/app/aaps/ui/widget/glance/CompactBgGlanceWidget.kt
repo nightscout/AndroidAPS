@@ -29,9 +29,8 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.ui.compose.navigation.DarkElementColors
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * Compact single-row widget: BG + trend arrow | bolus-icon IOB | carbs-icon COB.
@@ -46,9 +45,8 @@ class CompactBgGlanceWidget : GlanceAppWidget() {
         val stateLoader = deps.widgetStateLoader
         val config = deps.config
 
-        val ready = config.appInitialized || withTimeoutOrNull(AWAIT_INIT_TIMEOUT_MS) {
-            config.initProgressFlow.first { it.done }
-        } != null
+        // See AapsGlanceWidget: `done` alone is true during a settings import, awaitInitialized is not.
+        val ready = config.awaitInitialized(AWAIT_INIT_TIMEOUT_MS)
         if (!ready) {
             provideContent { LoadingContent() }
             return

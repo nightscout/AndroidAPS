@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.io.File
 
 /**
@@ -114,6 +115,14 @@ class DesktopClientConfig(
 
     override fun initFailed(error: String) {
         _initProgressFlow.value = InitProgress(done = true, error = error)
+    }
+
+    override fun beginReconfiguring() {
+        _initProgressFlow.update { it.enteringReconfigure() }
+    }
+
+    override fun endReconfiguring() {
+        _initProgressFlow.update { it.leavingReconfigure() }
     }
 
     override fun showInitSnackbar(message: String) {

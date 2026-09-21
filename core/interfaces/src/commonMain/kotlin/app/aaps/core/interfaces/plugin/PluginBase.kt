@@ -307,9 +307,16 @@ abstract class PluginBase(
     /**
      * [setPluginEnabled], but returns only once [onStart] / [onStop] has actually finished.
      *
-     * Applying imported settings needs this: it stops and starts pump drivers, and the whole point of
-     * waiting for an idle pump first is lost if the teardown is still queued on [pluginScope] when the
-     * caller moves on and lets commands flow again.
+     * **Used by tests, not by production code, and that is correct rather than a gap.** It was written
+     * for the settings import, on the reasoning that stopping and starting pump drivers is pointless if
+     * the teardown is still queued when the caller lets commands flow again. The import does need that
+     * guarantee - it just gets it one level up instead: `ConfigBuilderImpl.applyConfiguration` collects
+     * the jobs from every `setPluginEnabled` it calls and waits for the whole set at once, bounded by
+     * `PLUGIN_SETTLE_WAIT`. Waiting plugin-by-plugin here would serialise what that deliberately runs
+     * in parallel.
+     *
+     * Kept because roughly twenty tests use it to await a transition deterministically; the alternative
+     * is `setPluginEnabled(type, state)?.join()` written out at each of them.
      */
     suspend fun setPluginEnabledAwaiting(type: PluginType, newState: Boolean) {
         setPluginEnabled(type, newState)?.join()

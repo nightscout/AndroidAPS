@@ -685,8 +685,14 @@ Each of these changes what gets built, and none of them is a coding question.
    overtaken by `8f13138e29`, which added `PumpEnactResult.cancelled` - a dropped command is now told
    apart from a failed one, and `CommandQueueImplementation.postProfileWriteResult` returns early on
    it rather than posting `FAILED_UPDATE_PROFILE`.
-4. **Replace or merge?** Dropping `sp.clear()` changes what an import means, and the removal rule is
-   not written anywhere (8.B).
+4. ~~**Replace or merge?** Dropping `sp.clear()` changes what an import means, and the removal rule is
+   not written anywhere (8.B).~~ **SETTLED 2026-09-21: `sp.clear()` stays. An import REPLACES.**
+   Miloš's answer, and it settles the semantics rather than the code - `executeImport` already does
+   `beforeImport()` / `sp.clear()` / rewrite every key / `afterImport()`, so nothing changes. What it
+   settles is that a key absent from the export file is absent after the import, and goes back to its
+   own default; there is no merge with what was there before, and no removal rule to write. The
+   consequence that must NOT be undone: for the length of that rewrite every preference reads as its
+   default, safety limits included, which is exactly why the window in decision 2 brackets it.
 5. **ComboV2: device state or pump configuration?** 3.1.3 and 3.1.4 say different things, and the
    answer decides whether the restore checkbox can work at all (8.B).
 
