@@ -212,10 +212,13 @@ class PluginLifetimeWorkScanTest {
      * Separate from [patterns] on purpose. `pluginScope` is not an offence today - it is the scope a
      * plugin is supposed to use - so it must not appear in the list above and bury the real hits.
      *
-     * This inventory exists because [PluginBase.pluginScope] is process-lifetime and a proposal is open
-     * to make it per-enable, cancelled on stop. That change edits nothing at these call sites and
-     * produces no compile error, yet every one of them changes meaning. So each is written down with a
-     * decision first, and the build fails on a new one.
+     * This inventory was built to decide whether [PluginBase.pluginScope] should become per-enable,
+     * cancelled on stop - a change that edits nothing at these call sites and produces no compile error,
+     * yet changes what every one of them means. Writing them down answered it: **no**, see the decisions
+     * below and the note on `pluginScope` itself.
+     *
+     * It is kept because the answer depends on every site staying as reviewed here. The build fails on a
+     * new site, and on an extra launch inside one that is already written down.
      */
     private val queuedWorkPatterns = listOf(Regex("""\bpluginScope\s*\.\s*launch\b"""))
 
@@ -281,15 +284,16 @@ class PluginLifetimeWorkScanTest {
                 "commands themselves still run, which is what we want here."
         ),
 
-        // The one that is not safe, and the reason this inventory exists.
+        // The site this inventory was built for.
         "OmnipodDashPumpPlugin.kt#handleCommandConfirmation" to Site(
             4,
-            "UNDECIDED - settle before phase 2. Two customCommand(CommandDeliverBasalCorrection) and two " +
-                "customCommand(CommandDisableSuspendAlerts). CommandDeliverBasalCorrection DELIVERS INSULIN. " +
-                "Cancelling the coroutine does not withdraw it from the queue, so a per-enable scope would " +
-                "deliver the correction anyway and throw away the only report of whether it worked - strictly " +
-                "worse than today. If a stopped driver must not deliver, the command has to leave the QUEUE, " +
-                "and that is a queue change, not a scope change."
+            "Two customCommand(CommandDeliverBasalCorrection) and two customCommand(CommandDisableSuspendAlerts). " +
+                "CommandDeliverBasalCorrection DELIVERS INSULIN. SAFE, but for the opposite reason to the rest: " +
+                "the correction must still reach the pod - the pod asked for it and a stop is normally a " +
+                "restart, not a removal - so this coroutine must NOT be cancelled. Losing the result is the " +
+                "actual harm here, because it is the only record that the correction worked. Cancelling would " +
+                "not stop the delivery anyway; the command is already in the queue by then. This is the site " +
+                "that rules out a per-enable pluginScope for this driver."
         )
     )
 

@@ -849,17 +849,24 @@ Every item below survived two skeptics who were told to refute it. Each names th
 
 This is the group that reorders the work (4.2 step 1). All of it is about 3.5 step 3.
 
-- **A throwing `onStart` can make every later restart a no-op.** `PluginBase.pluginScope` is
-  `CoroutineScope(Dispatchers.Default + Job())` - a plain `Job`, not a `SupervisorJob` - and it is
-  what `setPluginEnabled` launches `onStart()`/`onStop()` on. One uncaught throw cancels the scope,
-  and a cancelled scope swallows every later `launch` in silence. **Blocker.**
+- ~~**A throwing `onStart` can make every later restart a no-op.**~~ **FIXED, `3761a48629`.**
+  `onStart`/`onStop` no longer run on `pluginScope` at all - they run on a private `lifecycleScope`
+  with its own `SupervisorJob` and exception handler, and `runPhase` catches everything a phase can
+  throw, records it in `PluginBase.lastStartFailed` and raises an URGENT notification. `pluginScope`
+  also carries a `SupervisorJob` now, plus a handler (`430982af5f`) - without one a throwing plugin
+  launch reached the thread's default handler and ended the process. A failed pump driver reports
+  `isInitialized() == false` through `PumpWithConcentrationImpl`, so the dosing gates refuse it.
 - **Nothing stops the running loop.** `CalculationExecutor.waitForPrepare` is documented as covering
   "Only the prepare phase, because the post phase invokes the loop", so neither waiting nor
   cancelling reaches the enactment. Sub-steps 3 and 4 are not buildable as written. **Blocker.**
-- **`completeAllAsNoOp` tells the loop the cancelled command succeeded.** It completes each queued
-  command with `success(true).enacted(false)`, and `LoopPlugin.invoke` branches on
-  `if (tbrResult.enacted || tbrResult.success)`: it records a temp basal that never happened and
-  then queues an SMB against it. **Blocker.**
+- ~~**`completeAllAsNoOp` tells the loop the cancelled command succeeded.**~~ **FIXED, `16147121cc`.**
+  Replaced by `cancelAll(comment, success)` routed through `Command.cancel`, with the import passing
+  `success = false`. The last caller that still passed `true` - `CommandExecutor`, when the pump is
+  selected but not configured - was flipped in `a837bb1f86`; it had been persisting the accompanying
+  carbs for insulin that never left the pump, because `bolus()` writes them on a successful result.
+  `PumpEnactResult.cancelled` (`8f13138e29`) keeps all of this silent: a dropped command is told apart
+  from a failed one, so nothing raises the delivery alarm. `clear()` deliberately keeps
+  `cancelled = false`, because a connection timeout IS a delivery failure and must still alarm.
 - **`completeAllAsNoOp` also bypasses `Command.cancel`.** It calls `callback?.result(...)?.run()`
   directly, so `CommandBolus.cancel`/`CommandSMBBolus.cancel` never run and `BolusProgressData`
   stays started. `CommandQueueImplementation.clear()` does go through `cancel`. One line to fix, and
