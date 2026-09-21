@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.constraints.Safety
+import kotlinx.coroutines.Job
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -101,7 +102,7 @@ class IosPluginPermissionsTest {
         override val activeSyncs: ArrayList<Sync> get() = unused()
         override fun getSpecificPluginsVisibleInList(type: PluginType): ArrayList<PluginBase> = unused()
         override fun getSpecificPluginsListByInterface(interfaceClass: KClass<*>): ArrayList<PluginBase> = unused()
-        override fun verifySelectionInCategories() = unused()
+        override fun verifySelectionInCategories(): List<Job> = unused()
         override fun getSpecificPluginsList(type: PluginType): ArrayList<PluginBase> = unused()
         override fun beforeImport() = unused()
         override fun afterImport() = unused()

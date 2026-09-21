@@ -28,6 +28,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import kotlinx.coroutines.Job
 import kotlin.reflect.KClass
 
 @ContributesBinding(AppScope::class, binding = binding<ActivePlugin>())
@@ -104,62 +105,66 @@ class PluginStore(
         return newList
     }
 
-    override fun verifySelectionInCategories() {
+    override fun verifySelectionInCategories(): List<Job> {
+        // Electing a plugin enables it, and enabling only schedules onStart on the plugin scope. These
+        // jobs used to be dropped here, so a caller could not wait for the plugins it had just elected.
+        val jobs = mutableListOf<Job>()
 
         // PluginType.APS
         var pluginsInCategory = getSpecificPluginsList(PluginType.APS)
-        activeAPSStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APS?
+        activeAPSStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS, jobs) as APS?
         if (activeAPSStore == null) {
             activeAPSStore = getDefaultPlugin(PluginType.APS) as APS
-            (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)
+            (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)?.let(jobs::add)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
         }
 
         // PluginType.SENSITIVITY
         pluginsInCategory = getSpecificPluginsList(PluginType.SENSITIVITY)
-        activeSensitivityStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.SENSITIVITY) as Sensitivity?
+        activeSensitivityStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.SENSITIVITY, jobs) as Sensitivity?
         if (activeSensitivityStore == null) {
             activeSensitivityStore = getDefaultPlugin(PluginType.SENSITIVITY) as Sensitivity
-            (activeSensitivityStore as PluginBase).setPluginEnabled(PluginType.SENSITIVITY, true)
+            (activeSensitivityStore as PluginBase).setPluginEnabled(PluginType.SENSITIVITY, true)?.let(jobs::add)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SensitivityInterface")
         }
-        activeSensitivityStore = fallbackIfNotVisible(activeSensitivityStore as PluginBase, PluginType.SENSITIVITY) as Sensitivity
+        activeSensitivityStore = fallbackIfNotVisible(activeSensitivityStore as PluginBase, PluginType.SENSITIVITY, jobs) as Sensitivity
 
         // PluginType.SMOOTHING
         pluginsInCategory = getSpecificPluginsList(PluginType.SMOOTHING)
-        activeSmoothingStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.SMOOTHING) as Smoothing?
+        activeSmoothingStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.SMOOTHING, jobs) as Smoothing?
         if (activeSmoothingStore == null) {
             activeSmoothingStore = getDefaultPlugin(PluginType.SMOOTHING) as Smoothing
-            (activeSmoothingStore as PluginBase).setPluginEnabled(PluginType.SMOOTHING, true)
+            (activeSmoothingStore as PluginBase).setPluginEnabled(PluginType.SMOOTHING, true)?.let(jobs::add)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SmoothingInterface")
         }
 
         // PluginType.CALIBRATION
         pluginsInCategory = getSpecificPluginsList(PluginType.CALIBRATION)
-        activeCalibrationStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.CALIBRATION) as Calibration?
+        activeCalibrationStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.CALIBRATION, jobs) as Calibration?
         if (activeCalibrationStore == null) {
             activeCalibrationStore = getDefaultPlugin(PluginType.CALIBRATION) as Calibration
-            (activeCalibrationStore as PluginBase).setPluginEnabled(PluginType.CALIBRATION, true)
+            (activeCalibrationStore as PluginBase).setPluginEnabled(PluginType.CALIBRATION, true)?.let(jobs::add)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting CalibrationInterface")
         }
 
         // PluginType.BGSOURCE
         pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
-        activeBgSourceStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.BGSOURCE) as BgSource?
+        activeBgSourceStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.BGSOURCE, jobs) as BgSource?
         if (activeBgSourceStore == null) {
             activeBgSourceStore = getDefaultPlugin(PluginType.BGSOURCE) as BgSource
-            (activeBgSourceStore as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)
+            (activeBgSourceStore as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)?.let(jobs::add)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting BgInterface")
         }
 
         // PluginType.PUMP
         pluginsInCategory = getSpecificPluginsList(PluginType.PUMP)
-        activePumpStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP) as Pump?
+        activePumpStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP, jobs) as Pump?
         if (activePumpStore == null) {
             activePumpStore = getDefaultPlugin(PluginType.PUMP) as Pump
-            (activePumpStore as PluginBase).setPluginEnabled(PluginType.PUMP, true)
+            (activePumpStore as PluginBase).setPluginEnabled(PluginType.PUMP, true)?.let(jobs::add)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting PumpInterface")
         }
+        return jobs
     }
 
     /**
@@ -169,30 +174,38 @@ class PluginStore(
      * Framework plugins declared `alwaysEnabled` are exempt — they use `showInList { false }`
      * to hide from the UI list but must stay functional regardless.
      */
-    private fun fallbackIfNotVisible(active: PluginBase, type: PluginType): PluginBase {
+    private fun fallbackIfNotVisible(active: PluginBase, type: PluginType, jobs: MutableList<Job>): PluginBase {
         if (active.pluginDescription.alwaysEnabled) return active
         if (!active.showInList(type)) {
-            active.setPluginEnabled(type, false)
+            active.setPluginEnabled(type, false)?.let(jobs::add)
             val default = getDefaultPlugin(type)
-            default.setPluginEnabled(type, true)
+            default.setPluginEnabled(type, true)?.let(jobs::add)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Falling back ${type.name} from ${active.name} to ${default.name}")
             return default
         }
         return active
     }
 
-    private fun getTheOneEnabledInArray(pluginsInCategory: ArrayList<PluginBase>, type: PluginType): PluginBase? {
+    private fun getTheOneEnabledInArray(pluginsInCategory: ArrayList<PluginBase>, type: PluginType, jobs: MutableList<Job>): PluginBase? {
         var found: PluginBase? = null
         for (p in pluginsInCategory) {
             if (p.isEnabled(type) && found == null) {
                 found = p
             } else if (p.isEnabled(type)) {
                 // set others disabled
-                p.setPluginEnabled(type, false)
+                p.setPluginEnabled(type, false)?.let(jobs::add)
             }
         }
         return found
     }
+
+    /**
+     * The first plugin enabled in the category, or null. Reads only - it changes nothing, so it is safe
+     * to call from a property getter. Same answer as [getTheOneEnabledInArray], which returns the first
+     * enabled one too; what this leaves out is that one's side effect of disabling the rest.
+     */
+    private fun firstEnabledIn(type: PluginType): PluginBase? =
+        getSpecificPluginsList(type).firstOrNull { it.isEnabled(type) }
 
     // ***** Interface *****
 
@@ -211,9 +224,12 @@ class PluginStore(
      */
     override val activePumpInternal: Pump
         get() = activePumpStore
-        // Following line can be used only during initialization
-            ?: getTheOneEnabledInArray(getSpecificPluginsList(PluginType.PUMP), PluginType.PUMP) as Pump?
-            ?: checkNotNull(activePumpStore) { "No pump selected" }
+            // Only during initialization: the selection is made by verifySelectionInCategories, which has
+            // not run yet while ConfigBuilder is still starting the plugins. This used to call
+            // getTheOneEnabledInArray, which DISABLES every later enabled pump in the category - a write,
+            // and scheduled onStop jobs nobody could wait for, from inside a property read.
+            ?: firstEnabledIn(PluginType.PUMP) as Pump?
+            ?: error("No pump selected")
 
     override val activeSensitivity: Sensitivity
         get() = activeSensitivityStore ?: checkNotNull(activeSensitivityStore) { "No sensitivity selected" }

@@ -170,6 +170,9 @@ class ConfigBuilderImpl(
 
     override fun storeSettings(from: String) {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing settings from: $from")
+        // Jobs ignored on purpose: storeSettings runs on a live app where the selection is already
+        // settled, so verify normally elects nothing and schedules nothing. The path that must wait is
+        // applyConfiguration, and it goes through loadSettings.
         activePlugin.verifySelectionInCategories()
         for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
@@ -188,8 +191,10 @@ class ConfigBuilderImpl(
     private fun loadSettings(): List<Job> {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loading stored settings")
         val jobs = activePlugin.getPluginsList().mapNotNull { p -> loadPref(p, p.getType()) }
-        activePlugin.verifySelectionInCategories()
-        return jobs
+        // verifySelectionInCategories elects the active plugin per category, and electing one enables it.
+        // Its jobs belong in the same list, or applyConfiguration would wait only for the plugins loadPref
+        // touched and carry on while a plugin elected here was still starting.
+        return jobs + activePlugin.verifySelectionInCategories()
     }
 
     private fun loadPref(p: PluginBase, type: PluginType): Job? {
