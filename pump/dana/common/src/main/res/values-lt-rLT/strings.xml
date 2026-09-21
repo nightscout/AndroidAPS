@@ -96,9 +96,9 @@
     <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="rs_loginsulinchange_title">Įrašyti rezervuaro keitimą</string>
-    <string name="rs_loginsulinchange_summary">Įtraukti į terapijos skiltį įvykį „Insulino pakeitimas“, jei jis aptinkamas istorijoje</string>
-    <string name="rs_logcanulachange_title">Įrašyti kaniulės pakeitimą</string>
-    <string name="rs_logcanulachange_summary">Įtraukti į terapijos skiltį įvykį „Kaniulės pakeitimas“, jei jis aptinkamas istorijoje</string>
+    <string name="rs_loginsulinchange_summary">Aptikus istorijoje, pridėti į Terapiją įvykį „Insulino keitimas“.</string>
+    <string name="rs_logcanulachange_title">Įrašyti kaniulės keitimą</string>
+    <string name="rs_logcanulachange_summary">Aptikus istorijoje, pridėti į Terapiją įvykį „Kaniulės keitimas“.</string>
     <string name="press_ok_on_the_pump">Paspauskite pompos mygtuką OK\n ir įveskite 2 rodomus skaičius\nĮjunkite pompos ekraną spausdami minuso mygtuką, kol baigsite įvesti kodą.</string>
     <string name="num1pin">1: (12 skaitmenų)</string>
     <string name="num2pin">2: (8 skaitmenys)</string>
