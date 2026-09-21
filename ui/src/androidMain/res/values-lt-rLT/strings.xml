@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
+    <string name="no_temp_basal_running">Nėra laikinos bazės</string>
     <string name="start_activity_tt">Pradėti Sporto LT</string>
     <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
     <string name="start_hypo_tt">Pradėti \"Hipo\" LT</string>
@@ -8,10 +9,27 @@
     <!--    Widget-->
     <string name="configure">Derinti skaidrumą</string>
     <string name="widget_description">AAPS valdiklis</string>
+    <string name="widget_bg_graph_description">AAPS gliukozės grafikas</string>
     <string name="widget_compact_bg_description">AAPS gliukozė + AIO + AAO (kompaktiškas)</string>
+    <string name="widget_small_description">Mažas AAPS valdiklis</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktyvumo stebėjimas</string>
     <string name="time_range">Laiko intervalas</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Išsamus gliukozės penkiakampis (CGP) — 14 dienų</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Vidurkis</string>
+    <string name="cgp_reference">Sveikas žmogus</string>
+    <string name="cgp_patient">Pacientas</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Labai maža rizika</string>
+    <string name="cgp_pgr_low">Maža rizika</string>
+    <string name="cgp_pgr_moderate">Vidutinė rizika</string>
+    <string name="cgp_pgr_high">Didelė rizika</string>
+    <string name="cgp_pgr_extremely_high">Ypač didelė rizika</string>
     <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
     <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
@@ -23,25 +41,119 @@
     <string name="bg_sensor">Sensorius</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Redaguoti</string>
+    <string name="record_site_location">Vieta: %1$s</string>
+    <string name="record_site_arrow">Vietos rodyklė: %1$s</string>
+    <string name="record_site_note">Pastaba: %1$s</string>
+    <string name="delete_site_note">Pastaba ištrinta</string>
     <!-- FillDialog -->
     <string name="fill_warning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
     <string name="record_pump_site_change">Įrašas apie infuzijos rinkinio keitimą</string>
     <string name="record_insulin_cartridge_change">Įrašas apie rezervuaro keitimą</string>
+    <string name="fill_prime_amount">Užpildymo kiekis</string>
+    <string name="fill_pump_units_note">Užpildymo kiekis nurodomas insulino vienetais</string>
     <string name="fill_insulin_change">Pakeisti insuliną į: %1$s (bus pritaikytas profilio keitimas)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
     <string name="scene_cat_activity">Sportas</string>
+    <string name="scene_cat_health">Sveikata</string>
+    <string name="scene_cat_food">Maistas</string>
+    <string name="scene_cat_sleep">Miegas</string>
+    <string name="scene_cat_dailylife">Kasdienybė</string>
+    <string name="scene_cat_wellness">Gera savijauta</string>
+    <string name="scene_cat_general">Bendra</string>
+    <string name="aaps_tt_high_icon_label">Laikinas tikslas</string>
     <string name="aaps_tt_activity_icon_label">LT sportas</string>
+    <string name="aaps_tt_eating_icon_label">LT Netrukus valgysiu</string>
+    <string name="aaps_tt_hypo_icon_label">LT Hipo</string>
+    <string name="aaps_tt_manual_icon_label">Pasirinktinis LT</string>
+    <string name="aaps_profile_icon_label">Profilis</string>
+    <string name="aaps_loop_icon_label">Ciklas</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolusas</string>
+    <string name="aaps_carbs_icon_label">Angliavandeniai</string>
     <string name="aaps_tbr_icon_label">Laikina bazė</string>
     <string name="aaps_activity_icon_label">Sportas</string>
+    <string name="aaps_note_icon_label">Pastaba</string>
+    <string name="aaps_automation_icon_label">Automatizacija</string>
+    <string name="aaps_calibration_icon_label">Kalibravimas</string>
+    <string name="exercise_icon_label">Bėgimas</string>
+    <string name="fitness_icon_label">Fitnesas</string>
+    <string name="swim_icon_label">Plaukimas</string>
+    <string name="hiking_icon_label">Žygis</string>
+    <string name="bike_icon_label">Dviratis</string>
+    <string name="skateboard_icon_label">Riedlentė</string>
+    <string name="tennis_icon_label">Tenisas</string>
+    <string name="soccer_icon_label">Futbolas</string>
+    <string name="baseball_icon_label">Regbis</string>
+    <string name="basketball_icon_label">Rankinis</string>
+    <string name="volleyball_icon_label">Gimnastika</string>
+    <string name="golf_icon_label">Golfas</string>
+    <string name="scubadiving_icon_label">Nardymas su akvalangu</string>
+    <string name="rowing_icon_label">Irklavimas</string>
+    <string name="surfing_icon_label">Banglenčių sportas</string>
+    <string name="hospital_icon_label">Ligoninė</string>
+    <string name="medication_icon_label">Vaistai</string>
+    <string name="monitor_heart_icon_label">Stebėjimas</string>
+    <string name="thermostat_icon_label">Termostatas</string>
+    <string name="blood_type_icon_label">Kraujas</string>
+    <string name="health_safety_icon_label">Sveikata</string>
+    <string name="healing_icon_label">Gijimas</string>
+    <string name="meal_icon_label">Restoranas</string>
+    <string name="cafe_icon_label">Kava</string>
+    <string name="lunch_icon_label">Pietūs</string>
+    <string name="bakery_icon_label">Kepykla</string>
+    <string name="sleep_icon_label">Miegas</string>
+    <string name="night_icon_label">Naktis</string>
+    <string name="nights_stay_icon_label">Nakvynė</string>
+    <string name="hotel_icon_label">Viešbutis</string>
+    <string name="seat_flat_icon_label">Poilsis</string>
+    <string name="work_icon_label">Darbas</string>
+    <string name="school_icon_label">Mokykla</string>
+    <string name="home_icon_label">Namai</string>
+    <string name="car_icon_label">Vairavimas</string>
+    <string name="flight_icon_label">Skrydis</string>
+    <string name="shopping_icon_label">Apsipirkimas</string>
+    <string name="relax_icon_label">Meditacija</string>
+    <string name="spa_icon_label">SPA</string>
+    <string name="heart_icon_label">Širdis</string>
+    <string name="psychology_icon_label">Protas</string>
+    <string name="star_icon_label">Žvaigždė</string>
+    <string name="speed_icon_label">Greitis</string>
+    <string name="alarm_icon_label">Signalas</string>
+    <string name="event_icon_label">Įvykis</string>
+    <string name="flag_icon_label">Vėliavėlė</string>
+    <string name="bookmark_icon_label">Žymelė</string>
+    <string name="label_icon_label">Žyma</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Nenurodytas insulino pavadinimas</string>
+    <string name="insulin_name_exists">Insulino pavadinimas %1$s jau naudojamas, pasirinkite kitą</string>
+    <string name="insulin_external_update_title">Pakeista insulino konfigūracija</string>
     <string name="insulin_external_update_message">Kitas susietas įrenginys pakeitė insulino nustatymus. Paspauskite OK, kad įkeltumėte jo pakeitimus ir atmestumėte savo neišsaugotus pakeitimus, arba Atšaukti, kad tęstumėte redagavimą (išsaugojus, Jūsų pakeitimai perrašys kito įrenginio nustatymus).</string>
+    <string name="insulin_edit_target_gone">Šis insulinas pašalintas kitur, todėl pakeitimų įrašyti nepavyko. Sąrašas įkeltas iš naujo.</string>
+    <string name="insulin_activation_applied">Insulinas aktyvuotas</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Taikoma…</string>
+    <string name="clientcontrol_pending_working_text">Laukiama pagrindinio įrenginio patvirtinimo…</string>
+    <string name="clientcontrol_pending_rejected_title">Nepritaikyta</string>
+    <string name="clientcontrol_pending_failed_format">Nepavyko atlikti %1$s.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Pritaikyta iš dalies</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s pritaikyta, tačiau kai kurių veiksmų atlikti nepavyko.\nPatikrinkite aktyvią būseną.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Nepavyko patvirtinti</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s išsiųsta, bet patvirtinimas negautas.\n%2$s\nJis čia pasirodys, jei ir kai pagrindinis įrenginys jį pritaikys.</string>
+    <string name="clientcontrol_pending_stop_waiting">Nebelaukti</string>
+    <string name="a11y_add_new_insulin">Pridėti naują insuliną</string>
+    <string name="a11y_delete_current_insulin">Ištrinti dabartinį insuliną</string>
+    <string name="load_peak_from">Įkelti piko reikšmę iš</string>
+    <string name="cannot_delete_last_insulin">Negalima ištrinti paskutinio insulino</string>
+    <string name="cannot_delete_active_insulin">Negalima ištrinti aktyvaus insulino</string>
     <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
     <string name="percentage_label">Procentais</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">Atjungti pompą</string>
     <string name="resume">Atnaujinti</string>
     <string name="reconnect">Prijungti pompą</string>
     <string name="duration15m">15 min</string>
@@ -52,6 +164,8 @@
     <string name="duration10h">10 val.</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Trūksta %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100 % greitai pasisavinamų angliavandenių, be ištęstų angliavandenių</string>
+    <string name="wizard_carbs_type_desc">Angliavandeniai sumažinti %1$d%%, pridėta %2$d%% i-AV, atidėtų %3$dmin ir paskirstytų per %4$dh</string>
     <string name="wizard_include_info">Bakstelėkite, kad įtrauktumėte į skaičiavimą arba pašalintumėte iš jo:\n• KG — kraujo gliukozė (pradžioje ĮJUNGTA)\n• LT — laikinas tikslas (pradžioje ĮJUNGTA)\n• Tendencija — KG tendencija (įsimenama paskutinė būsena)\n• AIO — aktyvus insulinas organizme (pradžioje ĮJUNGTA)\n• AAO — aktyvūs angliavandeniai organizme (įsimenama paskutinė būsena)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
@@ -62,16 +176,30 @@
     <string name="careportal_remove_started_events">Ištrinti AAPS paleidimo žymas</string>
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="clone_label">Klonuoti</string>
+    <string name="add_new_profile">Pridėti naują profilį</string>
+    <string name="edit_label">Redaguoti</string>
+    <string name="activate_label">Aktyvuoti</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
+    <string name="remove_label">Pašalinti</string>
+    <string name="active_profile_indicator">AKTYVUS</string>
+    <string name="confirm_remove_profile">Pašalinti profilį „%1$s“?</string>
+    <string name="confirm_clone_profile">Klonuoti profilį „%1$s“?</string>
+    <string name="profile_no_longer_exists">Profilių sąrašas tuo metu pasikeitė — bandykite dar kartą</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>
     <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profilio tipas</string>
+    <string name="profile_parameters">Profilio parametrai</string>
+    <string name="active_profile">Aktyvus profilis</string>
+    <string name="available_profiles">Galimi profiliai</string>
     <string name="profile_switches">Profilio keitimas</string>
     <string name="basal_pct_from_tdd_label">% bazės</string>
     <string name="selected_profile">Parinkta:</string>
+    <string name="comparation">Palyginimas</string>
+    <string name="profile_tab_1">1 profilis</string>
+    <string name="profile_tab_2">2 profilis</string>
     <string name="motol_default_profile">Numatytasis profilis</string>
     <string name="current_profile">Dabartinis profilis</string>
     <string name="available_profile">Galimas profilis</string>
@@ -82,27 +210,100 @@
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas</string>
+    <string name="quick_wizard_mode_wizard">Vedlys</string>
+    <string name="quick_wizard_mode_insulin">Insulinas</string>
+    <string name="quick_wizard_mode_carbs">Angliavandeniai</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Tik teigiamas AIO</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolusas</string>
     <!--    History browser-->
+    <string name="history_now">Dabar</string>
+    <string name="a11y_history_previous_window">Ankstesnis langas</string>
     <string name="a11y_history_next_window">Kitas langas</string>
     <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
+    <string name="calculator_options">Skaičiuotuvo parinktys</string>
     <string name="use_bg">Naudoti KG</string>
+    <string name="use_cob">Naudoti AAO</string>
+    <string name="use_iob">Naudoti AIO</string>
+    <string name="use_trend">Naudoti tendenciją</string>
+    <string name="trend_all">Visas</string>
+    <string name="trend_positive_only">Tik teigiamą</string>
+    <string name="trend_negative_only">Tik neigiamą</string>
+    <string name="use_temp_target">Naudoti laikiną tikslą</string>
+    <string name="use_alarm">Naudoti signalą</string>
+    <string name="device_selection">Įrenginio pasirinkimas</string>
+    <string name="show_on_phone">Rodyti telefone</string>
+    <string name="show_on_watch">Rodyti laikrodyje</string>
+    <string name="ecarbs_additional">Papildomi angliavandeniai</string>
+    <string name="valid_from_to">Galioja nuo–iki</string>
+    <string name="carb_time">Angliavandenių laikas</string>
+    <string name="save_changes_question">Įrašyti pakeitimus?</string>
+    <string name="wizard_no_insulin_required">Insulino nereikia</string>
+    <string name="carbs_constraint_violation">Angliavandenių kiekis apribotas pagal nustatytas ribas</string>
+    <string name="insulin_constraint_violation">Insulino kiekis apribotas pagal nustatytas ribas</string>
     <string name="confirm_treatment">Patvirtinkite terapiją</string>
     <string name="recalculate">Perskaičiuoti</string>
     <!--    Widget-->
+    <string name="use_black_color">Naudoti juodą spalvą</string>
+    <string name="widget_configuration">Valdiklio konfigūracija</string>
+    <string name="until_changed">Kol bus pakeista</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Reikalingi leidimai</string>
+    <string name="permission_sheet_subtitle">Kad programa veiktų tinkamai, reikia kai kurių leidimų</string>
+    <string name="permission_grant">Suteikti</string>
+    <string name="permission_change">Keisti</string>
+    <string name="permission_denied_go_to_settings">Leidimas visam laikui atmestas. Įjunkite jį programos nustatymuose.</string>
+    <string name="permission_open_settings">Nustatymai</string>
+    <string name="permission_directory_picker_error">Nepavyko atidaryti aplanko pasirinkimo lango. Dažniausiai tai susiję su Android arba Family Link.</string>
+    <string name="permission_nav_label">Leidimai</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Ciklo poslinkis</string>
+    <string name="raw_tdd">Neapdorota BPD</string>
+    <string name="cleaned_tdd">Išvalyta BPD</string>
+    <string name="cleaned_tdd_explanation">BPD atėmus angliavandeniams skirtą insuliną.</string>
+    <string name="cycle_lines_legend">Atskiri ciklai</string>
+    <string name="cycles_found">Ciklų: %1$d (dienų: %2$d)</string>
+    <string name="cycle_day1_date">1 diena = %1$s</string>
+    <string name="calculation_in_progress_percent">Skaičiuojama… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Nepakanka duomenų (2 ciklams reikia bent 56 dienų)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Abu</item>
         <item>Tik teigiamas</item>
         <item>Tik neigiamas</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Pasirinkti veiksmai</string>
+    <string name="quick_launch_no_dynamic_items">Nėra galimų elementų</string>
+    <string name="quick_launch_category_treatment">Terapija</string>
+    <string name="quick_launch_category_care">Terapija</string>
+    <string name="quick_launch_category_profile">Profilis</string>
+    <string name="quick_launch_category_temp_target">Laikino tikslo ruošiniai</string>
+    <string name="quick_launch_category_quick_wizard">Greitasis vedlys</string>
+    <string name="quick_launch_category_automation">Automatizacija</string>
+    <string name="quick_launch_all_selected">Pasirinkti visi elementai</string>
+    <string name="quick_launch_no_quick_wizard">Pridėkite įrašų į Greitąjį vedlį, kad galėtumėte juos naudoti čia</string>
+    <string name="quick_launch_no_automation">Sukurkite automatinių veiksmų, kad galėtumėte juos naudoti čia</string>
+    <string name="quick_launch_no_tt_presets">Pridėkite laikino tikslo ruošinių, kad galėtumėte juos naudoti čia</string>
+    <string name="quick_launch_no_profiles">Sukurkite profilių skiltyje Vietinis profilis, kad galėtumėte juos naudoti čia</string>
+    <string name="quick_launch_edit_profile_preset">Redaguoti profilio ruošinį</string>
+    <string name="quick_launch_profile_permanent">Nuolatinis</string>
+    <string name="select_arrow">Pasirinkti rodyklę</string>
+    <string name="loop_accept_nav_label">Ciklas</string>
+    <string name="loop_accept_set_basal_question">Priimti naują laikiną bazę:</string>
+    <string name="loop_accept_perform">Vykdyti</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
     <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Išjungta</string>
+    <string name="widget_rm_suspended">Sustabdyta</string>
+    <string name="widget_rm_resume">Atnaujinti</string>
     <!-- Calibration entry rejection reasons -->
     <string name="cal_reject_delta_too_high">Kalibravimas neįrašytas: gliukozė kinta per greitai (Δ %1$s %3$s per 5 min., riba %2$s). Bandykite dar kartą, kai gliukozė bus stabili.</string>
+    <string name="cal_reject_no_pair">Kalibravimas neįrašytas: per pastarąsias 10 minučių nerastas nė vienas jutiklio rodmuo.</string>
+    <string name="cal_reject_warmup">Kalibravimas neįrašytas: jutiklis vis dar šyla.</string>
+    <string name="cal_reject_no_session">Kalibravimas neįrašytas: nėra aktyvaus jutiklio. Pirmiausia pažymėkite jutiklio pakeitimą.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Jutiklis vis dar šyla. Kalibruoti bus galima %1$s.</string>
+    <string name="cal_precheck_no_session">Nėra aktyvaus jutiklio.</string>
     <string name="cal_precheck_no_pair">Per pastarąsias 10 min negauta jutiklio rodmenų. Patikrinkite jutiklio ryšį.</string>
+    <string name="cal_precheck_delta_too_high">Gliukozės kiekis kinta per greitai (Δ %1$s %3$s per 5 min., riba %2$s). Palaukite, kol stabilizuosis.</string>
+    <string name="cal_precheck_mark_sensor_change">Pažymėti jutiklio pakeitimą</string>
 </resources>
