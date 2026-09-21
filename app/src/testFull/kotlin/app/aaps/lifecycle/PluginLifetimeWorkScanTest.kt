@@ -51,6 +51,7 @@ class PluginLifetimeWorkScanTest {
         "OmnipodDashPumpPlugin#scope" to "onStop cancels the scope and tears the handler down",
         "OmnipodDashPumpPlugin#onStart" to "onStop cancels the scope and tears the handler down",
         "LoopPlugin#scheduleBuildAndStoreDeviceStatus" to "the job is held in deviceStatusJob and onStop cancels it",
+        "XdripPlugin#onStart" to "onStop removes the callbacks first, then quits the looper",
     )
 
     /**
@@ -59,9 +60,6 @@ class PluginLifetimeWorkScanTest {
      * should only ever get shorter. Nothing may be added here without a decision recorded next to it.
      */
     private val survivesStop: Map<String, String> = mapOf(
-        "LoopPlugin#invoke" to
-            "appScope.launch { delay(1000); invoke(...) } reschedules the loop a second later, so it lands inside or just " +
-                "after a restart window and can queue pump commands against a driver being torn down. The worst one here.",
         "OmnipodErosPumpPlugin#loopHandler" to
             "onStop cancels the scope and unbinds the service but never touches loopHandler, so the 1-minute status chain keeps posting",
         "OmnipodErosPumpPlugin#pumpDescription" to
@@ -70,9 +68,9 @@ class PluginLifetimeWorkScanTest {
             "onStart posts statusChecker on loopHandler every STATUS_CHECK_INTERVAL_MILLIS and onStop never removes it",
         "LoopPlugin#onStart" to
             "two collectors are launchIn(appScope); onStop cancels only deviceStatusJob, so both keep collecting after the stop",
-        "XdripPlugin#onStart" to
-            "onStop calls quitSafely() BEFORE removeCallbacksAndMessages, so the removal lands on a dead looper and an " +
-                "already-due message still runs. Reversing the two lines would close it.",
+        "LoopPlugin#invoke" to
+            "appScope.launch { delay(1000); invoke(...) } reschedules the loop a second later, so it lands inside or just " +
+                "after a restart window and can queue pump commands against a driver being torn down. The worst one here.",
         "VirtualPumpPlugin#deliverTreatment" to
             "one-shot appScope.launch that persists a bolus; it reschedules nothing, but it can still write during a restart window",
         "InsightPlugin#bolusProgressData" to

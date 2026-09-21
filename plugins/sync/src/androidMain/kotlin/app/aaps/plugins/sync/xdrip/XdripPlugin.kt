@@ -160,8 +160,12 @@ class XdripPlugin(
 
     override suspend fun onStop() {
         super.onStop()
-        handler?.looper?.quitSafely()
+        // Drop the queued work BEFORE quitting the looper. The other order does nothing: quitSafely()
+        // still delivers the messages that are already due, and removeCallbacksAndMessages then runs
+        // against a looper that is on its way out, so a pending send could still fire after onStop
+        // returned - inside the window an import uses to stop the plugins and write the store.
         handler?.removeCallbacksAndMessages(null)
+        handler?.looper?.quitSafely()
         handler = null
         eventWorker?.shutdown()
         eventWorker = null
