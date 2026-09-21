@@ -163,6 +163,11 @@ class LoopPlugin(
     // scope does the same and is the only part of this class that was ever Android.
     private var deviceStatusJob: Job? = null
 
+    // The collectors onStart puts on the application scope. That scope outlives the plugin, so onStop
+    // has to cancel them by hand or they keep running - and a later onStart stacks a second pair on top,
+    // so one temp-target change would then invoke the loop twice.
+    private val collectors = mutableListOf<Job>()
+
     // Serializes loop runs. Master's invoke() was @Synchronized; the suspend migration dropped that
     // (and @Synchronized cannot span suspension points). invoke() is reachable concurrently — the
     // per-BG PostCalculationWorker, the Accept-temp button, loop pull-to-refresh, the temp-target
@@ -192,7 +197,7 @@ class LoopPlugin(
                     aapsLogger.error(LTag.APS, "invoke on TempTarget change failed", e)
                 }
             }
-            .launchIn(appScope)
+            .launchIn(appScope).also(collectors::add)
         // Pump-state changes (suspend/resume, typically detected on a status read): reconcile the running
         // mode promptly instead of waiting for the next loop/keepalive tick (~5 min). EventPumpStatusChanged
         // is fired centrally by the command queue after every command, so it is pump-agnostic and arrives
@@ -210,11 +215,13 @@ class LoopPlugin(
                     aapsLogger.error(LTag.APS, "runningModePreCheck on pump status change failed", e)
                 }
             }
-            .launchIn(appScope)
+            .launchIn(appScope).also(collectors::add)
     }
 
     override suspend fun onStop() {
         deviceStatusJob?.cancel()
+        collectors.forEach { it.cancel() }
+        collectors.clear()
         super.onStop()
     }
 

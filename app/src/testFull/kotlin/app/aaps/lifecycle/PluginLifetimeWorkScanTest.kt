@@ -55,6 +55,7 @@ class PluginLifetimeWorkScanTest {
         "OmnipodErosPumpPlugin#loopHandler" to "onStop removes the callbacks; the looper stays alive on purpose, loopHandler is created once",
         "OmnipodErosPumpPlugin#pumpDescription" to "the statusChecker chain it re-posts is removed in onStop",
         "OmnipodErosPumpPlugin#onStart" to "the statusChecker it posts is removed in onStop",
+        "LoopPlugin#onStart" to "the two appScope collectors are kept in `collectors` and cancelled in onStop",
     )
 
     /**
@@ -63,8 +64,6 @@ class PluginLifetimeWorkScanTest {
      * should only ever get shorter. Nothing may be added here without a decision recorded next to it.
      */
     private val survivesStop: Map<String, String> = mapOf(
-        "LoopPlugin#onStart" to
-            "two collectors are launchIn(appScope); onStop cancels only deviceStatusJob, so both keep collecting after the stop",
         "LoopPlugin#invoke" to
             "appScope.launch { delay(1000); invoke(...) } reschedules the loop a second later, so it lands inside or just " +
                 "after a restart window and can queue pump commands against a driver being torn down. The worst one here.",
