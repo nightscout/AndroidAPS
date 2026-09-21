@@ -45,7 +45,7 @@
     <string name="equil_firmware_version">Programinės įrangos versija</string>
     <string name="equil_shutdown_be">Equil atsijungs automatiškai</string>
     <string name="equil_shutdown">Equil automatinis atsijungimas</string>
-    <string name="equil_common_history_tbr_value">Dydis： %1$.2f vv/val，trukmė： %2$d minutės</string>
+    <string name="equil_common_history_tbr_value">Dydis： %1$.2f V/val.，trukmė： %2$d min</string>
     <string name="equil_common_history_bolus_value">%1$.2f vv</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Nustatyti bolusą</string>
@@ -108,7 +108,7 @@
     <string name="equil_common_overview_button_resume_delivery">Atnaujinti suleidimą</string>
     <string name="equil_common_wizard_exit_confirmation_text">Dar nesate užbaigę visų žingsnių. Ar tikrai norite išeiti?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Išeiti</string>
-    <string name="equil_support_error">Programinės įrangos versija per žema. Nepalaikoma</string>
+    <string name="equil_support_error">Programinės įrangos versija nepalaikoma</string>
     <string name="equil_password_tips">Pasirinktinai nustatykite susiejimo su Equil v5.3 pompa slaptažodį. Šis slaptažodis ateityje taip pat bus naudojamas atsiejant, todėl būtinai jį įsiminkite. Slaptažodį turi sudaryti 4 simboliai, pasirinkti iš ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Nustatyti suporavimo slaptažodį</string>
     <string name="equil_hint1">Po to, kai uždėsite pompą ant pagrindo plokštės, pasirinkite, ar norite išstumti orą iš įvestos adatos.</string>
