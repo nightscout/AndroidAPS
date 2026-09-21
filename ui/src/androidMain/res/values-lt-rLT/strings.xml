@@ -30,8 +30,10 @@
     <!-- Scene -->
     <string name="scene_cat_activity">Sportas</string>
     <string name="aaps_tt_activity_icon_label">LT sportas</string>
+    <string name="aaps_tbr_icon_label">Laikina bazė</string>
     <string name="aaps_activity_icon_label">Sportas</string>
     <!-- Insulin Management -->
+    <string name="insulin_external_update_message">Kitas susietas įrenginys pakeitė insulino nustatymus. Paspauskite OK, kad įkeltumėte jo pakeitimus ir atmestumėte savo neišsaugotus pakeitimus, arba Atšaukti, kad tęstumėte redagavimą (išsaugojus, Jūsų pakeitimai perrašys kito įrenginio nustatymus).</string>
     <!-- Client→master round-trip pending dialog -->
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <!-- %1$s = action label -->
@@ -60,6 +62,10 @@
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="clone_label">Klonuoti</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profilio tipas</string>
     <string name="profile_switches">Profilio keitimas</string>
