@@ -153,4 +153,6 @@
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="wizard_ecarbs">eKarbo %1$dg / %2$dt (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f E</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s kunne ikke starte og vil kanskje ikke fungere. Start AndroidAPS på nytt.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Plugin %1$s støtte på en feil, og deler av den har stoppet. Vennligst start AndroidAPS på nytt.</string>
 </resources>
