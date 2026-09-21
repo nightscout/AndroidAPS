@@ -85,6 +85,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Tik teigiamas AIO</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolusas</string>
     <!--    History browser-->
+    <string name="a11y_history_next_window">Kitas langas</string>
     <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
     <string name="use_bg">Naudoti KG</string>
     <string name="confirm_treatment">Patvirtinkite terapiją</string>
