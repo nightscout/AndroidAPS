@@ -149,20 +149,20 @@ class PluginLifetimeWorkScanTest {
      */
     private val memberStart = Regex("""^ {0,4}(?:(?:private|internal|public|protected|open|override|suspend|inline)\s+)*(?:fun|val|var)\s+([A-Za-z_][A-Za-z0-9_]*)""")
 
-    private fun scan(simpleName: String, file: File): List<Hit> {
+    private fun scan(simpleName: String, file: File, using: List<Regex>): List<Hit> {
         val hits = mutableListOf<Hit>()
         var member = "<class body>"
         stripComments(file.readText()).lineSequence().forEachIndexed { index, line ->
             memberStart.find(line)?.let { member = it.groupValues[1] }
             if (declaration.containsMatchIn(line)) return@forEachIndexed
-            patterns.firstNotNullOfOrNull { it.find(line) }?.let { match ->
+            using.firstNotNullOfOrNull { it.find(line) }?.let { match ->
                 hits += Hit("$simpleName#$member", match.value.trim(), "${file.name}:${index + 1}")
             }
         }
         return hits
     }
 
-    private fun allHits(): List<Hit> {
+    private fun allHits(using: List<Regex> = patterns): List<Hit> {
         val root = repoRoot()
         val sources = sourceIndex(root)
         val plugins = aapsClassesOnClasspath(listOf(AppRootGraph::class.java))
@@ -179,7 +179,7 @@ class PluginLifetimeWorkScanTest {
             if (file == null) {
                 if (!cls.name.contains('$')) missing += cls.name
                 emptyList()
-            } else scan(simpleName, file)
+            } else scan(simpleName, file, using)
         }
         assertThat(missing).isEmpty()
         return hits
@@ -204,5 +204,130 @@ class PluginLifetimeWorkScanTest {
         val stale = (reviewedSafe.keys + survivesStop.keys).filterNot { it in keys }
 
         assertThat(stale).isEmpty()
+    }
+
+    // ---- pluginScope.launch inventory -------------------------------------------------------------
+
+    /**
+     * Separate from [patterns] on purpose. `pluginScope` is not an offence today - it is the scope a
+     * plugin is supposed to use - so it must not appear in the list above and bury the real hits.
+     *
+     * This inventory exists because [PluginBase.pluginScope] is process-lifetime and a proposal is open
+     * to make it per-enable, cancelled on stop. That change edits nothing at these call sites and
+     * produces no compile error, yet every one of them changes meaning. So each is written down with a
+     * decision first, and the build fails on a new one.
+     */
+    private val queuedWorkPatterns = listOf(Regex("""\bpluginScope\s*\.\s*launch\b"""))
+
+    /**
+     * Every `pluginScope.launch` in a plugin, with what cancelling it on stop would actually do.
+     *
+     * **The thing to understand before reading these.** Cancelling the coroutine does NOT withdraw the
+     * command. `CommandQueueImplementation.readStatus` (and the `customCommand` path) is
+     * `add(command)` -> `notifyAboutNewCommand()` -> `deferred.await()`. Cancel the caller at the await
+     * and the command stays in the queue and still runs - only the result is abandoned. So a per-enable
+     * scope does not stop a driver being torn down from being driven; it only loses the answer. Anything
+     * that must not reach a stopped driver has to leave the QUEUE, not just the scope.
+     */
+    /**
+     * [launches] is load bearing, not decoration. Keying by member alone made the guard miss a new launch
+     * added to a member that was already waived - and `OmnipodDashPumpPlugin#handleCommandConfirmation`
+     * holds four of them, two delivering insulin, so a fifth would have slipped in against a green build.
+     * Proven by adding one and watching the test stay green until this count existed.
+     */
+    private data class Site(val launches: Int, val decision: String)
+
+    private val pluginScopeLaunches: Map<String, Site> = mapOf(
+        "PumpPluginBase.kt#onStart" to Site(
+            1,
+            "readStatus after a 6 s delay, guarded by isConfigured(). SAFE, and already cancelled: the job is " +
+                "held in initialReadStatusJob and onStop cancels it, so a stop inside the 6 s window stops it " +
+                "before anything is queued. The only site here where cancelling really does prevent the command."
+        ),
+        "DanaRSPlugin.kt#changePump" to Site(
+            1,
+            "readStatus(device_changed). Status read, no dosing. The command is queued before the await, so a " +
+                "cancel only abandons the answer - but CommandExecutor drops the whole queue when the new " +
+                "driver reports !isConfigured(), so nothing reaches a pump. SAFE to abandon."
+        ),
+        "DiaconnG8Plugin.kt#changePump" to Site(
+            1,
+            "readStatus(reason). Same shape and same reasoning as DanaRSPlugin#changePump. SAFE to abandon."
+        ),
+        "EquilPumpPlugin.kt#getPumpStatus" to Site(
+            2,
+            "customCommand(CmdModeAndHistoryGet) and customCommand(CmdDevicesGet) - two launches on adjacent " +
+                "lines. Both are reads. SAFE to abandon; neither writes to the pump."
+        ),
+        "InsightPlugin.kt#onPumpPaired" to Site(
+            1,
+            "readStatus(\"Pump paired\"). A read, right after pairing. SAFE to abandon."
+        ),
+        "OmnipodDashPumpPlugin.kt#refreshStatusOnUnacknowledgedCommands" to Site(
+            1,
+            "readStatus(unconfirmed_command). A read. SAFE to abandon - but see handleCommandConfirmation " +
+                "below, which is the reason unconfirmed commands are being chased in the first place."
+        ),
+        "OmnipodErosPumpPlugin.kt#queueAcknowledgeAlertsCommand" to Site(
+            1,
+            "customCommand(CommandSilenceAlerts), result only logged. Silencing an alert is a pod write, but " +
+                "losing the log line is all a cancel costs. SAFE to abandon."
+        ),
+        "OmnipodErosPumpPlugin.kt#pumpDescription" to Site(
+            2,
+            "customCommand(CommandHandleTimeChange) and customCommand(CommandUpdateAlertConfiguration). The " +
+                "member name is the scan attributing to the last member it saw, not the real one; both sit in " +
+                "the status-refresh observer. Pod writes, results unused. Abandoning the result is SAFE; the " +
+                "commands themselves still run, which is what we want here."
+        ),
+
+        // The one that is not safe, and the reason this inventory exists.
+        "OmnipodDashPumpPlugin.kt#handleCommandConfirmation" to Site(
+            4,
+            "UNDECIDED - settle before phase 2. Two customCommand(CommandDeliverBasalCorrection) and two " +
+                "customCommand(CommandDisableSuspendAlerts). CommandDeliverBasalCorrection DELIVERS INSULIN. " +
+                "Cancelling the coroutine does not withdraw it from the queue, so a per-enable scope would " +
+                "deliver the correction anyway and throw away the only report of whether it worked - strictly " +
+                "worse than today. If a stopped driver must not deliver, the command has to leave the QUEUE, " +
+                "and that is a queue change, not a scope change."
+        )
+    )
+
+    /**
+     * File plus member, not class plus member. The class-based key the maps above use is derived from the
+     * compiled name and is not always the file it lands in - the DiaconnG8Plugin hit keys as `Plugin#`,
+     * which would let one waiver silently cover a different class's site. Line numbers are deliberately
+     * not part of it: they rot on the first edit.
+     */
+    private fun Hit.siteKey(): String = "${where.substringBefore(':')}#${key.substringAfter('#')}"
+
+    @Test
+    fun `every pluginScope launch is written down with a decision`() {
+        val hits = allHits(queuedWorkPatterns)
+        check(hits.isNotEmpty()) { "The scan found no pluginScope.launch at all, which cannot be right - it is broken" }
+
+        val unaccounted = hits.filterNot { it.siteKey() in pluginScopeLaunches }
+            .map { "${it.siteKey()} -> ${it.matched} (${it.where})" }
+            .distinct()
+
+        assertThat(unaccounted).isEmpty()
+
+        // A site that is already written down must not quietly grow another launch. Four of these sit
+        // under one key and two of them deliver insulin.
+        val miscounted = hits.groupBy { it.siteKey() }
+            .mapNotNull { (key, found) ->
+                val expected = pluginScopeLaunches.getValue(key).launches
+                if (found.size == expected) null
+                else "$key: expected $expected launch(es), found ${found.size} at ${found.map { it.where }}"
+            }
+
+        assertThat(miscounted).isEmpty()
+    }
+
+    @Test
+    fun `no pluginScope launch entry is stale`() {
+        val keys = allHits(queuedWorkPatterns).map { it.siteKey() }.toSet()
+
+        assertThat(pluginScopeLaunches.keys.filterNot { it in keys }).isEmpty()
     }
 }
