@@ -5,8 +5,9 @@
 > alarm entry in "Known gaps" said iOS alarms are silent and they are not, and two rows of the
 > "Open" table were already done. Verified unchanged in the same pass: `compileKotlinIosArm64`,
 > `:ios:shell:linkDebugFrameworkIosArm64` and `iosSimulatorArm64Test` are all green (714 tests, 0
-> failures, 14 modules). **Not checked:** the three dependency cycles, the `BtConnectionSource`
-> note, and the remaining four rows of the "Open" table.
+> failures, 14 modules). Every row of the "Open" table, the dependency-cycle section and the
+> `BtConnectionSource` note were then checked too - each carries its own dated result. **Not
+> checked:** everything outside the "Open" and "Known gaps" sections, which is most of this file.
 
 Things the iOS branch needs from the phone side. Written by the macOS session, for the Windows
 session to pick up. Newest findings at the top of each list.
@@ -327,12 +328,12 @@ wrong. What is actually left:
 
 | Missing binding | Whose | Note |
 |---|---|---|
-| `Autotune` | yours | 3 methods, but the Android class is portable Kotlin computation, not platform. Worth porting rather than stubbing - a no-op would quietly do nothing when a user runs it. |
+| `Autotune` | ours, stubbed | Still worth porting: it is portable Kotlin computation, not platform code. **The no-op this row warned about now exists** - `IosAutotune` is bound and does nothing. It is not reachable from the iOS UI today (autotune is not in the shared nav graph), so nothing silently lies yet, but it would the moment it is. Checked 2026-09-21. |
 | ~~`ExportPasswordDataStore`~~ | done | Shared `ExportPasswordDataStoreImpl` is in commonMain and the iOS half is `IosExportPasswordPlatform`. This section already says so further down ("`ExportPasswordDataStore` - iOS side done"); the table simply was not updated. Checked 2026-09-21. |
 | ~~`ImportExportPrefs`~~ | done | `LocalImportExportPrefs` in commonMain serves iOS and desktop; settings export and import were run end to end on the simulator, including Google Drive. A document picker is still missing, but that is a directory-chooser gap, not a missing binding. Checked 2026-09-21. |
-| `IobCobCalculator` | yours | still needs a home outside `:app` |
-| `UiInteraction` | shared | the interface is in commonMain already; only `UiInteractionImpl` is in `:app`. The iOS side is ours and is being written - see below. |
-| `NsSocketFactory` | ours | wiring only, see the gaps section |
+| ~~`IobCobCalculator`~~ | done | `IobCobCalculatorPlugin` is in `plugins/main/src/commonMain` now, and iOS builds it through `IosHistoryWindowGraph`. The "needs a home outside :app" problem is solved. Checked 2026-09-21. |
+| `UiInteraction` | ours, nearly done | `IosUiInteraction` exists and is bound. **One method left**: `runAlarm` still only logs. Note this is a different path from `setAudibleAlarm`, which does sound - see the corrected alarm entry below. Checked 2026-09-21. |
+| `NsSocketFactory` | ours, by design | Correct as written, and not a missing class: there is deliberately no `IosNsSocketFactory`. The implementation is Swift and enters as a factory parameter at start up. Checked 2026-09-21. |
 
 **Correction to what this section used to say.** It listed `BolusWizard`, `QuickWizard`,
 `RunningModeGuard`, `L` and `BolusProgressData` as having "no Kotlin implementation anywhere, and
@@ -356,6 +357,13 @@ implementation.
 
 ### Three dependency cycles, and why Android never sees them
 
+> **Still true, and now evidenced rather than argued (2026-09-21).** A Metro cycle fails the graph
+> at compile time, so it cannot be present in a build that works. At `7e303d9bb5` the iOS graph
+> compiles, links into `AapsShared.framework` and runs 714 tests green, which means all three are
+> genuinely broken by the `Provider` indirection described below. `TriggerFactory` still carries the
+> comment naming the `BtConnectionSource` cycle it breaks. Expect more of these, as this section
+> says - the reasoning holds.
+
 Worth knowing, because each one is a place where Android's platform machinery is quietly acting as
 an injection boundary and iOS has nothing in that role. All three are fixed on the iOS side with a
 `Provider`, the same tool `TriggerFactory` already uses in commonMain.
@@ -375,6 +383,11 @@ iOS. Anywhere Android hands construction to the framework - a `Service`, a `Broa
 `Worker` - the cycle is real in the object graph and only hidden by who does the building.
 
 ### `BtConnectionSource` no longer needs an iOS class
+
+> **Verified 2026-09-21.** No `IosBtConnectionSource` file exists anywhere in the tree, and
+> `AutomationRuntime` in commonMain carries the binding
+> (`(AppScope::class, binding = binding<BtConnectionSource>())`). Accurate as
+> written.
 
 `IosBtConnectionSource` is deleted. Once `AutomationRuntime` moved to commonMain it began
 contributing `BtConnectionSource` itself, which made two bindings on iOS and failed the graph. The
