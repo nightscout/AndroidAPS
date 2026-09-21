@@ -15,18 +15,22 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
 /**
- * That reading the active pump before one has been elected neither throws nor writes.
+ * That reading the active pump before one has been elected answers without WRITING.
  *
- * This pins the fix for the "No pump selected" crash (`PluginStore.getActivePumpInternal`, live in
- * Crashlytics on 4.0.0-dev..dev-c). `ConfigBuilderImpl.initialize` starts the plugins and only then
- * calls `verifySelectionInCategories`, so between those two a plugin's `onStart` can read the active
- * pump while `activePumpStore` is still null. Two things make that safe, and BOTH are easy to remove
- * by accident:
+ * `ConfigBuilderImpl.initialize` starts the plugins and only then calls `verifySelectionInCategories`,
+ * so between those two a plugin's `onStart` can read the active pump while `activePumpStore` is still
+ * null. Two things are pinned here, and both are easy to remove by accident:
  *
- * 1. the fallback to the first enabled PUMP plugin, instead of throwing;
+ * 1. the fallback to the first enabled PUMP plugin;
  * 2. that the fallback is a **pure read**. It used to call `getTheOneEnabledInArray`, which disables
  *    every other enabled pump in the category - a write, and scheduled `onStop` jobs nobody could
  *    wait for, from inside a property getter.
+ *
+ * **This does not fix the "No pump selected" crash**, and must not be read as doing so. That crash
+ * (`PluginStore.getActivePumpInternal`, 4.0.0-dev..dev-c) happens when NO pump plugin is enabled at
+ * all, which the old fallback did not survive either - it reached the same throw. And the throw is
+ * deliberate: see the block above the interface section in `PluginStore`. The crash is fixed at the
+ * caller, by closing the window in which nothing is elected.
  */
 class PluginStoreActivePumpTest : TestBase() {
 

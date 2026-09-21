@@ -209,6 +209,29 @@ class PluginStore(
 
     // ***** Interface *****
 
+    // ---------------------------------------------------------------------------------------------
+    // THE THROWS BELOW ARE BY DESIGN. DO NOT SOFTEN THEM.
+    //
+    // "No pump selected" and its siblings are ASSERTIONS about internal state, not error handling.
+    // AAPS cannot be in a state where no pump, bg source, sensitivity, smoothing or calibration is
+    // selected - if one of these throws, the app is already wrong and the crash is what makes that
+    // visible. The bug is always in whatever asked, and that is what gets fixed.
+    //
+    // So do NOT propose, and do not add:
+    //   - an `activePumpOrNull` / nullable variant so a caller can skip,
+    //   - a fallback to the default plugin,
+    //   - a last-known-good value held over,
+    //   - a try/catch at a call site.
+    // Every one of those converts a loud, locatable invariant violation into silent wrong behaviour -
+    // in an app that doses insulin. A pump that is quietly "not there" is worse than a crash report.
+    //
+    // This has been raised and rejected repeatedly. If a Crashlytics issue points here, read it as
+    // "something read the active plugin at a moment when none was elected" and fix the timing at the
+    // caller. A real example: `PersistentNotificationPlugin.onStart` runs again during a settings
+    // import, inside the window where `loadSettings` has disabled the old pump and not yet enabled
+    // the new one - the fix belongs to that window, never here.
+    // ---------------------------------------------------------------------------------------------
+
     override val activeBgSource: BgSource
         get() = activeBgSourceStore ?: checkNotNull(activeBgSourceStore) { "No bg source selected" }
 
@@ -229,6 +252,7 @@ class PluginStore(
             // getTheOneEnabledInArray, which DISABLES every later enabled pump in the category - a write,
             // and scheduled onStop jobs nobody could wait for, from inside a property read.
             ?: firstEnabledIn(PluginType.PUMP) as Pump?
+            // Deliberate. See the block above the interface section - this assertion stays.
             ?: error("No pump selected")
 
     override val activeSensitivity: Sensitivity
