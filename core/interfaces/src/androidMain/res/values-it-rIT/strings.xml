@@ -154,4 +154,5 @@
     <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Il plugin %1$s non è stato avviato e potrebbe non funzionare. Riavviare AndroidAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Il plugin %1$s ha sollevato un errore e parte di esso si è fermato. Riavviare AndroidAPS.</string>
 </resources>
