@@ -99,10 +99,11 @@
     <string name="action_carbs">AV</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Daugiausia galima pašalinti: %1$d g (AAO)</string>
     <string name="action_ecarbs">iAV</string>
+    <string name="action_start_minutes">Pradžia\n[min]</string>
     <string name="action_duration_hours_format">%1$d val.</string>
-    <string name="action_duration_hours_minutes_format">%1$d val. %2$d min.</string>
-    <string name="action_minutes_format">%1$d min.</string>
-    <string name="ecarbs_start_format">%1$d min.</string>
+    <string name="action_duration_hours_minutes_format">%1$d val. %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
     <string name="action_insulin">Insulinas</string>
     <string name="action_insulin_units">Insulinas [V]</string>
     <string name="action_preset_1">Ruošinys 1</string>
@@ -191,7 +192,7 @@
     <string name="week_short">sav.</string>
     <string name="day_short">d.</string>
     <string name="hour_short">val.</string>
-    <string name="minute_short">min.</string>
+    <string name="minute_short">min</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="pref_heartRateSampling">Pulsas</string>
@@ -241,7 +242,9 @@
     <string name="insulin_unit_short">V</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f V</string>
     <string name="wizard_confirmation_sent">Išsiųsta</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f V/val. (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">Liko %1$s</string>
     <string name="loop_status_tbr_continues">Laikina bazė tęsiama</string>
     <string name="loop_status_tbr_cancel">Nustatoma įprasta bazė</string>
     <string name="loop_status_smb">%1$.2f V</string>
@@ -265,10 +268,12 @@
     <string name="wizard_settings_format">IA: %1$s | JIF: %2$s</string>
     <string name="wizard_result_bg">KG</string>
     <string name="wizard_result_bg_tt">KG (LT: %1$s)</string>
-    <string name="wizard_result_trend">15 min. tendencija</string>
+    <string name="wizard_result_trend">15 min tendencija</string>
     <string name="wizard_result_iob">AIO</string>
     <string name="wizard_result_new_iob">Naujas AIO: %1$s V</string>
     <string name="wizard_result_cob">AAO (%1$.1f g)</string>
     <string name="wizard_result_correction">Taisymas</string>
     <string name="wizard_insulin_format">%1$s V</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>
