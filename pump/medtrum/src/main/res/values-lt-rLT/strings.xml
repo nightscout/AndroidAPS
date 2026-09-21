@@ -13,6 +13,7 @@
     <string name="patch_not_active">Rezervuaras neaktyvus</string>
     <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
     <string name="pump_sync_error">Klaida įkeliant pompos istoriją: įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar rezervuarą.</string>
+    <string name="patch_reset_after_primed_error">Pompos rezervuaras persikrovė ir prarado sesiją. Jis nebegali tiekti insulino. Nuimkite rezervuarą ir aktyvuokite naują.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktyvus bolusas</string>
     <string name="pump_state_label">Pompos būsena</string>
@@ -22,6 +23,7 @@
     <string name="fw_version_label">FW versija</string>
     <string name="patch_no_label">Rezervuaro nr.</string>
     <string name="patch_expiry_label">Rezerv. gal. baigsis</string>
+    <string name="patch_activation_time_label">Aktyvavimas</string>
     <string name="reset_alarms_label">Atstatyti aliarmus</string>
     <string name="change_patch_label">Keisti rezerv.</string>
     <string name="requested_by_user" comment="26 characters max for translation">Inicijuota naudotojo</string>
