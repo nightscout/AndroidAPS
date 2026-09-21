@@ -39,7 +39,7 @@
     <string name="cwf_comment_status">Apibendrinta būsena</string>
     <string name="cwf_comment_time">Laikas (val:min arba val:min:sek)</string>
     <string name="cwf_comment_hour">Val.</string>
-    <string name="cwf_comment_minute">Min.</string>
+    <string name="cwf_comment_minute">min</string>
     <string name="cwf_comment_second">Sek.</string>
     <string name="cwf_comment_timePeriod">AM ar PM</string>
     <string name="cwf_comment_day_name">Savaitės diena</string>
