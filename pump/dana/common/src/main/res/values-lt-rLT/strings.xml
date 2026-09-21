@@ -106,6 +106,7 @@
     <string name="connecting_to_pump">Jungiamasi prie pompos…</string>
     <string name="pairing_successful">Sėkmingai susieta!</string>
     <string name="cancel_pairing_title">Atšaukti susiejimą?</string>
+    <string name="cancel_pairing_message">Susiejimas bus nutrauktas.</string>
     <string name="done">Baigta</string>
     <string name="enter_pump_password">Įveskite pompos slaptažodį</string>
     <string name="select_paired_device">Pasirinkite susietą įrenginį</string>
