@@ -3,12 +3,22 @@
     <!--    Dialogs-->
     <string name="confirmation">Confirmação</string>
     <!--    Events-->
+    <string name="bolus_delivering">Administrando %1$.2f U</string>
+    <string name="bolus_delivered_so_far">Administrado: %1$.2f U / %2$.2f U</string>
+    <string name="bolus_delivered_successfully">Bolus de %1$.2f U administrado com sucesso</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Driver da bomba alterado.</string>
     <!--    DateUtil-->
+    <string name="minago">há %1$dm</string>
+    <string name="secago">há %1$ds</string>
     <string name="minago_long">%1$d minutos atrás</string>
+    <string name="hoursago">%1$.1fh atrás</string>
     <string name="days_ago">%1$d dias atrás</string>
     <string name="days_ago_round">%1$.0f dias atrás</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="one">há %1$s dia e %2$s h</item>
+        <item quantity="other">há %1$s dias e %2$s h</item>
+    </plurals>
     <string name="in_days">em %1$.0f dias</string>
     <string name="in_days_round">em %1$.0f dias</string>
     <string name="shorthour">h</string>
@@ -33,6 +43,7 @@
     <string name="connecting_for">Conectando para %1$d</string>
     <string name="handshaking">Cumprimento</string>
     <string name="connected">Conectado</string>
+    <string name="authorized">Autorizado</string>
     <string name="disconnecting">A desligar</string>
     <string name="waiting_for_disconnection">Aguardando a desconexão</string>
     <!-- Custom Watchface -->
@@ -49,6 +60,8 @@
     <string name="pref_show_delta">Mostrar Delta</string>
     <string name="pref_show_detailed_delta">Mostrar Delta detalho</string>
     <string name="pref_show_avgdelta">Mostrar média de delta</string>
+    <string name="pref_show_tempTarget">Mostrar alvo temporário</string>
+    <string name="pref_show_reservoir_level">Mostrar nível do reservatório</string>
     <string name="pref_show_phone_battery">Mostrar bateria do telefone</string>
     <string name="pref_show_rig_battery">Mostrar bateria de rig</string>
     <string name="pref_show_basal_rate">Mostrar Taxa Basal</string>
@@ -57,10 +70,23 @@
     <string name="pref_show_bgi">Mostrar BGI</string>
     <string name="pref_show_direction_arrow">Mostrar seta de tendência</string>
     <string name="pref_show_ago">Exibir atrás</string>
+    <string name="pref_show_week_number">Mostrar número da semana</string>
+    <string name="pref_show_date">Exibir data</string>
+    <string name="pref_show_seconds">Mostrar segundos</string>
+    <string name="pref_show_complication1">Mostrar complicação 1</string>
+    <string name="pref_show_complication2">Mostrar complicação 2</string>
+    <string name="pref_show_complication3">Mostrar complicação 3</string>
+    <string name="pref_show_complication4">Mostrar complicação 4</string>
+    <string name="pref_show_complication5">Mostrar complicação 5</string>
     <string name="default_custom_watchface_comment">Watchface padrão, você pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
+    <string name="default_custom_watchface_external_comment">Mostrador padrão incluindo visualizações externas para seguidores; você pode clicar no botão EXPORT WATCHFACE para gerar um modelo.</string>
     <string name="wear_default_watchface">Watchface padrão</string>
+    <string name="wear_more_watchfaces">Mais mostradores</string>
+    <string name="forever">Para sempre</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_description">O aplicativo precisa de permissão para Bluetooth para se comunicar com a bomba</string>
     <!-- Insulin -->
+    <string name="unknown">Desconhecido</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
