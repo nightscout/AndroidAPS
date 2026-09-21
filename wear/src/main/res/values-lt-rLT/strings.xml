@@ -3,6 +3,11 @@
     <string name="label_watchface_circle">AAPS(apskritimas)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(pasirinktinis)</string>
+    <string name="label_actions_tile">Veiksmai</string>
+    <string name="label_temp_target_tile">Laikinas tikslas</string>
+    <string name="label_quick_wizard_tile">Greitasis vedlys</string>
+    <string name="label_user_action_tile">Naudotojo veiksmas</string>
+    <string name="label_scene_tile">Scenarijus</string>
     <string name="msg_warning_sync">Nėra duomenų nuo %1$s! Patikrinkite, ar AAPS telefone siunčia duomenis laikrodžiui</string>
     <string name="msg_warning_old">AAPS duomenys yra %1$s senumo! Patikrinkite sensorių, xDrip+, NS, AAPS konfigūratorių ar kt.!</string>
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
@@ -64,6 +69,7 @@
     <string name="pref_moreWatchfaceSettings">Daugiau laikrodžio ekrano nustatymų</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Prašom žiūrėti Watchface konfigūraciją.</string>
     <string name="menu_tempt">LaikinasTikslas</string>
+    <string name="menu_tempt_long">Laikinas tikslas</string>
     <string name="menu_wizard">Skaičiuotuvas</string>
     <string name="menu_wizard_short">Skaič.</string>
     <string name="menu_treatment">Terapija</string>
@@ -82,12 +88,14 @@
     <string name="action_tempt_confirmation">Laikino tikslo užklausa</string>
     <string name="action_quick_wizard_confirmation">Greitojo vedlio užklausa</string>
     <string name="action_user_action_confirmation">Reikalingas vartotojo veiksmas</string>
+    <string name="scene_end">Baigti</string>
     <string name="action_treatment_confirmation">Terapijos užklausa</string>
     <string name="action_bolus_confirmation">Boluso užklausa</string>
     <string name="action_wizard_confirmation">Skaičiavimo užklausa</string>
     <string name="action_fill_confirmation">Pildymo užklausa</string>
     <string name="action_ecarb_confirmation">AV užklausa</string>
     <string name="action_profile_switch_confirmation">Profilio keitimo užklausa</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Tikslas [%s]</string>
     <string name="action_carbs">AV</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Daugiausia galima pašalinti: %1$d g (AAO)</string>
     <string name="action_ecarbs">iAV</string>
@@ -232,6 +240,7 @@
     <string name="title_activity_suspend_loop">Pristabdyti ciklą</string>
     <string name="insulin_unit_short">V</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f V</string>
+    <string name="wizard_confirmation_sent">Išsiųsta</string>
     <string name="loop_status_tbr_rate">%1$.2f V/val. (%2$d%%)</string>
     <string name="loop_status_tbr_continues">Laikina bazė tęsiama</string>
     <string name="loop_status_tbr_cancel">Nustatoma įprasta bazė</string>
@@ -240,10 +249,18 @@
     <string name="loop_status_closed">Uždaras ciklas</string>
     <string name="loop_status_open">Atviras ciklas</string>
     <string name="loop_status_lgs">Stabdymas esant žemai glikemijai</string>
+    <string name="loop_status_suspended">Ciklas sustabdytas</string>
     <string name="loop_status_last_run_enact">Paskutinis ciklas&amp; įvykdymas</string>
     <string name="loop_status_last_run">Paskutinis ciklas</string>
     <string name="loop_status_last_enact">Paskutinis įvykdymas</string>
     <string name="loop_status_basal_rate">Bazė</string>
+    <string name="loop_status_targets">Tikslai</string>
+    <string name="loop_status_temp_target">Laikinas tikslas</string>
+    <string name="loop_status_target_range">Diapazonas</string>
+    <string name="loop_status_target">Tikslas</string>
+    <string name="loop_status_adjusted_target">Pakoreguotas tikslas</string>
+    <string name="loop_status_refresh">Atnaujinti</string>
+    <string name="confirm">Patvirtinti</string>
     <string name="request">Užklausa</string>
     <string name="wizard_settings_format">IA: %1$s | JIF: %2$s</string>
     <string name="wizard_result_bg">KG</string>
