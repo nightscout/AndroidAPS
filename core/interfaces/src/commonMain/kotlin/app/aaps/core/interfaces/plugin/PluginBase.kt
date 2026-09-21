@@ -2,6 +2,8 @@ package app.aaps.core.interfaces.plugin
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
@@ -126,13 +128,19 @@ abstract class PluginBase(
     /**
      * The previous transition. Start and stop of one plugin must not run at the same time.
      *
-     * [Volatile] so a transition queued on one thread is seen by the next one on another. It does not make
-     * the read-then-write in [schedule] atomic: two callers arriving together can still both queue behind
-     * the same predecessor. Ordering here is best effort, and better than what it replaced - before this
-     * there was no ordering at all - but a caller that must not overlap should await the returned job.
+     * Guarded by [transitionLock] rather than only [Volatile]: [schedule] reads this and then writes it,
+     * and volatile alone makes each half visible without making the pair atomic - two callers arriving
+     * together would both read the same predecessor and queue behind it, running concurrently. That is
+     * the one thing the queueing exists to prevent, and it is reachable: `ConfigBuilderImpl` disables
+     * several plugins and enables one in the same pass.
      */
-    @Volatile
     private var lastTransition: Job? = null
+
+    /**
+     * Guards the read-then-write of [lastTransition]. Its own object, never reassigned - locking on
+     * something that gets replaced lets a second thread lock the new one and walk straight in.
+     */
+    private val transitionLock = AapsLock()
 
     enum class State {
         NOT_INITIALIZED, ENABLED, DISABLED
@@ -243,7 +251,7 @@ abstract class PluginBase(
      * otherwise wedge this plugin's lifecycle for the rest of the process. After [TRANSITION_WAIT] the new
      * transition goes ahead anyway and says so in the log: overlapping is bad, never starting again is worse.
      */
-    private fun schedule(starting: Boolean): Job {
+    private fun schedule(starting: Boolean): Job = transitionLock.withLock {
         val previous = lastTransition
         val job = lifecycleScope.launch {
             if (previous != null && previous.isActive) {
@@ -253,7 +261,7 @@ abstract class PluginBase(
             runPhase(starting)
         }
         lastTransition = job
-        return job
+        job
     }
 
     /**

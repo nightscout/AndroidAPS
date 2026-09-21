@@ -13,7 +13,10 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +26,8 @@ import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -141,15 +146,20 @@ class PluginBaseStartFailureTest {
         /** Set to hold [onStart] open, so "scheduled" and "finished" can be told apart. */
         var startGate: CompletableDeferred<Unit>? = null
 
+        /** Called at the top of both phases, so a test can detect two of them running at once. */
+        var onPhaseEnter: (() -> Unit)? = null
+
         val events = mutableListOf<String>()
 
         override suspend fun onStart() {
+            onPhaseEnter?.invoke()
             startGate?.await()
             events += "start"
             if (failStart) throw IllegalStateException("onStart boom")
         }
 
         override suspend fun onStop() {
+            onPhaseEnter?.invoke()
             events += "stop"
             if (failStop) throw IllegalStateException("onStop boom")
         }
@@ -373,6 +383,36 @@ class PluginBaseStartFailureTest {
         withTimeout(5.seconds) { sut.launchOwnWork { throw IllegalStateException("two") }.join() }
 
         assertThat(notifications.live).hasSize(1)
+    }
+
+    /**
+     * Two threads flipping the same plugin must not produce two transitions that overlap.
+     *
+     * `schedule` reads the previous transition and then writes its own, and a `@Volatile` alone makes each
+     * half visible without making the pair atomic: both callers read the same predecessor, both queue
+     * behind it, and both run at once - which is the single thing the queueing exists to prevent.
+     * `ConfigBuilderImpl` disables several plugins and enables one in the same pass, so it is reachable.
+     */
+    @Test
+    fun `concurrent enable and disable do not overlap`() = runBlocking {
+        repeat(40) {
+            val sut = plugin()
+            val inPhase = AtomicInteger(0)
+            val overlapped = AtomicBoolean(false)
+            sut.onPhaseEnter = {
+                if (inPhase.incrementAndGet() > 1) overlapped.set(true)
+                Thread.sleep(1)          // widen the window a real phase would occupy
+                inPhase.decrementAndGet()
+            }
+
+            val jobs = listOf(
+                async(Dispatchers.Default) { sut.setPluginEnabled(PluginType.GENERAL, true) },
+                async(Dispatchers.Default) { sut.setPluginEnabled(PluginType.GENERAL, false) }
+            ).awaitAll()
+
+            withTimeout(5.seconds) { jobs.filterNotNull().forEach { it.join() } }
+            assertThat(overlapped.get()).isFalse()
+        }
     }
 
     /**
