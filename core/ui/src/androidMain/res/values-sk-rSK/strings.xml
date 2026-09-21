@@ -58,6 +58,7 @@
     <string name="open_plugin">Otvoriť plugin</string>
     <string name="configbuilder_pick_one_hint">Vyberte jeden. Iba jeden môže byť aktívny.</string>
     <string name="configbuilder_pick_many_hint">Vyberte, čo sa použije.</string>
+    <string name="configbuilder_no_selection_warning">V tejto kategórii nie je vybraný žiadny plugin.</string>
     <string name="configbuilder_switch_confirmation_title">Prepnúť plugin?</string>
     <string name="configbuilder_switch_confirmation">Týmto vypnete %1$s a zapnete %2$s.</string>
     <string name="expand">Rozbaliť</string>
@@ -204,6 +205,7 @@
     <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Prihlásenie</string>
+    <string name="logout">Odhlásiť sa</string>
     <string name="prime_fill">Plnenie/doplňovanie</string>
     <string name="site_rotation">Striedanie miest</string>
     <string name="edit_site">Upraviť</string>
@@ -243,6 +245,8 @@
     <string name="location_permission_not_granted">Povolenie na zisťovanie polohy nebolo udelené. Povoľte v nastaveniach systému Android.</string>
     <string name="configbuilder_nightscoutversion_label">Verzia Nightscoutu:</string>
     <string name="not_available_full">Nedostupný</string>
+    <string name="not_implemented_yet">Táto funkcia zatiaľ nie je na tejto platforme pripravená</string>
+    <string name="not_available_on_platform">Táto funkcia nie je na tejto platforme k dispozícii</string>
     <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
     <string name="back">Späť</string>
     <string name="next">Ďalej</string>
@@ -255,6 +259,7 @@
     <string name="pin_dont_match">PIN kódy sa nezhodujú</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Spustiť profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Zrušiť dočasný bazál</string>
     <string name="let_temp_basal_run">Nechať bežať aktuálny dočasný bazál</string>
@@ -291,6 +296,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Ošetrenia</string>
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ručné meranie, alebo kalibrácia</string>
     <string name="careportal_announcement">Oznámenie</string>
@@ -341,6 +347,7 @@
     <string name="scene_conflict_active_running_mode">Aktívny režim uzavretého okruhu bude nahradený</string>
     <string name="scene_conflict_active_scene">Aktivna scéna \"%1$s\" bude najskôr ukončená</string>
     <string name="scene_action_tt">Dočasný cieľ: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">Povoliť SMB</string>
     <string name="scene_action_smb_off">Zakázať SMB</string>
@@ -399,6 +406,9 @@
     <string name="clientcontrol_fail_scene_disabled">Scéna je zakázaná.</string>
     <string name="clientcontrol_fail_partial">Niektoré akcie sa nepodarilo aplikovať.</string>
     <string name="clientcontrol_fail_execution">Hlavné zariadenie to nevedelo aplikovať.</string>
+    <string name="clientcontrol_fail_cancelled">Príkaz bol zrušený skôr, ako sa vykonal. Do pumpy nebolo nič odoslané.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus zrušený. Nebol podaný žiadny inzulín.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Zrušené</string>
     <string name="clientcontrol_fail_control_disabled">Diaľkové ovládanie je vypnuté na hlavnom zariadení.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Pripravený bolus exspiroval alebo bol nahradený. ​​Znova kliknite na tlačidlo.</string>
     <string name="clientcontrol_fail_bolus_compute">Hlavné zariadenie nedokázalo vypočítať bolus (chýba glukóza/profil alebo pumpa nie je pripravená).</string>
@@ -631,6 +641,7 @@
     <string name="uel_scene_deactivated">SCÉNA DEAKTIVOVANÁ</string>
     <string name="uel_remote_config_changed">VZDIALENÁ KONFIGURÁCIA ZMENENÁ</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Dolná hodnota dočasného cieľa</string>
     <string name="temp_target_high_target">Horní hodnota dočasného cíle</string>
     <string name="temp_target_value">Hodnota dočasného cieľa</string>
     <string name="insulin_dia">DIA hodnota inzulínu</string>
@@ -766,6 +777,7 @@
     <string name="initializing">Inicializácia…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Upozornenie</string>
+    <string name="alert" comment="Generic alert dialog title">Výstraha</string>
     <string name="retry" comment="Button label to retry a failed operation">Opakovať</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Dokončiť</string>
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
@@ -789,6 +801,7 @@
     <string name="close">Zavrieť</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <string name="export_warning">Varovanie</string>
     <string name="export_expired">Expirované</string>
     <string name="export_disabled">Vypnuté</string>
@@ -855,6 +868,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Požiadavka používateľa</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Spárovať</string>
     <string name="pump_unpair">Zrušiť párovanie</string>
     <string name="pump_unpair_confirm_title">Odpárovať pumpu?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
@@ -941,6 +955,7 @@
     <string name="reset_aps_results_confirm">Naozaj chcete resetovať uložené výsledky AAPS?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">Ned</string>
+    <string name="weekday_saturday_short">So</string>
     <string name="weekday_friday_short">Pia</string>
     <string name="weekday_thursday_short">Štv</string>
     <string name="weekday_wednesday_short">Str</string>
@@ -1018,6 +1033,14 @@
     <string name="import_wrong_password">Nesprávne heslo</string>
     <string name="import_btn">Importovať</string>
     <string name="import_anyway_btn">Importovať aj tak</string>
+    <string name="import_apply_title">Nastavenia importované</string>
+    <string name="import_apply_message">Importované nastavenia budú teraz aplikované. Zásuvné moduly, ktoré boli zmenené, budú reštartované.</string>
+    <string name="import_apply_waiting">Čakanie na pumpu…</string>
+    <string name="import_apply_pump_busy">Pumpa je stále zaneprázdnená, takže nastavenia neboli použité.</string>
+    <string name="import_apply_retry_question">Opakovať teraz?</string>
+    <string name="import_applied_title">Nastavenia boli použité</string>
+    <string name="import_applied_message">Importované nastavenia sú odteraz používané.</string>
+    <string name="import_apply_pump_changed">Zrušené: pumpa bola zmenená importom nastavení</string>
     <string name="import_source_local">Lokálne</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Načítať viac</string>
@@ -1030,6 +1053,7 @@
     <string name="nav_resetdb">Reset databázy</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Vyhľadať pumpu</string>
+    <string name="ble_scan_select_pump">Vyberte svoju pumpu z nižšie uvedeného zoznamu</string>
     <string name="ble_scan_scanning">Vyhľadávam zariadenia...</string>
     <!-- Graph configuration -->
     <string name="graph_add">Pridať graf</string>
@@ -1058,7 +1082,11 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.1f h</string>
+    <string name="units_format_hours_double_range">%1$.1f h (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>
