@@ -81,4 +81,6 @@
     <string name="requirementnotmet">Tikslo reikalavimai neįvykdyti</string>
     <string name="what_i_ve_learned">Ką išmokote:</string>
     <string name="verify_master_password">Pasitikrinkite, ar žinote pagrindinį slaptažodį</string>
+    <string name="objectives_exam_next">Kitas</string>
+    <string name="objectives_exam_next_unanswered">Kitas neatsakytas</string>
 </resources>
