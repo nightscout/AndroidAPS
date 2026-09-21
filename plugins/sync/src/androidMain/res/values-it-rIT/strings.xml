@@ -110,6 +110,7 @@
     <string name="user_action_not_available">L\'azione utente selezionata %1$s non è più disponibile, aggiorna la tua casella</string>
     <string name="scene_not_available">La scena %1$s non è più disponibile, aggiorna la tua casella</string>
     <string name="wear_remote_insulin_not_allowed_in_client">I comandi remoti dell\'insulina sono disabilitati in modalità client</string>
+    <string name="wear_phone_not_ready">Il telefono sta ancora avviando o applicando le impostazioni. Riprova tra un attimo.</string>
     <string name="wear_action_tempt_unit_error">Differenti unità usate su smartwatch e telefono!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG fuori range!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG fuori range!</string>
