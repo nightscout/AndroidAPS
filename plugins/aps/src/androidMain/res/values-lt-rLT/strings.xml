@@ -18,7 +18,7 @@
     <string name="description_smb_dynamic_isf">Naujausias algoritmas patyrusiems naudotojams su dinaminiu/automatiniu JIF</string>
     <string name="openapsma_last_run_label">Paskutinis veiksmas</string>
     <string name="openapsma_input_parameters_label">Įvesties parametrai</string>
-    <string name="openapsma_glucose_status_label">Glikemijos statusas</string>
+    <string name="openapsma_glucose_status_label">Glikemijos būklė</string>
     <string name="openapsma_current_temp_label">Dabartinė laikina bazė</string>
     <string name="openapsma_iob_data_label">AIO duomenys</string>
     <string name="openapsma_profile_label">Profilis</string>
