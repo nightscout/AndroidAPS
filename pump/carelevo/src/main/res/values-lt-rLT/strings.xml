@@ -1,21 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minučių</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 valanda</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 valanda 30 minučių</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 valandos</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 valandos 30 minučių</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 valandos</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 valandos 30 minučių</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 valandos</string>
+    <string name="carelevo_state_none_value">Nėra aktyvaus pompos modulio</string>
+    <string name="carelevo_state_disconnected_value">Atjungta</string>
+    <string name="carelevo_state_connected_value">Prijungta</string>
+    <string name="carelevo_patch_step_1">1 ŽINGSNIS.</string>
+    <string name="carelevo_patch_step_2">2 ŽINGSNIS.</string>
+    <string name="carelevo_patch_step_3">3 ŽINGSNIS.</string>
+    <string name="carelevo_patch_attach_step3_desc">Priklijuokite pompos modulį prie odos taip, kad pažymėtas taškas būtų nukreiptas į viršų.</string>
     <!-- Connection -->
     <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profilis nenustatytas.</string>
     <!-- Needle Insertion -->
     <!-- Patch Discard -->
     <!-- Basal Delivery -->
     <!-- Delivery Resume/Suspend -->
     <!-- Safety Check -->
     <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Mažas insulino kiekis</string>
     <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[Dėl užsikimšimo insulino tiekimas sustabdytas.<br><b>Bakstelėkite [Išjungti pompos modulį] ir nedelsdami pakeiskite pompos modulį.</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Nepavyko įvesti adatos.<br><b>Bakstelėkite [Išjungti pompos modulį] ir nedelsdami pakeiskite pompos modulį.</b>]]></string>
     <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Mažas insulino kiekis</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Baigėsi pompos modulio veikimo laikas</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Netrukus baigsis pompos modulio galiojimas</string>
+    <string name="alarm_feat_title_alert_low_battery">Mažas baterijos įkrovos lygis</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Per aukšta arba per žema temperatūra</string>
+    <string name="alarm_feat_title_alert_not_used_app">Automatinis išjungimas</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE neprijungtas</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Pompos modulis nebaigtas aktyvinti</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Įjungti Bluetooth</string>
     <!-- Alert Descriptions -->
     <!-- Notice Titles -->
     <!-- Notice Descriptions -->
     <string name="alarm_feat_desc_notice_lgs_ended_high_bg">Stabdymo prie žemos glikemijos režimas išjungtas, nes gliukozės reikšmė pakilo virš nustatytos ribos.</string>
+    <string name="alarm_feat_desc_unknown">Netikėta pompos modulio klaida.</string>
     <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Išjungti pompos modulį</string>
+    <string name="alarm_feat_btn_patch_force_discard">Išmesti pompos modulį</string>
+    <string name="alarm_feat_btn_resume_infusion">Pradėti insulino tiekimą</string>
     <!-- General Messages -->
     <!--    notification -->
+    <string name="alarm_notification_desc_warning_not_used_app">Insulino tiekimas sustabdytas. Bakstelėkite [Pradėti insulino tiekimą] ir iš naujo paleiskite bazinio insulino tiekimą.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_high_bg">Stabdymo prie žemos glikemijos režimas išjungtas, nes gliukozės reikšmė pakilo virš nustatytos ribos.</string>
 </resources>
