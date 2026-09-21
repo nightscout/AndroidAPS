@@ -406,6 +406,9 @@
     <string name="clientcontrol_fail_scene_disabled">Ngữ cảnh đã bị vô hiệu hóa.</string>
     <string name="clientcontrol_fail_partial">Không thể áp dụng một số thao tác.</string>
     <string name="clientcontrol_fail_execution">Thiết bị chính không thể áp dụng thay đổi này.</string>
+    <string name="clientcontrol_fail_cancelled">Lệnh đã bị hủy trước khi thực thi. Không có lệnh nào được gửi đến bơm.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Liều bolus đã bị hủy. Không có insulin nào được cấp.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Đã Hủy</string>
     <string name="clientcontrol_fail_control_disabled">Điều khiển từ xa đang bị tắt trên thiết bị chính.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Liều Bolus đã chuẩn bị đã hết hiệu lực hoặc bị thay thế. Hãy nhấn nút lại.</string>
     <string name="clientcontrol_fail_bolus_compute">Thiết bị chính không thể tính toán bolus (thiếu dữ liệu đường huyết, cấu hình hoặc bơm chưa sẵn sàng).</string>
