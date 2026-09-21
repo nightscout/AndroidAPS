@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Spúšťať naliehavé výstrahy, ako upozorenia pre systém Androide</string>
     <string name="pref_title_alert_increase_volume">Postupné zvyšovanie hlasitosti upozornení</string>
     <string name="pref_title_alert_override_dnd">Potlačiť režim Nerušiť</string>
+    <string name="pref_summary_alert_override_dnd">Pokiaľ je to povolené, zvuk alarmu i v prípade, že je telefón stlmený, alebo v režime Nerušiť. Pokiaľ je to vypnuté, alarmy zostanú v týchto režimoch tiché.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Nahrávať glykémie do NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Zaznamenať výmenu senzora</string>
@@ -144,6 +145,10 @@
     <string name="pref_title_wear_wizard_cob">Zahrnúť COB v kalkulačke</string>
     <string name="pref_title_wear_wizard_iob">Zahrnúť glykémiu v kalkulačke</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizovať vlastné ciferníky</string>
+    <string name="pref_title_wear_pushed_watchface">Ciferník nainštalovaný v hodinkách</string>
+    <string name="pref_summary_wear_pushed_watchface">Len Wear OS 6 a novšie verzie. AAPS dokáže do hodiniek nainštalovať jeden ciferník: buď ciferník s komplikáciami, alebo vlastný ciferník. Staršie hodinky toto nastavenie ignorujú.</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Ciferník s komlikáciami</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Vlastný ciferník</string>
     <string name="pref_title_wear_notify_on_smb">Upozorniť na SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Odosielať oznámenia na hodinky, keď je podané SMB.</string>
     <string name="pref_title_wear_broadcast_data">Odosielať dáta na hodinky</string>
@@ -177,6 +182,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Časový limit ochrany</string>
     <string name="pref_title_protection_type_application">Úroveň 0: Ochrana aplikácie</string>
+    <string name="pref_summary_protection_type_application">Spustenie aplikácie a návrat do aplikácie, nezávislé na iných úrovniach</string>
     <string name="pref_title_protection_type_bolus">Úroveň 1: Ochrana bolusu</string>
     <string name="pref_summary_protection_type_bolus">Ošetrenie, aktivácia profilu. Vyžaduje si úroveň 2</string>
     <string name="pref_title_protection_type_settings">Úroveň 2: Ochrana nastavení</string>
@@ -235,6 +241,7 @@
     <string name="pref_title_units">Jednotky</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Jazyk</string>
     <string name="lang_default">Východzí systémový</string>
     <string name="lang_en">Angličtina</string>
     <string name="lang_af">Afrikánčina</string>
