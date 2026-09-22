@@ -111,6 +111,7 @@
     <string name="user_action_not_available">選定的用戶操作 %1$s 已不再可用，請重新整理您的面版</string>
     <string name="scene_not_available">情境 %1$s 已無法使用，請重新整理您的圖塊</string>
     <string name="wear_remote_insulin_not_allowed_in_client">遠端胰島素指令在用戶端模式中已停用</string>
+    <string name="wear_phone_not_ready">手機仍在啟動或套用設定中。請稍後再試。</string>
     <string name="wear_action_tempt_unit_error">手錶和手機上使用了不同的單位！</string>
     <string name="wear_action_tempt_min_bg_error">最低血糖超出範圍！</string>
     <string name="wear_action_tempt_max_bg_error">最高血糖超出範圍！</string>
