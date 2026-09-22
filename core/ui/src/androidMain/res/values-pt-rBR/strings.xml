@@ -482,8 +482,24 @@
     <string name="location_side_right_upper_thigh">Parte externa superior da coxa direita</string>
     <string name="location_side_left_upper_thigh">Parte externa superior da coxa esquerda</string>
     <string name="location_side_right_lower_thigh">Parte externa inferior da coxa direita</string>
+    <string name="location_side_left_lower_thigh">Parte externa inferior da coxa esquerda</string>
+    <string name="location_front_right_upper_thigh">Parte frontal superior da coxa direita</string>
+    <string name="location_front_left_upper_thigh">Parte frontal superior da coxa esquerda</string>
+    <string name="location_front_right_lower_thigh">Parte frontal inferior da coxa direita</string>
+    <string name="location_front_left_lower_thigh">Parte frontal inferior da coxa esquerda</string>
+    <string name="arrow_up">Cima</string>
+    <string name="arrow_up_right">Cima à direita</string>
+    <string name="arrow_right">Direita</string>
+    <string name="arrow_down_right">Baixo à direita</string>
+    <string name="arrow_down">Baixo</string>
+    <string name="arrow_down_left">Baixo à esquerda</string>
+    <string name="arrow_left">Esquerda</string>
+    <string name="arrow_up_left">Cima à esquerda</string>
+    <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Ligação expirou</string>
+    <string name="command_replaced">Substituído por um comando mais recente</string>
+    <string name="pump_not_configured">Bomba não configurada</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Executado</string>
     <string name="comment">Commentário</string>
@@ -494,6 +510,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g de carboidratos necessários em %2$d minutos</string>
     <string name="basalrate">Basal</string>
+    <string name="tdd">Dose diária total</string>
     <!--    Ntp-->
     <string name="timedetection">Deteção de tempo</string>
     <!-- User Entry -->
@@ -514,6 +531,8 @@
     <string name="uel_lgs_loop_mode">MODO LOOP LGS</string>
     <string name="uel_open_loop_mode">MODO LOOP ABERTO</string>
     <string name="uel_loop_disabled">LOOP DESATIVADO</string>
+    <string name="uel_loop_resumed">LOOP RETOMADO</string>
+    <string name="uel_pump_running">BOMBA EM EXECUÇÃO</string>
     <string name="uel_reconnect">RECONECTAR</string>
     <string name="uel_disconnect">DESCONECTAR</string>
     <string name="uel_resume">RETOMAR</string>
@@ -526,7 +545,9 @@
     <string name="uel_cancel_extended_bolus">CANCELAR BOLUS ESTENDIDO</string>
     <string name="uel_cancel_tt">CANCELAR ALVO TEMPORÁRIO</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_sensor_location">LOCAL DO SENSOR</string>
     <string name="uel_site_change">TROCA DE CÂNULA</string>
+    <string name="uel_site_location">LOCAL DE INFUSÃO</string>
     <string name="uel_reservoir_change">TROCA DE RESERVATÓRIO</string>
     <string name="uel_calibration">CALIBRAÇÃO</string>
     <string name="uel_prime_bolus">BOLUS DE ENCHER</string>
@@ -537,6 +558,7 @@
     <string name="uel_tt_ns_refresh">ATUALIZAR ALVO TEMPORARIO NS</string>
     <string name="uel_automation_removed">AUTOMAÇÃO REMOVIDA</string>
     <string name="uel_bg_removed">GLICOSE REMOVIDA</string>
+    <string name="uel_calibration_removed">CALIBRAÇÃO REMOVIDA</string>
     <string name="uel_careportal_removed">CAREPORTAL REMOVIDO</string>
     <string name="uel_bolus_removed">BOLUS REMOVIDO</string>
     <string name="uel_carbs_removed">CARBOIDRATOS REMOVIDOS</string>
@@ -564,7 +586,9 @@
     <string name="uel_delete_future_treatments">Apagar tratamentos futuros</string>
     <string name="uel_export_settings">Exportar ajustes</string>
     <string name="uel_import_settings">Importar ajustes</string>
+    <string name="uel_select_directory">SELECIONAR DIRETÓRIO</string>
     <string name="uel_reset_databases">Redefinir banco de dados</string>
+    <string name="uel_reset_aps_results">REDEFINIR RESULTADOS DO APS</string>
     <string name="uel_cleanup_databases">Limpeza de banco de dados</string>
     <string name="uel_export_databases">Exportar banco de dados</string>
     <string name="uel_import_databases">Importar banco de dados</string>
@@ -584,15 +608,33 @@
     <string name="ue_none">Nenhuma unidade</string>
     <string name="uel_loop_change">LOOP ALTERADO</string>
     <string name="uel_loop_removed">LOOP REMOVIDO</string>
+    <string name="uel_new_insulin">NOVA INSULINA</string>
+    <string name="uel_change_pump_insulin">ALTERAR INSULINA DA BOMBA</string>
+    <string name="uel_store_insulin">ARMAZENAR INSULINA</string>
+    <string name="uel_change_insulin_concentration">ALTERAR CONCENTRAÇÃO DA INSULINA</string>
+    <string name="uel_insulin_removed">INSULINA REMOVIDA</string>
+    <string name="uel_running_mode">MODO DE OPERAÇÃO</string>
+    <string name="uel_running_mode_removed">MODO DE OPERAÇÃO REMOVIDO</string>
+    <string name="uel_running_mode_updarted">MODO DE OPERAÇÃO ATUALIZADO</string>
+    <string name="uel_scene_activated">CENÁRIO ATIVADO</string>
+    <string name="uel_scene_deactivated">CENÁRIO DESATIVADO</string>
+    <string name="uel_remote_config_changed">CONFIGURAÇÃO REMOTA ALTERADA</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Valor inferior do alvo temporário</string>
     <string name="temp_target_high_target">Valor maior do alvo temporário</string>
     <string name="temp_target_value">Valor do alvo temporário</string>
+    <string name="insulin_dia">Valor de DIA da insulina</string>
+    <string name="insulin_peak">Valor do pico da insulina</string>
     <string name="profile_max_daily_basal_value">Valor basal máximo do perfil</string>
     <string name="current_basal_value">Valor basal atual</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="valueoutofrange">&gt;&gt;%1$s&lt;&lt; está fora dos limites estabelecidos</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Nenhum perfil selecionado</string>
     <string name="missing_profile_name">Nome do perfil ausente</string>
+    <string name="profile_not_saved_activate">Perfil não salvo. Salve o perfil antes de ativá-lo.</string>
+    <string name="profile_basal_not_compatible_with_pump">A taxa basal não é compatível com a bomba atual e não pode ser ativada. Reduza a porcentagem ou ajuste a taxa basal.</string>
+    <string name="profile_pump_incompatible_label">Limite da bomba</string>
     <string name="error_in_ic_values">Erro nos valores de I:C</string>
     <string name="error_in_isf_values">Erro nos valores de FSI</string>
     <string name="error_in_basal_values">Erro nos valores da basal</string>
@@ -625,10 +667,13 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="sensitivity">Sensibilidade</string>
     <string name="isf_for_carbs">ISF médio para a calculadora e a absorção de carboidratos: %1$.1f</string>
     <string name="isf_profile">ISF do perfil: %1$.1f</string>
     <string name="isf_variable">ISF variável: %1$.1f</string>
     <string name="isf_effective">ISF efetivo: %1$.1f</string>
+    <string name="autosens_long">Valor do Autosens: %.0f%%</string>
+    <string name="algorithm_long">Autosens no algoritmo: %.0f%%</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Dias de sincronismo:</string>
@@ -639,6 +684,11 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Assistente de bolus</string>
     <string name="bolus_advisor_message">Sua glicemia está alta. Em vez de comer agora, é recomendado esperar por uma glicemia melhor. Quer fazer um bolus de correção agora e ser lembrado de quando for hora de comer? Neste caso, nenhum carboidrato será registrado e você deverá usar o assistente novamente quando lembrarmos você.</string>
+    <string name="wizard_correction">Correção</string>
+    <string name="carbs_type_bread">Pão, salgados, iogurte, frutas (maçã, banana, pera), batatas, arroz, trigo-sarraceno, aveia, alimentos com carboidratos de absorção lenta e baixa, verduras</string>
+    <string name="carbs_type_cake">Massas recheadas, macarrão, culinária asiática rica em carboidratos e gorduras, doces e pães doces, cereais, mingau de grãos, mel, geleia</string>
+    <string name="carbs_type_pizza">Lasanha, pizza, hambúrgueres, batatas fritas, batatas assadas, chips e lanches semelhantes</string>
+    <string name="wizard_carb_time">Tempo dos carboidratos</string>
     <string name="carb_time_now">Agora</string>
     <string name="change">Alterar</string>
     <string name="grant">Conceder</string>
