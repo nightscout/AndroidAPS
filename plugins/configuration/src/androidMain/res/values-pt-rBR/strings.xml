@@ -25,16 +25,32 @@
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="exitwizard">Sair do assistente de configuração</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
+    <string name="setupwizard_aps_description">Selecione um dos algoritmos disponíveis. Eles estão ordenados do mais antigo ao mais recente. O algoritmo mais novo geralmente é mais potente. Não se esqueça de ler a documentação do OpenAPS e configurá-lo antes de usá-lo.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor configurar o seu RileyLink abaixo. Após selecionar um RileyLink e assim que o estado do RileyLink for \"Conectado\", será possível continuar a instalação. Isso pode levar um minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Você pode continuar a configuração assim que a configuração da bomba estiver concluída.\n</string>
     <string name="startobjective">Iniciar primeiro objetivo</string>
+    <string name="open_objectives">Abrir objetivos</string>
+    <string name="setupwizard_permissions">Permissões</string>
+    <string name="setupwizard_profile_info">Crie um perfil com suas taxas basais, IC, ISF e valores de alvo. Você poderá adicionar vários perfis depois.</string>
+    <string name="setupwizard_permissions_info">O AAPS precisa de acesso ao armazenamento e de permissões para funcionar corretamente. Conceda as permissões necessárias abaixo.</string>
     <string name="setupwizard_pump_riley_link_status">Estado do RileyLink:</string>
+    <string name="setupwizard_client_control_title">Controle do cliente</string>
+    <string name="setupwizard_client_control_info">Pareie dispositivos clientes para que possam enviar comandos assinados a este dispositivo principal pelo Nightscout. Esta é a nova forma recomendada de controlar o AAPS remotamente.</string>
+    <string name="setupwizard_ns_receive_info">A aceitação de tratamentos e dados diretamente do Nightscout (forma menos segura) agora está desativada por padrão. Abra as configurações abaixo somente se ainda precisar delas. É necessária se você precisar inserir dados pelo NS ou por apps de terceiros (3rd party).</string>
+    <string name="setupwizard_open_ns_receive_settings">Aceitação de dados do Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Pareie este cliente com seu AAPS no dispositivo principal para que ele possa enviar comandos por um canal seguro.</string>
+    <string name="setupwizard_pairing_ws_warning">A conexão WebSocket do Nightscout é necessária para o pareamento. Volte à etapa anterior e ative-a primeiro.</string>
+    <string name="setupwizard_pairing_status_master">Clientes pareados: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Nenhum cliente pareado ainda</string>
+    <string name="setupwizard_pairing_status_client_paired">Pareado com um dispositivo principal</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Ainda não pareado</string>
     <string name="readstatus">Ler estado</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Qual a bomba que gostaria de usar com AndroidAPS?</string>
     <string name="configbuilder_aps_description">Qual é o algoritmo do APS que deve fazer ajustes na terapia?</string>
+    <string name="configbuilder_sync_description">Plugins de upload, sincronização e comunicação de dados.</string>
     <string name="configbuilder_bgsource_description">De onde o AndroidAPS deve obter os dados?</string>
     <string name="configbuilder_sensitivity_description">Que algoritmo de sensibilidade deve ser usado?</string>
     <string name="allow_hardware_pump_text">Atenção: Se você ativar o perfil e conectar à sua bomba, o AndroidAPS irá copiar as definições de basal desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor tenha certeza que preencheu no perfil do app os mesmos valores que estão na bomba. Em caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
@@ -49,6 +65,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Carregando…</string>
+    <string name="warning_wrong_directory_selected">Diretório selecionado incorretamente</string>
+    <string name="warning_wrong_directory_message">Você selecionou o subdiretório \"%1$s\" em vez do diretório raiz do AAPS. Selecione o diretório pai. O app criará e gerenciará os subdiretórios automaticamente.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
