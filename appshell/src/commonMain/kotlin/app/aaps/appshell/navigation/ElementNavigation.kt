@@ -245,7 +245,10 @@ fun ElementNavigator.handleNotificationAction(notificationId: NotificationId) {
         NotificationId.MASTER_PASSWORD_NOT_SET ->
             navController.navigate(AppRoute.PreferenceScreen.createRoute("protection", StringKey.ProtectionMasterPassword.key))
 
-        NotificationId.AAPS_DIR_NOT_SELECTED   -> onRequestDirectoryAccess()
+        // Both go to the same picker: one has never chosen a directory, the other chose one and lost
+        // the permission behind it. Re-granting is the same action in each case.
+        NotificationId.AAPS_DIR_NOT_SELECTED,
+        NotificationId.AAPS_DIR_ACCESS_LOST    -> onRequestDirectoryAccess()
 
         else                                   -> Unit
     }
