@@ -33,4 +33,5 @@
     <string name="current_master_password">Password Master corrente</string>
     <string name="master_password_not_set">Password principale non impostata</string>
     <string name="aaps_directory_not_selected">Directory AAPS non selezionata</string>
+    <string name="aaps_directory_access_lost">L\'accesso alla directory AAPS è stato perso, quindi le impostazioni non vengono più salvate sul telefono. Selezionare nuovamente la directory.</string>
 </resources>
