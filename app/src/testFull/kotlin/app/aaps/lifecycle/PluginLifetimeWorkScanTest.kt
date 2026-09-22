@@ -24,9 +24,11 @@ import java.io.File
  * ## It is a worklist, not a gate
  *
  * Every hit must be named in [reviewedSafe] or [survivesStop], with the reason in plain English.
- * [reviewedSafe] means `onStop` really does undo it. [survivesStop] means it does not, and that entry
- * is a thing to fix - the map is the todo list for the rest of this work, and it should only ever
- * shrink. Adding scheduled work to a plugin fails this test until someone writes down which it is.
+ * [reviewedSafe] means `onStop` really does undo it. [survivesStop] means it does not - which is
+ * usually a thing to fix, but not always: some work MUST outlive a stop, and the reason on the entry
+ * says which it is. `VirtualPumpPlugin#deliverTreatment` is the example, and cancelling it would be
+ * the bug rather than the fix. Adding scheduled work to a plugin fails this test until someone writes
+ * down which it is.
  *
  * ## What it cannot see
  *
@@ -51,6 +53,7 @@ class PluginLifetimeWorkScanTest {
         "OmnipodDashPumpPlugin#scope" to "onStop cancels the scope and tears the handler down",
         "OmnipodDashPumpPlugin#onStart" to "onStop cancels the scope and tears the handler down",
         "LoopPlugin#scheduleBuildAndStoreDeviceStatus" to "the job is held in deviceStatusJob and onStop cancels it",
+        "LoopPlugin#scheduleSmbFallback" to "the deferred SMB re-run is held in smbFallbackJob and onStop cancels it",
         "XdripPlugin#onStart" to "onStop removes the callbacks first, then quits the looper",
         "OmnipodErosPumpPlugin#loopHandler" to "onStop removes the callbacks; the looper stays alive on purpose, loopHandler is created once",
         "OmnipodErosPumpPlugin#pumpDescription" to "the statusChecker chain it re-posts is removed in onStop",
@@ -64,15 +67,16 @@ class PluginLifetimeWorkScanTest {
      * should only ever get shorter. Nothing may be added here without a decision recorded next to it.
      */
     private val survivesStop: Map<String, String> = mapOf(
-        "LoopPlugin#invoke" to
-            "appScope.launch { delay(1000); invoke(...) } reschedules the loop a second later, so it lands inside or just " +
-                "after a restart window and can queue pump commands against a driver being torn down. The worst one here.",
         "VirtualPumpPlugin#deliverTreatment" to
             "one-shot appScope.launch that persists a bolus; it reschedules nothing, but it can still write during a restart window",
         "InsightPlugin#bolusProgressData" to
-            "hands the application scope to a collaborator, so whatever that launches is not tied to this plugin's life",
-        "SmsCommunicatorPlugin#processTARGET" to
-            "hands the application scope to a collaborator, same as Insight",
+            "MISATTRIBUTED KEY, and read in full on 2026-09-22. The plugin launches nothing: the hit is the constructor " +
+                "forwarding appScope into its compose content, and the key is just the member declared above it. The real " +
+                "launches are InsightOverviewState's Refresh and TBR-over-notification buttons, which this scan cannot see " +
+                "because it reads the plugin class only. Both are one-shot user actions that go through commandQueue, so the " +
+                "queue hold covers the restart window, and both are MEANT to outlive the screen - owning them would cancel a " +
+                "pump command when the user navigates away. Left as is. What is untidy rather than unsafe: they call refresh() " +
+                "on an overview state that stop() may already have torn down.",
     )
 
     private data class Hit(val key: String, val matched: String, val where: String)

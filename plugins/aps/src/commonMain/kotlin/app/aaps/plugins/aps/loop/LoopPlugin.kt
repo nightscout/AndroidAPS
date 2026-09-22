@@ -163,6 +163,24 @@ class LoopPlugin(
     // scope does the same and is the only part of this class that was ever Android.
     private var deviceStatusJob: Job? = null
 
+    /**
+     * The deferred loop re-run scheduled when an SMB fails, held so [onStop] can take it back.
+     *
+     * It used to be a bare `appScope.launch`, which nothing owned: the plugin could be stopped and its
+     * pump driver torn down, and a second later this would still wake up and run a loop that queues
+     * commands against the driver being dismantled. A settings import does exactly that - stop, apply,
+     * start - so the one-second delay lands squarely in the window.
+     *
+     * Replaced rather than stacked, the same way [scheduleBuildAndStoreDeviceStatus] debounces. Two
+     * failures inside a second would otherwise schedule two re-runs, and `invokeMutex` would then run
+     * them back to back for no benefit. Holding only the latest job also means there is never an older
+     * one left that nothing can cancel.
+     */
+    // internal, not private, so the test can see it was really cancelled. The scan test only checks
+    // that this site is DECLARED, not that the job is owned, so without this there is nothing pinning
+    // the fix - a later edit could go back to a bare launch and the scan would still pass.
+    internal var smbFallbackJob: Job? = null
+
     // The collectors onStart puts on the application scope. That scope outlives the plugin, so onStop
     // has to cancel them by hand or they keep running - and a later onStart stacks a second pair on top,
     // so one temp-target change would then invoke the loop twice.
@@ -220,6 +238,10 @@ class LoopPlugin(
 
     override suspend fun onStop() {
         deviceStatusJob?.cancel()
+        // The deferred SMB fallback re-runs the loop a second later, so without this it fires into the
+        // restart window and queues commands against a driver being torn down.
+        smbFallbackJob?.cancel()
+        smbFallbackJob = null
         collectors.forEach { it.cancel() }
         collectors.clear()
         super.onStop()
@@ -721,7 +743,7 @@ class LoopPlugin(
                                         lastRun.lastSMBEnact = dateUtil.now()
                                         scheduleBuildAndStoreDeviceStatus("applySMBRequest")
                                     } else {
-                                        appScope.launch { delay(1000); invoke("tempBasalFallback", allowNotification, true) }
+                                        scheduleSmbFallback(allowNotification)
                                     }
                                 } else {
                                     aapsLogger.debug(LTag.APS, "No SMB requested")
@@ -964,6 +986,20 @@ class LoopPlugin(
             note = note,
             listValues = listValues
         )
+    }
+
+    /**
+     * Re-run the loop shortly after an SMB that was not enacted, so the temp basal still gets a chance.
+     *
+     * A named function rather than a launch buried in [invoke], so the cancellation can be tested
+     * without driving a whole loop run to its SMB branch. See [smbFallbackJob] for why the job is held.
+     */
+    internal fun scheduleSmbFallback(allowNotification: Boolean) {
+        smbFallbackJob?.cancel()
+        smbFallbackJob = appScope.launch {
+            delay(1000)
+            invoke("tempBasalFallback", allowNotification, true)
+        }
     }
 
     override fun scheduleBuildAndStoreDeviceStatus(reason: String) {
