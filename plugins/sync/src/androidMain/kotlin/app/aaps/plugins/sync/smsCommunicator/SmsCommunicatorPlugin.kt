@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -146,7 +145,6 @@ class SmsCommunicatorPlugin(
     notificationManager: NotificationManager,
     private val runningModeGuard: RunningModeGuard,
     private val bolusProgressData: BolusProgressData,
-    @ApplicationScope private val appScope: CoroutineScope,
     val repository: SmsCommunicatorRepository
 ) : PluginBaseWithPreferences(
     PluginDescription()
@@ -1001,7 +999,6 @@ class SmsCommunicatorPlugin(
                     dateUtil = dateUtil,
                     rh = rh,
                     uel = uel,
-                    appScope = appScope,
                     sendSMSToAllNumbers = ::sendSMSToAllNumbers
                 )
             )

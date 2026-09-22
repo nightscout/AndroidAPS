@@ -1178,11 +1178,14 @@ This is the group that reorders the work (4.2 step 1). All of it is about 3.5 st
   the watch) and `RunningModeReconciler.issueZeroTbrIfNeeded` (worst of the three - a hold granted
   between its `cancelExtended()` and its zero TBR leaves full basal running while the app believes the
   pump is suspended). Sub-steps 3 and 4 are buildable once reworded this way.
-- **Plugin state is not quiet during an import, and nothing says so.** The hold covers the command
-  queue; it does not stop a plugin restarted by `loadSettings` from reading an active plugin that is
-  mid-election. Live in Crashlytics. See 4.1 decision 2 for the mechanism, the evidence, and why the
-  fix must NOT be to clear `initProgressFlow.done` or to soften `PluginStore`'s assertions. **Blocker
-  for 3.5 step 3.**
+- ~~**Plugin state is not quiet during an import, and nothing says so.**~~ **BUILT 2026-09-22,
+  `2601f19fe6`; the blocker on 3.5 step 3 is lifted.** The finding was right: the hold covers the
+  command queue and does nothing about a plugin restarted by `loadSettings` reading an active plugin
+  mid-election. `Config` now carries a reconfiguration window - `appInitialized` is
+  `done && !reconfiguring`, so the ~35 call sites that already guard on it close during an import with
+  no change of their own, and `awaitInitialized` waits on the same condition instead of on `done`
+  alone. See 4.1 decision 2 for the design, what must not be undone, and the two things it is NOT:
+  clearing `initProgressFlow.done`, or softening `PluginStore`'s assertions.
 - ~~**`completeAllAsNoOp` tells the loop the cancelled command succeeded.**~~ **FIXED, `16147121cc`.**
   Replaced by `cancelAll(comment, success)` routed through `Command.cancel`, with the import passing
   `success = false`. The last caller that still passed `true` - `CommandExecutor`, when the pump is
@@ -1191,10 +1194,11 @@ This is the group that reorders the work (4.2 step 1). All of it is about 3.5 st
   `PumpEnactResult.cancelled` (`8f13138e29`) keeps all of this silent: a dropped command is told apart
   from a failed one, so nothing raises the delivery alarm. `clear()` deliberately keeps
   `cancelled = false`, because a connection timeout IS a delivery failure and must still alarm.
-- **`completeAllAsNoOp` also bypasses `Command.cancel`.** It calls `callback?.result(...)?.run()`
-  directly, so `CommandBolus.cancel`/`CommandSMBBolus.cancel` never run and `BolusProgressData`
-  stays started. `CommandQueueImplementation.clear()` does go through `cancel`. One line to fix, and
-  a bug today.
+- ~~**`completeAllAsNoOp` also bypasses `Command.cancel`.**~~ **FIXED with the bullet above,
+  `16147121cc`** - it went unmarked. `completeAllAsNoOp` has no occurrences left anywhere;
+  `cancelAll` is `drain(comment, success, cancelled = true)`, and `drain` calls
+  `queue[i].cancel(comment, success, cancelled)` on every entry. So `CommandBolus.cancel` /
+  `CommandSMBBolus.cancel` do run and `BolusProgressData` is stopped.
 - **Stopping `PersistentNotificationPlugin` stops the foreground service.** `onStop()` calls
   `dummyServiceHelper.stopService(context)`, and `DummyService` is what keeps AAPS out of the
   background execution limits. The plugin is `alwaysEnabled`, so "stop every enabled plugin"
