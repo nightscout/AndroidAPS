@@ -756,8 +756,30 @@
     <string name="file_management">Gerenciamento de arquivos</string>
     <string name="database_management">Gerenciamento do banco de dados</string>
     <string name="data_choices">Escolha de Dados</string>
+    <string name="unattended_settings_export">Exportação automática de configurações</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Configurar níveis de detalhamento dos logs</string>
+    <string name="maintenance_send_logs_desc">Compartilhar arquivos de log para diagnóstico</string>
+    <string name="maintenance_delete_logs_desc">Remover arquivos de log antigos</string>
+    <string name="maintenance_aaps_directory_desc">Selecionar pasta de armazenamento local</string>
+    <string name="maintenance_cloud_directory_desc">Configurar armazenamento em nuvem (Google Drive)</string>
+    <string name="maintenance_export_desc">Salvar backup criptografado das configurações</string>
+    <string name="maintenance_import_desc">Restaurar configurações do backup</string>
+    <string name="maintenance_export_csv_desc">Exportar histórico de tratamentos como planilha</string>
+    <string name="maintenance_cleanup_db_desc">Remover entradas antigas do banco de dados</string>
+    <string name="maintenance_reset_aps_results_desc">Limpar resultados armazenados do algoritmo</string>
+    <string name="maintenance_reset_db_desc">Apagar todos os bancos de dados e recarregar</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Selecionar tipo de armazenamento</string>
+    <string name="clear_cloud_action">Limpar configurações</string>
+    <string name="clear_cloud_settings">Limpar configurações da nuvem</string>
+    <string name="clear_cloud_settings_message">Isso mudará para o armazenamento local e limpará a autorização. Continuar?</string>
+    <string name="cloud_revoke_incomplete">As configurações da nuvem foram limpas neste dispositivo, mas não foi possível acessar a conta para revogar completamente o acesso. Talvez seja necessário removê-la manualmente nas configurações da conta.</string>
+    <string name="cloud_connection_failed">Falha na conexão com o armazenamento em nuvem</string>
+    <string name="cloud_reauthorize_message">Falha na conexão com o armazenamento em nuvem. Deseja autenticar novamente?</string>
+    <string name="reauthorize">Autenticar novamente</string>
+    <string name="cloud_auth_success">Autenticação do armazenamento em nuvem concluída</string>
+    <string name="authorization_status">Status da autorização</string>
     <!-- datetime layout -->
     <string name="event_time_label">Hora do Evento</string>
     <!-- BluetoothDevicePreference -->
@@ -765,22 +787,50 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Solicitação do usuário</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Parear</string>
+    <string name="pump_unpair">Desfazer pareamento</string>
+    <string name="pump_unpair_confirm_title">Desfazer pareamento da bomba?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba acoplada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de energia baixa (LE) não suportado.</string>
     <string name="ble_not_supported_or_not_paired">Bluetoothn Low Energy (BLE) não suportado ou o dispositivo não está acoplado.</string>
     <string name="ble_not_enabled">Bluetooth não está ativado.</string>
+    <string name="ble_permissions_missing">As permissões do Bluetooth não foram concedidas. Conceda-as nas configurações do aplicativo.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferências plugin</string>
     <!-- Navigation -->
+    <string name="nav_about">Sobre</string>
+    <string name="nav_about_desc">Ver versão e informações do aplicativo</string>
     <string name="nav_exit">Sair</string>
     <string name="open_navigation">Abrir a navegação</string>
     <string name="nav_history_browser">Navegador do histórico</string>
+    <string name="nav_history_browser_desc">Consultar gráficos históricos</string>
+    <string name="appearance">Aparência</string>
+    <string name="manage">Gerenciar</string>
+    <string name="localprofile">Perfil</string>
     <string name="nav_setupwizard">Assistente de Configuração</string>
+    <string name="nav_setupwizard_desc">Configurar o AAPS passo a passo</string>
     <string name="statistics">Estatísticas</string>
+    <string name="statistics_desc">Ver estatísticas e relatórios</string>
+    <string name="tdd_cycle_pattern">Padrão de ciclos da TDD</string>
+    <string name="tdd_cycle_pattern_desc">Sobrepor os totais diários de insulina em ciclos de 28 dias para identificar padrões recorrentes</string>
     <string name="nav_profile_helper">Assistente de perfil</string>
+    <string name="nav_profile_helper_desc">Criar seu perfil com base no peso ou na TDD</string>
+    <string name="quick_launch_configure">Configurar acesso rápido</string>
+    <string name="quick_launch_configure_desc">Personalizar botões de ações rápidas na visão geral</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Alertas locais</string>
     <!-- Actions Screen -->
+    <string name="add">Adicionar</string>
+    <string name="remove">Remover</string>
+    <string name="reorder">Reordenar</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mover para cima</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mover para baixo</string>
+    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Mostrar detalhes</string>
+    <string name="presets_changed_reorder_aborted">Predefinições alteradas em outro lugar. A nova ordem não foi salva.</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Posição %1$d de %2$d</string>
+    <string name="pump_actions">Ações da bomba</string>
+    <string name="tempbasal_button">Basal temporária</string>
     <string name="extended_bolus_button">Bólus estendido</string>
     <string name="device_maintenance">Manutenção do dispositivo</string>
     <string name="from_label">De</string>
@@ -849,22 +899,78 @@
     <string name="search_category_categories">Categorias de preferências</string>
     <string name="search_category_preferences">Preferências</string>
     <string name="search_category_dialogs">Diálogos</string>
+    <string name="search_category_wiki">Documentação</string>
+    <string name="wiki_search_offline">A pesquisa na documentação requer conexão com a internet</string>
+    <string name="no_search_results">Nenhum resultado encontrado</string>
+    <string name="search_plugin_disabled">Plugin %1$s desativado</string>
     <!--    Food Management -->
+    <string name="food_management">Alimentos</string>
+    <string name="food_deleted">Alimento excluído</string>
+    <string name="edit_food">Editar alimento</string>
+    <string name="add_food">Adicionar alimento</string>
+    <string name="name">Nome</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
+    <string name="portion">Porção</string>
+    <string name="unit_label">Unidade</string>
+    <string name="undo">Desfazer</string>
+    <string name="no_data">Nenhum dado</string>
+    <string name="manage_food_desc">Gerenciar entradas do banco de alimentos</string>
+    <string name="label_carbs_g">Carboidratos (g)</string>
+    <string name="label_fat_g">Gordura (g)</string>
+    <string name="label_protein_g">Proteína (g)</string>
+    <string name="label_energy_kj">Energia (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Configurações de logs</string>
     <string name="resettodefaults">Redefinir para padrões</string>
     <!--    Maintenance-->
     <string name="maintenance">Manutenção</string>
     <string name="description_maintenance">Fornece várias funções para manutenção (ex. envio de relatórios, eliminação de relatórios).</string>
     <string name="log_files">Arquivos de log</string>
     <string name="delete_logs">Eliminar registos</string>
+    <string name="logs_deleted">Logs excluídos</string>
+    <string name="aaps_directory">Diretório do AAPS</string>
     <string name="import_setting">Importar configurações</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Descriptografar &amp; revisar</string>
+    <string name="import_decrypt">Descriptografar</string>
+    <string name="import_master_password">Senha principal</string>
+    <string name="import_decryption_password">Senha de descriptografia</string>
+    <string name="import_different_password_hint">O arquivo foi criptografado com uma senha diferente</string>
+    <string name="import_wrong_password">Senha incorreta</string>
+    <string name="import_btn">Importar</string>
+    <string name="import_anyway_btn">Importar mesmo assim</string>
+    <string name="import_apply_title">Configurações importadas</string>
+    <string name="import_apply_message">As configurações importadas serão aplicadas agora. Os plugins alterados serão reiniciados.</string>
+    <string name="import_apply_waiting">Aguardando a bomba…</string>
+    <string name="import_apply_pump_busy">A bomba ainda está ocupada, portanto as configurações não foram aplicadas.</string>
+    <string name="import_apply_retry_question">Tentar novamente agora?</string>
+    <string name="import_applied_title">Configurações aplicadas</string>
+    <string name="import_applied_message">As configurações importadas estão sendo usadas agora.</string>
+    <string name="import_apply_pump_changed">Cancelado: a bomba foi alterada pela importação das configurações</string>
+    <string name="import_source_cloud">Nuvem</string>
+    <string name="import_load_more">Carregar mais</string>
+    <string name="import_no_files">Nenhum arquivo de configurações encontrado</string>
+    <string name="import_decrypt_ok">Descriptografia bem-sucedida. Pronto para importar.</string>
+    <string name="import_decrypt_warn">Descriptografia bem-sucedida, mas há avisos.</string>
+    <string name="import_decrypt_error">Descriptografia bem-sucedida, mas não é possível importar.</string>
+    <string name="reset_aps_results">Redefinir resultados do APS</string>
     <string name="database_cleanup">Limpeza de banco de dados</string>
     <string name="nav_resetdb">Redefinir banco de dados</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Encontrar bomba</string>
+    <string name="ble_scan_select_pump">Selecione sua bomba na lista abaixo</string>
+    <string name="ble_scan_scanning">Procurando dispositivos…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Adicionar gráfico</string>
+    <string name="graph_new">Novo gráfico</string>
+    <string name="graph_number">Gráfico %1$d</string>
+    <string name="graph_bg">Gráfico de glicemia</string>
+    <string name="graph_height">Altura do gráfico [dp]</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="steps_shortname" comment="Short label for Steps graph series">PASSOS</string>
+    <string name="units_days">dias</string>
+    <string name="units_format_days">%1$d dias</string>
+    <string name="units_format_days_range">%1$d dias (%2$d - %3$d)</string>
     <string name="prefs_range_title">Intervalo para visualização</string>
 </resources>
