@@ -179,6 +179,11 @@
     <string name="a11y_low">hipo</string>
     <string name="remove_label">Remover</string>
     <string name="activate_profile">Ativar perfil</string>
+    <string name="activate_insulin">Ativar insulina</string>
+    <string name="pump_wizard_profile_gate_title">Perfil necessário</string>
+    <string name="pump_wizard_profile_gate_pick">Selecione o perfil a ser aplicado na ativação.</string>
+    <string name="pump_wizard_profile_gate_no_store">Nenhum perfil definido. Abra o Gerenciamento de perfis para criar um e inicie a ativação novamente.</string>
+    <string name="reset">Redefinir</string>
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Ativar Perfil\" em PerfilLocal.</string>
     <string name="profile">Perfil</string>
     <string name="percentage_label">Porcentagem</string>
@@ -186,17 +191,32 @@
     <string name="confirm_remove_multiple_items">Tem certeza que deseja remover %1$d itens</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
+    <string name="wear_wizard_settings">Configurações do Assistente do Wear</string>
     <string name="bolus_iob_label">I.A de Bolus</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Login</string>
     <string name="logout">Sair da sua conta</string>
     <string name="prime_fill">Purgar/Preencher</string>
+    <string name="site_rotation">Rotação do local</string>
+    <string name="edit_site">Editar</string>
+    <string name="select_arrow">Selecionar seta</string>
+    <string name="site_filter_info">Selecione os tipos de eventos de tratamento que deseja ver: troca de cânula e/ou troca de sensor</string>
+    <string name="selected_location">Selecionado: %1$s</string>
+    <string name="last_site_location">Último local: %1$s</string>
+    <string name="pick_site">Escolher local</string>
+    <string name="select_site_location">Selecionar local</string>
+    <string name="site_location">Local</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Parar Alvo Temp</string>
     <string name="closedloop">Loop Fechado</string>
     <string name="openloop">Loop Aberto</string>
     <string name="lowglucosesuspend">Suspensão de Glicémia Baixa</string>
+    <string name="pump_suspended">Bomba suspensa</string>
+    <string name="pump_suspend">Suspender bomba</string>
+    <string name="pump_resume">Retomar bomba</string>
+    <string name="mode_reverted">Modo revertido</string>
+    <string name="select_insulin">Selecionar insulina</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">FSI</string>
@@ -204,11 +224,18 @@
     <string name="canceling_eb_failed">Falhou o cancelamento do bolus extendido</string>
     <string name="virtualpump_uploadstatus_title">Carregar status para NS ou Tidepool</string>
     <string name="iob_label">Insulina ativa (IA)</string>
+    <string name="loopstatus_targets">ALVOS:</string>
+    <string name="loopstatus_OAPS_result">RESULTADO DO OAPS:</string>
     <string name="nav_export">Exportar configurações</string>
+    <string name="location_permission_not_granted">Permissão de localização não concedida. Permita o acesso nas configurações do Android.</string>
     <string name="configbuilder_nightscoutversion_label">Versão do Nightscout:</string>
     <string name="not_available_full">Indisponível</string>
+    <string name="not_implemented_yet">Esta função ainda não está pronta nesta plataforma</string>
+    <string name="not_available_on_platform">Esta função não está disponível nesta plataforma</string>
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
+    <string name="back">Voltar</string>
     <string name="next">Seguinte</string>
+    <string name="pref_syncs_with_main_phone">Sincroniza com o telefone principal</string>
     <string name="show_hide_records">Ocultar registros do loop</string>
     <!--    Protection-->
     <string name="wrongpassword">Senha incorreta</string>
@@ -217,6 +244,7 @@
     <string name="pin_dont_match">PINs não conferem</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Iniciar perfil %1$d%% por %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Cancelar basal temporário</string>
     <string name="let_temp_basal_run">Deixa o basal temporário em andamento</string>
@@ -225,10 +253,18 @@
     <string name="reason">Motivo</string>
     <string name="nochangerequested">Nenhuma alteração solicitada</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Insulina %1$s confirmada</string>
+    <string name="current_insulin">Atualmente ativa</string>
+    <string name="change_insulin">Alterar</string>
+    <string name="select_insulin_description">Selecione a insulina com que está preenchendo a bomba. Uma troca de perfil será aplicada após a ativação/preenchimento.</string>
+    <string name="selected_insulin">Insulina selecionada: %1$s</string>
+    <string name="record_insulin_hint">Ao registrar insulina aplicada com caneta, selecione abaixo o tipo correto de insulina. A dose é sempre em Unidades Internacionais.</string>
     <!--       Stats -->
     <string name="average">Média</string>
+    <string name="tir">Tempo no intervalo</string>
     <string name="below" comment="below &quot;in range&quot;">Abaixo</string>
     <string name="in_range">Dentro da meta</string>
+    <string name="veryLow" comment="below 3.1">Muito baixo</string>
     <string name="low" comment="3.1-3.9">Baixo</string>
     <string name="high" comment="10.0-13.9">Alto</string>
     <string name="veryHigh" comment="above 13.9">Muito alto</string>
@@ -241,9 +277,11 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">CarePortal</string>
     <string name="careportal_bgcheck">Verificação BG</string>
     <string name="careportal_mbg">Glicemia manual ou calibração</string>
     <string name="careportal_announcement">Anúncio</string>
+    <string name="careportal_settings_export">Exportação de configurações</string>
     <string name="careportal_note">Anotação</string>
     <string name="careportal_question">Pergunta</string>
     <string name="careportal_exercise">Exercício</string>
@@ -252,6 +290,11 @@
     <string name="careportal_question_message">Questão : %1$s</string>
     <string name="careportal_exercise_message">Exercício : %1$s</string>
     <string name="careportal_pump_site_change">Alteração do local do cateter</string>
+    <string name="cgm_sensor_insert">Inserção do sensor</string>
+    <string name="careportal_pump_site_management">Locais de infusão</string>
+    <string name="careportal_cgm_site_management">Locais do CGM</string>
+    <string name="careportal_cgmsensorstart">Início do sensor</string>
+    <string name="careportal_cgm_sensor_stop">Parada do sensor</string>
     <string name="careportal_dad_alert">Alerta D.A.D</string>
     <string name="careportal_insulin_cartridge_change">Troca de Reservatório de Insulina</string>
     <string name="careportal_profileswitch">Troca de Perfil</string>
@@ -315,8 +358,58 @@
     <string name="scene_some_reverts_failed">Algumas ações de reversão falharam</string>
     <string name="scene_no_profile_store">Nenhum armazenamento de perfil disponível</string>
     <string name="scene_no_actions">O cenário não tem ações</string>
+    <string name="scene_profile_not_found">Perfil \"%1$s\" não encontrado</string>
+    <string name="scene_lock_banner_master_offline">Dispositivo principal inacessível. Os controles do cenário serão retomados quando a conexão for restaurada.</string>
+    <string name="scene_lock_banner_control_disabled">O dispositivo principal desativou o controle remoto. Os controles do cenário serão retomados quando ele for reativado no dispositivo principal.</string>
+    <string name="master_offline_banner">Dispositivo principal inacessível. A edição fica desativada até que a conexão seja restaurada.</string>
+    <string name="master_control_disabled_banner">O dispositivo principal desativou o controle remoto. A edição fica desativada até que ele seja reativado no dispositivo principal.</string>
+    <string name="scene_lock_reason_master_offline">Dispositivo principal desconectado</string>
+    <string name="scene_lock_reason_control_disabled">Controle remoto desativado</string>
+    <string name="scene_lock_reason_scene_active">Encerre o cenário em execução primeiro</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Definir alvo temporário</string>
+    <string name="clientcontrol_action_cancel_temp_target">Cancelar alvo temporário</string>
+    <string name="clientcontrol_action_activate_scene">Ativar cenário %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Encerrar cenário</string>
+    <string name="clientcontrol_action_update_settings">Atualizar configurações</string>
+    <string name="clientcontrol_action_deliver_bolus">Administrar bolus</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Este dispositivo não está pareado com um dispositivo principal.</string>
+    <string name="clientcontrol_fail_not_reachable">O dispositivo principal está offline.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">A configuração da bomba está dessincronizada com o dispositivo principal. Tente novamente.</string>
+    <string name="clientcontrol_fail_no_reply">O dispositivo principal não respondeu a tempo.</string>
+    <string name="clientcontrol_fail_expired">O comando expirou antes que o dispositivo principal o aplicasse.</string>
+    <string name="clientcontrol_fail_busy">Outra ação já está em andamento.</string>
+    <string name="clientcontrol_fail_send_failed">Não foi possível alcançar o Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">O dispositivo principal não tem um perfil ativo para aplicá-lo.</string>
+    <string name="clientcontrol_fail_scene_not_found">O cenário não existe mais.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">O registro do local não existe mais.</string>
+    <string name="clientcontrol_fail_scene_disabled">O cenário está desativado.</string>
+    <string name="clientcontrol_fail_partial">Não foi possível aplicar algumas ações.</string>
+    <string name="clientcontrol_fail_execution">O dispositivo principal não conseguiu aplicá-lo.</string>
+    <string name="clientcontrol_fail_cancelled">O comando foi cancelado antes de ser executado. Nada foi enviado à bomba.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus cancelado. Nenhuma insulina foi administrada.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelado</string>
+    <string name="clientcontrol_fail_control_disabled">O controle remoto está desativado no dispositivo principal.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">O bolus preparado expirou ou foi substituído. Toque no botão novamente.</string>
+    <string name="clientcontrol_fail_bolus_compute">O dispositivo principal não conseguiu calcular o bolus (glicose/perfil ausente ou bomba não pronta).</string>
+    <string name="clientcontrol_fail_internal">Algo deu errado.</string>
+    <string name="clientcontrol_fail_unknown">O comando falhou.</string>
+    <string name="clientcontrol_unconfirmed_wear">Estado desconhecido — verifique o telefone/Nightscout antes de administrar outro bolus.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Conexão perdida — status da administração desconhecido</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Este telefone parou de receber atualizações do dispositivo principal. O bolus ainda pode estar sendo administrado ou pode já ter terminado. Fechar esta mensagem apenas a oculta aqui — isso não interrompe a bomba. Verifique no telefone principal a quantidade realmente administrada.</string>
+    <string name="scene_revert_tt">Cancelar alvo temporário</string>
+    <string name="scene_revert_profile">Reverter alteração do perfil</string>
+    <string name="scene_revert_smb_on">Reativar SMB</string>
+    <string name="scene_revert_smb_off">Desativar SMB</string>
+    <string name="scene_revert_loop_mode">Cancelar substituição do modo de operação</string>
+    <string name="scene_careportal_no_revert">As entradas do CarePortal não serão revertidas</string>
+    <string name="careportal_sickness">Doença</string>
+    <string name="careportal_stress">Estresse</string>
+    <string name="careportal_pre_period">Antes da menstruação</string>
+    <string name="careportal_alcohol">Álcool</string>
+    <string name="careportal_cortisone">Cortisona</string>
+    <string name="careportal_feeling_low">Sensação de glicemia baixa</string>
     <string name="careportal_feeling_high">Sensação de glicemia alta</string>
     <string name="careportal_falling_asleep">Adormecendo</string>
     <string name="careportal_waking_up">Acordando</string>
@@ -382,6 +475,13 @@
     <string name="location_front_left_upper_abdomen">Parte frontal superior esquerda do abdômen</string>
     <string name="location_front_right_lower_abdomen">Parte frontal inferior direita do abdômen</string>
     <string name="location_front_left_lower_abdomen">Parte frontal inferior esquerda do abdômen</string>
+    <string name="location_back_right_buttock">Nádega direita</string>
+    <string name="location_back_left_buttock">Nádega esquerda</string>
+    <string name="location_back_right_lower_back">Parte inferior direita das costas</string>
+    <string name="location_back_left_lower_back">Parte inferior esquerda das costas</string>
+    <string name="location_side_right_upper_thigh">Parte externa superior da coxa direita</string>
+    <string name="location_side_left_upper_thigh">Parte externa superior da coxa esquerda</string>
+    <string name="location_side_right_lower_thigh">Parte externa inferior da coxa direita</string>
     <!--    Command-->
     <string name="connectiontimedout">Ligação expirou</string>
     <!--    PumpEnactResult-->
@@ -539,13 +639,29 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Assistente de bolus</string>
     <string name="bolus_advisor_message">Sua glicemia está alta. Em vez de comer agora, é recomendado esperar por uma glicemia melhor. Quer fazer um bolus de correção agora e ser lembrado de quando for hora de comer? Neste caso, nenhum carboidrato será registrado e você deverá usar o assistente novamente quando lembrarmos você.</string>
+    <string name="carb_time_now">Agora</string>
+    <string name="change">Alterar</string>
+    <string name="grant">Conceder</string>
+    <string name="set">Definir</string>
+    <string name="wizard_set_alarm">Definir alarme</string>
+    <string name="wizard_use_percentage">Usar porcentagem</string>
+    <string name="wizard_include_bg">Incluir BG</string>
+    <string name="wizard_include_tt">Incluir alvo temporário</string>
+    <string name="wizard_include_trend">Incluir tendência</string>
+    <string name="wizard_include_iob">Incluir IOB</string>
+    <string name="wizard_include_cob">Incluir COB</string>
+    <string name="wizard_calculation">Cálculo</string>
     <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Remoção máxima: %1$d g (carboidratos ativos)</string>
+    <string name="wizard_no_insulin_required">Nenhuma insulina necessária</string>
     <string name="wizard_no_actual_bg">Nenhuma glicemia recente para base de cálculo!</string>
     <string name="wizard_no_active_profile">Nenhum perfil ativo definido!</string>
     <string name="wizard_carbs_constraint">Violação da restrição de carboidrato!</string>
+    <string name="wizard_trend_detail">Tendência de 15 min (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Violação de restrição de insulina!\nNão é possível entregar %1$.2fU</string>
     <string name="wizard_pump_not_available">Nenhuma bomba disponível!</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
+    <string name="quickwizard_managemnt">Assistente rápido</string>
     <!--    Preferences-->
     <string name="child">Criança</string>
     <string name="teenage">Adolescente</string>
@@ -571,6 +687,7 @@
     <string name="connecting">Conectando</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicado no conectar à bomba</string>
     <string name="daily_units">Unidades diárias</string>
+    <string name="max_daily_units">Unidades máximas diárias</string>
     <string name="pump_history">Histórico da Bomba</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Alteração driver da bomba.</string>
     <string name="device_changed" comment="26 characters max for translation">Troca de dispositivo</string>
@@ -582,6 +699,14 @@
     <string name="reading_pump_history">Lendo histórico da bomba</string>
     <string name="password_cleared">Senha apagada!</string>
     <string name="pairing">Emparelhando</string>
+    <string name="initializing">Inicializando…</string>
+    <string name="warning" comment="Generic warning dialog title">Aviso</string>
+    <string name="alert" comment="Generic alert dialog title">Alerta</string>
+    <string name="retry" comment="Button label to retry a failed operation">Tentar novamente</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Finalizar</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Velocidade do bolus</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Histórico</string>
+    <string name="overview_reservoir_concentration_value_over">Restam mais de %1$s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal max está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite da bomba</string>
@@ -593,18 +718,43 @@
     <string name="message">Mensagem</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
+    <string name="dismiss">Dispensar</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
     <string name="close">Fechar</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_warning">Aviso</string>
+    <string name="export_expired">Expirado</string>
+    <string name="export_disabled">Desativado</string>
+    <string name="export_failed">Falha</string>
+    <string name="export_alert">ALERTA</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Senha mestra não definida!\n\nDefina primeiro uma senha mestra e tente novamente.</string>
     <string name="export_to">Exportar configurações para</string>
     <string name="password_preferences_encrypt_prompt">Será perguntado pela senha mestre, que será usada para encriptar preferências exportadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Configurações exportadas</string>
+    <string name="export_result_message_failed">FALHA ao exportar configurações!</string>
+    <string name="export_result_message_about_to_expire">Configurações exportadas: a senha expirará em breve. Exporte manualmente e insira a senha novamente.</string>
+    <string name="export_result_message_expired">Exportação de configurações cancelada: a senha expirou. Exporte manualmente e insira a senha novamente!</string>
+    <string name="export_result_message_disabled">Aviso (automação): a exportação de configurações não está ativada!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Exportação para a nuvem concluída</string>
+    <string name="export_cloud_failed">FALHA ao exportar para a nuvem!</string>
+    <string name="csv_exported">Entradas do usuário exportadas</string>
+    <string name="csv_export_failed">FALHA ao exportar entradas do usuário!</string>
+    <string name="logs_sent">Logs enviados por e-mail</string>
+    <string name="logs_send_failed">Falha ao enviar logs</string>
+    <string name="cloud_directory">Diretório da nuvem</string>
+    <string name="cloud_token_expired_or_invalid">A autorização do armazenamento em nuvem expirou ou é inválida. Autorize novamente.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_cloud">Nuvem</string>
+    <string name="chip_email">E-mail</string>
+    <string name="send_logs">Enviar logs</string>
+    <string name="file_management">Gerenciamento de arquivos</string>
+    <string name="database_management">Gerenciamento do banco de dados</string>
     <string name="data_choices">Escolha de Dados</string>
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
@@ -632,12 +782,16 @@
     <!-- Alerts -->
     <!-- Actions Screen -->
     <string name="extended_bolus_button">Bólus estendido</string>
+    <string name="device_maintenance">Manutenção do dispositivo</string>
+    <string name="from_label">De</string>
+    <string name="to_label">Até</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Bateria da bomba</string>
     <string name="cannula">Cânula</string>
     <string name="patch_pump">Bomba patch</string>
     <!-- Site Rotation -->
+    <string name="select_location">Clique abaixo para selecionar o local de infusão</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Não encerre meu aplicativo?</string>
     <string name="fabric_upload_disabled">Envio de logs de erro desativado!</string>
@@ -659,7 +813,9 @@
     <string name="cleanup_db_confirm_sync">Você deseja limpar a base de dados?\nIrá remover alterações rastreadas e dados históricos com mais de 3 meses.\nFazer isso irá acelerar a sincronização completa drasticamente.</string>
     <string name="cleared_entries">Entradas apagadas</string>
     <string name="reset_db_confirm">Você realmente quer redefinir os bancos de dados?</string>
+    <string name="reset_aps_results_confirm">Você realmente deseja redefinir os resultados armazenados do APS?</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">Dom</string>
     <string name="weekday_saturday_short">Sáb</string>
     <string name="weekday_friday_short">Sex</string>
     <string name="weekday_thursday_short">Qui</string>
@@ -667,13 +823,32 @@
     <string name="weekday_tuesday_short">Ter</string>
     <string name="weekday_monday_short">Seg</string>
     <!--    DecimalFormatterImpl -->
+    <string name="percent_rate_duration">Taxa: %1$.2f%% (%2$.2f U/h) Duração: %3$d min</string>
+    <string name="rate_percent_duration">Taxa: %1$.2f U/h (%2$.2f%%) Duração: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Taxa</b>: %1$.2f%% (%2$.2f U/h)<br><b>Duração</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Taxa</b>: %1$.2f U/h (%2$.2f%%) <br><b>Duração</b>: %3$d min<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"O AAPS reproduz áudio"</string>
     <!-- ProfileEditor -->
     <string name="target_short">ALV</string>
     <string name="profile_name">Nome do Perfil:</string>
+    <string name="edit_profile_name">Editar nome do perfil</string>
     <string name="units_colon">Unidades:</string>
+    <string name="unsaved_changes">Alterações não salvas</string>
+    <string name="unsaved_changes_message">Você tem alterações não salvas. O que deseja fazer?</string>
     <string name="discard">Descartar</string>
+    <string name="ic_dynamic_label_warning">Seu algoritmo pode fornecer um cálculo dinâmico de IC. Os valores abaixo só podem ser usados como fallback caso faltem dados ou apenas como valor de referência.</string>
+    <string name="isf_dynamic_label_warning">Seu algoritmo pode fornecer um cálculo dinâmico de ISF. Os valores abaixo só podem ser usados como fallback caso faltem dados ou apenas como valor de referência.</string>
+    <string name="add_time_block">Adicionar bloco de horário</string>
+    <string name="remove_entry">Remover entrada</string>
+    <string name="target_low_label">Baixo</string>
+    <string name="target_high_label">Alto</string>
     <!--    Search-->
+    <string name="search">Pesquisar</string>
+    <string name="clear">Limpar</string>
+    <string name="search_category_categories">Categorias de preferências</string>
+    <string name="search_category_preferences">Preferências</string>
+    <string name="search_category_dialogs">Diálogos</string>
     <!--    Food Management -->
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
