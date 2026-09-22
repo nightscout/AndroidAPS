@@ -13,7 +13,7 @@ mockito = "5.23.0"
 junit = "6.1.3"
 okhttp = "5.5.0"
 retrofit = "3.0.0"
-ktor = "3.5.2"
+ktor = "3.6.0"
 # cryptography-kotlin: HMAC-SHA256, PBKDF2 and AES-256-GCM for the client-control signing and
 # pairing path. It wraps each platform's vetted implementation (JCA, CryptoKit, OpenSSL 3) rather
 # than implementing the algorithms, which is what we want in a signing path.
