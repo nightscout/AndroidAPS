@@ -1137,6 +1137,34 @@ allowed; shipping 3 before 1 and 2 is not.
     contract. Note this does **not** fix 11: `loadSettings` still schedules `onStart` before electing,
     so the ordering is unchanged - what changed is that "plugins have started" is now true when
     `initialize()` returns.
+13. **STILL LIVE, and found on a real phone on 2026-09-22: local settings export turns itself off and
+    says nothing.** The Local button is gated on a PERSISTED SAF grant, not on the folder:
+
+        override fun isDirectoryAccessGranted(): Boolean {
+            val uriString = preferences().getIfExists(StringKey.AapsDirectoryUri)
+            if (uriString.isNullOrEmpty()) return false
+            val uri = uriString.toUri()
+            return context.contentResolver.persistedUriPermissions.any {
+                it.uri == uri && it.isReadPermission && it.isWritePermission
+            }
+        }
+
+    Android drops a persisted grant on reinstall and on "clear storage". When that happens the AAPS
+    directory still exists, the old exports are still in it, and the button simply goes grey - no
+    notification, no "access to the AAPS directory was lost, grant it again". On the phone this was
+    found on, the last local export was **2026-06-01** and every export since had gone to cloud only;
+    nobody knew. Re-granting through Maintenance -> AAPS directory fixed it immediately.
+
+    Two things make it worse than it sounds. A user with no cloud configured has **no working backup
+    at all** and no sign of it. And `/sdcard/AAPS/preferences/` on that phone holds a **0-byte**
+    `2026-05-19_215955_full.json`, which looks like the same failure leaving a husk behind - a file
+    that reads as a backup in the list until the day it is needed.
+
+    This belongs in a document about not losing settings: every other part of the plan protects the
+    values while a backup path that silently stops is how they are lost in the first place. The fix is
+    not the gate, which is correct - it is that losing the grant must be **visible**: an URGENT
+    notification, the same tier a failed plugin start already gets, naming what was lost and how to
+    restore it.
 
 ## 6. Open questions
 
