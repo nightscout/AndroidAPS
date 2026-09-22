@@ -73,7 +73,13 @@ class PreferenceKeySnapshotTest {
         val rendered = render(keys) + "\n"
         val snapshot = File(repoRoot(), "app/src/testFull/resources/prefs-schema.txt")
 
-        if (!snapshot.exists() || snapshot.readText() != rendered) {
+        // Compared with the line endings normalised. Git checks this file out with CRLF on Windows
+        // while the text built above always uses LF, so a byte comparison fails after every checkout,
+        // rewrites the file, and fails again after the next one - committing the rewrite does not
+        // help, because git re-normalises it on the way back out. Only the content is the record.
+        val onDisk = snapshot.takeIf { it.exists() }?.readText()?.replace("\r\n", "\n")
+
+        if (onDisk != rendered) {
             snapshot.parentFile.mkdirs()
             snapshot.writeText(rendered)
             // Fail on purpose: a rewritten snapshot that passed would be committed by accident, or
