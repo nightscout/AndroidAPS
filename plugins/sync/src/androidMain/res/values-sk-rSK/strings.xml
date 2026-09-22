@@ -110,6 +110,7 @@
     <string name="user_action_not_available">Vybratá akcia užívateľa %1$s už viac nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="scene_not_available">Vybratá scéna %1$s nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Vzdialené príkazy pre inzulín sú v klientskom režime zakázané</string>
+    <string name="wear_phone_not_ready">Telefón sa stále spúšťa alebo aplikuje nastavenia. Skúste to znova o chvíľu.</string>
     <string name="wear_action_tempt_unit_error">Použité rozdielne jednotky v hodinkách a v telefóne!</string>
     <string name="wear_action_tempt_min_bg_error">Minimálna glykémia mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximálna glykémia mimo rozsah!</string>
