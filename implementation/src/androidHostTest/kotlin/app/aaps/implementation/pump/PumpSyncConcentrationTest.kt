@@ -334,4 +334,30 @@ class PumpSyncConcentrationTest : TestBase() {
 
         assertThat(result).isFalse()
     }
+
+    /**
+     * A pump that has not been connected to yet reports no serial - Dana and Diaconn both keep it in
+     * a plain field that starts empty on every app start. That is "not known yet", not "a different
+     * pump", and the difference matters: the only caller answers a false by ending the running
+     * temporary basal and extended bolus in the database while the pump is still delivering them,
+     * and by wiping the pump identity so older history stops being accepted.
+     *
+     * If the pump really did change, `confirmActivePump` catches it when the first history record
+     * arrives carrying a real serial, and rejects it with a notification - so nothing is mixed
+     * silently by being lenient here.
+     */
+    @Test
+    fun `verifyPumpIdentification treats a pump that has not reported its serial as unchanged`() {
+        val result = sut.verifyPumpIdentification(pumpType, "")
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `verifyPumpIdentification still reports a real mismatch when the serial is known`() {
+        // Guards the fix above against being widened: only a blank serial is "unknown". A serial that
+        // is present and different is still a different pump.
+        assertThat(sut.verifyPumpIdentification(pumpType, "0")).isFalse()
+        assertThat(sut.verifyPumpIdentification(pumpType, " ")).isTrue() // blank, same as empty
+    }
 }

@@ -474,7 +474,11 @@ class DiaconnG8Plugin(
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.G2e
     override fun model(): PumpType = PumpType.DIACONN_G8
-    override fun serialNumber(): String = diaconnG8Pump.serialNo.toString()
+    // `serialNo` is 0 until the pump has been connected to and asked, so "0" is not a serial, it is
+    // "not read yet". Reporting it as text made callers compare a real stored serial against "0" and
+    // conclude the pump had been swapped. Only this driver knows what its own unset value looks like,
+    // so it is translated here into the blank that means unknown everywhere else.
+    override fun serialNumber(): String = if (diaconnG8Pump.serialNo == 0) "" else diaconnG8Pump.serialNo.toString()
     override val isFakingTempsByExtendedBoluses: Boolean = false
     override suspend fun loadTDDs(): PumpEnactResult = loadHistory()
     override fun getCustomActions(): List<CustomAction>? = null
