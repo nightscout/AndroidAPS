@@ -229,7 +229,7 @@ insight_log_site_changes|InsightBooleanKey|true
 insight_log_tube_changes|InsightBooleanKey|true
 insight_max_recovery_duration|InsightIntKey|true
 insight_min_recovery_duration|InsightIntKey|true
-instara_device_meta_json|InstaraStringKey|true
+instara_device_meta_json|InstaraStringKey|false
 instara_history_request_setting|InstaraBooleanKey|true
 insulin_button_increment_1|DoubleKey|true
 insulin_button_increment_2|DoubleKey|true

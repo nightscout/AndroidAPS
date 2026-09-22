@@ -31,7 +31,11 @@ abstract class PluginBaseWithPreferences(
      * Needed content should be stored into plugin variables and then processed and restored
      * in [app.aaps.core.interfaces.plugin.PluginBaseWithPreferences.afterImport]
      *
-     * App is restarted after import.
+     * The app is NOT restarted after an import. This line used to say it was, and that stopped being
+     * true: the import now stops the plugins, replaces the preferences and starts them again in the
+     * same process, inside the window where
+     * [app.aaps.core.interfaces.configuration.Config.appInitialized] is false. So whatever is kept
+     * here has to survive in the live object, and nothing may rely on getting a fresh process.
      *
      * See: [app.aaps.core.interfaces.maintenance.ImportExportPrefs.doImportSharedPreferences]
      */
@@ -45,7 +49,9 @@ abstract class PluginBaseWithPreferences(
      * This function is called AFTER clearing and importing preferences to process and restore
      * saved state from [app.aaps.core.interfaces.plugin.PluginBaseWithPreferences.beforeImport]
      *
-     * App is restarted after import.
+     * The app is NOT restarted after an import - see
+     * [app.aaps.core.interfaces.plugin.PluginBaseWithPreferences.beforeImport]. This runs while the
+     * app is still reconfiguring, so it must not assume the plugins around it have started yet.
      *
      * See: [app.aaps.core.interfaces.maintenance.ImportExportPrefs.doImportSharedPreferences]
      */
