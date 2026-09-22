@@ -260,8 +260,8 @@ last_bolus_time|MedtrumLongNonKey|true
 last_cleanup_run|LongNonKey|true
 last_connection|MedtrumLongNonKey|true
 last_expired_version_checker_warning|VersionCheckerLongKey|true
-last_processed_glunovo_timestamp|GlunovoLongKey|true
-last_processed_intelligo_timestamp|IntelligoLongKey|true
+last_processed_glunovo_timestamp|GlunovoLongKey|false
+last_processed_intelligo_timestamp|IntelligoLongKey|false
 last_revoked_certs_check|SignatureVerifierLongKey|true
 last_successful_version_check_timestamp|VersionCheckerLongKey|true
 last_vacuum_run|LongNonKey|true
@@ -472,7 +472,7 @@ tidepool_subscription_id|TidepoolStringNonKey|true
 treatmentssafety_maxbolus|DoubleKey|true
 treatmentssafety_maxcarbs|IntKey|true
 uamsmbmaxminutes|IntKey|true
-ukf_last_processed_timestamp|UkfLongNonKey|true
+ukf_last_processed_timestamp|UkfLongNonKey|false
 ukf_last_saved_timestamp|UkfLongNonKey|true
 ukf_learned_r|UkfDoubleNonKey|true
 ukf_sensor_change_timestamp|UkfLongNonKey|true

@@ -5,6 +5,7 @@ import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 enum class IntelligoLongKey(
     override val key: String,
     override val defaultValue: Long,
+    override val exportable: Boolean = true
 ) : LongNonPreferenceKey {
 
     /**
@@ -21,6 +22,9 @@ enum class IntelligoLongKey(
      * not done lightly. Here it is safe and the cost is one extra pass: Intelligo restarts at 0 and
      * re-walks the provider, and `CgmSourceTransaction` looks up each reading by
      * `findByTimestampAndSensor`, so anything already recorded is UPDATED rather than inserted twice.
+     *
+     * Not exported either, for the same reason as [GlunovoLongKey.LastProcessedTimestamp]: it says how
+     * far THIS phone has read, and another phone's copy would make this one skip readings.
      */
-    LastProcessedTimestamp("last_processed_intelligo_timestamp", 0)
+    LastProcessedTimestamp("last_processed_intelligo_timestamp", 0, exportable = false)
 }
