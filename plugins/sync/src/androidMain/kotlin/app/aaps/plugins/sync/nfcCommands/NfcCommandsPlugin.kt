@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -107,6 +108,7 @@ class NfcCommandsPlugin @Inject constructor(
     val glucoseStatusProvider: GlucoseStatusProvider,
     val sceneAutomationApi: SceneAutomationApi,
     val sceneIconResolver: SceneIconResolver,
+    notificationManager: NotificationManager,
 ) : PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -119,6 +121,7 @@ class NfcCommandsPlugin @Inject constructor(
     aapsLogger,
     rh,
     preferences,
+    notificationManager,
 ) {
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "nfccommunicator_settings",

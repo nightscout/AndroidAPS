@@ -86,6 +86,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 glucoseStatusProvider = glucoseStatusProvider,
                 sceneAutomationApi = sceneAutomationApi,
                 sceneIconResolver = sceneIconResolver,
+                notificationManager = mock(),
                 runtimeState = runtimeState,
                 actionFactory = NfcActionFactory(
                     aapsLogger = aapsLogger,

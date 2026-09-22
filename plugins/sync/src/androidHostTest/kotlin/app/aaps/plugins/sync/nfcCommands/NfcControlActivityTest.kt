@@ -49,6 +49,7 @@ class NfcControlActivityTest : TestBaseWithProfile() {
             glucoseStatusProvider = mock(),
             sceneAutomationApi = mock(),
             sceneIconResolver = mock(),
+            notificationManager = mock(),
             runtimeState = runtimeState,
             actionFactory = NfcActionFactory(
                 aapsLogger = mock(),
