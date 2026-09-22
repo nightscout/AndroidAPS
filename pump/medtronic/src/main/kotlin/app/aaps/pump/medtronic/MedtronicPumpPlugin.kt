@@ -258,7 +258,8 @@ class MedtronicPumpPlugin(
             preferences.put(MedtronicLongNonKey.FirstPumpUse, System.currentTimeMillis())
         migrateSettings()
 
-        pumpSyncStorage.initStorage()
+        // pumpSyncStorage.initStorage() was here. It no longer exists: the storage reads the
+        // preference on every call now, so there is nothing to prime and nothing that can go stale.
 
         this.displayConnectionMessages = false
     }

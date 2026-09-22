@@ -335,8 +335,12 @@ Then one app-scoped job that the screen cannot cancel:
 5. `commandQueue.withHold { ... }`, and pause client-control processing. If the pump does not
    settle, nothing is written.
 6. Write in one `edit(commit = true)`: settings from the map replace the old settings; device
-   state stays. **No `sp.clear()`.** On a master, imported Bidirectional keys get a stamp of
-   `max(stored + 1, now)` in the same write; a client writes no stamps and follows the master.
+   state stays. **No `sp.clear()`** - it would take the pump keys with it. Removing what the file
+   does not have is done by iterating the stored keys instead, and the rule for that, with its two
+   preconditions, is **4.1 decision 4**. Removal is the point of this step, not a side effect: an
+   import has to clear out what earlier versions left behind. On a master, imported Bidirectional
+   keys get a stamp of `max(stored + 1, now)` in the same write; a client writes no stamps and
+   follows the master.
 7. Log `IMPORT_SETTINGS`.
 8. Reload and apply (3.5).
 
@@ -701,14 +705,45 @@ Each of these changes what gets built, and none of them is a coding question.
    overtaken by `8f13138e29`, which added `PumpEnactResult.cancelled` - a dropped command is now told
    apart from a failed one, and `CommandQueueImplementation.postProfileWriteResult` returns early on
    it rather than posting `FAILED_UPDATE_PROFILE`.
-4. ~~**Replace or merge?** Dropping `sp.clear()` changes what an import means, and the removal rule is
-   not written anywhere (8.B).~~ **SETTLED 2026-09-21: `sp.clear()` stays. An import REPLACES.**
-   Miloš's answer, and it settles the semantics rather than the code - `executeImport` already does
-   `beforeImport()` / `sp.clear()` / rewrite every key / `afterImport()`, so nothing changes. What it
-   settles is that a key absent from the export file is absent after the import, and goes back to its
-   own default; there is no merge with what was there before, and no removal rule to write. The
-   consequence that must NOT be undone: for the length of that rewrite every preference reads as its
-   default, safety limits included, which is exactly why the window in decision 2 brackets it.
+4. **Replace or merge?** **SETTLED 2026-09-22, and the goal is the part to keep hold of: an import must
+   remove the trash left by earlier versions.** That is what `sp.clear()` was for, and it is a real
+   requirement, not an accident of the old code.
+
+   **But a blanket clear cannot do it any more, because it also deletes the pump keys.** `sp.clear()`
+   removes every key not in the file, device state included - pump runtime state
+   (`StringNonKey.PumpCommonBolusStorage`, `PumpCommonTbrStorage`, `BolusInfoStorage`), pump identity
+   and the sync cursors. Those belong to THIS phone and this pump, they are not in the file by design,
+   and restoring another phone's copy of them is the bug 3.1.3 exists to prevent. So the answer is
+   neither "keep the clear" nor "drop the clear and merge": **iterate the stored keys and decide each
+   one.** 3.4 step 6 already says `No sp.clear()`; what was missing is the rule for what iteration
+   removes, and here it is.
+
+   **The rule, per stored key:**
+   - a registered key whose kind is **Setting**: take the value from the file, and **remove it when the
+     file does not have it** - that is what makes this a replace rather than a merge;
+   - a registered key whose kind is **device state**: leave it completely alone, present in the file or
+     not;
+   - a `PrefMigrationDone` marker: leave alone (3.2 owns these);
+   - a key that matches **no** registered key: this is the trash, and it is the reason for the whole
+     decision - but see the two dependencies below before removing any of it.
+
+   **Two dependencies, and neither is optional.** Getting either wrong deletes live data rather than
+   trash, which is worse than leaving the trash alone:
+   - **Every key must already have a kind, enforced.** Removing by kind is only as good as the
+     classification, so this cannot ship before 4.2 step 2 - and specifically not before the
+     classification check 8.D says does not exist yet, because a device-state key mis-marked as a
+     setting is then deleted by design. 4.2 already orders step 3 after step 2; this is why.
+   - **CareLevo and ComboV2 must be off the raw store first** (3.1.2). They read raw today, so some of
+     their live keys match no registered key and would look exactly like trash. They are listed as work
+     in step 2 for other reasons; this promotes it from tidiness to a precondition.
+
+   **And the lookup order has to be written down** (8.B): exact key first, then an **anchored**
+   `ComposedKey` prefix, else never remove. `Preferences.get(key: String)` is exact-match and
+   `isExportableKey`'s prefix match is unanchored, so neither answers this question on its own, and an
+   unanchored match would remove keys that merely share a prefix.
+
+   The consequence that must NOT be undone: for the length of the rewrite every preference reads as its
+   default, safety limits included, which is why the window in decision 2 brackets it.
 5. **ComboV2: device state or pump configuration?** 3.1.3 and 3.1.4 say different things, and the
    answer decides whether the restore checkbox can work at all (8.B).
 
@@ -958,6 +993,26 @@ allowed; shipping 3 before 1 and 2 is not.
 5. Pump runtime state, pump identity and sync cursors are exportable, so every import restores
    another time's or another phone's state (the old import that restarted the app did the same).
    After this plan: pump state only through the checkbox, identity and cursors never.
+
+   **The runtime-state third of this is FIXED, 2026-09-22.** `StringNonKey.BolusInfoStorage`,
+   `PumpCommonBolusStorage` and `PumpCommonTbrStorage` are now `exportable = false`. They are short
+   lived caches of what is in flight to THIS pump, so another phone's copy landing here would be
+   matched against this pump's history. They still survive a restart - that is the preference store,
+   which `exportable` never had anything to do with.
+
+   Done in the same change, because it is the same three keys:
+   - **XStream is gone from the repository.** `PumpSyncStorage` was its only user anywhere, and it
+     needed `AnyTypePermission.ANY` - the setting that switches the type allowlist off - on data that
+     arrived in an import file. Now kotlinx, with a `Stored*` DTO per entry in the same shape
+     `DetailedBolusInfoStorageImpl` already used.
+   - **The in-memory copy is gone.** It loaded once behind a `storageInitialized` flag, so it never
+     saw an outside change to its own keys and wrote the stale copy back over any that was made. The
+     preference store is now the only copy; reads are once per Medtronic history pass, not a loop.
+   - **Read-modify-write is locked.** The mutation path had no lock at all.
+   - The two XStream keys were renamed (`*_json`), so the new code finds nothing rather than parsing
+     the old XML. The old values are orphans for the trash sweep in 4.1 decision 4 to remove.
+
+   Identity and cursors are untouched and still open.
 6. Today's import decides "pump changed" from a live serial that Dana and Diaconn keep empty until
    the next connection, so it may take that path for an unchanged pump (section 1; small effect).
 7. **PARTLY FIXED.** `LoopPlugin` and `OmnipodErosPumpPlugin` leak background work on a stop and
@@ -1167,9 +1222,14 @@ This is the group that reorders the work (4.2 step 1). All of it is about 3.5 st
   `WorkManager` or `AlarmManager`, which outlive the process and are a separate problem. Raw
   `CoroutineScope(` is deliberately not matched - created in `onStart` and cancelled in `onStop` is the
   correct idiom that 25 plugins already use, and flagging it buried the real hits in noise.
-- **Two pump-safety singletons outside plugins are missing from the reload list** (3.5 step 2):
+- ~~**Two pump-safety singletons outside plugins are missing from the reload list** (3.5 step 2):
   `PumpSyncStorage`, guarded by a one-shot `storageInitialized` flag, and
-  `DetailedBolusInfoStorageImpl`.
+  `DetailedBolusInfoStorageImpl`.~~ **CLOSED 2026-09-22 for `PumpSyncStorage` - not satisfied,
+  removed.** It has no in-memory copy any more, so there is nothing to reload: every call reads the
+  preference. The `storageInitialized` flag it was guarded by is gone with it. See 5.5.
+  `DetailedBolusInfoStorageImpl` still holds its list, loaded once in a property initializer, so it
+  keeps the same shape of problem and stays on the list - it is smaller (at most two entries, already
+  locked, already kotlinx) and the same treatment applies.
 
 ### 8.B The import: classification and semantics
 
@@ -1190,11 +1250,12 @@ This is the group that reorders the work (4.2 step 1). All of it is about 3.5 st
   `ConfigBuilder_PUMP_DanaRSPlugin_Enabled`, which survives the filter, is renamed by the legacy step
   and is then written - with the checkbox unticked. **Swap steps 1 and 2: migrate the whole map
   first, then classify and drop.**
-- **Dropping `sp.clear()` turns the import from replace into merge.** `PrefsTransfer.applyImported`
-  documents why the clear exists: "A setting the old configuration had and the new one does not would
-  otherwise survive an import that was meant to replace it." The plan removes it and never says what
-  happens to a setting missing from the file. This needs a removal rule in step 6, not the blanket
-  clear back.
+- ~~**Dropping `sp.clear()` turns the import from replace into merge.**~~ **ANSWERED - see 4.1
+  decision 4.** The finding was right: `PrefsTransfer.applyImported` documents why the clear exists
+  ("A setting the old configuration had and the new one does not would otherwise survive an import
+  that was meant to replace it"), and the plan removed it without saying what happens to a setting
+  missing from the file. The removal rule now exists in decision 4, and it is per-key iteration rather
+  than the blanket clear back, because the clear also deletes the pump keys.
 - **Phase 0 was unsafe for a reason the gate did not cover.** Today's import calls `sp.clear()`,
   which deletes every key *not* in the file - device state included - so `reloadFromStore()` would
   publish those deletions into live flows. Both branches of the gate written earlier missed this.

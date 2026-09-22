@@ -16,13 +16,23 @@ enum class StringNonKey(
     WearCwfWatchfaceName(key = "wear_cwf_watchface_name", defaultValue = ""),
     WearCwfAuthorVersion(key = "wear_cwf_author_version", defaultValue = ""),
     WearCwfFileName(key = "wear_cwf_filename", defaultValue = ""),
-    BolusInfoStorage(key = "key_bolus_storage", defaultValue = ""),
+    // Short lived caches of what is in flight to the pump, and deliberately NOT exportable: they
+    // belong to this install and this pump, and another phone's pending boluses landing here would be
+    // matched against this pump's history. They still survive a restart - that is the preference
+    // store, which `exportable` has nothing to do with.
+    BolusInfoStorage(key = "key_bolus_storage", defaultValue = "", exportable = false),
     ActivePumpType(key = "active_pump_type", defaultValue = ""),
     ActivePumpSerialNumber(key = "active_pump_serial_number", defaultValue = ""),
     SmsOtpSecret("smscommunicator_otp_secret", defaultValue = ""),
     TotalBaseBasal("TBB", defaultValue = "10.00"),
-    PumpCommonBolusStorage(key = "pump_sync_storage_bolus", defaultValue = ""),
-    PumpCommonTbrStorage(key = "pump_sync_storage_tbr", defaultValue = ""),
+    // New key names because the format changed from XStream XML to JSON. Renaming rather than
+    // detecting the old format means the new code simply finds nothing and starts empty, instead of
+    // parsing hostile-shaped input in the path that records delivered insulin. The old
+    // `pump_sync_storage_bolus` / `pump_sync_storage_tbr` values are left behind as orphans for the
+    // import trash sweep (4.1 decision 4) to remove.
+    // Not exportable, for the same reason as BolusInfoStorage above.
+    PumpCommonBolusStorage(key = "pump_sync_storage_bolus_json", defaultValue = "", exportable = false),
+    PumpCommonTbrStorage(key = "pump_sync_storage_tbr_json", defaultValue = "", exportable = false),
     TempTargetPresets(key = "temp_target_presets", defaultValue = "[]", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     SceneDefinitions(key = "scene_definitions", defaultValue = "[]", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ActiveScene(key = "active_scene", defaultValue = ""),
