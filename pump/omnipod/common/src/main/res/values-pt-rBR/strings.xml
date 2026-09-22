@@ -49,6 +49,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">Alertas ativos do Pod</string>
     <string name="omnipod_common_overview_firmware_version">Versão do firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Tempo no Pod</string>
+    <string name="omnipod_common_uncertain">incerto</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Pod Desativado</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Você ainda não concluiu todas as etapas. Tem certeza que deseja sair?</string>
@@ -82,6 +83,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar botão de suspensão de entrega na aba Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecção de fuso horário/zona de horário de verão ativada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Lembrete de expiração ativado</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Quando ativado, o Pod emitirá um bipe quando o horário especificado for atingido</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Lembrete [horas] antes da expiração (72 horas)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Alerta de expiração ativado</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Quando ativado, o Pod emitirá um bipe no horário especificado e 1 hora antes do desligamento</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alerta [horas] antes do desligamento (80 horas)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerta de reservatório baixo habilitado</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Número de unidades</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar alertas do Pod automaticamente</string>
@@ -90,7 +96,10 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">Beeps de confirmação</string>
     <string name="omnipod_common_preferences_category_notifications">Notificações</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sons para notificações incertas de taxa basal temporária ativados</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Som das notificações de SMB incerto ativado</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sons para notificações incertas de bolus ativados</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Som ativado para a notificação de administração suspensa</string>
+    <string name="omnipod_dash_use_bonding">Parear dispositivo Bluetooth no Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nenhum Pod Ativo</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuração em andamento (aguardando ativação do Pod)</string>
@@ -113,6 +122,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Definir a programação basal</string>
     <string name="omnipod_common_cmd_set_bolus">Definir Bólus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Cancelar bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Definir TBR</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Cancelar TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Descartar Pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Obter status do Pod</string>
     <string name="omnipod_common_cmd_set_time">Configurar a hora</string>
@@ -121,10 +132,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Ler Log do Pulso</string>
     <string name="omnipod_common_cmd_suspend_delivery">Suspender a entrega</string>
     <string name="omnipod_common_cmd_resume_delivery">Reiniciar a administração</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Cancelar TBR (pelo usuário)</string>
     <string name="omnipod_common_cmd_get_pod_info">Obter informações do Pod</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Definir TBR suspensa simulada</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancelar TBR suspensa simulada</string>
+    <string name="omnipod_common_cmd_split_tbr">Dividir TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Fazendo testes sonoros</string>
     <string name="omnipod_common_cmd_unknown_entry">Entrada desconhecida</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Desativar alertas de suspensão</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Concluir lembrete de pareamento</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Concluir lembrete de configuração</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Momentos atrás</string>
@@ -147,4 +165,5 @@
         <item quantity="one">Alerta de Pod %1$s</item>
         <item quantity="other">Alertas de Pod: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Fim obrigatório do Pod</string>
 </resources>
