@@ -8,7 +8,7 @@ room = "2.8.5"
 # said to move back "as soon as 1.5.0 ships", but the fix landed in 1.4.3 instead - its notes list
 # the crash on zero-parameter member-injection functions, and the issue was closed between the two
 # releases. There is no 1.5.0.
-metro = "1.4.3"
+metro = "1.4.4"
 mockito = "5.23.0"
 junit = "6.1.3"
 okhttp = "5.5.0"
