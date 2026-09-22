@@ -76,11 +76,11 @@ kotlin {
                 implementation(project(":core:objects"))
                 implementation(project(":core:ui"))
 
-                api(libs.cmp.runtime)
-                api(libs.cmp.foundation)
-                api(libs.cmp.ui)
-                api(libs.cmp.material3)
-                api(libs.cmp.material.icons.extended)
+                api(libs.jetbrains.compose.runtime)
+                api(libs.jetbrains.compose.foundation)
+                api(libs.jetbrains.compose.ui)
+                api(libs.jetbrains.compose.material3)
+                api(libs.jetbrains.compose.material.icons.extended)
                 // The JetBrains republish, not androidx.lifecycle: same `androidx.lifecycle.*` package names,
                 // but with Apple targets. Same choice as :core:ui and :plugins:calibration.
                 api(libs.jetbrains.lifecycle.viewmodel.compose)
@@ -90,7 +90,7 @@ kotlin {
                 // Ktor rather than OkHttp so the wiki search runs on every target. Same split as
                 // :core:nssdk: the engine is per platform, the code is not.
                 implementation(libs.io.ktor.client.core)
-                implementation(libs.cmp.ui.tooling.preview)
+                implementation(libs.jetbrains.compose.ui.tooling.preview)
                 // A Compose Multiplatform library - it publishes iosArm64, jvm and wasm too, so the
                 // reorderable list works everywhere and does not pin a screen to Android.
                 // Same choice as :plugins:automation.

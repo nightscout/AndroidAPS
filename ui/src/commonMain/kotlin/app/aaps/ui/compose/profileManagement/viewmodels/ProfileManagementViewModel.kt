@@ -15,7 +15,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.compensateForClockSkew
@@ -664,7 +664,7 @@ class ProfileManagementViewModel(
                                     }
 
                                     is ActionProgress.Rejected ->
-                                        if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
+                                        if (result.reason.isNotDeliveryError())
                                             rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(result.reason.failText())))
                                         else result.detail?.let { detail ->
                                             rxBus.send(EventShowDialog.Ok(title = label, message = detail))
@@ -681,7 +681,7 @@ class ProfileManagementViewModel(
 
             // Master-local pre-check failure, or a client offline; a client round-trip failure already showed on the app modal.
             is ActionProgress.Rejected -> {
-                if (prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
+                if (prepared.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = label, message = rh.gs(prepared.reason.failText())))
                 else prepared.detail?.let { detail ->
                     rxBus.send(EventShowDialog.Ok(title = label, message = detail))

@@ -6,6 +6,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.InsulinManager.UpdateResult
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -18,6 +19,7 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -86,6 +88,9 @@ class InsulinImplMigrationTest : TestBase() {
         }
 
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenAnswer { storedConfig }
+        // InsulinImpl observes the key on the master too now. A flow that never emits keeps these tests
+        // about the init-time migration only; adopting a change at runtime is InsulinImplSyncTest's job.
+        whenever(preferences.observe(StringNonKey.InsulinConfiguration)).thenReturn(MutableStateFlow("{}"))
         doAnswer { storedConfig = it.getArgument(1); null }
             .whenever(preferences).put(eq(StringNonKey.InsulinConfiguration), any<String>())
         // The one-time init normalize persists via putRemote (master-wins, no echo) — route it to storage too.
@@ -277,10 +282,10 @@ class InsulinImplMigrationTest : TestBase() {
     }
 
     @Test
-    fun removeInsulinRemovesTheOneAtTheGivenIndexPersistsAndLogs() {
+    fun removeInsulinRemovesTheOneWithTheGivenLabelPersistsAndLogs() {
         val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs), ins(peak = lyumjevPeakMs, endTime = rapidEndMs)))
 
-        sut.removeInsulin(1)
+        sut.removeInsulin(sut.insulins[1].insulinLabel)
 
         assertThat(sut.insulins).hasSize(1)
         assertThat(sut.insulins[0].insulinPeakTime).isEqualTo(rapidPeakMs) // the other one survived
@@ -295,18 +300,71 @@ class InsulinImplMigrationTest : TestBase() {
         val sut = create("{}") // one seeded default
         assertThat(sut.insulins).hasSize(1)
 
-        sut.removeInsulin(0)
+        sut.removeInsulin(sut.insulins[0].insulinLabel)
 
         assertThat(sut.insulins).hasSize(1)
     }
 
     @Test
-    fun removeInsulinIgnoresAnOutOfRangeIndex() {
+    fun removeInsulinIgnoresAnUnknownLabel() {
+        // A sync removed it already, for example.
         val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs), ins(peak = lyumjevPeakMs, endTime = rapidEndMs)))
 
-        sut.removeInsulin(5)
+        sut.removeInsulin("no such insulin")
 
         assertThat(sut.insulins).hasSize(2)
+    }
+
+    // ── update: found by label, relabelled and stored in one step ────────────────────────────────────
+
+    @Test
+    fun updateInsulinReplacesTheOneWithTheGivenLabelPersistsAndLogs() {
+        val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs), ins(peak = lyumjevPeakMs, endTime = rapidEndMs)))
+        val untouched = sut.insulins[0]
+        val edited = ICfg(insulinLabel = "", insulinEndTime = rapidEndMs, insulinPeakTime = freePeak30Ms, concentration = 1.0)
+            .also { it.insulinNickname = "Edited" }
+
+        val result = sut.updateInsulin(sut.insulins[1].insulinLabel, edited)
+
+        assertThat(result).isInstanceOf(UpdateResult.Updated::class.java)
+        val label = (result as UpdateResult.Updated).label
+        assertThat(label).startsWith("Edited ") // the manager builds the label from nickname and curve
+        assertThat(sut.insulins).hasSize(2)
+        assertThat(sut.insulins[0]).isEqualTo(untouched)
+        assertThat(sut.insulins[1].insulinLabel).isEqualTo(label)
+        assertThat(sut.insulins[1].insulinNickname).isEqualTo("Edited")
+        assertThat(sut.insulins[1].insulinPeakTime).isEqualTo(freePeak30Ms)
+        assertThat(JSONObject(storedConfig).getJSONArray("insulin").getJSONObject(1).getString("insulinLabel")).isEqualTo(label)
+        verify(uel).log(eq(Action.STORE_INSULIN), any<Sources>(), any<String>(), any<ValueWithUnit>())
+    }
+
+    @Test
+    fun updateInsulinOfAnUnknownLabelStoresNothing() {
+        // The insulin the editor was bound to was removed by a sync.
+        val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs)))
+        val before = storedConfig
+
+        val result = sut.updateInsulin("no such insulin", ICfg(insulinLabel = "", insulinEndTime = rapidEndMs, insulinPeakTime = lyumjevPeakMs, concentration = 1.0))
+
+        assertThat(result).isEqualTo(UpdateResult.NotFound)
+        assertThat(storedConfig).isEqualTo(before)
+        verify(preferences, never()).put(eq(StringNonKey.InsulinConfiguration), any<String>())
+    }
+
+    @Test
+    fun editsNeverChangeThePublishedListInPlace() {
+        // The pickers iterate `insulins` on the UI thread without the lock, while a reload may run in the
+        // background. So every edit must swap in a new list and leave the one a reader holds as it was.
+        val sut = create(cfg(ins(peak = rapidPeakMs, endTime = rapidEndMs), ins(peak = lyumjevPeakMs, endTime = rapidEndMs)))
+        val published = sut.insulins
+        val snapshot = published.map { it.deepClone() }
+
+        sut.addNewInsulin(ICfg(insulinLabel = "", insulinEndTime = rapidEndMs, insulinPeakTime = freePeak30Ms, concentration = 1.0), ue = false)
+        sut.updateInsulin(published[0].insulinLabel, ICfg(insulinLabel = "", insulinEndTime = rapidEndMs, insulinPeakTime = freePeak30Ms, concentration = 2.0))
+        sut.removeInsulin(published[1].insulinLabel)
+
+        assertThat(published).isEqualTo(snapshot)
+        assertThat(sut.insulins).isNotSameInstanceAs(published)
     }
 
     // ── iCfg sourcing: profile-driven, list only as fallback (orthogonal to the config cache) ────────

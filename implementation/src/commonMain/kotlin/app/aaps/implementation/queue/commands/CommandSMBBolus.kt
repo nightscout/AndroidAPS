@@ -58,8 +58,8 @@ class CommandSMBBolus(
 
     override fun log(): String = "SMB BOLUS ${rh.gs(InterfacesStrings.format_insulin_units, detailedBolusInfo.insulin)}"
 
-    override fun cancel(comment: TextRef, success: Boolean) {
-        super.cancel(comment, success)
+    override fun cancel(comment: TextRef, success: Boolean, cancelled: Boolean) {
+        super.cancel(comment, success, cancelled)
         bolusProgressData.clear(bolusGeneration)
     }
 }

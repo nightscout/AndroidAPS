@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.shared.tests.TestBase
@@ -89,10 +90,25 @@ class RoleBranchTest : TestBase() {
 
     @Test fun commit_masterSyncError_returnsRejectedExecutionFailed() = runTest {
         val result = roleBranch(client = false).commit("l", command) { onError ->
-            onError("fail"); WizardBolusExecutor.ConfirmResult.Delivered
+            onError(WizardBolusExecutor.Failure("fail")); WizardBolusExecutor.ConfirmResult.Delivered
         }
         assertThat((result as ActionProgress.Rejected).reason).isEqualTo(FailureReason.ExecutionFailed)
         assertThat(result.detail).isEqualTo("fail")
+    }
+
+    /**
+     * A command dropped from the queue on purpose fills the same `onError` comment as a real failure, so without
+     * the [WizardBolusExecutor.ConfirmResult.Cancelled] check first, the dialog would raise the full screen
+     * BOLUS_ERROR alarm for something that never reached the pump.
+     */
+    @Test fun commit_masterCancelled_returnsRejectedCancelledNotExecutionFailed() = runTest {
+        val result = roleBranch(client = false).commit("l", command) { onError ->
+            onError(WizardBolusExecutor.Failure("cancelled by import", cancelled = true))
+            WizardBolusExecutor.ConfirmResult.Cancelled
+        }
+        assertThat((result as ActionProgress.Rejected).reason).isEqualTo(FailureReason.Cancelled)
+        assertThat(result.detail).isEqualTo("cancelled by import")
+        assertThat(result.reason.isNotDeliveryError()).isTrue()
     }
 
     @Test fun commit_clientReachable_delegatesToDispatcher() = runTest {

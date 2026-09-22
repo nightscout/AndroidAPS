@@ -44,7 +44,6 @@
     <string name="objectives_exam_learned_isf">Du har lärt dig betydelsen av ISF-värde och hur det påverkar mängden insulin som levereras för BG-korrigering.</string>
     <string name="objectives_exam_learned_ic">Du har lärt dig betydelsen av KH-kvoten och hur det påverkar mängden insulin som levereras för att täcka upp för intagna kolhydrater.</string>
     <string name="objectives_exam_learned_hypott">Tillfälligt mål för lågt blodsocker används endast för att förhindra att AAPS överkorrigera vid lågt blodsocker, när det är vanligt att AAPS bygger upp ett negativt IOB. Ytterligare åtgärder bör utvärderas för att förhindra att denna situation uppstår igen.</string>
-    <string name="objectives_exam_learned_profileswitch">Användning av procent påverkar inte målvärdet för blodsocker. Men basal, ISF och IC justeras för att ge mer insulin (över 100%%) eller mindre insulin (under 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Genom att använda tidsförskjutning när du byter profil kan du anpassa dygnsprofilen till ovanligheter som t. ex. att du vaknat sent.</string>
     <string name="objectives_exam_learned_profileswitch4">Redigering av profilen räcker inte för att en ändring ska bli aktiv. Du måste fortfarande genomföra ett profilbyte för att aktivera ändringar.</string>
     <string name="objectives_exam_learned_exercise">Du bör minska mängden insulin i kroppen minst en timme före träning genom att välja en profilprocent under 100%.</string>

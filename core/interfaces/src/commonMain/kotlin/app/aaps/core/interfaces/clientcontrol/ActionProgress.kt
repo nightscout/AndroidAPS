@@ -68,6 +68,7 @@ enum class FailureReason {
     SceneDisabled,   // scene is disabled
     PartialFailure,  // scene chained but some actions failed (detail = "x/y")
     ExecutionFailed, // master-side execution failed (detail = message)
+    Cancelled,       // the queued pump command was dropped on purpose (queue cleared, e.g. by a settings import) — nothing was sent, NOT an error
     ControlDisabled, // master has client control turned OFF — command refused by policy (not an error, not offline)
     NoAction,        // prepare resolved to a no-op (nothing to do, e.g. negative carbs with no COB to remove) — NOT an error
     NoPendingBolus,  // bolus commit: the prepared dose was already consumed / superseded → re-prepare
@@ -77,3 +78,14 @@ enum class FailureReason {
     Internal,        // a bug / unexpected state (shouldn't normally surface)
     Unknown          // unrecognised code (e.g. newer master) or unmapped failure
 }
+
+/**
+ * True when the rejection is not a delivery failure: nothing was sent to the pump and nothing went wrong on it,
+ * so the user must get a plain message and never the full screen delivery alarm. Every caller that would raise
+ * that alarm asks here, so a new reason of this kind is handled everywhere at once.
+ *
+ * [FailureReason.NoAction] is deliberately NOT in this list, even though it is not an error either: each dialog
+ * shows its own "nothing to do" message for it, so it is answered before this check.
+ */
+fun FailureReason.isNotDeliveryError(): Boolean =
+    this == FailureReason.NotReachable || this == FailureReason.ControlDisabled || this == FailureReason.Cancelled

@@ -785,10 +785,14 @@ class MedtrumService : MetroService(), MedtrumBleCallback {
     private fun notifyPumpWarning(alarmState: AlarmState) {
         // Notification on pump warning
         if (medtrumPump.desiredPumpWarning && alarmState != AlarmState.NONE) {
+            // No level here: PUMP_WARNING already declares NORMAL. It used to be overridden to
+            // ANNOUNCEMENT, which is the LOWEST tier of all - below INFO - so the notification badge took
+            // the colour of any routine INFO message instead. A low reservoir warning was left showing
+            // the green "Basal profile in pump updated" colour, which reads as "nothing is wrong".
             notificationManager.post(
                 NotificationId.PUMP_WARNING,
-                TextRef.AndroidRes(R.string.pump_warning, listOf(medtrumPump.alarmStateToString(alarmState))),
-                level = NotificationLevel.ANNOUNCEMENT)
+                TextRef.AndroidRes(R.string.pump_warning, listOf(medtrumPump.alarmStateToString(alarmState)))
+            )
             runBlocking {
                 pumpSync.insertAnnouncement(
                     medtrumPump.alarmStateToString(alarmState),
@@ -804,10 +808,11 @@ class MedtrumService : MetroService(), MedtrumBleCallback {
         if (medtrumPump.desiredPatchExpiration && medtrumPump.desiredPumpWarning) {
             val warningAt = medtrumPump.patchStartTime + T.hours(medtrumPump.desiredPumpWarningExpiryThresholdHours.toLong()).msecs()
             if (dateUtil.now() >= warningAt && dateUtil.now() <= warningAt + CHECK_EXPIRY_WARNING_TIME_MS) {
+                // Keep the id's own NORMAL level, for the same reason as notifyPumpWarning above.
                 notificationManager.post(
                     NotificationId.PUMP_WARNING,
-                    TextRef.AndroidRes(R.string.alarm_pump_expires_soon),
-                    level = NotificationLevel.ANNOUNCEMENT)
+                    TextRef.AndroidRes(R.string.alarm_pump_expires_soon)
+                )
                 runBlocking {
                     pumpSync.insertAnnouncement(
                         rh.gs(R.string.alarm_pump_expires_soon),

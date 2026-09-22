@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.objectives
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.plugin.PluginType
@@ -47,7 +48,8 @@ class ObjectivesPlugin(
     override val rh: TextResolver,
     preferences: Preferences,
     config: Config,
-    val objectives: List<@JvmSuppressWildcards Objective>
+    val objectives: List<@JvmSuppressWildcards Objective>,
+    notificationManager: NotificationManager
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -58,7 +60,7 @@ class ObjectivesPlugin(
         .enableByDefault(config.APS)
         .description(ConstraintsStrings.description_objectives),
     ownPreferences = ObjectivesBooleanComposedKey.entries + ObjectivesLongComposedKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), PluginConstraints, Objectives {
 
     fun reset() {

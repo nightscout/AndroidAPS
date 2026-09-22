@@ -649,9 +649,15 @@ class SetupWizardE2ETest {
         error("Expected at least $count EditText fields")
     }
 
-    /** AAPS re-shows a "Permissions required" bottom sheet on resume until the directory is granted. */
+    /**
+     * AAPS re-shows a "Permissions required" bottom sheet on resume until the directory is granted.
+     *
+     * Back, not a tap on the scrim: "Close sheet" is Material3's description for the dim strip above the
+     * sheet, and a tap goes to that node's centre, which sits ON the sheet once it is tall enough. Back
+     * dismisses it at any height, and the find guards it so Back is never pressed without a sheet.
+     */
     private fun dismissBlockingSheetIfPresent() {
-        device.findObject(byDesc("Close sheet"))?.click()
+        if (device.findObject(byDesc("Close sheet")) != null) device.pressBack()
     }
 
     /**

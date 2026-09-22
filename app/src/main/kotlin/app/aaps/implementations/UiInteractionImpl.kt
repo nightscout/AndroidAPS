@@ -95,9 +95,10 @@ class UiInteractionImpl(
                 postFsiFallback(status, title, sound)
             }
         } else {
-            // Background path — FSI notification. Android auto-launches the activity on
-            // lockscreen/idle, or shows a heads-up (with channel sound) when the user is
-            // active in another app.
+            // Background path — the full-screen alarm ("FSI" in the names here, although it no
+            // longer uses a full-screen intent): a notification with channel sound plus the looping
+            // alarm sound, and a setAlarmClock screen wake that brings up the activity when exact
+            // alarms are allowed.
             aapsLogger.debug(LTag.CORE, "runAlarm (background via FSI): $title - $status (sound=$sound)")
             alarmNotificationManager.postFullScreenAlarm(status = status, title = title, sound = sound)
         }

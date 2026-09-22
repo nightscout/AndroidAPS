@@ -9,6 +9,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class VersionCheckerPluginTest : TestBaseWithProfile() {
@@ -19,7 +20,7 @@ class VersionCheckerPluginTest : TestBaseWithProfile() {
 
     @Test
     fun applyMaxIOBConstraintsTest() = runTest {
-        versionCheckerPlugin = VersionCheckerPlugin(aapsLogger, rh, preferences, versionCheckerUtils, config, dateUtil)
+        versionCheckerPlugin = VersionCheckerPlugin(aapsLogger, rh, preferences, versionCheckerUtils, config, dateUtil, mock())
         whenever(rh.gs(ConstraintsStrings.application_expired)).thenReturn("")
 
         // No expiration

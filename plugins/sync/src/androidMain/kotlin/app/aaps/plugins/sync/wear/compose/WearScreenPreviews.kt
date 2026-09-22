@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import app.aaps.core.keys.PushedWatchfaceId
 
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -15,14 +16,47 @@ internal fun WearMainContentPreview() {
                 connectedDevice = "Galaxy Watch 5 (a1b2)",
                 isDeviceConnected = true,
                 hasCustomWatchface = true,
-                watchfaceName = "AAPS V2"
+                watchfaceName = "AAPS V2",
+                watchFacePushSupported = true,
+                installedWatchface = PushedWatchfaceId.CWF
             ),
             onResendData = {},
             onOpenSettings = {},
             onLoadWatchface = {},
             onInfosWatchface = {},
             onExportTemplate = {},
-            onMoreWatchfaces = {}
+            onMoreWatchfaces = {},
+            onSelectPushedWatchface = {},
+            onDismissCustomWatchfaceNotShown = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+internal fun WearMainContentComplicationsFacePreview() {
+    MaterialTheme {
+        WearMainContent(
+            // The complications face chosen while the watch still holds the custom one: the chosen
+            // row carries the "Installing…" note, and its picture shows under the choice
+            uiState = WearUiState(
+                connectedDevice = "Galaxy Watch 8 (c3d4)",
+                isDeviceConnected = true,
+                hasCustomWatchface = true,
+                watchfaceName = "Analog G-Watch",
+                customWatchfaceSelected = false,
+                watchFacePushSupported = true,
+                installedWatchface = PushedWatchfaceId.CWF
+            ),
+            onResendData = {},
+            onOpenSettings = {},
+            onLoadWatchface = {},
+            onInfosWatchface = {},
+            onExportTemplate = {},
+            onMoreWatchfaces = {},
+            onSelectPushedWatchface = {},
+            onDismissCustomWatchfaceNotShown = {}
         )
     }
 }
@@ -41,7 +75,9 @@ internal fun WearMainContentDisconnectedPreview() {
             onLoadWatchface = {},
             onInfosWatchface = {},
             onExportTemplate = {},
-            onMoreWatchfaces = {}
+            onMoreWatchfaces = {},
+            onSelectPushedWatchface = {},
+            onDismissCustomWatchfaceNotShown = {}
         )
     }
 }

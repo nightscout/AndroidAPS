@@ -1,21 +1,11 @@
 package app.aaps.di.metro
 
+import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.shared.tests.aapsClassesOnClasspath
 import com.google.common.truth.Truth.assertThat
-import app.aaps.pump.danar.DanaRPlugin
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
-import app.aaps.pump.danars.DanaRSPlugin
-import app.aaps.pump.danarv2.DanaRv2Plugin
-import app.aaps.pump.diaconn.DiaconnG8Plugin
-import app.aaps.pump.eopatch.EopatchPumpPlugin
-import app.aaps.pump.equil.EquilPumpPlugin
-import app.aaps.pump.insight.InsightPlugin
-import app.aaps.pump.medtronic.MedtronicPumpPlugin
-import app.aaps.pump.medtrum.MedtrumPlugin
-import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
-import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.pump.combov2.ComboV2Plugin
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mockingDetails
+import dev.zacsweers.metro.IntKey as MetroIntKey
 
 /**
  * Pump drivers reach the `@PumpDriver` bucket, and only that bucket.
@@ -25,40 +15,51 @@ import org.mockito.Mockito.mockingDetails
  * it cannot be seen from the annotation on the plugin.
  * `:app` merges this bucket only when `config.PUMPDRIVERS`, so a driver landing in the unqualified map
  * instead would show up in a follower build that has no pump at all.
+ *
+ * ## Nothing here names a pump
+ *
+ * It used to import all fourteen plugin classes and restate the key of each, which made the set of
+ * modules in `settings.gradle` a compile-time dependency of this test: removing one stopped
+ * `:app:testFullDebugUnitTest` from compiling at all. Both sides are now read from the build itself -
+ * the bucket from the graph, the expectation from the classes actually on the classpath - so a build
+ * with fewer pumps simply has a smaller bucket and every assertion still means what it says.
  */
 class PumpDriverBucketTest {
 
+    /** Keys declared by the drivers compiled into THIS build, read from their own annotations. */
+    private fun declaredDriverKeys(): Set<Int> =
+        aapsClassesOnClasspath(listOf(AppRootGraph::class.java))
+            .filter { it.isAnnotationPresent(PumpDriver::class.java) }
+            .mapNotNull { it.getAnnotation(MetroIntKey::class.java)?.value }
+            .toSet()
+
     /**
-     * Moved here from `ContributedPluginsTest`, which lives in `src/test` and so is compiled for every
-     * flavour - including the followers, which have no pump module on the classpath and an empty bucket
-     * by design. It could only ever fail there, and did: `:app:testAapsclientDebugUnitTest` was red on
-     * its own, unnoticed because CI runs the `full` variant.
-     * `containsExactly`, not a per-key check: it is the only assertion that catches a driver quietly
-     * *disappearing* from the bucket.
+     * The original assertion, with the expectation derived instead of written out. It still catches a
+     * driver quietly *disappearing* from the bucket - the class is on the classpath and declares a key,
+     * so a missing entry is a mismatch - and it now also catches one that arrives without declaring
+     * `@PumpDriver` at all.
      */
     @Test
-    fun `the pump bucket holds exactly the known drivers`() {
-        assertThat(testRoot().contributedPumpDriverPlugins.keys)
-            .containsExactly(1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130)
+    fun `the pump bucket holds exactly the drivers compiled into this build`() {
+        val declared = declaredDriverKeys()
+        check(declared.isNotEmpty()) { "Found no @PumpDriver classes on the classpath - the scan broke" }
+
+        assertThat(testRoot().contributedPumpDriverPlugins.keys).isEqualTo(declared)
     }
 
+    /**
+     * Each driver is filed under the key it declares. This is what the fourteen `isInstanceOf` lines
+     * checked, without the test having to know which class belongs to which number - the plugin already
+     * says so with `@MetroIntKey`, and restating it in a second place only created something to keep in
+     * step.
+     */
     @Test
-    fun `every converted pump driver is in the pump bucket, under its own key`() {
-        val drivers = testRoot().contributedPumpDriverPlugins
+    fun `every pump driver is filed under its own declared key`() {
+        val misfiled = testRoot().contributedPumpDriverPlugins
+            .filter { (key, plugin) -> plugin::class.java.getAnnotation(MetroIntKey::class.java)?.value != key }
+            .map { (key, plugin) -> "${plugin::class.java.simpleName} is filed under $key" }
 
-        assertThat(drivers[1010]).isInstanceOf(DanaRPlugin::class.java)
-        assertThat(drivers[1020]).isInstanceOf(DanaRKoreanPlugin::class.java)
-        assertThat(drivers[1030]).isInstanceOf(DanaRv2Plugin::class.java)
-        assertThat(drivers[1040]).isInstanceOf(DanaRSPlugin::class.java)
-        assertThat(drivers[1050]).isInstanceOf(InsightPlugin::class.java)
-        assertThat(drivers[1060]).isInstanceOf(ComboV2Plugin::class.java)
-        assertThat(drivers[1070]).isInstanceOf(OmnipodErosPumpPlugin::class.java)
-        assertThat(drivers[1080]).isInstanceOf(OmnipodDashPumpPlugin::class.java)
-        assertThat(drivers[1090]).isInstanceOf(MedtronicPumpPlugin::class.java)
-        assertThat(drivers[1100]).isInstanceOf(DiaconnG8Plugin::class.java)
-        assertThat(drivers[1110]).isInstanceOf(EopatchPumpPlugin::class.java)
-        assertThat(drivers[1120]).isInstanceOf(MedtrumPlugin::class.java)
-        assertThat(drivers[1130]).isInstanceOf(EquilPumpPlugin::class.java)
+        assertThat(misfiled).isEmpty()
     }
 
     /**
@@ -98,8 +99,8 @@ class PumpDriverBucketTest {
         // Where a wrong qualifier would put them. `:app` merges the every-build bucket unconditionally,
         // so a driver landing there would appear in a follower that has no pump at all - and nothing
         // would report it.
-        val everyBuild = testRoot().contributedPlugins.keys
+        val root = testRoot()
 
-        assertThat(everyBuild).containsNoneOf(1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130)
+        assertThat(root.contributedPlugins.keys).containsNoneIn(root.contributedPumpDriverPlugins.keys)
     }
 }

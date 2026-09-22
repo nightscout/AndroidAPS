@@ -117,7 +117,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             aapsLogger, rh, smsManager, preferences, constraintChecker, profileFunction, profileUtil, activePlugin, profileRepository,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
-            runningModeGuard, bolusProgressData, testScope, repository
+            runningModeGuard, bolusProgressData, repository
         )
         smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
         runBlocking {

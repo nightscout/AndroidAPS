@@ -1,5 +1,6 @@
 package app.aaps.plugins.source.instara
 
+import org.mockito.kotlin.mock
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -11,7 +12,7 @@ class InstaraPluginTest : TestBaseWithProfile() {
     private lateinit var instaraPlugin: InstaraPlugin
 
     @BeforeEach fun prepare() {
-        instaraPlugin = InstaraPlugin(context, rh, aapsLogger, preferences, config)
+        instaraPlugin = InstaraPlugin(context, rh, aapsLogger, preferences, config, mock())
     }
 
     @Test

@@ -53,7 +53,6 @@
     <string name="objectives_exam_learned_isf">Ați învățat semnificația valorii ISF și cum afectează cantitatea de insulină utilizată pentru corectarea glicemiei.</string>
     <string name="objectives_exam_learned_ic">Ați învățat semnificația valorii IC și cum afectează cantitatea de insulină necesară pentru a acoperi carbohidrații.</string>
     <string name="objectives_exam_learned_hypott">Ținta temporară de hipoglicemie este utilizată numai pentru a preveni supra-corectarea după hipoglicemie, atunci când există de obicei și IOB negativ cumulat. Ar trebui luate în considerare viitoare acțiuni suplimentare pentru a preveni o situație similară în viitor.</string>
-    <string name="objectives_exam_learned_profileswitch">Folosirea procentului nu afectează ținta glicemică. Dar bazala, ISF și IC sunt ajustate pentru a administra mai multă insulină (peste 100%%) sau mai puțină insulină (sub 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Folosind temporizarea în schimbarea profilului poți adapta profilul circadian la neregularități cum ar fi trezirea târzie.</string>
     <string name="objectives_exam_learned_profileswitch4">Editarea profilului în sine nu este suficientă pentru a face o schimbare. Încă trebuie să efectuați o modificare de profil pentru a activa schimbările.</string>
     <string name="objectives_exam_learned_exercise">Ar trebui să reduceți cantitatea de insulină din organism cu cel puțin 1 oră înainte de a începe activitatea fizică, selectând profilul sub 100%.</string>

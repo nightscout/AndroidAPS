@@ -87,6 +87,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import app.aaps.core.objects.extensions.jsonObject
@@ -119,7 +120,7 @@ class LoopPlugin(
     private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
     private val uiInteraction: UiInteraction,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val pumpStatusProvider: PumpStatusProvider,
@@ -147,7 +148,7 @@ class LoopPlugin(
         .shortName(ApsStrings.loop_shortname)
         .alwaysEnabled(config.APS)
         .description(ApsStrings.description_loop),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), Loop, PluginConstraints {
 
     // Volatile: this is now the only gate against a second automatic loop run for the same BG. It is
@@ -162,6 +163,29 @@ class LoopPlugin(
     // scope does the same and is the only part of this class that was ever Android.
     private var deviceStatusJob: Job? = null
 
+    /**
+     * The deferred loop re-run scheduled when an SMB fails, held so [onStop] can take it back.
+     *
+     * It used to be a bare `appScope.launch`, which nothing owned: the plugin could be stopped and its
+     * pump driver torn down, and a second later this would still wake up and run a loop that queues
+     * commands against the driver being dismantled. A settings import does exactly that - stop, apply,
+     * start - so the one-second delay lands squarely in the window.
+     *
+     * Replaced rather than stacked, the same way [scheduleBuildAndStoreDeviceStatus] debounces. Two
+     * failures inside a second would otherwise schedule two re-runs, and `invokeMutex` would then run
+     * them back to back for no benefit. Holding only the latest job also means there is never an older
+     * one left that nothing can cancel.
+     */
+    // internal, not private, so the test can see it was really cancelled. The scan test only checks
+    // that this site is DECLARED, not that the job is owned, so without this there is nothing pinning
+    // the fix - a later edit could go back to a bare launch and the scan would still pass.
+    internal var smbFallbackJob: Job? = null
+
+    // The collectors onStart puts on the application scope. That scope outlives the plugin, so onStop
+    // has to cancel them by hand or they keep running - and a later onStart stacks a second pair on top,
+    // so one temp-target change would then invoke the loop twice.
+    private val collectors = mutableListOf<Job>()
+
     // Serializes loop runs. Master's invoke() was @Synchronized; the suspend migration dropped that
     // (and @Synchronized cannot span suspension points). invoke() is reachable concurrently — the
     // per-BG PostCalculationWorker, the Accept-temp button, loop pull-to-refresh, the temp-target
@@ -169,6 +193,11 @@ class LoopPlugin(
     // double-apply or mis-order TBR/SMB commands. Not reentrant: the SMB fallback re-invoke is
     // deferred (postDelayed + appScope.launch) and runs after the current run releases the lock.
     private val invokeMutex = Mutex()
+
+    // Serializes running-mode reconciliation. runningModePreCheck() is a read-check-write across two
+    // separate IO calls, and its triggers (the pump-status collector and invoke()) can arrive together, so
+    // without this two of them read the same stale mode and each writes its own row.
+    private val reconcileMutex = Mutex()
 
     @OptIn(FlowPreview::class)
     override suspend fun onStart() {
@@ -186,13 +215,15 @@ class LoopPlugin(
                     aapsLogger.error(LTag.APS, "invoke on TempTarget change failed", e)
                 }
             }
-            .launchIn(appScope)
+            .launchIn(appScope).also(collectors::add)
         // Pump-state changes (suspend/resume, typically detected on a status read): reconcile the running
         // mode promptly instead of waiting for the next loop/keepalive tick (~5 min). EventPumpStatusChanged
         // is fired centrally by the command queue after every command, so it is pump-agnostic and arrives
-        // exactly when isSuspended() may have flipped. runningModePreCheck() is idempotent (writes only when
-        // isSuspended() and the RM mode disagree, APS-gated) and emits only EventRefreshOverview — never
-        // EventPumpStatusChanged — so there is no feedback loop. The debounce collapses connection chatter.
+        // exactly when isSuspended() may have flipped. This is one of only two triggers for the pre-check
+        // (the other is invoke()); it is deliberately NOT reached from a read of the mode any more, and
+        // reconcileMutex keeps the two triggers from racing each other. It emits only EventRefreshOverview —
+        // never EventPumpStatusChanged — so there is no feedback loop, and the debounce collapses
+        // connection chatter.
         rxBus.toFlow(EventPumpStatusChanged::class)
             .debounce(1000L)
             .onEach {
@@ -202,11 +233,17 @@ class LoopPlugin(
                     aapsLogger.error(LTag.APS, "runningModePreCheck on pump status change failed", e)
                 }
             }
-            .launchIn(appScope)
+            .launchIn(appScope).also(collectors::add)
     }
 
     override suspend fun onStop() {
         deviceStatusJob?.cancel()
+        // The deferred SMB fallback re-runs the loop a second later, so without this it fires into the
+        // restart window and queues commands against a driver being torn down.
+        smbFallbackJob?.cancel()
+        smbFallbackJob = null
+        collectors.forEach { it.cancel() }
+        collectors.clear()
         super.onStop()
     }
 
@@ -231,10 +268,15 @@ class LoopPlugin(
 
     override suspend fun runningMode(): RM.Mode = runningModeRecord().mode
 
-    override suspend fun runningModeRecord(): RM {
-        runningModePreCheck()
-        return persistenceLayer.getRunningModeActiveAt(dateUtil.now())
-    }
+    /**
+     * A pure read. It used to call [runningModePreCheck] first, which made every reader of the mode a
+     * writer - and there are about 36 of them, across ViewModels, the Glance widget, wear, KeepAliveWorker,
+     * SMS and automation. One pump suspend wakes many of them at once through the central
+     * `EventPumpStatusChanged`, they all read the pre-suspend mode before any of them commits, and each
+     * inserts its own row: that was the duplicate `Pump suspended` history. Reconciliation now has its own
+     * triggers - see [runningModePreCheck].
+     */
+    override suspend fun runningModeRecord(): RM = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
 
     override suspend fun allowedNextModes(): List<RM.Mode> {
         if (profileFunction.isProfileValid("allowedNextModes").not()) return emptyList()
@@ -349,105 +391,128 @@ class LoopPlugin(
     }
 
     /**
-     * Check if running mode is corresponding to pump state and constraints
-     * and force change mode if needed
+     * Bring the running mode into line with the pump state and the constraints, writing a new mode row if
+     * they disagree.
+     *
+     * This is a write, so it must NOT be called from a read of the mode - see [runningModeRecord]. It has
+     * two triggers instead: the `EventPumpStatusChanged` collector in [onStart], and the start of
+     * [invoke], which reconciles before the loop reads the mode and decides anything.
+     *
+     * The constraint branches therefore apply at the next loop run rather than the next time some screen
+     * happens to read the mode. That is a display lag of at most one cycle and nothing more: the loop
+     * reconciles before it acts, and `constraintChecker` is consulted again for the dosing decision
+     * itself, so no decision is ever taken on a stale mode.
+     *
+     * [reconcileMutex] keeps two triggers from doing the read-check-write at the same time. The lock is
+     * safe here only because this is off the read path: on it, the mode had about 36 readers, four of them
+     * blocking with `runBlocking`, and it was re-entered from inside [invokeMutex].
      */
-    suspend fun runningModePreCheck() {
-        val runningMode = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
-        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed()
-        val loopInvocationAllowed = constraintChecker.isLoopInvocationAllowed()
-        val lgsModeForced = constraintChecker.isLgsForced()
+    suspend fun runningModePreCheck() = reconcileMutex.withLock { reconcileRunningMode() }
 
-        // Pump-state reconciliation: only on the device that actually owns the pump.
-        // Followers (config.APS=false) must not react to their own local activePump.isSuspended()
-        // state because they have no real pump — doing so rewrites NS-synced SUSPENDED_BY_PUMP
-        // rows with garbage durations and triggers a cross-device feedback loop.
-        if (config.APS) {
-            // Suspended pump found but suspended running mode not set
-            if (activePlugin.activePump.isSuspended() && runningMode.mode != RM.Mode.SUSPENDED_BY_PUMP) {
-                suspendLoop(
-                    mode = RM.Mode.SUSPENDED_BY_PUMP,
-                    autoForced = true,
-                    reasons = rh.gs(InterfacesStrings.pumpsuspended),
-                    durationInMinutes = Int.MAX_VALUE,
-                    action = Action.SUSPEND,
-                    source = Sources.Loop
+    /**
+     * The body of [runningModePreCheck]. Call it only with [reconcileMutex] held.
+     *
+     * Written as a loop rather than the recursive call it used to be: ending a SUSPENDED_BY_PUMP mode has
+     * to re-run the other conditions, and `Mutex` is not reentrant, so recursing here would deadlock.
+     */
+    private suspend fun reconcileRunningMode() {
+        while (true) {
+            val runningMode = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
+            val closedLoopAllowed = constraintChecker.isClosedLoopAllowed()
+            val loopInvocationAllowed = constraintChecker.isLoopInvocationAllowed()
+            val lgsModeForced = constraintChecker.isLgsForced()
+
+            // Pump-state reconciliation: only on the device that actually owns the pump.
+            // Followers (config.APS=false) must not react to their own local activePump.isSuspended()
+            // state because they have no real pump — doing so rewrites NS-synced SUSPENDED_BY_PUMP
+            // rows with garbage durations and triggers a cross-device feedback loop.
+            if (config.APS) {
+                // Suspended pump found but suspended running mode not set
+                if (activePlugin.activePump.isSuspended() && runningMode.mode != RM.Mode.SUSPENDED_BY_PUMP) {
+                    suspendLoop(
+                        mode = RM.Mode.SUSPENDED_BY_PUMP,
+                        autoForced = true,
+                        reasons = rh.gs(InterfacesStrings.pumpsuspended),
+                        durationInMinutes = Int.MAX_VALUE,
+                        action = Action.SUSPEND,
+                        source = Sources.Loop
+                    )
+                    rxBus.send(EventRefreshOverview("runningModePreCheck"))
+                    return
+                }
+                // Pump not suspended anymore but running mode is suspended by pump -> end running mode
+                if (!activePlugin.activePump.isSuspended() && runningMode.mode == RM.Mode.SUSPENDED_BY_PUMP) {
+                    runningMode.duration = dateUtil.now() - runningMode.timestamp
+                    persistenceLayer.insertOrUpdateRunningMode(
+                        runningMode = runningMode,
+                        action = Action.PUMP_RUNNING,
+                        source = Sources.Loop,
+                        listValues = listOf(ValueWithUnit.SimpleString(rh.gs(CoreUiStrings.pump_running)))
+                    )
+                    // re-run to process other conditions
+                    continue
+                }
+            }
+
+            var action = Action.CLOSED_LOOP_MODE
+            var newMode = runningMode.mode
+            var reasons: String? = null
+
+            // Check for LoopInvocation limitation on CLOSED_LOOP mode
+            if (runningMode.mode.isLoopRunning() && loopInvocationAllowed.value().not()) {
+                action = Action.LOOP_DISABLED
+                newMode = RM.Mode.DISABLED_LOOP
+                reasons = loopInvocationAllowed.getReasons()
+            }
+            // Check for OPEN_LOOP limitation on CLOSED_LOOP mode
+            else if (runningMode.mode == RM.Mode.CLOSED_LOOP && closedLoopAllowed.value().not()) {
+                action = Action.OPEN_LOOP_MODE
+                newMode = RM.Mode.OPEN_LOOP
+                reasons = closedLoopAllowed.getReasons()
+            }
+            // Check for LGS limitation on CLOSED_LOOP mode
+            else if (runningMode.mode == RM.Mode.CLOSED_LOOP && lgsModeForced.value()) {
+                action = Action.LGS_LOOP_MODE
+                newMode = RM.Mode.CLOSED_LOOP_LGS
+                reasons = lgsModeForced.getReasons()
+            }
+
+            // Perform change if needed
+            if (reasons != null) {
+                persistenceLayer.insertOrUpdateRunningMode(
+                    runningMode = RM(
+                        timestamp = dateUtil.now(),
+                        mode = newMode,
+                        reasons = reasons,
+                        autoForced = true,
+                        duration = Long.MAX_VALUE
+                    ),
+                    action = action,
+                    source = Sources.Loop,
+                    listValues = listOf(ValueWithUnit.SimpleString(reasons))
                 )
                 rxBus.send(EventRefreshOverview("runningModePreCheck"))
-                return
             }
-            // Pump not suspended anymore but running mode is suspended by pump -> end running mode
-            if (!activePlugin.activePump.isSuspended() && runningMode.mode == RM.Mode.SUSPENDED_BY_PUMP) {
+
+            if (
+            // Revert back from DISABLED_LOOP temporary mode
+                runningMode.autoForced && runningMode.mode == RM.Mode.DISABLED_LOOP && loopInvocationAllowed.value() ||
+                // Revert back from OPEN_LOOP temporary mode
+                runningMode.autoForced && runningMode.mode == RM.Mode.OPEN_LOOP && closedLoopAllowed.value() ||
+                // Revert back from LGS temporary mode
+                runningMode.autoForced && runningMode.mode == RM.Mode.CLOSED_LOOP_LGS && !lgsModeForced.value()
+            ) {
+                // End now
                 runningMode.duration = dateUtil.now() - runningMode.timestamp
                 persistenceLayer.insertOrUpdateRunningMode(
                     runningMode = runningMode,
-                    action = Action.PUMP_RUNNING,
+                    action = Action.LOOP_CHANGE,
                     source = Sources.Loop,
-                    listValues = listOf(ValueWithUnit.SimpleString(rh.gs(CoreUiStrings.pump_running)))
+                    listValues = listOf(ValueWithUnit.SimpleString(rh.gs(CoreUiStrings.mode_reverted)))
                 )
-                // re-run to process other conditions
-                runningModePreCheck()
-                return
+                rxBus.send(EventRefreshOverview("runningModePreCheck"))
             }
-        }
-
-        var action = Action.CLOSED_LOOP_MODE
-        var newMode = runningMode.mode
-        var reasons: String? = null
-
-        // Check for LoopInvocation limitation on CLOSED_LOOP mode
-        if (runningMode.mode.isLoopRunning() && loopInvocationAllowed.value().not()) {
-            action = Action.LOOP_DISABLED
-            newMode = RM.Mode.DISABLED_LOOP
-            reasons = loopInvocationAllowed.getReasons()
-        }
-        // Check for OPEN_LOOP limitation on CLOSED_LOOP mode
-        else if (runningMode.mode == RM.Mode.CLOSED_LOOP && closedLoopAllowed.value().not()) {
-            action = Action.OPEN_LOOP_MODE
-            newMode = RM.Mode.OPEN_LOOP
-            reasons = closedLoopAllowed.getReasons()
-        }
-        // Check for LGS limitation on CLOSED_LOOP mode
-        else if (runningMode.mode == RM.Mode.CLOSED_LOOP && lgsModeForced.value()) {
-            action = Action.LGS_LOOP_MODE
-            newMode = RM.Mode.CLOSED_LOOP_LGS
-            reasons = lgsModeForced.getReasons()
-        }
-
-        // Perform change if needed
-        if (reasons != null) {
-            persistenceLayer.insertOrUpdateRunningMode(
-                runningMode = RM(
-                    timestamp = dateUtil.now(),
-                    mode = newMode,
-                    reasons = reasons,
-                    autoForced = true,
-                    duration = Long.MAX_VALUE
-                ),
-                action = action,
-                source = Sources.Loop,
-                listValues = listOf(ValueWithUnit.SimpleString(reasons))
-            )
-            rxBus.send(EventRefreshOverview("runningModePreCheck"))
-        }
-
-        if (
-        // Revert back from DISABLED_LOOP temporary mode
-            runningMode.autoForced && runningMode.mode == RM.Mode.DISABLED_LOOP && loopInvocationAllowed.value() ||
-            // Revert back from OPEN_LOOP temporary mode
-            runningMode.autoForced && runningMode.mode == RM.Mode.OPEN_LOOP && closedLoopAllowed.value() ||
-            // Revert back from LGS temporary mode
-            runningMode.autoForced && runningMode.mode == RM.Mode.CLOSED_LOOP_LGS && !lgsModeForced.value()
-        ) {
-            // End now
-            runningMode.duration = dateUtil.now() - runningMode.timestamp
-            persistenceLayer.insertOrUpdateRunningMode(
-                runningMode = runningMode,
-                action = Action.LOOP_CHANGE,
-                source = Sources.Loop,
-                listValues = listOf(ValueWithUnit.SimpleString(rh.gs(CoreUiStrings.mode_reverted)))
-            )
-            rxBus.send(EventRefreshOverview("runningModePreCheck"))
+            return
         }
     }
 
@@ -486,6 +551,9 @@ class LoopPlugin(
         invokeMutex.lock()
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
+            // Reconcile before reading the mode: reads are pure now, so this is what makes the loop act on
+            // a mode that matches the pump state and the current constraints.
+            runningModePreCheck()
             if (runningMode() == RM.Mode.DISABLED_LOOP) {
                 val message = rh.gs(CoreUiStrings.loop_disabled_by_user)
                 aapsLogger.debug(LTag.APS, message)
@@ -614,8 +682,18 @@ class LoopPlugin(
                             }
                         }
                     }
+                    // `isHeld()` is the settings-import hold. Do NOT start an enactment under it: the
+                    // executor will not pick the commands up, so the temp basal and the SMB would sit in
+                    // the queue and both land after the hold ends - against pump drivers that were just
+                    // stopped and restarted. Waiting for a running enactment instead was tried and
+                    // refuted: `withHold` raises the flag BEFORE it waits, so the loop's second queue
+                    // call is never picked up and the import always times out.
+                    //
+                    // Skipping a loop run is cheap - the next one is five minutes away and re-decides
+                    // from fresh data. Enacting into a driver being torn down is not.
                     if (resultAfterConstraints.isChangeRequested()
                         && !commandQueue.bolusInQueue()
+                        && !commandQueue.isHeld()
                     ) {
                         val waiting = pumpEnactResultProvider()
                         waiting.queued = true
@@ -665,7 +743,7 @@ class LoopPlugin(
                                         lastRun.lastSMBEnact = dateUtil.now()
                                         scheduleBuildAndStoreDeviceStatus("applySMBRequest")
                                     } else {
-                                        appScope.launch { delay(1000); invoke("tempBasalFallback", allowNotification, true) }
+                                        scheduleSmbFallback(allowNotification)
                                     }
                                 } else {
                                     aapsLogger.debug(LTag.APS, "No SMB requested")
@@ -727,6 +805,13 @@ class LoopPlugin(
 
     override suspend fun acceptChangeRequest() {
         val profile = profileFunction.getProfile() ?: return
+        // Same hold as in `invoke`, and this path needs its own check: it enacts OUTSIDE `invokeMutex`
+        // and is reachable from the phone and the watch, so nothing `invoke` does protects it. The user
+        // pressed a button, so say why nothing happened rather than failing silently.
+        if (commandQueue.isHeld()) {
+            aapsLogger.debug(LTag.APS, "acceptChangeRequest: queue is held (settings being applied), not enacting")
+            return
+        }
         lastRun?.let { lastRun ->
             lastRun.constraintsProcessed?.let { constraintsProcessed ->
                 // Protected for the same reason as the enactment in `invoke`, and it matters more
@@ -901,6 +986,20 @@ class LoopPlugin(
             note = note,
             listValues = listValues
         )
+    }
+
+    /**
+     * Re-run the loop shortly after an SMB that was not enacted, so the temp basal still gets a chance.
+     *
+     * A named function rather than a launch buried in [invoke], so the cancellation can be tested
+     * without driving a whole loop run to its SMB branch. See [smbFallbackJob] for why the job is held.
+     */
+    internal fun scheduleSmbFallback(allowNotification: Boolean) {
+        smbFallbackJob?.cancel()
+        smbFallbackJob = appScope.launch {
+            delay(1000)
+            invoke("tempBasalFallback", allowNotification, true)
+        }
     }
 
     override fun scheduleBuildAndStoreDeviceStatus(reason: String) {

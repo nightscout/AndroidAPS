@@ -133,6 +133,12 @@ internal class FillDialogViewModelTest {
         return captor.allValues.filterIsInstance<EventShowDialog.Ok>().map { it.message }
     }
 
+    private fun reportedTitles(): List<String> {
+        val captor = argumentCaptor<Event>()
+        verify(rxBus, atLeast(0)).send(captor.capture())
+        return captor.allValues.filterIsInstance<EventShowDialog.Ok>().map { it.title }
+    }
+
     /**
      * Drive a cartridge change whose selected insulin differs from the active one (there is none), with no prime
      * bolus — so `confirmAndSave` takes the "switch immediately" branch and the outcome of [outcome] is what the
@@ -178,15 +184,17 @@ internal class FillDialogViewModelTest {
      * skips it entirely — and the confirmation has already promised it. [changeInsulin] selects a different insulin
      * (there is no active one) to make that promise, or leaves it alone so no switch was ever promised.
      */
-    private suspend fun runFailingPrime(changeInsulin: Boolean): List<String> {
+    private suspend fun runFailingPrime(changeInsulin: Boolean, cancelled: Boolean = false): List<String> {
         stubStrings()
         whenever(rh.gs(eq(CoreUiStrings.fill_prime_failed_insulin_not_switched), anyOrNull())).thenReturn("PRIME_FAILED_AND_NOT_SWITCHED")
+        whenever(rh.gs(CoreUiStrings.treatmentdeliveryerror)).thenReturn("ERROR_TITLE")
+        whenever(rh.gs(CoreUiStrings.command_cancelled_title)).thenReturn("CANCELLED_TITLE")
         // A non-zero constrained amount makes hasPrimeBolus true, so the switch is chained to the prime.
         val constrained: Constraint<Double> = mock()
         whenever(constrained.value()).thenReturn(0.3)
         whenever(constraintChecker.applyBolusConstraints(any())).thenReturn(constrained)
         whenever(wizardBolusExecutor.deliverFillBolus(any(), anyOrNull(), any(), any(), any())).thenAnswer { inv ->
-            inv.getArgument<(String) -> Unit>(3).invoke("pump error")
+            inv.getArgument<(WizardBolusExecutor.Failure) -> Unit>(3).invoke(WizardBolusExecutor.Failure("pump error", cancelled))
         }
         if (changeInsulin) sut.selectInsulin(ICfg(insulinLabel = "Fiasp", insulinEndTime = 480, insulinPeakTime = 55, concentration = 1.0))
         sut.updateCartridgeChange(true)
@@ -194,6 +202,18 @@ internal class FillDialogViewModelTest {
         sut.buildConfirmationSummary()
         sut.confirmAndSave()
         return reportedMessages()
+    }
+
+    /**
+     * A prime dropped from the queue (a settings import cleared it) did not fail, so calling it a delivery error
+     * is wrong twice over: it names the pump as the culprit, and "error" is the word the alarm tier uses.
+     */
+    @Test
+    fun `a cancelled prime is not reported as a delivery error`() = runTest {
+        runFailingPrime(changeInsulin = false, cancelled = true)
+
+        assertThat(reportedTitles()).contains("CANCELLED_TITLE")
+        assertThat(reportedTitles()).doesNotContain("ERROR_TITLE")
     }
 
     @Test

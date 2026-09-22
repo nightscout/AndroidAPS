@@ -3,6 +3,7 @@ package app.aaps.core.interfaces.configuration
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.plugin.PluginBase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 interface ConfigBuilder {
@@ -21,9 +22,18 @@ interface ConfigBuilder {
     val activeSelectionChanges: Flow<Unit>
 
     /**
-     * Called during start of app to load configuration and start enabled plugins
+     * Called during start of app to load configuration and start enabled plugins.
+     *
+     * Returns the start jobs. They are only *scheduled* here, so when this returns the plugins have been
+     * marked enabled but their `onStart` may not have run yet - and whatever the caller does next
+     * (`RunningModeReconciler.start()` reads the active pump) runs against half-started plugins. A caller
+     * on the startup path should wait for them; see `MainApp`. [applyConfiguration] does the same wait
+     * internally because it has nothing else it could do with the jobs.
+     *
+     * The return type is the contract: ignoring it is how the two start paths came to give different
+     * guarantees (plan bug 12).
      */
-    fun initialize()
+    fun initialize(): List<Job>
 
     /**
      * Re-reads the stored configuration into an app that is **already running**, and returns once the

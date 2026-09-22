@@ -6,6 +6,7 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
@@ -27,7 +28,8 @@ import kotlin.math.round
 @IntKey(610)
 class ExponentialSmoothingPlugin(
     aapsLogger: AAPSLogger,
-    rh: TextResolver
+    rh: TextResolver,
+    notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
@@ -35,7 +37,7 @@ class ExponentialSmoothingPlugin(
         .pluginName(SmoothingStrings.exponential_smoothing_name)
         .shortName(SmoothingStrings.smoothing_shortname)
         .description(SmoothingStrings.description_exponential_smoothing),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), Smoothing {
 
     @Suppress("LocalVariableName")

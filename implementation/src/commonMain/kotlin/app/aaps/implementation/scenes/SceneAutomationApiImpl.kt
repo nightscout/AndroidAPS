@@ -76,7 +76,7 @@ class SceneAutomationApiImpl(
         return sceneExecutor.prepareScene(scene, durationMinutes)
     }
 
-    override suspend fun commitScene(bolusId: Long, onError: (String) -> Unit): WizardBolusExecutor.ConfirmResult =
+    override suspend fun commitScene(bolusId: Long, onError: (WizardBolusExecutor.Failure) -> Unit): WizardBolusExecutor.ConfirmResult =
         sceneExecutor.commitScene(bolusId, onError)
 
     override suspend fun stopActiveSceneAndStartScene(targetSceneId: String): SceneAutomationResult {

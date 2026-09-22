@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.maintenance
 
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -15,7 +16,9 @@ import app.aaps.core.interfaces.ui.UiRestartImpl
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +39,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -48,6 +52,7 @@ internal class ImportViewModelTest {
     @Mock private lateinit var importExportPrefs: ImportExportPrefs
     @Mock private lateinit var prefFileList: FileListProvider
     @Mock private lateinit var configBuilder: ConfigBuilder
+    @Mock private lateinit var config: Config
     @Mock private lateinit var rh: TextResolver
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var commandQueue: CommandQueue
@@ -77,7 +82,7 @@ internal class ImportViewModelTest {
         // parameter. Tests that care about the wording stub their own ref over the top of this.
         whenever(rh.gs(any<TextRef>())).thenReturn("message")
         sut = ImportViewModel(
-            aapsLogger, importExportPrefs, prefFileList, configBuilder, rh, uel,
+            aapsLogger, importExportPrefs, prefFileList, configBuilder, config, rh, uel,
             commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator, uiRestart
         )
         // Production hands the apply to the IO dispatcher, which a test cannot advance or observe.
@@ -184,6 +189,71 @@ internal class ImportViewModelTest {
     }
 
     /**
+     * `applyConfiguration` disables the old pump and elects the new one, and between those two
+     * `PluginStore.activePumpInternal` has no answer and throws "No pump selected" - which is
+     * deliberate, so the readers have to stay away rather than the assertion being softened. Roughly
+     * 35 call sites already guard on `config.appInitialized`, and this is what closes it for them.
+     */
+    @Test
+    fun `the plugin rebuild runs inside a reconfiguring window`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        inOrder(config, configBuilder) {
+            verify(config).beginReconfiguring()
+            verify(configBuilder).applyConfiguration()
+            verify(config).endReconfiguring()
+        }
+    }
+
+    /**
+     * The window must close even when the apply blows up, and the existing test below proves a
+     * throwing `applyConfiguration` reaches `ApplyFailed`. Left open, `appInitialized` would stay
+     * false for the rest of the process and `WizardBolusExecutorImpl` refuses on it in two places -
+     * the user could not bolus. That is worse than the crash this change prevents.
+     */
+    @Test
+    fun `the reconfiguring window closes even when the apply throws`() = runTest(testDispatcher) {
+        queueGrantsHold(true)
+        whenever(configBuilder.applyConfiguration()).thenThrow(IllegalStateException("plugin blew up"))
+
+        sut.onApplyConfirmed()
+        advanceUntilIdle()
+
+        verify(config).endReconfiguring()
+    }
+
+    /**
+     * The other window, and a separate one: `executeImport` clears the preference store and rewrites
+     * it key by key, so until it returns every preference reads as its default - the safety limits
+     * included. It is a different step from the apply, with a user tap in between.
+     */
+    @Test
+    fun `the preference rewrite runs inside its own reconfiguring window`() = runTest(testDispatcher) {
+        val prefsFile = PrefsFile("backup.json", "", emptyMap())
+        whenever(importExportPrefs.isMasterPasswordSet()).thenReturn(true)
+        whenever(importExportPrefs.decryptImportFile(any(), any()))
+            .thenReturn(ImportDecryptResult.Success(Prefs(mapOf("k" to "v"), mutableMapOf()), importOk = true, importPossible = true))
+
+        sut.selectFile(ImportFileItem(prefsFile, ImportSource.LOCAL))
+        sut.onMasterPasswordChanged("pw")
+        sut.decrypt()
+        advanceUntilIdle()
+
+        sut.confirmImport()
+        advanceUntilIdle()
+
+        inOrder(config, importExportPrefs) {
+            verify(config).beginReconfiguring()
+            verify(importExportPrefs).executeImport(any())
+            verify(importExportPrefs).prepareImportedSettings()
+            verify(config).endReconfiguring()
+        }
+    }
+
+    /**
      * The success ending has to be its own step. It used to fall back to Idle, which the screen draws
      * as a spinner that nothing ever takes down - so a finished import looked like a hung one.
      */
@@ -281,7 +351,7 @@ internal class ImportViewModelTest {
         sut.onApplyConfirmed()
         advanceUntilIdle()
 
-        verify(commandQueue, never()).completeAllAsNoOp(any())
+        verify(commandQueue, never()).cancelAll(any(), any())
     }
 
     @Test
@@ -308,7 +378,7 @@ internal class ImportViewModelTest {
         sut.onApplyConfirmed()
         advanceUntilIdle()
 
-        verify(commandQueue).completeAllAsNoOp(any())
+        verify(commandQueue).cancelAll(any(), eq(false))
     }
 
     /**

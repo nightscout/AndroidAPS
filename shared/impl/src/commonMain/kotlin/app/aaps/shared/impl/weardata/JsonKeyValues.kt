@@ -19,9 +19,9 @@ enum class JsonKeyValues(val key: String) {
     BOLD("bold"),
     BOLD_ITALIC("bold_italic"),
     ITALIC("italic"),
-    BGCOLOR("bgColor"),
-    BGCOLOR_EXT1("bgColor_Ext1"),
-    BGCOLOR_EXT2("bgColor_Ext2"),
+    BGCOLOR("bgColor"),             // optional 2 hex digits alpha suffix, ie "bgColor#80" is half transparent
+    BGCOLOR_EXT1("bgColor_Ext1"),   // same optional alpha suffix, ie "bgColor_Ext1#80"
+    BGCOLOR_EXT2("bgColor_Ext2"),   // same optional alpha suffix, ie "bgColor_Ext2#80"
     SGV_LEVEL("sgvLevel"),
     SGV_LEVEL_EXT1("sgvLevel_Ext1"),
     SGV_LEVEL_EXT2("sgvLevel_Ext2"),
@@ -30,5 +30,12 @@ enum class JsonKeyValues(val key: String) {
     RESERVOIR_LEVEL_EXT2("reservoirLevel_Ext2"),
     PREF_UNITS("key_units"),
     PREF_DARK("key_dark"),
-    PREF_MATCH_DIVIDER("key_match_divider")
+    PREF_MATCH_DIVIDER("key_match_divider"),
+
+    // Values for JsonKeys.IMAGEFIT, named after android.widget.ImageView.ScaleType. They describe
+    // the square the image is drawn into, because the library always crops the image to fill that
+    // square - see ComplicationImageFit.
+    FIT_CENTER("fit_center"),       // square of the slot's smaller side, centred - the default
+    CENTER_CROP("center_crop"),     // square of the slot's larger side: fills the slot, sides cut off
+    FIT_XY("fit_xy")                // stretched to the slot's width and height, aspect not kept
 }

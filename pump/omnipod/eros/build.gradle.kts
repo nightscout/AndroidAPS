@@ -28,7 +28,6 @@ dependencies {
     implementation(project(":pump:rileylink"))
 
     api(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.rxjava3)
 
     implementation(libs.kotlinx.coroutines.rx3)
 

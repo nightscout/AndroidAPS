@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -44,14 +45,15 @@ class BgQualityCheckPlugin(
     override val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(ConstraintsStrings.bg_quality),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), PluginConstraints, BgQualityCheck {
 
     private var scope: CoroutineScope? = null

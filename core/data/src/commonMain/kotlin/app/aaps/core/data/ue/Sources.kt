@@ -84,6 +84,8 @@ enum class Sources {
     Garmin,
     Scene,              //From Scene activation
     Database,           // for PersistenceLayer
+
+    Carelevo,
     Unknown             //if necessary
     ;
 }

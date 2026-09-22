@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="calibration_shortname">CAL</string>
+    <string name="no_calibration_name">无需校准</string>
+    <string name="description_no_calibration">"未应用校准覆盖。传感器数值按原样使用。当传感器已出厂校准且准确时，请使用此选项。"</string>
+    <string name="linear_calibration_name">线性校准</string>
+    <string name="description_linear_calibration">"基于您的指血录入值计算的逐传感器线性校准覆盖（斜率与偏移）。较新的录入值权重更高。覆盖在当前传感器会话开始后应用；前2小时作为预热期被跳过。"</string>
+    <string name="sensor_change_detected_text">在 %1$s 检测到可能的传感器更换。是否标记为新传感器？</string>
+    <string name="sensor_change_detected_action">标记传感器更换</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">记录传感器更改以启用校准。</string>
+    <string name="cal_status_warmup">传感器预热中——校准将在 %1$s 后激活</string>
+    <string name="cal_status_need_more_entries">至少需要 2 条指血录入条目（当前为 %1$d 条）。</string>
+    <string name="cal_status_unsafe_fit">拟合超出安全范围——校准未应用。</string>
+    <string name="cal_status_applied">校准已应用。</string>
+    <string name="cal_status_applied_offset_only">仅偏移校准已应用——传感器范围过窄，无法计算斜率。</string>
+    <string name="cal_status_applied_slope_clamped">校准已应用——斜率已被限制在安全范围内。添加更多条目以放宽限制。</string>
+    <string name="cal_slope_offset">斜率 %1$.2f, 中段校正 %2$s</string>
+    <string name="cal_session_started">会话开始: %1$s</string>
+    <string name="cal_mark_sensor_change_now">记录传感器更换</string>
+    <string name="cal_add_calibration">添加校准</string>
+    <string name="cal_entries_header">指血录入条目 (%1$d)</string>
+    <string name="cal_no_entries">暂无指血录入条目。</string>
+    <string name="cal_entry_pair">指血%1$s → 传感器 %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">移除项目?</string>
+    <string name="cal_remove_entry_message">此操作将使该条目失效。拟合将重新计算。</string>
+    <string name="cal_chart_entry_readout">条目 %1$d/%2$d · %3$s · 传感器 %4$s → 血糖 %5$s</string>
 </resources>

@@ -66,9 +66,25 @@ Useful commands on the Mac:
 - Compile the iOS device target for every KMP module: `./gradlew compileKotlinIosArm64 --no-daemon`
 - Run the iOS simulator tests: `./gradlew iosSimulatorArm64Test --no-daemon`
 
-Note that today only `:core:data` has a `commonTest` source set, so it is the only module whose
-tests actually run on the simulator. The other KMP modules keep their tests in `androidHostTest`,
-and their `linkDebugTestIosSimulatorArm64` task reports `NO-SOURCE`.
+**A real body of tests runs on the simulator** - `iosTest` and `commonTest` source sets both execute
+under `iosSimulatorArm64Test`, so a change to shared code is genuinely run on Apple, not merely
+cross-compiled to a klib. Measured on 2026-09-21 at `7e303d9bb5`: **714 tests, 0 failures, across all
+14 modules below** (4m 11s). There are 18 populated test source sets in those 14 modules:
+
+- `commonTest`: `core/data`, `core/interfaces`, `core/nssdk`, `core/objects`, `core/utils`,
+  `database/persistence`, `implementation`, `plugins/aps`, `plugins/sync`, `shared/clientbindings`,
+  `shared/impl`, `ui`
+- `iosTest`: `core/interfaces`, `implementation`, `ios/shell`, `plugins/aps`, `plugins/automation`,
+  `plugins/sync`
+
+`.github/workflows/ios-ci.yml` already runs five of them explicitly. Re-derive the list rather than
+trusting this one when it matters:
+`find . -maxdepth 4 -type d \( -name commonTest -o -name iosTest \) -not -path "*/build/*"` - and
+check each for `.kt` files, because an empty source-set directory still exists for `core/ui`.
+
+(This paragraph used to say only `:core:data` had a `commonTest` source set and that everything else
+reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused work to be shipped as
+"compiles for iOS" when it could have been run.)
 
 ## Token Usage Reduction (Delay Conversation Compaction)
 

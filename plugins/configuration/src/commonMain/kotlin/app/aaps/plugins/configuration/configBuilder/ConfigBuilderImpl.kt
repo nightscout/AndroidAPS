@@ -65,15 +65,19 @@ class ConfigBuilderImpl(
 
     private val scope = CoroutineScope(Dispatchers.Default + Job())
 
-    override fun initialize() {
-        loadSettings()
-        setAlwaysEnabledPluginsEnabled()
+    override fun initialize(): List<Job> {
+        // Collected and returned, not dropped: these are only scheduled, so without waiting for them the
+        // caller carries on against plugins that are enabled but not yet started. That is the difference
+        // that made the two start paths give different guarantees (plan bug 12) - applyConfiguration below
+        // waits, this one left it to the caller and nobody did it.
+        val started = loadSettings() + setAlwaysEnabledPluginsEnabled()
         // Seed the synthetic ActivePlugin mirror from the local selection — MASTER ONLY. On a client this is
         // intentionally skipped: now that these keys are Bidirectional, a startup put would publish the
         // client's (possibly stale) local selection and clobber the master. The client's mirror is instead
         // driven by the master's push and by the client's own gated switches (both already non-clobbering).
         if (!config.AAPSCLIENT) regenerateActivePluginKeys()
         startActivePluginObservers()   // adopt sync-driven selection changes (master↔client)
+        return started
     }
 
     override suspend fun applyConfiguration() {
@@ -170,6 +174,9 @@ class ConfigBuilderImpl(
 
     override fun storeSettings(from: String) {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing settings from: $from")
+        // Jobs ignored on purpose: storeSettings runs on a live app where the selection is already
+        // settled, so verify normally elects nothing and schedules nothing. The path that must wait is
+        // applyConfiguration, and it goes through loadSettings.
         activePlugin.verifySelectionInCategories()
         for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
@@ -188,8 +195,10 @@ class ConfigBuilderImpl(
     private fun loadSettings(): List<Job> {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loading stored settings")
         val jobs = activePlugin.getPluginsList().mapNotNull { p -> loadPref(p, p.getType()) }
-        activePlugin.verifySelectionInCategories()
-        return jobs
+        // verifySelectionInCategories elects the active plugin per category, and electing one enables it.
+        // Its jobs belong in the same list, or applyConfiguration would wait only for the plugins loadPref
+        // touched and carry on while a plugin elected here was still starting.
+        return jobs + activePlugin.verifySelectionInCategories()
     }
 
     private fun loadPref(p: PluginBase, type: PluginType): Job? {

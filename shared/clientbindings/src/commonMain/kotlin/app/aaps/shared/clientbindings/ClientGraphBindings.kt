@@ -208,10 +208,11 @@ object ClientGraphBindings {
         decimalFormatter: DecimalFormatter,
         processedTbrEbData: ProcessedTbrEbData,
         signals: CalculationSignalsEmitter,
+        notificationManager: NotificationManager,
         cache: () -> OverviewDataCache
     ): IobCobCalculatorPlugin = IobCobCalculatorPlugin(
         aapsLogger, rxBus, preferences, rh, profileFunction, activePlugin, dateUtil, persistenceLayer,
-        overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData, signals
+        overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData, signals, notificationManager
     ) { cache() }
 
     @Provides

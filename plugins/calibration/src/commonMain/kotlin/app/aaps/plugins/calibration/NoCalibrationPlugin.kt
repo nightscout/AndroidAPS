@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.calibration.CalibrationContext
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
@@ -25,7 +26,8 @@ import dev.zacsweers.metro.binding
 @IntKey(700)
 class NoCalibrationPlugin(
     aapsLogger: AAPSLogger,
-    rh: TextResolver
+    rh: TextResolver,
+    notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CALIBRATION)
@@ -34,7 +36,7 @@ class NoCalibrationPlugin(
         .pluginName(CalibrationStrings.no_calibration_name)
         .shortName(CalibrationStrings.calibration_shortname)
         .description(CalibrationStrings.description_no_calibration),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), Calibration {
 
     override suspend fun calibrate(

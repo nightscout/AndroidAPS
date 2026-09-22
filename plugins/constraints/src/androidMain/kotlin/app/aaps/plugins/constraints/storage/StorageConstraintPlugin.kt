@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.storage
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.plugins.constraints.ConstraintsStrings
 import android.os.Environment
@@ -13,7 +14,6 @@ import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -34,14 +34,14 @@ import dev.zacsweers.metro.binding
 class StorageConstraintPlugin(
     aapsLogger: AAPSLogger,
     override val rh: ResourceHelper,
-    private val notificationManager: NotificationManager
+    notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(ConstraintsStrings.storage),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), PluginConstraints {
 
     override suspend fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {

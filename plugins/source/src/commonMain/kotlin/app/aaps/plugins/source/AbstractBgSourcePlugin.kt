@@ -2,6 +2,7 @@
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.TextResolver
@@ -17,8 +18,9 @@ abstract class AbstractBgSourcePlugin(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
     preferences: Preferences,
-    protected val config: Config
-) : PluginBaseWithPreferences(pluginDescription, ownPreferences, aapsLogger, rh, preferences), BgSource {
+    protected val config: Config,
+    notificationManager: NotificationManager
+) : PluginBaseWithPreferences(pluginDescription, ownPreferences, aapsLogger, rh, preferences, notificationManager), BgSource {
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "bg_source_settings",

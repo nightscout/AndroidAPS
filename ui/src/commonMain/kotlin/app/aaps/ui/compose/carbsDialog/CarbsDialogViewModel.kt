@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -286,11 +287,11 @@ class CarbsDialogViewModel(
             }
             when (val prepared = batchExecutor.prepare(actions, Sources.CarbDialog, rh.gs(InterfacesStrings.carbs))) {
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
-                is ActionProgress.Rejected -> when (prepared.reason) {
-                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = rh.gs(prepared.reason.failText())))
+                is ActionProgress.Rejected -> when {
                     // No-op (e.g. nothing left to remove after a COB-shrink between open and confirm): neutral message, NOT the bolus-error alarm.
-                    FailureReason.NoAction     -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
-                    else                       -> prepared.detail?.let { detail ->
+                    prepared.reason == FailureReason.NoAction -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
+                    prepared.reason.isNotDeliveryError()      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = rh.gs(prepared.reason.failText())))
+                    else                                      -> prepared.detail?.let { detail ->
                         if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = detail))
                         else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                     }
@@ -312,7 +313,7 @@ class CarbsDialogViewModel(
             // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
             // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
-                if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
+                if (result.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
                     if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.carbs), message = detail))

@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import org.mockito.kotlin.mock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -12,7 +13,7 @@ class NotificationReaderPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         // construction runs loadPackageConfig() (falls back to an empty config when the asset/pref is absent)
-        notificationReaderPlugin = NotificationReaderPlugin(rh, aapsLogger, preferences, config, context)
+        notificationReaderPlugin = NotificationReaderPlugin(rh, aapsLogger, preferences, config, context, mock())
     }
 
     @Test

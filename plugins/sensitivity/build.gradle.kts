@@ -65,8 +65,8 @@ kotlin {
                 implementation(project(":core:ui"))
 
                 implementation(libs.androidx.collection)
-                implementation(libs.cmp.runtime)
-                implementation(libs.cmp.material.icons.extended)
+                implementation(libs.jetbrains.compose.runtime)
+                implementation(libs.jetbrains.compose.material.icons.extended)
             }
         }
 

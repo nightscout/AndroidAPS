@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import org.mockito.kotlin.mock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase
@@ -17,7 +18,7 @@ class NSClientSourcePluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        nsClientSourcePlugin = NSClientSourcePlugin(rh, aapsLogger, config)
+        nsClientSourcePlugin = NSClientSourcePlugin(rh, aapsLogger, config, mock())
     }
 
     @Test

@@ -160,7 +160,7 @@ class InsightPlugin(
     private val pumpSync: PumpSync,
     private val insightDatabase: InsightDatabase,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
     private val bolusProgressData: BolusProgressData,
     @ApplicationScope private val appScope: CoroutineScope,
@@ -189,7 +189,7 @@ class InsightPlugin(
             )
         },
     ownPreferences = InsightBooleanKey.entries + InsightIntKey.entries + InsightLongNonKey.entries + InsightDoubleNonKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, Insight, PumpPluginConstraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }

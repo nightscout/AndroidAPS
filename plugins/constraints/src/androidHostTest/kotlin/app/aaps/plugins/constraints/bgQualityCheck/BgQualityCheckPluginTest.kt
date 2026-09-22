@@ -1,6 +1,7 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
 import app.aaps.shared.tests.stubTextRefResolution
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doAnswer
 import app.aaps.core.keys.interfaces.TextRef
@@ -41,7 +42,7 @@ class BgQualityCheckPluginTest : TestBase() {
     @BeforeEach
     fun mock() {
         plugin =
-            BgQualityCheckPlugin(aapsLogger, rh, rxBus, iobCobCalculator, dateUtil)
+            BgQualityCheckPlugin(aapsLogger, rh, rxBus, iobCobCalculator, dateUtil, org.mockito.kotlin.mock())
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
         stubTextRefResolution(rh)
         whenever(dateUtil.now()).thenReturn(now)
