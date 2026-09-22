@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -69,6 +68,7 @@ import app.aaps.pump.carelevo.common.CarelevoObserveReceiver
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.common.keys.CarelevoBooleanPreferenceKey
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.compose.CarelevoComposeContent
 import app.aaps.pump.carelevo.coordinator.CarelevoBasalProfileUpdateCoordinator
@@ -123,7 +123,6 @@ class CarelevoPumpPlugin @Inject constructor(
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
-    private val sp: SP,
     private val fabricPrivacy: FabricPrivacy,
     private val profileFunction: ProfileFunction,
     private val context: Context,
@@ -160,7 +159,7 @@ class CarelevoPumpPlugin @Inject constructor(
         .pluginName(TextRef.AndroidRes(R.string.carelevo))
         .shortName(TextRef.AndroidRes(R.string.carelevo_shortname))
         .description(TextRef.AndroidRes(R.string.carelevo_description)),
-    ownPreferences = CarelevoBooleanPreferenceKey.entries + CarelevoIntPreferenceKey.entries,
+    ownPreferences = CarelevoBooleanPreferenceKey.entries + CarelevoIntPreferenceKey.entries + CarelevoStringNonKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump {
 
@@ -245,7 +244,7 @@ class CarelevoPumpPlugin @Inject constructor(
         preferences.observe(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)
             .drop(1)
             .onEach {
-                val hours = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key, 0)
+                val hours = preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)
                 commandQueue.customCommand(CmdUpdateExpiredThreshold(hours))
             }
             .launchIn(newScope)
@@ -253,7 +252,7 @@ class CarelevoPumpPlugin @Inject constructor(
         preferences.observe(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
             .drop(1)
             .onEach {
-                val amountUnits = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key, 0)
+                val amountUnits = preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
                 // Zero = reminder off; skip enqueuing so the pump isn't reconnected just to no-op.
                 if (amountUnits != 0) commandQueue.customCommand(CmdUpdateLowInsulinNotice(amountUnits))
             }
@@ -262,7 +261,7 @@ class CarelevoPumpPlugin @Inject constructor(
         preferences.observe(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER)
             .drop(1)
             .onEach {
-                val on = sp.getBoolean(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER.key, false)
+                val on = preferences.get(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER)
                 commandQueue.customCommand(CmdUpdateBuzzer(on))
             }
             .launchIn(newScope)
@@ -449,13 +448,11 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     private fun applyDefaultCageThresholdsIfNeeded() {
-        if (sp.getBoolean(CarelevoBooleanPreferenceKey.CARELEVO_CAGE_DEFAULT_APPLIED.key, false)) return
+        if (preferences.get(CarelevoBooleanPreferenceKey.CARELEVO_CAGE_DEFAULT_APPLIED)) return
 
-        sp.edit {
-            putInt(IntKey.OverviewCageWarning.key, 96)
-            putInt(IntKey.OverviewCageCritical.key, 168)
-            putBoolean(CarelevoBooleanPreferenceKey.CARELEVO_CAGE_DEFAULT_APPLIED.key, true)
-        }
+        preferences.put(IntKey.OverviewCageWarning, 96)
+        preferences.put(IntKey.OverviewCageCritical, 168)
+        preferences.put(CarelevoBooleanPreferenceKey.CARELEVO_CAGE_DEFAULT_APPLIED, true)
     }
 
     private suspend fun startAlarmObserving() {

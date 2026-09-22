@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.command.CmdDiscard
@@ -94,7 +94,7 @@ internal class CarelevoPatchConnectViewModelTest {
     @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var carelevoPatch: CarelevoPatch
     @Mock lateinit var commandQueue: CommandQueue
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var bleSession: CarelevoBleSession
     @Mock lateinit var transport: CarelevoBleTransport
     @Mock lateinit var scanner: BleScanner
@@ -143,7 +143,7 @@ internal class CarelevoPatchConnectViewModelTest {
             aapsSchedulers = aapsSchedulers,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
-            sp = sp,
+            preferences = preferences,
             bleSession = bleSession,
             transport = transport,
             connectNewPatchUseCase = connectNewPatchUseCase,
@@ -378,8 +378,8 @@ internal class CarelevoPatchConnectViewModelTest {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
         whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(userSettings))
-        whenever(sp.getInt(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key, 116)).thenReturn(72)
-        whenever(sp.getBoolean(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER.key, false)).thenReturn(true)
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(72)
+        whenever(preferences.get(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER)).thenReturn(true)
         whenever { bleSession.runPairing(any(), any()) }.thenReturn(pairingResult)
         whenever(connectNewPatchUseCase.persistNewPatch(any(), any(), any(), any(), any())).thenReturn(true)
 
@@ -415,7 +415,7 @@ internal class CarelevoPatchConnectViewModelTest {
         whenever(carelevoPatch.isBluetoothEnabled()).thenReturn(true)
         setSelectedDevice(device)
         whenever(carelevoPatch.userSettingInfo).thenReturn(userSettingSubject(userSettings))
-        whenever(sp.getInt(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key, 116)).thenReturn(72)
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(72)
         whenever { bleSession.runPairing(any(), any()) }.thenReturn(sessionReported)
         whenever(connectNewPatchUseCase.persistNewPatch(any(), any(), any(), any(), any())).thenReturn(true)
 

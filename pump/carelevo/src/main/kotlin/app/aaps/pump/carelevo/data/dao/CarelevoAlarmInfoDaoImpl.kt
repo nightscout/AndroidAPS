@@ -1,7 +1,7 @@
 package app.aaps.pump.carelevo.data.dao
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.carelevo.config.PrefEnvConfig
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -18,7 +18,7 @@ import java.util.Optional
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class CarelevoAlarmInfoDaoImpl @Inject constructor(
-    private val prefManager: SP
+    private val preferences: Preferences
 ) : CarelevoAlarmInfoDao {
 
     private val _alarms: BehaviorSubject<Optional<List<CarelevoAlarmInfoEntity>>> = BehaviorSubject.create()
@@ -52,7 +52,7 @@ class CarelevoAlarmInfoDaoImpl @Inject constructor(
     }
 
     override fun clearAlarms(): Completable = Completable.fromAction {
-        prefManager.remove(PrefEnvConfig.CARELEVO_ALARM_INFO_LIST)
+        preferences.remove(CarelevoStringNonKey.AlarmInfoList)
         _alarms.onNext(Optional.ofNullable(null))
     }
 
@@ -104,7 +104,7 @@ class CarelevoAlarmInfoDaoImpl @Inject constructor(
         val cached = _alarms.value?.orElse(null)
         if (cached != null) return cached
 
-        val json = prefManager.getString(PrefEnvConfig.CARELEVO_ALARM_INFO_LIST, "")
+        val json = preferences.get(CarelevoStringNonKey.AlarmInfoList)
         val list = if (json.isBlank()) emptyList() else CarelevoGsonHelper.sharedGson()
             .fromJson(json, Array<CarelevoAlarmInfoEntity>::class.java)
             .toList()
@@ -114,7 +114,7 @@ class CarelevoAlarmInfoDaoImpl @Inject constructor(
 
     private fun saveList(list: List<CarelevoAlarmInfoEntity>) {
         val json = CarelevoGsonHelper.sharedGson().toJson(list)
-        prefManager.putString(PrefEnvConfig.CARELEVO_ALARM_INFO_LIST, json)
+        preferences.put(CarelevoStringNonKey.AlarmInfoList, json)
     }
 
     private fun AlarmCause.canonicalKey(): String = when (this) {

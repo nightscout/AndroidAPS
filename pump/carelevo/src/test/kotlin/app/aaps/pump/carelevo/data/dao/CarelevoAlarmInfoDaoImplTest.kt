@@ -1,7 +1,8 @@
 package app.aaps.pump.carelevo.data.dao
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.carelevo.config.PrefEnvConfig
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoAlarmInfoEntity
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -15,18 +16,19 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 
 /**
  * Unit coverage for [CarelevoAlarmInfoDaoImpl].
  *
- * The DAO persists the alarm list as a Gson-serialized JSON string in [SP] under a single key. The
- * mocked [SP] is driven as an in-memory fake — a backing map answers `getString`/`putString`/`remove`
- * — so every method exercises the *real* [CarelevoGsonHelper] serialization round trip.
+ * The DAO persists the alarm list as a Gson-serialized JSON string in [Preferences] under the single
+ * registered key [CarelevoStringNonKey.AlarmInfoList]. The mocked [Preferences] is driven as an
+ * in-memory fake — a backing map answers `get`/`put`/`remove` — so every method exercises the *real*
+ * [CarelevoGsonHelper] serialization round trip.
  *
  * The load path is deliberately UNFILTERED: everything in the store is an active (unacknowledged)
  * alarm by construction because acknowledging an alarm removes it (see `removeAlarm`). The regression
@@ -37,32 +39,31 @@ import org.mockito.quality.Strictness
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class CarelevoAlarmInfoDaoImplTest {
 
-    @Mock lateinit var prefManager: SP
+    @Mock lateinit var preferences: Preferences
 
-    private val key = PrefEnvConfig.CARELEVO_ALARM_INFO_LIST
-    private val store = mutableMapOf<String, String>()
+    private val key = CarelevoStringNonKey.AlarmInfoList
+    private val store = mutableMapOf<StringNonPreferenceKey, String>()
 
     private lateinit var sut: CarelevoAlarmInfoDaoImpl
 
     @BeforeEach
     fun setUp() {
-        // Fake shared-preferences: a backing map behind the three String-keyed methods the DAO uses.
-        // any<String>() picks the String overload over the @StringRes Int overload of each.
-        whenever(prefManager.getString(any<String>(), any<String>())).thenAnswer {
-            val k = it.getArgument<String>(0)
-            val default = it.getArgument<String>(1)
-            store[k] ?: default
+        // Fake preference store: a backing map behind the three key-typed methods the DAO uses.
+        // An absent key falls back to the key's own declared defaultValue, exactly as the real store does.
+        whenever(preferences.get(any<StringNonPreferenceKey>())).thenAnswer {
+            val k = it.getArgument<StringNonPreferenceKey>(0)
+            store[k] ?: k.defaultValue
         }
         doAnswer {
-            store[it.getArgument<String>(0)] = it.getArgument<String>(1)
+            store[it.getArgument<StringNonPreferenceKey>(0)] = it.getArgument<String>(1)
             null
-        }.whenever(prefManager).putString(any<String>(), any<String>())
+        }.whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
         doAnswer {
-            store.remove(it.getArgument<String>(0))
+            store.remove(it.getArgument<StringNonPreferenceKey>(0))
             null
-        }.whenever(prefManager).remove(any<String>())
+        }.whenever(preferences).remove(any<StringNonPreferenceKey>())
 
-        sut = CarelevoAlarmInfoDaoImpl(prefManager)
+        sut = CarelevoAlarmInfoDaoImpl(preferences)
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -136,7 +137,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
         val second = sut.getAlarms().blockingFirst()
 
         assertThat(second.get()).hasSize(1)
-        verify(prefManager, times(1)).getString(any<String>(), any<String>())
+        verify(preferences, times(1)).get(any<StringNonPreferenceKey>())
     }
 
     @Test
@@ -222,7 +223,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
 
         sut.setAlarms(list).blockingAwait()
 
-        verify(prefManager).putString(eq(key), any<String>())
+        verify(preferences).put(eq(key), any<String>())
         assertThat(store).containsKey(key)
         assertThat(sut.getAlarms().blockingFirst().get()).containsExactlyElementsIn(list)
     }
@@ -232,7 +233,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
         sut.setAlarms(listOf(entity(alarmId = "first"))).blockingAwait()
         sut.setAlarms(listOf(entity(alarmId = "second"))).blockingAwait()
 
-        val reloaded = CarelevoAlarmInfoDaoImpl(prefManager).getAlarmsOnce().blockingGet()
+        val reloaded = CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce().blockingGet()
         assertThat(reloaded.get().map { it.alarmId }).containsExactly("second")
     }
 
@@ -247,7 +248,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
 
         sut.clearAlarms().blockingAwait()
 
-        verify(prefManager).remove(eq(key))
+        verify(preferences).remove(eq(key))
         assertThat(store).doesNotContainKey(key)
         assertThat(sut.getAlarms().blockingFirst().isPresent).isFalse()
     }
@@ -385,7 +386,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
         val stored = sut.getAlarms().blockingFirst().get()
         assertThat(stored.map { it.alarmId }).containsExactly("keep")
         // Persisted too: a fresh cold read agrees.
-        val reloaded = CarelevoAlarmInfoDaoImpl(prefManager).getAlarmsOnce().blockingGet()
+        val reloaded = CarelevoAlarmInfoDaoImpl(preferences).getAlarmsOnce().blockingGet()
         assertThat(reloaded.get().map { it.alarmId }).containsExactly("keep")
     }
 
@@ -398,7 +399,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
 
         val stored = sut.getAlarms().blockingFirst().get()
         assertThat(stored.map { it.alarmId }).containsExactly("a", "b")
-        verify(prefManager, times(1)).putString(eq(key), any<String>())
+        verify(preferences, times(1)).put(eq(key), any<String>())
     }
 
     @Test
@@ -423,7 +424,7 @@ internal class CarelevoAlarmInfoDaoImplTest {
         )
         sut.setAlarms(list).blockingAwait()
 
-        val fresh = CarelevoAlarmInfoDaoImpl(prefManager)
+        val fresh = CarelevoAlarmInfoDaoImpl(preferences)
         val read = fresh.getAlarmsOnce().blockingGet()
 
         assertThat(read.isPresent).isTrue()
@@ -432,15 +433,18 @@ internal class CarelevoAlarmInfoDaoImplTest {
     }
 
     @Test
-    fun `verifies the fake never touches the StringRes overloads`() {
-        // Sanity guard on the fake wiring: the DAO only uses the String-keyed SP overloads.
+    fun `the DAO reads and writes nothing but the alarm-list key`() {
+        // Sanity guard on the fake wiring. It used to check that the DAO never reached the @StringRes
+        // overloads of SP; those overloads are gone with SP, and the equivalent worry on a registered
+        // store is the DAO touching some OTHER key, so that is what is asserted now.
         seedStore(entity())
         sut.getAlarms().blockingFirst()
         sut.setAlarms(listOf(entity())).blockingAwait()
         sut.clearAlarms().blockingAwait()
 
-        verify(prefManager, never()).getString(any<Int>(), any<String>())
-        verify(prefManager, never()).putString(any<Int>(), any<String>())
-        verify(prefManager, never()).remove(any<Int>())
+        verify(preferences).get(eq(key))
+        verify(preferences).put(eq(key), any<String>())
+        verify(preferences).remove(eq(key))
+        verifyNoMoreInteractions(preferences)
     }
 }

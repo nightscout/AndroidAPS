@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
@@ -20,6 +19,7 @@ import app.aaps.pump.carelevo.ble.data.BleState
 import app.aaps.pump.carelevo.ble.data.DeviceModuleState
 import app.aaps.pump.carelevo.ble.data.isAvailable
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
@@ -67,7 +67,6 @@ class CarelevoPatch @Inject constructor(
     private val transport: CarelevoBleTransport,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
-    private val sp: SP,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val infusionInfoMonitorUseCase: CarelevoInfusionInfoMonitorUseCase,
@@ -457,15 +456,20 @@ class CarelevoPatch @Inject constructor(
             )
     }
 
-    /** Which causes the last processed snapshot reported active — survives across acknowledges on purpose. */
+    /**
+     * Which causes the last processed snapshot reported active — survives across acknowledges on
+     * purpose. Stored comma-joined in [CarelevoStringNonKey.LastSnapshotAlarmCauses] so it is kept
+     * across process restarts: a cold start must not treat every still-active condition as newly
+     * raised.
+     */
     private fun loadLastSnapshotAlarmCauses(): Set<AlarmCause> =
-        sp.getString(PREF_KEY_LAST_SNAPSHOT_ALARM_CAUSES, "")
+        preferences.get(CarelevoStringNonKey.LastSnapshotAlarmCauses)
             .split(",")
             .mapNotNull { name -> runCatching { AlarmCause.valueOf(name) }.getOrNull() }
             .toSet()
 
     private fun saveLastSnapshotAlarmCauses(causes: Set<AlarmCause>) {
-        sp.putString(PREF_KEY_LAST_SNAPSHOT_ALARM_CAUSES, causes.joinToString(",") { it.name })
+        preferences.put(CarelevoStringNonKey.LastSnapshotAlarmCauses, causes.joinToString(",") { it.name })
     }
 
     /**
@@ -475,7 +479,7 @@ class CarelevoPatch @Inject constructor(
      * and never raise it, even though this patch (and its alarm records) are brand new.
      */
     private fun clearLastSnapshotAlarmCauses() {
-        sp.remove(PREF_KEY_LAST_SNAPSHOT_ALARM_CAUSES)
+        preferences.remove(CarelevoStringNonKey.LastSnapshotAlarmCauses)
     }
 
     private fun reconcileInfusingStateFromSnapshot(infusing: Boolean) {
@@ -667,7 +671,7 @@ class CarelevoPatch @Inject constructor(
         // Main-thread subscribe, and SharedPreferences reads on the main thread risk an ANR.
         infoDisposable += Single.fromCallable {
             CarelevoUserSettingInfoRequestModel(
-                lowInsulinNoticeAmount = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key, 30),
+                lowInsulinNoticeAmount = preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS),
                 maxBasalSpeed = 15.0,
                 maxBolusDose = preferences.get(DoubleKey.SafetyMaxBolus)
             )
@@ -687,11 +691,6 @@ class CarelevoPatch @Inject constructor(
         private const val RPT_WARNING: Byte = 0xA1.toByte()       // CMD_WARNING_MSG_RPT
         private const val RPT_ALERT: Byte = 0xA2.toByte()         // CMD_ALERT_MSG_RPT
         private const val RPT_NOTICE: Byte = 0xA3.toByte()        // CMD_NOTICE_MSG_RPT
-
-        // Comma-joined AlarmCause names last seen active in an 0x43→0xA4/A5/A6 snapshot — the
-        // edge-detection baseline for applyActiveAlarmSnapshots, kept across process restarts so a
-        // cold start doesn't treat every still-active condition as newly raised.
-        private const val PREF_KEY_LAST_SNAPSHOT_ALARM_CAUSES = "carelevo_last_snapshot_alarm_causes"
 
         private fun hex(b: Byte) = "0x%02X".format(b.toInt() and 0xFF)
     }

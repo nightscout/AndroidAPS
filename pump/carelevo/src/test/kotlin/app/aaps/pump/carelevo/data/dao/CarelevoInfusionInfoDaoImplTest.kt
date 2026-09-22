@@ -1,7 +1,9 @@
 package app.aaps.pump.carelevo.data.dao
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.carelevo.config.PrefEnvConfig
+import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalSegmentInfusionInfoEntity
@@ -27,16 +29,16 @@ import org.mockito.quality.Strictness
 import java.util.Optional
 
 /**
- * Unit tests for [CarelevoInfusionInfoDaoImpl] — exercises the SharedPreferences-backed round-trip
- * (save / load / update-field / delete) using an in-memory [MutableMap] behind the mocked [SP], plus
- * the aggregate [CarelevoInfusionInfoEntity] BehaviorSubject folding, empty/absent-record collapse,
- * malformed-JSON tolerance and persistence-failure branches.
+ * Unit tests for [CarelevoInfusionInfoDaoImpl] — exercises the preference-backed round-trip
+ * (save / load / update-field / delete) using an in-memory [MutableMap] behind the mocked
+ * [Preferences], plus the aggregate [CarelevoInfusionInfoEntity] BehaviorSubject folding,
+ * empty/absent-record collapse, malformed-JSON tolerance and persistence-failure branches.
  */
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class CarelevoInfusionInfoDaoImplTest {
 
-    @Mock lateinit var prefManager: SP
+    @Mock lateinit var preferences: Preferences
 
     private lateinit var store: MutableMap<String, String>
     private lateinit var sut: CarelevoInfusionInfoDaoImpl
@@ -95,31 +97,30 @@ internal class CarelevoInfusionInfoDaoImplTest {
         infusionDurationMin = 45
     )
 
-    private fun seed(key: String, value: Any) {
-        store[key] = gson.toJson(value)
+    private fun seed(key: StringNonPreferenceKey, value: Any) {
+        store[key.key] = gson.toJson(value)
     }
 
     @BeforeEach
     fun setUp() {
         store = mutableMapOf()
-        // getString(key, default) — non-void, backed by the in-memory store.
-        whenever(prefManager.getString(any<String>(), any<String>())).thenAnswer { inv ->
-            val key = inv.getArgument<String>(0)
-            val def = inv.getArgument<String>(1)
-            store[key] ?: def
+        // get(key) — non-void, backed by the in-memory store; falls back to the key's own default.
+        whenever(preferences.get(any<StringNonPreferenceKey>())).thenAnswer { inv ->
+            val key = inv.getArgument<StringNonPreferenceKey>(0)
+            store[key.key] ?: key.defaultValue
         }
-        // putString(key, value) — void; write through to the store.
+        // put(key, value) — void; write through to the store.
         doAnswer { inv ->
-            store[inv.getArgument<String>(0)] = inv.getArgument<String>(1)
+            store[inv.getArgument<StringNonPreferenceKey>(0).key] = inv.getArgument<String>(1)
             null
-        }.whenever(prefManager).putString(any<String>(), any<String>())
+        }.whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
         // remove(key) — void; delete from the store.
         doAnswer { inv ->
-            store.remove(inv.getArgument<String>(0))
+            store.remove(inv.getArgument<NonPreferenceKey>(0).key)
             null
-        }.whenever(prefManager).remove(any<String>())
+        }.whenever(preferences).remove(any<NonPreferenceKey>())
 
-        sut = CarelevoInfusionInfoDaoImpl(prefManager)
+        sut = CarelevoInfusionInfoDaoImpl(preferences)
     }
 
     // ---- getInfusionInfo / ensureLoaded ----------------------------------------------------
@@ -132,7 +133,7 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
     @Test
     fun `getInfusionInfo seeds the aggregate from a stored basal record`() {
-        seed(PrefEnvConfig.BASAL_INFUSION_INFO, basal())
+        seed(CarelevoStringNonKey.BasalInfusionInfo, basal())
 
         val result = sut.getInfusionInfo().blockingFirst()
 
@@ -150,10 +151,10 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
     @Test
     fun `getInfusionInfoBySync seeds all four records from prefs`() {
-        seed(PrefEnvConfig.BASAL_INFUSION_INFO, basal())
-        seed(PrefEnvConfig.TEMP_BASAL_INFUSION_INFO, tempBasal())
-        seed(PrefEnvConfig.IMME_BOLUS_INFUSION_INFO, immeBolus())
-        seed(PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO, extendBolus())
+        seed(CarelevoStringNonKey.BasalInfusionInfo, basal())
+        seed(CarelevoStringNonKey.TempBasalInfusionInfo, tempBasal())
+        seed(CarelevoStringNonKey.ImmeBolusInfusionInfo, immeBolus())
+        seed(CarelevoStringNonKey.ExtendBolusInfusionInfo, extendBolus())
 
         val agg = sut.getInfusionInfoBySync()
 
@@ -169,17 +170,17 @@ internal class CarelevoInfusionInfoDaoImplTest {
         // First read seeds from an empty store (absent).
         assertThat(sut.getInfusionInfoBySync()).isNull()
         // Even though data appears in prefs afterwards, the cached subject is not reloaded.
-        seed(PrefEnvConfig.BASAL_INFUSION_INFO, basal())
+        seed(CarelevoStringNonKey.BasalInfusionInfo, basal())
         assertThat(sut.getInfusionInfoBySync()).isNull()
 
-        // Exactly one load pass = four getString calls (one per per-mode key).
-        verify(prefManager, times(4)).getString(any<String>(), any<String>())
+        // Exactly one load pass = four get calls (one per per-mode key).
+        verify(preferences, times(4)).get(any<StringNonPreferenceKey>())
     }
 
     @Test
     fun `loadEntity tolerates malformed json by treating that record as absent`() {
-        store[PrefEnvConfig.BASAL_INFUSION_INFO] = "[1,2,3]" // not a JSON object → parse fails
-        seed(PrefEnvConfig.TEMP_BASAL_INFUSION_INFO, tempBasal())
+        store[CarelevoStringNonKey.BasalInfusionInfo.key] = "[1,2,3]" // not a JSON object → parse fails
+        seed(CarelevoStringNonKey.TempBasalInfusionInfo, tempBasal())
 
         val agg = sut.getInfusionInfoBySync()
 
@@ -196,9 +197,9 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.updateBasalInfusionInfo(b)).isTrue()
 
-        assertThat(store[PrefEnvConfig.BASAL_INFUSION_INFO]).isEqualTo(gson.toJson(b))
+        assertThat(store[CarelevoStringNonKey.BasalInfusionInfo.key]).isEqualTo(gson.toJson(b))
         assertThat(sut.getInfusionInfoBySync()!!.basalInfusionInfo).isEqualTo(b)
-        verify(prefManager).putString(eq(PrefEnvConfig.BASAL_INFUSION_INFO), any<String>())
+        verify(preferences).put(eq<StringNonPreferenceKey>(CarelevoStringNonKey.BasalInfusionInfo), any<String>())
     }
 
     @Test
@@ -207,9 +208,9 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.updateTempBasalInfusionInfo(tb)).isTrue()
 
-        assertThat(store[PrefEnvConfig.TEMP_BASAL_INFUSION_INFO]).isEqualTo(gson.toJson(tb))
+        assertThat(store[CarelevoStringNonKey.TempBasalInfusionInfo.key]).isEqualTo(gson.toJson(tb))
         assertThat(sut.getInfusionInfoBySync()!!.tempBasalInfusionInfo).isEqualTo(tb)
-        verify(prefManager).putString(eq(PrefEnvConfig.TEMP_BASAL_INFUSION_INFO), any<String>())
+        verify(preferences).put(eq<StringNonPreferenceKey>(CarelevoStringNonKey.TempBasalInfusionInfo), any<String>())
     }
 
     @Test
@@ -218,9 +219,9 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.updateImmeBolusInfusionInfo(ib)).isTrue()
 
-        assertThat(store[PrefEnvConfig.IMME_BOLUS_INFUSION_INFO]).isEqualTo(gson.toJson(ib))
+        assertThat(store[CarelevoStringNonKey.ImmeBolusInfusionInfo.key]).isEqualTo(gson.toJson(ib))
         assertThat(sut.getInfusionInfoBySync()!!.immeBolusInfusionInfo).isEqualTo(ib)
-        verify(prefManager).putString(eq(PrefEnvConfig.IMME_BOLUS_INFUSION_INFO), any<String>())
+        verify(preferences).put(eq<StringNonPreferenceKey>(CarelevoStringNonKey.ImmeBolusInfusionInfo), any<String>())
     }
 
     @Test
@@ -229,9 +230,9 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.updateExtendBolusInfusionInfo(eb)).isTrue()
 
-        assertThat(store[PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO]).isEqualTo(gson.toJson(eb))
+        assertThat(store[CarelevoStringNonKey.ExtendBolusInfusionInfo.key]).isEqualTo(gson.toJson(eb))
         assertThat(sut.getInfusionInfoBySync()!!.extendBolusInfusionInfo).isEqualTo(eb)
-        verify(prefManager).putString(eq(PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO), any<String>())
+        verify(preferences).put(eq<StringNonPreferenceKey>(CarelevoStringNonKey.ExtendBolusInfusionInfo), any<String>())
     }
 
     @Test
@@ -251,7 +252,7 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
     @Test
     fun `updateBasalInfusionInfo returns false and leaves the aggregate untouched when persistence throws`() {
-        doThrow(RuntimeException("write failed")).whenever(prefManager).putString(any<String>(), any<String>())
+        doThrow(RuntimeException("write failed")).whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
 
         assertThat(sut.updateBasalInfusionInfo(basal())).isFalse()
         // Nothing was persisted, so a fresh load still reports absent.
@@ -277,9 +278,9 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.deleteBasalInfusionInfo()).isTrue()
 
-        assertThat(store.containsKey(PrefEnvConfig.BASAL_INFUSION_INFO)).isFalse()
+        assertThat(store.containsKey(CarelevoStringNonKey.BasalInfusionInfo.key)).isFalse()
         assertThat(sut.getInfusionInfoBySync()).isNull()
-        verify(prefManager).remove(eq(PrefEnvConfig.BASAL_INFUSION_INFO))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.BasalInfusionInfo))
     }
 
     @Test
@@ -288,9 +289,9 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.deleteTempBasalInfusionInfo()).isTrue()
 
-        assertThat(store.containsKey(PrefEnvConfig.TEMP_BASAL_INFUSION_INFO)).isFalse()
+        assertThat(store.containsKey(CarelevoStringNonKey.TempBasalInfusionInfo.key)).isFalse()
         assertThat(sut.getInfusionInfoBySync()).isNull()
-        verify(prefManager).remove(eq(PrefEnvConfig.TEMP_BASAL_INFUSION_INFO))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.TempBasalInfusionInfo))
     }
 
     @Test
@@ -299,9 +300,9 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.deleteImmeBolusInfusionInfo()).isTrue()
 
-        assertThat(store.containsKey(PrefEnvConfig.IMME_BOLUS_INFUSION_INFO)).isFalse()
+        assertThat(store.containsKey(CarelevoStringNonKey.ImmeBolusInfusionInfo.key)).isFalse()
         assertThat(sut.getInfusionInfoBySync()).isNull()
-        verify(prefManager).remove(eq(PrefEnvConfig.IMME_BOLUS_INFUSION_INFO))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.ImmeBolusInfusionInfo))
     }
 
     @Test
@@ -310,9 +311,9 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(sut.deleteExtendBolusInfusionInfo()).isTrue()
 
-        assertThat(store.containsKey(PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO)).isFalse()
+        assertThat(store.containsKey(CarelevoStringNonKey.ExtendBolusInfusionInfo.key)).isFalse()
         assertThat(sut.getInfusionInfoBySync()).isNull()
-        verify(prefManager).remove(eq(PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.ExtendBolusInfusionInfo))
     }
 
     @Test
@@ -333,12 +334,12 @@ internal class CarelevoInfusionInfoDaoImplTest {
         assertThat(sut.deleteBasalInfusionInfo()).isTrue()
 
         assertThat(sut.getInfusionInfoBySync()).isNull()
-        verify(prefManager).remove(eq(PrefEnvConfig.BASAL_INFUSION_INFO))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.BasalInfusionInfo))
     }
 
     @Test
     fun `deleteBasalInfusionInfo returns false when the remove throws`() {
-        doThrow(RuntimeException("remove failed")).whenever(prefManager).remove(any<String>())
+        doThrow(RuntimeException("remove failed")).whenever(preferences).remove(any<NonPreferenceKey>())
 
         assertThat(sut.deleteBasalInfusionInfo()).isFalse()
     }
@@ -356,15 +357,15 @@ internal class CarelevoInfusionInfoDaoImplTest {
 
         assertThat(store).isEmpty()
         assertThat(sut.getInfusionInfoBySync()).isNull()
-        verify(prefManager).remove(eq(PrefEnvConfig.BASAL_INFUSION_INFO))
-        verify(prefManager).remove(eq(PrefEnvConfig.TEMP_BASAL_INFUSION_INFO))
-        verify(prefManager).remove(eq(PrefEnvConfig.IMME_BOLUS_INFUSION_INFO))
-        verify(prefManager).remove(eq(PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.BasalInfusionInfo))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.TempBasalInfusionInfo))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.ImmeBolusInfusionInfo))
+        verify(preferences).remove(eq<NonPreferenceKey>(CarelevoStringNonKey.ExtendBolusInfusionInfo))
     }
 
     @Test
     fun `deleteInfusionInfo returns false when a remove throws`() {
-        doThrow(RuntimeException("remove failed")).whenever(prefManager).remove(any<String>())
+        doThrow(RuntimeException("remove failed")).whenever(preferences).remove(any<NonPreferenceKey>())
 
         assertThat(sut.deleteInfusionInfo()).isFalse()
     }

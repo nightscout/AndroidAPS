@@ -17,8 +17,8 @@ import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
@@ -58,7 +58,7 @@ class CarelevoAlarmNotifier @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val dateUtil: DateUtil,
     private val notificationManager: app.aaps.core.interfaces.notifications.NotificationManager,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val alarmActionHandler: CarelevoAlarmActionHandler
 ) {
 
@@ -263,12 +263,12 @@ class CarelevoAlarmNotifier @Inject constructor(
     private fun buildDescArgsFor(alarm: CarelevoAlarmInfo): List<String> = when (alarm.cause) {
         AlarmCause.ALARM_NOTICE_LOW_INSULIN,
         AlarmCause.ALARM_ALERT_OUT_OF_INSULIN -> {
-            val lowInsulinNoticeAmount = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key, 30)
+            val lowInsulinNoticeAmount = preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
             listOf((lowInsulinNoticeAmount).toString())
         }
 
         AlarmCause.ALARM_NOTICE_PATCH_EXPIRED -> {
-            val expiry = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key, 116)
+            val expiry = preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)
             aapsLogger.debug(LTag.PUMPCOMM, "buildDescArgsFor alarm=${alarm.value} expiry=$expiry")
             val (days, hours) = splitDaysAndHours(expiry)
             listOf(days.toString(), hours.toString())

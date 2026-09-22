@@ -94,6 +94,19 @@ Non-goals:
      through `.key`, for example
      `sp.getInt(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key, 0)`. ComboV2
      does the same through `AAPSPumpStateStore`, `Delegates` and `ComboV2Plugin`.
+
+     **Order agreed 2026-09-22: CareLevo now, ComboV2 later with its own migration.** CareLevo is the
+     cheaper of the two and splits in half. The registered keys read raw
+     (`CarelevoBooleanPreferenceKey`, `CarelevoIntPreferenceKey` - already in `ownPreferences`, just
+     read through `sp.getX(Key.key, default)` instead of `preferences.get(Key)`) are a swap at about
+     seven call sites. The part that actually matters for 4.1 decision 4 is the OTHER half: seven raw
+     string constants in `PrefEnvConfig` - `carelevo_patch_info`, the four `*_infusion_info` keys,
+     `carelevo_user_setting_info`, `carelevo_alarm_info_list` - plus
+     `PREF_KEY_LAST_SNAPSHOT_ALARM_CAUSES` in `CarelevoPatch`. Those are registered nowhere, they hold
+     live patch and infusion state, and under the removal rule they look exactly like trash. They need
+     a `CarelevoStringNonKey` marked NOT exportable (they belong to this patch and this install), and
+     the DAOs routed through `Preferences`. Note `CarelevoInfusionInfoDaoImpl` keys by a computed
+     string per infusion mode, so that one needs a composed key rather than a plain entry.
    Nothing else. `ActiveSceneManager`, `ProfileRepositoryImpl`, `UnscentedKalmanFilterPlugin` and
    `MainApp` only name the type in a comment.
    **Why the two drivers are a prerequisite and not a tidy-up.** A raw read never sees
@@ -494,11 +507,36 @@ reloadFromStore is unsafe on today's sp.clear()").
 
 Each of these changes what gets built, and none of them is a coding question.
 
-1. **Does `kind` have a default?** `NonPreferenceKey.exportable` is `get() = true`, and that default
-   is exactly how the pump-state keys in 8.B became exportable without anyone typing it. A `kind`
-   with a default repeats that one level up, and the unsafe value (Setting) is again the natural
-   default. A `kind` with no default breaks every key enum at once and has to be filled in one pass.
-   Two very different pieces of work; phase 1 cannot start without the answer.
+1. ~~**Does `kind` have a default?**~~ **SETTLED 2026-09-22: YES, a default is allowed - and the work
+   goes into making the minority visible instead of into 287 hand-written declarations.** Miloš's
+   answer, and the measurement supports it: only **25 key entries** are `exportable = false` against
+   roughly 287 core entries, so the default is right about 91% of the time. Forcing every entry to
+   declare a kind, to catch the rest, is the worse trade.
+
+   **But the default is only safe with the check, and that check does not exist yet.** The earlier
+   reasoning here was that a default is how the 8.B pump-state keys became exportable with nobody
+   typing it. That is true, and the measurement says why it was not caught: 14 of the 25 opt-outs are
+   in `StringNonKey`, and the three pump-state keys sat in that same file **next to fourteen
+   neighbours that had the `false` they were missing**. Nothing ever showed which entries were wrong.
+   So the fix is not to remove the default, it is 8.D: **the snapshot must record `kind` per key, and
+   CI must fail on a change**, so a new key's classification lands in a reviewable diff and a flip from
+   device state back to setting cannot pass silently. That moves 8.D's snapshot item from "machinery"
+   to a **precondition of 4.2 step 2**, because decision 4 now makes a wrong kind mean the key is
+   DELETED on import, not merely exported wrongly.
+
+   **Where a whole family has one answer, put it on the interface, not on each enum.** Done for intent
+   keys on 2026-09-22: `IntentPreferenceKey` now declares `override val exportable: Boolean get() = false`,
+   because an intent key is an ACTION and there is no value to carry. All six implementations
+   (`IntentKey`, `ApsIntentKey`, `SmsIntentKey`, `XdripIntentKey`, `DanaIntentKey`, `DiaconnIntentKey`)
+   already wrote that in their constructor and agreed - but that was a convention repeated six times,
+   and a seventh enum leaving the line out would have inherited `true` from `NonPreferenceKey` and
+   become exportable while holding nothing. This also answers the sub-question below: intent keys need
+   no fourth `NotStored` kind declared per enum, because the kind follows from the type.
+
+   Note the shadowing rule when doing the same for `kind`: a constructor parameter default **wins over**
+   an interface getter (`StringNonKey` declares `override val exportable: Boolean = true` and shadows
+   the interface), so an interface default sets the fallback for enums that stay silent - it does not
+   override one that speaks.
 2. **What is the quiet point**, given that nothing can stop the loop between the temp basal and the
    SMB (8.A)? **HALF SETTLED AND BUILT; the other half is specified below and not built.**
 
@@ -776,12 +814,16 @@ They are still proposals - each needs a yes or a different answer.
 - The snapshot must record `kind` per key (8.D), and it has to ship **with** the classification in
   4.2 step 2, not later. 516 classifications with no check behind them is worse than a known gap,
   because a guard that is believed removes the reason to build the real one.
-- Two cases need an answer in the same pass: `IntentPreferenceKey` stores no value, so give it a
-  fourth kind (`NotStored`) rather than a classification the checker throws away; and
+- Two cases need an answer in the same pass. **The first is now done**: `IntentPreferenceKey` stores no
+  value, and rather than a fourth `NotStored` kind declared by each enum, the answer went on the
+  interface - `override val exportable: Boolean get() = false`, because the kind follows from the type
+  and nobody has to remember it. See decision 1. **The second is still open**:
   `BooleanComposedKey.ConfigBuilderEnabled` is one constant covering every plugin in the app, so it
-  cannot carry a single kind - see decision 4.
-- If the pass has to be staged, stage it with a shrinking allowlist of unclassified enums, never
-  with a default.
+  cannot carry a single kind - see decision 4, where the removal rule makes it sharper than it was.
+- ~~If the pass has to be staged, stage it with a shrinking allowlist of unclassified enums, never
+  with a default.~~ **Overtaken by decision 1**, which allows the default and puts the safety in 8.D's
+  snapshot instead. The allowlist idea is still the right way to stage anything that cannot take a
+  default at all.
 
 **2. Do not stop the loop and do not wait for it under the hold.** (3 of 3 refuted. The goal stands;
 the mechanism written first was a deadlock.)
@@ -882,6 +924,31 @@ survived unchanged. It needs neither phase 1 nor phase 2 and can be done now.)
   with the box unticked. Compute these keys in `:app` from the live plugin list (8.D needs the same
   exposure), mark the `PUMP` ones pump configuration and the rest setting, and call `storeSettings`
   once after the import so every plugin in this build has an explicit value.
+
+  **SETTLED 2026-09-22.** Take the split: `PUMP` keys are pump configuration, the rest are settings.
+  Miloš's reasoning, and it draws the line in the right place - **losing the pump SELECTION is
+  acceptable, losing the pump CONFIGURATION is not.** The user re-picks the driver and it has to come
+  back working, so what must survive an import is the driver's own keys, not the tick that says which
+  driver is on.
+
+  Two things follow, and they are why 4.1 decision 4's preconditions are not optional:
+  - **Every pump driver's own keys must be classified as pump configuration.** Otherwise an
+    aapsclient export - which has no pump modules, so those keys are absent from the file - removes
+    them under the removal rule, and re-picking the driver gives a driver with no pairing, no serial
+    and no settings. Selection restored, configuration gone, which is the one outcome ruled out.
+  - **CareLevo and ComboV2 must be off the raw store**, or their keys are not registered at all, look
+    like trash, and go the same way.
+
+  **And the fallback must say so.** `verifySelectionInCategories` does not leave the category empty -
+  it calls `getDefaultPlugin(PUMP)` and `setPluginEnabled(PUMP, true)`, so it actively enables
+  `VirtualPumpPlugin`: a pump that accepts every command and reports success while delivering
+  nothing. "The user switches back" assumes the user looks. So an import that ends with no pump
+  selected **must raise a notification saying what happened and naming the pump that is now active**,
+  the same treatment a failed plugin start already gets. Agreed 2026-09-22.
+
+  Worth recording the tension this exposes: `PluginStore` forbids falling back to a default plugin
+  when READING - the standing doctrine - while `verifySelectionInCategories` does exactly that when
+  ELECTING. The notification is what stops the election-time fallback being silent.
 - Split by phase: "and every pump-configuration key when the box is ticked" belongs with the
   checkbox in 4.2 step 5. **Phase 3 must keep writing the file's pump keys exactly as today**, or a
   fresh-phone restore comes back with no pump configured for two whole phases. The plan has to state
