@@ -192,6 +192,7 @@
     <string name="other_medication_text">AAPS sumažina bazę ar sustabdo insulino tiekimą, kad neištiktų hipoglikemija. SGLT2 inhibitorių grupės vaistai (gliflozinai) gali neleisti glikemijai padidėti, todėl dėl sistemos veiksmų gali atsirasti pavojingas insulino trūkumas ir diabetinė ketoacidozė.
  \nPrekių ženklų pavadinimai apima: „Invokana®“, „Forxiga®“, „Jardiance®“, „Steglatro®“, „Suglat®“, „Apleway®“, „Deberza®“, „Synjardy®“, „Vokanamet®“, „Xigduo®“.\n\n Pažadu nevartoti tokių vaistų naudodamas AAPS, arba prieš vartojant juos, išjungti uždarą ciklą.</string>
     <string name="switch_u200_profile">Iki šiol su U200 insulinu naudojote 50 % profilio metodą, o dabar norite pereiti prie naujos insulino koncentracijos funkcijos. Kurie iš šių teiginių yra teisingi?</string>
+    <string name="switch_u200_profile_any_time">Galiu pereiti bet kuriuo metu, nes pompoje jau yra tinkamas U200 insulinas.</string>
     <string name="switch_u200_profile_ps">Turiu sukurti dvigubai agresyvesnį profilį (200 % dabartinio profilio) ir, pasirinkus U200 insuliną, jį sinchronizuoti po kito pompos rezervuaro keitimo.</string>
     <string name="switch_u100_u200_change">Insulino koncentraciją galima pakeisti tik keičiant insuliną rezervuare arba keičiant Pod.</string>
 </resources>
