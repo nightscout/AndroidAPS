@@ -21,7 +21,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
@@ -47,10 +46,15 @@ internal fun IobChip(
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
         // Name the whole chip, not the icon. state.text is only a bare value like "1.20 U", so
         // without a noun a screen reader cannot tell it from a bolus. It goes on the Surface and
-        // not on the Icon for two reasons: the icon is dropped when the row is too narrow
-        // (see IobCobChips), and a clickable Surface merges its children, so a description set
-        // here replaces the value text and has to carry it.
-        val chipDescription = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.iob), state.text)
+        // not on the Icon because the icon is dropped when the row is too narrow (see IobCobChips)
+        // and the label would go with it.
+        //
+        // Only the noun belongs here, never the value. A contentDescription on a merging node does
+        // NOT replace the children: SemanticsNode.emitFakeNodes inserts it as an extra child, so
+        // the child Text is still read. Putting the value in both makes it announced twice.
+        // Measured in ChipAnnouncementTest: the merged node keeps ContentDescription and Text side
+        // by side, giving "IOB" then "1.20 U".
+        val chipDescription = stringResource(CoreUiStrings.iob)
         Surface(
             onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onClick() },
             shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),

@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
@@ -66,7 +65,11 @@ internal fun CobChip(
     // Name the whole chip, not the icon. state.text is only a bare value like "45 g", which says
     // nothing about what it measures. It goes on the Surface because the icon is dropped when the
     // row is too narrow (see IobCobChips) and the label would go with it.
-    val chipDescription = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.cob), state.text)
+    //
+    // Only the noun belongs here, never the value - a description on a merging node is added
+    // beside the children rather than replacing them, so repeating the value says it twice.
+    // See ChipAnnouncementTest.
+    val chipDescription = stringResource(CoreUiStrings.cob)
     Surface(
         shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
         color = if (hasValue) ElementType.COB.color().copy(alpha = 0.2f) else Color.Transparent,
