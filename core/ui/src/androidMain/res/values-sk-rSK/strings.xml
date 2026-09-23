@@ -1033,8 +1033,11 @@
     <string name="import_wrong_password">Nesprávne heslo</string>
     <string name="import_btn">Importovať</string>
     <string name="import_anyway_btn">Importovať aj tak</string>
-    <string name="import_apply_title">Nastavenia importované</string>
-    <string name="import_apply_message">Importované nastavenia budú teraz aplikované. Zásuvné moduly, ktoré boli zmenené, budú reštartované.</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_apply_waiting">Čakanie na pumpu…</string>
     <string name="import_apply_pump_busy">Pumpa je stále zaneprázdnená, takže nastavenia neboli použité.</string>
     <string name="import_apply_retry_question">Opakovať teraz?</string>
