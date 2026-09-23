@@ -146,7 +146,6 @@
     <string name="pref_title_wear_wizard_iob">向导中包含 IOB</string>
     <string name="pref_title_wear_custom_watchface_authorization">授权自定义看板</string>
     <string name="pref_title_wear_pushed_watchface">表盘已安装到手表</string>
-    <string name="pref_summary_wear_pushed_watchface">仅限 Wear OS 6 及更新版本。AAPS 可在手表上安装一个表盘：小工具表盘或自定义表盘。较旧的手表会忽略此设置。</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">小工具表盘</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">自定义表盘</string>
     <string name="pref_title_wear_notify_on_smb">在 SMB 上通知</string>
