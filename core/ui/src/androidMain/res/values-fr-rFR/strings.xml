@@ -183,6 +183,8 @@
     <string name="a11y_arrow_double_up">en hausse rapide</string>
     <string name="a11y_arrow_none">aucun</string>
     <string name="a11y_arrow_unknown">inconnu</string>
+    <string name="decrement">diminuer</string>
+    <string name="increment">augmenter</string>
     <string name="a11y_high">haut</string>
     <string name="a11y_inrange">dans la cible</string>
     <string name="a11y_low">bas</string>
@@ -898,7 +900,7 @@
     <string name="reorder">Réordonner</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Déplacer avant</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Déplacer après</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Afficher les détails</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Afficher les détails</string>
     <string name="presets_changed_reorder_aborted">Les présélections ont été modifiées ailleurs. La nouvelle commande n\'a pas été enregistrée.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d de %2$d</string>
