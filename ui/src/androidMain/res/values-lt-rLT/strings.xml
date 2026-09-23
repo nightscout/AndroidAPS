@@ -23,7 +23,7 @@
     <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
     <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Vidurkis</string>
     <string name="cgp_reference">Sveikas žmogus</string>
-    <string name="cgp_patient">Pacientas</string>
+    <string name="cgp_patient">Naudotojas</string>
     <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
     <string name="cgp_pgr_very_low">Labai maža rizika</string>
     <string name="cgp_pgr_low">Maža rizika</string>
