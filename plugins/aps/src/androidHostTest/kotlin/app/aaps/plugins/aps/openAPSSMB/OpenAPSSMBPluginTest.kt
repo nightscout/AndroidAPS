@@ -33,11 +33,6 @@ class OpenAPSSMBPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun specialEnableConditionTest() {
-        assertThat(openAPSSMBPlugin.specialEnableCondition()).isTrue()
-    }
-
-    @Test
     fun specialShowInListConditionTest() {
         assertThat(openAPSSMBPlugin.specialShowInListCondition()).isTrue()
     }

@@ -28,11 +28,6 @@ class OpenAPSAMAPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun specialEnableConditionTest() {
-        assertThat(openAPSAMAPlugin.specialEnableCondition()).isTrue()
-    }
-
-    @Test
     fun specialShowInListConditionTest() {
         assertThat(openAPSAMAPlugin.specialShowInListCondition()).isTrue()
     }

@@ -204,24 +204,14 @@ open class OpenAPSAutoISFPlugin(
 
     override fun getSensitivityOverviewString(): String? = null // placeholder for Auto ISF Detailed information for overview
 
-    override fun specialEnableCondition(): Boolean {
-        return config.isEngineeringMode() && config.isDev() &&
-            try {
-                activePlugin.activePump.pumpDescription.isTempBasalCapable
-            } catch (_: Exception) {
-                // may fail during initialization
-                true
-            }
-    }
-
-    override fun specialShowInListCondition(): Boolean {
-        try {
-            val pump = activePlugin.activePump
-            return pump.pumpDescription.isTempBasalCapable
-        } catch (_: Exception) {
-            return true
-        }
-    }
+    /**
+     * AutoISF is still a development feature, so it needs an engineering-mode dev build. `showInList`
+     * carries the same pair, so the plugin is neither offered nor selectable anywhere else.
+     *
+     * The temp basal check that used to be ANDed in here is gone - see the note in OpenAPSSMBPlugin.
+     * SafetyPlugin.isLoopInvocationAllowed owns that rule.
+     */
+    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev()
 
     private val autoIsfCache = LongSparseArray<Double>()
 
