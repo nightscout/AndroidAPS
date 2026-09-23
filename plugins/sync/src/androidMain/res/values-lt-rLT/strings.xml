@@ -87,7 +87,7 @@
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Siųsti duomenis į xDrip+</string>
-    <string name="xdrip_status_settings">Išplėstinė xDrip+ statuso linija</string>
+    <string name="xdrip_status_settings">Papildoma xDrip+ būsenos linija</string>
     <string name="xdrip_not_installed">xDrip+ neinstaliuota</string>
     <string name="calibration_sent">Kalibracija nusiųsta į xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Siųsti glikemijos ir terapijos duomenis į xDrip+. Turi būti pasirinktas duomenų šaltinis „xDrip+ Sync Follower“, o duomenų priėmimas turi būti įjungtas skiltyje Nustatymai – Programų sąveikos nustatymai – Priimti glikemiją/terapiją</string>
