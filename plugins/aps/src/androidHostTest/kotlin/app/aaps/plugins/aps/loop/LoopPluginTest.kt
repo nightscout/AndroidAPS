@@ -120,10 +120,34 @@ class LoopPluginTest : TestBaseWithProfile() {
         // Plugin is enabled by default
         assertThat(loopPlugin.isEnabled()).isTrue()
 
-        // No temp basal capable pump should disable plugin
-        virtualPumpPlugin.pumpDescription.isTempBasalCapable = false
-        assertThat(loopPlugin.specialEnableCondition()).isFalse()
-        virtualPumpPlugin.pumpDescription.isTempBasalCapable = true
+        // A build with an APS of its own may run the loop
+        assertThat(loopPlugin.specialEnableCondition()).isTrue()
+    }
+
+    /**
+     * A client must never run the loop, whatever the stored flag says.
+     *
+     * `ConfigBuilder_Enabled_LOOP_*` is exportable and is not a synced key, so importing a master's
+     * settings writes it on a client too. `specialEnableCondition` is what stops it: `PluginBase.isEnabled`
+     * ANDs it with the stored state, so it beats the flag rather than sitting beside it. See #5145.
+     *
+     * This asserts the condition itself rather than driving the state machine: `setPluginEnabled` starts
+     * the plugin on a real scope, and a collector left running here would outlive the test - see
+     * [cancelPendingWork].
+     */
+    @Test
+    fun `a client may not run the loop`() {
+        whenever(config.APS).thenReturn(false)
+        val clientLoopPlugin = LoopPlugin(
+            aapsLogger, rxBus, preferences, config,
+            constraintChecker, rh, profileFunction, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
+            persistenceLayer, uiInteraction, notificationManager, { pumpEnactResultProvider() },
+            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
+        )
+
+        assertThat(clientLoopPlugin.specialEnableCondition()).isFalse()
+        // Not force-enabled either: alwaysEnabled is config.APS, so isEnabled cannot short-circuit to true
+        assertThat(clientLoopPlugin.isEnabled()).isFalse()
     }
 
     @Test
