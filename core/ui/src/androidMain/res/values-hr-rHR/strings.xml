@@ -76,6 +76,8 @@
     <string name="a11y_arrow_double_up">brzo raste</string>
     <string name="a11y_arrow_none">none</string>
     <string name="a11y_arrow_unknown">nepoznato</string>
+    <string name="decrement">smanjenje</string>
+    <string name="increment">povećanje</string>
     <string name="a11y_high">visoko</string>
     <string name="a11y_inrange">u rasponu</string>
     <string name="a11y_low">nisko</string>
