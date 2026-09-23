@@ -18,8 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -187,12 +186,14 @@ private fun BolusProgressSection(
             text = statusText,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
-            // Delivery moves on without the user touching anything, so say so when it changes.
-            // Polite, not Assertive: this line changes a handful of times during a bolus and
-            // should wait for a gap rather than cut across whatever is being read.
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { liveRegion = LiveRegionMode.Polite }
+            // Deliberately NOT a liveRegion. This line is rebuilt on every progress frame -
+            // BolusProgressData.updateProgress puts the delivered amount into a whole sentence, and
+            // the Dana drivers call it per 0.01 U - so a live region here fires as often as Compose
+            // allows (one per 100 ms). TalkBack queues polite announcements, so the user would get
+            // a growing backlog of "Delivering 1.23 U, Delivering 1.24 U ..." and could not hear
+            // anything else, including the Stop button. The amount is on screen to be read on
+            // demand; it does not need to interrupt.
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(AapsSpacing.large))
     }
@@ -226,26 +227,38 @@ private fun BolusProgressSection(
         // before a terminal frame. Stop can't reach the master either, so offer a manual dismiss that
         // only hides this dialog — it does NOT stop the pump.
         state.stalled -> {
-            Text(
-                text = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_title),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center,
-                // Assertive, unlike the running status above: this says we have lost track of a
-                // bolus that may still be delivering, so it is worth interrupting for.
+            val stalledTitle = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_title)
+            // paneTitle, NOT liveRegion. This whole branch is composed for the first time at the
+            // moment of the stall, and Compose only fires a live region for a node that was already
+            // in the tree on the previous pass - sendSemanticsPropertyChangeEvents skips a node with
+            // no previous entry - so a liveRegion here announces nothing at all. The same flip also
+            // removes the running status line, which was the only node still speaking, so the moment
+            // we lose track of a bolus would otherwise be met with silence. A newly appearing
+            // paneTitle is the supported way to say "this just appeared": it sends
+            // CONTENT_CHANGE_TYPE_PANE_APPEARED carrying the title.
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics { liveRegion = LiveRegionMode.Assertive }
-            )
-            Spacer(modifier = Modifier.height(AapsSpacing.medium))
-            Text(
-                text = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_body),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
+                    .semantics { paneTitle = stalledTitle }
+            ) {
+                Text(
+                    text = stalledTitle,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(AapsSpacing.medium))
+                Text(
+                    text = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_body),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Spacer(modifier = Modifier.height(AapsSpacing.large))
             Row(
                 modifier = Modifier.fillMaxWidth(),
