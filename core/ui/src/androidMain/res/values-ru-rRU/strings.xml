@@ -117,6 +117,8 @@
     <string name="a11y_arrow_double_up">быстрый рост</string>
     <string name="a11y_arrow_none">отсутствует</string>
     <string name="a11y_arrow_unknown">неизвестно</string>
+    <string name="decrement">декремент</string>
+    <string name="increment">приращение</string>
     <string name="a11y_high">высокий</string>
     <string name="a11y_inrange">в диапазоне</string>
     <string name="a11y_low">низкий</string>
