@@ -183,6 +183,8 @@
     <string name="a11y_arrow_double_up">快速上升</string>
     <string name="a11y_arrow_none">无</string>
     <string name="a11y_arrow_unknown">未知</string>
+    <string name="decrement">减少</string>
+    <string name="increment">增加</string>
     <string name="a11y_high">高</string>
     <string name="a11y_inrange">在范围内</string>
     <string name="a11y_low">低</string>
@@ -904,7 +906,7 @@
     <string name="reorder">重新排序</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">前移</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">后移</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">显示详情</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">显示详情</string>
     <string name="presets_changed_reorder_aborted">预设已在别处更改。新顺序未保存。</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">位置 %1$d / %2$d</string>
