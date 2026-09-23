@@ -63,8 +63,8 @@ class PluginLifetimeWorkScanTest {
 
     /**
      * Work that OUTLIVES `onStop` - whether or not that is a problem on its own. The reason says which.
-     * This is the worklist for the `onStop` parity step of `_docs/PREFERENCE_MIGRATIONS_PLAN.md`, and it
-     * should only ever get shorter. Nothing may be added here without a decision recorded next to it.
+     * This is the worklist for the `onStop` parity step, and it should only ever get shorter.
+     * Nothing may be added here without a decision recorded next to it.
      */
     private val survivesStop: Map<String, String> = mapOf(
         "VirtualPumpPlugin#deliverTreatment" to
