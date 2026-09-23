@@ -110,6 +110,7 @@
     <string name="user_action_not_available">Hành động người dùng đã chọn %1$s không còn khả dụng, vui lòng làm mới ô của bạn</string>
     <string name="scene_not_available">Ngữ cảnh %1$s không còn khả dụng, vui lòng làm mới ô hiển thị của bạn</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Các lệnh insulin từ xa bị vô hiệu hóa ở chế độ client</string>
+    <string name="wear_phone_not_ready">Điện thoại vẫn đang khởi động hoặc áp dụng cài đặt. Vui lòng thử lại sau một lát.</string>
     <string name="wear_action_tempt_unit_error">Đồng hồ và điện thoại đang dùng đơn vị khác nhau!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG nằm ngoài phạm vi!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG nằm ngoài phạm vi!</string>
