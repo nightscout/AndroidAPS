@@ -124,6 +124,8 @@
     <string name="a11y_arrow_double_up">hızla yükseliyor</string>
     <string name="a11y_arrow_none">yok</string>
     <string name="a11y_arrow_unknown">bilinmiyor</string>
+    <string name="decrement">azalma</string>
+    <string name="increment">artış</string>
     <string name="a11y_high">yüksek</string>
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
