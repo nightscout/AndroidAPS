@@ -170,6 +170,28 @@ internal class ConfigBuilderImplTest {
     }
 
     /**
+     * The other half of the same contract, and the one that was missing (plan bug 12).
+     *
+     * `initialize` cannot wait for the plugins itself - it is not `suspend`, and several instrumented
+     * tests call it - so it has to hand the jobs back instead. It used to drop them, which is how the
+     * two start paths came to give different guarantees: `applyConfiguration` returned with the plugins
+     * started, `initialize` returned with them merely marked enabled. Whatever the caller does next then
+     * runs against half-started plugins, and on the startup path the very next statement
+     * (`RunningModeReconciler.start()`) reads the active pump.
+     */
+    @Test
+    fun `initialize hands back the jobs its plugins are starting on`() {
+        stubKeyObservation(MutableStateFlow(""))
+        whenever(preferences.getIfExists(eq(BooleanComposedKey.ConfigBuilderEnabled), any())).thenReturn(true)
+        val stillStarting = Job()
+        whenever(sens2.setPluginEnabled(eq(PluginType.SENSITIVITY), any())).thenReturn(stillStarting)
+
+        val jobs = sut.initialize()
+
+        assertThat(jobs).contains(stillStarting)
+    }
+
+    /**
      * Applying on a live app must announce the change, or nothing on screen follows it.
      *
      * Device-found: importing a file that selected a different pump switched the plugin correctly -

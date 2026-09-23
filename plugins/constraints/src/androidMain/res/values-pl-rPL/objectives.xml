@@ -49,7 +49,6 @@
     <string name="objectives_exam_learned_isf">Nauczyłeś się znaczenia wartości ISF i jej wpływu na ilość insuliny użytej do korekty glikemii.</string>
     <string name="objectives_exam_learned_ic">Nauczyłeś się znaczenia wartości IC i jej wpływu na ilość insuliny potrzebną do pokrycia węglowodanów.</string>
     <string name="objectives_exam_learned_hypott">Cel tymczasowy Hipo jest używany tylko aby zapobiec nadmiernej korekcie po hipoglikemii, kiedy zazwyczaj występuje nagromadzony ujemny wskaźnik IOB. Należy rozważyć dodatkowe działania, aby zapobiec takiej sytuacji w przyszłości.</string>
-    <string name="objectives_exam_learned_profileswitch">Użycie mnożnika procentowego nie ma wpływu na poziomy docelowe, ale dawki bazowe, ISF i IC są dostosowane tak, aby podać więcej insuliny (powyżej 100%%) lub mniej insuliny (poniżej 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Używając zmiany czasu (systemu timeshift) w przełączniku profilu, możesz dostosować profil okołodobowy do nieprawidłowości takich jak spóźniona pobudka.</string>
     <string name="objectives_exam_learned_profileswitch4">Edycja profilu nie jest wystarczająca aby dokonać zmiany. Nadal musisz przełączyć się na ten profil aby zastosować zmiany.</string>
     <string name="objectives_exam_learned_exercise">Należy zmniejszyć ilość insuliny w organizmie na co najmniej 1 godzinę przed rozpoczęciem wysiłku fizycznego, wybierając profil i ustawiając mnożnik poniżej 100%.</string>

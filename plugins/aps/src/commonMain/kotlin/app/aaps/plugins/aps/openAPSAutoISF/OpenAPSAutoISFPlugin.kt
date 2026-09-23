@@ -95,7 +95,7 @@ open class OpenAPSAutoISFPlugin(
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val bgQualityCheck: BgQualityCheck,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val determineBasalAutoISF: DetermineBasalAutoISF,
     private val profiler: Profiler,
     private val glucoseStatusCalculatorAutoIsf: GlucoseStatusCalculatorAutoIsf,
@@ -119,7 +119,7 @@ open class OpenAPSAutoISFPlugin(
         .showInList { (config.APS || config.AAPSCLIENT) && config.isEngineeringMode() && config.isDev() }   // AAPSCLIENT: visible so a client can select the master's APS (still eng+dev only)
         .description(ApsStrings.description_auto_isf),
     ownPreferences = ApsIntentKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), APS, PluginConstraints {
 
     // last values

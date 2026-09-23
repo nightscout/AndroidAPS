@@ -23,7 +23,7 @@ class SensitivityWeightedAveragePluginTest : SensitivityTestBase() {
     private lateinit var sut: SensitivityWeightedAveragePlugin
 
     @BeforeEach fun prepare() {
-        sut = SensitivityWeightedAveragePlugin(aapsLogger, rh, preferences, dateUtil, activePlugin)
+        sut = SensitivityWeightedAveragePlugin(aapsLogger, rh, preferences, dateUtil, activePlugin, mock())
     }
 
     private fun detect(

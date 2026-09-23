@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class EopatchPumpPluginTest : EopatchTestBase() {
@@ -54,7 +55,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         plugin = EopatchPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, aapsSchedulers, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
-            protectionCheck, blePreCheck, bolusProgressData
+            protectionCheck, blePreCheck, bolusProgressData, mock()
         )
     }
 
@@ -250,11 +251,5 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         val allPermissions = plugin.requiredPermissions().flatMap { it.permissions }
         assertThat(allPermissions).contains(Manifest.permission.BLUETOOTH_CONNECT)
         assertThat(allPermissions).contains(Manifest.permission.BLUETOOTH_SCAN)
-    }
-
-    @Test
-    fun `requiredPermissions should include SCHEDULE_EXACT_ALARM as special`() {
-        val exactAlarmGroup = plugin.requiredPermissions().first { Manifest.permission.SCHEDULE_EXACT_ALARM in it.permissions }
-        assertThat(exactAlarmGroup.special).isTrue()
     }
 }

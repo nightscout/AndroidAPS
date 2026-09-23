@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -52,6 +53,7 @@ class GlunovoPlugin(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
+    notificationManager: NotificationManager,
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -66,7 +68,7 @@ class GlunovoPlugin(
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_glunovo)),
     ownPreferences = GlunovoLongKey.entries,
-    aapsLogger, resourceHelper, preferences, config
+    aapsLogger, resourceHelper, preferences, config, notificationManager
 ), BgSource {
 
     @VisibleForTesting

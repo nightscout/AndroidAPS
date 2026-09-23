@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.Sync
+import kotlinx.coroutines.Job
 import kotlin.reflect.KClass
 
 interface ActivePlugin {
@@ -98,8 +99,14 @@ interface ActivePlugin {
 
     /**
      *  Pre-process all plugin types and validate active plugins (ie. only only one plugin for type is selected)
+     *
+     *  Returns the start/stop jobs it scheduled. Electing a plugin enables it, and enabling only
+     *  *schedules* [PluginBase.onStart] on the plugin scope, so a caller that must not carry on until
+     *  the plugins have really started joins these. A caller that only wants the selection ignores them.
+     *  Before this returned nothing the jobs were dropped, and "start every plugin, awaited" could not
+     *  be true however the calls were ordered.
      */
-    fun verifySelectionInCategories()
+    fun verifySelectionInCategories(): List<Job>
 
     /**
      *  List of all plugins of type

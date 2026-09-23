@@ -77,6 +77,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
@@ -88,8 +89,19 @@ import java.util.Locale
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
+
+    companion object {
+
+        /**
+         * How long start up waits for the plugins to finish starting before carrying on regardless.
+         * Matches `ConfigBuilderImpl.PLUGIN_SETTLE_WAIT`, which bounds the same wait on the import path -
+         * the two start paths should behave the same, which is the whole point of waiting here at all.
+         */
+        private val PLUGIN_START_WAIT = 30.seconds
+    }
 
     override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
 
@@ -166,6 +178,21 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private var insulinPeakTime: Long = 0L
     private var profileNameToDia: Map<String, Double> = emptyMap()
 
+    /**
+     * The raw profile keys that [profileNameToDia] was built from, still in the old store.
+     *
+     * `doMigrations` used to remove them as it read them, which put the only copy of those DIA
+     * values in the map above - a field, in memory. `dataMigrations` is the only consumer and runs
+     * much later, after `vacuumDatabaseIfDue` (which documents that it can take the process down
+     * below the JVM, where no `catch` reaches) and after the plugins start. A death anywhere in that
+     * gap lost the DIA values for good: the next start finds no keys, takes the empty branch and
+     * stamps the old records with a substituted insulin instead. That is wrong IOB on historical
+     * records and it is one-way - the sentinel is consumed and those rows are never revisited.
+     *
+     * So they are removed only once the value they carry is safely in the insulin list.
+     */
+    private var legacyProfileKeysToRemove: List<String> = emptyList()
+
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshWidget: Runnable
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -208,10 +235,16 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 config.updateInitProgress(getString(R.string.migrating_preferences))
                 doMigrations()
 
-                // ProfileRepository is a @Singleton, so it already loaded during field injection —
-                // before doMigrations() converted the ancient raw SharedPreferences profile keys into
-                // the numbered ones. Re-read now, otherwise that upgrade would be picked up only on
-                // the next start (and the profile-to-JSON conversion with it).
+                // Re-read the profiles now that doMigrations() has converted the ancient raw
+                // SharedPreferences profile keys into the numbered ones. Without this the upgrade
+                // would only be picked up on the next start, and the profile-to-JSON conversion
+                // with it.
+                //
+                // This used to say the repository "already loaded during field injection". There is
+                // no field injection any more - it is a lazy `metroGraphs` accessor, so whether it
+                // was built before this line depends on what else happened to pull it in. Which is
+                // exactly why the call stays: it costs a re-read when nothing was loaded, and it is
+                // the difference between a right and a stale profile when something was.
                 profileRepository.reset()
 
                 // Defragment the DB while it is quiescent: plugins, loop, sync and UI all start
@@ -221,7 +254,13 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // Register and initialize plugins
                 config.updateInitProgress(getString(R.string.initializing_plugins))
                 pluginStore.plugins = plugins
-                configBuilder.initialize()
+                // Wait for the plugins to actually start, not just to be marked enabled. initialize()
+                // only schedules onStart, and everything below reads plugin state - the reconciler asks
+                // for the active pump on the next line. Bounded for the same reason applyConfiguration
+                // bounds it: a driver whose onStart will not settle must not hold up start up for ever.
+                val started = configBuilder.initialize()
+                if (withTimeoutOrNull(PLUGIN_START_WAIT) { started.joinAll() } == null)
+                    aapsLogger.warn(LTag.CORE, "Plugins did not finish starting within $PLUGIN_START_WAIT")
 
                 // Running-mode reconciler + expiry scheduler. Start after plugins are registered:
                 // the reconciler's startup-drift check reads the active pump, which requires
@@ -477,6 +516,21 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.select)) {}),
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
+        // AAPS directory selected, but the permission behind it is gone.
+        //
+        // The check above only ever looked at whether the URI string is there, so this case was
+        // completely silent: the directory is still "selected", the folder and the old exports are
+        // still on the phone, and the Local export button simply goes grey. Android drops a persisted
+        // SAF grant on reinstall and on "clear storage", so it happens to people who did nothing
+        // wrong. Found on a real phone where the last local backup was four months old and nobody
+        // knew - and a user with no cloud set up has, at that point, no backup at all.
+        else if (!fileListProvider.isDirectoryAccessGranted())
+            notificationManager.post(
+                id = NotificationId.AAPS_DIR_ACCESS_LOST,
+                TextRef.AndroidRes(app.aaps.core.ui.R.string.aaps_directory_access_lost),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.select)) {}),
+                validityCheck = { !fileListProvider.isDirectoryAccessGranted() }
+            )
     }
 
     private fun setRxErrorHandler() {
@@ -521,7 +575,21 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         if (sp.getBoolean("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled", false)) {
             sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled")
             sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Visible")
-            sp.putBoolean("ConfigBuilder_APS_OpenAPSSMB_Enabled", true)
+            // The point of this branch: the plugin the user had is gone, so turn its replacement on.
+            //
+            // It wrote the raw key "ConfigBuilder_APS_OpenAPSSMB_Enabled", which the loop below turns
+            // into the composed name "APS_OpenAPSSMB" - while `ConfigBuilderImpl.composedKeyFor`
+            // builds "APS_OpenAPSSMBPlugin", from `PluginType.name + "_" + the class simple name`.
+            // The names never met, so nothing ever read it and this migration has done nothing since
+            // January 2024: someone coming from a pre-2024 install with DynamicISF enabled was left
+            // with no APS plugin turned on at all.
+            //
+            // Written as the typed key directly, so it no longer depends on the raw loop below
+            // parsing the name back the same way it was spelled here. The gating is left exactly as
+            // it was - the plugin is enabled for everyone, the dynamic sensitivity flag only off a
+            // client - because whether a client should carry an APS plugin is a separate question
+            // and not one to settle inside a bug fix.
+            preferences.put(BooleanComposedKey.ConfigBuilderEnabled, "APS_OpenAPSSMBPlugin", value = true)
             if (!config.AAPSCLIENT) preferences.put(BooleanKey.ApsUseDynamicSensitivity, true)
         }
         // convert Double to Int
@@ -537,56 +605,58 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         val keys: Map<String, *> = sp.getAll()
         // Migrate ActivityMonitor
         for ((key, value) in keys) {
-            if (key.startsWith("Monitor") && key.endsWith("total")) {
-                val activity = key.split("_")[1]
-                if (value is String)
-                    preferences.put(LongComposedKey.ActivityMonitorTotal, activity, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(LongComposedKey.ActivityMonitorTotal, activity, value = value as Long)
-                sp.remove(key)
-            }
-            if (key.startsWith("Monitor") && key.endsWith("resumed")) {
-                val activity = key.split("_")[1]
-                if (value is String)
-                    preferences.put(LongComposedKey.ActivityMonitorResumed, activity, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(LongComposedKey.ActivityMonitorResumed, activity, value = value as Long)
-                sp.remove(key)
-            }
-            if (key.startsWith("Monitor") && key.endsWith("start")) {
-                val activity = key.split("_")[1]
-                if (value is String)
-                    preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = value as Long)
+            val parts = key.split("_")
+            if (key.startsWith("Monitor") && key.endsWith("total"))
+                migrateLong(key, value, parts.getOrNull(1)) { activity, total ->
+                    preferences.put(LongComposedKey.ActivityMonitorTotal, activity, value = total)
+                }
+            if (key.startsWith("Monitor") && key.endsWith("resumed"))
+                migrateLong(key, value, parts.getOrNull(1)) { activity, resumed ->
+                    preferences.put(LongComposedKey.ActivityMonitorResumed, activity, value = resumed)
+                }
+            if (key.startsWith("Monitor") && key.endsWith("start"))
+                migrateLong(key, value, parts.getOrNull(1)) { activity, start ->
+                    preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = start)
+                }
+        }
+        // Move the widget "use black background" flag off the appwidget_ prefix.
+        //
+        // It was `appwidget_use_black_<id>`, which sits INSIDE `IntComposedKey.WidgetOpacity`'s
+        // `appwidget_` prefix, so a prefix lookup could resolve it to the opacity key and read a
+        // Boolean as an Int. See ComposedKeyPrefixTest, which now fails if that can happen again.
+        //
+        // The match is anchored on purpose: a bare startsWith("appwidget_") would also take
+        // `appwidget_<id>`, which is the opacity itself and must be left exactly where it is.
+        for ((key, value) in keys) {
+            val id = key.removePrefix("appwidget_use_black_").toIntOrNull()
+            if (key.startsWith("appwidget_use_black_") && id != null) {
+                LegacyPreferenceValue.asBoolean(value)?.let { useBlack ->
+                    preferences.put(BooleanComposedKey.WidgetUseBlack, id, value = useBlack)
+                } ?: skipLegacyKey(key, "expected true or false, found ${describeType(value)}")
                 sp.remove(key)
             }
         }
         // Migrate Objectives
         for ((key, value) in keys) {
-            if (key.startsWith("Objectives_") && key.endsWith("_started")) {
-                val objective = key.split("_")[1]
-                if (value is String)
-                    preferences.put(ObjectivesLongComposedKey.Started, objective, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(ObjectivesLongComposedKey.Started, objective, value = value as Long)
-                sp.remove(key)
-            }
-            if (key.startsWith("Objectives_") && key.endsWith("_accomplished")) {
-                val objective = key.split("_")[1]
-                if (value is String)
-                    preferences.put(ObjectivesLongComposedKey.Accomplished, objective, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(ObjectivesLongComposedKey.Accomplished, objective, value = value as Long)
-                sp.remove(key)
-            }
+            val parts = key.split("_")
+            if (key.startsWith("Objectives_") && key.endsWith("_started"))
+                migrateLong(key, value, parts.getOrNull(1)) { objective, started ->
+                    preferences.put(ObjectivesLongComposedKey.Started, objective, value = started)
+                }
+            if (key.startsWith("Objectives_") && key.endsWith("_accomplished"))
+                migrateLong(key, value, parts.getOrNull(1)) { objective, accomplished ->
+                    preferences.put(ObjectivesLongComposedKey.Accomplished, objective, value = accomplished)
+                }
         }
         // Migrate ConfigBuilder
         for ((key, value) in keys) {
+            val parts = key.split("_")
             if (key.startsWith("ConfigBuilder_") && key.endsWith("_Enabled")) {
-                val plugin = key.split("_")[1] + "_" + key.split("_")[2]
-                preferences.put(BooleanComposedKey.ConfigBuilderEnabled, plugin, value = value as Boolean)
-                sp.remove(key)
+                // The plugin name is two parts, so a key with fewer is not one of ours.
+                val plugin = if (parts.size > 2) parts[1] + "_" + parts[2] else null
+                migrateBoolean(key, value, plugin) { name, enabled ->
+                    preferences.put(BooleanComposedKey.ConfigBuilderEnabled, name, value = enabled)
+                }
             }
             if (key.startsWith("ConfigBuilder_") && key.endsWith("_Visible")) {
                 // Legacy fragment-visibility pref — no longer tracked; drop during migration.
@@ -596,66 +666,66 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // Migrate Profile
         val indexToName = mutableMapOf<Int, String>()
         val indexToDia = mutableMapOf<Int, Double>()
+        // See legacyProfileKeysToRemove: these are collected, not removed, and dataMigrations() drops
+        // them once it has used the DIA values they carry.
+        val stillNeeded = mutableListOf<String>()
         for ((key, value) in keys) {
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_mgdl")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, SafeParse.stringToInt(number), value = value as Boolean)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_isf")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targetlow")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targethigh")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
+            val parts = key.split("_")
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_mgdl"))
+                migrateBoolean(key, value, parts.getOrNull(1)) { number, mgdl ->
+                    preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, SafeParse.stringToInt(number), value = mgdl)
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_isf"))
+                migrateString(key, value, parts.getOrNull(1)) { number, isf ->
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, SafeParse.stringToInt(number), value = isf)
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic"))
+                migrateString(key, value, parts.getOrNull(1)) { number, ic ->
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = ic)
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal"))
+                migrateString(key, value, parts.getOrNull(1)) { number, basal ->
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, SafeParse.stringToInt(number), value = basal)
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targetlow"))
+                migrateString(key, value, parts.getOrNull(1)) { number, low ->
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, SafeParse.stringToInt(number), value = low)
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targethigh"))
+                migrateString(key, value, parts.getOrNull(1)) { number, high ->
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, SafeParse.stringToInt(number), value = high)
+                }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name")) {
-                val number = key.split("_")[1]
-                indexToName[SafeParse.stringToInt(number)] = value as String
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, SafeParse.stringToInt(number), value = value)
-                sp.remove(key)
+                val number = parts.getOrNull(1)
+                val name = LegacyPreferenceValue.asString(value)
+                if (number == null || name == null) skipLegacyKey(key, "expected a name, found ${describeType(value)}")
+                else {
+                    indexToName[SafeParse.stringToInt(number)] = name
+                    preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, SafeParse.stringToInt(number), value = name)
+                    // The new store has the name now, but the raw key stays until the DIA values are
+                    // consumed: a retry has to be able to rebuild the name-to-index pairing.
+                    stillNeeded += key
+                }
             }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_name_")) {
-                val number = key.split("_")[2]
-                indexToName[SafeParse.stringToInt(number)] = value as String
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia")) {
-                val number = SafeParse.stringToInt(key.split("_")[1])
-                indexToDia[number] = SafeParse.stringToDouble(value.toString())
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_dia_")) {
-                val number = SafeParse.stringToInt(key.split("_")[2])
-                indexToDia[number] = SafeParse.stringToDouble(value.toString())
-                sp.remove(key)
-            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_name_"))
+                parts.getOrNull(2)?.let { number ->
+                    LegacyPreferenceValue.asString(value)?.let { indexToName[SafeParse.stringToInt(number)] = it }
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia"))
+                parts.getOrNull(1)?.let { number ->
+                    indexToDia[SafeParse.stringToInt(number)] = SafeParse.stringToDouble(value.toString())
+                    stillNeeded += key
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_dia_"))
+                parts.getOrNull(2)?.let { number ->
+                    indexToDia[SafeParse.stringToInt(number)] = SafeParse.stringToDouble(value.toString())
+                    stillNeeded += key
+                }
         }
         profileNameToDia = indexToDia.mapNotNull { (index, dia) ->
             indexToName[index]?.let { name -> name to dia }
         }.toMap()
+        legacyProfileKeysToRemove = stillNeeded
 
         // Migrate Tidepool from username/password to OAuth2
         if (sp.contains("tidepool_username") || sp.contains("tidepool_password")) {
@@ -731,6 +801,58 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             sp.remove("insulin_oref_peak")
         }
     }
+
+    /**
+     * Moves one legacy raw key into the typed store, or leaves it exactly where it is.
+     *
+     * Every loop in [doMigrations] used to cast the raw value (`value as Long`, `as Boolean`,
+     * `as String`) and index the key parts directly. Both throw, and `doMigrations` runs inside the
+     * start-up `try` in `onCreate`, so anything thrown there is caught as "Fatal initialization
+     * error" and the app does not start at all - for one odd value in a key nobody has read since
+     * 2023. The raw store holds whatever any AAPS version, any import file or any third party ever
+     * wrote, so "the name says Long, therefore it is a Long" is not something we can rely on.
+     *
+     * So a value that will not convert, or a key that is not shaped the way its prefix suggests, is
+     * logged and SKIPPED, and the raw key is LEFT IN PLACE. Leaving it is deliberate: the value is
+     * still there to look at, the migration runs again on the next start, and the trash sweep owns
+     * whatever is left over. Guessing a replacement would silently write a wrong number into a
+     * profile.
+     *
+     * [part] is the piece of the key that names the thing being migrated, for example the activity
+     * in `Monitor_Foo_total`; null means the key did not have it.
+     */
+    private fun migrateLong(key: String, value: Any?, part: String?, put: (String, Long) -> Unit) {
+        if (part == null) return skipLegacyKey(key, "the key does not have the part that names what it belongs to")
+        val number = LegacyPreferenceValue.asLong(value)
+            ?: return skipLegacyKey(key, "expected a whole number, found ${describeType(value)}")
+        put(part, number)
+        sp.remove(key)
+    }
+
+    /** Boolean half of [migrateLong]; the same rules apply. */
+    private fun migrateBoolean(key: String, value: Any?, part: String?, put: (String, Boolean) -> Unit) {
+        if (part == null) return skipLegacyKey(key, "the key does not have the part that names what it belongs to")
+        val flag = LegacyPreferenceValue.asBoolean(value)
+            ?: return skipLegacyKey(key, "expected true or false, found ${describeType(value)}")
+        put(part, flag)
+        sp.remove(key)
+    }
+
+    /** String half of [migrateLong]; the same rules apply. */
+    private fun migrateString(key: String, value: Any?, part: String?, put: (String, String) -> Unit) {
+        if (part == null) return skipLegacyKey(key, "the key does not have the part that names what it belongs to")
+        val text = LegacyPreferenceValue.asString(value)
+            ?: return skipLegacyKey(key, "expected text, found ${describeType(value)}")
+        put(part, text)
+        sp.remove(key)
+    }
+
+    private fun skipLegacyKey(key: String, reason: String) {
+        aapsLogger.warn(LTag.CORE, "Not migrating '$key': $reason. Left in the old store.")
+    }
+
+    /** The type only. The value itself may be profile data, and this line goes to the log. */
+    private fun describeType(value: Any?): String = value?.javaClass?.simpleName ?: "nothing"
 
     /**
      * Migrates temp target presets from old individual preference keys to unified JSON storage.
@@ -844,6 +966,12 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
         if (!localInsulinManager.insulinAlreadyExists(runningICfg))
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)
+
+        // The DIA these keys carry is now in the insulin list, so the old copies can go. This is the
+        // first point where losing them costs nothing - see legacyProfileKeysToRemove for why they
+        // were not dropped when they were read.
+        legacyProfileKeysToRemove.forEach { sp.remove(it) }
+        legacyProfileKeysToRemove = emptyList()
 
         val label = runningICfg.insulinLabel
         val end = runningICfg.insulinEndTime

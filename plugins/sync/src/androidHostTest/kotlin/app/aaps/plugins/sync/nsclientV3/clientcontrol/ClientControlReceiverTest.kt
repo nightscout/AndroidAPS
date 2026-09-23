@@ -615,8 +615,8 @@ internal class ClientControlReceiverTest {
         // confirm() consumed the parked dose (Delivered) but delivery fails via onError before any frame streams
         // (e.g. the master was already bolusing → queue-rejected this one). The arm must be cleared right away.
         whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any())).thenAnswer { inv ->
-            @Suppress("UNCHECKED_CAST") val onError = inv.arguments[2] as (String) -> Unit
-            onError("executing right now")
+            @Suppress("UNCHECKED_CAST") val onError = inv.arguments[2] as (WizardBolusExecutor.Failure) -> Unit
+            onError(WizardBolusExecutor.Failure("executing right now"))
             WizardBolusExecutor.ConfirmResult.Delivered
         }
         val progressId = "${ClientControlPublisher.IDENTIFIER_PROGRESS_PREFIX}$clientId"
@@ -691,6 +691,58 @@ internal class ClientControlReceiverTest {
 
         verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.NSClient), any(), eq(false), any())
         assertThat(acks.last().status.name).isEqualTo("Ok")
+    }
+
+    /**
+     * The LATE delivery ack — the bolus was already acked Ok, then the pump result arrived. The client turns a
+     * Delivery/Failed ack into an URGENT BOLUS_ERROR alarm, so the reason has to say whether anything actually
+     * failed. A command dropped on purpose (the master's queue was cleared by a settings import) must ack
+     * Cancelled, or the client alarms for a bolus nothing tried to give.
+     */
+    @Test
+    fun lateDeliveryFailureAcksCancelledWhenTheCommandWasDropped() = runTest {
+        val (clientId, secret) = pair()
+        authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
+        // Capture the callback instead of calling it inside confirm(): the real failure arrives AFTER confirm
+        // returned, which is exactly what makes it a late Delivery ack rather than part of the Done ack.
+        var report: ((WizardBolusExecutor.Failure) -> Unit)? = null
+        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any())).thenAnswer {
+            report = it.getArgument(2)
+            WizardBolusExecutor.ConfirmResult.Delivered
+        }
+        val acks = captureAcks(clientId)
+        val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
+        sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
+        assertThat(acks.last().status.name).isEqualTo("Ok")
+
+        report!!(WizardBolusExecutor.Failure("settings import", cancelled = true))
+
+        val delivery = acks.last()
+        assertThat(delivery.phase.name).isEqualTo("Delivery")
+        assertThat(delivery.status.name).isEqualTo("Failed")
+        assertThat(delivery.reason).isEqualTo(FailureReason.Cancelled.name)
+        assertThat(delivery.payload).isEqualTo("settings import")
+    }
+
+    /** The same late ack for a real pump failure still says ExecutionFailed, so the client still alarms. */
+    @Test
+    fun lateDeliveryFailureAcksExecutionFailedWhenThePumpFailed() = runTest {
+        val (clientId, secret) = pair()
+        authorizedRepository.markActive(clientId, counterReceived = 1L, now = now - 5_000L)
+        var report: ((WizardBolusExecutor.Failure) -> Unit)? = null
+        whenever(wizardBolusExecutor.confirm(any(), any(), any(), any(), any())).thenAnswer {
+            report = it.getArgument(2)
+            WizardBolusExecutor.ConfirmResult.Delivered
+        }
+        val acks = captureAcks(clientId)
+        val identifier = "${ClientControlPublisher.IDENTIFIER_CMD_PREFIX}bolus_commit_$clientId"
+        sut.onSettingsDocChanged(identifier, wrap(envelope(clientId, secret, message = ClientControlMessage.BolusCommit(42L), counter = 5L, wantsAck = true)))
+
+        report!!(WizardBolusExecutor.Failure("pump said no"))
+
+        val delivery = acks.last()
+        assertThat(delivery.phase.name).isEqualTo("Delivery")
+        assertThat(delivery.reason).isEqualTo(FailureReason.ExecutionFailed.name)
     }
 
     @Test

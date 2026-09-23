@@ -611,7 +611,7 @@ private fun GraphEditButton(
     ) {
         Icon(
             imageVector = Icons.Filled.Edit,
-            contentDescription = null,
+            contentDescription = stringResource(CoreUiStrings.switch_to_edit),
             modifier = Modifier.size(16.dp)
         )
     }

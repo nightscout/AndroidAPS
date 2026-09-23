@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.versionChecker
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
@@ -35,7 +36,8 @@ class VersionCheckerPlugin(
     preferences: Preferences,
     private val versionCheckerUtils: VersionCheckerUtils,
     private val config: Config,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    notificationManager: NotificationManager
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -43,7 +45,7 @@ class VersionCheckerPlugin(
         .showInList { false }
         .pluginName(ConstraintsStrings.version_checker),
     ownPreferences = VersionCheckerLongKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), PluginConstraints {
 
     override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {

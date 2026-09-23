@@ -12,7 +12,7 @@
     <string name="automation_category_time">時間與排程</string>
     <string name="automation_category_glucose">血糖與治療</string>
     <string name="automation_category_device">裝置狀態</string>
-    <string name="automation_category_sensors">感測器與連線</string>
+    <string name="automation_category_sensors">傳感器與連線</string>
     <string name="automation_category_other">其他</string>
     <string name="automation_choose_trigger">新增觸發條件</string>
     <string name="automation_add_group">群組</string>
@@ -151,6 +151,11 @@
     <string name="on">ON</string>
     <string name="off">關</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">變更平滑處理</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">將平滑處理變更為 %1$s</string>
+    <string name="smoothing_label">平滑處理</string>
+    <string name="precondition_smoothing_not_active_name">未啟用平滑處理</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">平滑處理 %1$s 未啟用</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">從地圖選取</string>
     <string name="tap_to_select_location">在地圖上點選以選擇位置</string>

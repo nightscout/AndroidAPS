@@ -5,14 +5,17 @@ import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 
 /**
- * Legacy IntentKey enum - keys have been migrated to module-specific key enums:
- * - ApsIntentKey in :plugins:aps
- * - XdripIntentKey in :plugins:sync
- * - SmsIntentKey in :plugins:main
- * - OverviewIntentKey in :plugins:main
+ * Legacy `IntentKey` enum. It is EMPTY and must stay empty.
  *
- * This enum is kept for backwards compatibility but should remain empty.
- * New intent keys should be added to their respective module key enums.
+ * An intent key belongs to the module that owns the intent - `ApsIntentKey` in `:plugins:aps`,
+ * `SmsIntentKey` and `XdripIntentKey` in `:plugins:sync`, `DanaIntentKey` and `DiaconnIntentKey` in
+ * the pump drivers. Add new ones there, not here. The only reason this type still exists is that
+ * `PreferencesImpl` registers `IntentKey.entries` on both phone and wear; it contributes no keys.
+ *
+ * The list that used to be here named `SmsIntentKey` in `:plugins:main` (it lives in
+ * `:plugins:sync`) and an `OverviewIntentKey` that is in no module at all - it appears nowhere in
+ * the repository except in that line. A list of where things live rots and then misleads; the rule
+ * above does not, so keep the rule and do not grow it back into an inventory.
  */
 enum class IntentKey(
     override val key: String,

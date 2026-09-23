@@ -1032,4 +1032,108 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.interfaces.R.string.loopsuspended)).thenReturn("loop suspended")
         whenever(rh.gs(app.aaps.core.interfaces.R.string.pumpsuspended)).thenReturn("pump suspended")
     }
+
+    // ---- dropping the queue ---------------------------------------------------------------
+
+    /**
+     * What a dropped command tells the caller.
+     *
+     * The drain used to answer `success = true` for the import, and `LoopPlugin.invoke` branches on
+     * `enacted || success`: it carried on behind a temp basal that never reached the pump and then
+     * delivered an SMB against it. `CommandQueueImplementation.bolus` also persists carbs on a
+     * successful result, for insulin that was never given.
+     */
+    @Test
+    fun `a dropped command reports failure when the drain says so`() = runTest {
+        var result: PumpEnactResult? = null
+        backgroundScope.launch { result = commandQueue.bolus(DetailedBolusInfo()) }
+        yield()
+        assertThat(commandQueue.size()).isEqualTo(1)
+
+        commandQueue.cancelAll(TextRef.Literal("import"), success = false)
+        yield()
+
+        assertThat(commandQueue.size()).isEqualTo(0)
+        assertThat(result).isNotNull()
+        assertThat(result!!.success).isFalse()
+        assertThat(result!!.enacted).isFalse()
+    }
+
+    /**
+     * What the `success` flag actually costs. `CommandExecutor` drops the queue when the pump is not
+     * configured - selected but never paired - and it used to do that with `success = true`. [bolus]
+     * persists the accompanying carbs on a successful result, so the carbs were written for insulin
+     * that never left the pump, and the loop then counted them.
+     */
+    @Test
+    fun `carbs are not persisted when the bolus was dropped`() = runTest {
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0; carbs = 20.0 }) }
+        yield()
+
+        commandQueue.cancelAll(TextRef.Literal("pump not configured"), success = false)
+        yield()
+
+        verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+    }
+
+    /**
+     * Dropping is not failing. The alarm in `WizardBolusExecutorImpl` fires on `!success`, so
+     * without this flag the import would start raising BOLUS_DELIVERY_FAILED where nothing failed -
+     * the same reason a bolus the user stopped does not alarm.
+     */
+    @Test
+    fun `a dropped command is marked cancelled, whatever it reports`() = runTest {
+        var failed: PumpEnactResult? = null
+        backgroundScope.launch { failed = commandQueue.bolus(DetailedBolusInfo()) }
+        yield()
+        commandQueue.cancelAll(TextRef.Literal("import"), success = false)
+        yield()
+
+        var noOp: PumpEnactResult? = null
+        backgroundScope.launch { noOp = commandQueue.bolus(DetailedBolusInfo()) }
+        yield()
+        // A drain that still reports success. No production caller passes true any more - the last one,
+        // CommandExecutor's "pump not configured", was flipped to false - but the flag is part of the
+        // API, and the point here is that `cancelled` is set either way.
+        commandQueue.cancelAll(TextRef.Literal("drained, reported as success"), success = true)
+        yield()
+
+        assertThat(failed!!.cancelled).isTrue()
+        assertThat(noOp!!.cancelled).isTrue()
+        assertThat(noOp!!.success).isTrue()
+    }
+
+    /**
+     * A connection timeout is a real delivery failure, not a drop on purpose, so it must NOT be
+     * marked cancelled - otherwise the BOLUS_DELIVERY_FAILED alarm stops firing when the pump
+     * cannot be reached, which is exactly when it is needed.
+     */
+    @Test
+    fun `a connection timeout is a failure, not a cancellation`() = runTest {
+        var result: PumpEnactResult? = null
+        backgroundScope.launch { result = commandQueue.bolus(DetailedBolusInfo()) }
+        yield()
+
+        commandQueue.clear()
+        yield()
+
+        assertThat(result!!.success).isFalse()
+        assertThat(result!!.cancelled).isFalse()
+    }
+
+    /**
+     * The drain used to call the callback directly, so `CommandBolus.cancel` never ran and the
+     * bolus progress it owns was left running with nothing to finish it.
+     */
+    @Test
+    fun `dropping a bolus clears the progress it owns`() = runTest {
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo()) }
+        yield()
+        assertThat(bolusProgressData.state.value).isNotNull()
+
+        commandQueue.cancelAll(TextRef.Literal("import"), success = false)
+        yield()
+
+        assertThat(bolusProgressData.state.value).isNull()
+    }
 }

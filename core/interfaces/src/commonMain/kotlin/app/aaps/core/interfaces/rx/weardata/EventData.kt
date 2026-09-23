@@ -44,6 +44,15 @@ sealed class EventData : Event() {
     @Serializable
     data class ActionPong(val timeStamp: Long, val apiLevel: Int) : EventData()
 
+    /**
+     * What the watch did with `StringKey.WearPushedWatchface`. Sent after the startup sync, after
+     * every install, and in reply to [Preferences], so the phone shows the face choice only on a
+     * watch that has Watch Face Push (Wear OS 6+) and can tell when the watch still holds the other
+     * face. [installedFace] is a `PushedWatchfaceId` value, or null when no face of ours is installed.
+     */
+    @Serializable
+    data class WatchFacePushStatus(val supported: Boolean, val installedFace: String? = null) : EventData()
+
     @Serializable
     data class WearException(
         val timeStamp: Long,
@@ -399,7 +408,13 @@ sealed class EventData : Event() {
         val insulinButtonIncrement1: Double,
         val insulinButtonIncrement2: Double,
         val carbsButtonIncrement1: Int,
-        val carbsButtonIncrement2: Int
+        val carbsButtonIncrement2: Int,
+        /**
+         * Which embedded Watch Face Format face the wear app installs through Watch Face Push, as
+         * a value of `StringKey.WearPushedWatchface`. Defaulted, so a payload from a phone that
+         * predates the field still decodes and keeps the face that was pushed before.
+         */
+        val pushedWatchface: String = "cwf"
     ) : EventData()
 
     @Serializable

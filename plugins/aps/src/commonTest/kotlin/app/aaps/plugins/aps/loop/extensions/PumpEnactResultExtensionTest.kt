@@ -26,6 +26,7 @@ class PumpEnactResultExtensionTest {
         override var isTempCancel = false
         override var bolusDelivered = 0.0
         override var queued = false
+        override var cancelled = false
 
         override fun success(success: Boolean) = apply { this.success = success }
         override fun enacted(enacted: Boolean) = apply { this.enacted = enacted }
@@ -38,6 +39,7 @@ class PumpEnactResultExtensionTest {
         override fun isTempCancel(isTempCancel: Boolean) = apply { this.isTempCancel = isTempCancel }
         override fun bolusDelivered(bolusDelivered: Double) = apply { this.bolusDelivered = bolusDelivered }
         override fun queued(queued: Boolean) = apply { this.queued = queued }
+        override fun cancelled(cancelled: Boolean) = apply { this.cancelled = cancelled }
     }
 
     @Test

@@ -51,23 +51,31 @@ class RoleBranch(
     /**
      * Run a COMMIT: client → [clientCommand] over the round-trip (offline → [FailureReason.NotReachable]);
      * master → [masterConfirm] locally. The async delivery failure is alarmed centrally by the executor, so the
-     * `onError` captured here only carries a synchronous rejection comment (it doesn't double-report).
+     * [WizardBolusExecutor.Failure] captured here only carries a synchronous rejection (it doesn't double-report).
+     *
+     * A command dropped from the queue on purpose fills that same comment, so
+     * [WizardBolusExecutor.ConfirmResult.Cancelled] is checked FIRST - it is not a delivery failure and must not
+     * reach the caller as one. The return value is checked rather than `failure.cancelled` because a drop does not
+     * always produce a failure at all: a drain that reports `success = true` (the "pump not configured" path in
+     * `CommandExecutor`) never calls `onError`, and reading only the callback would report [ActionProgress.Applied]
+     * for a command that never left the queue.
      */
     suspend fun commit(
         label: String,
         clientCommand: ClientControlActionDispatcher.Command,
-        masterConfirm: suspend ((String) -> Unit) -> WizardBolusExecutor.ConfirmResult
+        masterConfirm: suspend ((WizardBolusExecutor.Failure) -> Unit) -> WizardBolusExecutor.ConfirmResult
     ): ActionProgress {
         if (config.AAPSCLIENT) {
             if (!nsClient.masterReachable.value) return ActionProgress.Rejected(clientBlockReason())
             return dispatcher.run(clientCommand, label)
         }
         // Master: deliver the parked dose/bundle locally.
-        var error: String? = null
-        val result = masterConfirm { error = it }
-        val err = error
+        var failure: WizardBolusExecutor.Failure? = null
+        val result = masterConfirm { failure = it }
+        val err = failure?.comment
         return when {
             result is WizardBolusExecutor.ConfirmResult.NoPending -> ActionProgress.Rejected(FailureReason.NoPendingBolus)
+            result is WizardBolusExecutor.ConfirmResult.Cancelled -> ActionProgress.Rejected(FailureReason.Cancelled, err)
             err != null                                           -> ActionProgress.Rejected(FailureReason.ExecutionFailed, err)
             else                                                  -> ActionProgress.Applied
         }

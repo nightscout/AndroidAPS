@@ -130,6 +130,23 @@ fun NumberInputRow(
     // Range text
     val rangeText = "${effectiveValueFormat.format(valueRange.start)} — ${effectiveValueFormat.format(valueRange.endInclusive)}"
 
+    // Names for the +/- buttons read by a screen reader. Without the label every number row on a
+    // screen would sound the same, so the label is included when there is one.
+    //
+    // The step carries its unit, so this says "increment Bolus by 0.1 U" and not a bare "by 0.1",
+    // matching what SliderWithButtons speaks. Joined through a format resource rather than in code,
+    // because a translator has to be able to move the unit relative to the number.
+    val stepNumber = effectiveValueFormat.format(step)
+    val stepText =
+        if (resolvedUnitLabel.isNotEmpty()) stringResource(CoreUiStrings.value_with_unit, stepNumber, resolvedUnitLabel)
+        else stepNumber
+    val decreaseDescription =
+        if (label.isNotEmpty()) stringResource(CoreUiStrings.a11y_min_button_description, label, stepText)
+        else stringResource(CoreUiStrings.decrement)
+    val increaseDescription =
+        if (label.isNotEmpty()) stringResource(CoreUiStrings.a11y_plus_button_description, label, stepText)
+        else stringResource(CoreUiStrings.increment)
+
     // Pre-resolve error strings for use in non-composable validateAndCommit
     val errorInvalidNumber = stringResource(CoreUiStrings.invalid_number)
 
@@ -277,7 +294,7 @@ fun NumberInputRow(
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
-                contentDescription = "Decrease",
+                contentDescription = decreaseDescription,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -287,7 +304,7 @@ fun NumberInputRow(
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
-                contentDescription = "Increase",
+                contentDescription = increaseDescription,
                 modifier = Modifier.size(20.dp)
             )
         }

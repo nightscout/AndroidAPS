@@ -7,17 +7,19 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.insulin.InsulinManager
-import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.insulin.InsulinManager.UpdateResult
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +36,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -46,7 +52,6 @@ internal class InsulinManagementViewModelTest {
     @Mock private lateinit var profileFunction: ProfileFunction
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var hardLimits: HardLimits
-    @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var persistenceLayer: PersistenceLayer
@@ -73,8 +78,10 @@ internal class InsulinManagementViewModelTest {
         whenever(profileRepository.profiles).thenReturn(MutableStateFlow(emptyList<SingleProfile>()))
         whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         whenever(preferences.observe(StringNonKey.InsulinConfiguration)).thenReturn(configFlow)
+        // gs(TextRef) is a DEFAULT interface method, so a mock returns null rather than running it.
+        whenever(rh.gs(any<TextRef>())).thenReturn("text")
         sut = InsulinManagementViewModel(
-            insulinManager, preferences, profileFunction, dateUtil, hardLimits, uel,
+            insulinManager, preferences, profileFunction, dateUtil, hardLimits,
             rh, rxBus, persistenceLayer, profileRepository, config, batchExecutor,
             CoroutineScope(UnconfinedTestDispatcher())
         )
@@ -190,6 +197,50 @@ internal class InsulinManagementViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertThat(sut.uiState.value.externalUpdatePending).isTrue()
+    }
+
+    // --- Save and delete name their target by label: a sync can replace the manager's list at any moment ---
+
+    private fun loadTwoInsulinsOnCard(index: Int) {
+        whenever(insulinManager.insulins).thenReturn(arrayListOf(icfg(1.0, "A"), icfg(1.0, "B")))
+        whenever(insulinManager.insulinIndex(anyOrNull())).thenReturn(index)
+        whenever(hardLimits.diaRange()).thenReturn(5.0..10.0)
+        whenever(hardLimits.peakRange()).thenReturn(35..120)
+        testDispatcher.scheduler.advanceUntilIdle()
+    }
+
+    @Test
+    fun `save sends the edit to the insulin of the card, by its label`() {
+        whenever(insulinManager.updateInsulin(any(), any())).thenReturn(UpdateResult.Updated("B2 75m 5h"))
+        loadTwoInsulinsOnCard(1)
+        sut.updateEditorNickname("B2")
+
+        assertThat(sut.saveCurrentInsulin()).isTrue()
+
+        val edited = argumentCaptor<ICfg>()
+        verify(insulinManager).updateInsulin(eq("B 75m 5h"), edited.capture())
+        assertThat(edited.firstValue.insulinNickname).isEqualTo("B2")
+        assertThat(edited.firstValue.peak).isEqualTo(75)
+    }
+
+    @Test
+    fun `save of an insulin that a sync removed reports it and does not claim success`() {
+        whenever(insulinManager.updateInsulin(any(), any())).thenReturn(UpdateResult.NotFound)
+        loadTwoInsulinsOnCard(1)
+        sut.updateEditorNickname("B2")
+
+        assertThat(sut.saveCurrentInsulin()).isFalse()
+
+        verify(rxBus).send(any<EventShowSnackbar>())
+    }
+
+    @Test
+    fun `delete removes the insulin of the card, by its label`() {
+        loadTwoInsulinsOnCard(1)
+
+        assertThat(sut.deleteCurrentInsulin()).isTrue()
+
+        verify(insulinManager).removeInsulin("B 75m 5h")
     }
 
     private fun icfg(concentration: Double, nickname: String = "Rapid"): ICfg =

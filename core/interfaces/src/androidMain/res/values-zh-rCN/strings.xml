@@ -122,13 +122,16 @@
     <string name="pumpsuspended">泵暂停了</string>
     <string name="loopsuspended">闭环暂停了</string>
     <string name="pump_disconnected">泵已断开</string>
+    <string name="basalprofilenotaligned">基础率值与小时不一致:%1$s</string>
     <string name="minimalbasalvaluereplaced">基础率已设为支持的最小值：%1$s</string>
     <string name="maximumbasalvaluereplaced">基础率值被泵支持的最大值:%1$s 替换了</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">克/U</string>
+    <string name="mins">%1$d min</string>
     <string name="record">记录</string>
     <string name="bolus">大剂量</string>
     <string name="uel_extended_carbs">扩展碳水</string>
+    <string name="profile_low_target">个人配置低目标</string>
     <string name="profile_high_target">个人配置高目标</string>
     <string name="profile_dia">配置文件DIA值</string>
     <string name="profile_sensitivity_value">配置文件敏感系数值</string>

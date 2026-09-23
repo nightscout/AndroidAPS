@@ -1,6 +1,5 @@
 package app.aaps.pump.eopatch
 
-import android.Manifest
 import android.os.SystemClock
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -12,7 +11,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -103,7 +102,8 @@ class EopatchPumpPlugin(
     private val normalBasalManager: NormalBasalManager,
     private val protectionCheck: ProtectionCheck,
     private val blePreCheck: BlePreCheck,
-    private val bolusProgressData: BolusProgressData
+    private val bolusProgressData: BolusProgressData,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -118,7 +118,7 @@ class EopatchPumpPlugin(
         .shortName(TextRef.AndroidRes(R.string.eopatch_shortname))
         .description(TextRef.AndroidRes(R.string.eopatch_pump_description)),
     ownPreferences = EopatchIntKey.entries + EopatchBooleanKey.entries + EopatchStringNonKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump {
 
     private val mDisposables = CompositeDisposable()
@@ -131,15 +131,6 @@ class EopatchPumpPlugin(
             _lastDataTime.value = value
         }
     private val mPumpDescription = PumpDescription().fillFor(mPumpType)
-
-    override fun requiredPermissions(): List<PermissionGroup> = super.requiredPermissions() + listOf(
-        PermissionGroup(
-            permissions = listOf(Manifest.permission.SCHEDULE_EXACT_ALARM),
-            rationaleTitle = TextRef.AndroidRes(R.string.permission_exact_alarm_title),
-            rationaleDescription = TextRef.AndroidRes(R.string.permission_exact_alarm_description),
-            special = true,
-        )
-    )
 
     override suspend fun onStart() {
         super.onStart()

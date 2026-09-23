@@ -17,7 +17,8 @@ import android.util.Log
  * already on, so it can't self-wake). A sibling `setAlarmClock` → `getActivity` alarm launches
  * [app.aaps.core.interfaces.ui.UiInteraction.errorHelperActivity] once this wake has lit the screen.
  *
- * No app-op or special permission required — only the normal `WAKE_LOCK` permission.
+ * The receiver itself needs only the normal `WAKE_LOCK` permission. Scheduling the alarm that fires it
+ * needs `SCHEDULE_EXACT_ALARM` - see `AlarmNotificationManager.scheduleScreenWakeAndLaunch`.
  */
 class AlarmScreenWakeReceiver : BroadcastReceiver() {
 

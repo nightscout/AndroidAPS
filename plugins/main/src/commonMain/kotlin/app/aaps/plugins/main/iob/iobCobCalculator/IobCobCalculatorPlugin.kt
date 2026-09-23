@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -90,6 +91,8 @@ class IobCobCalculatorPlugin(
     private val decimalFormatter: DecimalFormatter,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val signals: CalculationSignalsEmitter,
+    notificationManager: NotificationManager,
+    // Last on purpose: the call site in HistoryWindowGraph passes it as a trailing lambda.
     private val cache: () -> OverviewDataCache
 ) : PluginBase(
     PluginDescription()
@@ -97,7 +100,7 @@ class IobCobCalculatorPlugin(
         .pluginName(MainStrings.iob_cob_calculator)
         .showInList { false }
         .alwaysEnabled(true),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), IobCobCalculator {
 
     private var scope: CoroutineScope? = null

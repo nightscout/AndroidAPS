@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -44,6 +45,7 @@ class GlimpPlugin(
     aapsLogger: AAPSLogger,
     preferences: Preferences,
     config: Config,
+    notificationManager: NotificationManager
 ) : AbstractBgSourcePlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -57,7 +59,7 @@ class GlimpPlugin(
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_glimp)),
     ownPreferences = emptyList(),
-    aapsLogger, rh, preferences, config
+    aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
 
     // cannot be inner class because of needed injection

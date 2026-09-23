@@ -224,7 +224,7 @@ private fun AutomationEventCard(
                 IconRow(event = event)
             }
             IconButton(onClick = onEdit, enabled = editingEnabled) {
-                Icon(Icons.Default.Edit, contentDescription = null)
+                Icon(Icons.Default.Edit, contentDescription = stringResource(AutomationStrings.automation_edit_rule))
             }
             if (event.readOnly) {
                 Icon(
@@ -234,7 +234,7 @@ private fun AutomationEventCard(
                 )
             } else {
                 IconButton(onClick = onDelete, enabled = editingEnabled) {
-                    Icon(Icons.Default.Delete, contentDescription = null)
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
                 }
             }
             IconButton(

@@ -185,10 +185,32 @@ android {
 
 
     sourceSets {
-        getByName("full") { kotlin.directories.add("src/withPumps/kotlin") }
-        getByName("pumpcontrol") { kotlin.directories.add("src/withPumps/kotlin") }
         getByName("aapsclient2") { kotlin.directories.add("src/aapsclient/kotlin") }
         getByName("aapsclient3") { kotlin.directories.add("src/aapsclient/kotlin") }
+
+        // Instrumented tests that drive one pump, added only where that pump is in the build. An e2e
+        // test for a Dana emulator has nothing to test without :pump:dana:danar, so it should not compile
+        // there - and before this it did not compile for a follower either, it just failed unnoticed
+        // because CI only builds `full`: :app:compileAapsclientDebugAndroidTestKotlin was red on dev
+        // with "Unresolved reference 'dana'".
+        //
+        // Keyed on the module being in settings.gradle, the same single source of truth the driver
+        // dependencies above are derived from, so removing a pump takes its tests with it. Dana R and
+        // Dana RS are separate keys so either one can be removed alone; `dana/common` holds the base
+        // class both use and needs only :pump:dana:common.
+        val pumpTestSources = mapOf(
+            ":pump:dana:common" to "src/androidTestPumps/dana/common/kotlin",
+            ":pump:dana:danar" to "src/androidTestPumps/dana/danar/kotlin",
+            ":pump:dana:danars" to "src/androidTestPumps/dana/danars/kotlin",
+            ":pump:equil" to "src/androidTestPumps/equil/kotlin"
+        )
+        listOf("androidTestFull", "androidTestPumpcontrol").forEach { name ->
+            findByName(name)?.let { set ->
+                pumpTestSources.forEach { (path, dir) ->
+                    if (rootProject.findProject(path) != null) set.kotlin.directories.add(dir)
+                }
+            }
+        }
     }
 }
 
@@ -217,12 +239,21 @@ dependencies {
     implementation(project(":workflow"))
 
     // Pump drivers — only for full + pumpcontrol flavors. Derived from the :pump:* modules included
-    // in settings.gradle (single source of truth) minus two exceptions:
-    //  - :pump:virtual is @AllConfigs (all flavors) and is wired above as a plain implementation
-    //  - :pump:combov2:comboctl is a support lib pulled in transitively by :pump:combov2
-    // buildFile.exists() skips the phantom :pump:omnipod container Gradle auto-creates from the
-    // nested :pump:omnipod:* includes (it has no build script / no consumable variant).
-    val pumpExclusions = setOf(":pump:virtual", ":pump:combov2:comboctl")
+    // in settings.gradle (single source of truth) minus one exception:
+    //  - :pump:virtual is @AllConfigs (all flavors) and is wired above as a plain implementation,
+    //    so listing it again per flavor would declare it twice for different configurations.
+    // buildFile.exists() skips the phantom :pump:omnipod and :pump:dana containers Gradle
+    // auto-creates from the nested :pump:omnipod:* and :pump:dana:* includes (they have no build
+    // script / no consumable variant).
+    //
+    // Support modules nested under a driver (:pump:combov2:comboctl, :pump:omnipod:common,
+    // :pump:dana:common, and the :protocol and :emulator modules of carelevo, equil and the Dana
+    // drivers) need NO exception. They arrive transitively through their driver anyway, and naming
+    // the same project path twice resolves to one node in the graph rather than two copies -
+    // verified by building an APK with comboctl un-excluded. Keeping
+    // them out of this list would only be tidiness, and it is tidiness that has to be maintained by
+    // hand every time a module is added.
+    val pumpExclusions = setOf(":pump:virtual")
     rootProject.subprojects
         .filter { it.path.startsWith(":pump:") && it.path !in pumpExclusions && it.buildFile.exists() }
         .forEach {
@@ -257,7 +288,7 @@ dependencies {
     // Remote config
     api(libs.com.google.firebase.config)
     // Navigation Compose
-    api(libs.androidx.compose.navigation)
+    api(libs.jetbrains.androidx.compose.navigation)
 }
 
 
@@ -272,4 +303,3 @@ if (!gitAvailable()) {
 if (isMaster() && !allCommitted()) {
     throw GradleException("There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update")
 }
-

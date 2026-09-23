@@ -3,6 +3,10 @@ package app.aaps.desktop.shell.prefs
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.implementation.maintenance.DesktopFolders
 import java.io.File
+import java.io.FileOutputStream
+import java.nio.file.AtomicMoveNotSupportedException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.util.Properties
 
 /**
@@ -38,11 +42,40 @@ class DesktopSp(
         if (file.isFile) file.inputStream().use(loaded::load)
     }
 
+    /**
+     * Writes the whole file. Either the new content lands or the old content stays - never a mixture.
+     *
+     * This used to open the real file and write into it, and opening a file for writing truncates it
+     * at once. Anything that stopped the write after that point - a crash, a kill, a full disk, a
+     * power cut - left a preferences file that was empty or cut in half. There is no second copy, so
+     * the next start would read it, find nothing, and every AAPS setting on that machine would be
+     * back to its default.
+     *
+     * So the content goes to a sibling file first, is forced to the disk, and only then replaces the
+     * real one. A move inside one directory is atomic where the filesystem supports it, which means
+     * a reader sees the old file or the new file and never a half-written one. Where it is not
+     * supported (some network shares) the plain replacing move is the fallback - still better than
+     * writing in place, because the content is already complete before the move starts.
+     */
     private fun persist() {
         file.parentFile?.mkdirs()
         // Written whole each time. The file is a few hundred short lines, so the simplicity is worth
         // more than an incremental write would save.
-        synchronized(properties) { file.outputStream().use { properties.store(it, "AAPS desktop preferences") } }
+        synchronized(properties) {
+            val temp = File(file.parentFile, "${file.name}.new")
+            FileOutputStream(temp).use { out ->
+                properties.store(out, "AAPS desktop preferences")
+                out.flush()
+                // The bytes must be on the disk before the move publishes them, or a power cut can
+                // leave the real name pointing at an empty file - the thing this is here to prevent.
+                out.fd.sync()
+            }
+            try {
+                Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+            } catch (_: AtomicMoveNotSupportedException) {
+                Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            }
+        }
     }
 
     private fun raw(key: String): String? = properties.getProperty(key)

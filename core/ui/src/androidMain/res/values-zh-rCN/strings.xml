@@ -28,6 +28,7 @@
     <string name="tt_label">临时目标</string>
     <string name="pump_unreachable">泵无法连接</string>
     <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
     <string name="pump_not_initialized_profile_not_set">泵未初始化, 配置文件未设置!</string>
     <string name="failed_update_basal_profile">更新基础率配置文件失败</string>
@@ -124,6 +125,7 @@
     <string name="insulin_nickname_label">胰岛素昵称</string>
     <string name="concentration_label">浓度</string>
     <string name="peak_label">峰值</string>
+    <string name="dia_label">DIA</string>
     <string name="ic_label">IC碳水系数</string>
     <string name="isf_label">ISF胰岛素敏感系数</string>
     <string name="basal_label">基础率</string>
@@ -224,6 +226,9 @@
     <string name="pump_resume">恢复泵</string>
     <string name="mode_reverted">模式已恢复</string>
     <string name="select_insulin">选择胰岛素</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">临时基础率取消操作失败</string>
     <string name="canceling_eb_failed">取消扩展大剂量失败</string>
     <string name="virtualpump_uploadstatus_title">将泵状态上传至 NS 或 Tidepool</string>
@@ -240,6 +245,8 @@
     <string name="location_permission_not_granted">未授予位置权限。请在 Android 设置中允许。</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 版本：</string>
     <string name="not_available_full">不可用</string>
+    <string name="not_implemented_yet">此功能在当前平台上尚未就绪</string>
+    <string name="not_available_on_platform">此功能在当前平台上不可用</string>
     <string name="engineering_mode_enabled">已启用工程模式</string>
     <string name="back">返回</string>
     <string name="next">下一步</string>
@@ -252,6 +259,7 @@
     <string name="pin_dont_match">PIN 码不匹配。</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">启动配置文件 %1$d%%在 %2$d 分钟</string>
     <!--    APSResult-->
     <string name="cancel_temp">取消临时基础率</string>
     <string name="let_temp_basal_run">让临时基础率运行</string>
@@ -288,6 +296,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">护理记录</string>
     <string name="careportal_bgcheck">指血检查</string>
     <string name="careportal_mbg">指血BG 或 校准</string>
     <string name="careportal_announcement">通告</string>
@@ -338,6 +347,7 @@
     <string name="scene_conflict_active_running_mode">当前运行模式将被替换</string>
     <string name="scene_conflict_active_scene">当前已激活的情景 \"%1$s\" 将先结束</string>
     <string name="scene_action_tt">临时目标：%1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">配置文件：%1$s%2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">配置文件：%1$d%%</string>
     <string name="scene_action_smb_on">启用微型大剂量</string>
     <string name="scene_action_smb_off">禁用微型大剂量</string>
@@ -513,6 +523,7 @@
     <string name="percent">百分比</string>
     <string name="absolute">绝对值</string>
     <string name="waitingforpumpresult">正在等待结果</string>
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d 分钟内需要额外摄入 %1$d 克碳水化合物</string>
     <string name="basalrate">基础率</string>
@@ -627,6 +638,7 @@
     <string name="uel_scene_deactivated">情景已停用</string>
     <string name="uel_remote_config_changed">远程配置已更改</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">临时目标值下限值</string>
     <string name="temp_target_high_target">临时目标值上限值</string>
     <string name="temp_target_value">临时目标值</string>
     <string name="insulin_dia">胰岛素作用时间</string>
@@ -762,6 +774,7 @@
     <string name="initializing">初始化…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">警告</string>
+    <string name="alert" comment="Generic alert dialog title">警告</string>
     <string name="retry" comment="Button label to retry a failed operation">重试</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">完成</string>
     <string name="firmware" comment="Pump firmware version label">固件</string>
@@ -771,6 +784,7 @@
     <!--    Constraints-->
     <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
     <string name="pumplimit">泵限制</string>
+    <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%</string>
     <string name="itmustbepositivevalue">它必须是正数</string>
     <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
     <!--    Dialogs-->
@@ -784,6 +798,7 @@
     <string name="close">关闭</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">确定</string>
     <string name="export_warning">警告</string>
     <string name="export_expired">已过期</string>
     <string name="export_disabled">停用</string>
@@ -850,6 +865,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">用户请求</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">配对</string>
     <string name="pump_unpair">取消配对</string>
     <string name="pump_unpair_confirm_title">取消配对泵？</string>
     <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
@@ -893,6 +909,7 @@
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">位置 %1$d / %2$d</string>
     <string name="status">状态</string>
+    <string name="pump_actions">泵操作</string>
     <string name="tempbasal_button">临时基础率</string>
     <string name="extended_bolus_button">扩展大剂量(方波)</string>
     <string name="device_maintenance">设备维护</string>
@@ -942,6 +959,7 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS 播放音频"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
     <string name="profile_name">配置文件名称：</string>
     <string name="edit_profile_name">编辑配置文件名称</string>
@@ -1003,6 +1021,14 @@
     <string name="import_wrong_password">密码错误</string>
     <string name="import_btn">导入</string>
     <string name="import_anyway_btn">仍然导入</string>
+    <string name="import_apply_title">配置导入了</string>
+    <string name="import_apply_message">导入的设置现在将被应用。发生变更的插件将会重启</string>
+    <string name="import_apply_waiting">正在等待泵…</string>
+    <string name="import_apply_pump_busy">泵仍在忙碌中，因此设置未应用。</string>
+    <string name="import_apply_retry_question">现在重试吗？</string>
+    <string name="import_applied_title">设置已应用</string>
+    <string name="import_applied_message">导入的设置现已生效。</string>
+    <string name="import_apply_pump_changed">已取消：泵因设置导入而被更改</string>
     <string name="import_source_local">本地</string>
     <string name="import_source_cloud">云</string>
     <string name="import_load_more">加载更多</string>
@@ -1015,6 +1041,7 @@
     <string name="nav_resetdb">重置数据库</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">查找泵</string>
+    <string name="ble_scan_select_pump">从下面的列表中选择您的泵</string>
     <string name="ble_scan_scanning">正在扫描设备…</string>
     <!-- Graph configuration -->
     <string name="graph_add">添加图表</string>
@@ -1043,6 +1070,8 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d 小时</string>
     <string name="units_format_hours_double">%1$.1f 小时</string>
     <string name="units_format_hours_double_range">%1$.1f 小时(%2$.1f - %3$.1f)</string>

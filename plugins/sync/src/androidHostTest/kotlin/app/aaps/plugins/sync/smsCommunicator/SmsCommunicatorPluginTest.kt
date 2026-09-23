@@ -1,17 +1,13 @@
 package app.aaps.plugins.sync.smsCommunicator
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import android.Manifest
 import android.telephony.SmsManager
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SourceSensor
-import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.InterfacesStrings
@@ -34,30 +30,28 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.aps.loop.LoopPlugin
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.smsCommunicator.compose.SmsCommunicatorRepository
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyDouble
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.eq
-import org.mockito.Mock
-import org.mockito.invocation.InvocationOnMock
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verifyBlocking
@@ -81,10 +75,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var bolusProgressData: BolusProgressData
     private lateinit var runningModeGuard: RunningModeGuard
 
-    private val iCfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
-
     private val repository = SmsCommunicatorRepository()
-    private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     private val modeClosed = "Closed Loop"
     private val modeOpen = "Open Loop"
@@ -105,7 +96,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         runBlocking {
             whenever(
                 persistenceLayer.insertAndCancelCurrentTemporaryTarget(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
-            ).thenReturn(PersistenceLayer.TransactionResult<TT>())
+            ).thenReturn(PersistenceLayer.TransactionResult())
         }
         // Use a real RunningModeGuard so the gate decisions actually fire from the mocked loop
         // (a mock guard returns null for everything → all gate-protected paths silently allow).
@@ -117,7 +108,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             aapsLogger, rh, smsManager, preferences, constraintChecker, profileFunction, profileUtil, activePlugin, profileRepository,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
             smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
-            runningModeGuard, bolusProgressData, testScope, repository
+            runningModeGuard, bolusProgressData, repository
         )
         smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
         runBlocking {
@@ -542,7 +533,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong duration")
 
         //PUMP DISCONNECT 30
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP DISCONNECT 30")
         smsCommunicatorPlugin.processSms(sms)
@@ -685,7 +676,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Not configured")
 
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(getValidProfileStore()))
-        runBlocking { whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME) }
+        whenever(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME)
 
         //PROFILE STATUS
         smsCommunicatorPlugin.messages = ArrayList()
@@ -701,7 +692,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE LIST")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("1. $TESTPROFILENAME")
 
-        //PROFILE 2 (non existing)
+        //PROFILE 2 (non-existing)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 2")
         smsCommunicatorPlugin.processSms(sms)
@@ -730,23 +721,21 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("To switch profile to someProfile 100% reply with code")
 
         //PROFILE 1 90(OK)
-        runBlocking {
-            whenever(
-                profileFunction.createProfileSwitch(
-                    anyOrNull(),
-                    anyString(),
-                    anyInt(),
-                    anyInt(),
-                    anyInt(),
-                    anyLong(),
-                    anyOrNull(),
-                    anyOrNull(),
-                    anyOrNull(),
-                    anyOrNull(),
-                    anyOrNull()
-                )
-            ).thenReturn(mock())
-        }
+        whenever(
+            profileFunction.createProfileSwitch(
+                anyOrNull(),
+                anyString(),
+                anyInt(),
+                anyInt(),
+                anyInt(),
+                anyLong(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+            )
+        ).thenReturn(mock())
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 1 90")
         smsCommunicatorPlugin.processSms(sms)
@@ -807,7 +796,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("Temp basal canceled")
 
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         //BASAL a%
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL a%")
@@ -1007,7 +996,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1 a")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(
             """[{"id":"eatingsoon","reason":"Eating Soon","targetValue":90.0,"duration":2700000,"isDeletable":false}]"""
         )

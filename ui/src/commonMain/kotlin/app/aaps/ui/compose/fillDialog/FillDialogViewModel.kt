@@ -341,12 +341,13 @@ class FillDialogViewModel(
                     amount = state.insulinAfterConstraints,
                     notes = notes,
                     source = Sources.FillDialog,
-                    onError = { error ->
-                        // The switch is chained to onSuccess, so a failed prime silently skips it — but the
-                        // confirmation already promised it. Say so in the SAME message rather than two dialogs.
+                    onError = { failure ->
+                        // The switch is chained to onSuccess, so a prime that did not happen silently skips it — but
+                        // the confirmation already promised it. Say so in the SAME message rather than two dialogs.
+                        // A prime dropped from the queue on purpose did not fail, so it must not carry the error title.
                         reportAfterClose(
-                            CoreUiStrings.treatmentdeliveryerror,
-                            if (doProfileSwitch) rh.gs(CoreUiStrings.fill_prime_failed_insulin_not_switched, error) else error
+                            if (failure.cancelled) CoreUiStrings.command_cancelled_title else CoreUiStrings.treatmentdeliveryerror,
+                            if (doProfileSwitch) rh.gs(CoreUiStrings.fill_prime_failed_insulin_not_switched, failure.comment) else failure.comment
                         )
                     },
                     onSuccess = {

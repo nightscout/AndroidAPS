@@ -35,7 +35,7 @@ interface SceneAutomationApi {
     suspend fun prepareScene(id: String, durationMinutes: Int? = null): WizardBolusExecutor.PrepareResult
 
     /** Two-step COMMIT: activate the parked scene matching [bolusId] EXACTLY once; an activation failure rides [onError]. */
-    suspend fun commitScene(bolusId: Long, onError: (String) -> Unit): WizardBolusExecutor.ConfirmResult
+    suspend fun commitScene(bolusId: Long, onError: (WizardBolusExecutor.Failure) -> Unit): WizardBolusExecutor.ConfirmResult
 
     /** Set the enabled flag on a scene by id. Fails only if the scene is missing. */
     fun setEnabled(id: String, enabled: Boolean): SceneAutomationResult

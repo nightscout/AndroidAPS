@@ -25,9 +25,10 @@ enum class SyncDirection {
  * Single source of truth for how a preference key participates in device-to-device sync. Declared
  * on the key enum entry itself (see [NonPreferenceKey.sync]); `null` means the key is not synced.
  *
- * This describes plain, read-on-demand preference values only. Structured documents that a plugin
- * parses into internal state (insulin/scenes/automation JSON) are NOT plain keys — they keep their
- * own merge channels and reload hooks, because applying them requires `reloadInternalState()`.
+ * Structured documents (insulin, scenes, automation, quick wizard JSON) use it too. The sync layer
+ * only writes the value. A class that parses one into memory must observe its key and reload itself,
+ * on the master as well as on the client: a client edit reaches the master through the same write,
+ * and nothing else tells the class that the value changed.
  */
 data class SyncSpec(
     val channel: SyncChannel,

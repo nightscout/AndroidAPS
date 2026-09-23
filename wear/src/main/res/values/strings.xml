@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Custom) always-on</string>
     <string name="label_actions_tile">Actions</string>
     <string name="label_temp_target_tile">Temp Target</string>
     <string name="label_quick_wizard_tile">Quick Wizard</string>
@@ -159,6 +160,21 @@
     <string name="pref_simplify_ui">Simplify UI</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
+    <string name="pref_complication_1">Complication 1</string>
+    <string name="pref_complication_2">Complication 2</string>
+    <string name="pref_complication_3">Complication 3</string>
+    <string name="pref_complication_4">Complication 4</string>
+    <string name="pref_complication_5">Complication 5</string>
+    <string name="complication_summary_none">Tap to select a data source</string>
+    <string name="pref_complication_type_priority">Complication type priority</string>
+    <string name="pref_complication_type_priority_all">Default for all slots</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">A change here applies the next time you pick a data source. Picking the same one again is not enough: pick a different data source first, then pick the one you want.</string>
+    <string name="complication_type_priority_value">Value or gauge</string>
+    <string name="complication_type_priority_text">Text</string>
+    <string name="complication_type_priority_icon">Icon</string>
+    <string name="complication_type_priority_use_default">Use default</string>
+    <string name="cwf_complication_layout">Complication layout</string>
+    <string name="cwf_complication_layout_description">Position and size of the complications, taken from the loaded custom watch face.</string>
     <string name="pref_include_external">Include external views in template</string>
     <string name="pref_switch_external">Switch external datas in Watchface</string>
     <string name="custom_pref_show_seconds">Show seconds</string>
@@ -240,9 +256,27 @@
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
     <string name="key_complication_bg_graph_hours" translatable="false">complication_bg_graph_hours</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
+    <string name="key_show_complication_1" translatable="false">show_complication_1</string>
+    <string name="key_show_complication_2" translatable="false">show_complication_2</string>
+    <string name="key_show_complication_3" translatable="false">show_complication_3</string>
+    <string name="key_show_complication_4" translatable="false">show_complication_4</string>
+    <string name="key_show_complication_5" translatable="false">show_complication_5</string>
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
     <string name="key_last_selected_watchface" translatable="false">last_selected_watchface</string>
+    <string name="key_complication_1" translatable="false">complication_1</string>
+    <string name="key_complication_2" translatable="false">complication_2</string>
+    <string name="key_complication_3" translatable="false">complication_3</string>
+    <string name="key_complication_4" translatable="false">complication_4</string>
+    <string name="key_complication_5" translatable="false">complication_5</string>
+    <string name="key_complication_type_priority_screen" translatable="false">complication_type_priority_screen</string>
+    <string name="key_complication_type_priority_warning" translatable="false">complication_type_priority_warning</string>
+    <string name="key_complication_type_priority_default" translatable="false">complication_type_priority_default</string>
+    <string name="key_complication_type_priority_1" translatable="false">complication_type_priority_1</string>
+    <string name="key_complication_type_priority_2" translatable="false">complication_type_priority_2</string>
+    <string name="key_complication_type_priority_3" translatable="false">complication_type_priority_3</string>
+    <string name="key_complication_type_priority_4" translatable="false">complication_type_priority_4</string>
+    <string name="key_complication_type_priority_5" translatable="false">complication_type_priority_5</string>
     <string name="abbreviation_average">avg</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -290,6 +324,12 @@
     <string name="complication_blood_glucose_ext1">Blood Glucose Ext1</string>
     <string name="complication_blood_glucose_ext2">Blood Glucose Ext2</string>
     <string name="complication_bg_graph">BG Graph</string>
+    <string name="complication_cwf_image">Custom Watchface</string>
+    <string name="complication_cwf_ambient_bg">Custom Watchface ambient glucose</string>
+    <string name="complication_cwf_ambient_status">Custom Watchface ambient status</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Custom Watchface background</string>
+    <string name="complication_cwf_upper">Custom Watchface clock</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>

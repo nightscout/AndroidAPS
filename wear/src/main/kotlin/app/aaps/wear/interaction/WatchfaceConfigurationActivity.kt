@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceManager
@@ -18,18 +19,27 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
+import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.preference.WearPreferenceActivity
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.runBlocking
 
-class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener, CustomWatchfaceSettingsHost {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var complicationDataRepository: ComplicationDataRepository
+
+    // See the same override in ConfigurationActivity for why this blocks.
+    override fun storedWatchfaceConfiguration(): String? = runBlocking { complicationDataRepository.getCustomWatchface()?.json }
 
     @Suppress("PrivatePropertyName")
     private val PHYSICAL_ACTIVITY = 1
 
     private var preferenceFile: Int = 0
+
+    // Both set before super.onCreate(), which is what creates the fragment - see createPreferenceFragment().
+    private var showsCustomWatchface = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Inject dependencies first
@@ -40,23 +50,26 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
             .takeIf { it >= 0 }
             ?.let { SelectedWatchFace.fromId(it) }
 
+        showsCustomWatchface = requestedWatchFace == SelectedWatchFace.CUSTOM
+
         preferenceFile = requestedWatchFace
             ?.let { WatchFaceCatalog.preferenceXmlFor(it) }
             ?: intent.getIntExtra(getString(R.string.key_preference_id), R.xml.display_preferences)
 
         super.onCreate(savedInstanceState)
 
-        // Only the 3 dedicated watch-face menu entries pass key_selected_watchface. The app-wide
-        // display/graph/interface/complication/others screens (and the phone-triggered
-        // OpenSettings default) must never activate a watch face as a side effect of being
-        // opened, so the SysUI hand-off below only ever runs when one was explicitly requested.
-        if (savedInstanceState == null && requestedWatchFace != null) {
-            val watchFaceComponent = WatchFaceCatalog.componentNameFor(this, requestedWatchFace)
-            if (watchFaceComponent != null && SamsungWatchFaceEditor.requestEditor(this, watchFaceComponent)) {
-                finish()
-                return
-            }
-        }
+        // This screen hands off to nothing and works the same on every watch, whatever its make.
+        //
+        // It used to ask the system to open its editor, because that gave the preference screen a
+        // live editing session - the only way a complication slot can be assigned. The hand-off
+        // *activated* the watch face as a side effect, so opening the AAPS settings menu silently
+        // switched the wearer from the Watch Face Format face to the code-based one, reported on a
+        // real watch.
+        //
+        // There is nothing left here that needs a session. The complication rows have moved out of
+        // this menu, because the Watch Face Format face has no slots for the wearer to assign. The
+        // code-based face's own settings, complication slots included, are still reached by
+        // long-pressing it, which is the system's own editor and switches nothing.
 
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
 
@@ -70,9 +83,11 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
         contentView?.setPadding(0, 50, 0, 50)
     }
 
-    override fun createPreferenceFragment(): PreferenceFragmentCompat {
-        return WatchfaceConfigurationFragment.newInstance(preferenceFile)
-    }
+    // CustomWatchface's screen is built in code by its own fragment, so it takes no xml - see
+    // CustomWatchfaceConfigurationFragment. Every other screen this activity shows still comes from one.
+    override fun createPreferenceFragment(): PreferenceFragmentCompat =
+        if (showsCustomWatchface) CustomWatchfaceConfigurationFragment.newInstance()
+        else WatchfaceConfigurationFragment.newInstance(preferenceFile)
 
     private fun removeBackgroundRecursively(parent: View) {
         if (parent is ViewGroup)
@@ -124,7 +139,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     }
 
     /**
-     * Fragment for loading watchface configuration preferences
+     * Fragment for loading preferences from a settings xml. Nothing here deals with complications: the
+     * only screen that has any is CustomWatchface's, built by its own fragment.
      */
     class WatchfaceConfigurationFragment : PreferenceFragmentCompat() {
 

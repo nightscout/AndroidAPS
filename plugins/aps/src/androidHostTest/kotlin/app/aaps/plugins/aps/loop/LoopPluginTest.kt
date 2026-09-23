@@ -1,7 +1,5 @@
 package app.aaps.plugins.aps.loop
 
-import android.app.NotificationManager
-import android.content.Context
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
@@ -24,7 +22,6 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -36,11 +33,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import org.json.JSONException
 import org.json.JSONObject
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -54,8 +52,11 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.stub
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
 class LoopPluginTest : TestBaseWithProfile() {
 
@@ -65,11 +66,9 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock lateinit var loopNotifier: LoopNotifier
-
 
     private lateinit var loopPlugin: LoopPlugin
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -81,10 +80,23 @@ class LoopPluginTest : TestBaseWithProfile() {
             constraintChecker, rh, profileFunction, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             // The shared test base still hands out a javax Provider, which other tests rely on;
             // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
-            persistenceLayer, uiInteraction, notificationManager, { pumpEnactResultProvider() },
+            persistenceLayer, notificationManager, { pumpEnactResultProvider() },
             processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
         )
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
+    }
+
+    /**
+     * Leave no live coroutine behind.
+     *
+     * [testScope] is a real scope on [Dispatchers.Unconfined], so a job left pending here does not die
+     * with the test - it waits out its `delay` and then runs against a half-stubbed plugin. The throw
+     * lands in kotlinx-coroutines-test's process-wide collector and is reported as
+     * `UncaughtExceptionsBeforeTest` against whichever unrelated `runTest` happens to start next, which
+     * is what it did to `allowedNextModes returns emptyList if profile is invalid`.
+     */
+    @AfterEach fun cancelPendingWork() {
+        loopPlugin.smbFallbackJob?.cancel()
     }
 
     @Test
@@ -102,10 +114,34 @@ class LoopPluginTest : TestBaseWithProfile() {
         // Plugin is enabled by default
         assertThat(loopPlugin.isEnabled()).isTrue()
 
-        // No temp basal capable pump should disable plugin
-        virtualPumpPlugin.pumpDescription.isTempBasalCapable = false
-        assertThat(loopPlugin.specialEnableCondition()).isFalse()
-        virtualPumpPlugin.pumpDescription.isTempBasalCapable = true
+        // A build with an APS of its own may run the loop
+        assertThat(loopPlugin.specialEnableCondition()).isTrue()
+    }
+
+    /**
+     * A client must never run the loop, whatever the stored flag says.
+     *
+     * `ConfigBuilder_Enabled_LOOP_*` is exportable and is not a synced key, so importing a master's
+     * settings writes it on a client too. `specialEnableCondition` is what stops it: `PluginBase.isEnabled`
+     * ANDs it with the stored state, so it beats the flag rather than sitting beside it. See #5145.
+     *
+     * This asserts the condition itself rather than driving the state machine: `setPluginEnabled` starts
+     * the plugin on a real scope, and a collector left running here would outlive the test - see
+     * [cancelPendingWork].
+     */
+    @Test
+    fun `a client may not run the loop`() {
+        whenever(config.APS).thenReturn(false)
+        val clientLoopPlugin = LoopPlugin(
+            aapsLogger, rxBus, preferences, config,
+            constraintChecker, rh, profileFunction, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
+            persistenceLayer, uiInteraction, notificationManager, { pumpEnactResultProvider() },
+            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
+        )
+
+        assertThat(clientLoopPlugin.specialEnableCondition()).isFalse()
+        // Not force-enabled either: alwaysEnabled is config.APS, so isEnabled cannot short-circuit to true
+        assertThat(clientLoopPlugin.isEnabled()).isFalse()
     }
 
     @Test
@@ -363,7 +399,11 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(result).isEqualTo(expectedModes)
     }
 
-    // region Tests for runningModePreCheck (via public runningModeRecord property)
+    // region Tests for runningModePreCheck
+    //
+    // These drive the reconciliation directly. They used to call runningModeRecord() instead, because a
+    // read triggered the pre-check - which is precisely the defect that produced duplicate rows, so the
+    // trigger is now explicit. `reading the running mode never writes` at the end of the region guards it.
 
     private fun setupForPreCheck() = runTest {
         // Default setup: All constraints pass, pump is not suspended.
@@ -386,7 +426,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `runningModeRecord forces SUSPENDED_BY_PUMP when pump is suspended`() = runTest {
+    fun `runningModePreCheck forces SUSPENDED_BY_PUMP when pump is suspended`() = runTest {
         // Arrange
         setupForPreCheck()
         // The current mode in the DB is CLOSED_LOOP, but the pump reports it's suspended
@@ -394,7 +434,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump.isSuspended()).thenReturn(true)
 
         // Act
-        loopPlugin.runningModeRecord() // Accessing the property triggers the pre-check
+        loopPlugin.runningModePreCheck()
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -411,7 +451,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `runningModeRecord reverts from SUSPENDED_BY_PUMP when pump is resumed`() = runTest {
+    fun `runningModePreCheck reverts from SUSPENDED_BY_PUMP when pump is resumed`() = runTest {
         // Arrange
         setupForPreCheck()
         val suspendedByPumpMode = RM(mode = RM.Mode.SUSPENDED_BY_PUMP, timestamp = dateUtil.now() - T.mins(5).msecs(), duration = 0)
@@ -420,18 +460,18 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.pump_running)).thenReturn("Pump running")
 
         // 1. First time getRunningModeActiveAt is called, return the suspended mode.
-        // 2. Any subsequent time it's called (in the recursive call), return the previous, non-suspended mode.
+        // 2. Any subsequent time it's called (on the re-run), return the previous, non-suspended mode.
         whenever(persistenceLayer.getRunningModeActiveAt(any()))
             .thenReturn(suspendedByPumpMode)
             .thenReturn(previousMode)
 
         // Act
-        loopPlugin.runningModeRecord() // Accessing the property triggers the pre-check
+        loopPlugin.runningModePreCheck()
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
         // We only care that it was called once to end the suspended mode.
-        // The recursive call should find a consistent state and do nothing.
+        // The re-run should find a consistent state and do nothing.
         verify(persistenceLayer).insertOrUpdateRunningMode(
             modeCaptor.capture(),
             eq(Action.PUMP_RUNNING),
@@ -445,7 +485,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `runningModeRecord forces DISABLED_LOOP when loop invocation is denied`() = runTest {
+    fun `runningModePreCheck forces DISABLED_LOOP when loop invocation is denied`() = runTest {
         // Arrange
         setupForPreCheck()
         // The current mode is OPEN_LOOP, but a constraint now forbids looping
@@ -453,7 +493,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(constraintChecker.isLoopInvocationAllowed()).thenReturn(ConstraintObject(false, aapsLogger))
 
         // Act
-        loopPlugin.runningModeRecord()
+        loopPlugin.runningModePreCheck()
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -469,7 +509,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `runningModeRecord forces OPEN_LOOP when closed loop is denied`() = runTest {
+    fun `runningModePreCheck forces OPEN_LOOP when closed loop is denied`() = runTest {
         // Arrange
         setupForPreCheck()
         // The current mode is CLOSED_LOOP, but a constraint now forbids it
@@ -477,7 +517,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(false, aapsLogger))
 
         // Act
-        loopPlugin.runningModeRecord()
+        loopPlugin.runningModePreCheck()
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -493,7 +533,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `runningModeRecord reverts from forced OPEN_LOOP when constraints pass again`() = runTest {
+    fun `runningModePreCheck reverts from forced OPEN_LOOP when constraints pass again`() = runTest {
         // Arrange
         setupForPreCheck()
         // The current mode is an auto-forced OPEN_LOOP
@@ -509,7 +549,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.mode_reverted)).thenReturn("Mode reverted")
 
         // Act
-        loopPlugin.runningModeRecord()
+        loopPlugin.runningModePreCheck()
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -526,7 +566,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `runningModeRecord does nothing if state is consistent`() = runTest {
+    fun `runningModePreCheck does nothing if state is consistent`() = runTest {
         // Arrange
         setupForPreCheck()
         // The current mode is consistent with all constraints
@@ -534,11 +574,104 @@ class LoopPluginTest : TestBaseWithProfile() {
         // All constraints are passing and pump is not suspended (from default setup)
 
         // Act
-        loopPlugin.runningModeRecord()
+        loopPlugin.runningModePreCheck()
 
         // Assert
         // Verify that no *new* running mode was inserted.
         verify(persistenceLayer, never()).insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any())
+    }
+
+    /**
+     * Reading the running mode must not change it.
+     *
+     * `runningModeRecord()` runs `runningModePreCheck()` first, so today every one of the ~36 places that
+     * read the mode - ViewModels, the Glance widget, wear, `KeepAliveWorker`, SMS, automation - also
+     * writes to the RM table. The pre-check is a read-check-write across two separate IO calls with
+     * nothing serializing it, so when one pump suspend wakes many readers at once (`EventPumpStatusChanged`
+     * is sent centrally by the command queue) they all read the pre-suspend mode before any of them has
+     * committed, and each inserts its own row. That is the duplicate `Pump suspended` history in #5001.
+     *
+     * The fix is to make the read pure and give reconciliation its own trigger, which is also what
+     * `_docs/RUNNING_MODE_SPEC.md` proposes under "Known inconsistencies". This test is the guard for that
+     * split: it FAILS today on purpose, and it is what stops the write from creeping back onto the read
+     * path later.
+     *
+     * Deliberately arranged so reconciliation really is due (the pump reports suspended while the stored
+     * mode is CLOSED_LOOP) - a test where nothing needs doing would pass for the wrong reason. The
+     * constraint-driven branches need the same guard; that sibling test belongs with the split, when
+     * there is a trigger to move them to.
+     */
+    @Test
+    fun `reading the running mode never writes`() = runTest {
+        // Arrange
+        setupForPreCheck()
+        mockCurrentMode(RM(mode = RM.Mode.CLOSED_LOOP, timestamp = dateUtil.now(), duration = 0))
+        whenever(activePlugin.activePump.isSuspended()).thenReturn(true)
+
+        // Act - both public read paths
+        loopPlugin.runningModeRecord()
+        loopPlugin.runningMode()
+
+        // Assert
+        verify(persistenceLayer, never()).insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any())
+    }
+
+    /**
+     * Two reconciliation triggers arriving together must still write one row.
+     *
+     * `runningModePreCheck` reads the mode, compares it against the pump, then writes - three steps with
+     * suspension points between them. On a device the triggers really do arrive together: one pump suspend
+     * sends a single `EventPumpStatusChanged` that wakes the collector in `onStart` and the calculation
+     * that calls `invoke()`, on different dispatchers. Without `reconcileMutex` both read the pre-suspend
+     * mode and both insert.
+     *
+     * Deterministic, not a stress test. `persistenceLayer` is made to behave like the DB rather than like
+     * a fixed stub - the read returns whatever the last write stored - because that is the whole point: the
+     * second trigger has to see the first one's row. The first read is held until the test releases it, so
+     * the interleaving is fixed rather than hoped for.
+     */
+    @Test
+    fun `two reconciliations arriving together write only one row`() = runTest {
+        // Arrange
+        setupForPreCheck()
+        whenever(activePlugin.activePump.isSuspended()).thenReturn(true)
+
+        val stored = AtomicReference(RM(mode = RM.Mode.CLOSED_LOOP, timestamp = dateUtil.now(), duration = 0))
+        val firstReadStarted = CompletableDeferred<Unit>()
+        val releaseFirstRead = CompletableDeferred<Unit>()
+        val holdFirstRead = AtomicBoolean(true)
+
+        persistenceLayer.stub {
+            on { getRunningModeActiveAt(any()) } doSuspendableAnswer {
+                // Snapshot BEFORE the hold: a real read returns what the row said when it ran, so holding
+                // it must not let this caller pick up a write that landed while it waited. Returning
+                // stored.get() after the await makes the test pass with or without the lock.
+                val atReadTime = stored.get()
+                if (holdFirstRead.compareAndSet(true, false)) {
+                    firstReadStarted.complete(Unit)
+                    releaseFirstRead.await()
+                }
+                atReadTime
+            }
+            on { insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any()) } doSuspendableAnswer { invocation ->
+                stored.set(invocation.getArgument(0))
+                PersistenceLayer.TransactionResult()
+            }
+        }
+
+        // Act
+        val first = launch { loopPlugin.runningModePreCheck() }
+        firstReadStarted.await()
+        val second = launch { loopPlugin.runningModePreCheck() }
+        // Let the second one get as far as it can while the first still holds the critical section.
+        yield()
+        releaseFirstRead.complete(Unit)
+        first.join()
+        second.join()
+
+        // Assert
+        verify(persistenceLayer, times(1)).insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any())
+        assertThat(stored.get().mode).isEqualTo(RM.Mode.SUSPENDED_BY_PUMP)
     }
 
 // endregion
@@ -698,7 +831,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         // The pump command hangs until the test releases it, so the cancel below is guaranteed to
         // arrive while it is still in flight.
         commandQueue.stub {
-            onBlocking { tempBasalAbsolute(any(), any(), any(), any(), any()) } doSuspendableAnswer {
+            on { tempBasalAbsolute(any(), any(), any(), any(), any()) } doSuspendableAnswer {
                 commandStarted.complete(Unit)
                 releaseCommand.await()
                 enacted
@@ -713,5 +846,77 @@ class LoopPluginTest : TestBaseWithProfile() {
 
         assertThat(loopPlugin.lastRun?.tbrSetByPump).isEqualTo(enacted)
         assertThat(loopPlugin.lastRun?.lastOpenModeAccept).isNotEqualTo(0L)
+    }
+
+    /**
+     * Accepting an open-loop suggestion does nothing while the queue is held for a settings import.
+     *
+     * This path enacts OUTSIDE `invokeMutex` and is reachable from the phone and the watch, so the
+     * guard in `invoke` does not cover it. Held, the executor picks nothing up, so enacting would leave
+     * the temp basal in the queue to land after the import - against a driver that was just stopped and
+     * restarted. Waiting instead deadlocks: `withHold` raises the flag before it waits.
+     */
+    @Test
+    fun `acceptChangeRequest enacts nothing while the queue is held`() = runTest {
+        // Everything else is set up so the request WOULD be enacted - a pump that is initialized, not
+        // suspended, with a base rate and no running TBR. Without that the early return in
+        // applyTBRRequest satisfies the assertions on its own and the test proves nothing, which is
+        // what the first version of it did.
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(virtualPumpPlugin.isInitialized()).thenReturn(true)
+        whenever(virtualPumpPlugin.isSuspended()).thenReturn(false)
+        whenever(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription().apply { basalStep = 0.05 })
+        whenever(virtualPumpPlugin.baseBasalRate).thenReturn(PumpRate(1.0))
+        whenever(ch.fromPump(any<PumpRate>())).thenReturn(1.0)
+        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
+        whenever(commandQueue.isHeld()).thenReturn(true)
+
+        val request = mock<APSResult>()
+        whenever(request.isTempBasalRequested).thenReturn(true)
+        whenever(request.rate).thenReturn(2.0)
+        whenever(request.duration).thenReturn(30)
+        whenever(request.usePercent).thenReturn(false)
+        loopPlugin.lastRun = Loop.LastRun().apply {
+            this.constraintsProcessed = request
+            this.lastAPSRun = dateUtil.now()
+        }
+
+        loopPlugin.acceptChangeRequest()
+
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+        verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any())
+        assertThat(loopPlugin.lastRun?.lastOpenModeAccept).isEqualTo(0L)
+    }
+
+    /**
+     * The deferred SMB fallback must not outlive the plugin.
+     *
+     * It re-runs the loop a second later, so a plugin stopped in between - which a settings import
+     * does to every plugin - would otherwise have it wake up and queue commands against a pump driver
+     * that is being torn down. It ran on the application scope and nothing owned it.
+     */
+    @Test
+    fun `onStop cancels the deferred SMB fallback`() = runTest {
+        loopPlugin.scheduleSmbFallback(allowNotification = false)
+        val scheduled = loopPlugin.smbFallbackJob
+        assertThat(scheduled).isNotNull()
+        assertThat(scheduled!!.isActive).isTrue()
+
+        loopPlugin.onStop()
+
+        assertThat(scheduled.isCancelled).isTrue()
+    }
+
+    /** Two failures in the same second schedule one re-run, not two stacked on the invoke mutex. */
+    @Test
+    fun `scheduling the fallback again replaces the pending one`() = runTest {
+        loopPlugin.scheduleSmbFallback(allowNotification = false)
+        val first = loopPlugin.smbFallbackJob
+
+        loopPlugin.scheduleSmbFallback(allowNotification = false)
+
+        assertThat(first!!.isCancelled).isTrue()
+        assertThat(loopPlugin.smbFallbackJob).isNotSameInstanceAs(first)
+        assertThat(loopPlugin.smbFallbackJob!!.isActive).isTrue()
     }
 }

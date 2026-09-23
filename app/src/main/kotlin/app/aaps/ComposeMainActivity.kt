@@ -393,11 +393,23 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                                 )
 
                             effect.group.permissions.contains(Manifest.permission.SCHEDULE_EXACT_ALARM)                 ->
-                                startActivity(
-                                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                                        data = "package:$packageName".toUri()
+                                // Every user can get here now, not only EOPatch users. If a ROM has no screen
+                                // for this intent, open the app's own settings page instead of crashing.
+                                try {
+                                    startActivity(
+                                        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                                            data = "package:$packageName".toUri()
+                                        }
+                                    )
+                                } catch (_: ActivityNotFoundException) {
+                                    runCatching {
+                                        startActivity(
+                                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                                data = "package:$packageName".toUri()
+                                            }
+                                        )
                                     }
-                                )
+                                }
 
                             effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_NOTIFICATION_LISTENER)   ->
                                 startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))

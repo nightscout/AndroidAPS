@@ -21,6 +21,7 @@ import app.aaps.wear.interaction.actions.WizardActivity
 import app.aaps.wear.interaction.activities.BgGraphActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
+import app.aaps.wear.watchfaces.PushedFace
 import app.aaps.wear.watchfaces.WatchFacePushHelper
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.launch
@@ -80,8 +81,14 @@ class MainMenuActivity : MenuListActivity() {
             // user who removed the face and wants it back before the next app update. While an
             // install runs the label switches to an inert "Installing…" so the tap is visibly
             // acknowledged (install can take a few seconds and a silent wait provokes second taps)
-            if (watchFacePushHelper.isSupported() && !sp.getBoolean(WatchFacePushHelper.KEY_FACE_INSTALLED, false))
-                add(MenuItem(R.drawable.watchface_aapsv4, getString(if (installing) R.string.menu_installing_watchface else R.string.menu_install_watchface)))
+            if (watchFacePushHelper.isSupported() && !sp.getBoolean(WatchFacePushHelper.KEY_FACE_INSTALLED, false)) {
+                // The entry installs whichever face is selected on the phone, so it shows that face
+                val icon = when (watchFacePushHelper.selectedFace) {
+                    PushedFace.WFS -> R.drawable.watchface_wfs
+                    PushedFace.CWF -> R.drawable.watchface_custom
+                }
+                add(MenuItem(icon, getString(if (installing) R.string.menu_installing_watchface else R.string.menu_install_watchface)))
+            }
         }
 
     override fun doAction(position: String) {

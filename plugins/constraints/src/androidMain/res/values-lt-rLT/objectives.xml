@@ -46,7 +46,6 @@
     <string name="objectives_exam_learned_isf">Jūs sužinojote, kas yra JIF ir kaip jo dydis lemia insulino kiekio, naudojamo glikemijos korekcijoms, apskaičiavimus.</string>
     <string name="objectives_exam_learned_ic">Jūs sužinojote, kas yra IA ir kaip jo dydis lemia insulino kiekio, naudojamo angliavandeniams padengti, apskaičiavimus.</string>
     <string name="objectives_exam_learned_hypott">Hipo laikinas tikslas naudojamas tam, kad sistema nepradėtų agresyviai koreguoti greitai kylančios glikemijos suvalgius AV hipo metu, kai įprastai AIO būna minusinis. Tam, kad šios situacijos būtų išvengta ateityje, reikalingi papildomi veiksmai.</string>
-    <string name="objectives_exam_learned_profileswitch">Keičiant profilį procentaliai, glikemijos tikslas nepasikeičia, tačiau bazė, JIF ir IA yra perskaičiuojami, kad būtų leidžiama daugiau (virš 100%%) ar mažiau insulino (žemiau 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Laiko perstūmimas keičiant profilį padeda prisitaikyti prie cirkadinių ritmų pokyčių, pvz.: vėlyvo atsikėlimo.</string>
     <string name="objectives_exam_learned_profileswitch4">Vien pakeisti profilio reikšmes nepakanka, kad profilis įsigaliotų. Po bet kokių pakietimų būtina aktyvuoti profilį.</string>
     <string name="objectives_exam_learned_exercise">Reikėtų sumažinti aktyvaus insulino kiekį organizme. Tam reikia bent 1 val. iki fizinio aktyvumo pakeisti profilį į mažesnį nei 100%.</string>

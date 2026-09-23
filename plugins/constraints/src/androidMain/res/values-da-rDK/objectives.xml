@@ -44,7 +44,6 @@
     <string name="objectives_exam_learned_isf">Du lærte betydningen af ISF-værdi, og hvordan det påvirker mængden af insulin, der anvendes til BS korrektion.</string>
     <string name="objectives_exam_learned_ic">Du lærte betydningen af IC-værdi, og hvordan det påvirker mængden af insulin, der anvendes til at dække kulhydrater.</string>
     <string name="objectives_exam_learned_hypott">Hypo midlertidigt mål bruges kun til at forhindre overkorrektion efter hypo, når IOB er negativ. Yderligere handlinger bør evalueres for at forhindre denne situation igen i fremtiden.</string>
-    <string name="objectives_exam_learned_profileswitch">Brug af procent påvirker ikke BS-mål men basal, ISF og IC justeres for at give mere insulin (over 100%%) eller mindre insulin (under 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Ved at bruge tidsforskydning i profilmenuen kan du tilpasse døgnprofilen til uregelmæssigheder som at vågne senere.</string>
     <string name="objectives_exam_learned_profileswitch4">Redigering af profilen i sig selv er ikke tilstrækkeligt til at foretage en ændring. Du skal stadig udføre et profilskift for at aktivere ændringerne.</string>
     <string name="objectives_exam_learned_exercise">Du bør reducere mængden af insulin i kroppen mindst 1 time før start af motion ved at vælge en profil under 100%.</string>

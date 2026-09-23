@@ -49,7 +49,12 @@ interface Command {
      * Override to add side-effects (e.g. clearing progress UI).
      * Return success = true to avoid command failed dialog
      */
-    fun cancel(comment: TextRef, success: Boolean = true) {
-        callback?.result(pumpEnactResultProvider().success(success).comment(comment))?.run()
+    /**
+     * [cancelled] says the drop was on purpose, so nothing alarms about it - see
+     * [app.aaps.core.interfaces.pump.PumpEnactResult.cancelled]. It defaults to false because most
+     * drops are not: a connection timeout is a real delivery failure and must still ring.
+     */
+    fun cancel(comment: TextRef, success: Boolean = true, cancelled: Boolean = false) {
+        callback?.result(pumpEnactResultProvider().success(success).cancelled(cancelled).comment(comment))?.run()
     }
 }

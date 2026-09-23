@@ -27,7 +27,7 @@ class AbstractSensitivityPluginTest : TestBase() {
     @Mock lateinit var preferences: Preferences
 
     private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, rh: ResourceHelper) :
-        AbstractSensitivityPlugin(pluginDescription, aapsLogger, rh, preferences) {
+        AbstractSensitivityPlugin(pluginDescription, aapsLogger, rh, preferences, mock()) {
 
         override fun detectSensitivity(
             ads: AutosensDataStore,

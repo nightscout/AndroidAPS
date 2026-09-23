@@ -174,6 +174,7 @@
     <string name="notconfigured">Not configured</string>
     <string name="loop_suspended_by_dst">Loop suspended by DST</string>
     <string name="required">req</string>
+    <string name="a11y_arrow_triple_down">falling very rapidly</string>
     <string name="a11y_arrow_double_down">falling rapidly</string>
     <string name="a11y_arrow_single_down">falling</string>
     <string name="a11y_arrow_forty_five_down">falling slowly</string>
@@ -181,8 +182,13 @@
     <string name="a11y_arrow_forty_five_up">rising slowly</string>
     <string name="a11y_arrow_single_up">rising</string>
     <string name="a11y_arrow_double_up">rising rapidly</string>
+    <string name="a11y_arrow_triple_up">rising very rapidly</string>
     <string name="a11y_arrow_none">none</string>
     <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">decrement %1$s by %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">increment %1$s by %2$s</string>
+    <string name="decrement">decrement</string>
+    <string name="increment">increment</string>
     <string name="a11y_high">high</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>
@@ -418,6 +424,9 @@
     <string name="clientcontrol_fail_scene_disabled">The scene is disabled.</string>
     <string name="clientcontrol_fail_partial">Some actions couldn\'t be applied.</string>
     <string name="clientcontrol_fail_execution">The master couldn\'t apply it.</string>
+    <string name="clientcontrol_fail_cancelled">The command was cancelled before it ran. Nothing was sent to the pump.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus cancelled. No insulin was given.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelled</string>
     <string name="clientcontrol_fail_control_disabled">Remote control is turned off on the master.</string>
     <string name="clientcontrol_fail_no_pending_bolus">The prepared bolus expired or was superseded. Tap the button again.</string>
     <string name="clientcontrol_fail_bolus_compute">The master couldn\'t calculate the bolus (missing glucose / profile, or pump not ready).</string>
@@ -957,7 +966,7 @@
     <string name="reorder">Reorder</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Move earlier</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Move later</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Show details</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Show details</string>
     <string name="presets_changed_reorder_aborted">Presets changed elsewhere. The new order was not saved.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d of %2$d</string>
@@ -1090,8 +1099,18 @@
     <string name="import_wrong_password">Wrong password</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Import anyway</string>
-    <string name="import_apply_title">Settings imported</string>
-    <string name="import_apply_message">The imported settings will now be applied. Plugins that changed will be restarted.</string>
+    <string name="import_apply_title">Apply imported settings?</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Settings to change: %1$d. Plugins that changed will be restarted.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Settings to change: %1$d. Pump settings kept: %2$d, so your pump keeps working.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">The imported settings selected no pump this phone has. %1$s is now active — check your pump settings.</string>
+    <string name="import_applying">Applying settings…</string>
+    <string name="import_replace_pump_settings">Also replace pump settings</string>
+    <string name="import_replace_pump_settings_summary">Leave this off to keep the pump this phone is paired with. Turn it on when restoring onto a new phone with the same pump.</string>
     <string name="import_apply_waiting">Waiting for pump…</string>
     <string name="import_apply_pump_busy">The pump is still busy, so the settings were not applied.</string>
     <string name="import_apply_retry_question">Try again now?</string>

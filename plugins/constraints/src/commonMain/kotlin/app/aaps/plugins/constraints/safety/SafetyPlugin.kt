@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.safety
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.material.icons.Icons
@@ -15,7 +16,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -55,7 +55,7 @@ class SafetyPlugin(
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
@@ -64,7 +64,7 @@ class SafetyPlugin(
         .showInList { false }
         .pluginName(ConstraintsStrings.safety)
         .icon(Icons.Default.Shield),
-    aapsLogger, rh
+    aapsLogger, rh, notificationManager
 ), PluginConstraints, Safety {
 
     /**

@@ -54,9 +54,19 @@ interface CommandQueue {
     suspend fun withHold(reason: String, timeout: Duration, block: suspend () -> Unit): Boolean
 
     fun clear()
+
+    /**
+     * Drops every queued command without running it and tells each waiting caller, through
+     * [Command.cancel] - so a command that owns progress UI (a bolus) clears it as well.
+     *
+     * [success] is what the caller is told. Pass `false` when nothing reached the pump and the
+     * caller must not treat the command as done: [app.aaps.core.interfaces.aps.Loop.invoke] branches
+     * on `enacted || success`, so `true` there lets it carry on as if the temp basal had been set,
+     * and then deliver an SMB behind it. Pass `true` only where that no-op meaning is wanted.
+     */
     // TextRef, not an @StringRes Int: this interface is commonMain, and a resource id here would pin
     // every implementation and every caller to Android. `comment` already has a TextRef overload.
-    fun completeAllAsNoOp(comment: TextRef)
+    fun cancelAll(comment: TextRef, success: Boolean)
     fun size(): Int
     fun performing(): Command?
     fun resetPerforming()

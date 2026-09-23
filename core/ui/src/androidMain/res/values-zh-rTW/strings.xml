@@ -90,6 +90,7 @@
     <string name="uploader">上傳器</string>
     <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">遺失血糖讀取值</string>
+    <string name="treatments_iob_label_string">IOB 活性胰島素:</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
     <string name="success">成功</string>
@@ -244,6 +245,8 @@
     <string name="location_permission_not_granted">位置權限未獲授權。請在 Android 設定中允許。</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 版本：</string>
     <string name="not_available_full">無法取得</string>
+    <string name="not_implemented_yet">此功能在此平台尚未準備就緒</string>
+    <string name="not_available_on_platform">此功能在此平台無法使用</string>
     <string name="engineering_mode_enabled">工程模式已啟用</string>
     <string name="back">返回</string>
     <string name="next">下一步</string>
@@ -256,6 +259,7 @@
     <string name="pin_dont_match">PIN 碼不一致</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">啟用設定檔 %1$d%%，持續 %2$d 分鐘</string>
     <!--    APSResult-->
     <string name="cancel_temp">取消臨時基礎率</string>
     <string name="let_temp_basal_run">讓臨時基礎率運行</string>
@@ -292,6 +296,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">照護入口</string>
     <string name="careportal_bgcheck">血糖檢查</string>
     <string name="careportal_mbg">手動血糖或校正</string>
     <string name="careportal_announcement">公告</string>
@@ -635,6 +640,7 @@
     <string name="uel_scene_deactivated">場景已停用</string>
     <string name="uel_remote_config_changed">遠端設定已變更</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">臨時目標下限值</string>
     <string name="temp_target_high_target">臨時目標高值</string>
     <string name="temp_target_value">臨時目標值</string>
     <string name="insulin_dia">胰島素作用時間數值</string>
@@ -770,6 +776,7 @@
     <string name="initializing">初始化中…</string>
     <string name="secs" comment="second short">%1$d 秒</string>
     <string name="warning" comment="Generic warning dialog title">警告</string>
+    <string name="alert" comment="Generic alert dialog title">警示</string>
     <string name="retry" comment="Button label to retry a failed operation">重試</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">完成</string>
     <string name="firmware" comment="Pump firmware version label">韌體</string>
@@ -910,7 +917,7 @@
     <string name="device_maintenance">裝置維護</string>
     <string name="from_label">從</string>
     <string name="to_label">到</string>
-    <string name="sensor_label">感測器</string>
+    <string name="sensor_label">傳感器</string>
     <string name="insulin_label">胰島素</string>
     <string name="pb_label">幫浦電池</string>
     <string name="cannula">套管</string>
@@ -1016,6 +1023,14 @@
     <string name="import_wrong_password">密碼錯誤</string>
     <string name="import_btn">匯入</string>
     <string name="import_anyway_btn">仍要匯入</string>
+    <string name="import_apply_title">設定已匯入</string>
+    <string name="import_apply_message">現在將套用已匯入的設定。變更的外掛將會重新啟動。</string>
+    <string name="import_apply_waiting">正在等待幫浦…</string>
+    <string name="import_apply_pump_busy">幫浦仍在忙碌中，因此未套用設定。</string>
+    <string name="import_apply_retry_question">要現在再試一次嗎？</string>
+    <string name="import_applied_title">已套用設定</string>
+    <string name="import_applied_message">已匯入的設定現已生效。</string>
+    <string name="import_apply_pump_changed">已取消：匯入設定導致幫浦變更</string>
     <string name="import_source_local">本機</string>
     <string name="import_source_cloud">雲端</string>
     <string name="import_load_more">載入更多</string>
@@ -1057,6 +1072,8 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d 小時</string>
     <string name="units_format_hours_double">%1$.1f 小時</string>
     <string name="units_format_hours_double_range">%1$.1f 小時 (%2$.1f - %3$.1f)</string>

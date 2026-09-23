@@ -64,11 +64,13 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pickers.WeekDaySelector
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.plugins.aps.R
 
@@ -143,7 +145,7 @@ fun AutotuneScreen(
                     IconButton(onClick = onToggleWeekDays) {
                         Icon(
                             imageVector = Icons.Default.Visibility,
-                            contentDescription = null,
+                            contentDescription = stringResource(if (state.showWeekDays) CoreUiStrings.collapse else CoreUiStrings.expand),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }

@@ -35,4 +35,5 @@
     <string name="current_master_password">Current master password</string>
     <string name="master_password_not_set">Master password not set</string>
     <string name="aaps_directory_not_selected">AAPS directory not selected</string>
+    <string name="aaps_directory_access_lost">Access to the AAPS directory was lost, so settings are no longer saved to the phone. Select the directory again.</string>
 </resources>

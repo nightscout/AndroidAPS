@@ -101,8 +101,41 @@ interface ImportExportPrefs {
     /** Attempt to decrypt a preference file with the given password. */
     fun decryptImportFile(file: PrefsFile, password: String): ImportDecryptResult
 
-    /** Write the decrypted prefs to SharedPreferences and call plugin hooks. */
-    fun executeImport(prefs: Prefs)
+    /**
+     * Applies the decrypted prefs to the live store and calls the plugin hooks.
+     *
+     * The store is NOT cleared. Each name is resolved to the key that owns it, the value is read as
+     * that key's type, and only what would actually change is written - in one batch, then published
+     * once. A name this build does not know is left alone rather than dropped.
+     *
+     * @param keepPumpSettings the user's choice on the import screen. When true, keys owned by a pump
+     *        driver and the pump's own `ConfigBuilder_Enabled_*` entry are skipped, so the pump this
+     *        phone is paired with keeps working. When false the file replaces them, which is what a
+     *        restore onto a new phone with the same pump wants.
+     * @return what changed, for the log and for what the user is told afterwards
+     */
+    fun executeImport(prefs: Prefs, keepPumpSettings: Boolean): ImportOutcome
+
+    /** What [executeImport] did, or what [previewImport] says it would do. */
+    data class ImportOutcome(
+        val changed: Int = 0,
+        val unchanged: Int = 0,
+        val pumpSkipped: Int = 0,
+        val pumpWouldChange: Int = 0,
+        val syncedSkipped: Int = 0,
+        val notExportable: Int = 0,
+        val unresolved: List<String> = emptyList(),
+        val unreadable: List<String> = emptyList()
+    )
+
+    /**
+     * What [executeImport] would do, without doing it.
+     *
+     * The import screen uses this to say how much actually changes, and how many pump settings the
+     * checkbox is protecting - counted with the same filter that will run, so the number cannot
+     * disagree with the outcome.
+     */
+    fun previewImport(prefs: Prefs, keepPumpSettings: Boolean): ImportOutcome
 
     /**
      * Tidy up after [executeImport], before the imported settings are applied.

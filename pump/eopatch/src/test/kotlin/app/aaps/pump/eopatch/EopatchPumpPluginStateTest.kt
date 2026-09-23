@@ -63,7 +63,8 @@ class EopatchPumpPluginStateTest {
         normalBasalManager = mock<NormalBasalManager>(),
         protectionCheck = mock<ProtectionCheck>(),
         blePreCheck = mock<BlePreCheck>(),
-        bolusProgressData = mock<BolusProgressData>()
+        bolusProgressData = mock<BolusProgressData>(),
+        notificationManager = mock()
     )
 
     private fun patch(

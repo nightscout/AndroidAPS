@@ -16,12 +16,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcNoTbr
 import app.aaps.core.ui.compose.icons.IcTbrHigh
 import app.aaps.core.ui.compose.icons.IcTbrLow
+import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResourceOrNull
 
 /**
  * @see TbrChipHighPreview
@@ -54,7 +57,7 @@ fun TbrChip(
             ) {
                 Icon(
                     imageVector = state.toIcon(),
-                    contentDescription = null,
+                    contentDescription = stringResourceOrNull(ElementType.TEMP_BASAL.label()),
                     tint = iconColor,
                     modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )

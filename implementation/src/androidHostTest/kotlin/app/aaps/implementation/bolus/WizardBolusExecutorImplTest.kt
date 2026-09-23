@@ -49,6 +49,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -344,7 +345,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         // The loop suspends between prepare and commit → the bolus is mode-rejected at delivery.
         whenever(runningModeGuard.rejectionMessage(any())).thenReturn("loop suspended")
         var err: String? = null
-        executor.confirm(prepared.bolusId, Sources.NSClient, { err = it })
+        executor.confirm(prepared.bolusId, Sources.NSClient, { err = it.comment })
 
         assertThat(err).isNotNull()
         // Decision B: a target-LOWERING eating-soon TT is NOT applied when the bolus fails (else the loop chases the low).
@@ -653,6 +654,57 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         verify(commandQueue).tempBasalPercent(eq(150), eq(30), eq(true), any(), any())
     }
 
+    /**
+     * A temp basal dropped from the queue (an import clears it) reports `success = false` like a pump failure, and
+     * the dialog would raise the full screen BOLUS_ERROR alarm for it. `cancelled` rides back on the result, so
+     * confirm answers [WizardBolusExecutor.ConfirmResult.Cancelled] — the comment still reaches onError, or the
+     * caller would be told the rate was set.
+     */
+    @Test
+    fun prepareBatch_tempBasalDroppedFromQueue_isCancelledNotAFailure() = runTest {
+        stubPassthroughConstraints()
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(constraintsChecker.applyBasalPercentConstraints(any(), any())).thenAnswer { it.getArgument<Constraint<Int>>(0) }
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isInitialized()).thenReturn(true)
+        whenever(pump.pumpDescription).thenReturn(PumpDescription().also { it.isTempBasalCapable = true; it.tempBasalStyle = PumpDescription.PERCENT })
+        whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any()))
+            .thenReturn(pumpEnactResultProvider().success(false).cancelled(true).comment("dropped by import"))
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as WizardBolusExecutor.PrepareResult.Preview
+        var err: String? = null
+        val result = executor.confirm(prepared.bolusId, Sources.NSClient, { err = it.comment })
+
+        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Cancelled)
+        assertThat(err).isEqualTo("dropped by import")
+    }
+
+    /** A real pump failure keeps reporting Delivered + the error comment — only a deliberate drop is Cancelled. */
+    @Test
+    fun prepareBatch_tempBasalFailedOnPump_staysADeliveryFailure() = runTest {
+        stubPassthroughConstraints()
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(constraintsChecker.applyBasalPercentConstraints(any(), any())).thenAnswer { it.getArgument<Constraint<Int>>(0) }
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isInitialized()).thenReturn(true)
+        whenever(pump.pumpDescription).thenReturn(PumpDescription().also { it.isTempBasalCapable = true; it.tempBasalStyle = PumpDescription.PERCENT })
+        whenever(commandQueue.tempBasalPercent(any(), any(), any(), any(), any()))
+            .thenReturn(pumpEnactResultProvider().success(false).comment("pump said no"))
+        val executor = create()
+
+        val prepared = executor.prepareBatch(listOf(BatchAction.TempBasal(rate = 150.0, isPercent = true, durationMinutes = 30))) as WizardBolusExecutor.PrepareResult.Preview
+        var err: String? = null
+        val result = executor.confirm(prepared.bolusId, Sources.NSClient, { err = it.comment })
+
+        assertThat(result).isEqualTo(WizardBolusExecutor.ConfirmResult.Delivered)
+        assertThat(err).isEqualTo("pump said no")
+    }
+
     @Test
     fun prepareBatch_tempBasal_styleMismatch_returnsOutOfSyncAndAppliesNothing() = runTest {
         stubPassthroughConstraints()
@@ -874,7 +926,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             bolusCalculatorResult = null,
             notes = null,
             source = Sources.WizardDialog,
-            onError = { errorMsg = it }
+            onError = { errorMsg = it.comment }
         )
 
         assertThat(errorMsg).isNotNull()
@@ -916,6 +968,72 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
             eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
             anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
         )
+    }
+
+    /**
+     * A bolus dropped from the queue on purpose (a settings import clears it) is not a pump failure, so it must
+     * not ring the alarm — but it must NOT be silent either. Nothing re-sends a bolus: the user pressed the
+     * button, no insulin was given, and the entry dialog is already gone.
+     */
+    @Test
+    fun bolus_whenDroppedFromQueue_postsSilentCancelledNoticeNotTheAlarm() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false).cancelled(true).comment("import"))
+        val executor = create()
+
+        executor.deliverWizardBolus(
+            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
+            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { }
+        )
+
+        verify(notificationManager, never()).post(
+            eq(NotificationId.BOLUS_DELIVERY_FAILED), any<String>(), any<NotificationLevel>(), any<Int>(),
+            anyOrNull<AlarmSound>(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
+        )
+        // BOLUS_CANCELLED is declared IMPORTANT, which is silent by definition — no sound is passed at the post site.
+        verify(notificationManager).post(
+            eq(NotificationId.BOLUS_CANCELLED), any<String>(), any<NotificationLevel>(), any<Int>(),
+            isNull(), any<List<NotificationAction>>(), anyOrNull<() -> Boolean>()
+        )
+    }
+
+    /**
+     * The async bolus result arrives long after confirm() returned, so the RETURN value cannot carry it — the
+     * callback is the only way the relay learns a bolus was dropped rather than failed. Without the flag the
+     * master writes an ExecutionFailed ack and the paired client rings its own BOLUS_ERROR alarm for a bolus
+     * that nothing tried to give.
+     */
+    @Test
+    fun bolus_whenDroppedFromQueue_tellsTheCallerItWasCancelled() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false).cancelled(true).comment("import"))
+        val executor = create()
+
+        var failure: WizardBolusExecutor.Failure? = null
+        executor.deliverWizardBolus(
+            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
+            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { failure = it }
+        )
+
+        assertThat(failure).isNotNull()
+        assertThat(failure!!.cancelled).isTrue()
+    }
+
+    /** The same shape when the pump really failed — the caller must still be able to tell the two apart. */
+    @Test
+    fun bolus_whenPumpFailed_tellsTheCallerItWasNotCancelled() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(false).comment("pump said no"))
+        val executor = create()
+
+        var failure: WizardBolusExecutor.Failure? = null
+        executor.deliverWizardBolus(
+            insulin = 1.0, carbs = 0, carbTimeMinutes = 0, mgdlGlucose = null,
+            bolusCalculatorResult = null, notes = null, source = Sources.QuickWizard, onError = { failure = it }
+        )
+
+        assertThat(failure).isNotNull()
+        assertThat(failure!!.cancelled).isFalse()
     }
 
     @Test

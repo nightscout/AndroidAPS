@@ -64,11 +64,11 @@ kotlin {
                 implementation(project(":core:ui"))
                 implementation(project(":core:utils"))
 
-                implementation(libs.cmp.runtime)
-                implementation(libs.cmp.foundation)
-                implementation(libs.cmp.ui)
-                implementation(libs.cmp.material3)
-                implementation(libs.cmp.material.icons.extended)
+                implementation(libs.jetbrains.compose.runtime)
+                implementation(libs.jetbrains.compose.foundation)
+                implementation(libs.jetbrains.compose.ui)
+                implementation(libs.jetbrains.compose.material3)
+                implementation(libs.jetbrains.compose.material.icons.extended)
             }
         }
 
