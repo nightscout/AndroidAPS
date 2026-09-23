@@ -146,7 +146,6 @@
     <string name="pref_title_wear_wizard_iob">在嚮導中包含活性胰島素</string>
     <string name="pref_title_wear_custom_watchface_authorization">授權自訂錶盤</string>
     <string name="pref_title_wear_pushed_watchface">已在手錶上安裝錶面</string>
-    <string name="pref_summary_wear_pushed_watchface">僅適用於 Wear OS 6 及更新版本。AAPS 可在手錶上安裝一個錶面：小工具錶面或自訂錶面。較舊的手錶會忽略此設定。</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">小工具錶面</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">自訂錶面</string>
     <string name="pref_title_wear_notify_on_smb">微量注射時通知</string>
