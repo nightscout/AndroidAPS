@@ -166,6 +166,8 @@
     <string name="a11y_arrow_double_up">greitai didėja</string>
     <string name="a11y_arrow_none">nėra</string>
     <string name="a11y_arrow_unknown">nežinoma</string>
+    <string name="decrement">mažėjimas</string>
+    <string name="increment">didėjimas</string>
     <string name="a11y_high">hiper</string>
     <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
