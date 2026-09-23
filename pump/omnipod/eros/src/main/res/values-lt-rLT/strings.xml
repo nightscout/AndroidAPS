@@ -11,7 +11,7 @@
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Įjungti baterijos keitimo registravimą veiksmuose</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f V</string>
-    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f v, AV=%2$.1f g</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f V, AV=%2$.1f g</string>
     <string name="omnipod_eros_history_tbr_value">Kiekis: %1$.2f V, trukmė: %2$d min</string>
     <!-- Omnipod Eros - Error -->
     <string name="omnipod_eros_error_crc_mismatch">Ryšio klaida: pranešimo vientisumo patikrinti nepavyko</string>
