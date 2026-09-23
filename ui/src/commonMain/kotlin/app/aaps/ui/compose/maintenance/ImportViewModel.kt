@@ -11,8 +11,11 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -26,6 +29,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.PrefsFileInfo
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -62,18 +66,39 @@ sealed interface ImportStep {
         val decryptionPassword: String = "",
         val needsDecryptionPassword: Boolean = false,
         val decryptResult: ImportDecryptResult? = null,
-        val isProcessing: Boolean = false
-    ) : ImportStep
+        val isProcessing: Boolean = false,
+        /**
+         * The user's answer to "also replace pump settings", asked on this screen under the password.
+         *
+         * False by default so the safe case needs no thought: restoring onto the same phone with the
+         * same pump leaves the pump alone. Replacing a pump's configuration takes one deliberate tick.
+         * Phrased as the destructive action for the same reason - a checkbox meaning "do NOT do
+         * something" is hard to read in a hurry.
+         */
+        val replacePumpSettings: Boolean = false
+    ) : ImportStep {
+
+        /** What the applier takes. The screen asks the question the other way round. */
+        val keepPumpSettings: Boolean get() = !replacePumpSettings
+    }
 
     /**
-     * The settings are written and are about to be applied to the running app.
+     * The last chance to stop. NOTHING has been written at this point.
      *
      * This was `RestartConfirm`, and the app really did restart: `exitApp` killed the process so the
      * new settings were picked up on the way back. iOS may not terminate itself, so that ending
      * silently did nothing there - the user confirmed a restart that never happened and carried on
      * with the old configuration. Applying in place is the one ending that works everywhere.
+     *
+     * It also used to come AFTER the store had been rewritten, which made it an acknowledgement
+     * rather than a confirmation. It carries [preview] so it can say what is about to happen -
+     * counted by the same filter that will run, so the number cannot disagree with the outcome.
      */
-    data object ApplyConfirm : ImportStep
+    data class ApplyConfirm(
+        val prefs: Prefs,
+        val keepPumpSettings: Boolean,
+        val preview: ImportExportPrefs.ImportOutcome
+    ) : ImportStep
 
     /**
      * Waiting for the pump to finish what it is doing before the settings are applied.
@@ -86,6 +111,15 @@ sealed interface ImportStep {
     data object WaitingForPump : ImportStep
 
     /**
+     * The apply is running and there was nothing to wait for.
+     *
+     * Exists so the confirm dialog always comes down when the user taps OK. Without it the step only
+     * moved when the pump queue was busy, which left the dialog interactive for the whole apply on
+     * every idle pump - and a second tap would have started a second one.
+     */
+    data object Applying : ImportStep
+
+    /**
      * The settings are in force. The last step, and the only one the user should end an import on.
      *
      * There has to be a step for this. The app used to die at this point, so "finished" needed no
@@ -95,10 +129,14 @@ sealed interface ImportStep {
     data object Applied : ImportStep
 
     /**
-     * The settings are written but could not be applied, because the pump stayed busy.
+     * The settings were NOT applied, because the pump stayed busy or a plugin threw.
+     *
+     * Nothing was written: the write moved inside the command-queue hold, so a refused hold leaves
+     * the store exactly as it was. (This used to say "the settings are written but could not be
+     * applied", which was true when the write happened before the user confirmed.)
      *
      * Separate from [Error] because it is recoverable and worth retrying: nothing is wrong with the
-     * imported file, the app is simply running the old plugin configuration until this succeeds.
+     * imported file, and the file is still held so the retry has something to apply.
      */
     data class ApplyFailed(val message: String) : ImportStep
     data class Error(val message: String) : ImportStep
@@ -123,7 +161,8 @@ class ImportViewModel(
     private val activePlugin: ActivePlugin,
     private val overviewDataCache: OverviewDataCache,
     private val iobCobCalculator: IobCobCalculator,
-    private val uiRestart: UiRestart
+    private val uiRestart: UiRestart,
+    private val notificationManager: NotificationManager
 ) : ViewModel() {
 
     private companion object {
@@ -142,6 +181,28 @@ class ImportViewModel(
     // straight to `aapsIoDispatcher` could not be awaited from a test at all, so the preference
     // rewrite - which clears the whole store - had no test covering it.
     internal var applyDispatcher: CoroutineDispatcher = aapsIoDispatcher
+
+    /**
+     * The decrypted file waiting to be applied, and the user's checkbox answer.
+     *
+     * Survives the step changing, which is what makes a retry possible: an apply that fails moves to
+     * [ImportStep.ApplyFailed], and the retry has to know what it is retrying. Cleared when the
+     * import finishes or is abandoned, so nothing can be applied twice or after a cancel.
+     */
+    private var pending: ImportStep.ApplyConfirm? = null
+
+    /**
+     * Puts the screen straight on the confirm step, for tests about the APPLY.
+     *
+     * Reaching it for real means picking a file, decrypting it and previewing - none of which the
+     * apply tests are about, and all of which would have to be stubbed to get here. Internal, like
+     * [applyDispatcher] above and for the same reason.
+     */
+    internal fun readyToApply(prefs: Prefs, keepPumpSettings: Boolean = true) {
+        val confirm = ImportStep.ApplyConfirm(prefs, keepPumpSettings, ImportExportPrefs.ImportOutcome())
+        pending = confirm
+        _importStep.value = confirm
+    }
 
     private val _importStep = MutableStateFlow<ImportStep>(ImportStep.Idle)
     val importStep: StateFlow<ImportStep> = _importStep.asStateFlow()
@@ -346,6 +407,37 @@ class ImportViewModel(
         }
     }
 
+    /**
+     * Says so when the import left no pump selected and the app quietly picked the virtual one.
+     *
+     * `verifySelectionInCategories` enables `VirtualPumpPlugin` when a category ends up empty, which
+     * is the right thing for the app to do - it cannot run with no pump at all - but it means an
+     * import that named a driver this build does not have ends with the user on a pump they never
+     * chose, delivering nothing, with nothing on screen to say so. The notification names what is
+     * active now, because "no pump selected" is not what happened and would send them looking for
+     * the wrong thing.
+     */
+    private fun notifyIfPumpFellBackToVirtual(pumpBefore: Any) {
+        val pumpNow = activePlugin.activePump
+        if (pumpNow !is VirtualPump || pumpBefore is VirtualPump) return
+        notificationManager.post(
+            id = NotificationId.WRONG_DRIVER,
+            text = rh.gs(CoreUiStrings.import_pump_fell_back, pumpNow.pumpDescription.pumpType.description)
+        )
+        aapsLogger.warn(LTag.CORE, "Import left no pump selected; the virtual pump is active")
+    }
+
+    /**
+     * "Also replace pump settings", from the review screen.
+     *
+     * Only ever set before anything is written - the answer is read once, in [confirmImport], and
+     * carried on the confirm step from there.
+     */
+    fun onReplacePumpSettingsChanged(replace: Boolean) {
+        val current = importStep.value
+        if (current is ImportStep.Review) _importStep.value = current.copy(replacePumpSettings = replace)
+    }
+
     fun confirmImport() {
         val current = importStep.value
         if (current !is ImportStep.Review) return
@@ -355,16 +447,32 @@ class ImportViewModel(
         _importStep.value = current.copy(isProcessing = true)
 
         viewModelScope.launch {
-            withContext(applyDispatcher) {
-                // `executeImport` clears the preference store and rewrites it key by key, so for the
-                // length of this block every preference reads as its default - the safety limits
-                // included. Nothing may act on settings until it is finished.
-                config.whileReconfiguring {
-                    importExportPrefs.executeImport(result.prefs)
-                    importExportPrefs.prepareImportedSettings()
+            // Nothing is written here any more. This step only works out WHAT would change, so the
+            // confirm screen can say so and the user's answer still means something - the store used
+            // to be rewritten before they were asked, which made `cancelImport` a lie and published
+            // the file to every paired client five seconds later. The write is in `onApplyConfirmed`.
+            // Wrapped for the same reason `onApplyConfirmed` is: the preview walks every key in the
+            // file and resolves each one, and an unhandled throw out of viewModelScope takes the app
+            // down. Nothing is written here, so an error is simply an error - no half-applied state
+            // to recover, and the user can pick the file again.
+            val preview = try {
+                withContext(applyDispatcher) {
+                    importExportPrefs.previewImport(result.prefs, keepPumpSettings = current.keepPumpSettings)
                 }
+            } catch (e: CancellationException) {
+                throw e     // the screen going away, not a failure
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.CORE, "Previewing the import failed", e)
+                _importStep.value = ImportStep.Error(e.message ?: rh.gs(CoreUiStrings.error))
+                return@launch
             }
-            _importStep.value = ImportStep.ApplyConfirm
+            val confirm = ImportStep.ApplyConfirm(
+                prefs = result.prefs,
+                keepPumpSettings = current.keepPumpSettings,
+                preview = preview
+            )
+            pending = confirm
+            _importStep.value = confirm
         }
     }
 
@@ -382,18 +490,48 @@ class ImportViewModel(
      * and a missed difference would skip the protection rather than add a needless wait.
      */
     fun onApplyConfirmed() {
+        // Held in a field rather than read off the step, because the RETRY comes from `ApplyFailed`.
+        // Reading `importStep.value as? ApplyConfirm` made `retryApply` return immediately and the
+        // dialog's button do nothing - and the test did not catch it, because its helper put the step
+        // back to ApplyConfirm before retrying.
+        val confirmed = pending ?: return
         viewModelScope.launch {
-            // Cosmetic only - whether the spinner is worth showing at all. The real wait, and the
-            // guarantee that nothing starts during the apply, both live inside withHold.
-            if (commandQueue.size() > 0 || commandQueue.performing() != null)
-                _importStep.value = ImportStep.WaitingForPump
+            // Leave ApplyConfirm FIRST, always. It used to move only when the queue was busy, so on
+            // an idle pump - the normal case - the confirm dialog stayed on screen and tappable for
+            // the whole write, applyConfiguration and storeSettings. A second tap would have started
+            // a second apply.
+            //
+            // Which screen depends only on whether there is something to wait for: the real wait, and
+            // the guarantee that nothing starts during the apply, both live inside withHold.
+            _importStep.value =
+                if (commandQueue.size() > 0 || commandQueue.performing() != null) ImportStep.WaitingForPump
+                else ImportStep.Applying
             // A plugin can throw on the way up or down, and this runs a lot of them. Letting that out
             // of viewModelScope would take the app down at the one moment the user cannot afford it:
             // the settings are already written, so the app would come back with them half applied and
             // no screen left to finish the job. Offer the retry instead.
             val applied = try {
                 commandQueue.withHold(HOLD_REASON, PUMP_WAIT) {
-                    withContext(applyDispatcher) { applySettings() }
+                    withContext(applyDispatcher) {
+                        // The write lives HERE, inside the hold, and not in `confirmImport`. Two
+                        // reasons. The user's confirmation now gates it, so cancelling changes
+                        // nothing. And the pump drivers that watch their own keys - Dana's name,
+                        // Medtronic's serial, `UseExtended` - react by talking to the pump; inside the
+                        // hold that command queues behind the apply instead of racing it.
+                        // Which pump was in charge BEFORE, so the fallback below can be spotted.
+                        val pumpBefore = activePlugin.activePump
+                        config.whileReconfiguring {
+                            importExportPrefs.executeImport(confirmed.prefs, confirmed.keepPumpSettings)
+                            importExportPrefs.prepareImportedSettings()
+                        }
+                        applySettings()
+                        notifyIfPumpFellBackToVirtual(pumpBefore)
+                        // Every plugin in THIS build now has an explicit stored enabled value, rather
+                        // than an absent one that the next start would fill from a default. The file
+                        // cannot name plugins it never had, so without this an import from a smaller
+                        // build leaves gaps that resolve differently on the next launch.
+                        configBuilder.storeSettings("import")
+                    }
                 }
             } catch (e: CancellationException) {
                 throw e     // the screen going away, not a failure
@@ -404,6 +542,9 @@ class ImportViewModel(
             }
             if (applied) {
                 uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
+                // Done with, so a stray retry cannot apply the same file twice. A FAILED apply
+                // deliberately keeps it - that is what the retry is for.
+                pending = null
                 _importStep.value = ImportStep.Applied
             } else {
                 aapsLogger.warn(LTag.CORE, "Pump still busy after $PUMP_WAIT, settings not applied")
@@ -489,10 +630,14 @@ class ImportViewModel(
     }
 
     fun dismissError() {
+        pending = null
         _importStep.value = ImportStep.Idle
     }
 
     fun cancelImport() {
+        // Clears the pending file too: abandoning an import must not leave something a later
+        // retry could apply.
+        pending = null
         _importStep.value = ImportStep.Idle
     }
 }
