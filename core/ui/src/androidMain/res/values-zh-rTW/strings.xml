@@ -183,6 +183,8 @@
     <string name="a11y_arrow_double_up">快速上升</string>
     <string name="a11y_arrow_none">無</string>
     <string name="a11y_arrow_unknown">未知</string>
+    <string name="decrement">減少</string>
+    <string name="increment">增加</string>
     <string name="a11y_high">高</string>
     <string name="a11y_inrange">在範圍內</string>
     <string name="a11y_low">低</string>
@@ -909,7 +911,7 @@
     <string name="reorder">重新排序</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">往前移動</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">往後移動</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">顯示詳細資料</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">顯示詳細資料</string>
     <string name="presets_changed_reorder_aborted">預設設定已在其他地方變更，新的排列順序未儲存。</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">第 %1$d 個，共 %2$d 個</string>
@@ -1026,11 +1028,18 @@
     <string name="import_wrong_password">密碼錯誤</string>
     <string name="import_btn">匯入</string>
     <string name="import_anyway_btn">仍要匯入</string>
+    <string name="import_apply_title">要套用匯入的設定嗎？</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">將變更 %1$d 項設定。已變更的外掛程式將會重新啟動。</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">將變更 %1$d 項設定。已保留 %2$d 項幫浦設定，因此你的幫浦可以繼續運作。</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">匯入的設定所選擇的幫浦不在此手機上。現在已啟用 %1$s — 請檢查你的幫浦設定。</string>
+    <string name="import_applying">正在套用設定……</string>
+    <string name="import_replace_pump_settings">同時取代幫浦設定</string>
+    <string name="import_replace_pump_settings_summary">關閉此選項，可保留目前與此手機配對的幫浦。若要還原到新手機，且使用相同的幫浦，請開啟此選項。</string>
     <string name="import_apply_waiting">正在等待幫浦…</string>
     <string name="import_apply_pump_busy">幫浦仍在忙碌中，因此未套用設定。</string>
     <string name="import_apply_retry_question">要現在再試一次嗎？</string>
