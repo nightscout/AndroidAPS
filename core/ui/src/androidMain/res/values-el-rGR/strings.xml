@@ -118,6 +118,8 @@
     <string name="a11y_arrow_double_up">ταχεία αύξηση</string>
     <string name="a11y_arrow_none">κανένα</string>
     <string name="a11y_arrow_unknown">άγνωστο</string>
+    <string name="decrement">μείωση</string>
+    <string name="increment">αύξηση</string>
     <string name="a11y_high">υψηλό</string>
     <string name="a11y_inrange">εντός στόχου</string>
     <string name="a11y_low">χαμηλό</string>
