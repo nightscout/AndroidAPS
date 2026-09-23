@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.TE
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 
@@ -62,8 +63,23 @@ private fun ArrowIcon(arrow: TE.Arrow, onArrowSelected: (TE.Arrow) -> Unit) {
     ) {
         Icon(
             imageVector = arrow.directionToComposeIcon(),
-            contentDescription = null,
+            contentDescription = stringResource(arrow.directionToLabel()),
             modifier = Modifier.size(32.dp)
         )
     }
 }
+
+/** Spoken name of the direction, so the screen reader does not just say "button". */
+private fun TE.Arrow.directionToLabel(): TextRef =
+    when (this) {
+        TE.Arrow.UP         -> CoreUiStrings.arrow_up
+        TE.Arrow.UP_RIGHT   -> CoreUiStrings.arrow_up_right
+        TE.Arrow.RIGHT      -> CoreUiStrings.arrow_right
+        TE.Arrow.DOWN_RIGHT -> CoreUiStrings.arrow_down_right
+        TE.Arrow.DOWN       -> CoreUiStrings.arrow_down
+        TE.Arrow.DOWN_LEFT  -> CoreUiStrings.arrow_down_left
+        TE.Arrow.LEFT       -> CoreUiStrings.arrow_left
+        TE.Arrow.UP_LEFT    -> CoreUiStrings.arrow_up_left
+        TE.Arrow.CENTER     -> CoreUiStrings.arrow_center
+        TE.Arrow.NONE       -> CoreUiStrings.unknown
+    }

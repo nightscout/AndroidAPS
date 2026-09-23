@@ -315,11 +315,11 @@ internal fun SceneCard(
                     }
                 }
                 IconButton(onClick = onEdit, enabled = editEnabled) {
-                    Icon(Icons.Default.Edit, contentDescription = null)
+                    Icon(Icons.Default.Edit, contentDescription = stringResource(CoreUiStrings.switch_to_edit))
                 }
                 if (scene.isDeletable) {
                     IconButton(onClick = onDelete, enabled = editEnabled) {
-                        Icon(Icons.Default.Delete, contentDescription = null)
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
                     }
                 }
             }

@@ -385,7 +385,7 @@ internal fun WizardDialogContent(
                             }
                             Icon(
                                 imageVector = if (uiState.calculationExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                                contentDescription = null,
+                                contentDescription = stringResource(if (uiState.calculationExpanded) CoreUiStrings.collapse else CoreUiStrings.expand),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -484,7 +484,7 @@ internal fun WizardDialogContent(
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.Info,
-                                    contentDescription = null,
+                                    contentDescription = stringResource(CoreUiStrings.carousel_show_card),
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -695,7 +695,7 @@ internal fun WizardDialogContent(
                                 IconButton(onClick = { scope.launch { tooltipState.show() } }) {
                                     Icon(
                                         imageVector = Icons.Outlined.Info,
-                                        contentDescription = null,
+                                        contentDescription = stringResource(CoreUiStrings.carousel_show_card),
                                         modifier = Modifier.size(20.dp)
                                     )
                                 }
