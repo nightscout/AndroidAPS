@@ -75,9 +75,9 @@ RM row and restores the underlying mode. Never persisted as `RESUME`.
 | `CLOSED_LOOP_LGS`   | DISABLED_LOOP, OPEN_LOOP, CLOSED_LOOP, DISCONNECTED_PUMP, SUSPENDED_BY_USER, SUPER_BOLUS       |
 | `DISABLED_LOOP`     | OPEN_LOOP, CLOSED_LOOP, CLOSED_LOOP_LGS, DISCONNECTED_PUMP, SUPER_BOLUS                        |
 | `SUPER_BOLUS`       | DISCONNECTED_PUMP, RESUME                                                                      |
-| `DISCONNECTED_PUMP` | RESUME                                                                                         |
+| `DISCONNECTED_PUMP` | DISCONNECTED_PUMP (extend: new duration from now), RESUME                                      |
 | `SUSPENDED_BY_PUMP` | (empty — auto-cleared by `runningModePreCheck` when pump unsuspends)                           |
-| `SUSPENDED_BY_USER` | DISCONNECTED_PUMP, RESUME                                                                      |
+| `SUSPENDED_BY_USER` | DISCONNECTED_PUMP, SUSPENDED_BY_USER (extend: new duration from now), RESUME                   |
 | `SUSPENDED_BY_DST`  | DISCONNECTED_PUMP only — **not RESUME**. User cannot manually exit; expires by duration.       |
 | `RESUME`            | error (invalid mode)                                                                           |
 
