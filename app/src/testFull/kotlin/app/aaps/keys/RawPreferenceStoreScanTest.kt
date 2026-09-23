@@ -60,6 +60,14 @@ class RawPreferenceStoreScanTest {
         "implementation/src/androidMain/kotlin/app/aaps/implementation/maintenance/ImportExportPrefsImpl.kt" to "the import/export itself - it copies the whole store by design",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/LocalImportExportPrefs.kt" to "the multiplatform half of the same import/export",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/formats/PrefsTransfer.kt" to "reads and writes the whole store for a transfer",
+        // Deliberately below `Preferences`, and the reason is the opposite of carelessness. It writes
+        // an import as ONE `edit(commit = true)` and then calls `Preferences.reloadFromStore()` once.
+        // Going through `preferences.put` per key would be ~500 separate commits, would let a live
+        // collector see a half-imported store, and would stamp and publish every Bidirectional key on
+        // the way past. It resolves each name to its key first, so the values are typed - it is not
+        // bypassing the key system, only the per-key write.
+        "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/PreferenceImportApplier.kt" to
+            "applies an import as one batched write, then republishes through Preferences.reloadFromStore()",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/CloudStorageManager.kt" to "moves export files to and from cloud storage",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/GoogleDriveProvider.kt" to "cloud export, shared part",
         "implementation/src/androidMain/kotlin/app/aaps/implementation/maintenance/cloud/AndroidGoogleDriveProvider.kt" to "cloud export, Android part",

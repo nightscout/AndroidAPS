@@ -75,6 +75,7 @@ class LocalImportExportPrefs(
     private val persistenceLayer: PersistenceLayer,
     private val userEntryPresentationHelper: UserEntryPresentationHelper,
     private val appScope: CoroutineScope,
+    private val applier: PreferenceImportApplier,
     secureEncrypt: SecureEncrypt,
     textResolver: TextResolver
 ) : ImportExportPrefs {
@@ -273,11 +274,23 @@ class LocalImportExportPrefs(
         transfer.importResult(file.content, password, config.isEngineeringMode())
             .also { if (it is ImportDecryptResult.Error) aapsLogger.error(LTag.CORE, "Reading ${file.name} failed: ${it.message}") }
 
-    override fun executeImport(prefs: Prefs) {
+    override fun executeImport(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome {
         activePlugin.beforeImport()
-        transfer.applyImported(prefs)
+        val outcome = applier.apply(prefs, keepPumpSettings)
         activePlugin.afterImport()
+        aapsLogger.info(
+            LTag.CORE,
+            "Import applied: ${outcome.changed} changed, ${outcome.unchanged} already matched, " +
+                "${outcome.pumpSkipped} pump settings kept (${outcome.pumpWouldChange} would have changed), " +
+                "${outcome.syncedSkipped} synced keys left to the master, ${outcome.notExportable} refused as device state, " +
+                "${outcome.unresolved.size} unknown names left alone, ${outcome.unreadable.size} unreadable values skipped"
+        )
+        if (outcome.unresolved.isNotEmpty()) aapsLogger.debug(LTag.CORE, "Import: names this build does not know: ${outcome.unresolved}")
+        return outcome
     }
+
+    override fun previewImport(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome =
+        applier.preview(prefs, keepPumpSettings)
 
     override fun prepareImportedSettings() {
         preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
