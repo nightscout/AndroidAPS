@@ -1016,6 +1016,11 @@
     <string name="import_wrong_password">Грешна парола</string>
     <string name="import_btn">Импорт</string>
     <string name="import_anyway_btn">Импортиране въпреки това</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_source_local">Локално</string>
     <string name="import_source_cloud">Клауд</string>
     <string name="import_load_more">Зареди още</string>
