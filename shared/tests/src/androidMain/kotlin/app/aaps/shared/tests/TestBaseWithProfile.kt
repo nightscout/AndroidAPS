@@ -199,6 +199,11 @@ open class TestBaseWithProfile : TestBase() {
         // unstubbed enum comes back null from Mockito and anything reading it - the preference
         // platform filter, for one - fails on a non-null type rather than on its own logic.
         whenever(config.platform).thenReturn(AppPlatform.Android)
+        // Same reason, one type along: `appName` is a non-null TextRef, and `CommandExecutor` passes it
+        // straight into `rh.gs(...)`. The mocked resolver tolerated the null because a mock does not
+        // enforce parameter nullability; a real one throws on the way in. Stubbed here rather than in the
+        // one test that noticed, because every test that reaches that line has the same hole.
+        whenever(config.appName).thenReturn(TextRef.Literal("AAPS"))
 
         whenever(rh.gs(R.string.ok)).thenReturn("OK")
         whenever(rh.gs(R.string.error)).thenReturn("Error")
