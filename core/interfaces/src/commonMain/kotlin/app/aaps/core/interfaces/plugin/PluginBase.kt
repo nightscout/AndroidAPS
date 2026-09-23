@@ -372,9 +372,25 @@ abstract class PluginBase(
         }
     }
 
-    fun showInList(type: PluginType): Boolean {
-        if (pluginDescription.mainType == type) return pluginDescription.showInList.invoke()
-        return false
+    /**
+     * Whether this plugin is offered in the Config Builder list.
+     *
+     * A plugin this build forces OFF is hidden without having to say so twice. Forced off means it cannot be
+     * used here at all, so there is nothing to offer and a switch locked in the off position tells the user
+     * nothing they can act on. `AutotunePlugin` and `OpenAPSAutoISFPlugin` used to repeat their enforcement
+     * condition here, and `LoopPlugin` and `RandomBgPlugin` forgot to - which is how the loop stayed listed
+     * on a client that could never run it.
+     *
+     * Forced ON is deliberately NOT derived. Those plugins differ: the framework ones say
+     * `showInList { false }` because they have no UI at all, while `ObjectivesPlugin` has a real screen and
+     * `NSClientSourcePlugin` has to stay selectable on a master, where it is not enforced.
+     *
+     * It took a [PluginType] until every caller turned out to pass `pluginDescription.mainType` - the other
+     * branch could only ever return false.
+     */
+    fun showInList(): Boolean {
+        if (enforcedState() == EnforcedState.Disabled) return false
+        return pluginDescription.showInList.invoke()
     }
 
     open suspend fun onStart() {}

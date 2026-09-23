@@ -163,6 +163,6 @@ class SensitivityWeightedAveragePluginTest : SensitivityTestBase() {
         val aps = mock<APS>()
         whenever(aps.algorithm).thenReturn(APSResult.Algorithm.SMB)
         whenever(activePlugin.activeAPS).thenReturn(aps)
-        assertThat(sut.showInList(PluginType.SENSITIVITY)).isFalse()
+        assertThat(sut.showInList()).isFalse()
     }
 }

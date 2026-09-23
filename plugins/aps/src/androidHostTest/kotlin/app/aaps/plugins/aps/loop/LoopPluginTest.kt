@@ -120,7 +120,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(loopPlugin.getType()).isEqualTo(PluginType.LOOP)
         assertThat(loopPlugin.name).isEqualTo("Loop")
         assertThat(loopPlugin.nameShort).isEqualTo("LOOP")
-        assertThat(loopPlugin.showInList(PluginType.LOOP)).isTrue()
+        assertThat(loopPlugin.showInList()).isTrue()
 
         // Plugin is enabled by default
         assertThat(loopPlugin.isEnabled()).isTrue()

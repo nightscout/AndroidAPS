@@ -167,7 +167,7 @@ class SensitivityAAPSPluginTest : SensitivityTestBase() {
     @Test
     fun `shown while no APS is elected yet`() {
         whenever(activePlugin.activeAPS).thenReturn(null)
-        assertThat(sut.showInList(PluginType.SENSITIVITY)).isTrue()
+        assertThat(sut.showInList()).isTrue()
     }
 
     @Test
@@ -175,7 +175,7 @@ class SensitivityAAPSPluginTest : SensitivityTestBase() {
         val aps = mock<APS>()
         whenever(aps.algorithm).thenReturn(APSResult.Algorithm.AMA)
         whenever(activePlugin.activeAPS).thenReturn(aps)
-        assertThat(sut.showInList(PluginType.SENSITIVITY)).isTrue()
+        assertThat(sut.showInList()).isTrue()
     }
 
     @Test
@@ -183,6 +183,6 @@ class SensitivityAAPSPluginTest : SensitivityTestBase() {
         val aps = mock<APS>()
         whenever(aps.algorithm).thenReturn(APSResult.Algorithm.SMB)
         whenever(activePlugin.activeAPS).thenReturn(aps)
-        assertThat(sut.showInList(PluginType.SENSITIVITY)).isFalse()
+        assertThat(sut.showInList()).isFalse()
     }
 }

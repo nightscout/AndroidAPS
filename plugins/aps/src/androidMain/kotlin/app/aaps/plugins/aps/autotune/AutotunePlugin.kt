@@ -122,9 +122,9 @@ class AutotunePlugin(
                 atProfileProvider = atProfileProvider
             )
         }
-        .showInList { config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE) }
-        // Same gate as showInList: outside an engineering dev build, or without the opt-in option file,
-        // Autotune cannot be switched on at all. Forced off only.
+        // Outside an engineering dev build, or without the opt-in option file, Autotune cannot be switched on
+        // at all. No showInList needed: a plugin forced off is hidden by PluginBase.showInList, so the
+        // condition is written once rather than here and negated there.
         .enforce(EnforcedState.Disabled) { !(config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE)) }
         .description(TextRef.AndroidRes(R.string.autotune_description)),
     ownPreferences = AutotuneStringKey.entries,

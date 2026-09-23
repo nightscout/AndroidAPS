@@ -115,7 +115,7 @@ class PluginStore(
     override fun getSpecificPluginsVisibleInList(type: PluginType): ArrayList<PluginBase> {
         val newList = ArrayList<PluginBase>()
         for (p in plugins) {
-            if (p.getType() == type) if (p.showInList(type)) newList.add(p)
+            if (p.getType() == type) if (p.showInList()) newList.add(p)
         }
         return newList
     }
@@ -192,7 +192,7 @@ class PluginStore(
      */
     private fun fallbackIfNotVisible(active: PluginBase, type: PluginType, jobs: MutableList<Job>): PluginBase {
         if (active.enforcedState() != null) return active
-        if (!active.showInList(type)) {
+        if (!active.showInList()) {
             active.setPluginEnabled(type, false)?.let(jobs::add)
             val default = getDefaultPlugin(type)
             default.setPluginEnabled(type, true)?.let(jobs::add)
