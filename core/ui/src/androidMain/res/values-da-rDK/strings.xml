@@ -528,6 +528,11 @@
     <string name="delete_logs">Slet logs</string>
     <string name="import_setting">Importer indstillinger</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="database_cleanup">Database-oprydning</string>
     <string name="nav_resetdb">Nulstil databaser</string>
     <!--    BLE Scan Step (shared pump pairing) -->
