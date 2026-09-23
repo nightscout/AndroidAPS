@@ -118,6 +118,8 @@
     <string name="a11y_arrow_double_up">עלייה מהירה</string>
     <string name="a11y_arrow_none">ללא</string>
     <string name="a11y_arrow_unknown">לא ידוע</string>
+    <string name="decrement">הפחתה</string>
+    <string name="increment">תוספת</string>
     <string name="a11y_high">גבוה</string>
     <string name="a11y_inrange">בטווח</string>
     <string name="a11y_low">נמוך</string>
