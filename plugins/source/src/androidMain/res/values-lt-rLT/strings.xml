@@ -32,5 +32,12 @@
     <string name="description_source_instara_app">Gauti glikemijos reikšmes iš Instara App.</string>
     <!-- Instara preferences -->
     <!-- Notification Reader -->
+    <string name="description_source_notification_reader">Nuskaityti gliukozės reikšmes iš oficialių CGM programų (Dexcom, Medtronic, Eversense ir kt.) pranešimų.</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Programai reikia leidimo gauti CGM duomenis iš Dexcom programos</string>
+    <string name="permission_notification_listener_description">Reikalinga gliukozės reikšmėms nuskaityti iš CGM app pranešimų</string>
+    <string name="aidex">MicroTech CGM App</string>
+    <string name="aidex_short">CGM App</string>
+    <string name="description_source_aidex">Gauti CGM reikšmes iš LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 ir kt.</string>
 </resources>
