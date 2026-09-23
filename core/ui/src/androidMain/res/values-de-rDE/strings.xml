@@ -101,6 +101,8 @@
     <string name="a11y_arrow_double_up">schnell steigend</string>
     <string name="a11y_arrow_none">kein(e)</string>
     <string name="a11y_arrow_unknown">unbekannt</string>
+    <string name="decrement">verringern</string>
+    <string name="increment">erhöhen</string>
     <string name="a11y_high">hoch</string>
     <string name="a11y_inrange">im Zielbereich</string>
     <string name="a11y_low">niedrig</string>
