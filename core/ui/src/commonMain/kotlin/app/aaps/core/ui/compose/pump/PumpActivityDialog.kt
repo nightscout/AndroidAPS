@@ -1,14 +1,9 @@
 package app.aaps.core.ui.compose.pump
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,9 +16,11 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,17 +49,26 @@ fun PumpActivityDialog(
     onDismiss: () -> Unit
 ) {
     if (isModal) {
-        // Modal: full-screen scrim + centered card, not dismissable
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f))
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = { } // consume touches
-                ),
-            contentAlignment = Alignment.Center
+        // Modal (standard bolus): a real Dialog, so it gets its own window and the app behind it
+        // leaves the accessibility tree.
+        //
+        // This used to be a Box with a scrim and a clickable that only consumed TOUCHES. That
+        // blocks a finger, but a screen reader does not use touches - it activates controls
+        // through accessibility actions, which a touch handler does not stop - and a sibling Box
+        // removes nothing from the semantics tree. So during a bolus a blind user was never told
+        // delivery had started and could still reach and operate the UI behind the scrim,
+        // including starting a second treatment.
+        //
+        // Not dismissable, as before: no dismiss on back press or on a tap outside, and the
+        // dialog goes away only when the caller stops composing it. usePlatformDefaultWidth is
+        // off so the card keeps the full-bleed width it had inside the Box.
+        Dialog(
+            onDismissRequest = { },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false
+            )
         ) {
             PumpActivityCard(
                 bolusState = bolusState,
@@ -181,7 +187,12 @@ private fun BolusProgressSection(
             text = statusText,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            // Delivery moves on without the user touching anything, so say so when it changes.
+            // Polite, not Assertive: this line changes a handful of times during a bolus and
+            // should wait for a gap rather than cut across whatever is being read.
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { liveRegion = LiveRegionMode.Polite }
         )
         Spacer(modifier = Modifier.height(AapsSpacing.large))
     }
@@ -221,7 +232,11 @@ private fun BolusProgressSection(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                // Assertive, unlike the running status above: this says we have lost track of a
+                // bolus that may still be delivering, so it is worth interrupting for.
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { liveRegion = LiveRegionMode.Assertive }
             )
             Spacer(modifier = Modifier.height(AapsSpacing.medium))
             Text(
