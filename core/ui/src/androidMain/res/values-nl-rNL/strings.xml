@@ -602,6 +602,11 @@
     <string name="aaps_directory">AAPS map</string>
     <string name="import_setting">Importeer instellingen</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="reset_aps_results">Reset APS resultaten</string>
     <string name="database_cleanup">Database opschonen</string>
     <string name="nav_resetdb">Reset database</string>
