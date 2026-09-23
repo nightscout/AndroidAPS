@@ -1026,8 +1026,11 @@
     <string name="import_wrong_password">密碼錯誤</string>
     <string name="import_btn">匯入</string>
     <string name="import_anyway_btn">仍要匯入</string>
-    <string name="import_apply_title">設定已匯入</string>
-    <string name="import_apply_message">現在將套用已匯入的設定。變更的外掛將會重新啟動。</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_apply_waiting">正在等待幫浦…</string>
     <string name="import_apply_pump_busy">幫浦仍在忙碌中，因此未套用設定。</string>
     <string name="import_apply_retry_question">要現在再試一次嗎？</string>
