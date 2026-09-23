@@ -36,7 +36,7 @@
     <string name="metadata_label_created_at">Sukurta</string>
     <string name="metadata_label_aaps_version">AAPS versija</string>
     <string name="metadata_label_aaps_flavour">Versijos variantas</string>
-    <string name="metadata_label_device_name">Eksportuojamas paciento vardas</string>
+    <string name="metadata_label_device_name">Naudotojo vardo eksportavimas iš įrenginio</string>
     <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
     <string name="metadata_label_encryption">Failo šifravimas</string>
     <string name="metadata_format_new">Naujas šifruotas formatas</string>
