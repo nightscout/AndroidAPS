@@ -178,9 +178,10 @@ class PersistentNotificationPlugin(
                 // Show an arrow only when there really is one. This used to fall back to FLAT,
                 // which told the user the glucose was stable whenever the trend was simply not
                 // known yet - for example right after a start, with fewer than two readings.
-                // TrendArrow.NONE has no glyph of its own ("??"), so it is dropped, not drawn.
+                // NONE and the two triples have no glyph in TrendArrow.symbol, only the
+                // placeholders "??" and "X", so they are dropped rather than printed.
                 val trendSymbol = trendCalculator.getTrendArrow(iobCobCalculator.ads)
-                    ?.takeIf { it != TrendArrow.NONE }
+                    ?.takeIf { it != TrendArrow.NONE && it != TrendArrow.TRIPLE_UP && it != TrendArrow.TRIPLE_DOWN }
                     ?.symbol
                 line1 = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated) +
                     (trendSymbol?.let { " $it" } ?: "")

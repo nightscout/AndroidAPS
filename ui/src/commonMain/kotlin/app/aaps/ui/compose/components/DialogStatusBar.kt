@@ -18,9 +18,12 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalAapsScale
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.extensions.directionToDescription
 import app.aaps.core.ui.extensions.directionToIcon
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
@@ -61,16 +64,17 @@ fun DialogStatusBar(
                     textDecoration = bgDecoration,
                     maxLines = 1
                 )
-                // Trend arrow. Draw the icon, never TrendArrow.symbol: that field is a plain glyph
-                // with no picture for every value, so NONE used to print a literal "??" and both
-                // triple arrows a literal "X" at the user. The icon covers every value, and it
-                // carries the spoken description that a bare arrow character does not.
+                // Trend arrow. Draw the icon, not TrendArrow.symbol. That field has no glyph for
+                // NONE or for the triple arrows - it holds the placeholders "??" and "X", which
+                // users used to see here. The icon has a picture for every value and a spoken
+                // name, which a bare arrow character does not.
                 bg.trendArrow?.let { arrow ->
                     Icon(
                         imageVector = arrow.directionToIcon(),
-                        contentDescription = bg.trendDescription,
+                        contentDescription = stringResource(arrow.directionToDescription()),
                         tint = bgColor,
-                        modifier = Modifier.size(20.dp)
+                        // Scale with the text beside it, as the Text this replaced did.
+                        modifier = Modifier.size(AapsSpacing.trendArrowSize * LocalAapsScale.current)
                     )
                 }
                 // Delta

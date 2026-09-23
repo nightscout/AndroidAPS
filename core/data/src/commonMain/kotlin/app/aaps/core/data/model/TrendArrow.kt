@@ -1,5 +1,20 @@
 package app.aaps.core.data.model
 
+/**
+ * A glucose trend.
+ *
+ * [text] is the wire name, used by Nightscout and by the phone-to-watch protocol. Do not translate it.
+ *
+ * [symbol] is NOT a display string, despite looking like one. Three values have no arrow character
+ * and carry a placeholder instead: [NONE] is `"??"`, and both [TRIPLE_UP] and [TRIPLE_DOWN] are
+ * `"X"`. Showing it raw puts that placeholder in front of the user, and a screen reader cannot say
+ * an arrow character usefully either. For the UI use the `directionToIcon()` and
+ * `directionToDescription()` extensions in `:core:ui` instead.
+ *
+ * The one place [symbol] is still right is the watch protocol: `DataHandlerMobile` sends it and the
+ * watch matches on it to pick a drawable, so those exact strings, placeholders included, are part of
+ * the wire format.
+ */
 enum class TrendArrow(val text: String, val symbol: String) {
     NONE("NONE", "??"),
     TRIPLE_UP("TripleUp", "X"),
