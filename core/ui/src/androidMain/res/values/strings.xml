@@ -185,6 +185,10 @@
     <string name="a11y_arrow_triple_up">rising very rapidly</string>
     <string name="a11y_arrow_none">none</string>
     <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">decrement %1$s by %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">increment %1$s by %2$s</string>
+    <string name="decrement">decrement</string>
+    <string name="increment">increment</string>
     <string name="a11y_high">high</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>

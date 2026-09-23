@@ -12,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -43,7 +45,12 @@ fun DialogStatusBar(
     Surface(
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
         shape = MaterialTheme.shapes.small,
-        modifier = modifier.fillMaxWidth()
+        // Read the whole bar as one item instead of up to nine separate stops. No
+        // contentDescription here on purpose: merging keeps the texts of the children,
+        // including the spoken name of the trend arrow, and setting one would drop them all.
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) { }
     ) {
         Row(
             modifier = Modifier
@@ -133,7 +140,10 @@ private fun Separator() {
         text = "\u2022",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-        modifier = Modifier.padding(horizontal = 2.dp)
+        // The bullet is only a visual divider, so keep it out of the spoken text.
+        modifier = Modifier
+            .padding(horizontal = 2.dp)
+            .clearAndSetSemantics { }
     )
 }
 

@@ -39,9 +39,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.calibration.AddEntryResult
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
@@ -150,6 +153,13 @@ internal fun CalibrationDialogContent(
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
+            val bgFormat = remember(uiState.isMgdl) { if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1 }
+            // One value for both the visible label and the spoken name, so they can never drift apart.
+            val confirmLabel =
+                if (uiState.hasValidBg) "${bgFormat.format(uiState.bg)} ${uiState.unitLabel}"
+                else stringResource(CoreUiStrings.ok)
+            // A Button merges its children, so a bare name would hide the value. Carry the value in the name.
+            val confirmDescription = stringResource(CoreUiStrings.confirm)
             Button(
                 onClick = {
                     focusManager.clearFocus()
@@ -160,6 +170,7 @@ internal fun CalibrationDialogContent(
                     .fillMaxWidth()
                     .bottomBarSafeArea()
                     .padding(horizontal = AapsSpacing.extraLarge, vertical = AapsSpacing.medium)
+                    .semantics { contentDescription = confirmDescription }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Check,
@@ -167,12 +178,7 @@ internal fun CalibrationDialogContent(
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(AapsSpacing.medium))
-                if (uiState.hasValidBg) {
-                    val bgFormat = remember(uiState.isMgdl) { if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1 }
-                    Text("${bgFormat.format(uiState.bg)} ${uiState.unitLabel}")
-                } else {
-                    Text(stringResource(CoreUiStrings.ok))
-                }
+                Text(confirmLabel)
             }
         }
     ) { paddingValues ->

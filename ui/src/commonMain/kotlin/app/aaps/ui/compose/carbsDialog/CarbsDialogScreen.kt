@@ -47,6 +47,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
@@ -256,6 +258,14 @@ internal fun CarbsDialogContent(
         },
         bottomBar = {
             val hasAction = uiState.carbs != 0 || uiState.hypoTtChecked || uiState.eatingSoonTtChecked || uiState.activityTtChecked
+            // The button shows only a value, so a screen reader would say just "20 g" and never what
+            // pressing it does. Name it, but with the verb ONLY - a contentDescription on a merging
+            // node is added beside the children rather than replacing them, so repeating the amount
+            // here would have it announced twice. The Text below still supplies it: "Confirm, 20 g".
+            val confirmText =
+                if (uiState.carbs > 0) stringResource(InterfacesStrings.format_carbs, uiState.carbs)
+                else stringResource(CoreUiStrings.ok)
+            val confirmDescription = stringResource(CoreUiStrings.confirm)
             Button(
                 onClick = {
                     focusManager.clearFocus()
@@ -266,6 +276,7 @@ internal fun CarbsDialogContent(
                     .fillMaxWidth()
                     .bottomBarSafeArea()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .semantics { contentDescription = confirmDescription }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Check,
@@ -273,11 +284,7 @@ internal fun CarbsDialogContent(
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                if (uiState.carbs > 0) {
-                    Text(stringResource(InterfacesStrings.format_carbs, uiState.carbs))
-                } else {
-                    Text(stringResource(CoreUiStrings.ok))
-                }
+                Text(confirmText)
             }
         }
     ) { paddingValues ->

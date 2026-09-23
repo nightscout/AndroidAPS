@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import kotlin.math.roundToInt
 
 /**
@@ -119,7 +120,7 @@ fun PlusMinusEdit(
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
-                contentDescription = "-",
+                contentDescription = stringResource(CoreUiStrings.decrement),
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -169,7 +170,7 @@ fun PlusMinusEdit(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "+",
+                contentDescription = stringResource(CoreUiStrings.increment),
                 modifier = Modifier.size(16.dp)
             )
         }
