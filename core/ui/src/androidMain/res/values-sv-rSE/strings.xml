@@ -100,6 +100,8 @@
     <string name="a11y_arrow_double_up">stiger snabbt</string>
     <string name="a11y_arrow_none">ingen</string>
     <string name="a11y_arrow_unknown">okänd</string>
+    <string name="decrement">minska</string>
+    <string name="increment">öka</string>
     <string name="a11y_high">hög</string>
     <string name="a11y_inrange">inom målområdet</string>
     <string name="a11y_low">låg</string>
