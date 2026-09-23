@@ -11,7 +11,15 @@ enum class LongNonKey(
     LocalProfileLastChange("local_profile_last_change", 0L),
 
     BtWatchdogLastBark("bt_watchdog_last", 0L),
-    ActivePumpChangeTimestamp("active_pump_change_timestamp", 0L),
+    /**
+     * When this phone registered its current pump. NOT exportable, and it is the third of the trio
+     * with `StringNonKey.ActivePumpType` and `ActivePumpSerialNumber` - see the note there.
+     *
+     * It is the "accept nothing older than this" line for pump history: `confirmActivePump` rejects
+     * records stamped before it. Another phone's value would silently drop a stretch of this pump's
+     * history, or accept a stretch that belongs to a different one.
+     */
+    ActivePumpChangeTimestamp("active_pump_change_timestamp", 0L, exportable = false),
     LastCleanupRun("last_cleanup_run", 0L),
 
     // NSCv3 client-control pairing (excluded from export — replay protection regresses if restored)

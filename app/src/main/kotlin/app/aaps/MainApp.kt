@@ -619,6 +619,23 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                     preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = start)
                 }
         }
+        // Move the widget "use black background" flag off the appwidget_ prefix.
+        //
+        // It was `appwidget_use_black_<id>`, which sits INSIDE `IntComposedKey.WidgetOpacity`'s
+        // `appwidget_` prefix, so a prefix lookup could resolve it to the opacity key and read a
+        // Boolean as an Int. See ComposedKeyPrefixTest, which now fails if that can happen again.
+        //
+        // The match is anchored on purpose: a bare startsWith("appwidget_") would also take
+        // `appwidget_<id>`, which is the opacity itself and must be left exactly where it is.
+        for ((key, value) in keys) {
+            val id = key.removePrefix("appwidget_use_black_").toIntOrNull()
+            if (key.startsWith("appwidget_use_black_") && id != null) {
+                LegacyPreferenceValue.asBoolean(value)?.let { useBlack ->
+                    preferences.put(BooleanComposedKey.WidgetUseBlack, id, value = useBlack)
+                } ?: skipLegacyKey(key, "expected true or false, found ${describeType(value)}")
+                sp.remove(key)
+            }
+        }
         // Migrate Objectives
         for ((key, value) in keys) {
             val parts = key.split("_")
