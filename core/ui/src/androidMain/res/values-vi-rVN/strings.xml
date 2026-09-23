@@ -1024,11 +1024,18 @@
     <string name="import_wrong_password">Sai mật khẩu</string>
     <string name="import_btn">Nhập</string>
     <string name="import_anyway_btn">Vẫn nhập</string>
+    <string name="import_apply_title">Áp dụng các cài đặt đã nhập?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Số các cài đặt cần thay đổi: %1$d. Các plugin có thay đổi sẽ được khởi động lại.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Số các cài đặt cần thay đổi: %1$d. Các cài đặt bơm được giữ lại: %2$d, vì vậy bơm của bạn vẫn tiếp tục hoạt động.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Các cài đặt đã nhập chọn một loại bơm không có trên điện thoại này. %1$s hiện đang hoạt động — hãy kiểm tra cài đặt bơm.</string>
+    <string name="import_applying">Áp dụng các cài đặt…</string>
+    <string name="import_replace_pump_settings">Đồng thời thay thế cài đặt bơm</string>
+    <string name="import_replace_pump_settings_summary">Để tắt tùy chọn này để giữ lại bơm mà điện thoại này đang ghép nối. Bật tùy chọn này khi khôi phục trên điện thoại mới với cùng một bơm.</string>
     <string name="import_apply_waiting">Đang chờ phản hồi từ Bơm…</string>
     <string name="import_apply_pump_busy">Bơm vẫn đang bận nên các cài đặt chưa được áp dụng.</string>
     <string name="import_apply_retry_question">Thử lại ngay bây giờ?</string>
