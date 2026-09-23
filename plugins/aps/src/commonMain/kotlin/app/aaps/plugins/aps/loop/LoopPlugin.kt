@@ -247,15 +247,22 @@ class LoopPlugin(
         super.onStop()
     }
 
-    override fun specialEnableCondition(): Boolean {
-        return try {
-            val pump = activePlugin.activePump
-            pump.pumpDescription.isTempBasalCapable
-        } catch (_: Exception) {
-            // may fail during initialization
-            true
-        }
-    }
+    /**
+     * Only a build that has an APS of its own may run the loop.
+     *
+     * This is ANDed with the stored enabled flag in [PluginBase.isEnabled], so it beats the flag - which
+     * is the point. A client that imports a master's settings gets `ConfigBuilder_Enabled_LOOP_*` = true
+     * along with everything else, and without this the client then ran the algorithm on synced data,
+     * enacted it on its virtual pump, and uploaded a device status that replaced the master's. See #5145.
+     *
+     * It used to read `activePump.pumpDescription.isTempBasalCapable` instead. That was already dead:
+     * `alwaysEnabled(config.APS)` makes `isEnabled` return at its first line on a master, so the check
+     * was never reached there, and on a client the active pump is the virtual one, which IS temp basal
+     * capable. The real protection for a pump that cannot do temp basals is
+     * `SafetyPlugin.isLoopInvocationAllowed`, which forces the running mode to DISABLED_LOOP with a
+     * reason the user can read, is re-evaluated on every run, and cannot be switched off.
+     */
+    override fun specialEnableCondition(): Boolean = config.APS
 
     override suspend fun minutesToEndOfSuspend(): Int =
         runningModeRecord().let { runningMode ->

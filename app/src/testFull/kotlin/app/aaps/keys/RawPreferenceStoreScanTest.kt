@@ -12,8 +12,8 @@ import java.io.File
  * A key reached through `Preferences` is a registered key: the registry knows it, the snapshot in
  * `prefs-schema.txt` records it, and `isExportableKey` can answer for it. A key reached through `SP`
  * or `SharedPreferences` directly is invisible to all three - and an import cannot tell a key it has
- * never heard of from rubbish an old version left behind. Under the removal rule in
- * `_docs/PREFERENCE_MIGRATIONS_PLAN.md` 4.1 decision 4, invisible means deleted.
+ * never heard of from rubbish an old version left behind. It leaves both alone today (see
+ * `_docs/IMPORT.md`), so an invisible key is one that nothing can ever clean up.
  *
  * That is not hypothetical. CareLevo kept a running patch's state - `carelevo_patch_info`, the four
  * infusion records - in raw keys until 2026-09-22. They are registered now, and this test is what
