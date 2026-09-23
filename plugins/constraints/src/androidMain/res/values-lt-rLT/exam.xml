@@ -133,7 +133,7 @@
     <string name="breadgrams_label">Angliavandenių įrašai ir bolusai</string>
     <string name="breadgrams_grams">Apskaičiuojant ir įrašant angliavandenius, jų kiekis išreiškiamas tik gramais.</string>
     <string name="breadgrams_exchange">Suvartotus angliavandenius galima įrašyti naudojant atitinkamą perskaičiavimo sistemą (pvz., DAFNE „CHO“ pakeitimus ar europinius \"duonos vienetus\").</string>
-    <string name="breadgrams_decay">AndroidAPS naudoja dinaminį modelį, kad įvertintų angliavandenių įsisavinimą ir apskaičiuotų AAO.</string>
+    <string name="breadgrams_decay">AAPS naudoja dinaminį modelį, kad įvertintų angliavandenių įsisavinimą ir apskaičiuotų AAO.</string>
     <string name="breadgrams_calc">Kai gliukozės kiekis kraujyje viršija normos ribas (yra per žemas ar per aukštas), skaičiuotuvas parodo, kiek angliavandenių ar insulino trūksta.</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#bolus-wizard</string>
     <string name="breadgrams_hint2">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
