@@ -1063,6 +1063,111 @@ state.** (3 of 3 refuted - the earlier "all pump configuration" was wrong, and 3
 (4.2 step 2). Decisions 2 and 4 gate the import (4.2 step 3). Decision 5 is settled by 3.1.4 as it
 already stands, and only removes a clause from 3.1.3.
 
+#### 4.1.6 Writing the import through `Preferences` instead of the raw store
+
+**Miloš's framing, 2026-09-22, and it replaces "clear then rewrite" rather than patching it.** Split
+the keys by what writing one MEANS, and both of the gaps below close at once:
+
+| Key type | List from | Full import | Except pump | Update by |
+|---|---|---|---|---|
+| General (core enums, unowned) | iterate the file | `preferences.put` | `preferences.put` | observing |
+| Pump internal | iterate the file | `preferences.put` | **skip** | observing |
+| Other plugin internal | iterate the file | `preferences.put` | `preferences.put` | observing |
+| `ConfigBuilderEnabled` | fixed, enumerate plugins | `setPluginEnabled` | `setPluginEnabled` | plugin lifecycle, only if changed |
+
+The two gaps it closes, which are one gap seen from two sides:
+
+- **Nothing refreshes the observable flows.** Both writers go through `KeyValueStore`
+  (`sp.putString` / `store.putBoolean`), never `preferences.put`. `PreferencesImpl` updates a flow
+  only inside its own `put*`, there is no `registerOnSharedPreferenceChangeListener` in the phone
+  app, and `PreferencesImpl` is `@SingleIn(AppScope::class)` - so `uiRestart.request()` cannot help,
+  it recreates the composition and `observe()` hands it back the same stale `MutableStateFlow`.
+  143 production call sites across 45 files. `remove()` has the identical hole, which is why
+  replacing one `clear()` with per-key iteration makes this WORSE unless it is fixed first.
+- **Nothing restarts the plugins.** `setPluginEnabled` acts only on a CHANGE (enabling when
+  `state != ENABLED`, disabling when `state == ENABLED`, otherwise `return null`), so a plugin whose
+  enabled flag did not change is deliberately left running - correctly, because `onStop`/`onStart`
+  may wait on a pump disconnecting while the caller holds the command queue. Only six production
+  classes listen to `EventConfigBuilderChange`, three of them pump drivers. So a plugin that cached a
+  preference at `onStart` keeps the pre-import value and **neither** mechanism catches it.
+
+**Can every key in a file be resolved to a `NonPreferenceKey`? Measured, not assumed.**
+
+Yes, by construction, within one build: both export paths gate on `isExportableKey`, which only
+returns true on an exact match or a `ComposedKey` prefix match, so nothing unregistered ever reaches
+a file. But:
+
+- **The existing lookup cannot do it.** `get(key: String)` and `getIfExists(key: String)` are
+  byte-identical (`prefsList.find { it.key == key }`) - exact match only. They resolve the 456
+  concrete exportable keys and fail on **every** composed instance. 26 composed templates are
+  exportable, each expanding to arbitrarily many stored keys (every widget, objective, profile slot,
+  exam task, Dana pairing key). The resolver is new work.
+- **Prefix matching had to be made unambiguous first** - see 8.D and `ComposedKeyPrefixTest`.
+- **Two cases cannot resolve, by construction.** A file from a newer AAPS carries unknown keys. And
+  on AAPSCLIENT/pumpcontrol, `MetroGraphs.allPlugins` never constructs the `@APS`, `@PumpDriver` and
+  `@NotNSClient` buckets, so **every pump and APS key in a full export is unresolvable on a client** -
+  not because the file is foreign, but because that flavour does not build those plugins.
+
+That last point kills "drop what does not resolve" as a blanket rule. Proposed instead:
+**resolve-or-passthrough** - resolved keys get a typed `preferences.put` (which also removes the
+`if (value == "true") putBoolean else putString` type guess, so a `StringKey` holding "true" stops
+being written as a Boolean), unresolved keys are written raw exactly as today and logged. Nothing is
+lost, nothing becomes newly destructive, and the log turns "what actually fails to resolve in the
+field" into data before anything is deleted.
+
+**BUILT 2026-09-22: the resolver and the classification.**
+
+- `PreferenceKeyResolver` (`:core:keys`) turns a stored name back into its key: exact match for plain
+  keys, longest-prefix-first for `ComposedKey` instances, with the argument handed back out so the
+  caller can `put(key, argument, value)`. The argument is validated against the format (`%d` needs a
+  whole number, `%s` a non-empty value), so a name that merely starts with a prefix does not resolve.
+  Unknown names return null - normal, not an error.
+- `KeyCategory` is the table's four rows. `categoryOf` checks `ConfigBuilderEnabled` by identity
+  FIRST, before ownership: it lives in a core enum so by ownership it is General, but it is not a
+  value, and writing it as one leaves the store and the running plugins disagreeing.
+- `PreferenceKeyResolverFactory` (`:implementation`) supplies ownership, because the resolver cannot
+  work it out: `registerPreferences` throws the caller away, and `core:interfaces` depends on
+  `core:keys` so the arrow cannot point back. It walks `activePlugin.getPluginsList()`, takes each
+  `PluginBaseWithPreferences.ownPreferences`, and splits on
+  **`pluginDescription.mainType == PluginType.PUMP`** (Miloš's call) - the same property
+  `ConfigBuilderImpl` uses to elect the active pump, deliberately not the `@PumpDriver` DI bucket,
+  which describes how the graph was assembled rather than what the plugin is.
+- A key claimed by a pump AND by something else counts as the pump's. That is the direction that
+  PRESERVES it under "keep my pump settings"; the other way round overwrites a pump key from the
+  file, which is the failure the category exists to prevent.
+- `Preferences.getAllKeys()` was added because `getAllPreferenceKeys()` filters to `PreferenceKey`
+  and so leaves out every device-state key - exactly the ones that decide whether a pump still works.
+  Three implementations had to take it: `:implementation`, `wear` (its own registry) and the Compose
+  preview stub in `:core:ui`.
+
+Guards: `ComposedKeyPrefixTest` (no prefix may swallow another - it found the real
+`appwidget_use_black_` / `appwidget_` collision), `PreferenceKeyRoundTripTest` (every key in the
+build composes and resolves back to itself), plus unit tests on the resolver and the factory. Worth
+knowing which catches what: restoring the collision fails the prefix test but NOT the round-trip
+test, because longest-prefix-first still resolves correctly through it. They are complementary, and
+that was checked by breaking each in turn rather than assumed.
+
+**STILL OPEN, and neither can be defaulted safely:**
+
+1. **What does an import do to the 99 `SyncDirection.Bidirectional` keys?** `synced_pref_modified_%s`
+   is `exportable = false`, so they arrive with no version stamps. `preferences.put` calls
+   `onLocalSyncedWrite`, which bumps each stamp to `now` and emits to `_syncedLocalChanges` - an
+   import would publish 99 keys to the master as local edits. `putRemote(key, value, version)`
+   already exists and writes without signalling the publisher. Which is right probably depends on
+   ROLE: a master importing should arguably propagate, a client importing must not overwrite the
+   master. The table has no role column yet.
+2. **Removal.** Every row says what to do with a key IN the file; nothing says what happens to a key
+   in the store that is not. That is the trash `clear` was for, and it is where the General vs Other
+   plugin split earns its keep - for writing those two rows are identical, but for removing,
+   registered-but-unowned and owned are different cases.
+
+Note also that `registerPreferences` is `prefsList.addAll(keys)` and **discards the caller**, so no
+plugin-to-keys map exists anywhere: "pump internal" has to be derived by walking
+`PluginStore.plugins` filtering `PluginBaseWithPreferences`, or by changing the registration
+signature - which lands on wear's separate `PreferencesImpl` too. ComboV2's raw keys sit outside all
+four rows and stay on the `beforeImport`/`afterImport` hook; `ActivePlugin*` keys are already handled
+(`exportable = false`, regenerated by `regenerateActivePluginKeys`).
+
 ### 4.2 The order
 
 0. ~~**Re-derive bug 5.11 before spending anything on it.**~~ **DONE 2026-09-21, and the guess in this
@@ -1680,6 +1785,33 @@ This is the group that reorders the work (4.2 step 1). All of it is about 3.5 st
   authoritative; the file's markers should only decide what runs on the map.
 
 ### 8.D The machinery that is supposed to keep it true
+
+**Added 2026-09-22: `ComposedKeyPrefixTest`, and the collision it found.**
+
+A `ComposedKey` stores many values under one prefix, so the only route from a stored string back to
+the key that owns it is a prefix match. `PreferencesImpl.isExportableKey` already relies on that with
+a bare `key.startsWith(it.key)`, and the replacement for `sp.clear()` needs the same match to know
+what an imported key IS before it can write it with the right type (4.1, the `preferences.put` table).
+
+That match is sound only while no prefix swallows another - a property of all the key enums taken
+together, which nobody can hold in their head and which breaks when someone adds a reasonable key to
+one file without reading the others.
+
+It was already broken. `IntComposedKey.WidgetOpacity` was `appwidget_` and
+`BooleanComposedKey.WidgetUseBlack` was `appwidget_use_black_`, so a stored `appwidget_use_black_0`
+matched BOTH, and `prefsList` is a `LinkedHashSet` - which one answered depended on registration
+order. Resolving to the wrong one reads a Boolean as an Int. The whole 524-key set was checked: this
+was the only ambiguity, no plain key starts with a composed prefix, and no raw-store key does either.
+
+Fixed by moving the flag to `widget_use_black_` (the black flag, not the opacity, because
+`appwidget_` is pinned by wear's `PreferencesImplTest` and the opacity value is the one already in
+every install), with an anchored migration in `doMigrations` - anchored because a bare
+`startsWith("appwidget_")` would also take `appwidget_<id>`, which IS the opacity and must not move.
+
+Two prefixes end with no separator and are deliberately NOT asserted: `snoozedTo` and
+`dana_ble5_pairingkey`. Neither collides today; both are one new key away from it, and this test is
+what would catch it. They are not renamed because their stored values are live and a rename without a
+migration loses them.
 
 The completeness pass found that every other finding was about runtime, and that nobody had asked
 whether 3.3 enforces the design. It does not.
