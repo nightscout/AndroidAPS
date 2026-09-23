@@ -108,6 +108,8 @@
     <string name="a11y_arrow_double_up">snel stijgend</string>
     <string name="a11y_arrow_none">geen</string>
     <string name="a11y_arrow_unknown">onbekend</string>
+    <string name="decrement">verlaag</string>
+    <string name="increment">verhoog</string>
     <string name="a11y_high">hoog</string>
     <string name="a11y_inrange">binnen bereik</string>
     <string name="a11y_low">laag</string>
