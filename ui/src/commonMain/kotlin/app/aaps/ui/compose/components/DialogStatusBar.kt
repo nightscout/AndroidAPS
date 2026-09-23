@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -19,6 +21,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.extensions.directionToIcon
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
@@ -58,13 +61,16 @@ fun DialogStatusBar(
                     textDecoration = bgDecoration,
                     maxLines = 1
                 )
-                // Trend arrow
+                // Trend arrow. Draw the icon, never TrendArrow.symbol: that field is a plain glyph
+                // with no picture for every value, so NONE used to print a literal "??" and both
+                // triple arrows a literal "X" at the user. The icon covers every value, and it
+                // carries the spoken description that a bare arrow character does not.
                 bg.trendArrow?.let { arrow ->
-                    Text(
-                        text = arrow.symbol,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = bgColor,
-                        maxLines = 1
+                    Icon(
+                        imageVector = arrow.directionToIcon(),
+                        contentDescription = bg.trendDescription,
+                        tint = bgColor,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
                 // Delta

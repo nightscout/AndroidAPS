@@ -175,9 +175,15 @@ class PersistentNotificationPlugin(
             val lastBG = iobCobCalculator.ads.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (lastBG != null) {
-                val trendSymbol = (trendCalculator.getTrendArrow(iobCobCalculator.ads)
-                    ?.takeIf { it != TrendArrow.NONE } ?: TrendArrow.FLAT).symbol
-                line1 = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated) + " " + trendSymbol
+                // Show an arrow only when there really is one. This used to fall back to FLAT,
+                // which told the user the glucose was stable whenever the trend was simply not
+                // known yet - for example right after a start, with fewer than two readings.
+                // TrendArrow.NONE has no glyph of its own ("??"), so it is dropped, not drawn.
+                val trendSymbol = trendCalculator.getTrendArrow(iobCobCalculator.ads)
+                    ?.takeIf { it != TrendArrow.NONE }
+                    ?.symbol
+                line1 = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated) +
+                    (trendSymbol?.let { " $it" } ?: "")
                 if (glucoseStatus != null) {
                     line1 += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
                 } else {
