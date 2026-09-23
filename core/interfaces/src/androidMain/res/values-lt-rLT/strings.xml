@@ -3,7 +3,7 @@
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
     <!--    Events-->
-    <string name="bolus_delivering">Leidžiama %1$.2f U</string>
+    <string name="bolus_delivering">Leidžiama %1$.2f V</string>
     <string name="bolus_delivered_so_far">Suleista %1$.2f V iš %2$.2f V</string>
     <string name="bolus_delivered_successfully">Sėkmingai suleistas %1$.2f V bolusas</string>
     <!-- PumpPluginBase -->
@@ -87,7 +87,7 @@
     <string name="pref_show_basal_rate">Rodyti valandinę bazę</string>
     <string name="pref_show_loop_status">Rodyti Ciklo statusą</string>
     <string name="pref_show_bg">Rodyti glikemiją</string>
-    <string name="pref_show_bgi">Rodyti GĮ</string>
+    <string name="pref_show_bgi">Rodyti KGĮ</string>
     <string name="pref_show_direction_arrow">Rodyti krypties rodyklę</string>
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
     <string name="pref_show_week_number">Rodyti savaitės numerį</string>
@@ -127,7 +127,7 @@
     <string name="u300">U300</string>
     <string name="u500">U500</string>
     <string name="profile_isf_units_mgdl">mg/dL/U</string>
-    <string name="profile_isf_units_mmol">mmol/L/U</string>
+    <string name="profile_isf_units_mmol">mmol/l/V</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
     <string name="format_carbs">%1$d g</string>
     <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
