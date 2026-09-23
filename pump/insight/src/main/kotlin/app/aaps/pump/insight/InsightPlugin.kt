@@ -292,6 +292,12 @@ class InsightPlugin(
 
     override suspend fun onStop() {
         super.onStop()
+        // Cancel before unbinding. onServiceDisconnected is only called when the service process
+        // dies unexpectedly, never by unbindService, so a plugin stop - a settings import, a config
+        // change, switching pumps - would otherwise leave the collector running on appScope for the
+        // life of the process, still writing the value the pump unreachable alarm is timed from.
+        lastDataTimeJob?.cancel()
+        lastDataTimeJob = null
         context.unbindService(serviceConnection)
     }
 
