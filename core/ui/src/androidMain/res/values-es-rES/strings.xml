@@ -1012,6 +1012,11 @@
     <string name="import_wrong_password">Contraseña incorrecta</string>
     <string name="import_btn">Importar</string>
     <string name="import_anyway_btn">Importar de todos modos</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Nube</string>
     <string name="import_load_more">Cargar más</string>
