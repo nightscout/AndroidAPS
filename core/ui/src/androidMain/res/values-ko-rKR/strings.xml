@@ -119,6 +119,8 @@
     <string name="a11y_arrow_double_up">고속 상승</string>
     <string name="a11y_arrow_none">없음</string>
     <string name="a11y_arrow_unknown">알수없음</string>
+    <string name="decrement">감소</string>
+    <string name="increment">증가</string>
     <string name="a11y_high">대</string>
     <string name="a11y_inrange">범위 내</string>
     <string name="a11y_low">소</string>
