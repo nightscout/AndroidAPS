@@ -146,7 +146,6 @@
     <string name="pref_title_wear_wizard_iob">Zahrnúť glykémiu v kalkulačke</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizovať vlastné ciferníky</string>
     <string name="pref_title_wear_pushed_watchface">Ciferník nainštalovaný v hodinkách</string>
-    <string name="pref_summary_wear_pushed_watchface">Len Wear OS 6 a novšie verzie. AAPS dokáže do hodiniek nainštalovať jeden ciferník: buď ciferník s komplikáciami, alebo vlastný ciferník. Staršie hodinky toto nastavenie ignorujú.</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Ciferník s komlikáciami</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Vlastný ciferník</string>
     <string name="pref_title_wear_notify_on_smb">Upozorniť na SMB</string>
