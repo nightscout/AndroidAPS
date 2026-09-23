@@ -1027,8 +1027,11 @@
     <string name="import_wrong_password">Feil passord</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Importer uansett</string>
-    <string name="import_apply_title">Innstillinger importert</string>
-    <string name="import_apply_message">De importerte innstillingene vil nå bli tatt i bruk. Tillegg som er endret, vil bli startet på nytt.</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_apply_waiting">Venter på pumpen…</string>
     <string name="import_apply_pump_busy">Pumpen er fortsatt opptatt, så innstillingene ble ikke tatt i bruk.</string>
     <string name="import_apply_retry_question">Prøve på nytt nå?</string>
