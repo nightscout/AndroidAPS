@@ -7,7 +7,7 @@
     <string name="objectivenotfinished">%1$d tikslas neužbaigtas</string>
     <string name="objectives_0_objective">Nustatykite pagrindinius vizualizacijos, nuotolinio stebėjimo, bazės bei santykių parametrus</string>
     <string name="objectives_0_gate">Įsitikinkite, kad glikemijos duomenys rodomi Nightscout ir pompos insulino duomenys yra įkelti</string>
-    <string name="objectives_0_learned">Įvedėte pradinius AAPS nustatymus. AAPS veikimui nėra privaloma nuolat kelti duomenis į Nightscout, bet tai naudinga norint stebėti sistemos veikimą nuotoliniu būdu bei kurti ataskaitas. Jei NS naudojate tik sau, galite nustatyti, kad duomenų perdavimas nebūtų nuolatinis. Pvz.: galite duomenis įkelti tik namuose, naudojant WiFi, taip taupysite ir bateriją.</string>
+    <string name="objectives_0_learned">Pagrindinė AAPS sąranka baigta. Nightscout nėra būtinas AAPS veikimui, tačiau labai naudingas ataskaitoms ir kitų naudotojų duomenims stebėti. Jei Nightscout naudojate tik savo duomenims, nuolatinis interneto ryšys nebūtinas. Pavyzdžiui, galite nustatyti, kad duomenys būtų siunčiami tik prisijungus prie namų Wi-Fi – taip taupysite bateriją.</string>
     <string name="objectives_openloop_objective">Aktyvuojamas atviras ciklas</string>
     <string name="objectives_openloop_gate">Keletą dienų praleiskite atvirojo ciklo (Open Loop) režime, rankiniu būdu tvirtindami kuo daugiau siūlomų bazės pakeitimų. Nustatykite ir naudokite laikinus bei numatytuosiuos tikslus (pvz.: sportui ir hipoglikemijos korekcijai)</string>
     <string name="objectives_openloop_learned">Atviras ciklas gali būti naudojamas rekomendacijoms gauti, kol neturite tinkamos pompos arba nesate pasiruošę uždaram ciklui.</string>
