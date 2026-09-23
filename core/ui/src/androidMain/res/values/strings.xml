@@ -174,6 +174,7 @@
     <string name="notconfigured">Not configured</string>
     <string name="loop_suspended_by_dst">Loop suspended by DST</string>
     <string name="required">req</string>
+    <string name="a11y_arrow_triple_down">falling very rapidly</string>
     <string name="a11y_arrow_double_down">falling rapidly</string>
     <string name="a11y_arrow_single_down">falling</string>
     <string name="a11y_arrow_forty_five_down">falling slowly</string>
@@ -181,8 +182,13 @@
     <string name="a11y_arrow_forty_five_up">rising slowly</string>
     <string name="a11y_arrow_single_up">rising</string>
     <string name="a11y_arrow_double_up">rising rapidly</string>
+    <string name="a11y_arrow_triple_up">rising very rapidly</string>
     <string name="a11y_arrow_none">none</string>
     <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">decrement %1$s by %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">increment %1$s by %2$s</string>
+    <string name="decrement">decrement</string>
+    <string name="increment">increment</string>
     <string name="a11y_high">high</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>
@@ -960,7 +966,7 @@
     <string name="reorder">Reorder</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Move earlier</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Move later</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Show details</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Show details</string>
     <string name="presets_changed_reorder_aborted">Presets changed elsewhere. The new order was not saved.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d of %2$d</string>
