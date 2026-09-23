@@ -57,7 +57,12 @@ class ObjectivesPlugin(
         .icon(IcPluginObjectives)
         .pluginName(CoreUiStrings.objectives)
         .shortName(ConstraintsStrings.objectives_shortname)
-        .enableByDefault(config.APS)
+        // Objectives must be present on a master and must not be switchable off. alwaysEnabled says
+        // exactly that; enableByDefault only seeded the state on a fresh install and was overridden by
+        // any stored flag. It was inert either way - isEnabled() short-circuits to true for a CONSTRAINTS
+        // plugin - but it also left the Config Builder switch live and doing nothing. alwaysEnabled makes
+        // canToggle false, so the UI matches the rule.
+        .alwaysEnabled(config.APS)
         .description(ConstraintsStrings.description_objectives),
     ownPreferences = ObjectivesBooleanComposedKey.entries + ObjectivesLongComposedKey.entries,
     aapsLogger, rh, preferences, notificationManager

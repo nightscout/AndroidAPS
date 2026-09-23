@@ -206,7 +206,7 @@ class ConfigBuilderImpl(
         val existing = preferences.getIfExists(BooleanComposedKey.ConfigBuilderEnabled, composed)
         val job =
             if (existing != null) p.setPluginEnabled(type, existing)
-            else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) p.setPluginEnabled(type, true)
+            else if (p.getType() == type && p.pluginDescription.alwaysEnabled) p.setPluginEnabled(type, true)
             else null
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + BooleanComposedKey.ConfigBuilderEnabled.composeKey(composed) + ":" + p.isEnabled(type))
         return job

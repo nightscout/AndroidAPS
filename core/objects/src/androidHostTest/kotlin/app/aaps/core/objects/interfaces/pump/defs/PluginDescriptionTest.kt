@@ -18,11 +18,6 @@ class PluginDescriptionTest {
         assertThat(pluginDescription.alwaysEnabled).isTrue()
     }
 
-    @Test fun neverVisibleTest() {
-        val pluginDescription = PluginDescription().neverVisible(true)
-        assertThat(pluginDescription.neverVisible).isTrue()
-    }
-
     @Test fun showInListTest() {
         val pluginDescription = PluginDescription().showInList { false }
         assertThat(pluginDescription.showInList.invoke()).isFalse()
@@ -36,10 +31,5 @@ class PluginDescriptionTest {
     @Test fun shortNameTest() {
         val ref = TextRef.AndroidRes(10)
         assertThat(PluginDescription().shortName(ref).shortName).isEqualTo(ref)
-    }
-
-    @Test fun enableByDefault() {
-        val pluginDescription = PluginDescription().enableByDefault(true)
-        assertThat(pluginDescription.enableByDefault).isTrue()
     }
 }

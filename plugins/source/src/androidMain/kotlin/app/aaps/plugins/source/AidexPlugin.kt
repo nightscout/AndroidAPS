@@ -83,10 +83,6 @@ class AidexPlugin(
 
     override fun hasSensorError(): Boolean = _hasSensorError
 
-    override fun specialEnableCondition(): Boolean {
-        return true
-    }
-
 
     @AssistedInject
     class AidexWorker(

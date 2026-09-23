@@ -97,7 +97,6 @@ class PersistentNotificationPlugin(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(TextRef.AndroidRes(R.string.ongoingnotificaction))
-        .enableByDefault(true)
         .alwaysEnabled(true)
         .showInList { false }
         .description(TextRef.AndroidRes(R.string.description_persistent_notification)),
