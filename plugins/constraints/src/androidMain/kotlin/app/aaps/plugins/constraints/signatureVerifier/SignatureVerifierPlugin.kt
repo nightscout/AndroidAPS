@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.signatureVerifier
 
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.plugins.constraints.ConstraintsStrings
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
@@ -12,12 +10,14 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.plugins.constraints.signatureVerifier.keys.SignatureVerifierLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -59,7 +59,7 @@ class SignatureVerifierPlugin(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .alwaysEnabled(true)
+        .enforce(EnforcedState.Enabled)
         .showInList { false }
         .pluginName(ConstraintsStrings.signature_verifier),
     ownPreferences = SignatureVerifierLongKey.entries,

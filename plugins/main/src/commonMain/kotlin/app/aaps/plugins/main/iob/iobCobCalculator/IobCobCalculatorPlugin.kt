@@ -32,6 +32,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
@@ -99,7 +100,7 @@ class IobCobCalculatorPlugin(
         .mainType(PluginType.GENERAL)
         .pluginName(MainStrings.iob_cob_calculator)
         .showInList { false }
-        .alwaysEnabled(true),
+        .enforce(EnforcedState.Enabled),
     aapsLogger, rh, notificationManager
 ), IobCobCalculator {
 

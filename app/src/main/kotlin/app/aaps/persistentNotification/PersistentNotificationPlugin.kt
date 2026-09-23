@@ -1,6 +1,5 @@
 package app.aaps.persistentNotification
 
-import android.app.NotificationManager as AndroidNotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -23,6 +22,7 @@ import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -47,6 +47,7 @@ import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.main.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
@@ -60,7 +61,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.runBlocking
-import dev.zacsweers.metro.Inject
+import android.app.NotificationManager as AndroidNotificationManager
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
 // Registers itself into the every-build plugin bucket at order 0, replacing the @Binds @IntKey(0) in
@@ -97,7 +98,7 @@ class PersistentNotificationPlugin(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(TextRef.AndroidRes(R.string.ongoingnotificaction))
-        .alwaysEnabled(true)
+        .enforce(EnforcedState.Enabled)
         .showInList { false }
         .description(TextRef.AndroidRes(R.string.description_persistent_notification)),
     aapsLogger, rh, notificationManager

@@ -18,7 +18,8 @@ open class PluginDescription {
      */
     var composeContentProvider: ((PluginBase) -> Any)? = null
 
-    var alwaysEnabled = false
+    /** See [Enforcement]. Empty means the user's stored choice decides. */
+    var enforcements: List<Enforcement> = emptyList()
     var showInList = { true }
     var pluginName: TextRef? = null
     var shortName: TextRef? = null
@@ -29,7 +30,20 @@ open class PluginDescription {
     var preferencesVisibleInSimpleMode = true
 
     fun mainType(mainType: PluginType): PluginDescription = this.also { it.mainType = mainType }
-    fun alwaysEnabled(alwaysEnabled: Boolean): PluginDescription = this.also { it.alwaysEnabled = alwaysEnabled }
+    /**
+     * Forces [state] whenever [applies] holds, overriding whatever the user stored. See [Enforcement] for
+     * the rules - in particular that [applies] may only read build-constant facts.
+     */
+    fun enforce(state: EnforcedState, reason: TextRef? = null, applies: () -> Boolean = { true }): PluginDescription =
+        this.also { it.enforcements = it.enforcements + Enforcement(state, reason, applies) }
+
+    /**
+     * Sugar for the two-sided case: enabled while [condition] holds, disabled while it does not, and never
+     * the user's to pick either way. `LoopPlugin` is the example - forced on where there is an APS, forced
+     * off where there is not.
+     */
+    fun enforceEnabledOnlyWhen(reason: TextRef? = null, condition: () -> Boolean): PluginDescription =
+        enforce(EnforcedState.Enabled, reason, condition).enforce(EnforcedState.Disabled, reason) { !condition() }
     fun showInList(showInList: () -> Boolean): PluginDescription = this.also { it.showInList = showInList }
 
     fun icon(icon: ImageVector): PluginDescription = this.also { it.icon = icon }

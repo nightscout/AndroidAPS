@@ -3,6 +3,7 @@ package app.aaps.plugins.sensitivity
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
@@ -158,10 +159,10 @@ class SensitivityWeightedAveragePluginTest : SensitivityTestBase() {
     }
 
     @Test
-    fun specialShowInListCondition_falseForSmb() {
+    fun `hidden when the active APS is SMB`() {
         val aps = mock<APS>()
         whenever(aps.algorithm).thenReturn(APSResult.Algorithm.SMB)
         whenever(activePlugin.activeAPS).thenReturn(aps)
-        assertThat(sut.specialShowInListCondition()).isFalse()
+        assertThat(sut.showInList(PluginType.SENSITIVITY)).isFalse()
     }
 }

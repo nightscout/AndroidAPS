@@ -3,6 +3,7 @@ package app.aaps.plugins.sensitivity
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
@@ -164,24 +165,24 @@ class SensitivityAAPSPluginTest : SensitivityTestBase() {
     }
 
     @Test
-    fun specialShowInListCondition_trueWhenNoActiveAps() {
+    fun `shown while no APS is elected yet`() {
         whenever(activePlugin.activeAPS).thenReturn(null)
-        assertThat(sut.specialShowInListCondition()).isTrue()
+        assertThat(sut.showInList(PluginType.SENSITIVITY)).isTrue()
     }
 
     @Test
-    fun specialShowInListCondition_trueForAma() {
+    fun `shown when the active APS is AMA`() {
         val aps = mock<APS>()
         whenever(aps.algorithm).thenReturn(APSResult.Algorithm.AMA)
         whenever(activePlugin.activeAPS).thenReturn(aps)
-        assertThat(sut.specialShowInListCondition()).isTrue()
+        assertThat(sut.showInList(PluginType.SENSITIVITY)).isTrue()
     }
 
     @Test
-    fun specialShowInListCondition_falseForSmb() {
+    fun `hidden when the active APS is SMB`() {
         val aps = mock<APS>()
         whenever(aps.algorithm).thenReturn(APSResult.Algorithm.SMB)
         whenever(activePlugin.activeAPS).thenReturn(aps)
-        assertThat(sut.specialShowInListCondition()).isFalse()
+        assertThat(sut.showInList(PluginType.SENSITIVITY)).isFalse()
     }
 }

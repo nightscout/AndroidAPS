@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpRate
@@ -115,17 +116,17 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(loopPlugin.isEnabled()).isTrue()
 
         // A build with an APS of its own may run the loop
-        assertThat(loopPlugin.specialEnableCondition()).isTrue()
+        assertThat(loopPlugin.enforcedState()).isEqualTo(EnforcedState.Enabled)
     }
 
     /**
      * A client must never run the loop, whatever the stored flag says.
      *
      * `ConfigBuilder_Enabled_LOOP_*` is exportable and is not a synced key, so importing a master's
-     * settings writes it on a client too. `specialEnableCondition` is what stops it: `PluginBase.isEnabled`
-     * ANDs it with the stored state, so it beats the flag rather than sitting beside it. See #5145.
+     * settings writes it on a client too. The forced-off enforcement is what stops it: `PluginBase.isEnabled`
+     * is answered from the enforcement before the stored state is consulted, so it beats the flag. See #5145.
      *
-     * This asserts the condition itself rather than driving the state machine: `setPluginEnabled` starts
+     * This asserts the enforcement itself rather than driving the state machine: `setPluginEnabled` starts
      * the plugin on a real scope, and a collector left running here would outlive the test - see
      * [cancelPendingWork].
      */
@@ -139,8 +140,8 @@ class LoopPluginTest : TestBaseWithProfile() {
             processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
         )
 
-        assertThat(clientLoopPlugin.specialEnableCondition()).isFalse()
-        // Not force-enabled either: alwaysEnabled is config.APS, so isEnabled cannot short-circuit to true
+        assertThat(clientLoopPlugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
+        // Enforced DISABLED on a client, so isEnabled is false whatever the stored flag says
         assertThat(clientLoopPlugin.isEnabled()).isFalse()
     }
 
