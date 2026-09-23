@@ -76,16 +76,26 @@ class LoopPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         whenever(config.APS).thenReturn(true)
-        loopPlugin = LoopPlugin(
-            aapsLogger, rxBus, preferences, config,
-            constraintChecker, rh, profileFunction, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-            // The shared test base still hands out a javax Provider, which other tests rely on;
-            // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
-            persistenceLayer, notificationManager, { pumpEnactResultProvider() },
-            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
-        )
+        loopPlugin = buildLoopPlugin()
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
     }
+
+    /**
+     * The ONLY place this test constructs a [LoopPlugin].
+     *
+     * A second copy of this argument list broke the build once already: `uiInteraction` was dropped from the
+     * constructor, the copy in `prepare` was updated and the one in a test body was not. A test that needs
+     * its own instance - one built with a different `config` stubbing, say - calls this instead of pasting
+     * the list again.
+     */
+    private fun buildLoopPlugin() = LoopPlugin(
+        aapsLogger, rxBus, preferences, config,
+        constraintChecker, rh, profileFunction, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
+        // The shared test base still hands out a javax Provider, which other tests rely on;
+        // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
+        persistenceLayer, notificationManager, { pumpEnactResultProvider() },
+        processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
+    )
 
     /**
      * Leave no live coroutine behind.
@@ -133,12 +143,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Test
     fun `a client may not run the loop`() {
         whenever(config.APS).thenReturn(false)
-        val clientLoopPlugin = LoopPlugin(
-            aapsLogger, rxBus, preferences, config,
-            constraintChecker, rh, profileFunction, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-            persistenceLayer, uiInteraction, notificationManager, { pumpEnactResultProvider() },
-            processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
-        )
+        val clientLoopPlugin = buildLoopPlugin()
 
         assertThat(clientLoopPlugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
         // Enforced DISABLED on a client, so isEnabled is false whatever the stored flag says
