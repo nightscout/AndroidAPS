@@ -1027,8 +1027,11 @@
     <string name="import_wrong_password">Password errata</string>
     <string name="import_btn">Importa</string>
     <string name="import_anyway_btn">Importa Comunque</string>
-    <string name="import_apply_title">Impostazioni importate</string>
-    <string name="import_apply_message">Le impostazioni importate verranno ora applicate. I plugin modificati verranno riavviati.</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_apply_waiting">In attesa del micro..</string>
     <string name="import_apply_pump_busy">Il micro è ancora occupato, quindi le impostazioni non sono state applicate.</string>
     <string name="import_apply_retry_question">Riprova adesso?</string>
