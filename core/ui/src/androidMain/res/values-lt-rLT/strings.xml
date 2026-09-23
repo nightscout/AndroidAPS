@@ -24,7 +24,12 @@
     <string name="event_type">Įvykio tipas</string>
     <string name="bg_mmol">%1$.1f mmol/l</string>
     <string name="save">Išsaugoti</string>
+    <string name="skip">Praleisti</string>
+    <string name="switch_to_edit">Redaguoti</string>
     <string name="snooze">Nutildyti</string>
+    <string name="snooze_15m">Atidėti 15 min.</string>
+    <string name="snooze_30m">Atidėti 30 min.</string>
+    <string name="snooze_60m">Atidėti 60 min.</string>
     <string name="virtual_pump">Virtuali pompa</string>
     <string name="constraints">Apribojimai</string>
     <string name="superbolus">Superbolus</string>
@@ -33,14 +38,28 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Naudotojas</string>
     <string name="result">Rezultatas</string>
     <string name="settings">Parametrai</string>
+    <string name="open_plugin">Atidaryti įskiepį</string>
+    <string name="configbuilder_pick_one_hint">Pasirinkite vieną, nes vienu metu gali būti aktyvus tik vienas.</string>
+    <string name="configbuilder_pick_many_hint">Pasirinkite visus tinkamus.</string>
+    <string name="configbuilder_no_selection_warning">Šioje kategorijoje nepasirinktas joks įskiepis.</string>
+    <string name="configbuilder_switch_confirmation_title">Keisti įskiepį?</string>
+    <string name="configbuilder_switch_confirmation">%1$s bus išjungtas, o %2$s — įjungtas.</string>
+    <string name="expand">Išskleisti</string>
+    <string name="collapse">Suskleisti</string>
+    <string name="no_compose_preferences">Šiam įskiepiui nėra nuostatų</string>
+    <string name="confirm_password_hint">Patvirtinkite slaptažodį</string>
+    <string name="confirm_pin_hint">Patvirtinkite PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Būklės indikatoriai</string>
     <string name="configbuilder_insulin">Insulinas</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
     <string name="configbuilder_smoothing">Glodinimas</string>
+    <string name="configbuilder_calibration">Kalibravimas</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
     <string name="configbuilder_aps">DKS</string>
     <string name="configbuilder_loop">Ciklas</string>
+    <string name="configbuilder_sync">Ryšys</string>
     <string name="configbuilder_general">Bendrieji</string>
     <string name="protection">Apsauga</string>
     <string name="value_unavailable_short">n/a</string>
@@ -48,6 +67,7 @@
     <string name="ue_export_to_csv">Eksportuoti naudotojo įrašus į Excel (csv)</string>
     <string name="confirm">Patvirtinti</string>
     <string name="pump">Pompa</string>
+    <string name="pump_management">Pompa</string>
     <string name="openaps">AtviraDKS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Siuntėjas</string>
@@ -60,20 +80,34 @@
     <string name="advanced_settings_title">Papildomi nustatymai</string>
     <string name="extended_bolus">Ištęstas bolusas</string>
     <string name="paused">Pristabdyta</string>
+    <string name="running">Vykdoma</string>
     <string name="tdd_total">BPD viso</string>
     <string name="tdd_old_data">Seni duomenys</string>
     <string name="goingtodeliver">Bus suleista %1$.2f vv</string>
+    <string name="carbs_not_saved_after_bolus">Bolusas suleistas, bet angliavandenių išsaugoti nepavyko. Įveskite juos dar kartą.</string>
     <string name="androidaps_start">AAPS paleista</string>
+    <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
     <string name="format_hours">%1$.2f val.</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
     <string name="objectives">Tikslai</string>
     <string name="please_wait">Palaukite…</string>
     <string name="stop">Stop</string>
+    <string name="stop_pressed">SUSTABDYTA</string>
     <string name="invalid_profile">Netinkamas profilis!</string>
     <string name="no_profile_set">Nenustatytas profilis</string>
     <string name="profile_switch_no_insulin">Profilio keitimas negalimas: nepasirinktas insulinas.</string>
+    <string name="profile_switch_select_insulin_hint">Insulinas dar nepasirinktas. Pasirinkite naudojamą insuliną, kad šis profilio pakeitimas galėtų jį įrašyti.</string>
+    <string name="insulin_activation_failed">Insulinas nepakeistas. Toliau naudojamas ankstesnis insulinas.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Insulinas nepakeistas: %1$s. Toliau naudojamas ankstesnis insulinas.</string>
+    <string name="insulin_activation_unconfirmed">Insulino pakeitimo patvirtinti nepavyko. Prieš leisdami insuliną patikrinkite, kuris insulinas aktyvuotas profilyje.</string>
+    <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinas taip pat nepakeistas.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Vienetai</string>
+    <string name="insulin_nickname_label">Insulino pavadinimas</string>
+    <string name="concentration_label">Koncentracija</string>
+    <string name="peak_label">Pikas</string>
     <string name="dia_label">IVT</string>
     <string name="ic_label">IA</string>
     <string name="isf_label">JIF</string>
@@ -94,6 +128,7 @@
     <string name="alarm">Aliarmas</string>
     <string name="exportsettings">Eksportuoti nustatymus</string>
     <string name="disableloop">Išjungti Ciklą</string>
+    <string name="disabled_loop">Išjungtas ciklas</string>
     <string name="resumeloop">Atnaujinti ciklą</string>
     <string name="suspendloop">Sustabdyti ciklą</string>
     <string name="notification">Pranešimas</string>
@@ -106,6 +141,9 @@
     <string name="name_short">Vardas:</string>
     <string name="time">Laikas</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Įkeliama…</string>
+    <string name="waiting_for_pump">Laukiama pompos…</string>
+    <string name="initialization_failed">Inicijuoti nepavyko</string>
     <string name="notes_label">Pastabos</string>
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
     <string name="bg_label">Glikemija</string>
@@ -115,6 +153,7 @@
     <string name="bolus_reminder">Priminti apie bolusą, kai glikemija atsistato</string>
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>
+    <string name="pump_running">Pompa veikia</string>
     <string name="notconfigured">Nesukonfigūruota</string>
     <string name="loop_suspended_by_dst">Ciklas sustabdytas dėl laiko persukimo</string>
     <string name="required">reikal.</string>
@@ -127,9 +166,16 @@
     <string name="a11y_arrow_double_up">greitai didėja</string>
     <string name="a11y_arrow_none">nėra</string>
     <string name="a11y_arrow_unknown">nežinoma</string>
+    <string name="a11y_high">hiper</string>
     <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
+    <string name="remove_label">Pašalinti</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
+    <string name="activate_insulin">Aktyvuoti insuliną</string>
+    <string name="pump_wizard_profile_gate_title">Reikalingas profilis</string>
+    <string name="pump_wizard_profile_gate_pick">Pasirinkite profilį, kuris bus taikomas aktyvavus.</string>
+    <string name="pump_wizard_profile_gate_no_store">Profilis nesukurtas. Atidarykite profilių valdymą, sukurkite profilį ir pradėkite aktyvavimą iš naujo.</string>
+    <string name="reset">Nustatyti iš naujo</string>
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="profile">Profilis</string>
     <string name="percentage_label">Procentais</string>
@@ -137,12 +183,16 @@
     <string name="confirm_remove_multiple_items">Ar tikrai norite pašalinti %1$d elementus</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
+    <string name="wear_wizard_settings">Wear boluso skaičiuoklės nustatymai</string>
     <string name="bolus_iob_label">Bolusų AIO</string>
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
     <string name="invalid">KLAIDA</string>
     <string name="login">Prisijungti</string>
     <string name="logout">Atsijungti</string>
     <string name="prime_fill">Užpildymas</string>
+    <string name="site_rotation">Vietų rotacija</string>
+    <string name="edit_site">Redaguoti</string>
+    <string name="select_arrow">Pasirinkite rodyklę</string>
     <string name="site_filter_info">Pasirinkite norimą gydymo įvykio tipą: kaniulės ir (arba) jutiklio pakeitimą</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="stoptemptarget">Sustabdyti laikiną tikslą</string>
@@ -168,6 +218,7 @@
     <string name="location_permission_not_granted">Vietos nustatymo leidimas nesuteiktas. Suteikite leidimą Android nustatymuose.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versija:</string>
     <string name="not_available_full">Nepasiekiama</string>
+    <string name="not_implemented_yet">Ši funkcija šioje platformoje dar negalima</string>
     <string name="engineering_mode_enabled">Inžinerinis režimas įjungtas</string>
     <string name="next">Toliau</string>
     <string name="show_hide_records">Slėpti ciklo įrašus</string>
@@ -236,12 +287,62 @@
     <string name="temporary_target">Laikinas tikslas</string>
     <string name="scene_conflict_active_profile">Aktyvus profilis bus pakeistas</string>
     <string name="scene_action_careportal">Įrašas: %1$s</string>
+    <string name="scene_editor_target">Tikslas</string>
+    <string name="scene_editor_tt_preset">Laikino tikslo ruošinys</string>
+    <string name="scene_editor_no_tt_presets">Nėra nustatytų laikinų tikslų ruošinių</string>
+    <string name="scene_editor_select_tt_preset">Pasirinkite ruošinį</string>
+    <string name="scene_editor_percentage">Procentais</string>
+    <string name="scene_editor_profile">Profilis</string>
+    <string name="scene_editor_keep_current_profile">-- Palikti dabartinį --</string>
+    <string name="scene_editor_mode">Režimas</string>
+    <string name="scene_editor_event_type">Įvykio tipas</string>
+    <string name="scene_editor_note">Pastaba</string>
+    <string name="scene_icon">Piktograma</string>
+    <string name="scene_editor_enabled">Įjungta</string>
+    <string name="scene_editor_disabled">Išjungta</string>
+    <string name="scene_summary">%1$d veiksmai(-ų), %2$s</string>
+    <string name="scene_duration_indefinite">Neterminuota (baigiama rankiniu būdu)</string>
+    <string name="scene_some_actions_failed">Kai kurių veiksmų atlikti nepavyko</string>
+    <string name="scene_no_active">Nėra aktyvaus scenarijaus</string>
+    <string name="scene_some_reverts_failed">Kai kurių veiksmų atšaukti nepavyko</string>
+    <string name="scene_no_profile_store">Profilių saugykla nepasiekiama</string>
+    <string name="scene_no_actions">Scenarijuje nėra veiksmų</string>
+    <string name="scene_profile_not_found">Profilis „%1$s“ nerastas</string>
+    <string name="scene_lock_banner_master_offline">Pagrindinis įrenginys nepasiekiamas. Atkūrus ryšį scenarijų valdymas vėl veiks.</string>
+    <string name="scene_lock_banner_control_disabled">Pagrindiniame įrenginyje nuotolinis valdymas išjungtas. Vėl jį įjungus scenarijų valdymas veiks.</string>
+    <string name="master_offline_banner">Pagrindinis įrenginys nepasiekiamas. Kol ryšys neatkurtas, redaguoti negalima.</string>
+    <string name="master_control_disabled_banner">Pagrindiniame įrenginyje nuotolinis valdymas išjungtas. Redaguoti negalima, kol jis nebus vėl įjungtas pagrindinėje programėlėje.</string>
+    <string name="scene_lock_reason_master_offline">Pagrindinis įrenginys atsijungęs</string>
+    <string name="scene_lock_reason_control_disabled">Nuotolinis valdymas išjungtas</string>
+    <string name="scene_lock_reason_scene_active">Pirmiausia sustabdykite veikiantį scenarijų</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
+    <string name="clientcontrol_action_set_temp_target">Pradėti laikiną tikslą</string>
     <string name="clientcontrol_action_cancel_temp_target">Atšaukti laikiną tikslą</string>
+    <string name="clientcontrol_action_activate_scene">Aktyvuoti scenarijų %1$s</string>
+    <string name="clientcontrol_action_deactivate_scene">Baigti scenarijų</string>
+    <string name="clientcontrol_action_update_settings">Atnaujinti nustatymus</string>
+    <string name="clientcontrol_action_deliver_bolus">Suleisti bolusą</string>
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
+    <string name="clientcontrol_fail_not_paired">Šis įrenginys nesusietas su pagrindiniu įrenginiu.</string>
+    <string name="clientcontrol_fail_not_reachable">Pagrindinis įrenginys neprisijungęs.</string>
+    <string name="clientcontrol_pump_out_of_sync" comment="Shown when a follower relays a temp basal / extended bolus but its cached pump type no longer matches the master\'s pump">Pompos konfigūracija nesutampa su pagrindinio įrenginio konfigūracija. Bandykite dar kartą.</string>
+    <string name="clientcontrol_fail_no_reply">Laiku negautas pagrindinio įrenginio atsakymas.</string>
+    <string name="clientcontrol_fail_expired">Komanda nustojo galioti prieš pagrindiniam įrenginiui ją pritaikant.</string>
+    <string name="clientcontrol_fail_busy">Jau vykdomas kitas veiksmas.</string>
+    <string name="clientcontrol_fail_send_failed">Nepavyko pasiekti Nightscout.</string>
+    <string name="clientcontrol_fail_no_active_profile">Pagrindiniame įrenginyje nėra aktyvaus profilio, kuriam tai būtų galima pritaikyti.</string>
+    <string name="clientcontrol_fail_scene_not_found">Scenarijus nebeegzistuoja.</string>
+    <string name="clientcontrol_fail_site_entry_not_found">Vietos įrašas nebeegzistuoja.</string>
+    <string name="clientcontrol_fail_scene_disabled">Scenarijus išjungtas.</string>
+    <string name="clientcontrol_fail_partial">Kai kurių veiksmų pritaikyti nepavyko.</string>
+    <string name="clientcontrol_fail_execution">Pagrindiniam įrenginiui nepavyko to pritaikyti.</string>
     <string name="clientcontrol_fail_cancelled">Komanda buvo atšaukta prieš ją paleidžiant. Nieko neišsiųsta pompai.</string>
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolusas atšauktas. Insulinas nesuleistas.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Atšaukta</string>
+    <string name="clientcontrol_fail_control_disabled">Pagrindiniame įrenginyje nuotolinis valdymas išjungtas.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Bolusas nustojo galioti arba buvo pakeistas. Paspauskite mygtuką dar kartą.</string>
+    <string name="clientcontrol_fail_bolus_compute">Pagrindiniam įrenginiui nepavyko apskaičiuoti boluso (trūksta gliukozės ar profilio duomenų arba pompa nepasiruošusi).</string>
+    <string name="clientcontrol_fail_internal">Įvyko klaida.</string>
     <string name="scene_revert_tt">Atšaukti laikiną tikslą</string>
     <string name="scene_revert_profile">Atšaukti profilio keitimą</string>
     <string name="scene_revert_loop_mode">Atšaukti veikimo režimo pakeitimą</string>
@@ -260,6 +361,7 @@
     <string name="boluswizard">Boluso patarėjas</string>
     <string name="simple_mode_blocked_by_concentration">Naudojant ne U100 insuliną paprastojo režimo įjungti negalima. Pirmiausia perjunkite į U100 insuliną.</string>
     <string name="manage_temp_basal_desc">Pradėti laikiną bazinį greitį</string>
+    <string name="manage_site_rotation_desc">Stebėti infuzijos vietų rotaciją</string>
     <string name="treatment_cgm_desc">Atverti CGM programėlę</string>
     <string name="treatment_calibration_desc">Kalibruoti jutiklį</string>
     <string name="treatment_bg_check_desc">Įrašyti gliukozės matavimą</string>
@@ -280,8 +382,24 @@
     <string name="custom">Pasirinktinis</string>
     <string name="loop">Ciklas</string>
     <string name="ns">NS</string>
+    <string name="location_side_left_lower_thigh">Kairės šlaunies išorinės pusės apačia</string>
+    <string name="location_front_right_upper_thigh">Dešinės šlaunies priekinės pusės viršus</string>
+    <string name="location_front_left_upper_thigh">Kairės šlaunies priekinės pusės viršus</string>
+    <string name="location_front_right_lower_thigh">Dešinės šlaunies priekinės pusės apačia</string>
+    <string name="location_front_left_lower_thigh">Kairės šlaunies priekinės pusės apačia</string>
+    <string name="arrow_up">Aukštyn</string>
+    <string name="arrow_up_right">Aukštyn dešinėn</string>
+    <string name="arrow_right">Dešinėn</string>
+    <string name="arrow_down_right">Žemyn dešinėn</string>
+    <string name="arrow_down">Žemyn</string>
+    <string name="arrow_down_left">Žemyn kairėn</string>
+    <string name="arrow_left">Kairėn</string>
+    <string name="arrow_up_left">Aukštyn kairėn</string>
+    <string name="arrow_center">Centre</string>
     <!--    Command-->
     <string name="connectiontimedout">Prijungimo laikas baigėsi</string>
+    <string name="command_replaced">Pakeista naujesne komanda</string>
+    <string name="pump_not_configured">Pompa nesukonfigūruota</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Vykdoma</string>
     <string name="comment">Komentaras</string>
@@ -292,6 +410,8 @@
     <!--    CarbsReq-->
     <string name="carbsreq">Būtina suvartoti %1$d g papildomų AV per %2$d min</string>
     <string name="basalrate">Valandinė bazė</string>
+    <string name="tdd_short">BPD</string>
+    <string name="tdd">Bendra paros dozė</string>
     <!--    Ntp-->
     <string name="timedetection">Laiko nustatymas</string>
     <!-- User Entry -->
@@ -312,6 +432,8 @@
     <string name="uel_lgs_loop_mode">LGS REŽIMAS</string>
     <string name="uel_open_loop_mode">ATVIRO CIKLO REŽIMAS</string>
     <string name="uel_loop_disabled">CIKLAS IŠJUNGTAS</string>
+    <string name="uel_loop_resumed">CIKLO VEIKIMAS ATNAUJINTAS</string>
+    <string name="uel_pump_running">POMPA VEIKIA</string>
     <string name="uel_reconnect">VĖL PRISIJUNGTI</string>
     <string name="uel_disconnect">ATSIJUNGTI</string>
     <string name="uel_resume">ATNAUJINTI</string>
@@ -324,7 +446,9 @@
     <string name="uel_cancel_extended_bolus">ATŠAUKTI IŠTĘSTĄ BOLUSĄ</string>
     <string name="uel_cancel_tt">ATŠAUKTI LAIKINĄ TIKSLĄ</string>
     <string name="uel_careportal">TERAPIJA</string>
+    <string name="uel_sensor_location">JUTIKLIO VIETA</string>
     <string name="uel_site_change">KANIULĖS KEITIMAS</string>
+    <string name="uel_site_location">INFUZIJOS VIETA</string>
     <string name="uel_reservoir_change">REZERVUARO KEITIMAS</string>
     <string name="uel_calibration">KALIBRACIJA</string>
     <string name="uel_prime_bolus">UŽPILDYMO BOLUSAS</string>
@@ -335,6 +459,7 @@
     <string name="uel_tt_ns_refresh">ATNAUJINTI LAIKINĄ TIKSLĄ NS</string>
     <string name="uel_automation_removed">AUTOMATIZAVIMAS PAŠALINTAS</string>
     <string name="uel_bg_removed">PAŠALINTA</string>
+    <string name="uel_calibration_removed">KALIBRAVIMAS PAŠALINTAS</string>
     <string name="uel_careportal_removed">TERAPIJA PAŠALINTA</string>
     <string name="uel_bolus_removed">BOLUSAS PAŠALINTAS</string>
     <string name="uel_carbs_removed">AV PAŠALINTI</string>
@@ -384,6 +509,17 @@
     <string name="ue_none">Nėra vienetų</string>
     <string name="uel_loop_change">CIKLAS PAKEISTAS</string>
     <string name="uel_loop_removed">CIKLAS PAŠALINTAS</string>
+    <string name="uel_new_insulin">NAUJAS INSULINAS</string>
+    <string name="uel_change_pump_insulin">PAKEISTI INSULINĄ</string>
+    <string name="uel_store_insulin">IŠSAUGOTI INSULINĄ</string>
+    <string name="uel_change_insulin_concentration">PAKEISTI INSULINO KONCENTRACIJĄ</string>
+    <string name="uel_insulin_removed">INSULINAS PAŠALINTAS</string>
+    <string name="uel_running_mode">VEIKIMO REŽIMAS</string>
+    <string name="uel_running_mode_removed">VEIKIMO REŽIMAS PAŠALINTAS</string>
+    <string name="uel_running_mode_updarted">VEIKIMO REŽIMAS ATNAUJINTAS</string>
+    <string name="uel_scene_activated">SCENARIJUS AKTYVUOTAS</string>
+    <string name="uel_scene_deactivated">SCENARIJUS IŠJUNGTAS</string>
+    <string name="uel_remote_config_changed">NUOTOLINĖ KONFIGŪRACIJA PAKEISTA</string>
     <!-- HardLimits -->
     <string name="temp_target_high_target">Laikino tikslo viršutinė riba</string>
     <string name="temp_target_value">Laikino tikslo reikšmė</string>
@@ -555,6 +691,7 @@
     <string name="cannula">Kaniulė</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Site Rotation -->
+    <string name="select_location">Paspauskite ir pasirinkite vietą</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
@@ -625,6 +762,7 @@
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
     <string name="import_apply_pump_changed">Atšaukta: importuojant nustatymus pompa buvo pakeista</string>
+    <string name="import_decrypt_ok">Iššifruota sėkmingai. Paruošta importuoti.</string>
     <string name="reset_aps_results">Iš naujo nustatyti APS rezultatus</string>
     <string name="database_cleanup">Duomenų bazės valymas</string>
     <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
