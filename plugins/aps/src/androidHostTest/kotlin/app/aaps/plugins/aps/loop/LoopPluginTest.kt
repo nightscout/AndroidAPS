@@ -1,7 +1,5 @@
 package app.aaps.plugins.aps.loop
 
-import android.app.NotificationManager
-import android.content.Context
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
@@ -24,7 +22,6 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -40,7 +37,6 @@ import kotlinx.coroutines.yield
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -70,11 +66,9 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock lateinit var loopNotifier: LoopNotifier
-
 
     private lateinit var loopPlugin: LoopPlugin
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -86,7 +80,7 @@ class LoopPluginTest : TestBaseWithProfile() {
             constraintChecker, rh, profileFunction, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             // The shared test base still hands out a javax Provider, which other tests rely on;
             // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
-            persistenceLayer, uiInteraction, notificationManager, { pumpEnactResultProvider() },
+            persistenceLayer, notificationManager, { pumpEnactResultProvider() },
             processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
         )
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
@@ -648,7 +642,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         val holdFirstRead = AtomicBoolean(true)
 
         persistenceLayer.stub {
-            onBlocking { getRunningModeActiveAt(any()) } doSuspendableAnswer {
+            on { getRunningModeActiveAt(any()) } doSuspendableAnswer {
                 // Snapshot BEFORE the hold: a real read returns what the row said when it ran, so holding
                 // it must not let this caller pick up a write that landed while it waited. Returning
                 // stored.get() after the await makes the test pass with or without the lock.
@@ -659,7 +653,7 @@ class LoopPluginTest : TestBaseWithProfile() {
                 }
                 atReadTime
             }
-            onBlocking { insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any()) } doSuspendableAnswer { invocation ->
+            on { insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any()) } doSuspendableAnswer { invocation ->
                 stored.set(invocation.getArgument(0))
                 PersistenceLayer.TransactionResult()
             }
@@ -837,7 +831,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         // The pump command hangs until the test releases it, so the cancel below is guaranteed to
         // arrive while it is still in flight.
         commandQueue.stub {
-            onBlocking { tempBasalAbsolute(any(), any(), any(), any(), any()) } doSuspendableAnswer {
+            on { tempBasalAbsolute(any(), any(), any(), any(), any()) } doSuspendableAnswer {
                 commandStarted.complete(Unit)
                 releaseCommand.await()
                 enacted
