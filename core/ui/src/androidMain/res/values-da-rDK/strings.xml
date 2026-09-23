@@ -118,6 +118,8 @@
     <string name="a11y_arrow_double_up">stiger hurtigt</string>
     <string name="a11y_arrow_none">ingen</string>
     <string name="a11y_arrow_unknown">ukendt</string>
+    <string name="decrement">formindskelse</string>
+    <string name="increment">forøgelse</string>
     <string name="a11y_high">høj</string>
     <string name="a11y_inrange">inden for området</string>
     <string name="a11y_low">lav</string>
