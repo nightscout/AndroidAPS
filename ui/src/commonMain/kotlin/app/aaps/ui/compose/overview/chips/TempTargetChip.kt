@@ -21,12 +21,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import app.aaps.core.data.model.TT
+import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcTtActivity
 import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
+import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.core.ui.compose.ttReasonColor
 import app.aaps.ui.compose.main.TempTargetChipState
 
@@ -76,7 +79,7 @@ fun TempTargetChip(
             ) {
                 Icon(
                     imageVector = reason.toIcon(),
-                    contentDescription = null,
+                    contentDescription = stringResourceOrNull(ElementType.TEMP_TARGET_MANAGEMENT.label()),
                     tint = iconColor,
                     modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )

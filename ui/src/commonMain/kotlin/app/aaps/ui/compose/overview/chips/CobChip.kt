@@ -21,11 +21,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * @see CobChipPreview
@@ -58,11 +63,17 @@ internal fun CobChip(
     }
 
     val hasValue = state.cobValue != 0.0
+    // Name the whole chip, not the icon. state.text is only a bare value like "45 g", which says
+    // nothing about what it measures. It goes on the Surface because the icon is dropped when the
+    // row is too narrow (see IobCobChips) and the label would go with it.
+    val chipDescription = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.cob), state.text)
     Surface(
         shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
         color = if (hasValue) ElementType.COB.color().copy(alpha = 0.2f) else Color.Transparent,
         modifier = modifier
             .heightIn(min = AapsSpacing.chipHeight)
+            // This chip has no onClick, so unlike its siblings it does not merge on its own.
+            .semantics(mergeDescendants = true) { contentDescription = chipDescription }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -71,6 +82,7 @@ internal fun CobChip(
             if (showIcon) {
                 Icon(
                     imageVector = ElementType.COB.icon(),
+                    // Decorative: the Surface above names the chip and carries the value.
                     contentDescription = null,
                     tint = ElementType.COB.color(),
                     modifier = Modifier

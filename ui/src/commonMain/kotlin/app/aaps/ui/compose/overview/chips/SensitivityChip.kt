@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.icons.IcArrowFlat
 import app.aaps.core.ui.compose.icons.IcArrowFortyfiveDown
@@ -29,6 +31,8 @@ import app.aaps.core.ui.compose.icons.IcAsBelow
 import app.aaps.core.ui.compose.icons.IcAsBelowX
 import app.aaps.core.ui.compose.icons.IcAsX
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResourceOrNull
 
 /**
  * @see SensitivityChipAbovePreview
@@ -56,7 +60,7 @@ internal fun SensitivityChip(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = stringResourceOrNull(ElementType.SENSITIVITY.label()),
                 tint = ElementType.SENSITIVITY.color(),
                 modifier = Modifier.size(AapsSpacing.chipIconSize)
             )
@@ -79,7 +83,7 @@ internal fun SensitivityChip(
                 )
                 Icon(
                     imageVector = selectIsfArrow(state.isfFrom, state.isfTo),
-                    contentDescription = null,
+                    contentDescription = stringResourceOrNull(selectIsfArrowLabel(state.isfFrom, state.isfTo)),
                     tint = ElementType.SENSITIVITY.color(),
                     modifier = Modifier.size(16.dp)
                 )
@@ -108,12 +112,41 @@ private fun selectSensIcon(ratio: Double, isEnabled: Boolean): ImageVector =
         }
     }
 
-private fun selectIsfArrow(fromStr: String, toStr: String): ImageVector {
+/** Direction of the step between the two ISF values: 1 when it goes up, -1 when it goes down, 0 when it stays. */
+private fun isfDirection(fromStr: String, toStr: String): Int {
     val from = fromStr.replace(",", ".").toDoubleOrNull() ?: 0.0
     val to = toStr.replace(",", ".").toDoubleOrNull() ?: 0.0
     return when {
-        to > from -> IcArrowFortyfiveUp
-        to < from -> IcArrowFortyfiveDown
-        else      -> IcArrowFlat
+        to > from -> 1
+        to < from -> -1
+        else      -> 0
     }
 }
+
+private fun selectIsfArrow(fromStr: String, toStr: String): ImageVector =
+    when (isfDirection(fromStr, toStr)) {
+        1    -> IcArrowFortyfiveUp
+        -1   -> IcArrowFortyfiveDown
+        else -> IcArrowFlat
+    }
+
+/**
+ * Spoken name of the arrow between the two ISF values. The arrow carries the direction, so without a
+ * name a screen reader reads only the two numbers. The names match the same glyphs in
+ * `ArrowExtensions.directionToComposeIcon`, so the arrows are always spoken the same way.
+ */
+/**
+ * What the arrow between the two ISF values MEANS, which is that the value rises or falls - not
+ * which way the glyph happens to point. Naming the glyph gave "5.5, Up Right, 6.8", and for two
+ * equal values "5.5, Right, 5.5", which says nothing at all.
+ *
+ * Equal returns null on purpose: two identical numbers already say the value did not change, and
+ * every word available here would either be wrong ("Right") or borrowed from the glucose trend
+ * vocabulary ("stable"), which is a different thing.
+ */
+private fun selectIsfArrowLabel(fromStr: String, toStr: String): TextRef? =
+    when (isfDirection(fromStr, toStr)) {
+        1    -> CoreUiStrings.arrow_up
+        -1   -> CoreUiStrings.arrow_down
+        else -> null
+    }
