@@ -57,7 +57,7 @@
     <string name="mute5min">Nutildyti 5 min</string>
     <string name="mute">Nutildyti</string>
     <string name="success">Atlikta</string>
-    <string name="advanced_settings_title">Išplėstiniai nustatymai</string>
+    <string name="advanced_settings_title">Papildomi nustatymai</string>
     <string name="extended_bolus">Ištęstas bolusas</string>
     <string name="paused">Pristabdyta</string>
     <string name="tdd_total">BPD viso</string>
@@ -216,6 +216,7 @@
     <string name="careportal_question_message">Klausimas: %1$s</string>
     <string name="careportal_exercise_message">Sportas: %1$s</string>
     <string name="careportal_pump_site_change">Infuzijos vietos keitimas</string>
+    <string name="cgm_sensor_insert">Jutiklio įvedimas</string>
     <string name="careportal_pump_site_management">Infuzijos vietos</string>
     <string name="careportal_cgm_site_management">Jutiklio vietos</string>
     <string name="careportal_cgmsensorstart">Jutiklio paleidimas</string>
@@ -262,6 +263,7 @@
     <string name="treatment_cgm_desc">Atverti CGM programėlę</string>
     <string name="treatment_calibration_desc">Kalibruoti jutiklį</string>
     <string name="treatment_bg_check_desc">Įrašyti gliukozės matavimą</string>
+    <string name="treatment_exercise_desc">Registruoti fizinį aktyvumą</string>
     <string name="treatment_sensor_insert_desc">Registruoti jutiklio įvedimą</string>
     <string name="treatment_cannula_change_desc">Registruoti kaniulės ar infuzijos rinkinio pakeitimą</string>
     <string name="treatment_fill_desc">Užpildyti sistemą ir kaniulę</string>
@@ -454,10 +456,10 @@
     <string name="adult">Suaugęs</string>
     <string name="resistant_adult">Insulinui rezistentiškas suaugęs</string>
     <string name="pregnant">Nėščioji</string>
-    <string name="patient_age_summary">Pasirinkite paciento tipą saugumo apribojimams nustatyti</string>
+    <string name="patient_age_summary">Pasirinkite naudotojo tipą, kad būtų nustatytos saugos ribos.</string>
     <string name="max_bolus_title">Maksimalus leistinas bolusas [U]</string>
     <string name="max_carbs_title">Maks. leistini angliavandeniai [g]</string>
-    <string name="patient_type">Paciento tipas</string>
+    <string name="patient_type">Naudotojo tipas</string>
     <!--    Protection-->
     <string name="unlock_settings">Atrakinti nustatymus</string>
     <!--    Pumps -->
