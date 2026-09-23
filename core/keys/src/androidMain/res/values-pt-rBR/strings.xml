@@ -146,7 +146,6 @@
     <string name="pref_title_wear_wizard_iob">Incluir IOB na calculadora</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizar mostradores personalizados</string>
     <string name="pref_title_wear_pushed_watchface">Mostrador instalado no relógio</string>
-    <string name="pref_summary_wear_pushed_watchface">Somente no Wear OS 6 ou mais recente. O AAPS pode instalar um mostrador no relógio: o mostrador de complicações ou o mostrador personalizado. Relógios mais antigos ignoram esta configuração.</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Mostrador de complicações</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Mostrador personalizado</string>
     <string name="pref_title_wear_notify_on_smb">Notificar sobre SMB</string>
