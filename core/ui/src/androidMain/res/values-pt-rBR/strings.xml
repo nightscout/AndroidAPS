@@ -990,8 +990,11 @@
     <string name="import_wrong_password">Senha incorreta</string>
     <string name="import_btn">Importar</string>
     <string name="import_anyway_btn">Importar mesmo assim</string>
-    <string name="import_apply_title">Configurações importadas</string>
-    <string name="import_apply_message">As configurações importadas serão aplicadas agora. Os plugins alterados serão reiniciados.</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_apply_waiting">Aguardando a bomba…</string>
     <string name="import_apply_pump_busy">A bomba ainda está ocupada, portanto as configurações não foram aplicadas.</string>
     <string name="import_apply_retry_question">Tentar novamente agora?</string>
