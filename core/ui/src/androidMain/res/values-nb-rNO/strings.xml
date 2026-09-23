@@ -174,6 +174,7 @@
     <string name="notconfigured">Ikke konfigurert</string>
     <string name="loop_suspended_by_dst">Loop suspendert av DST (Sommertid)</string>
     <string name="required">nødv</string>
+    <string name="a11y_arrow_triple_down">faller svært raskt</string>
     <string name="a11y_arrow_double_down">synker raskt</string>
     <string name="a11y_arrow_single_down">synkende</string>
     <string name="a11y_arrow_forty_five_down">synker sakte</string>
@@ -181,8 +182,11 @@
     <string name="a11y_arrow_forty_five_up">stiger raskt</string>
     <string name="a11y_arrow_single_up">stiger</string>
     <string name="a11y_arrow_double_up">stiger raskt</string>
+    <string name="a11y_arrow_triple_up">stiger svært raskt</string>
     <string name="a11y_arrow_none">ingen</string>
     <string name="a11y_arrow_unknown">ukjent</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">reduser %1$s med %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">øk %1$s med %2$s</string>
     <string name="decrement">reduksjon</string>
     <string name="increment">økning</string>
     <string name="a11y_high">høyt</string>
@@ -1029,11 +1033,18 @@
     <string name="import_wrong_password">Feil passord</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Importer uansett</string>
+    <string name="import_apply_title">Bruk importerte innstillinger?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Innstillinger som endres: %1$d. Plugin som er endret, startes på nytt.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Innstillinger som endres: %1$d. Pumpeinnstillinger beholdt: %2$d, slik at pumpen fortsetter å fungere.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">De importerte innstillingene valgte ingen pumpe som finnes på denne telefonen. %1$s er nå aktiv – kontroller pumpeinnstillingene.</string>
+    <string name="import_applying">Aktiverer innstillinger…</string>
+    <string name="import_replace_pump_settings">Bytt også ut pumpeinnstillingene</string>
+    <string name="import_replace_pump_settings_summary">La dette være avslått for å beholde pumpen som denne telefonen er paret med. Slå det på når du gjenoppretter innstillinger på en ny telefon med samme pumpe.</string>
     <string name="import_apply_waiting">Venter på pumpen…</string>
     <string name="import_apply_pump_busy">Pumpen er fortsatt opptatt, så innstillingene ble ikke tatt i bruk.</string>
     <string name="import_apply_retry_question">Prøve på nytt nå?</string>
