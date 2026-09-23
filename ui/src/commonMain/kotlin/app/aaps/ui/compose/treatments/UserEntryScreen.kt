@@ -113,8 +113,8 @@ fun UserEntryScreen(
     // Export confirmation dialog
     if (showExportDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.confirm),
-            message = viewModel.rh.gs(CoreUiStrings.ue_export_to_csv) + "?",
+            title = stringResource(CoreUiStrings.confirm),
+            message = stringResource(CoreUiStrings.ue_export_to_csv) + "?",
             onConfirm = {
                 uel.log(Action.EXPORT_CSV, Sources.Treatments)
                 importExportPrefs.exportUserEntriesCsv()

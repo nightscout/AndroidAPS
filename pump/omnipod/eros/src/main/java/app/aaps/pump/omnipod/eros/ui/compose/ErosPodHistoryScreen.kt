@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -130,7 +131,7 @@ private fun ErosHistoryCard(
 ) {
     val entryType = PodHistoryEntryType.getByCode(record.podEntryTypeCode)
     ErosHistoryCardContent(
-        commandName = rh.gs(entryType.resourceId),
+        commandName = stringResource(entryType.resourceId),
         time = dateUtil.timeString(record.date),
         isSuccess = record.isSuccess,
         description = formatErosValue(record, entryType, rh, profileUtil, aapsOmnipodUtil)

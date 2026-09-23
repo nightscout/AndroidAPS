@@ -37,7 +37,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
@@ -103,7 +102,7 @@ fun ProfileSwitchScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.removerecord),
+            title = stringResource(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -116,7 +115,7 @@ fun ProfileSwitchScreen(
     // Clone confirmation dialog
     if (showCloneDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.careportal_profileswitch),
+            title = stringResource(CoreUiStrings.careportal_profileswitch),
             message = cloneDialogMessage,
             onConfirm = {
                 pendingCloneAction?.invoke()
@@ -190,7 +189,6 @@ fun ProfileSwitchScreen(
                                 }
                                 showCloneDialog = true
                             },
-                            rh = viewModel.rh,
                             decimalFormatter = decimalFormatter
                         )
                     }
@@ -211,7 +209,6 @@ private fun ProfileSwitchItem(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     onClone: (ProfileSealed.PS) -> Unit,
-    rh: TextResolver,
     decimalFormatter: DecimalFormatter
 ) {
     val dateUtil = LocalDateUtil.current
@@ -250,7 +247,7 @@ private fun ProfileSwitchItem(
                     if (profileSwitch.duration != null && profileSwitch.duration != 0L) {
                         append(" ")
                         append(T.msecs(profileSwitch.duration ?: 0L).mins().toInt())
-                        append(rh.gs(CoreUiStrings.units_min))
+                        append(stringResource(CoreUiStrings.units_min))
                     }
                 },
                 modifier = Modifier.padding(start = 4.dp),

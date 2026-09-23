@@ -104,7 +104,7 @@ fun TempBasalScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.removerecord),
+            title = stringResource(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()

@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -129,11 +130,11 @@ private fun DashHistoryCard(
     dateUtil: DateUtil
 ) {
     HistoryCardContent(
-        commandName = rh.gs(record.commandType.resourceId),
+        commandName = stringResource(record.commandType.resourceId),
         time = dateUtil.timeString(record.displayTimestamp()),
         isSuccess = record.isSuccess(),
         description = formatValue(record, rh, profileUtil),
-        extra = record.totalAmountDelivered?.let { rh.gs(R.string.omnipod_common_history_total_delivered, it) }
+        extra = record.totalAmountDelivered?.let { stringResource(R.string.omnipod_common_history_total_delivered, it) }
     )
 }
 
