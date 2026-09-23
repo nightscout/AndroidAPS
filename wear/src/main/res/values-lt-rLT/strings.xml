@@ -10,7 +10,7 @@
     <string name="label_user_action_tile">Naudotojo veiksmas</string>
     <string name="label_scene_tile">Scenarijus</string>
     <string name="msg_warning_sync">Nėra duomenų nuo %1$s! Patikrinkite, ar AAPS telefone siunčia duomenis laikrodžiui</string>
-    <string name="msg_warning_old">AAPS duomenys yra %1$s senumo! Patikrinkite sensorių, xDrip+, NS, AAPS konfigūratorių ar kt.!</string>
+    <string name="msg_warning_old">AAPS duomenys yra %1$s senumo! Patikrinkite sensorių, xDrip+, NS, AAPS konfigūraciją ar kt.!</string>
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
     <string name="units_short">V</string>
     <string name="pref_display_settings">Ekranas</string>
