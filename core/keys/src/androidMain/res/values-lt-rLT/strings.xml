@@ -2,24 +2,56 @@
 <resources>
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Paprastasis režimas</string>
+    <string name="pref_title_insulin_concentration">Skirtingų insulino koncentracijų palaikymas</string>
+    <string name="pref_summary_insulin_concentration">Leisti naudoti skirtingas insulino koncentracijas (U50, U200 ir kt.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Neleisti ekranui išsijungti</string>
+    <string name="pref_summary_keep_screen_on">Neleisti Android išjungti ekrano. Jei įrenginys neprijungtas prie maitinimo šaltinio, bus sunaudojama daug energijos.</string>
+    <string name="pref_title_show_treatment_button">Rodyti terapijos mygtuką</string>
+    <string name="pref_title_show_wizard_button">Rodyti boluso skaičiuotuvo mygtuką</string>
+    <string name="pref_title_show_insulin_button">Rodyti insulino mygtuką</string>
+    <string name="pref_title_show_carbs_button">Rodyti angliavandenių mygtuką</string>
+    <string name="pref_title_show_cgm_button">Rodyti CGM mygtuką</string>
+    <string name="pref_summary_show_cgm_button">Atidaro xDrip+ arba Dexcom app (į AAPS galite grįžti paspaudę mygtuką Atgal).</string>
+    <string name="pref_title_show_calibration_button">Rodyti kalibravimo mygtuką</string>
     <string name="pref_summary_show_calibration_button">Siunčia kalibravimo duomenis į xDrip+ (įsitikinkite, kad xDrip+ skiltyje Programų sąveikos nustatymai įjungta parinktis Priimti kalibracijas).</string>
+    <string name="pref_title_show_notes_in_dialogs">Dialoguose rodyti pastabas</string>
+    <string name="pref_title_use_bolus_advisor">Naudoti boluso patarėją</string>
+    <string name="pref_summary_use_bolus_advisor">Įjungti boluso patarėją, padedantį apskaičiuoti bolusą esant aukštesnei glikemijai.</string>
     <string name="pref_title_use_bolus_reminder">Naudoti boluso priminimą</string>
     <string name="pref_summary_use_bolus_reminder">Įjungti boluso priminimą, kad būtų lengviau sekti insulino suleidimą.</string>
+    <string name="pref_title_use_super_bolus">Naudoti superbolusą</string>
+    <string name="pref_summary_use_super_bolus">Įjungti superboluso funkciją, kuri dalį būsimo bazinio insulino suleidžia iš karto.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Jei nepavyksta prisijungti prie pompos, telefono Bluetooth vienai sekundei išjungiamas ir vėl įjungiamas. Tai gali padėti, jei telefone užstringa Bluetooth ryšys.</string>
     <!-- Alert preferences -->
     <string name="pref_title_alert_missed_bg_reading">Įspėti, jei negaunami KG duomenys</string>
+    <string name="pref_title_alert_pump_unreachable">Įspėti, kad pompa nepasiekiama</string>
+    <string name="pref_title_alert_carbs_required">Įspėti, kai reikia angliavandenių</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Rodyti skubius įspėjimus kaip Android pranešimus</string>
+    <string name="pref_title_alert_increase_volume">Palaipsniui didinti pranešimų garsumą</string>
+    <string name="pref_title_alert_override_dnd">Nepaisyti netrukdymo režimo</string>
+    <string name="pref_summary_alert_override_dnd">Įjungus šią parinktį AAPS pavojaus signalai skambės net nutildžius telefoną arba įjungus netrukdymo režimą. Išjungus parinktį šiais režimais įspėjimai bus be garso.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Įkelti glikemijos duomenis į NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Registruoti jutiklio pakeitimą</string>
     <string name="pref_summary_bg_source_create_sensor_change">Pakeitus jutiklį sukurti terapijos įrašą.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Naudoti dinaminį jautrumą</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Jautrumui koreguoti vietoje Autosens naudoti DynamicISF.</string>
+    <string name="pref_title_aps_use_autosens">Naudoti Autosens</string>
+    <string name="pref_title_aps_use_smb">Įjungti SMB</string>
     <string name="pref_summary_aps_always_use_short_deltas">Apskaičiuojant gliukozės pokytį, visada naudoti trumpalaikį vidutinį pokytį, o ne paprastą pokytį.</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_receive_cgm">Gauti CGM duomenis iš NS</string>
+    <string name="pref_summary_ns_receive_cgm">Priimti CGM rodmenis iš Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Gauti profilio keitimus iš NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Priimti profilio keitimo įvykius iš Nightscout.</string>
     <string name="pref_title_ns_receive_tbr_eb">Gauti laikinas bazes/ištęstus bolusus iš NS</string>
     <string name="pref_summary_ns_receive_tbr_eb">Priimti laikinas bazes/ištęstus bolusus iš Nightscout.</string>
     <string name="pref_title_ns_use_roaming">Naudoti tarptinklinį ryšį</string>
@@ -30,6 +62,7 @@
     <!-- Wear preferences -->
     <string name="pref_title_wear_wizard_bg">Įtraukti glikemiją į boluso skaičiuoklę</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_cgm">Valdyti CGM jutiklio vietų kaitaliojimą</string>
     <!-- IntKey: Overview preferences -->
     <string name="carb_increment_button_message">Paspaudus mygtuką įvedamas nustatytas angliavandenių kiekis</string>
     <string name="pref_title_cage_warning">Kaniulės naudojimo trukmės įspėjimo riba</string>
@@ -124,7 +157,7 @@
     <string name="openapsama_dura_ISF_weight_summary">Tai svoris, kuris taikomas per ilgesnės trukmės aukštą glikemiją, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
     <string name="openapsama_smb_delivery_ratio_summary">Numatytoji reikšmė: 0,5. Tai yra dar vienas svarbus OpenAPS saugos apribojimas, kuris nurodo, kokią dalį viso reikalingo insulino galima skirti kaip SMB. Šis apribojimas skirtas išvengti pavojingų situacijų, kai SMB užklausos siunčiamos tuo pačiu metu sekėjo globėjo telefono. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
     <string name="pref_title_smb_delivery_ratio_min">Mažiausia SMB dozės dalis</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Numatytoji reikšmė: 0,5. Tai yra apatinė ribinė reikšmė, naudojama linijiniam santykiui didinti, o ne fiksuota reikšmė, kaip nurodyta aukščiau.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Numatytoji reikšmė: 0,5. Tai apatinė tiesiškai didėjančios SMB dozės dalies riba, o ne fiksuota reikšmė, kaip nurodyta aukščiau.</string>
     <string name="openapsama_smb_delivery_ratio_max_summary">Numatytoji reikšmė: 0,5. Tai yra viršutinė ribinė reikšmė, naudojama linijiniam santykiui didinti, o ne fiksuota reikšmė, kaip nurodyta aukščiau.</string>
     <string name="openapsama_smb_max_range_extension_summary">Numatytoji reikšmė: 1. Tai dar vienas svarbus OpenAPS saugos apribojimas, kuris nurodo, kiek kartų galite viršyti įprastą 120 maxSMB/maxNDM minučių ribą. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
     <!-- UnitDoubleKey: Overview preferences -->
