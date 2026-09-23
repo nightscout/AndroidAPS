@@ -124,6 +124,7 @@
     <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">手錶目前顯示小工具錶面。選擇自訂錶面即可在手錶上看到 %1$s。</string>
     <string name="wear_pushed_watchface_confirm_title">要變更手錶上的錶面嗎？</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s 將取代手錶上的 %2$s。</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s 將取代手錶上的 %2$s。你在錶面編輯器中變更的 Complication 將恢復為預設值。</string>
     <string name="wear_load_watchface">載入錶盤</string>
     <string name="wear_infos_watchface">資訊錶盤</string>
     <string name="wear_export_watchface">匯出範本</string>
