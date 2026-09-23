@@ -110,6 +110,7 @@
     <string name="user_action_not_available">Pasirinktas naudotojo veiksmas %1$s nebepasiekiamas, atnaujinkite savo valdiklį</string>
     <string name="scene_not_available">Scenarijus %1$s nebepasiekiamas. Atnaujinkite plytelę</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Kliento režimu nuotolinės insulino komandos išjungtos</string>
+    <string name="wear_phone_not_ready">Telefonas vis dar paleidžiamas arba taiko nustatymus. Netrukus bandykite dar kartą.</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
     <string name="wear_action_tempt_min_bg_error">Minimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
     <string name="wear_action_tempt_max_bg_error">Maksimali gliukozės reikšmė nepatenka į leistiną intervalą!</string>
@@ -257,7 +258,7 @@
     <string name="sms_min_ago">prieš %1$dmin</string>
     <string name="sms_loop_suspended_for">Sustabdyta (%1$d m)</string>
     <string name="sms_read_status_failed">Statuso nuskaityti nepavyko</string>
-    <string name="sms_profile_switch_created">Profilio perjungimas sukurtas</string>
+    <string name="sms_profile_switch_created">Profilio keitimas sukurtas</string>
     <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti %1$d min kartotinė ir didesnė nei 0.</string>
     <string name="a11y_otp_qr_code">QR kodas vienkartinio slaptažodžio nustatymui</string>
     <string name="permission_sms_title">SMS</string>
