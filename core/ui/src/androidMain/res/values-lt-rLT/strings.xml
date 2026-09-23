@@ -3,6 +3,7 @@
     <string name="error_field_must_not_be_empty">Laukas negali būti tuščias</string>
     <string name="error_mustbe4hexadidits">Turi būti 4 simboliai iš ABCDEF0123456789</string>
     <!--    General-->
+    <string name="nav_configuration_desc">Nustatykite konfigūraciją (CGM, pompą ir kt.) ir įjunkite norimas funkcijas</string>
     <string name="count_selected">%1$d pasirinkta</string>
     <string name="delete">Ištrinti</string>
     <string name="show_invalidated">Rodyti negaliojančius</string>
@@ -241,11 +242,12 @@
     <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolusas atšauktas. Insulinas nesuleistas.\n%1$s</string>
     <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Atšaukta</string>
     <string name="scene_revert_tt">Atšaukti laikiną tikslą</string>
+    <string name="scene_revert_profile">Atšaukti profilio keitimą</string>
     <string name="scene_revert_loop_mode">Atšaukti veikimo režimo pakeitimą</string>
     <string name="scene_careportal_no_revert">Terapijos įrašai nebus atšaukti</string>
     <string name="careportal_sickness">Liga</string>
     <string name="careportal_stress">Stresas</string>
-    <string name="careportal_pre_period">Prieš mėnesines</string>
+    <string name="careportal_pre_period">PMS</string>
     <string name="careportal_alcohol">Alkoholis</string>
     <string name="careportal_cortisone">Kortizolis</string>
     <string name="careportal_feeling_low">Jaučiama hipoglikemija</string>
@@ -257,7 +259,10 @@
     <string name="boluswizard">Boluso patarėjas</string>
     <string name="simple_mode_blocked_by_concentration">Naudojant ne U100 insuliną paprastojo režimo įjungti negalima. Pirmiausia perjunkite į U100 insuliną.</string>
     <string name="manage_temp_basal_desc">Pradėti laikiną bazinį greitį</string>
+    <string name="treatment_cgm_desc">Atverti CGM programėlę</string>
+    <string name="treatment_calibration_desc">Kalibruoti jutiklį</string>
     <string name="treatment_bg_check_desc">Įrašyti gliukozės matavimą</string>
+    <string name="treatment_sensor_insert_desc">Registruoti jutiklio įvedimą</string>
     <string name="treatment_cannula_change_desc">Registruoti kaniulės ar infuzijos rinkinio pakeitimą</string>
     <string name="treatment_fill_desc">Užpildyti sistemą ir kaniulę</string>
     <string name="user_entry">Naudotojo įrašas</string>
@@ -625,6 +630,7 @@
     <!-- Graph configuration -->
     <string name="graph_bg">KG grafikas</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="activity_shortname" comment="Short label for Activity graph series">AKT</string>
     <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-KGĮ</string>
     <string name="units_insulin">V</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
