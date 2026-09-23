@@ -123,6 +123,7 @@
     <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Hodinky zobrazujú Ciferník s komplikáciami. Vyberte si Vlastný ciferník, ak chcete na hodinkách zobraziť %1$s.</string>
     <string name="wear_pushed_watchface_confirm_title">Zmeniť ciferník na hodinkách?</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s nahradí %2$s na hodinkách.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s budú nahradené %2$s na hodinkách. Komplikácie, ktoré ste zmenili v editore ciferníka, sa vrátia na predvolené hodnoty.</string>
     <string name="wear_load_watchface">Nahrať ciferník</string>
     <string name="wear_infos_watchface">Informácie o ciferníku</string>
     <string name="wear_export_watchface">Exportovať šablónu</string>
