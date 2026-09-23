@@ -182,6 +182,8 @@
     <string name="a11y_arrow_double_up">бързо покачване</string>
     <string name="a11y_arrow_none">без</string>
     <string name="a11y_arrow_unknown">неизвестно</string>
+    <string name="decrement">Намаляване</string>
+    <string name="increment">Нарастване</string>
     <string name="a11y_high">висока</string>
     <string name="a11y_inrange">в диапазон</string>
     <string name="a11y_low">ниска</string>
@@ -896,7 +898,7 @@
     <string name="reorder">Подреди</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Премести по-рано</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Премести по-късно</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Повече информация</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Повече информация</string>
     <string name="presets_changed_reorder_aborted">Настройката е сменена на друго място. Новата последователност не е запазена.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Позиция %1$d от %2$d</string>
