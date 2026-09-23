@@ -174,6 +174,8 @@
     <string name="a11y_arrow_double_up">subindo rapidamente</string>
     <string name="a11y_arrow_none">nenhum</string>
     <string name="a11y_arrow_unknown">desconhecido</string>
+    <string name="decrement">diminuição</string>
+    <string name="increment">incremento</string>
     <string name="a11y_high">hiper</string>
     <string name="a11y_inrange">no alvo</string>
     <string name="a11y_low">hipo</string>
@@ -876,7 +878,7 @@
     <string name="reorder">Reordenar</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mover para cima</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Mover para baixo</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Mostrar detalhes</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Mostrar detalhes</string>
     <string name="presets_changed_reorder_aborted">Predefinições alteradas em outro lugar. A nova ordem não foi salva.</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Posição %1$d de %2$d</string>
     <string name="pump_actions">Ações da bomba</string>
