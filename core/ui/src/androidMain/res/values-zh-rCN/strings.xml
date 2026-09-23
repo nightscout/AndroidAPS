@@ -1021,8 +1021,11 @@
     <string name="import_wrong_password">密码错误</string>
     <string name="import_btn">导入</string>
     <string name="import_anyway_btn">仍然导入</string>
-    <string name="import_apply_title">配置导入了</string>
-    <string name="import_apply_message">导入的设置现在将被应用。发生变更的插件将会重启</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_apply_waiting">正在等待泵…</string>
     <string name="import_apply_pump_busy">泵仍在忙碌中，因此设置未应用。</string>
     <string name="import_apply_retry_question">现在重试吗？</string>
