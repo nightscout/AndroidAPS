@@ -126,6 +126,8 @@
     <string name="a11y_arrow_double_up">szybko rośnie</string>
     <string name="a11y_arrow_none">brak</string>
     <string name="a11y_arrow_unknown">nieznany</string>
+    <string name="decrement">zmniejszenie</string>
+    <string name="increment">zwiększenie</string>
     <string name="a11y_high">wysokie</string>
     <string name="a11y_inrange">w zakresie</string>
     <string name="a11y_low">niskie</string>
