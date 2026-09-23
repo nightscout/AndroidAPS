@@ -146,7 +146,6 @@
     <string name="pref_title_wear_wizard_iob">Includi IOB nella procedura guidata</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizza watchface personalizzate</string>
     <string name="pref_title_wear_pushed_watchface">Watchface installata sull\'orologio</string>
-    <string name="pref_summary_wear_pushed_watchface">Wear OS 6 e solo più recente. AAPS può installare una watchface sull\'orologio: il quadrante delle complicazioni o l\'orologio personalizzato. Gli orologi vecchi ignorano questa impostazione.</string>
     <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Complicazioni watchface</string>
     <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Watchface personalizzata</string>
     <string name="pref_title_wear_notify_on_smb">Notifica su SMB</string>
