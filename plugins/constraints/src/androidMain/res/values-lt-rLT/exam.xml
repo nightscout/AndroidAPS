@@ -39,14 +39,14 @@
     <string name="noisycgm_replacesensor">Pakeisti jutiklį, jei jo duomenys pastoviai triukšmingi ar netikslūs.</string>
     <string name="noisycgm_checksmoothing">Patikrinti, ar Jūsų NGJ programėlė naudoja duomenų išlyginimo funkciją.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
-    <string name="exerciseprofile_label">Aktyvumas ir Profiliai</string>
+    <string name="exerciseprofile_label">Sportas ir profiliai</string>
     <string name="exerciseprofile_whattodo">Kaip naudoti profilius, kad sistema geriausiai susitvarkytų su aerobiniais pratimais?</string>
     <string name="exerciseprofile_switchprofilebelow100">Perjungti profilį į žemesnį nei 100%.</string>
     <string name="exerciseprofile_switchprofileabove100">Perjungti profilį į aukštesnį nei 100%.</string>
     <string name="exerciseprofile_leaveat100">Palikti 100% profilį.</string>
     <string name="exerciseprofile_suspendloop">Sustabdyti ciklą.</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/TempTargets.html</string>
-    <string name="exercise_label">Aktyvumas ir Laikini tikslai</string>
+    <string name="exercise_label">Sportas ir laikini tikslai</string>
     <string name="exercise_whattodo">Kaip naudoti laikinus tikslus, kad sistema geriausiai susitvarkytų su aerobiniais pratimais?</string>
     <string name="exercise_settt">Nustatyti sporto laikiną tikslą tinkamu laiku prieš pradedant sportuoti.</string>
     <string name="exercise_setfinished">Nustatyti sporto laikiną tikslą pasibaigus fizinei veiklai.</string>
@@ -128,7 +128,7 @@
     <string name="cob_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/CobCalculation.html</string>
     <string name="iob_value">AIO keičia nustatyta laikina valandinė bazė.</string>
     <string name="iob_hightemp">Padidinta laikina bazė nebus nustatyta, jei glikemija yra žemiau numatyto tikslo.</string>
-    <string name="iob_negiob">Jei ilgą laiką stebima neigiama AIO reikšmė ir nėra fizinio aktyvumo, tai rodo, kad Jūsų nustatymai yra per „agresyvūs“ ir Jums reikia mažiau insulino.</string>
+    <string name="iob_negiob">Jei nesportuojant neigiamas aktyvus insulinas išlieka ilgą laiką, tai gali reikšti, kad profilis per agresyvus ir nustatymuose reikėtų mažinti insulino kiekį.</string>
     <string name="iob_posiob">Jei ilgą laiką stebima teigiama AIO reikšmė, tai rodo rezistenciją insulinui arba neįrašomą maistą.</string>
     <string name="breadgrams_label">Angliavandenių įrašai ir bolusai</string>
     <string name="breadgrams_grams">Apskaičiuojant ir įrašant angliavandenius, jų kiekis išreiškiamas tik gramais.</string>
