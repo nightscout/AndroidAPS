@@ -59,7 +59,7 @@
     <string name="needinsullinreplace">Būtina pakeisti insuliną</string>
     <string name="diaconn_g8_loginsulinchange_title">Įrašyti rezervuaro keitimą</string>
     <string name="diaconn_g8_loginsulinchange_summary">Įtraukti į terapijos skiltį įvykį „Insulino pakeitimas“, jei jis aptinkamas istorijoje</string>
-    <string name="diaconn_g8_logcanulachange_title">Įrašyti kaniulės pakeitimą</string>
+    <string name="diaconn_g8_logcanulachange_title">Įrašyti kaniulės keitimą</string>
     <string name="diaconn_g8_logcanulachange_summary">Įtraukti į terapijos skiltį įvykį „Kaniulės keitimas“, jei jis aptinkamas istorijoje</string>
     <string name="diaconn_g8_logbatterychange_summary">Įtraukti į terapijos skiltį įvykį „Baterijos pakeitimas“, jei jis aptinkamas istorijoje</string>
     <string name="diaconn_g8_logbatterychange_title">Įrašyti baterijos pakeitimą</string>
@@ -126,14 +126,14 @@
     <string name="diaconn_g8_errorcode_36">Laikinos bazės stabdymas atmestas, nes nėra nustatyta laikina bazė</string>
     <string name="diaconn_g8_cloudsend_summary">Siųsti pompos įrašus į Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
-    <string name="bolus_speed_1">1 U/min</string>
-    <string name="bolus_speed_2">2 U/min</string>
-    <string name="bolus_speed_3">3 U/min</string>
-    <string name="bolus_speed_4">4 U/min</string>
-    <string name="bolus_speed_5">5 U/min</string>
-    <string name="bolus_speed_6">6 U/min</string>
-    <string name="bolus_speed_7">7 U/min</string>
-    <string name="bolus_speed_8">8 U/min</string>
+    <string name="bolus_speed_1">1 V/min</string>
+    <string name="bolus_speed_2">2 V/min</string>
+    <string name="bolus_speed_3">3 V/min</string>
+    <string name="bolus_speed_4">4 V/min</string>
+    <string name="bolus_speed_5">5 V/min</string>
+    <string name="bolus_speed_6">6 V/min</string>
+    <string name="bolus_speed_7">7 V/min</string>
+    <string name="bolus_speed_8">8 V/min</string>
     <string name="diaconn_pairing_successful">Sėkmingai susieta!</string>
     <string name="diaconn_pairing_successful_message">Pompa prijungta ir paruošta naudoti.</string>
 </resources>
