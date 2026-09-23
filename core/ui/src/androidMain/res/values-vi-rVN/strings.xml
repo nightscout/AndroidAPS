@@ -1024,8 +1024,11 @@
     <string name="import_wrong_password">Sai mật khẩu</string>
     <string name="import_btn">Nhập</string>
     <string name="import_anyway_btn">Vẫn nhập</string>
-    <string name="import_apply_title">Đã nhập cài đặt</string>
-    <string name="import_apply_message">Các cài đặt đã nhập sẽ được áp dụng ngay bây giờ. Các plugin có thay đổi sẽ được khởi động lại.</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_apply_waiting">Đang chờ phản hồi từ Bơm…</string>
     <string name="import_apply_pump_busy">Bơm vẫn đang bận nên các cài đặt chưa được áp dụng.</string>
     <string name="import_apply_retry_question">Thử lại ngay bây giờ?</string>
