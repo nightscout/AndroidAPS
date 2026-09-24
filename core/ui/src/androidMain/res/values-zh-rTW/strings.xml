@@ -442,7 +442,6 @@
     <string name="treatment_insulin_desc">手動注射</string>
     <string name="treatment_carbs_desc">僅記錄碳水化合物</string>
     <string name="treatment_calculator_desc">計算注射量</string>
-    <string name="insulin_management">胰島素</string>
     <string name="manage_insulin_desc">管理並啟用胰島素組態</string>
     <string name="concentration_disable_blocked">在存在非 U100 胰島素時無法停用濃度支援。請先移除所有非 U100 的胰島素組態，並切換至 U100 設定檔。</string>
     <string name="simple_mode_blocked_by_concentration">使用非 U100 胰島素時無法啟用簡易模式。請先切換為 U100 胰島素。</string>
@@ -729,7 +728,6 @@
     <string name="wizard_include_iob">包含活性胰島素</string>
     <string name="wizard_include_cob">包含 COB</string>
     <string name="wizard_calculation">計算</string>
-    <string name="no_action_selected">未選擇任何操作，無事發生</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">最多移除：%1$d 克（COB）</string>
     <string name="wizard_no_insulin_required">不需要胰島素</string>
     <string name="wizard_no_actual_bg">沒有最近的血糖值可用於計算！</string>
