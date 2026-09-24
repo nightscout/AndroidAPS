@@ -346,7 +346,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus-Rechner</string>
     <string name="bolus_advisor_message">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
-    <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
     <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
     <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
     <string name="wizard_carbs_constraint">Die Kohlenhydrateinschränkung wurde überschritten!</string>
