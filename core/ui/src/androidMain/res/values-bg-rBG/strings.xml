@@ -431,7 +431,6 @@
     <string name="treatment_insulin_desc">Постави инсулина ръчно</string>
     <string name="treatment_carbs_desc">Запиши въглехидрати без инсулин</string>
     <string name="treatment_calculator_desc">Изчисли болус</string>
-    <string name="insulin_management">Инсулин</string>
     <string name="manage_insulin_desc">Редакция и активация на инсолинови конфигурации</string>
     <string name="concentration_disable_blocked">Не може да изключите поддръжката на концентрация докато има инсулини различни от 100E/мл съществуват. Изтрийте всички такива конфигурации и превключете на профил с концентрация U100.</string>
     <string name="simple_mode_blocked_by_concentration">Не може да включите опростен режим докато ползвате инсулин, който не е U100ед/мл. Първо превключете към такъв.</string>
@@ -717,7 +716,6 @@
     <string name="wizard_include_iob">Включи IOB</string>
     <string name="wizard_include_cob">Включи въглехидрати</string>
     <string name="wizard_calculation">Калкулация</string>
-    <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Макс премахване: %1$d гр (CoB)</string>
     <string name="wizard_no_insulin_required">Няма нужда от инсулин</string>
     <string name="wizard_no_actual_bg">Не е налична кръвна захар, върху която да се изчисли!</string>
