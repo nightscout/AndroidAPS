@@ -166,6 +166,6 @@ fun OverviewScreenStacked(
             )
         }
 
-        GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode)
+        GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text)
     }
 }

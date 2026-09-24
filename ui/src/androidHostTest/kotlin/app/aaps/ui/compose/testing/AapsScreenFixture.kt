@@ -3,6 +3,7 @@ package app.aaps.ui.compose.testing
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -63,6 +64,10 @@ class AapsScreenFixture(
         TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
         whenever(preferences.observe(StringKey.GeneralDarkMode)).thenReturn(MutableStateFlow("light"))
         whenever(config.AAPSCLIENT).thenReturn(false)
+        // ProfileUtil.units is non-null in the contract, so nothing guards against a mock's null.
+        // The spoken description of the BG graph reads it to decide how many decimals a reading
+        // takes, and an unstubbed mock put an NPE in every screen that draws a graph.
+        whenever(profileUtil.units).thenReturn(GlucoseUnit.MGDL)
         // Graph axis labels go through this, and a mock's null lands as an NPE inside the chart.
         whenever(decimalFormatter.to0Decimal(any())).thenAnswer { fixed(it.arguments[0] as Double, 0) }
         whenever(decimalFormatter.to1Decimal(any())).thenAnswer { fixed(it.arguments[0] as Double, 1) }

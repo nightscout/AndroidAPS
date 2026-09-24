@@ -195,7 +195,7 @@ fun OverviewScreenSplit(
                     .verticalScroll(rememberScrollState())
                     .padding(start = 4.dp)
             ) {
-                GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode)
+                GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode, iobText = iobUiState.text, cobText = cobUiState.text)
             }
         }
     }
