@@ -18,7 +18,8 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.plugins.sync.SyncStringsValues
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
 import app.aaps.core.interfaces.utils.DateUtil
@@ -73,7 +74,7 @@ internal class ClientControlReceiverTest {
 
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var aapsLogger: AAPSLogger
-    @Mock private lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("sync" to SyncStringsValues::textOf)
     @Mock private lateinit var nsClientRepository: NSClientRepository
     @Mock private lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Mock private lateinit var nsAndroidClient: NSAndroidClient
@@ -130,14 +131,6 @@ internal class ClientControlReceiverTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        // gs(TextRef) is a DEFAULT interface method, so a mock answers null unless it is stubbed.
-        whenever(rh.gs(any<TextRef>())).thenAnswer {
-            when (val ref = it.getArgument<TextRef>(0)) {
-                is TextRef.Literal    -> ref.text
-                is TextRef.Named      -> ref.name
-                is TextRef.AndroidRes -> "S" + ref.id
-            }
-        }
         stored = "[]"
         storage.clear()
         storage[StringNonKey.SceneDefinitions.key] = "[]"

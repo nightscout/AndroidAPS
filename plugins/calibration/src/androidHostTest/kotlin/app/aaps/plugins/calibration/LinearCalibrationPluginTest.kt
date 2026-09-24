@@ -18,9 +18,8 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -37,7 +36,7 @@ import org.mockito.kotlin.whenever
 
 class LinearCalibrationPluginTest : TestBase() {
 
-    @Mock lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("calibration" to CalibrationStringsValues::textOf)
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var notificationManager: NotificationManager
@@ -197,7 +196,6 @@ class LinearCalibrationPluginTest : TestBase() {
 
     @Test
     fun calibrate_gapDetected_postsNotification() = runTest {
-        whenever(rh.gs(any<TextRef>(), any())).thenReturn("Possible sensor change")
         // Gap of 60min between data[0] and data[1]; default sessionStart is 12h ago so gap is within session
         val data = mutableListOf(
             value(now, 150.0),
@@ -240,7 +238,6 @@ class LinearCalibrationPluginTest : TestBase() {
 
     @Test
     fun calibrate_notificationAction_insertsSensorChange() = runTest {
-        whenever(rh.gs(any<TextRef>(), any())).thenReturn("Possible sensor change")
         whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any()))
             .thenReturn(PersistenceLayer.TransactionResult())
         val data = mutableListOf(

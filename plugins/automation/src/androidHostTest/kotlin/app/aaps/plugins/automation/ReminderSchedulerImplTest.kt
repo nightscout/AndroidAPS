@@ -1,10 +1,10 @@
 package app.aaps.plugins.automation
 
-import app.aaps.core.keys.interfaces.TextRef
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.plugins.automation.AutomationStringsValues
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
@@ -19,7 +19,6 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockedConstruction.MockInitializer
 import org.mockito.Mockito.mockConstruction
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
@@ -44,7 +43,7 @@ import org.mockito.kotlin.whenever
 class ReminderSchedulerImplTest : TestBase() {
 
     @Mock lateinit var context: Context
-    @Mock lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("automation" to AutomationStringsValues::textOf)
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var alarmManager: AlarmManager
 
@@ -93,14 +92,13 @@ class ReminderSchedulerImplTest : TestBase() {
         // A reminder that cannot be scheduled must say so - failing silently is how the previous
         // background-reminder bug stayed hidden.
         whenever(context.getSystemService(Context.ALARM_SERVICE)).thenThrow(RuntimeException("no alarm service"))
-        doAnswer { "Cannot set reminder" }.whenever(rh).gs(any<TextRef>())
 
         val events = argumentCaptor<Event>()
         sut.scheduleReminder(60, "Time to eat")
 
         verify(bus).send(events.capture())
         val event = events.allValues.filterIsInstance<EventShowSnackbar>().single()
-        assertThat(event.message).isEqualTo("Cannot set reminder")
+        assertThat(event.message).isEqualTo("Error while setting future alarm")
         assertThat(event.type).isEqualTo(EventShowSnackbar.Type.Error)
     }
 
@@ -109,7 +107,6 @@ class ReminderSchedulerImplTest : TestBase() {
         // Neither the permission nor the battery-optimization exemption: setAlarmClock would throw.
         whenever(context.getSystemService(Context.ALARM_SERVICE)).thenReturn(alarmManager)
         whenever(alarmManager.canScheduleExactAlarms()).thenReturn(false)
-        doAnswer { "Cannot set reminder" }.whenever(rh).gs(any<TextRef>())
 
         // Same mocks as in the first test. Without them the chained framework calls return null, the
         // class ends up in its catch before it reaches setAlarmClock, and this test would pass without
@@ -127,7 +124,7 @@ class ReminderSchedulerImplTest : TestBase() {
         verify(alarmManager, never()).setAlarmClock(anyOrNull(), anyOrNull())
         verify(bus).send(events.capture())
         val event = events.allValues.filterIsInstance<EventShowSnackbar>().single()
-        assertThat(event.message).isEqualTo("Cannot set reminder")
+        assertThat(event.message).isEqualTo("Error while setting future alarm")
         assertThat(event.type).isEqualTo(EventShowSnackbar.Type.Error)
     }
 }

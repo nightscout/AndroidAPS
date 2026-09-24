@@ -1,6 +1,6 @@
 package app.aaps.plugins.constraints.objectives
 
-import app.aaps.plugins.constraints.ConstraintsStrings
+import app.aaps.plugins.constraints.ConstraintsStringsValues
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -26,6 +26,7 @@ import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.impl.sharedPreferences.SPImpl
 import app.aaps.shared.tests.SharedPreferencesMock
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -33,7 +34,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class ObjectivesPluginTest : TestBaseWithProfile() {
 
@@ -44,6 +44,9 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
     @Mock lateinit var profileUtilMock: ProfileUtil
     @Mock lateinit var profileFunctionMock: ProfileFunction
     @Mock lateinit var hardLimitsMock: HardLimits
+
+    /** Real English for the objective reasons, so the sentences asserted below are what the user reads. */
+    private val text = generatedTextResolver("constraints" to ConstraintsStringsValues::textOf)
 
     private lateinit var objectivesPlugin: ObjectivesPlugin
     private lateinit var emulatedPreferences: Preferences
@@ -56,21 +59,19 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         // Real formatter: pure arithmetic over a duration, and only read for display.
         val durationText = PlainDurationText()
         val objectives = listOf(
-            Objective0(emulatedPreferences, rh, durationText, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
-            Objective1(emulatedPreferences, rh, durationText, dateUtil),
-            Objective2(emulatedPreferences, rh, durationText, dateUtil),
-            Objective3(emulatedPreferences, rh, durationText, dateUtil),
-            Objective4(emulatedPreferences, rh, durationText, dateUtil, profileFunction),
-            Objective5(emulatedPreferences, rh, durationText, dateUtil),
-            Objective6(emulatedPreferences, rh, durationText, dateUtil, constraintsChecker, loop),
-            Objective7(emulatedPreferences, rh, durationText, dateUtil),
-            Objective8(emulatedPreferences, rh, durationText, dateUtil),
-            Objective9(emulatedPreferences, rh, durationText, dateUtil)
+            Objective0(emulatedPreferences, text, durationText, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
+            Objective1(emulatedPreferences, text, durationText, dateUtil),
+            Objective2(emulatedPreferences, text, durationText, dateUtil),
+            Objective3(emulatedPreferences, text, durationText, dateUtil),
+            Objective4(emulatedPreferences, text, durationText, dateUtil, profileFunction),
+            Objective5(emulatedPreferences, text, durationText, dateUtil),
+            Objective6(emulatedPreferences, text, durationText, dateUtil, constraintsChecker, loop),
+            Objective7(emulatedPreferences, text, durationText, dateUtil),
+            Objective8(emulatedPreferences, text, durationText, dateUtil),
+            Objective9(emulatedPreferences, text, durationText, dateUtil)
         )
-        objectivesPlugin = ObjectivesPlugin(aapsLogger, rh, emulatedPreferences, config, objectives, mock())
+        objectivesPlugin = ObjectivesPlugin(aapsLogger, text, emulatedPreferences, config, objectives, mock())
         runBlocking { objectivesPlugin.onStart() }
-        whenever(rh.gs(ConstraintsStrings.objectivenotstarted)).thenReturn("Objective %1\$d not started")
-        whenever(rh.gs(ConstraintsStrings.objectivenotfinished)).thenReturn("Objective %1\$d not finished")
     }
 
     @Test fun notStartedObjectivesShouldLimitLoopInvocation() {
