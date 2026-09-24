@@ -1,18 +1,18 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
+import app.aaps.plugins.automation.AutomationStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
@@ -20,19 +20,20 @@ class ActionNotificationTest : TestBaseWithProfile() {
 
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
+    /** Real English, so the expected description is the wording the user reads. */
+    private val text = generatedTextResolver("automation" to AutomationStringsValues::textOf)
+
     private lateinit var sut: ActionNotification
 
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(CoreUiStrings.notification)).thenReturn("Notification")
-        whenever(rh.gs(eq(AutomationStrings.notification_message), any())).thenReturn("Notification: %s")
         runTest {
             whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
 
-        sut = ActionNotification(aapsLogger, rh, { pumpEnactResultProvider() }, rxBus, notificationManager, persistenceLayer, dateUtil)
+        sut = ActionNotification(aapsLogger, text, { pumpEnactResultProvider() }, rxBus, notificationManager, persistenceLayer, dateUtil)
     }
 
     @Test fun friendlyNameTest() {

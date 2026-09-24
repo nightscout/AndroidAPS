@@ -3,12 +3,10 @@ package app.aaps.ui.compose.treatments.viewmodels
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,7 +26,6 @@ import org.mockito.kotlin.whenever
 internal class CareportalViewModelTest {
 
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var translator: Translator
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var aapsLogger: AAPSLogger
@@ -41,7 +38,7 @@ internal class CareportalViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
         whenever(persistenceLayer.observeChanges(TE::class)).thenReturn(emptyFlow())
-        sut = CareportalViewModel(persistenceLayer, rh, translator, dateUtil, aapsLogger, rxBus)
+        sut = CareportalViewModel(persistenceLayer, generatedTextResolver(), translator, dateUtil, aapsLogger, rxBus)
     }
 
     @AfterEach
@@ -99,9 +96,8 @@ internal class CareportalViewModelTest {
     fun `getDeleteConfirmationMessage empty when nothing selected, plural for many`() {
         assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("")
 
-        whenever(rh.gs(CoreUiStrings.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
         sut.enterSelectionMode(mock<TE>())
         sut.toggleSelection(mock<TE>())
-        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Remove 2 items")
+        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Are you sure you want to remove 2 items")
     }
 }

@@ -32,9 +32,16 @@ import app.aaps.plugins.aps.ApsStringsValues
  * so it renders as `res:<id>`, and the legacy `gs(Int)` overload does not exist on [TextResolver] at
  * all. A test whose subject still uses resource ids has to keep the mock.
  *
- * Only the five owners `:shared:tests` can see. Adding more would mean taking a module dependency
- * just to resolve a string, which is exactly what the house rule forbids; a test in one of those
- * modules can call [TextRefValueRegistry.register] itself with its own generated object.
+ * Only the five owners `:shared:tests` can see are registered here. Adding more would mean taking a
+ * module dependency just to resolve a string, which is exactly what the house rule forbids. A test
+ * in another module passes its own generated object as [extraOwners] instead - that module can see
+ * it already, so nothing new is depended on:
+ *
+ * ```
+ * val text = generatedTextResolver("ui" to UiStringsValues::textOf)
+ * ```
+ *
+ * The owner name is the one the generated `TextRef.Named` carries, not the Gradle path.
  *
  * English only. The generated maps carry translations too, but a test that depended on a locale
  * would be a test that fails when a translator edits Crowdin.
@@ -45,13 +52,14 @@ import app.aaps.plugins.aps.ApsStringsValues
  * per test (or from `@BeforeEach`), never once for a whole run, or the owners one test registered
  * leak into the next.
  */
-fun generatedTextResolver(): TextResolver {
+fun generatedTextResolver(vararg extraOwners: Pair<String, (String, String?) -> String?>): TextResolver {
     TextRefValueRegistry.clear()
     TextRefValueRegistry.register("keys", KeysStringsValues::textOf)
     TextRefValueRegistry.register("coreUi", CoreUiStringsValues::textOf)
     TextRefValueRegistry.register("interfaces", InterfacesStringsValues::textOf)
     TextRefValueRegistry.register("implementation", ImplementationStringsValues::textOf)
     TextRefValueRegistry.register("aps", ApsStringsValues::textOf)
+    extraOwners.forEach { (owner, textOf) -> TextRefValueRegistry.register(owner, textOf) }
     return GeneratedTextResolver()
 }
 
@@ -66,8 +74,8 @@ fun generatedTextResolver(): TextResolver {
  * Pass the test's mocked `rh`. Without a fallback an unresolvable id renders as `res:<id>`, which is
  * honest but fails any assert on the text.
  */
-fun generatedTextResolver(fallback: TextResolver): TextResolver {
-    val generated = generatedTextResolver()
+fun generatedTextResolver(fallback: TextResolver, vararg extraOwners: Pair<String, (String, String?) -> String?>): TextResolver {
+    val generated = generatedTextResolver(*extraOwners)
     return object : TextResolver {
         override fun gs(ref: TextRef): String =
             if (ref is TextRef.AndroidRes) fallback.gs(ref) else generated.gs(ref)

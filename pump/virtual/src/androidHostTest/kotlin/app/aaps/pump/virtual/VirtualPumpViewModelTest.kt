@@ -8,13 +8,12 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +30,6 @@ import org.mockito.kotlin.whenever
 internal class VirtualPumpViewModelTest {
 
     @Mock private lateinit var virtualPumpPlugin: VirtualPumpPlugin
-    @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var pumpSync: PumpSync
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var persistenceLayer: PersistenceLayer
@@ -61,9 +59,6 @@ internal class VirtualPumpViewModelTest {
         whenever(virtualPumpPlugin.reservoirInUnitsFlow).thenReturn(MutableStateFlow(50))
         // suspend preference observed by combine() and read by buildInitialState()
         whenever(preferences.observe(VirtualBooleanNonPreferenceKey.IsSuspended)).thenReturn(MutableStateFlow(false))
-        // management-action labels resolved in buildInitialState()
-        whenever(rh.gs(CoreUiStrings.pump_suspend)).thenReturn("Suspend")
-        whenever(rh.gs(CoreUiStrings.pump_resume)).thenReturn("Resume")
     }
 
     // Dispatchers.Unconfined runs the PumpCommunicationStatus init collectors eagerly; reading
@@ -71,7 +66,7 @@ internal class VirtualPumpViewModelTest {
     // the combine/buildUiState block never runs and only the constructor-time stubs are touched.
     private fun viewModel() = VirtualPumpViewModel(
         virtualPumpPlugin = virtualPumpPlugin,
-        rh = rh,
+        rh = generatedTextResolver(),
         pumpSync = pumpSync,
         dateUtil = dateUtil,
         persistenceLayer = persistenceLayer,
@@ -95,9 +90,9 @@ internal class VirtualPumpViewModelTest {
         assertThat(state.queueStatus).isNull()
         // suspend (visible when running) + resume (visible when suspended)
         assertThat(state.managementActions).hasSize(2)
-        assertThat(state.managementActions[0].label).isEqualTo("Suspend")
+        assertThat(state.managementActions[0].label).isEqualTo("Suspend pump")
         assertThat(state.managementActions[0].visible).isTrue()
-        assertThat(state.managementActions[1].label).isEqualTo("Resume")
+        assertThat(state.managementActions[1].label).isEqualTo("Resume pump")
         assertThat(state.managementActions[1].visible).isFalse()
     }
 

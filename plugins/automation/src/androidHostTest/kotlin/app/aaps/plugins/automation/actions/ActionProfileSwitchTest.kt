@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
@@ -30,16 +29,10 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     private lateinit var sut: ActionProfileSwitch
 
     @BeforeEach fun setUp() {
-        whenever(rh.gs(AutomationStrings.profilename)).thenReturn("Change profile to")
-        whenever(rh.gs(AutomationStrings.changengetoprofilename)).thenReturn("Change profile to %s")
-        whenever(rh.gs(AutomationStrings.alreadyset)).thenReturn("Already set")
-        whenever(rh.gs(CoreUiStrings.notexists)).thenReturn("not exists")
-        whenever(rh.gs(CoreUiStrings.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
-        whenever(rh.gs(CoreUiStrings.noprofile)).thenReturn("No profile loaded from NS yet")
         // Automation keeps whatever insulin is in force; it never picks one from the catalogue.
         runBlocking { whenever(profileFunction.getRunningOrRequestedICfg()).thenReturn(iCfg) }
 
-        sut = ActionProfileSwitch(aapsLogger, rh, { pumpEnactResultProvider() }, profileRepository, profileFunction, dateUtil)
+        sut = ActionProfileSwitch(aapsLogger, text, { pumpEnactResultProvider() }, profileRepository, profileFunction, dateUtil)
     }
 
     @Test fun friendlyName() = runTest {

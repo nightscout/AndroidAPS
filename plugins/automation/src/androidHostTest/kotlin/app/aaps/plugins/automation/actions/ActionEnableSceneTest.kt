@@ -23,10 +23,7 @@ class ActionEnableSceneTest : ActionsTestBase() {
     private val scene = Scene(id = "scene-1", name = "Sport")
 
     @BeforeEach fun setUp() {
-        whenever(rh.gs(AutomationStrings.action_enable_scene)).thenReturn("Enable scene")
-        whenever(rh.gs(AutomationStrings.action_enable_scene_short)).thenReturn("Enable scene: %1\$s")
-        whenever(rh.gs(AutomationStrings.action_scene_not_found)).thenReturn("Scene not found")
-        sut = ActionEnableScene(aapsLogger, rh, { pumpEnactResultProvider() }, sceneApi, sceneIconResolver)
+        sut = ActionEnableScene(aapsLogger, text, { pumpEnactResultProvider() }, sceneApi, sceneIconResolver)
     }
 
     @Test fun friendlyName() = runTest {

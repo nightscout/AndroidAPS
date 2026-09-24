@@ -12,7 +12,6 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 private const val STRING_JSON = """{"data":{"smbState":true},"type":"ActionSMBChange"}"""
@@ -22,12 +21,8 @@ class ActionSMBChangeTest : ActionsTestBase() {
     private lateinit var sut: ActionSMBChange
 
     @BeforeEach fun setUp() {
-        whenever(rh.gs(AutomationStrings.changeSmbState)).thenReturn("Enable/disable SMB")
-        whenever(rh.gs(AutomationStrings.changeSmbTo)).thenReturn("Change SMB to %1\$s")
-        whenever(rh.gs(AutomationStrings.on)).thenReturn("ON")
-        whenever(rh.gs(AutomationStrings.off)).thenReturn("OFF")
 
-        sut = ActionSMBChange(aapsLogger, rh, { pumpEnactResultProvider() }, dateUtil, preferences)
+        sut = ActionSMBChange(aapsLogger, text, { pumpEnactResultProvider() }, dateUtil, preferences)
     }
 
     @Test fun friendlyName() = runTest {
@@ -39,7 +34,7 @@ class ActionSMBChangeTest : ActionsTestBase() {
     }
 
     @Test fun doAction() = runTest {
-        sut.smbState = InputDropdownOnOffMenu(rh, true)
+        sut.smbState = InputDropdownOnOffMenu(text, true)
         val result = sut.doAction()
         assertThat(result.success).isTrue()
         assertThat(result.comment).isEqualTo("OK")
@@ -51,7 +46,7 @@ class ActionSMBChangeTest : ActionsTestBase() {
     }
 
     @Test fun toJSONTest() = runTest {
-        sut.smbState = InputDropdownOnOffMenu(rh, true)
+        sut.smbState = InputDropdownOnOffMenu(text, true)
         JSONAssert.assertEquals(STRING_JSON, sut.toJSON(), true)
     }
 

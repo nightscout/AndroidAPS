@@ -25,10 +25,6 @@ class ActionSmoothingChangeTest : ActionsTestBase() {
     private lateinit var sut: ActionSmoothingChange
 
     @BeforeEach fun setUp() {
-        whenever(rh.gs(AutomationStrings.change_smoothing)).thenReturn("Change smoothing")
-        whenever(rh.gs(AutomationStrings.change_smoothing_to)).thenReturn("Change smoothing to %1\$s")
-        whenever(rh.gs(AutomationStrings.alreadyset)).thenReturn("Already set")
-        whenever(rh.gs(AutomationStrings.precondition_smoothing_not_active)).thenReturn("Smoothing %1\$s is not active")
 
         whenever(avgSmoothingPlugin.pluginId).thenReturn("AvgSmoothingPlugin")
         whenever(avgSmoothingPlugin.name).thenReturn("Average smoothing")
@@ -40,7 +36,7 @@ class ActionSmoothingChangeTest : ActionsTestBase() {
         sut.smoothingPlugin.value = "AvgSmoothingPlugin"
     }
 
-    private fun newAction() = ActionSmoothingChange(aapsLogger, rh, { pumpEnactResultProvider() }, activePlugin, configBuilder, triggerDeps)
+    private fun newAction() = ActionSmoothingChange(aapsLogger, text, { pumpEnactResultProvider() }, activePlugin, configBuilder, triggerDeps)
 
     @Test fun friendlyName() = runTest {
         assertThat(sut.friendlyName()).isEqualTo(AutomationStrings.change_smoothing)

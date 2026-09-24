@@ -21,14 +21,13 @@ class ActionCarePortalEventTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(CoreUiStrings.careportal_note_message)).thenReturn("Note : %s")
         whenever(dateUtil.now()).thenReturn(0)
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         runTest {
             whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(anyOrNull(), anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
-        sut = ActionCarePortalEvent(aapsLogger, rh, { pumpEnactResultProvider() }, persistenceLayer, profileFunction, dateUtil, glucoseStatusProvider)
+        sut = ActionCarePortalEvent(aapsLogger, text, { pumpEnactResultProvider() }, persistenceLayer, profileFunction, dateUtil, glucoseStatusProvider)
         sut.cpEvent = InputCarePortalMenu()
         sut.cpEvent.value = InputCarePortalMenu.EventType.NOTE
         sut.note = InputString("Asd")

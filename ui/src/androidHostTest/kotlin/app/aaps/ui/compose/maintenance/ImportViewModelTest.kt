@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.ui.UiRestartImpl
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -40,7 +39,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.ui.CoreUiStrings
+import app.aaps.shared.tests.generatedTextResolver
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -64,7 +63,7 @@ internal class ImportViewModelTest {
     @Mock private lateinit var prefFileList: FileListProvider
     @Mock private lateinit var configBuilder: ConfigBuilder
     @Mock private lateinit var config: Config
-    @Mock private lateinit var rh: TextResolver
+    private val rh: TextResolver = generatedTextResolver()
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var commandQueue: CommandQueue
     @Mock private lateinit var pumpSync: PumpSync
@@ -91,9 +90,6 @@ internal class ImportViewModelTest {
         whenever(pump.serialNumber()).thenReturn("sn")
         whenever(pump.pumpDescription).thenReturn(PumpDescription())
         whenever(iobCobCalculator.ads).thenReturn(ads)
-        // The steps carry resolved text, and an unstubbed mock hands back null into a non-null
-        // parameter. Tests that care about the wording stub their own ref over the top of this.
-        whenever(rh.gs(any<TextRef>())).thenReturn("message")
         sut = ImportViewModel(
             aapsLogger, importExportPrefs, prefFileList, configBuilder, config, rh, uel,
             commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator, uiRestart,
@@ -504,12 +500,11 @@ internal class ImportViewModelTest {
     @Test
     fun `a pump that stays busy ends on a retryable step`() = runTest(testDispatcher) {
         queueGrantsHold(false)
-        whenever(rh.gs(CoreUiStrings.import_apply_pump_busy)).thenReturn("busy")
 
         sut.onApplyConfirmed()
         advanceUntilIdle()
 
-        assertThat(sut.importStep.value).isEqualTo(ImportStep.ApplyFailed("busy"))
+        assertThat(sut.importStep.value).isEqualTo(ImportStep.ApplyFailed("The pump is still busy, so the settings were not applied."))
     }
 
     /**
