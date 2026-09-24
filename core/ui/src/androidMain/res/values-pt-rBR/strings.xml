@@ -107,7 +107,6 @@
     <string name="profile_switch_no_insulin">Não é possível trocar o perfil: nenhuma insulina está em uso e nenhuma foi selecionada.</string>
     <string name="profile_switch_select_insulin_hint">Nenhuma insulina está em uso ainda. Selecione a insulina que você está usando para que esta troca de perfil possa registrá-la.</string>
     <string name="insulin_activation_failed">A insulina não foi trocada. A insulina anterior ainda está em uso.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">A insulina não foi trocada: %1$s. A insulina anterior ainda está em uso.</string>
     <string name="insulin_activation_unconfirmed">Não foi possível confirmar a troca de insulina. Verifique qual insulina está ativa no seu perfil antes de administrar.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nA insulina também não foi trocada.</string>
     <string name="active"><![CDATA[<Active>]]></string>
