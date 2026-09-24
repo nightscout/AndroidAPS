@@ -99,7 +99,6 @@
     <string name="profile_switch_no_insulin">Profilio keitimas negalimas: nepasirinktas insulinas.</string>
     <string name="profile_switch_select_insulin_hint">Insulinas dar nepasirinktas. Pasirinkite naudojamą insuliną, kad šis profilio pakeitimas galėtų jį įrašyti.</string>
     <string name="insulin_activation_failed">Insulinas nepakeistas. Toliau naudojamas ankstesnis insulinas.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Insulinas nepakeistas: %1$s. Toliau naudojamas ankstesnis insulinas.</string>
     <string name="insulin_activation_unconfirmed">Insulino pakeitimo patvirtinti nepavyko. Prieš leisdami insuliną patikrinkite, kuris insulinas aktyvuotas profilyje.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinas taip pat nepakeistas.</string>
     <string name="active"><![CDATA[<Active>]]></string>
