@@ -16,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.interfaces.TextRef
@@ -32,6 +34,7 @@ import app.aaps.core.ui.compose.icons.IcAsBelowX
 import app.aaps.core.ui.compose.icons.IcAsX
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 
 /**
@@ -47,12 +50,21 @@ internal fun SensitivityChip(
 ) {
     val icon = selectSensIcon(ratio = state.ratio, isEnabled = state.isEnabled)
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
+    // Autosens being switched off is drawn as a small X across the icon and nothing else, while the
+    // chip goes on showing a percentage. So a screen reader read out a figure that is not actually
+    // being applied, with no sign of it. Above or below profile stays unspoken on purpose - the
+    // percentage itself already says which way it goes.
+    val autosensOff = stringResource(CoreUiStrings.autosens_state_off)
     Surface(
         shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
         color = ElementType.SENSITIVITY.color().copy(alpha = 0.2f),
         modifier = modifier
             .heightIn(min = AapsSpacing.chipHeight)
             .clickable(onClick = onClick)
+            .then(
+                if (!state.isEnabled) Modifier.semantics { stateDescription = autosensOff }
+                else Modifier
+            )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -130,11 +142,6 @@ private fun selectIsfArrow(fromStr: String, toStr: String): ImageVector =
         else -> IcArrowFlat
     }
 
-/**
- * Spoken name of the arrow between the two ISF values. The arrow carries the direction, so without a
- * name a screen reader reads only the two numbers. The names match the same glyphs in
- * `ArrowExtensions.directionToComposeIcon`, so the arrows are always spoken the same way.
- */
 /**
  * What the arrow between the two ISF values MEANS, which is that the value rises or falls - not
  * which way the glyph happens to point. Naming the glyph gave "5.5, Up Right, 6.8", and for two

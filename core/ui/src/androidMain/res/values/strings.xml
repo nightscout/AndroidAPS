@@ -723,6 +723,7 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensitivity</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens off</string>
     <string name="isf_for_carbs">Average ISF for Calculator and Carbs Absorption: %1$.1f</string>
     <string name="isf_profile">Profile ISF: %1$.1f</string>
     <string name="isf_variable">Variable ISF: %1$.1f</string>
