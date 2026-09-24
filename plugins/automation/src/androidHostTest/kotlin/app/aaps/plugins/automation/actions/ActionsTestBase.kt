@@ -69,9 +69,8 @@ ActionsTestBase : TestBaseWithProfile() {
     @BeforeEach
     fun prepareActionMocks() {
         // An action reports its outcome through PumpEnactResult, which resolves the comment itself. The
-        // base builds that with the mocked `rh`, whose real default method answers a Named ref with its
-        // own NAME - so a comment assert read "alreadyset" instead of "Already set". Same resolver as the
-        // actions, so the comment is real English too.
+        // base builds that with `baseText`, which knows only the five owners :shared:tests can see - an
+        // automation string would not resolve. Same resolver as the actions, so the comment resolves too.
         pumpEnactResultProvider = { PumpEnactResultObject(text) }
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         runBlocking {

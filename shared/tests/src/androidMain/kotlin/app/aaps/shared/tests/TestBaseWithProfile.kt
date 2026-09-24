@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -73,6 +74,18 @@ open class TestBaseWithProfile : TestBase() {
 
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var rh: ResourceHelper
+
+    /**
+     * Real English for the five owners `:shared:tests` can see, for the collaborators this base builds
+     * itself. They take a [app.aaps.core.interfaces.resources.TextResolver], and handing them the mocked
+     * [rh] meant an unstubbed string came back as its own name - that is how `result.comment` read
+     * "alreadyset" instead of "Already set".
+     *
+     * A subclass that needs a sixth owner builds its own with
+     * `generatedTextResolver("<owner>" to <Owner>StringsValues::textOf)`; its property initialiser runs
+     * after this one, so its registration wins.
+     */
+    val baseText: TextResolver = generatedTextResolver()
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var processedTbrEbData: ProcessedTbrEbData
     @Mock lateinit var fabricPrivacy: FabricPrivacy
@@ -327,8 +340,8 @@ open class TestBaseWithProfile : TestBase() {
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
         }.whenever(rh).gs(anyInt(), anyString(), anyInt(), anyString())
-        pumpEnactResultProvider = { PumpEnactResultObject(rh) }
-        profileStoreProvider = { ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil) }
+        pumpEnactResultProvider = { PumpEnactResultObject(baseText) }
+        profileStoreProvider = { ProfileStoreObject(aapsLogger, activePlugin, baseText, hardLimits, dateUtil) }
         glucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, DeltaCalculator(aapsLogger))
 
         whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Boolean>())).thenReturn("AnyString")
@@ -346,7 +359,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, baseText, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 
     fun getInvalidProfileStore1(): ProfileStore {
@@ -355,7 +368,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, baseText, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 
     fun getInvalidProfileStore2(): ProfileStore {
@@ -365,6 +378,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put("invalid", JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, rh, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
+        return ProfileStoreObject(aapsLogger, activePlugin, baseText, hardLimits, dateUtil).with(Json.parseToJsonElement(json.toString()).jsonObject)
     }
 }

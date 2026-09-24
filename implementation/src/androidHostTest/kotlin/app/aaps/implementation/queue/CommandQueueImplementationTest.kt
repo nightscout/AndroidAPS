@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CustomCommand
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
@@ -81,7 +81,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     class CommandQueueMocked(
         aapsLogger: AAPSLogger,
         rxBus: RxBus,
-        rh: ResourceHelper,
+        rh: TextResolver,
         constraintChecker: ConstraintsChecker,
         profileFunction: ProfileFunction,
         activePlugin: ActivePlugin,
@@ -122,7 +122,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             commandQueue = CommandQueueMocked(
                 aapsLogger,
                 rxBus,
-                rh,
+                text,
                 constraintChecker,
                 profileFunction,
                 activePlugin,
