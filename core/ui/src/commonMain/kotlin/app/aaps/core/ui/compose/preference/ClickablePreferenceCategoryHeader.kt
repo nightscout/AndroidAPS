@@ -40,6 +40,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.interfaces.TextRef
@@ -94,6 +96,11 @@ internal fun ClickablePreferenceCategoryHeader(
             .fillMaxWidth()
             .background(backgroundColor)
             .then(if (collapsible) Modifier.clickable(onClick = onToggle) else Modifier)
+            // Marked as a heading so a screen reader can jump between categories. Without this the
+            // only way through a settings screen is to swipe past every single row, because
+            // heading navigation - the usual way of skimming - has nothing to land on. This one
+            // component backs every preference screen and settings sheet in the app.
+            .semantics { heading() }
             .padding(headerPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {

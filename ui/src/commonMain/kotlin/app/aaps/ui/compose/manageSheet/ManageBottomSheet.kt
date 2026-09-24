@@ -40,6 +40,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -501,7 +503,11 @@ private fun SectionHeader(text: String) {
         text = text,
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
+        // A heading, like its collapsible sibling below. This one does not expand, but a screen
+        // reader skimming by heading should still stop on it.
+        modifier = Modifier
+            .semantics { heading() }
+            .padding(horizontal = 24.dp, vertical = 12.dp)
     )
 }
 
@@ -511,6 +517,9 @@ private fun CollapsibleSectionHeader(text: String, expanded: Boolean, onToggle: 
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onToggle)
+            // A heading, so a screen reader can jump between the sections of this sheet instead of
+            // swiping through every row to reach the next one.
+            .semantics { heading() }
             .padding(horizontal = 24.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

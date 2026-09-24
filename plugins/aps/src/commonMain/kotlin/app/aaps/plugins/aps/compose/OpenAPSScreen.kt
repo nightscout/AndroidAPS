@@ -25,6 +25,8 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -134,6 +136,9 @@ private fun CollapsibleSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable(onClick = onToggle)
+                    // A heading, so a screen reader can jump between sections rather than swiping
+                    // through every key/value row to reach the next one.
+                    .semantics { heading() }
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
