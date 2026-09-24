@@ -63,6 +63,7 @@
     <string name="configbuilder_switch_confirmation">Questo disabiliterà %1$s e abiliterà %2$s.</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Contrai</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Completato</string>
     <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Esteso</string>
     <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Collassato</string>
     <string name="no_compose_preferences">Nessuna preferenza disponibile per questo plugin</string>
