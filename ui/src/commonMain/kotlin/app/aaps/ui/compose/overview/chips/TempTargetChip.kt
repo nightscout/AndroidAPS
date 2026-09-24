@@ -20,8 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcTtActivity
@@ -61,6 +65,10 @@ fun TempTargetChip(
     }
     val haptic = LocalHapticFeedback.current
 
+    // Why a temp target is running was carried only by which of the four icons was drawn, so
+    // "eating soon" and "hypo" - which mean very different things - were announced identically.
+    // Mirrors the wording TranslatorImpl already uses for the same enum, so nothing new to translate.
+    val reasonState = stringResourceOrNull(reason.toDescription())
     Surface(
         onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onClick() },
         enabled = enabled,
@@ -69,6 +77,10 @@ fun TempTargetChip(
         modifier = modifier
             .fillMaxWidth()
             .height(AapsSpacing.chipHeight)
+            .then(
+                if (reasonState != null) Modifier.semantics { stateDescription = reasonState }
+                else Modifier
+            )
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -110,6 +122,21 @@ fun TempTargetChip(
 
 @Composable
 private fun TT.Reason?.toIconColor(): Color = ttReasonColor(AapsTheme.generalColors)
+
+/**
+ * Why the temp target is running, in words. Same wording as `TranslatorImpl.translate(TT.Reason?)`,
+ * which cannot be used here because it needs an injected Translator and this is a leaf composable.
+ * Null for no reason at all, so nothing is announced rather than a bare "unknown".
+ */
+private fun TT.Reason?.toDescription(): TextRef? = when (this) {
+    TT.Reason.CUSTOM       -> CoreUiStrings.custom
+    TT.Reason.HYPOGLYCEMIA -> CoreUiStrings.hypo
+    TT.Reason.EATING_SOON  -> CoreUiStrings.eatingsoon
+    TT.Reason.ACTIVITY     -> CoreUiStrings.activity
+    TT.Reason.AUTOMATION   -> CoreUiStrings.automation
+    TT.Reason.WEAR         -> CoreUiStrings.wear
+    null                   -> null
+}
 
 private fun TT.Reason?.toIcon(): ImageVector = when (this) {
     TT.Reason.EATING_SOON  -> IcTtEatingSoon
