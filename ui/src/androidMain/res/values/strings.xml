@@ -191,6 +191,7 @@
     <string name="careportal_remove_started_events">Remove AAPS started entries</string>
     <string name="user_entry">User entry</string>
     <string name="clone_label">Clone</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Execute</string>
     <string name="add_new_profile">Add new profile</string>
     <string name="edit_label">Edit</string>
     <string name="activate_label">Activate</string>
