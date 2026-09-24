@@ -580,7 +580,6 @@
     <string name="wizard_correction">Taisymas</string>
     <string name="set">Nustatyti</string>
     <string name="wizard_include_bg">Įtraukti glikemiją</string>
-    <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
     <string name="wizard_no_actual_bg">Nėra naujausių glikemijos duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="wizard_carbs_constraint">AV apribojimų pažeidimas!</string>
