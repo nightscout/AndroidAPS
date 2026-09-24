@@ -116,6 +116,7 @@
     <string name="profile_switch_no_insulin">Không thể chuyển cấu hình điều trị: không có loại insulin nào đang được sử dụng và cũng chưa có loại nào được chọn.</string>
     <string name="profile_switch_select_insulin_hint">Chưa có loại insulin nào được sử dụng. Hãy chọn loại insulin bạn đang sử dụng để lần chuyển cấu hình này có thể ghi nhận loại insulin đó.</string>
     <string name="insulin_activation_failed">Loại insulin chưa được chuyển đổi. Loại insulin trước đó vẫn đang được sử dụng.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Chưa chuyển sang loại insulin mới: %1$s. Loại insulin trước đó vẫn đang được sử dụng.</string>
     <string name="insulin_activation_unconfirmed">Không thể xác nhận việc chuyển đổi loại insulin. Hãy kiểm tra loại insulin nào đang hoạt động trong cấu hình trước khi tiêm insulin.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nLoại insulin cũng chưa được chuyển đổi.</string>
     <string name="active"><![CDATA[<Đang hoạt động>]]></string>
@@ -894,7 +895,7 @@
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Cấu hình</string>
-    <string name="nav_setupwizard">Setup Wizard</string>
+    <string name="nav_setupwizard">Hướng dẫn thiết lập</string>
     <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
     <string name="statistics">Thống kê</string>
     <string name="statistics_desc">Xem thống kê và báo cáo</string>
