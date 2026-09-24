@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
@@ -86,7 +88,9 @@ private fun StatusRow(
         // Icon
         Icon(
             imageVector = item.icon,
-            contentDescription = item.label,
+            // Decorative: the Text right beside it already says the same word, so naming the icon
+            // too had a screen reader announce "Cannula" twice before reaching the row's value.
+            contentDescription = null,
             modifier = Modifier.size(28.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -117,12 +121,21 @@ private fun StatusRow(
             )
         }
 
-        // Action button
+        // Action button. Name it with the row it belongs to, because the same verb appears on more
+        // than one row - "Prime/Fill" sits on both Cannula and Insulin, and "Add" on both Sensor and
+        // Battery - while the row's own name is a sibling Text outside the button. A screen reader
+        // therefore heard "Prime/Fill, button" twice with no way to tell which one primes the pump.
+        //
+        // Only the row name goes here, not the verb: a Button merges its children and a
+        // contentDescription is inserted BEFORE them rather than replacing them, so this reads
+        // "Insulin, Prime/Fill" and the visible Text still supplies the verb.
         if (actionLabel != null && onActionClick != null) {
             FilledTonalButton(
                 onClick = onActionClick,
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
-                modifier = Modifier.height(32.dp)
+                modifier = Modifier
+                    .height(32.dp)
+                    .semantics { contentDescription = item.label }
             ) {
                 Text(text = actionLabel, style = MaterialTheme.typography.labelMedium)
             }
