@@ -435,7 +435,6 @@
     <string name="treatment_insulin_desc">Injecter le bolus manuellement</string>
     <string name="treatment_carbs_desc">Enregistrer les glucides sans insuline</string>
     <string name="treatment_calculator_desc">Calculer le bolus</string>
-    <string name="insulin_management">Insuline</string>
     <string name="manage_insulin_desc">Gérer et activer les insulines</string>
     <string name="concentration_disable_blocked">Impossible de désactiver la gestion de la concentration alors que les insulines non-U100 existent. Supprimez toutes les insulines non-U100 et activez une insuline U100 d\'abord.</string>
     <string name="simple_mode_blocked_by_concentration">Impossible d\'activer le mode simple en utilisant une insuline non-U100. Passez d\'abord à l\'insuline U100.</string>
@@ -721,7 +720,6 @@
     <string name="wizard_include_iob">Inclure IA</string>
     <string name="wizard_include_cob">Inclure GA</string>
     <string name="wizard_calculation">Calcul</string>
-    <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Suppression max : %1$d g (glucides actifs)</string>
     <string name="wizard_no_insulin_required">Pas d\'insuline requise</string>
     <string name="wizard_no_actual_bg">Pas de glycémie récente pour calculer !</string>
