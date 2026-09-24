@@ -316,7 +316,6 @@
     <string name="urgent_alarm">Alarma urgent</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
-    <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
     <!--    Preferences-->
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
