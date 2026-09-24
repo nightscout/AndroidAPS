@@ -63,6 +63,8 @@
     <string name="configbuilder_switch_confirmation">Thao tác này sẽ tắt %1$s và bật %2$s.</string>
     <string name="expand">Mở rộng</string>
     <string name="collapse">Thu gọn</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Đã mở rộng</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Đã thu gọn</string>
     <string name="no_compose_preferences">Plugin này không có tùy chọn nào</string>
     <string name="confirm_password_hint">Xác nhận mật khẩu</string>
     <string name="confirm_pin_hint">Xác nhận mã PIN</string>
@@ -445,6 +447,7 @@
     <string name="treatment_insulin_desc">Tiêm liều bolus thủ công</string>
     <string name="treatment_carbs_desc">Ghi nhận carb không kèm insulin</string>
     <string name="treatment_calculator_desc">Tính toán liều bolus</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Cài đặt insulin</string>
     <string name="manage_insulin_desc">Quản lý và kích hoạt các cấu hình insulin</string>
     <string name="concentration_disable_blocked">Không thể tắt hỗ trợ nồng độ khi vẫn còn insulin không phải U100. Hãy xóa tất cả các cấu hình insulin không phải U100 và chuyển sang cấu hình U100 trước.</string>
     <string name="simple_mode_blocked_by_concentration">Không thể bật chế độ đơn giản khi đang sử dụng insulin không phải U100. Hãy chuyển sang insulin U100 trước.</string>
@@ -466,6 +469,9 @@
     <string name="treatment_cannula_change_desc">Ghi lại việc thay kim luồn/bộ truyền</string>
     <string name="treatment_fill_desc">Mồi và làm đầy kim luồn</string>
     <string name="temp_basal">Liều nền tạm thời</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Cấu hình cao hơn</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Cấu hình thấp hơn</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Không</string>
     <string name="user_entry">Nhập liệu của người dùng</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Ngón tay</string>
@@ -694,6 +700,7 @@
     <string name="basal">Liều Basal</string>
     <string name="basalpct">Liều nền %</string>
     <string name="sensitivity">Độ nhạy</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Tắt Autosens</string>
     <string name="isf_for_carbs">ISF trung bình cho Tính toán và Hấp thu carb: %1$.1f</string>
     <string name="isf_profile">Cấu hình ISF: %1$.1f</string>
     <string name="isf_variable">ISF thay đổi: %1$.1f</string>
@@ -731,6 +738,7 @@
     <string name="wizard_include_iob">Bao gồm IOB</string>
     <string name="wizard_include_cob">Bao gồm COB</string>
     <string name="wizard_calculation">Tính toán</string>
+    <string name="no_action_selected">Chưa chọn hành động nào, sẽ không có gì xảy ra.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Loại bỏ tối đa: %1$d g (carb đang hoạt động)</string>
     <string name="wizard_no_insulin_required">Không cần insulin</string>
     <string name="wizard_no_actual_bg">Chưa có BG gần đây để tính toán!</string>
@@ -781,6 +789,7 @@
     <string name="initializing">Đang khởi chạy…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Cảnh báo</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Nghiêm trọng</string>
     <string name="alert" comment="Generic alert dialog title">Cảnh báo</string>
     <string name="retry" comment="Button label to retry a failed operation">Thử lại</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Kết thúc</string>
