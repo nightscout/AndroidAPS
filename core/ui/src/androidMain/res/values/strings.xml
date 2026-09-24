@@ -481,6 +481,9 @@
     <string name="treatment_cannula_change_desc">Record cannula/infusion set change</string>
     <string name="treatment_fill_desc">Prime and fill cannula</string>
     <string name="temp_basal">Temp basal</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Above profile</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Below profile</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">None</string>
     <string name="user_entry">User entry</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Finger</string>
@@ -720,6 +723,7 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensitivity</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens off</string>
     <string name="isf_for_carbs">Average ISF for Calculator and Carbs Absorption: %1$.1f</string>
     <string name="isf_profile">Profile ISF: %1$.1f</string>
     <string name="isf_variable">Variable ISF: %1$.1f</string>
