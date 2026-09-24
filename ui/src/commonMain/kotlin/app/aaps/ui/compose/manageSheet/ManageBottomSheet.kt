@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -513,13 +514,19 @@ private fun SectionHeader(text: String) {
 
 @Composable
 private fun CollapsibleSectionHeader(text: String, expanded: Boolean, onToggle: () -> Unit) {
+    val expandedState = stringResource(CoreUiStrings.state_expanded)
+    val collapsedState = stringResource(CoreUiStrings.state_collapsed)
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onToggle)
             // A heading, so a screen reader can jump between the sections of this sheet instead of
-            // swiping through every row to reach the next one.
-            .semantics { heading() }
+            // swiping through every row to reach the next one. The open/closed state rides with it,
+            // so landing on the header says "Pump, collapsed" rather than leaving the user to guess.
+            .semantics {
+                heading()
+                stateDescription = if (expanded) expandedState else collapsedState
+            }
             .padding(horizontal = 24.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

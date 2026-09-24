@@ -27,9 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.aps.ApsStrings
@@ -129,6 +131,8 @@ private fun CollapsibleSection(
     onToggle: () -> Unit,
     rows: List<KeyValueRow>
 ) {
+    val expandedState = stringResource(CoreUiStrings.state_expanded)
+    val collapsedState = stringResource(CoreUiStrings.state_collapsed)
     AapsCard(modifier = Modifier.fillMaxWidth()) {
         Column {
             // Header
@@ -137,8 +141,12 @@ private fun CollapsibleSection(
                     .fillMaxWidth()
                     .clickable(onClick = onToggle)
                     // A heading, so a screen reader can jump between sections rather than swiping
-                    // through every key/value row to reach the next one.
-                    .semantics { heading() }
+                    // through every key/value row to reach the next one. The open/closed state goes
+                    // with it - the arrow alone said nothing, its description was null.
+                    .semantics {
+                        heading()
+                        stateDescription = if (expanded) expandedState else collapsedState
+                    }
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
