@@ -63,6 +63,8 @@
     <string name="configbuilder_switch_confirmation">Dette vil deaktivere %1$s og aktivere %2$s.</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Utvidet</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Kollapset</string>
     <string name="no_compose_preferences">Ingen innstillinger tilgjengelig for denne plugin</string>
     <string name="confirm_password_hint">Bekreft passord</string>
     <string name="confirm_pin_hint">Bekreft PIN</string>
@@ -116,6 +118,7 @@
     <string name="profile_switch_no_insulin">Kan ikke bytte profil: Ingen insulin er i bruk, og ingen er valgt.</string>
     <string name="profile_switch_select_insulin_hint">Ingen insulin er i bruk ennå. Velg insulinet du bruker, slik at dette profilbyttet kan registrere det.</string>
     <string name="insulin_activation_failed">Insulinet ble ikke byttet. Det forrige insulinet er fortsatt i bruk.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinet ble ikke byttet: %1$s. Det forrige insulinet er fortsatt i bruk.</string>
     <string name="insulin_activation_unconfirmed">Kunne ikke bekrefte insulinbyttet. Kontroller hvilket insulin som er aktivt i profilen før du doserer.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinet ble heller ikke byttet.</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
@@ -444,6 +447,7 @@
     <string name="treatment_insulin_desc">Lever bolus manuelt</string>
     <string name="treatment_carbs_desc">Registrer karbo uten insulin</string>
     <string name="treatment_calculator_desc">Beregn bolus</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Insulininnstillinger</string>
     <string name="manage_insulin_desc">Administrer og aktiver insulinkonfigurasjoner</string>
     <string name="concentration_disable_blocked">Kan ikke deaktivere konsentrasjonsstøtte mens ikke-U100-insuliner finnes. Fjern alle ikke-U100-insulinkonfigurasjoner og bytt til en U100-profil først.</string>
     <string name="simple_mode_blocked_by_concentration">Kan ikke aktivere Enkelmodus når du bruker insulin som ikke er U100. Bytt til U100-insulin først.</string>
@@ -465,6 +469,9 @@
     <string name="treatment_cannula_change_desc">Registrer bytte av kanyle/infusjonssett</string>
     <string name="treatment_fill_desc">Prime og fylle kanylen</string>
     <string name="temp_basal">Midlertidig basal</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Over profilen</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Under profilen</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Ingen</string>
     <string name="user_entry">Brukeroppføring</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Finger</string>
@@ -693,6 +700,7 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensitivitet</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens av</string>
     <string name="isf_for_carbs">Gjennomsnittlig ISF for kalkulator og karboabsorpsjon: %1$.1f</string>
     <string name="isf_profile">Profil ISF: %1$.1f</string>
     <string name="isf_variable">Dynamisk ISF: %1$.1f</string>
@@ -730,6 +738,7 @@
     <string name="wizard_include_iob">Inkluder IOB</string>
     <string name="wizard_include_cob">Inkluder COB</string>
     <string name="wizard_calculation">Beregning</string>
+    <string name="no_action_selected">Ingen handling er valgt, ingenting vil skje.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maks fjerning: %1$d g (karbo ombord)</string>
     <string name="wizard_no_insulin_required">Insulin er ikke nødvendig</string>
     <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
@@ -780,6 +789,7 @@
     <string name="initializing">Initialiserer…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Advarsel</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritisk</string>
     <string name="alert" comment="Generic alert dialog title">Varsel</string>
     <string name="retry" comment="Button label to retry a failed operation">Prøv på nytt</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Fullfør</string>
