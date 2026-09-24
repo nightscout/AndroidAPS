@@ -32,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
 
@@ -103,6 +105,17 @@ fun ConfigPluginCard(
         enabled = canTap,
         modifier = modifier
             .fillMaxWidth()
+            // Whether the plugin is on was carried ONLY by the container colour and the border, so
+            // a screen reader announced an enabled and a disabled plugin identically - on the very
+            // screen whose purpose is turning them on and off. The RadioButton/Checkbox inside
+            // cannot help: both are passed a null click handler, which in Material3 means they
+            // produce no semantics node at all and are pure decoration.
+            //
+            // Reported through the platform's own selected state rather than a string of ours, so
+            // the screen reader says it in the user's language with nothing to translate.
+            // `this.` because this file already has a local val named selected, which would
+            // otherwise win here and fail to compile.
+            .semantics { this.selected = plugin.isEnabled }
             .padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small),
         colors = colors,
         border = border,
