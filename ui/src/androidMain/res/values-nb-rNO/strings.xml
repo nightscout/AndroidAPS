@@ -176,6 +176,9 @@
     <string name="careportal_remove_started_events">Fjern oppføringer startet av AAPS</string>
     <string name="user_entry">Brukeroppføring</string>
     <string name="clone_label">Dupliser</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Glukosegraf. Nylige verdier %1$s. %2$s. %3$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Glukosegraf. Nylige verdier %1$s</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Utfør</string>
     <string name="add_new_profile">Legg til ny profil</string>
     <string name="edit_label">Rediger</string>
     <string name="activate_label">Aktiver</string>
