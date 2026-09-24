@@ -116,7 +116,6 @@
     <string name="profile_switch_no_insulin">Nie je možné prepnúť profil: nepoužíva se žiadny inzulín a žiadny nebol vybraný.</string>
     <string name="profile_switch_select_insulin_hint">Zatiaľ sa nepoužíva žiadny inzulín. Vyberte inzulín, ktorý používate, aby ho prepnutie profilu mohlo zaznamenať.</string>
     <string name="insulin_activation_failed">Inzulín nebol prepnutý. Váš predchádzajúci inzulín sa stále používá.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Inzulín nebol prepnutý: %1$s. Váš predchádzajúci inzulín sa stále používa.</string>
     <string name="insulin_activation_unconfirmed">Prepnutie inzulínu nemohlo byť potvrdené. Skontrolujte, ktorý inzulín je aktívny vo vašom profile pred dávkovaním.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInzulín tiež nebol prepnutý.</string>
     <string name="active"><![CDATA[<Aktívny>]]></string>
