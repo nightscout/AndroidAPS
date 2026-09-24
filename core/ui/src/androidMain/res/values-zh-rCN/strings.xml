@@ -437,7 +437,6 @@
     <string name="treatment_insulin_desc">手动执行推注</string>
     <string name="treatment_carbs_desc">仅记录碳水化合物</string>
     <string name="treatment_calculator_desc">计算推注剂量</string>
-    <string name="insulin_management">胰岛素</string>
     <string name="manage_insulin_desc">管理并启用胰岛素配置</string>
     <string name="concentration_disable_blocked">如果系统中存在非 U100 胰岛素，则无法禁用浓度支持。请先移除所有非 U100 胰岛素配置，然后切换到 U100 胰岛素配置文件。</string>
     <string name="simple_mode_blocked_by_concentration">使用非 U100 胰岛素时无法启用简易模式。请先切换至 U100 胰岛素。</string>
@@ -724,7 +723,6 @@
     <string name="wizard_include_iob">包含 IOB</string>
     <string name="wizard_include_cob">包含 COB</string>
     <string name="wizard_calculation">计算</string>
-    <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">最大移除：%1$d g（COB）</string>
     <string name="wizard_no_insulin_required">不需要胰岛素</string>
     <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
