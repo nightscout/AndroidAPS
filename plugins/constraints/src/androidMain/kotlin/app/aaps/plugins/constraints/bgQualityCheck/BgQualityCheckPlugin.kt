@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
@@ -42,7 +42,7 @@ import kotlin.math.min
 @Inject
 class BgQualityCheckPlugin(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil,

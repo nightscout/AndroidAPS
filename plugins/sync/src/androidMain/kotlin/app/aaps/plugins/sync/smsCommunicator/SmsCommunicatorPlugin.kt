@@ -39,7 +39,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
@@ -121,7 +121,7 @@ import org.joda.time.DateTime
 @Inject
 class SmsCommunicatorPlugin(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     private val smsManager: SmsManager?,
     preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,

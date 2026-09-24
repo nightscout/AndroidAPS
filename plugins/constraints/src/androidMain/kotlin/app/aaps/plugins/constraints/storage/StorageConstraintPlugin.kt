@@ -15,7 +15,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.plugins.constraints.ConstraintsStrings
 import dev.zacsweers.metro.AppScope
@@ -33,7 +33,7 @@ import dev.zacsweers.metro.binding
 @Inject
 class StorageConstraintPlugin(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()

@@ -8,7 +8,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
@@ -27,7 +27,7 @@ class TempTargetSetAction(
     private val profileUtil: ProfileUtil,
     private val decimalFormatter: DecimalFormatter,
     private val dateUtil: DateUtil,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val sendSMSToAllNumbers: (Sms) -> Unit
 ) : SmsAction(pumpCommand = false) {
 

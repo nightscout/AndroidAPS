@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
@@ -31,7 +31,7 @@ class BolusAction(
     private val isMeal: Boolean,
     private val receivedSms: Sms,
     private val commandQueue: CommandQueue,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val uel: UserEntryLogger,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,

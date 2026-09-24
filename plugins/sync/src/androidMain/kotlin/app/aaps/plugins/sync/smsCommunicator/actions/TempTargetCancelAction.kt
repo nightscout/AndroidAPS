@@ -6,7 +6,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
@@ -16,7 +16,7 @@ class TempTargetCancelAction(
     private val receivedSms: Sms,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val uel: UserEntryLogger,
     private val sendSMSToAllNumbers: (Sms) -> Unit
 ) : SmsAction(pumpCommand = false) {

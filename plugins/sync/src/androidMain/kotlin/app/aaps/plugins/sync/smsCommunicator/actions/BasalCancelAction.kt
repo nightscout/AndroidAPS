@@ -6,7 +6,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
@@ -15,7 +15,7 @@ import app.aaps.plugins.sync.smsCommunicator.SmsAction
 class BasalCancelAction(
     private val receivedSms: Sms,
     private val commandQueue: CommandQueue,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val uel: UserEntryLogger,
     private val smsCommunicator: SmsCommunicator,
     private val sendSMSToAllNumbers: (Sms) -> Unit,
