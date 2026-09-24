@@ -445,7 +445,6 @@
     <string name="treatment_insulin_desc">Tiêm liều bolus thủ công</string>
     <string name="treatment_carbs_desc">Ghi nhận carb không kèm insulin</string>
     <string name="treatment_calculator_desc">Tính toán liều bolus</string>
-    <string name="insulin_management">Insulin</string>
     <string name="manage_insulin_desc">Quản lý và kích hoạt các cấu hình insulin</string>
     <string name="concentration_disable_blocked">Không thể tắt hỗ trợ nồng độ khi vẫn còn insulin không phải U100. Hãy xóa tất cả các cấu hình insulin không phải U100 và chuyển sang cấu hình U100 trước.</string>
     <string name="simple_mode_blocked_by_concentration">Không thể bật chế độ đơn giản khi đang sử dụng insulin không phải U100. Hãy chuyển sang insulin U100 trước.</string>
@@ -732,7 +731,6 @@
     <string name="wizard_include_iob">Bao gồm IOB</string>
     <string name="wizard_include_cob">Bao gồm COB</string>
     <string name="wizard_calculation">Tính toán</string>
-    <string name="no_action_selected">Không có hành động nào được chọn, sẽ không có gì xảy ra</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Loại bỏ tối đa: %1$d g (carb đang hoạt động)</string>
     <string name="wizard_no_insulin_required">Không cần insulin</string>
     <string name="wizard_no_actual_bg">Chưa có BG gần đây để tính toán!</string>
