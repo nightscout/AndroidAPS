@@ -372,7 +372,7 @@ private fun ImportFileCard(
                 ) {
                     Icon(
                         imageVector = metaKey.icon,
-                        contentDescription = null,
+                        contentDescription = stringResource(metaKey.label),
                         modifier = Modifier
                             .padding(start = iconStartPadding, end = 8.dp)
                             .height(iconSize)
@@ -397,7 +397,7 @@ private fun ImportFileCard(
                 metadata.entries.find { it.key.key == "created_at" }?.let { (metaKey, metaEntry) ->
                     Icon(
                         imageVector = metaKey.icon,
-                        contentDescription = null,
+                        contentDescription = stringResource(metaKey.label),
                         modifier = Modifier
                             .padding(start = iconStartPadding, end = 8.dp)
                             .height(iconSize)
