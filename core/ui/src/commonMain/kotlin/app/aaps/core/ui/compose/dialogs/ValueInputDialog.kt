@@ -19,12 +19,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.formatMinutesAsDuration
@@ -69,6 +73,15 @@ fun ValueInputDialog(
     var errorMessage by remember { mutableStateOf("") }
     val resolvedUnitLabel = unitLabel?.let { stringResource(it) } ?: ""
 
+    // The allowed range, shown under the field while the entry is good. The same line carries the
+    // error message when the entry is bad - see the comment on that Text below.
+    val rangeText = "${valueFormat.format(valueRange.start)} - ${valueFormat.format(valueRange.endInclusive)}"
+
+    // Resolved here because validateAndParse() is not a composable and cannot call stringResource.
+    val errorInvalidNumber = stringResource(CoreUiStrings.invalid_number)
+    val errorOutOfRange = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.error), rangeText)
+
+    // The three messages below are still hardcoded English: no matching string resource exists yet.
     fun validateAndParse(): Double? {
         val text = textFieldValue.text.replace(",", ".")
         return try {
@@ -76,19 +89,25 @@ fun ValueInputDialog(
             when {
                 parsed < valueRange.start                              -> {
                     isError = true
-                    errorMessage = "Min: ${valueFormat.format(valueRange.start)}"
+                    // Carries the whole range, so the hint the user needs is not replaced by the
+                    // error - the supporting line below shows one or the other, not both. Also
+                    // English-only before this, on a field that takes insulin and carb amounts.
+                    errorMessage = errorOutOfRange
                     null
                 }
 
                 parsed > valueRange.endInclusive                       -> {
                     isError = true
-                    errorMessage = "Max: ${valueFormat.format(valueRange.endInclusive)}"
+                    errorMessage = errorOutOfRange
                     null
                 }
 
                 asDuration && parsed != parsed.roundToInt().toDouble() -> {
                     isError = true
-                    errorMessage = "Minutes must be whole numbers"
+                    // "Minutes must be whole numbers" would say it better, but no such string
+                    // exists and an untranslated English sentence helps fewer people than a
+                    // translated general one. Worth a dedicated string later.
+                    errorMessage = errorInvalidNumber
                     null
                 }
 
@@ -100,7 +119,7 @@ fun ValueInputDialog(
             }
         } catch (e: NumberFormatException) {
             isError = true
-            errorMessage = "Invalid number"
+            errorMessage = errorInvalidNumber
             null
         }
     }
@@ -148,16 +167,13 @@ fun ValueInputDialog(
                     },
                     singleLine = true,
                     isError = isError,
-                    supportingText = when {
-                        isError                  -> {
-                            { Text(errorMessage, color = MaterialTheme.colorScheme.error) }
-                        }
-
-                        formattedPreview != null -> {
-                            { Text(formattedPreview, color = MaterialTheme.colorScheme.primary) }
-                        }
-
-                        else                     -> null
+                    // Only the duration preview lives in this slot now. The error used to be here,
+                    // but this slot has no node at all while the entry is good, so the error line
+                    // was a node that APPEARED - and Compose never announces a node that appeared
+                    // (sendSemanticsPropertyChangeEvents skips any node with no previous entry).
+                    // The error moved to the range line below, which is always in the tree.
+                    supportingText = formattedPreview?.let { preview ->
+                        { Text(preview, color = MaterialTheme.colorScheme.primary) }
                     },
                     suffix = if (resolvedUnitLabel.isNotEmpty()) {
                         { Text(resolvedUnitLabel) }
@@ -174,11 +190,22 @@ fun ValueInputDialog(
                         .focusRequester(focusRequester)
                 )
 
+                // This Text is composed whether or not there is an error, so only its content
+                // CHANGES - that is the case a live region can announce. A rejected value is
+                // something the user must not miss, so the region is Assertive and interrupts.
+                //
+                // The live region is set only while the error is shown. Adding it together with the
+                // new text still announces (the property change is what sends the event, and the
+                // node already carries the region by the time the event is read), while dropping it
+                // keeps the switch back to the plain range quiet - otherwise the range would be read
+                // out over the user's own typing as soon as the first key cleared the error.
                 Text(
-                    text = "${valueFormat.format(valueRange.start)} - ${valueFormat.format(valueRange.endInclusive)}",
+                    text = if (isError) errorMessage else rangeText,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 4.dp)
+                    color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .semantics { if (isError) liveRegion = LiveRegionMode.Assertive }
                 )
             }
         },
