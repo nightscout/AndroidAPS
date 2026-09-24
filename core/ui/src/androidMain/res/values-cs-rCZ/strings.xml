@@ -437,7 +437,6 @@
     <string name="treatment_insulin_desc">Podat bolus ručně</string>
     <string name="treatment_carbs_desc">Zaznamenat sacharidy bez inzulínu</string>
     <string name="treatment_calculator_desc">Vypočítat bolus</string>
-    <string name="insulin_management">Inzulín</string>
     <string name="manage_insulin_desc">Spravovat a aktivovat konfigurace inzulínů</string>
     <string name="concentration_disable_blocked">Nelze zakázat podporu koncentrací, pokud existují jiné než U100 inzulíny. Odstraňte všechny konfigurace jiných než U100 inzulínů a nejprve přepněte na U100 profil.</string>
     <string name="simple_mode_blocked_by_concentration">Nelze povolit jednoduchý režim při použití jiného než U100 inzulínu. Nejprve přepněte na U100 inzulín.</string>
@@ -724,7 +723,6 @@
     <string name="wizard_include_iob">Zahrnout IOB</string>
     <string name="wizard_include_cob">Zahrnout COB</string>
     <string name="wizard_calculation">Výpočet</string>
-    <string name="no_action_selected">Žádná akce nevybrána, nic se neprovede</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Max. odebrání: %1$dg (COB)</string>
     <string name="wizard_no_insulin_required">Inzulín není potřeba</string>
     <string name="wizard_no_actual_bg">Žádná aktuální glykémie k výpočtu!</string>
