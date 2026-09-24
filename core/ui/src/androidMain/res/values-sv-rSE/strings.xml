@@ -336,7 +336,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusguide</string>
     <string name="bolus_advisor_message">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrigeringsbolus nu och få en påminnelse när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
-    <string name="no_action_selected">Ingen åtgärd vald. Inget ändras.</string>
     <string name="wizard_no_actual_bg">Inget nytt BG-värde att basera beräkning på!</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil vald!</string>
     <string name="wizard_carbs_constraint">Max KH uppnått!</string>
