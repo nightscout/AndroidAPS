@@ -432,7 +432,6 @@
     <string name="treatment_insulin_desc">Administrați bolusul manual</string>
     <string name="treatment_carbs_desc">Înregistrați carbohidrați fără insulină</string>
     <string name="treatment_calculator_desc">Calculați bolusul</string>
-    <string name="insulin_management">Insulină</string>
     <string name="manage_insulin_desc">Gestionați și activați configurațiile insulinei</string>
     <string name="concentration_disable_blocked">Nu se poate dezactiva suportul concentrației cât timp există insuline non-U100. Îndepărtați mai întâi toate configurațiile de insulină non-U100 și treceți la un profil U100.</string>
     <string name="simple_mode_blocked_by_concentration">Nu se poate activa modul simplu în timp ce se folosește insulina non-U100. Mai întâi se trece la insulina U100.</string>
@@ -718,7 +717,6 @@
     <string name="wizard_include_iob">Includeți IOB</string>
     <string name="wizard_include_cob">Includeți COB</string>
     <string name="wizard_calculation">Calcul</string>
-    <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Eliminare maximă: %1$d g (carbohidrați la bord)</string>
     <string name="wizard_no_insulin_required">Nu este necesară insulină</string>
     <string name="wizard_no_actual_bg">Nicio glicemie recentă pe care să se bazeze calculul!</string>
