@@ -444,7 +444,6 @@
     <string name="treatment_insulin_desc">Podaj bolus ručne</string>
     <string name="treatment_carbs_desc">Zaznamenaj sacharidy bez inzulínu</string>
     <string name="treatment_calculator_desc">Spočítaj bolus</string>
-    <string name="insulin_management">Inzulín</string>
     <string name="manage_insulin_desc">Správa a aktivácia konfigurácie inzulínu</string>
     <string name="concentration_disable_blocked">Nemôžem vypnúť podporu koncentrácie, pretože existuje i iný inzulín ako U100. Odstráň všetky inzulíny iné ako U100 a prepni najskôr na U100.</string>
     <string name="simple_mode_blocked_by_concentration">Nemôžem zapnúť jednoduchý mód, pretože je použitý iný inzulín ako U100. Prepni najskôr na U100.</string>
@@ -731,7 +730,6 @@
     <string name="wizard_include_iob">Zahŕňa IOB</string>
     <string name="wizard_include_cob">Zahŕňa COB</string>
     <string name="wizard_calculation">Výpočet</string>
-    <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maximálne odstránenie: %1$d g (sacharidy na palube)</string>
     <string name="wizard_no_insulin_required">Nie je požadovaný žiadny inzulín</string>
     <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
