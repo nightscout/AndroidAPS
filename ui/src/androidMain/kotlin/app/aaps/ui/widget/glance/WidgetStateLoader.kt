@@ -31,6 +31,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.loopColor
 import app.aaps.core.ui.compose.ttReasonColor
+import app.aaps.core.ui.extensions.directionToDescription
 import app.aaps.core.ui.extensions.displayText
 import app.aaps.ui.R
 import app.aaps.ui.UiStrings
@@ -160,14 +161,17 @@ class WidgetStateLoader(
         } ?: "—"
 
         val profile = profileFunction.getProfile()
-        val tbrIconResId = if (profile == null) R.drawable.ic_widget_no_tbr
-        else {
+        // The icon and its spoken name are chosen together, so the two cannot drift apart. Same
+        // three states the overview chip uses, so the same words describe them.
+        val (tbrIconResId, tbrDescription) = if (profile == null) {
+            R.drawable.ic_widget_no_tbr to rh.gs(CoreUiStrings.tbr_state_none)
+        } else {
             val basalData = iobCobCalculator.getBasalData(profile, dateUtil.now())
             when {
-                !basalData.isTempBasalRunning                             -> R.drawable.ic_widget_no_tbr
-                abs(basalData.tempBasalAbsolute - basalData.basal) < 0.01 -> R.drawable.ic_widget_no_tbr
-                basalData.tempBasalAbsolute > basalData.basal             -> R.drawable.ic_widget_tbr_high
-                else                                                      -> R.drawable.ic_widget_tbr_low
+                !basalData.isTempBasalRunning                             -> R.drawable.ic_widget_no_tbr to rh.gs(CoreUiStrings.tbr_state_none)
+                abs(basalData.tempBasalAbsolute - basalData.basal) < 0.01 -> R.drawable.ic_widget_no_tbr to rh.gs(CoreUiStrings.tbr_state_none)
+                basalData.tempBasalAbsolute > basalData.basal             -> R.drawable.ic_widget_tbr_high to rh.gs(CoreUiStrings.tbr_state_above_profile)
+                else                                                      -> R.drawable.ic_widget_tbr_low to rh.gs(CoreUiStrings.tbr_state_below_profile)
             }
         }
 
@@ -208,6 +212,10 @@ class WidgetStateLoader(
             bgColor = bgColor,
             strikeThrough = strikeThrough,
             arrowResId = arrowResId,
+            arrowDescription = lastBg?.let { rh.gs(trendArrow.directionToDescription()) },
+            tbrDescription = tbrDescription,
+            iobLabel = rh.gs(CoreUiStrings.iob),
+            cobLabel = rh.gs(CoreUiStrings.cob),
             deltaText = deltaText,
             timeAgoText = timeAgoText,
             iobText = iobText,

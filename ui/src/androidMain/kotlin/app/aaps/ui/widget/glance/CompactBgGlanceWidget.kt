@@ -93,14 +93,14 @@ private fun CompactContent(state: WidgetRenderState) {
         if (state.arrowResId != null) {
             Image(
                 provider = ImageProvider(state.arrowResId),
-                contentDescription = null,
+                contentDescription = state.arrowDescription,
                 modifier = GlanceModifier.size(ICON_SIZE).padding(start = 3.dp),
                 colorFilter = ColorFilter.tint(ColorProvider(bgColor))
             )
         }
         Image(
             provider = ImageProvider(state.iobIconResId),
-            contentDescription = null,
+            contentDescription = state.iobLabel,
             modifier = GlanceModifier.size(ICON_SIZE).padding(start = SECTION_GAP),
             colorFilter = ColorFilter.tint(ColorProvider(DarkElementColors.insulin))
         )
@@ -114,7 +114,7 @@ private fun CompactContent(state: WidgetRenderState) {
         )
         Image(
             provider = ImageProvider(state.cobIconResId),
-            contentDescription = null,
+            contentDescription = state.cobLabel,
             modifier = GlanceModifier.size(ICON_SIZE).padding(start = SECTION_GAP),
             colorFilter = ColorFilter.tint(ColorProvider(DarkElementColors.cob))
         )
@@ -129,7 +129,7 @@ private fun CompactContent(state: WidgetRenderState) {
         )
         Image(
             provider = ImageProvider(state.tbrIconResId),
-            contentDescription = null,
+            contentDescription = state.tbrDescription,
             modifier = GlanceModifier.size(ICON_SIZE).padding(start = SECTION_GAP),
             colorFilter = ColorFilter.tint(ColorProvider(DarkElementColors.tempBasal))
         )
