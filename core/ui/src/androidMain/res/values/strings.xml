@@ -63,6 +63,8 @@
     <string name="configbuilder_switch_confirmation">This will disable %1$s and enable %2$s.</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Expanded</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Collapsed</string>
     <string name="no_compose_preferences">No preferences available for this plugin</string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="confirm_pin_hint">Confirm PIN</string>
