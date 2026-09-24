@@ -444,7 +444,6 @@
     <string name="treatment_insulin_desc">Lever bolus manuelt</string>
     <string name="treatment_carbs_desc">Registrer karbo uten insulin</string>
     <string name="treatment_calculator_desc">Beregn bolus</string>
-    <string name="insulin_management">Insulin</string>
     <string name="manage_insulin_desc">Administrer og aktiver insulinkonfigurasjoner</string>
     <string name="concentration_disable_blocked">Kan ikke deaktivere konsentrasjonsstøtte mens ikke-U100-insuliner finnes. Fjern alle ikke-U100-insulinkonfigurasjoner og bytt til en U100-profil først.</string>
     <string name="simple_mode_blocked_by_concentration">Kan ikke aktivere Enkelmodus når du bruker insulin som ikke er U100. Bytt til U100-insulin først.</string>
@@ -731,7 +730,6 @@
     <string name="wizard_include_iob">Inkluder IOB</string>
     <string name="wizard_include_cob">Inkluder COB</string>
     <string name="wizard_calculation">Beregning</string>
-    <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maks fjerning: %1$d g (karbo ombord)</string>
     <string name="wizard_no_insulin_required">Insulin er ikke nødvendig</string>
     <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
