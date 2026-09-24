@@ -457,7 +457,7 @@
     <string name="treatment_insulin_desc">Deliver bolus manually</string>
     <string name="treatment_carbs_desc">Record carbs without insulin</string>
     <string name="treatment_calculator_desc">Calculate bolus</string>
-    <string name="insulin_management">Insulin</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Insulin settings</string>
     <string name="manage_insulin_desc">Manage and activate insulin configurations</string>
     <string name="concentration_disable_blocked">Cannot disable concentration support while non-U100 insulins exist. Remove all non-U100 insulin configurations and switch to a U100 profile first.</string>
     <string name="simple_mode_blocked_by_concentration">Cannot enable simple mode while using non-U100 insulin. Switch to U100 insulin first.</string>
@@ -760,7 +760,7 @@
     <string name="wizard_include_iob">Include IOB</string>
     <string name="wizard_include_cob">Include COB</string>
     <string name="wizard_calculation">Calculation</string>
-    <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="no_action_selected">No action selected, nothing will happen.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Max removal: %1$d g (carbs on board)</string>
     <string name="wizard_no_insulin_required">No insulin required</string>
     <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
@@ -815,6 +815,7 @@
     <string name="initializing">Initializing…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Warning</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Critical</string>
     <string name="alert" comment="Generic alert dialog title">Alert</string>
     <string name="retry" comment="Button label to retry a failed operation">Retry</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Finish</string>
