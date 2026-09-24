@@ -204,7 +204,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Savjetnik za bolus</string>
     <string name="bolus_advisor_message">Imate visoku glikemiju. Umjesto da jedete sada, preporuča se pričekati bolju glikemiju. Želite li sada napraviti korekcijski bolus i podsjetiti vas kada je vrijeme za jelo? U ovom slučaju neće biti zabilježeni ugljikohidrati i morate ponovno koristiti čarobnjaka kada vas podsjetimo.</string>
-    <string name="no_action_selected">Nije odabrana radnja, ništa se neće dogoditi</string>
     <!--    Preferences-->
     <!--    Protection-->
     <string name="unlock_settings">Otključaj postavke</string>
