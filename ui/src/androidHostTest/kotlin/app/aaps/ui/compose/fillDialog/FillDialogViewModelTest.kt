@@ -148,7 +148,8 @@ internal class FillDialogViewModelTest {
         val seen = runCartridgeChangeWithInsulinSwitch(ActionProgress.Rejected(FailureReason.NotReachable, "offline"))
 
         // Previously this only hit aapsLogger.warn — the user was told the insulin changed when it had not.
-        assertThat(seen).contains("The insulin was not switched: The master is offline.. Your previous insulin is still in use.")
+        // The reason is a whole sentence and brings its own full stop, so the template adds none.
+        assertThat(seen).contains("The insulin was not switched: The master is offline. Your previous insulin is still in use.")
     }
 
     @Test
