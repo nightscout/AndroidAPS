@@ -379,7 +379,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Σύμβουλος Bolus</string>
     <string name="bolus_advisor_message">Έχετε υπεργλυκαιμία. Αντί να φάτε τώρα συνιστάτε να περιμένετε μια καλύτερη γλυκαιμία. Θέλετε να κάνετε ένα διορθωτικό bolus τώρα και να γίνει υπενθύμιση όταν έρθει η ώρα να φάτε; Σε αυτή την περίπτωση δε θα καταγραφούν καθόλου υδατάνθρακες και θα πρέπει να χρησιμοποιήσετε τον οδηγό ξανά μετά την υπενθύμιση.</string>
-    <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
     <string name="wizard_no_actual_bg">Δεν υπάρχει πρόσφατή γλυκόζη αίματος για να γίνει υπολογισμός!</string>
     <string name="wizard_no_active_profile">Δεν ορίστηκε ενεργό προφίλ!</string>
     <string name="wizard_carbs_constraint">Παραβίαση περιορισμού υδατανθράκων!</string>
