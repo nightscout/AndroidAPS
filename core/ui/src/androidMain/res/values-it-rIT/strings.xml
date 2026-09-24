@@ -63,6 +63,8 @@
     <string name="configbuilder_switch_confirmation">Questo disabiliterà %1$s e abiliterà %2$s.</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Contrai</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Esteso</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Collassato</string>
     <string name="no_compose_preferences">Nessuna preferenza disponibile per questo plugin</string>
     <string name="confirm_password_hint">Conferma la password</string>
     <string name="confirm_pin_hint">Conferma il PIN</string>
@@ -445,6 +447,7 @@
     <string name="treatment_insulin_desc">Eroga manualmente il bolo</string>
     <string name="treatment_carbs_desc">Registrare carboidrati senza insulina</string>
     <string name="treatment_calculator_desc">Calcola bolo</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Impostazioni insulina</string>
     <string name="manage_insulin_desc">Gestire e attivare le configurazioni di insulina</string>
     <string name="concentration_disable_blocked">Non è possibile disabilitare il supporto alla concentrazione mentre esistono insuline non-U100. Rimuovere prima tutte le configurazioni non-U100 e passare a un profilo U100.</string>
     <string name="simple_mode_blocked_by_concentration">Non è possibile abilitare la modalità semplice mentre si utilizza insulina non-U100. Passare prima all\'insulina U100.</string>
@@ -466,6 +469,9 @@
     <string name="treatment_cannula_change_desc">Registrare il cambio del set cannula/infusione</string>
     <string name="treatment_fill_desc">Inizializzazione e riempimento cannula</string>
     <string name="temp_basal">Basale temporanea</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Sopra il profilo</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Sotto il profilo</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Nessuno</string>
     <string name="user_entry">Voce utente</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Dito</string>
@@ -694,6 +700,7 @@
     <string name="basal">Basale</string>
     <string name="basalpct">% basale</string>
     <string name="sensitivity">Sensibilità</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens off</string>
     <string name="isf_for_carbs">ISF per Calcolatore e Assorbimento di Carbo: %1$.1f</string>
     <string name="isf_profile">Profilo ISF: %1$.1f</string>
     <string name="isf_variable">ISF Variabile: %1$.1f</string>
@@ -731,6 +738,7 @@
     <string name="wizard_include_iob">Includi IOB</string>
     <string name="wizard_include_cob">Includi IOB</string>
     <string name="wizard_calculation">Calcolo</string>
+    <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Rimozione massima: %1$d g (carboidrati a bordo)</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
@@ -781,6 +789,7 @@
     <string name="initializing">Inizializzazione…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Avviso</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Critico</string>
     <string name="alert" comment="Generic alert dialog title">Avviso</string>
     <string name="retry" comment="Button label to retry a failed operation">Riprova</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Termina</string>
