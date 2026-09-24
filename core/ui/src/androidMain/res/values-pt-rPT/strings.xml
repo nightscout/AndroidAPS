@@ -370,7 +370,6 @@
     <string name="urgent_alarm">Alarme Urgente</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
-    <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize o ecrã</string>
     <!--    Preferences-->
     <string name="teenage">Adolescente</string>
