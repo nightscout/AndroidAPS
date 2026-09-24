@@ -445,7 +445,6 @@
     <string name="treatment_insulin_desc">Eroga manualmente il bolo</string>
     <string name="treatment_carbs_desc">Registrare carboidrati senza insulina</string>
     <string name="treatment_calculator_desc">Calcola bolo</string>
-    <string name="insulin_management">Insulina</string>
     <string name="manage_insulin_desc">Gestire e attivare le configurazioni di insulina</string>
     <string name="concentration_disable_blocked">Non è possibile disabilitare il supporto alla concentrazione mentre esistono insuline non-U100. Rimuovere prima tutte le configurazioni non-U100 e passare a un profilo U100.</string>
     <string name="simple_mode_blocked_by_concentration">Non è possibile abilitare la modalità semplice mentre si utilizza insulina non-U100. Passare prima all\'insulina U100.</string>
@@ -732,7 +731,6 @@
     <string name="wizard_include_iob">Includi IOB</string>
     <string name="wizard_include_cob">Includi IOB</string>
     <string name="wizard_calculation">Calcolo</string>
-    <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Rimozione massima: %1$d g (carboidrati a bordo)</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
