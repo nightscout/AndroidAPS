@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.objectives.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
@@ -57,8 +55,13 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.constraints.ConstraintsStrings
 
 @Composable
 fun ObjectivesScreen(
@@ -541,8 +544,17 @@ private fun TaskRow(
         Modifier.fillMaxWidth()
     }
 
+    // Whether a task is finished shows as a tick against a chevron and nothing else, on a screen
+    // whose entire purpose is tracking what is still left to do. Only the finished case speaks: a
+    // list where every remaining task announces "not completed" buries the ones that are done.
+    val completedState = if (task.isCompleted) stringResource(CoreUiStrings.state_completed) else null
+
     Row(
-        modifier = rowModifier,
+        modifier = if (completedState != null) {
+            rowModifier.semantics { stateDescription = completedState }
+        } else {
+            rowModifier
+        },
         verticalAlignment = Alignment.Top
     ) {
         // Status icon
