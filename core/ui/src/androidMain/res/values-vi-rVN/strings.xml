@@ -116,7 +116,6 @@
     <string name="profile_switch_no_insulin">Không thể chuyển cấu hình điều trị: không có loại insulin nào đang được sử dụng và cũng chưa có loại nào được chọn.</string>
     <string name="profile_switch_select_insulin_hint">Chưa có loại insulin nào được sử dụng. Hãy chọn loại insulin bạn đang sử dụng để lần chuyển cấu hình này có thể ghi nhận loại insulin đó.</string>
     <string name="insulin_activation_failed">Loại insulin chưa được chuyển đổi. Loại insulin trước đó vẫn đang được sử dụng.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Không thể chuyển đổi loại insulin: %1$s. Loại insulin trước đó vẫn đang được sử dụng.</string>
     <string name="insulin_activation_unconfirmed">Không thể xác nhận việc chuyển đổi loại insulin. Hãy kiểm tra loại insulin nào đang hoạt động trong cấu hình trước khi tiêm insulin.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nLoại insulin cũng chưa được chuyển đổi.</string>
     <string name="active"><![CDATA[<Đang hoạt động>]]></string>
