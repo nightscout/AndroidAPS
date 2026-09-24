@@ -115,7 +115,6 @@
     <string name="profile_switch_no_insulin">Не мога да сменя профил: няма избран инсулин.</string>
     <string name="profile_switch_select_insulin_hint">Няма избран инсулин. Изберете какъв използвате за да може профилът да го използва.</string>
     <string name="insulin_activation_failed">Превключването на инсулина не е направено. Старият ви инсулин е още избран.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Превключването на инсулина не е направено: %1$s. Използвам старият инсулин.</string>
     <string name="insulin_activation_unconfirmed">Не мога да потвърдя смяната на инсулин. Проверете кой инсулин е активен в профила преди да направите болус.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n Инсулинът не е сменен.</string>
     <string name="active"><![CDATA[<Активно>]]></string>
