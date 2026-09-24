@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -73,6 +74,7 @@ internal class ImportViewModelTest {
     @Mock private lateinit var pump: PumpWithConcentration
     @Mock private lateinit var ads: AutosensDataStore
     @Mock private lateinit var notificationManager: NotificationManager
+    @Mock private lateinit var profileRepository: ProfileRepository
     @Mock private lateinit var virtualPump: VirtualPumpForTest
     private val uiRestart = UiRestartImpl()
 
@@ -93,7 +95,7 @@ internal class ImportViewModelTest {
         sut = ImportViewModel(
             aapsLogger, importExportPrefs, prefFileList, configBuilder, config, rh, uel,
             commandQueue, pumpSync, activePlugin, overviewDataCache, iobCobCalculator, uiRestart,
-            notificationManager
+            notificationManager, profileRepository
         )
         // Production hands the apply to the IO dispatcher, which a test cannot advance or observe.
         // Unconfined runs it inline instead, so `advanceUntilIdle` really does mean "the apply is done".

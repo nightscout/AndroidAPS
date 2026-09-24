@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -162,7 +163,8 @@ class ImportViewModel(
     private val overviewDataCache: OverviewDataCache,
     private val iobCobCalculator: IobCobCalculator,
     private val uiRestart: UiRestart,
-    private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
     private companion object {
@@ -582,6 +584,17 @@ class ImportViewModel(
             // report success, which let the loop carry on as if its temp basal had been set.
             commandQueue.cancelAll(CoreUiStrings.import_apply_pump_changed, success = false)
         }
+
+        // Re-read the profile list from the store before the caches below are refreshed from it.
+        //
+        // `ProfileRepositoryImpl` is app scoped and loads once in its init block. It watches
+        // `StringNonKey.LocalProfileData` for lists arriving over the sync channel, and an import that
+        // carries that key therefore lands on its own. A file from an older AAPS does NOT carry it -
+        // the profiles arrive as the numbered `LocalProfile_isf_0` keys that `PreferenceMigrations`
+        // writes - and nothing observes those, so without this the imported profiles would sit in the
+        // store unread until the next process start. The refreshes below would not find them either:
+        // they re-read through `profileFunction`, which asks this repository.
+        profileRepository.reset()
 
         // The same reset `resetDatabases` does: the imported profile, units and targets change what
         // every cached calculation meant.
