@@ -815,6 +815,7 @@
     <string name="initializing">Initializing…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Warning</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Critical</string>
     <string name="alert" comment="Generic alert dialog title">Alert</string>
     <string name="retry" comment="Button label to retry a failed operation">Retry</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Finish</string>

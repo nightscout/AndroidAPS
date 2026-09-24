@@ -25,7 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.statusLevelToColor
+import app.aaps.core.ui.compose.statusLevelToDescription
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
 
 /**
@@ -108,7 +110,8 @@ private fun StatusRow(
             value = item.age,
             valueColor = ageColor,
             progress = item.agePercent,
-            progressColor = ageColor
+            progressColor = ageColor,
+            levelDescription = stringResourceOrNull(statusLevelToDescription(item.ageStatus))
         )
 
         // Level with vertical progress (if available and allowed in expanded view)
@@ -117,7 +120,8 @@ private fun StatusRow(
                 value = item.level,
                 valueColor = levelColor,
                 progress = item.levelPercent,
-                progressColor = levelColor
+                progressColor = levelColor,
+                levelDescription = stringResourceOrNull(statusLevelToDescription(item.levelStatus))
             )
         }
 
@@ -148,11 +152,25 @@ private fun StatusValueWithProgress(
     value: String,
     valueColor: Color,
     progress: Float,
-    progressColor: Color
+    progressColor: Color,
+    /**
+     * Spoken severity, or null when there is nothing to flag. The colour of [valueColor] used to be
+     * the only sign that a cannula was past its change day or a reservoir nearly empty.
+     */
+    levelDescription: String? = null
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        // Merged so the value and its severity are one item rather than two stops, and the progress
+        // bar stops being announced separately - it shows the same thing the value already says.
+        // The description carries only the severity: on a merging node it is added before the
+        // children rather than replacing them, so this reads "Critical, 3 days".
+        modifier = if (levelDescription != null) {
+            Modifier.semantics(mergeDescendants = true) { contentDescription = levelDescription }
+        } else {
+            Modifier.semantics(mergeDescendants = true) { }
+        }
     ) {
         Text(
             text = value,
