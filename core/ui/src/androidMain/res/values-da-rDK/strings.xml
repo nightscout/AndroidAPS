@@ -380,7 +380,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus-rådgiver</string>
     <string name="bolus_advisor_message">Du har høj glycæmi. I stedet for at spise nu anbefales det at vente på bedre glycæmi. Ønsker du at lave en korrektionsbolus nu og minde dig om, hvornår det er tid til at spise? I dette tilfælde vil ingen kulhydrater blive registreret, og du skal bruge guiden igen, når vi påminder dig.</string>
-    <string name="no_action_selected">Ingen handling valgt, intet vil ske</string>
     <string name="wizard_no_actual_bg">Ingen nylig BG til at basere beregningen på!</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
     <string name="wizard_carbs_constraint">KH begrænsninger overtrådt!</string>
