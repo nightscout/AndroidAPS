@@ -116,7 +116,6 @@
     <string name="profile_switch_no_insulin">无法切换配置文件：没有正在使用的胰岛素，也未选择任何胰岛素。</string>
     <string name="profile_switch_select_insulin_hint">尚未使用任何胰岛素。请选择您正在使用的胰岛素，以便此次配置文件切换能够记录它。</string>
     <string name="insulin_activation_failed">胰岛素未切换。您之前的胰岛素仍在使用中。</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">胰岛素未切换：%1$s。您之前的胰岛素仍在使用中。</string>
     <string name="insulin_activation_unconfirmed">胰岛素切换无法确认。请在输注前检查配置文件中哪种胰岛素处于活动状态。</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。</string>
     <string name="active"><![CDATA[<Active>]]></string>
