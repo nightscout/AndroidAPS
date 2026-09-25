@@ -101,6 +101,7 @@ import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.plugins.sync.nfcCommands.NfcForegroundDispatch
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
 import app.aaps.ui.compose.loopSheet.LoopActionViewModel
@@ -180,6 +181,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
+
+    private val nfcForegroundDispatch by lazy { NfcForegroundDispatch(this, preferences) }
 
     /**
      * The factory `by viewModels()` uses.
@@ -616,8 +619,19 @@ class ComposeMainActivity : MetroAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        nfcForegroundDispatch.onResume()
         if (!config.appInitialized) return
         refreshOnResume()
+    }
+
+    override fun onPause() {
+        nfcForegroundDispatch.onPause()
+        super.onPause()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        nfcForegroundDispatch.onNewIntent(intent)
     }
 
     private fun updateButtons() {
@@ -652,6 +666,7 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         lifecycleScope.launch {
             uiRestart.signal.drop(1).collect { recreate() }
         }
+        nfcForegroundDispatch.observeWarning(lifecycleScope, rxBus, rh)
     }
 
     private fun setupWakeLock() {

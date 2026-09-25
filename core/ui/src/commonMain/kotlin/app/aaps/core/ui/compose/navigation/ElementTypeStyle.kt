@@ -37,6 +37,7 @@ import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
 import app.aaps.core.ui.compose.icons.IcPluginFood
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
 import app.aaps.core.ui.compose.icons.IcPluginMaintenance
+import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
@@ -98,6 +99,7 @@ fun ElementType.color(): Color = when (this) {
     ElementType.PUMP                    -> AapsTheme.elementColors.pump
     ElementType.SETTINGS,
     ElementType.QUICK_LAUNCH_CONFIG     -> AapsTheme.elementColors.settings
+    ElementType.NFC                     -> AapsTheme.elementColors.nfc
 
     ElementType.TREATMENTS              -> AapsTheme.elementColors.treatments
     ElementType.STATISTICS,
@@ -161,6 +163,7 @@ fun ElementType.icon(): ImageVector = when (this) {
     ElementType.AUTOMATION_MANAGEMENT   -> IcPluginAutomation
 
     ElementType.PUMP                    -> Pump
+    ElementType.NFC                     -> IcPluginNfc
     ElementType.SETTINGS                -> Icons.Default.Settings
     ElementType.QUICK_LAUNCH_CONFIG     -> Icons.Default.Settings
     ElementType.TREATMENTS              -> IcClinicalNotes
@@ -228,6 +231,7 @@ fun ElementType.label(): TextRef? = when (this) {
     ElementType.AUTOMATION              -> null // dynamic label
     ElementType.AUTOMATION_MANAGEMENT   -> CoreUiStrings.automation
     ElementType.PUMP                    -> CoreUiStrings.pump
+    ElementType.NFC                     -> CoreUiStrings.nfccommands
     ElementType.SETTINGS                -> CoreUiStrings.settings
     ElementType.QUICK_LAUNCH_CONFIG     -> CoreUiStrings.quick_launch_configure
     ElementType.TREATMENTS              -> CoreUiStrings.treatments_history
@@ -294,6 +298,7 @@ fun ElementType.description(): TextRef? = when (this) {
     ElementType.AUTOMATION_MANAGEMENT   -> CoreUiStrings.automation_management_desc
     ElementType.AUTHORIZED_CLIENTS      -> CoreUiStrings.authorized_clients_manage_desc
     ElementType.PAIR_WITH_MASTER        -> CoreUiStrings.pair_with_master_manage_desc
+    ElementType.NFC                     -> CoreUiStrings.description_nfc_communicator
     ElementType.QUICK_WIZARD,
     ElementType.RUNNING_MODE,
     ElementType.AUTOMATION,

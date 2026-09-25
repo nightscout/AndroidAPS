@@ -68,6 +68,7 @@ import app.aaps.core.ui.compose.icons.IcPluginMM640G
 import app.aaps.core.ui.compose.icons.IcPluginMaintenance
 import app.aaps.core.ui.compose.icons.IcPluginMedtronic
 import app.aaps.core.ui.compose.icons.IcPluginMedtrum
+import app.aaps.core.ui.compose.icons.IcPluginNfc
 import app.aaps.core.ui.compose.icons.IcPluginNsClient
 import app.aaps.core.ui.compose.icons.IcPluginNsClientBg
 import app.aaps.core.ui.compose.icons.IcPluginObjectives
@@ -152,6 +153,7 @@ class UserEntryPresentationHelperImpl(
         Sources.Maintenance         -> IcPluginMaintenance
         Sources.Medtronic           -> IcPluginMedtronic
         Sources.Medtrum             -> IcPluginMedtrum
+        Sources.NfcCommands         -> IcPluginNfc
         Sources.NSClient            -> IcPluginNsClient
         Sources.NSClientSource      -> IcPluginNsClientBg
         Sources.NSProfile           -> IcPluginNsClient
@@ -242,6 +244,7 @@ class UserEntryPresentationHelperImpl(
         Sources.NSClient            -> ElementType.AAPS.color()
         Sources.NSClientSource      -> ElementType.AAPS.color()
         Sources.NSProfile           -> ElementType.PROFILE_MANAGEMENT.color()
+        Sources.NfcCommands         -> ElementType.NFC.color()
         Sources.Note                -> ElementType.NOTE.color()
         Sources.NotificationReader  -> ElementType.CGM_DEX.color()
         Sources.Objectives          -> ElementType.AAPS.color()
