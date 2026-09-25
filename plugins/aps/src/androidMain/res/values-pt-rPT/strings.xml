@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Autotune-->
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">ISF Dinâmico</string>
+    <string name="openapsma_disabled">Plugin está desativado</string>
+    <string name="openapsma_no_glucose_data">Sem dados de glucose disponíveis</string>
+    <string name="openaps_no_as_data">Sem dados Autosens disponíveis</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Estado do algoritmo em 2017</string>
+    <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
+    <string name="description_smb_dynamic_isf">O algoritmo mais recente para utilizadores avançados com FSI dinâmico/automático</string>
+    <string name="openapsma_last_run_label">Última execução</string>
+    <string name="openapsma_input_parameters_label">Parâmetros de entrada</string>
+    <string name="openapsma_glucose_status_label">Estado da glicose</string>
+    <string name="openapsma_current_temp_label">Basal Temporária atual</string>
+    <string name="openapsma_iob_data_label">Dados de IA</string>
+    <string name="openapsma_profile_label">Perfil</string>
+    <string name="openapsma_meal_data_label">Dados de refeição</string>
+    <string name="openapsma_request_label">Pedido</string>
+    <string name="constraints">Restrições</string>
+    <string name="openapsma_autosensdata_label">Dados Autosens</string>
+    <string name="openapsma_script_debug_data_label">Script debug</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequenciais antes de alterar algum destes valores.</string>
+    <string name="increasing_max_basal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
+    <string name="max_basal_multiplier">multiplicador de basal máx</string>
+    <string name="max_daily_basal_multiplier">multiplicador de basal máx diária</string>
+    <string name="smb_disabled_in_preferences">SMB desactivado nas configurações</string>
+    <string name="uam_disabled_in_preferences">RNA desactivada nas configurações</string>
+    <string name="autosens_disabled_in_preferences">Autosens desabilitado nas preferências</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">A limitar IA para %1$.1f U porque %2$s</string>
+    <string name="maxvalueinpreferences">valor máx nas preferências</string>
+    <string name="hardlimit">limite rígido</string>
+    <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Um bólus foi administrado nos últimos 3 minutos, a ignorar SMB</string>
+    <string name="pump_not_initialized">Bomba não inicializada!</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
+    <string name="no_aps_selected">NENHUM APS SELECIONADO OU RESULTADO FORNECIDO</string>
+    <string name="ignore5m">Ignorar 5m</string>
+    <string name="ignore15m">Ignorar 15m</string>
+    <string name="ignore30m">Ignorar 30m</string>
+    <string name="carbs_suggestion">Sugestão de Hidratos</string>
+    <string name="open_loop_new_suggestion">Disponível nova sugestão</string>
+    <string name="basal_set_correctly">Basal correctamente definida</string>
+    <string name="last_run_label">Última execução</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Pedido</string>
+    <string name="loop_constraints_processed_label">Depois das restrições processadas</string>
+    <string name="loop_tbr_request_time_label">Hora de solicitação da DBT</string>
+    <string name="loop_tbr_execution_time_label">Hora de execução da DBT</string>
+    <string name="loop_tbr_set_by_pump_label">Basal temporária definida pela bomba</string>
+    <string name="loop_smb_request_time_label">Hora de solicitação SMB</string>
+    <string name="loop_smb_execution_time_label">Hora de execução do SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
+    <!-- Autotune -->
+    <string name="autotune_missing">Em falta</string>
+    <string name="autotune_compare_profile">Comparar Perfis</string>
+    <!--    autoISF -->
+</resources>

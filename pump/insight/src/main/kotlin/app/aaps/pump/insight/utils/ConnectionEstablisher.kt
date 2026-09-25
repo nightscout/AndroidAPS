@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import androidx.annotation.RequiresPermission
-import app.aaps.core.data.time.T
 import app.aaps.core.utils.extensions.safeEnable
 import java.io.IOException
 import java.util.UUID
@@ -58,7 +57,10 @@ class ConnectionEstablisher(
     fun close(closeSocket: Boolean) {
         try {
             interrupt()
-            socket?.let { if (closeSocket && it.isConnected) it.close() }
+            // Close whether or not the socket reached the connected state. A socket whose connect()
+            // failed is not "connected", so the old isConnected check meant exactly the sockets that
+            // needed releasing were the ones left open.
+            socket?.let { if (closeSocket) it.close() }
         } catch (_: IOException) {
         }
     }

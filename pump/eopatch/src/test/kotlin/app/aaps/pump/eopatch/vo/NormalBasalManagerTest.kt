@@ -1,7 +1,6 @@
 package app.aaps.pump.eopatch.vo
 
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.eopatch.code.BasalStatus
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import java.util.concurrent.TimeUnit
 
 class NormalBasalManagerTest : TestBaseWithProfile() {
 

@@ -1,7 +1,7 @@
 package app.aaps.receivers
 
 import android.content.Intent
-import app.aaps.plugins.main.general.persistentNotification.DummyServiceHelper
+import app.aaps.persistentNotification.DummyServiceHelper
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

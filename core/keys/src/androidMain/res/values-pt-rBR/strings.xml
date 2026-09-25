@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General preferences -->
+    <!-- Overview preferences -->
+    <!-- Pump preferences -->
+    <!-- Alert preferences -->
+    <!-- BG Source preferences -->
+    <!-- APS preferences -->
+    <!-- Maintenance preferences -->
+    <!-- Autotune preferences -->
+    <!-- SMS preferences -->
+    <!-- Virtual pump preferences -->
+    <!-- NS Client preferences -->
+    <!-- OpenHumans preferences -->
+    <!-- xDrip preferences -->
+    <!-- Wear preferences -->
+    <!-- Site rotation preferences -->
+    <!-- IntKey: Overview preferences -->
+    <string name="carb_increment_button_message">Número de carboidratos a adicionar quando o botão é premido</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Entregar bólus completo (100%) se o glicemia for mais velha do que</string>
+    <!-- IntKey: Protection preferences -->
+    <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="biometric">Biometria</string>
+    <string name="master_password">Senha mestra</string>
+    <string name="custom_password">Senha personalizada</string>
+    <string name="custom_pin">PIN personalizado</string>
+    <!-- IntKey: Safety preferences -->
+    <!-- IntKey: Loop preferences -->
+    <string name="loop_open_mode_min_change_summary" formatted="false">O Loop aberto irá apresentar uma nova solicitação de alteração apenas se a mudança for maior do que este valor em %. O valor padrão é 20%</string>
+    <!-- IntKey: APS preferences -->
+    <string name="uam_smb_max_minutes">UAM SMB máx minutos</string>
+    <string name="carbs_req_threshold_summary">Gramas mínimas de carboidratos para exibir um alerta de sugestão de carboidratos. Sugestões de carboidratos abaixo deste número não acionarão uma notificação.</string>
+    <string name="openapsama_autosens_period_summary">Quantidade de horas observadas para a deteção de sensibilidade (o tempo de absorção dos hidratos de carbono é excluído)</string>
+    <!-- IntKey: Maintenance preferences -->
+    <!-- IntKey: Alert preferences -->
+    <!-- IntKey: Insulin preferences -->
+    <!-- IntKey: Autotune preferences -->
+    <string name="autotune_default_tune_days_summary">Número padrão de dias de dados a serem processados por Autotune (até 30)</string>
+    <!-- IntKey: SMS preferences -->
+    <!-- IntKey: BG Source preferences -->
+    <!-- IntKey: NS Client preferences -->
+    <!-- IntKey: Site rotation preferences -->
+    <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <!-- StringKey: General preferences -->
+    <!-- Formatted unit strings with value only -->
+    <!-- Formatted unit strings with value and range -->
+    <!-- StringKey: Directory preferences -->
+    <!-- StringKey: Protection preferences -->
+    <!-- Theme switcher dark and light mode-->
+    <!-- StringKey: Safety preferences -->
+    <!-- StringKey: Maintenance preferences -->
+    <!-- StringKey: Automation preferences -->
+    <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">PIN adicional obrigatório no fim do token</string>
+    <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Password-Única que seja gerada</string>
+    <!-- StringKey: Virtual pump preferences -->
+    <!-- StringKey: NS Client preferences -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- DoubleKey: Overview preferences -->
+    <string name="insulin_increment_button_message">Unidades de insulina a adicionar quando o botão é premido</string>
+    <!-- DoubleKey: Actions preferences -->
+    <!-- DoubleKey: Safety preferences -->
+    <!-- DoubleKey: APS preferences -->
+    <string name="openapsma_max_basal_summary">O valor definido será o máximo de unidades de basal por hora que o aaps poderá chegar</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Esta é uma chave de segurança OpenAPS. O que isso faz é limitar seus basais para serem 3x (neste caso) sua maior taxa basal. Provavelmente você não precisará alterar isso, mas você deve estar ciente de que é o que se discute sobre \"3x máximo diário; 4x atual\" para chaves de segurança.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra metade da chave OpenAPS de segurança, e a outra metade de \"3x diário máximo; 4x atual\" das tampas de segurança. Isso significa que o seu basal, independentemente do nível máximo de basal definido na bomba, não pode ser maior do que este número vezes o nível atual do seu basal. Isso é para evitar que as pessoas entrem em território perigoso, definindo basais excessivamente altos antes de entender como funciona o algoritmo. Novamente, o padrão é 4x; a maioria das pessoas nunca precisará ajustar isso e, em vez disso, precisará ajustar outras configurações se sentirem que estão \"batendo\" nessa tampa de segurança.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Valor padrão: 2\nBolus Snooze (pausa após bolus) é executado depois de realizar um bolus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de ação da insulina (DIA) de 5h significa que o Bolus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valor padrão: 3.0 para assitência avançada de refeições (AAR) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glicemia (BG) devido à absorção de carboidratos. O padrão é 3mg/dl/5min. Isso afeta a rapidez com que decaem os carboidratos ativos (CA) e quanta absorção de carboidrato será considerada no cálculo da previsão de glicemia futura, tornando possível notar que glicemia está baixando mais do que o esperado ou não subindo como esperado.</string>
+    <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
+    <string name="absorption_max_time_summary">Tempo em horas, espectável para que todos os hidratos de carbono da refeição sejam absorvidos</string>
+    <string name="openapsama_autosens_min_summary">Valor padrão: 0,7\nO outro lado dos limites de segurança do Autosens, colocando um limite no quanto o Autosens pode ajustar os basais e no quanto pode ajustar os alvos FSI e alvos de Glicose.</string>
+    <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
+    <!-- UnitDoubleKey: Overview preferences -->
+    <!-- UnitDoubleKey: APS preferences -->
+    <string name="lgs_threshold_summary">Valor a partir do qual a insulina é suspensa. O valor padrão usa como base o alvo padrão. O usuário pode definir o valor entre 60mg/dl (3.3mmol/l) e 100mg/dl(5.5 mmol/l). Valores abaixo de 65/3.6 resulta em uso do modelo padrão.</string>
+    <!-- IntentKey preferences -->
+    <!--    Appearance preferences-->
+</resources>

@@ -1,0 +1,124 @@
+package app.aaps.plugins.configuration.setupwizard.elements
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.configuration.setupwizard.SWDefinition
+import dev.zacsweers.metro.Inject
+
+@Inject
+class SWPermissions(
+    aapsLogger: AAPSLogger, rh: TextResolver, rxBus: RxBus, preferences: Preferences, passwordCheck: PasswordCheck
+) : SWItem(aapsLogger, rh, rxBus, preferences, passwordCheck) {
+
+    private var swDefinition: SWDefinition? = null
+
+    fun with(swDefinition: SWDefinition): SWPermissions {
+        this.swDefinition = swDefinition
+        return this
+    }
+
+    @Composable
+    override fun Compose() {
+        val definition = swDefinition ?: return
+        var refreshTick by remember { mutableIntStateOf(0) }
+
+        // Refresh on resume (after returning from permission dialog/settings)
+        val lifecycleOwner = LocalLifecycleOwner.current
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) refreshTick++
+            }
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+        }
+
+        Column(modifier = Modifier.fillMaxWidth()) {
+            val items = remember(refreshTick) {
+                definition.permissionItems?.invoke() ?: emptyList()
+            }
+            items.forEach { (group, granted) ->
+                PermissionRow(
+                    group = group,
+                    granted = granted,
+                    onGrant = {
+                        definition.onRequestPermission?.invoke(group)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PermissionRow(
+    group: PermissionGroup,
+    granted: Boolean,
+    onGrant: () -> Unit
+) {
+    // Whether the permission is granted is drawn as a tick or a warning triangle and nothing else.
+    // The button beside it does change word - "Grant" against "Change" - but "Change" is a thin
+    // signal for "this one is already done", and this list is what the setup wizard blocks on.
+    //
+    // Only the missing case is spoken, matching the status lights and the notification list: saying
+    // something about every granted row would bury the rows that still need attention.
+    val missing = if (granted) null else stringResource(CoreUiStrings.warning)
+    ListItem(
+        modifier = if (missing != null) Modifier.semantics { stateDescription = missing } else Modifier,
+        leadingContent = {
+            Icon(
+                imageVector = if (granted) Icons.Default.CheckCircle else Icons.Default.Warning,
+                contentDescription = null,
+                tint = if (granted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+            )
+        },
+        headlineContent = {
+            Text(stringResource(group.rationaleTitle))
+        },
+        supportingContent = {
+            Text(
+                text = stringResource(group.rationaleDescription),
+                style = MaterialTheme.typography.bodySmall
+            )
+        },
+        trailingContent = {
+            if (!granted || group.alwaysShowAction) {
+                TextButton(onClick = onGrant) {
+                    Text(
+                        stringResource(
+                            if (granted) CoreUiStrings.change
+                            else CoreUiStrings.grant
+                        )
+                    )
+                }
+            }
+        }
+    )
+}

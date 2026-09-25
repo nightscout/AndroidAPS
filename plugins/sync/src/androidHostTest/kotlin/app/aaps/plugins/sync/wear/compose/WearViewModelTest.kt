@@ -1,0 +1,301 @@
+package app.aaps.plugins.sync.wear.compose
+
+import app.aaps.plugins.sync.SyncStrings
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.rx.weardata.CwfData
+import app.aaps.core.interfaces.rx.weardata.CwfFile
+import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.PushedWatchfaceId
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.sync.wear.WearPlugin
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+
+@OptIn(ExperimentalCoroutinesApi::class)
+internal class WearViewModelTest {
+
+    @Mock private lateinit var wearPlugin: WearPlugin
+    @Mock private lateinit var rxBus: RxBus
+    @Mock private lateinit var rh: ResourceHelper
+    @Mock private lateinit var dateUtil: DateUtil
+    @Mock private lateinit var preferences: Preferences
+    @Mock private lateinit var versionCheckerUtils: VersionCheckerUtils
+    @Mock private lateinit var fileListProvider: FileListProvider
+    @Mock private lateinit var aapsLogger: AAPSLogger
+
+    private val connectedDeviceFlow = MutableStateFlow<String?>(null)
+    private val savedCustomWatchfaceFlow = MutableStateFlow<CwfData?>(null)
+    private val eventWearUpdateGuiFlow = MutableSharedFlow<EventWearUpdateGui>()
+    private val pushedWatchfaceFlow = MutableStateFlow(PushedWatchfaceId.CWF)
+    private val watchFacePushStatusFlow = MutableStateFlow<EventData.WatchFacePushStatus?>(null)
+
+    private lateinit var sut: WearViewModel
+
+    @BeforeEach
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        whenever(wearPlugin.connectedDevice).thenReturn(connectedDeviceFlow)
+        whenever(wearPlugin.savedCustomWatchface).thenReturn(savedCustomWatchfaceFlow)
+        whenever(wearPlugin.watchFacePushStatus).thenReturn(watchFacePushStatusFlow)
+        whenever(rxBus.toFlow(EventWearUpdateGui::class)).thenReturn(eventWearUpdateGuiFlow)
+        whenever(preferences.observe(StringKey.WearPushedWatchface)).thenReturn(pushedWatchfaceFlow)
+        whenever(rh.gs(SyncStrings.no_watch_connected)).thenReturn("No watch connected")
+        sut = WearViewModel(wearPlugin, rxBus, rh, dateUtil, preferences, versionCheckerUtils, fileListProvider, aapsLogger)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `initial state shows no device connected`() {
+        assertThat(sut.uiState.value.isDeviceConnected).isFalse()
+        assertThat(sut.uiState.value.hasCustomWatchface).isFalse()
+    }
+
+    @Test
+    fun `null connected device shows no watch connected text`() {
+        connectedDeviceFlow.value = null
+        assertThat(sut.uiState.value.connectedDevice).isEqualTo("No watch connected")
+        assertThat(sut.uiState.value.isDeviceConnected).isFalse()
+    }
+
+    @Test
+    fun `non-null connected device shows device name`() {
+        connectedDeviceFlow.value = "Galaxy Watch 5"
+        assertThat(sut.uiState.value.connectedDevice).isEqualTo("Galaxy Watch 5")
+        assertThat(sut.uiState.value.isDeviceConnected).isTrue()
+    }
+
+    @Test
+    fun `device disconnection updates state`() {
+        connectedDeviceFlow.value = "Galaxy Watch 5"
+        assertThat(sut.uiState.value.isDeviceConnected).isTrue()
+        connectedDeviceFlow.value = null
+        assertThat(sut.uiState.value.isDeviceConnected).isFalse()
+    }
+
+    @Test
+    fun `savedCustomWatchface emits watchface metadata`() {
+        val cwfData = CwfData(
+            json = "{}",
+            metadata = mutableMapOf(CwfMetadataKey.CWF_NAME to "MyWatchface"),
+            resData = mutableMapOf()
+        )
+        savedCustomWatchfaceFlow.value = cwfData
+        assertThat(sut.uiState.value.hasCustomWatchface).isTrue()
+        assertThat(sut.uiState.value.watchfaceName).isEqualTo("MyWatchface")
+        // BitmapFactory returns null in unit tests, so watchfaceImage will be null
+        assertThat(sut.uiState.value.watchfaceImage).isNull()
+    }
+
+    @Test
+    fun `null savedCustomWatchface clears watchface state`() {
+        val cwfData = CwfData(
+            json = "{}",
+            metadata = mutableMapOf(CwfMetadataKey.CWF_NAME to "MyWatchface"),
+            resData = mutableMapOf()
+        )
+        savedCustomWatchfaceFlow.value = cwfData
+        assertThat(sut.uiState.value.hasCustomWatchface).isTrue()
+
+        savedCustomWatchfaceFlow.value = null
+        assertThat(sut.uiState.value.hasCustomWatchface).isFalse()
+        assertThat(sut.uiState.value.watchfaceName).isEmpty()
+    }
+
+    @Test
+    fun `the custom watchface warning follows the pushed watchface setting`() {
+        // Custom watchface chosen: nothing to warn about
+        assertThat(sut.uiState.value.customWatchfaceSelected).isTrue()
+
+        // The complications face chosen instead: a loaded zip would not be shown
+        pushedWatchfaceFlow.value = PushedWatchfaceId.WFS
+        assertThat(sut.uiState.value.customWatchfaceSelected).isFalse()
+    }
+
+    @Test
+    fun `the face choice appears only once the watch reports Watch Face Push`() {
+        // Nothing reported yet, or an older wear app that never reports: no choice
+        assertThat(sut.uiState.value.watchFacePushSupported).isFalse()
+        assertThat(sut.uiState.value.installedWatchface).isNull()
+
+        watchFacePushStatusFlow.value = EventData.WatchFacePushStatus(supported = true, installedFace = PushedWatchfaceId.WFS)
+        assertThat(sut.uiState.value.watchFacePushSupported).isTrue()
+        assertThat(sut.uiState.value.installedWatchface).isEqualTo(PushedWatchfaceId.WFS)
+
+        // A watch below Wear OS 6 reports, and the choice stays away
+        watchFacePushStatusFlow.value = EventData.WatchFacePushStatus(supported = false)
+        assertThat(sut.uiState.value.watchFacePushSupported).isFalse()
+
+        // Disconnected: the plugin clears the report, the next watch speaks for itself
+        watchFacePushStatusFlow.value = null
+        assertThat(sut.uiState.value.watchFacePushSupported).isFalse()
+        assertThat(sut.uiState.value.installedWatchface).isNull()
+    }
+
+    @Test
+    fun `sending a zip while the complications face is on the wrist says so once`() {
+        val zip = CwfFile(
+            cwfData = CwfData(json = "{}", metadata = mutableMapOf(CwfMetadataKey.CWF_NAME to "Analog G-Watch"), resData = mutableMapOf()),
+            zipByteArray = ByteArray(0)
+        )
+        watchFacePushStatusFlow.value = EventData.WatchFacePushStatus(supported = true)
+        pushedWatchfaceFlow.value = PushedWatchfaceId.WFS
+
+        sut.selectWatchface(zip)
+        assertThat(sut.uiState.value.customWatchfaceNotShown).isEqualTo("Analog G-Watch")
+
+        sut.dismissCustomWatchfaceNotShown()
+        assertThat(sut.uiState.value.customWatchfaceNotShown).isNull()
+    }
+
+    @Test
+    fun `sending a zip while the custom face is on the wrist says nothing`() {
+        val zip = CwfFile(
+            cwfData = CwfData(json = "{}", metadata = mutableMapOf(CwfMetadataKey.CWF_NAME to "Analog G-Watch"), resData = mutableMapOf()),
+            zipByteArray = ByteArray(0)
+        )
+        watchFacePushStatusFlow.value = EventData.WatchFacePushStatus(supported = true)
+
+        sut.selectWatchface(zip)
+        assertThat(sut.uiState.value.customWatchfaceNotShown).isNull()
+    }
+
+    @Test
+    fun `selectPushedWatchface stores the choice for the plugin to resend`() {
+        sut.selectPushedWatchface(PushedWatchfaceId.WFS)
+        verify(preferences).put(StringKey.WearPushedWatchface, PushedWatchfaceId.WFS)
+    }
+
+    @Test
+    fun `requestCustomWatchface sends event when no saved watchface`() {
+        sut.requestCustomWatchface()
+        val captor = argumentCaptor<Event>()
+        verify(rxBus).send(captor.capture())
+        val event = captor.firstValue as EventMobileToWear
+        assertThat(event.payload).isInstanceOf(EventData.ActionrequestCustomWatchface::class.java)
+    }
+
+    @Test
+    fun `requestCustomWatchface does nothing when watchface exists`() {
+        savedCustomWatchfaceFlow.value = CwfData(
+            json = "{}",
+            metadata = mutableMapOf(CwfMetadataKey.CWF_NAME to "existing"),
+            resData = mutableMapOf()
+        )
+        sut.requestCustomWatchface()
+        verify(rxBus, never()).send(any<EventMobileToWear>())
+    }
+
+    @Test
+    fun `resendData sends ActionResendData event`() {
+        sut.resendData()
+        val captor = argumentCaptor<Event>()
+        verify(rxBus).send(captor.capture())
+        val event = captor.firstValue as EventData.ActionResendData
+        assertThat(event.from).isEqualTo("WearScreen")
+    }
+
+    @Test
+    fun `openSettingsOnWear sends OpenSettings event`() {
+        whenever(dateUtil.now()).thenReturn(12345L)
+        sut.openSettingsOnWear()
+        val captor = argumentCaptor<Event>()
+        verify(rxBus).send(captor.capture())
+        val event = captor.firstValue as EventMobileToWear
+        assertThat(event.payload).isInstanceOf(EventData.OpenSettings::class.java)
+    }
+
+    @Test
+    fun `showCwfInfos lists visible complication views and hides the others`() {
+        val json = """
+            {
+              "background": { "width": 400, "visibility": "visible" },
+              "complication1": { "width": 106, "height": 106, "visibility": "visible" },
+              "complication2": { "width": 106, "height": 106, "visibility": "gone" },
+              "complication4": { "width": 267, "height": 102, "visibility": "visible" }
+            }
+        """.trimIndent()
+        savedCustomWatchfaceFlow.value = CwfData(
+            json = json,
+            metadata = mutableMapOf(CwfMetadataKey.CWF_NAME to "TestWatch"),
+            resData = mutableMapOf()
+        )
+        whenever(rh.gs(any<Int>(), any())).thenReturn("mocked")
+        whenever(rh.gs(any<Int>())).thenReturn("comment")
+        // The state this builds reads CwfMetadataKey.label, a TextRef - see the same stub below
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("mocked")
+        whenever(versionCheckerUtils.versionDigits(any())).thenReturn(intArrayOf(1, 0, 0))
+
+        sut.showCwfInfos()
+
+        val keys = sut.uiState.value.cwfInfosState?.viewElements?.map { it.key }
+        assertThat(keys).contains("\"complication1\":")
+        assertThat(keys).contains("\"complication4\":")
+        assertThat(keys).doesNotContain("\"complication2\":")
+    }
+
+    @Test
+    fun `showCwfInfos and hideCwfInfos toggle showInfos`() {
+        // Without cwfData, showCwfInfos should be a no-op
+        sut.showCwfInfos()
+        assertThat(sut.uiState.value.showInfos).isFalse()
+
+        // Set up cwfData
+        val cwfData = CwfData(
+            json = "{}",
+            metadata = mutableMapOf(
+                CwfMetadataKey.CWF_NAME to "TestWatch",
+                CwfMetadataKey.CWF_AUTHOR to "Author",
+                CwfMetadataKey.CWF_CREATED_AT to "2024-01-01",
+                CwfMetadataKey.CWF_VERSION to "1.0"
+            ),
+            resData = mutableMapOf()
+        )
+        savedCustomWatchfaceFlow.value = cwfData
+
+        // Mock resource helper calls
+        whenever(rh.gs(any<Int>(), any())).thenReturn("mocked")
+        // CwfMetadataKey.label is a TextRef now; gs(TextRef, vararg) is a default interface method,
+        // which a mock intercepts and answers with null unless it is stubbed here too.
+        whenever(rh.gs(any<TextRef>(), any())).thenReturn("mocked")
+        whenever(versionCheckerUtils.versionDigits(any())).thenReturn(intArrayOf(1, 0, 0))
+
+        sut.showCwfInfos()
+        assertThat(sut.uiState.value.showInfos).isTrue()
+        assertThat(sut.uiState.value.cwfInfosState).isNotNull()
+
+        sut.hideCwfInfos()
+        assertThat(sut.uiState.value.showInfos).isFalse()
+    }
+}

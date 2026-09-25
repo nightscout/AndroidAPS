@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Inzulin</string>
+    <!-- Overview -->
+    <!-- overview moved to core:ui module -->
+    <!--    OverviewMenu-->
+    <string name="basal_shortname">BAZAL</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Prikazuje tekuće obavijesti sa kratkim pregledom što loop radi</string>
+</resources>

@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    id("kotlin-android")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -8,13 +7,15 @@ plugins {
 
 android {
     namespace = "info.nightscout.comboctl"
-    sourceSets.getByName("main") {
-        kotlin.srcDir("src/commonMain/kotlin")
-        kotlin.srcDir("src/androidMain/kotlin")
-        manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    }
-    sourceSets.getByName("test") {
-        kotlin.srcDir("src/jvmTest/kotlin")
+    sourceSets {
+        getByName("main") {
+            kotlin.directories.add("src/commonMain/kotlin")
+            kotlin.directories.add("src/androidMain/kotlin")
+            manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        }
+        getByName("test") {
+            kotlin.directories.add("src/jvmTest/kotlin")
+        }
     }
 }
 
@@ -26,7 +27,12 @@ dependencies {
     api(libs.androidx.core)
 
     testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit5"))
     testImplementation(project(":shared:tests"))
+    // PumpIOTest extends TestBase and calls aapsLogger.debug(...); resolving that overload set
+    // requires AAPSLogger on the test classpath. :shared:tests pulls it via `implementation` so
+    // it's not transitively exposed — we ask for it directly here.
+    testImplementation(project(":core:interfaces"))
 
     testImplementation(libs.io.kotlintest.runner.junit5)
     testRuntimeOnly(libs.org.junit.jupiter.engine)

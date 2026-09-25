@@ -52,7 +52,7 @@ class RileyLinkMedtronicServiceUTest : TestBaseWithProfile() {
         // Create service instance
         service = RileyLinkMedtronicService().also {
 
-        // Inject dependencies via reflection since it's a service with @Inject fields
+            // Inject dependencies via reflection since it's a service with @Inject fields
             it.medtronicPumpPlugin = medtronicPumpPlugin
             it.medtronicUtil = medtronicUtil
             it.medtronicPumpStatus = medtronicPumpStatus
@@ -74,7 +74,7 @@ class RileyLinkMedtronicServiceUTest : TestBaseWithProfile() {
         whenever(preferences.get(MedtronicStringPreferenceKey.Serial)).thenReturn("123456")
         whenever(preferences.get(MedtronicStringPreferenceKey.PumpType)).thenReturn("522")
         whenever(preferences.get(MedtronicStringPreferenceKey.PumpFrequency)).thenReturn("medtronic_pump_frequency_us_ca")
-        whenever(preferences.get(RileyLinkStringPreferenceKey.MacAddress)).thenReturn("AA:BB:CC:DD:EE:FF")
+        whenever(preferences.get(RileyLinkStringKey.MacAddress)).thenReturn("AA:BB:CC:DD:EE:FF")
         whenever(preferences.get(RileyLinkStringKey.Name)).thenReturn("RileyLink")
         whenever(preferences.get(MedtronicIntPreferenceKey.MaxBolus)).thenReturn(10)
         whenever(preferences.get(MedtronicIntPreferenceKey.MaxBasal)).thenReturn(5)
@@ -165,7 +165,7 @@ class RileyLinkMedtronicServiceUTest : TestBaseWithProfile() {
     @Test
     fun `test verifyConfiguration with empty RileyLink address returns false`() {
         setupValidConfiguration()
-        whenever(preferences.get(RileyLinkStringPreferenceKey.MacAddress)).thenReturn("")
+        whenever(preferences.get(RileyLinkStringKey.MacAddress)).thenReturn("")
 
         whenever(rh.gs(R.string.medtronic_error_rileylink_address_invalid)).thenReturn("Invalid RileyLink address")
 
@@ -178,7 +178,7 @@ class RileyLinkMedtronicServiceUTest : TestBaseWithProfile() {
     @Test
     fun `test verifyConfiguration with invalid RileyLink MAC address format returns false`() {
         setupValidConfiguration()
-        whenever(preferences.get(RileyLinkStringPreferenceKey.MacAddress)).thenReturn("INVALID_MAC")
+        whenever(preferences.get(RileyLinkStringKey.MacAddress)).thenReturn("INVALID_MAC")
 
         whenever(rh.gs(R.string.medtronic_error_rileylink_address_invalid)).thenReturn("Invalid RileyLink address")
 
@@ -193,15 +193,15 @@ class RileyLinkMedtronicServiceUTest : TestBaseWithProfile() {
         setupValidConfiguration()
 
         // Test with colons
-        whenever(preferences.get(RileyLinkStringPreferenceKey.MacAddress)).thenReturn("AA:BB:CC:DD:EE:FF")
+        whenever(preferences.get(RileyLinkStringKey.MacAddress)).thenReturn("AA:BB:CC:DD:EE:FF")
         assertThat(service.verifyConfiguration(forceRileyLinkAddressRenewal = false)).isTrue()
 
         // Test lowercase
-        whenever(preferences.get(RileyLinkStringPreferenceKey.MacAddress)).thenReturn("aa:bb:cc:dd:ee:ff")
+        whenever(preferences.get(RileyLinkStringKey.MacAddress)).thenReturn("aa:bb:cc:dd:ee:ff")
         assertThat(service.verifyConfiguration(forceRileyLinkAddressRenewal = false)).isTrue()
 
         // Test single digit hex values
-        whenever(preferences.get(RileyLinkStringPreferenceKey.MacAddress)).thenReturn("0:1:2:3:4:5")
+        whenever(preferences.get(RileyLinkStringKey.MacAddress)).thenReturn("0:1:2:3:4:5")
         assertThat(service.verifyConfiguration(forceRileyLinkAddressRenewal = false)).isTrue()
     }
 

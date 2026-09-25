@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Autotune-->
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openapsma_disabled">Plugin desactivat</string>
+    <string name="openapsma_no_glucose_data">Dades de glucèmia no disponibles</string>
+    <string name="openaps_no_as_data">Dades d\'autosens no disponibles</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Array de %1$d elements.\nValor actual:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Estat de l\'algoritme el 2017</string>
+    <string name="description_smb">Algoritme més nou per usuaris avançats</string>
+    <string name="openapsma_last_run_label">Última execució</string>
+    <string name="openapsma_input_parameters_label">Paràmetres d\'entrada</string>
+    <string name="openapsma_glucose_status_label">Estat glucèmia</string>
+    <string name="openapsma_current_temp_label">Temp actual</string>
+    <string name="openapsma_iob_data_label">Dades d\'IOB</string>
+    <string name="openapsma_profile_label">Perfil</string>
+    <string name="openapsma_meal_data_label">Dades àpat</string>
+    <string name="openapsma_request_label">Petició</string>
+    <string name="constraints">Restriccions</string>
+    <string name="openapsma_autosensdata_label">Dades autosens</string>
+    <string name="openapsma_script_debug_data_label">Depurar script</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Atenció!\nNormalment no cal modificar els valors d\'aquí sota. Si us plau FEU CLIC AQUÍ, LLEGIU el text i assegureu-vos de COMPRENDRE\'L abans de modificar-ne qualsevol.</string>
+    <string name="increasing_max_basal">Augmentant basal màxima perquè està configurada més baixa que la basal màxima del perfil</string>
+    <string name="max_basal_multiplier">màxim multiplicador de basal</string>
+    <string name="max_daily_basal_multiplier">màxim multiplicador de basal diaria</string>
+    <string name="smb_disabled_in_preferences">SMB desactivat a la configuració</string>
+    <string name="uam_disabled_in_preferences">UAM desactivat a la configuració</string>
+    <string name="autosens_disabled_in_preferences">Autosens desactivat a la configuració</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">Limitant IOB a %1$.1f U a causa de %2$s</string>
+    <string name="maxvalueinpreferences">valor màxim a la configuració</string>
+    <string name="hardlimit">límit estricte</string>
+    <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">S\'ha lliurat un bolus els darrers 3 minuts, ignorant SMB</string>
+    <string name="loop_shortname">LLAÇ</string>
+    <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
+    <string name="ignore5m">Ignorar 5m</string>
+    <string name="ignore15m">Ignorar 15m</string>
+    <string name="ignore30m">Ignorar 30m</string>
+    <string name="basal_set_correctly">Basal configurada ok</string>
+    <string name="loop_aps_label">APS</string>
+    <!-- Autotune -->
+    <string name="autotune_result">Resultat: %1$s</string>
+    <string name="autotune_compare_profile">Comparar perfils</string>
+    <!--    autoISF -->
+</resources>

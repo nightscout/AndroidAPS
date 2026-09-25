@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Labels the watch face editor shows for this face's own settings.
+
+     They have to live here rather than be shared with the wear app: this is a separate, code-free
+     APK, and it carries no translations of its own - so everything here is English until that is
+     solved.
+
+     Two things were learned the hard way and both shape the wording:
+
+     - A literal in displayName is ignored: the editor showed "1st setting" instead. It has to be a
+       string resource reference.
+     - The editor draws the title on one line at the very top of a round screen, so a long title has
+       its beginning and end cut off by the bezel. This title is deliberately short for that reason -
+       shorter than the code-based menu's own wording, which it used to copy. The full sentence goes
+       in screenReaderText, which has no such limit. -->
+<resources>
+    <string name="simplify_ui_always_on">Simple always-on</string>
+    <string name="simplify_ui_always_on_reader">Show a simple clock and readings while the screen stays on, instead of your own design</string>
+</resources>

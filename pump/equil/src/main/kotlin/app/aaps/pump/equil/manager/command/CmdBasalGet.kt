@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.notify
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
@@ -36,7 +37,7 @@ class CmdBasalGet(
         val currentBasal = StringBuilder()
         for (i in 0..23) {
             var value = profile.getBasalTimeFromMidnight(i * 60 * 60)
-            value = value / 2f
+            value /= 2f
             val bs = Utils.basalToByteArray2(value)
             currentBasal.append(Utils.bytesToHex(bs))
             currentBasal.append(Utils.bytesToHex(bs))
@@ -47,7 +48,7 @@ class CmdBasalGet(
         synchronized(this) {
             cmdSuccess = true
             enacted = currentBasal.toString() == rspBasal
-            (this as Object).notify()
+            notify()
         }
     }
 

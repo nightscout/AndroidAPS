@@ -1,0 +1,66 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "73b4e763a6e7c5dc0d1e1c4598e6edd1",
+    "entities": [
+      {
+        "tableName": "calibration_entries",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `fingerstickMgdl` REAL NOT NULL, `sensorMgdlAtPairing` REAL NOT NULL, `isValid` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fingerstickMgdl",
+            "columnName": "fingerstickMgdl",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sensorMgdlAtPairing",
+            "columnName": "sensorMgdlAtPairing",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isValid",
+            "columnName": "isValid",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_calibration_entries_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_calibration_entries_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '73b4e763a6e7c5dc0d1e1c4598e6edd1')"
+    ]
+  }
+}
