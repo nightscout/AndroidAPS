@@ -44,6 +44,11 @@ class AutosensDataStoreObject : AutosensDataStore {
 
         const val IRREGULAR_DATA_SEC = 30L
 
+        // How far back seedReferenceTime looks for the phase the readings share. Long enough to hold
+        // several readings of a 5 minute source, short enough to describe the phase the sensor is on
+        // now rather than one it left hours ago.
+        const val PHASE_SEED_MIN = 30L
+
         // Autosens/COB data (table or stored fallback) older than this is treated as stale and not handed out.
         val MAX_AUTOSENS_AGE_MS = T.mins(11).msecs()
     }
@@ -230,6 +235,48 @@ class AutosensDataStoreObject : AutosensDataStore {
         else someTime - diff // adjust to the past
     }
 
+    /**
+     * Pick the anchor from the phase the recent readings share, instead of from whichever reading
+     * happens to be newest.
+     *
+     * The anchor is set once and then kept for the life of the process, because the whole point of it
+     * is that autosens and COB keep the same 5 minute slots (issue #5066): the table is keyed by bucket
+     * time, COB is chained from the previous bucket, and carbs are counted into the slot the grid
+     * defines. So the one moment it is chosen has to be right, and [adjustToReferenceTime] chose it
+     * from a single reading with nothing checking that the reading is representative.
+     *
+     * This path runs exactly when the data is NOT a clean 5 minute cadence, so the newest reading is
+     * the one most likely to be the irregular one. Anchoring on it puts every regular reading off the
+     * grid for the rest of the session - every bucket becomes an interpolation, which is reported as
+     * filledGap and which the AutoISF parabola fit then refuses. Only a restart cleared it, and only by
+     * luck, when the newest reading at that moment happened to be a regular one.
+     *
+     * So score every recent reading as a candidate anchor by how many of the others its grid would
+     * land on, and take the best. A source faster than 5 minutes has no dominant phase - every
+     * candidate scores the same - and the list is newest first, so ties keep today's answer.
+     */
+    private fun seedReferenceTime() {
+        val newest = bgReadings[0].timestamp
+        val from = newest - T.mins(PHASE_SEED_MIN).msecs()
+        val recent = bgReadings.asSequence().takeWhile { it.timestamp >= from }.map { it.timestamp }.toList()
+        val tolerance = T.secs(IRREGULAR_DATA_SEC).msecs()
+        referenceTime = recent.maxByOrNull { candidate -> recent.count { distanceToGrid(it, candidate) <= tolerance } } ?: newest
+    }
+
+    /**
+     * Distance from [someTime] to the nearest point of the 5 minute grid that [anchor] defines, always
+     * positive.
+     *
+     * A real modulo, not [adjustToReferenceTime]. That one takes the absolute difference from the
+     * anchor first, so for a time OLDER than the anchor it moves the right distance in the wrong
+     * direction and lands off the grid. Most times measured here are older than their candidate.
+     */
+    private fun distanceToGrid(someTime: Long, anchor: Long): Long {
+        val fiveMin = T.mins(5).msecs()
+        val offset = ((someTime - anchor) % fiveMin + fiveMin) % fiveMin
+        return min(offset, fiveMin - offset)
+    }
+
     fun isAbout5minData(aapsLogger: AAPSLogger): Boolean {
         dataLock.withLock {
             if (bgReadings.size < 3) return true
@@ -296,6 +343,8 @@ class AutosensDataStoreObject : AutosensDataStore {
             return
         }
         val lastBg = bgReadings[0]
+        // The anchor is kept for the life of the process, so the one time it is chosen has to be right.
+        if (referenceTime == -1L) seedReferenceTime()
         val newBucketedData = ArrayList<InMemoryGlucoseValue>()
         val adjustedTime = adjustToReferenceTime(lastBg.timestamp)
         // adjustToReferenceTime snaps to the NEAREST grid point, so the newest grid point can land after

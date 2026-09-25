@@ -1757,6 +1757,79 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         assertThat(bucketed[0].timestamp).isEqualTo(newest - T.mins(5).msecs() + tolerance + 1)
     }
 
+    /**
+     * A clean 5 minute cadence with one late reading on top - the shape from the Libre 2 log in issue
+     * #5148. The late reading is what makes isAbout5minData false, so it is also the reading the
+     * recalculated path would anchor on.
+     */
+    private fun readingsWithLateNewest(): List<GV> =
+        listOf(
+            T.mins(46).msecs() to 150.0,   // 6 minutes after the one below, so 60s off the regular phase
+            T.mins(40).msecs() to 140.0,
+            T.mins(35).msecs() to 130.0,
+            T.mins(30).msecs() to 120.0,
+            T.mins(25).msecs() to 110.0,
+            T.mins(20).msecs() to 100.0
+        ).map { (time, value) ->
+            GV(raw = 0.0, noise = 0.0, value = value, timestamp = time, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
+        }
+
+    @Test
+    fun theAnchorTakesThePhaseOfTheRegularReadingsNotTheLateOne() {
+        autosensDataStore.bgReadings = readingsWithLateNewest()
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+        assertThat(autosensDataStore.referenceTime).isEqualTo(-1)
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        // Anchored on the five regular readings, not on the late one. Anchoring on the late reading put
+        // every regular reading 60s off the grid, so every bucket came out interpolated and flagged
+        // filledGap - which the AutoISF parabola fit refuses, leaving bgAcceleration at 0 until restart.
+        assertThat(autosensDataStore.referenceTime).isEqualTo(T.mins(40).msecs())
+        val bucketed = autosensDataStore.bucketedData!!
+        assertThat(bucketed.count { !it.filledGap }).isAtLeast(5)
+        assertThat(bucketed.first { it.timestamp == T.mins(40).msecs() }.value).isEqualTo(140.0)
+        assertThat(bucketed.first { it.timestamp == T.mins(40).msecs() }.filledGap).isFalse()
+        assertThat(bucketed.first { it.timestamp == T.mins(25).msecs() }.value).isEqualTo(110.0)
+        assertThat(bucketed.first { it.timestamp == T.mins(25).msecs() }.filledGap).isFalse()
+    }
+
+    @Test
+    fun aSourceFasterThanFiveMinutesAnchorsOnItsNewestReading() {
+        // No dominant phase to find - a 1 minute source lands on every phase equally - so the seed has
+        // to fall back to the newest reading, which is what it always did. The anchor must not start
+        // wandering for these users: keeping it still across the process is what issue #5066 needs.
+        val newest = T.mins(48).msecs()
+        autosensDataStore.bgReadings = (0 until 20).map { i ->
+            GV(
+                raw = 0.0,
+                noise = 0.0,
+                value = 100.0 + i,
+                timestamp = newest - T.mins(i.toLong()).msecs(),
+                sourceSensor = SourceSensor.UNKNOWN,
+                trendArrow = TrendArrow.FLAT
+            )
+        }
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        assertThat(autosensDataStore.referenceTime).isEqualTo(newest)
+    }
+
+    @Test
+    fun anAnchorAlreadySetIsNotReSeeded() {
+        // Seeding runs only when there is no anchor yet. Once set it stays for the life of the process,
+        // because autosens keys, the COB chain and carb slotting all depend on the grid not moving.
+        autosensDataStore.bgReadings = readingsWithLateNewest()
+        val existing = T.mins(46).msecs()
+        autosensDataStore.referenceTime = existing
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        assertThat(autosensDataStore.referenceTime).isEqualTo(existing)
+    }
+
     @Test
     fun theKeptGridPointAloneDoesNotBecomeBucketedData() {
         // Every reading inside the last 5 minutes, so nothing fits below the newest grid point. The
