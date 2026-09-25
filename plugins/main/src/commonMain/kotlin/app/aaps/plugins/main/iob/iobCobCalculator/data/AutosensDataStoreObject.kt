@@ -297,11 +297,31 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
         val lastBg = bgReadings[0]
         val newBucketedData = ArrayList<InMemoryGlucoseValue>()
-        var currentTime = bgReadings[0].timestamp
-        val adjustedTime = adjustToReferenceTime(currentTime)
-        // after adjusting time may be newer. In this case use T-5min
-        currentTime = if (adjustedTime > currentTime) adjustedTime - T.mins(5).msecs() else adjustedTime
+        val adjustedTime = adjustToReferenceTime(lastBg.timestamp)
+        // adjustToReferenceTime snaps to the NEAREST grid point, so the newest grid point can land after
+        // the newest reading. Dropping to T-5min for that leaves the newest reading out of the bucketed
+        // data, and everything reading bucketedData[0] - overview, loop, wear - then runs 5 minutes late
+        // for as long as the process lives, because referenceTime survives clone().
+        //
+        // So keep the grid point and fill it from the newest reading below, the way createBucketedData5min
+        // keeps bgReadings[0]. The limit is IRREGULAR_DATA_SEC, the same "still the same 5 minute slot"
+        // distance isAbout5minData and filledGap use. Up to that much, bucketedData[0] carries a timestamp
+        // ahead of the reading it holds, so actualBg() and isActualBg() read it as up to 30 seconds
+        // fresher than it is. That is the price of not being a full 5 minutes stale.
+        //
+        // A bigger overshoot is a real phase mismatch, not jitter, and still steps back. createBucketedData5min
+        // drops the anchor instead when it is that far out; this path has no such re-anchor.
+        var currentTime =
+            if (adjustedTime - lastBg.timestamp > T.secs(IRREGULAR_DATA_SEC).msecs()) adjustedTime - T.mins(5).msecs()
+            else adjustedTime
         aapsLogger.debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(currentTime))
+        // findNewer() and findOlder() cannot bracket a time that is after every reading, so this bucket is
+        // taken from the newest reading and the loop starts one grid point below it.
+        val firstBucket = if (currentTime > lastBg.timestamp) {
+            val bucket = InMemoryGlucoseValue.fromGv(lastBg).copy(timestamp = currentTime)
+            currentTime -= T.mins(5).msecs()
+            bucket
+        } else null
         while (true) {
             // test if current value is older than current time
             val newer = findNewer(currentTime)
@@ -320,6 +340,10 @@ class AutosensDataStoreObject : AutosensDataStore {
             }
             currentTime -= T.mins(5).msecs()
         }
+        // Only when the loop found something to bucket. On its own this bucket would turn a result that
+        // used to be empty into a single point, and GlucoseStatus answers a lone point with delta 0
+        // instead of null, so the APS would run on a made up flat trend instead of declining to run.
+        if (firstBucket != null && newBucketedData.isNotEmpty()) newBucketedData.add(0, firstBucket)
         bucketedData = newBucketedData
     }
 

@@ -1689,4 +1689,88 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         // 5 minute path kept: bucketed data has one entry per reading, no interpolation
         assertThat(ads.bucketedData).hasSize(12)
     }
+
+    /**
+     * Readings newest first, 5 minutes apart, with one 7 minute gap at the bottom so isAbout5minData is
+     * false and createBucketedDataRecalculated runs.
+     */
+    private fun readingsForRecalculatedPath(newest: Long): List<GV> =
+        listOf(newest to 100.0, newest - T.mins(5).msecs() to 90.0, newest - T.mins(10).msecs() to 80.0, newest - T.mins(17).msecs() to 60.0)
+            .map { (time, value) ->
+                GV(raw = 0.0, noise = 0.0, value = value, timestamp = time, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
+            }
+
+    @Test
+    fun newestReadingIsKeptWhenTheGridPointIsJustAfterIt() {
+        val newest = T.mins(48).msecs()
+        autosensDataStore.bgReadings = readingsForRecalculatedPath(newest)
+        // Anchor one millisecond later in phase than the readings. Sensor timestamps jitter by that much
+        // within a reading or two, and the anchor lives as long as the process, so this is the normal
+        // state after a while. adjustToReferenceTime then rounds the newest reading UP, past the end of
+        // the data.
+        autosensDataStore.referenceTime = newest - T.mins(5).msecs() + 1
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        // The newest reading has to stay in the bucketed data. Before, the newest bucket was T-5min and
+        // overview, loop and wear all ran on an interpolated value 5 minutes old.
+        val bucketed = autosensDataStore.bucketedData!!
+        assertThat(bucketed).hasSize(4)
+        assertThat(bucketed[0].timestamp).isEqualTo(newest + 1)
+        assertThat(bucketed[0].value).isEqualTo(100.0)
+        assertThat(bucketed[0].filledGap).isFalse()
+        assertThat(bucketed[1].timestamp).isEqualTo(newest - T.mins(5).msecs() + 1)
+        assertThat(bucketed[1].value).isWithin(1.0).of(90.0)
+    }
+
+    @Test
+    fun anchorExactlyAtTheToleranceStillKeepsTheGridPoint() {
+        val newest = T.mins(48).msecs()
+        val tolerance = T.secs(AutosensDataStoreObject.IRREGULAR_DATA_SEC).msecs()
+        autosensDataStore.bgReadings = readingsForRecalculatedPath(newest)
+        // Exactly on the limit, so the grid point is still kept. Together with the test below this pins
+        // the tolerance from both sides.
+        autosensDataStore.referenceTime = newest - T.mins(5).msecs() + tolerance
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        val bucketed = autosensDataStore.bucketedData!!
+        assertThat(bucketed).hasSize(4)
+        assertThat(bucketed[0].timestamp).isEqualTo(newest + tolerance)
+        assertThat(bucketed[0].value).isEqualTo(100.0)
+    }
+
+    @Test
+    fun anchorFurtherOutOfPhaseThanJitterStillStepsBack() {
+        val newest = T.mins(48).msecs()
+        val tolerance = T.secs(AutosensDataStoreObject.IRREGULAR_DATA_SEC).msecs()
+        autosensDataStore.bgReadings = readingsForRecalculatedPath(newest)
+        // One millisecond past the tolerance. That is a real phase mismatch, not jitter, so the newest
+        // grid point stays below the newest reading and no bucket is placed after the data.
+        autosensDataStore.referenceTime = newest - T.mins(5).msecs() + tolerance + 1
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        val bucketed = autosensDataStore.bucketedData!!
+        assertThat(bucketed).hasSize(3)
+        assertThat(bucketed[0].timestamp).isEqualTo(newest - T.mins(5).msecs() + tolerance + 1)
+    }
+
+    @Test
+    fun theKeptGridPointAloneDoesNotBecomeBucketedData() {
+        // Every reading inside the last 5 minutes, so nothing fits below the newest grid point. The
+        // result has to stay empty: a single bucket makes GlucoseStatus report delta 0 instead of null,
+        // and the APS would run on a made up flat trend instead of declining to run.
+        val newest = T.mins(48).msecs()
+        autosensDataStore.bgReadings = listOf(newest, newest - T.mins(1).msecs(), newest - T.mins(2).msecs()).map { time ->
+            GV(raw = 0.0, noise = 0.0, value = 100.0, timestamp = time, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
+        }
+        autosensDataStore.referenceTime = newest - T.mins(5).msecs() + T.secs(10).msecs()
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        assertThat(autosensDataStore.bucketedData).isEmpty()
+    }
 }
