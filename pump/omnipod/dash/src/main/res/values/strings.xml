@@ -31,6 +31,7 @@
     <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
     <string name="omnipod_common_bolus_type_smb">SMB</string>
     <string name="omnipod_common_bolus_type_basal_correction">Basal correction</string>
+    <string name="omnipod_common_bolus_type_priming">Priming</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulin delivery is suspended</string>
     <string name="omnipod_common_history_total_delivered">Total delivered: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Another bolus is being delivered</string>

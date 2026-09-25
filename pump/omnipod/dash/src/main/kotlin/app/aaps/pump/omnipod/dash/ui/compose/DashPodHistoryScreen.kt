@@ -229,6 +229,7 @@ private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: 
                     BolusType.DEFAULT          -> amount
                     BolusType.SMB              -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_smb))
                     BolusType.BASAL_CORRECTION -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_basal_correction))
+                    BolusType.PRIMING          -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_priming))
                 }
             } ?: ""
         }

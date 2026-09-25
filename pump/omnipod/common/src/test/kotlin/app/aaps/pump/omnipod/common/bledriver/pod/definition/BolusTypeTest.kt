@@ -6,10 +6,10 @@ import com.google.gson.Gson
 import org.junit.jupiter.api.Test
 
 /**
- * Regression test for the AAPS 3.x pod-state migration: [OmnipodDashPodStateManagerImpl.LastBolus.bolusType]
+ * Regression test for the AAPS 3.x pod-state migration: `OmnipodDashPodStateManager.LastBolus.bolusType`
  * used to be `BS.Type`, and Gson persists enums by name, so pod state stored by AAPS 3.x has
  * "NORMAL" where this enum only knows "DEFAULT". If this ever stops parsing, updaters from AAPS 3.x
- * with a recorded bolus lose their whole pod state (see [OmnipodDashPodStateManagerImpl.load]).
+ * with a recorded bolus lose their whole pod state (see `OmnipodDashPodStateManagerImpl.load`).
  */
 class BolusTypeTest {
 
@@ -33,5 +33,12 @@ class BolusTypeTest {
 
     @Test fun `BASAL_CORRECTION reports to AAPS as a plain NORMAL bolus`() {
         assertThat(BolusType.BASAL_CORRECTION.toBolusInfoBolusType()).isEqualTo(BS.Type.NORMAL)
+    }
+
+    @Test fun `every BS Type round-trips through BolusType unchanged`() {
+        // Guards against future BS.Type additions (like PRIMING) silently narrowing to DEFAULT.
+        for (type in BS.Type.entries) {
+            assertThat(BolusType.fromBolusInfoBolusType(type).toBolusInfoBolusType()).isEqualTo(type)
+        }
     }
 }

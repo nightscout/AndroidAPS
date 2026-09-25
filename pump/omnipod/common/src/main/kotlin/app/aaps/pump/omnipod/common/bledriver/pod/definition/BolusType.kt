@@ -8,12 +8,13 @@ enum class BolusType {
     // stores enums by name, so old JSON has "NORMAL" here, not "DEFAULT"). Keep while upgrades from
     // AAPS 3.x are supported.
     @SerializedName(value = "DEFAULT", alternate = ["NORMAL"])
-    DEFAULT, SMB, BASAL_CORRECTION;
+    DEFAULT, SMB, BASAL_CORRECTION, PRIMING;
 
     fun toBolusInfoBolusType(): BS.Type {
         return when (this) {
             DEFAULT, BASAL_CORRECTION -> BS.Type.NORMAL
             SMB                       -> BS.Type.SMB
+            PRIMING                   -> BS.Type.PRIMING
         }
     }
 
@@ -21,8 +22,9 @@ enum class BolusType {
 
         fun fromBolusInfoBolusType(type: BS.Type): BolusType {
             return when (type) {
-                BS.Type.SMB -> SMB
-                else        -> DEFAULT
+                BS.Type.SMB     -> SMB
+                BS.Type.PRIMING -> PRIMING
+                BS.Type.NORMAL  -> DEFAULT
             }
         }
     }
