@@ -380,11 +380,7 @@ class OmnipodDashPumpPlugin(
                 if (!deliveryComplete) {
                     val deliveredUnits = markComplete()
                     deliveryComplete = true
-                    // A basal correction is never announced to AAPS as a started bolus (no pumpSyncBolusStart),
-                    // so do not report its interrupted completion as one either.
-                    if (bolusType == BolusType.BASAL_CORRECTION) {
-                        aapsLogger.info(LTag.PUMP, "Basal correction interrupted by pod kaput, not syncing as a bolus")
-                    } else {
+                    bolusType.toBolusInfoBolusType()?.let { bolusInfoType ->
                         val bolusHistoryEntry = history.getById(historyId)
                         val sync = pumpSync.syncBolusWithPumpId(
                             timestamp = bolusHistoryEntry.createdAt,
@@ -392,10 +388,10 @@ class OmnipodDashPumpPlugin(
                             pumpId = bolusHistoryEntry.pumpId(),
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = serialNumber(),
-                            type = bolusType.toBolusInfoBolusType()
+                            type = bolusInfoType
                         )
                         aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
-                    }
+                    } ?: aapsLogger.info(LTag.PUMP, "Pod kaput interrupted $bolusType bolus, not synced (no BS.Type equivalent)")
                 }
             }
             if (!podStateManager.alarmSynced) {
@@ -1481,14 +1477,14 @@ class OmnipodDashPumpPlugin(
                     // A basal correction is never announced to AAPS as a started bolus (no pumpSyncBolusStart),
                     // so do not report its denial as one either.
                     val record = historyEntry.record as? BolusRecord
-                    if (record?.bolusType != BolusType.BASAL_CORRECTION) {
+                    if (record?.bolusType?.toBolusInfoBolusType() != null) {
                         pumpSync.syncBolusWithPumpId(
                             timestamp = historyEntry.createdAt,
                             amount = PumpInsulin(0.0),
                             pumpId = historyEntry.pumpId(),
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = serialNumber(),
-                            type = null
+                            type = null // denied before delivery
                         )
                     }
                 }
@@ -1503,11 +1499,7 @@ class OmnipodDashPumpPlugin(
                             aapsLogger.error(LTag.PUMP, "Negative delivered units!!! $deliveredUnits")
                             return
                         }
-                        // A basal correction is never announced to AAPS as a started bolus (no pumpSyncBolusStart),
-                        // so do not report its cancellation as one either.
-                        if (bolusType == BolusType.BASAL_CORRECTION) {
-                            aapsLogger.info(LTag.PUMP, "Basal correction canceled, not syncing as a bolus")
-                        } else {
+                        bolusType.toBolusInfoBolusType()?.let { bolusInfoType ->
                             val bolusHistoryEntry = history.getById(historyId)
                             val sync = pumpSync.syncBolusWithPumpId(
                                 timestamp = bolusHistoryEntry.createdAt,
@@ -1515,10 +1507,10 @@ class OmnipodDashPumpPlugin(
                                 pumpId = bolusHistoryEntry.pumpId(),
                                 pumpType = PumpType.OMNIPOD_DASH,
                                 pumpSerial = serialNumber(),
-                                type = bolusType.toBolusInfoBolusType()
+                                type = bolusInfoType
                             )
                             aapsLogger.info(LTag.PUMP, "syncBolusWithPumpId on CANCEL_BOLUS returned: $sync")
-                        }
+                        } ?: aapsLogger.info(LTag.PUMP, "Cancelled $bolusType bolus, not synced (no BS.Type equivalent)")
                     } ?: aapsLogger.error(LTag.PUMP, "Cancelled bolus that does not exist")
                 }
             }

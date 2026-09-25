@@ -10,11 +10,13 @@ enum class BolusType {
     @SerializedName(value = "DEFAULT", alternate = ["NORMAL"])
     DEFAULT, SMB, BASAL_CORRECTION, PRIMING;
 
-    fun toBolusInfoBolusType(): BS.Type {
+    // Null for BASAL_CORRECTION: it has no AAPS equivalent and must never be synced as a bolus.
+    fun toBolusInfoBolusType(): BS.Type? {
         return when (this) {
-            DEFAULT, BASAL_CORRECTION -> BS.Type.NORMAL
-            SMB                       -> BS.Type.SMB
-            PRIMING                   -> BS.Type.PRIMING
+            DEFAULT           -> BS.Type.NORMAL
+            SMB               -> BS.Type.SMB
+            PRIMING           -> BS.Type.PRIMING
+            BASAL_CORRECTION  -> null
         }
     }
 

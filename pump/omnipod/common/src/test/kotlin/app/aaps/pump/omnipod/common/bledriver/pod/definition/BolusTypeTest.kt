@@ -31,8 +31,8 @@ class BolusTypeTest {
         assertThat(gson.toJson(BolusType.DEFAULT)).isEqualTo("\"DEFAULT\"")
     }
 
-    @Test fun `BASAL_CORRECTION reports to AAPS as a plain NORMAL bolus`() {
-        assertThat(BolusType.BASAL_CORRECTION.toBolusInfoBolusType()).isEqualTo(BS.Type.NORMAL)
+    @Test fun `BASAL_CORRECTION has no BS Type`() {
+        assertThat(BolusType.BASAL_CORRECTION.toBolusInfoBolusType()).isNull()
     }
 
     @Test fun `every BS Type round-trips through BolusType unchanged`() {
