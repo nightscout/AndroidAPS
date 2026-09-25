@@ -63,6 +63,7 @@
     <string name="configbuilder_switch_confirmation">Thao tác này sẽ tắt %1$s và bật %2$s.</string>
     <string name="expand">Mở rộng</string>
     <string name="collapse">Thu gọn</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Đã hoàn thành</string>
     <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Đã mở rộng</string>
     <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Đã thu gọn</string>
     <string name="no_compose_preferences">Plugin này không có tùy chọn nào</string>
