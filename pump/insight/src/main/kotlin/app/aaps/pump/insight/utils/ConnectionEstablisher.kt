@@ -57,7 +57,10 @@ class ConnectionEstablisher(
     fun close(closeSocket: Boolean) {
         try {
             interrupt()
-            socket?.let { if (closeSocket && it.isConnected) it.close() }
+            // Close whether or not the socket reached the connected state. A socket whose connect()
+            // failed is not "connected", so the old isConnected check meant exactly the sockets that
+            // needed releasing were the ones left open.
+            socket?.let { if (closeSocket) it.close() }
         } catch (_: IOException) {
         }
     }

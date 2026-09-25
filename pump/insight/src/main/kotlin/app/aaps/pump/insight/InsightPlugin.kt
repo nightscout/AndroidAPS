@@ -124,6 +124,7 @@ import app.aaps.pump.insight.keys.InsightLongNonKey
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -207,12 +208,21 @@ class InsightPlugin(
         private set
     private var alertService: InsightAlertService? = null
     var connectionService: InsightConnectionService? = null
-        private set
+        // internal rather than private so a test can stand in a fake connection service. Still not
+        // settable from outside the module - only the service connection below assigns it for real.
+        internal set
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             if (binder is InsightConnectionService.LocalBinder) {
                 connectionService = binder.service
                 connectionService?.registerStateCallback(this@InsightPlugin)
+                // Follow the connection service, which stamps this every time the pump answers
+                // anything. Reading it only while fetching the pump status left it standing still
+                // between status reads, and the "pump unreachable" alarm is timed off it.
+                lastDataTimeJob?.cancel()
+                lastDataTimeJob = connectionService?.let { service ->
+                    appScope.launch { service.lastDataTimeFlow.collect { _lastDataTime.value = it } }
+                }
             } else if (binder is InsightAlertService.LocalBinder) {
                 alertService = binder.service
             }
@@ -222,7 +232,13 @@ class InsightPlugin(
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
+            lastDataTimeJob?.cancel()
+            lastDataTimeJob = null
             connectionService = null
+            // Without a service there is nothing to report. Say "just now" rather than leave an old
+            // stamp behind, so a pump that is merely unbound does not raise the unreachable alarm -
+            // that is what the previous getter did.
+            _lastDataTime.value = dateUtil.now()
         }
     }
     private var timeOffset: Long = 0
@@ -276,6 +292,12 @@ class InsightPlugin(
 
     override suspend fun onStop() {
         super.onStop()
+        // Cancel before unbinding. onServiceDisconnected is only called when the service process
+        // dies unexpectedly, never by unbindService, so a plugin stop - a settings import, a config
+        // change, switching pumps - would otherwise leave the collector running on appScope for the
+        // life of the process, still writing the value the pump unreachable alarm is timed from.
+        lastDataTimeJob?.cancel()
+        lastDataTimeJob = null
         context.unbindService(serviceConnection)
     }
 
@@ -337,7 +359,6 @@ class InsightPlugin(
                 aapsLogger.error("Exception while fetching status", e)
             }
         }
-        _lastDataTime.value = if (connectionService == null || alertService == null) dateUtil.now() else connectionService?.lastDataTime ?: 0
     }
 
     @Throws(Exception::class) private fun updatePumpTimeIfNeeded() {
@@ -466,13 +487,23 @@ class InsightPlugin(
         }
         connectionService?.let { service ->
             try {
-                val activeBRProfileBlock = ActiveBRProfileBlock()
-                activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
-                ParameterBlockUtil.writeConfigurationBlock(service, activeBRProfileBlock)
-                activeBasalProfile = BasalProfile.PROFILE_1
+                // Both blocks go into ONE write session, rates first and activation second.
+                //
+                // The pump only applies a write session when it is closed, so nothing at all is
+                // committed until both blocks have been written. A connection lost anywhere in
+                // between leaves the pump exactly as it was, instead of switched to PROFILE_1 while
+                // PROFILE_1 still holds the old rates - which is what the previous two-session
+                // version did, with nothing to warn the user.
+                //
+                // The order still matters as a second line of defence: if the pump ever rejects the
+                // second write while the link is up, the close is still sent, so the rates must be
+                // the block that is already in.
                 val profileBlock: BRProfileBlock = BRProfile1Block()
                 profileBlock.profileBlocks = profileBlocks
-                ParameterBlockUtil.writeConfigurationBlock(service, profileBlock)
+                val activeBRProfileBlock = ActiveBRProfileBlock()
+                activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
+                ParameterBlockUtil.writeConfigurationBlocks(service, profileBlock, activeBRProfileBlock)
+                activeBasalProfile = BasalProfile.PROFILE_1
                 // PROFILE_SET_OK posted (and FAILED cleared) centrally on the return value.
                 result.success(true)
                     .enacted(true)
@@ -521,7 +552,8 @@ class InsightPlugin(
         return true
     }
 
-    private val _lastDataTime = MutableStateFlow(0L)
+    private var lastDataTimeJob: Job? = null
+    private val _lastDataTime = MutableStateFlow(dateUtil.now())
     override val lastDataTime: StateFlow<Long> = _lastDataTime
 
     private val _lastBolusTime = MutableStateFlow<Long?>(null)
