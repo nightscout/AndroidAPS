@@ -318,7 +318,7 @@
     <string name="careportal_question_message">問題：%1$s</string>
     <string name="careportal_exercise_message">運動：%1$s</string>
     <string name="careportal_pump_site_change">幫浦位置更改</string>
-    <string name="cgm_sensor_insert">傳感器插入</string>
+    <string name="cgm_sensor_insert">傳感器植入</string>
     <string name="careportal_pump_site_management">幫浦植入部位</string>
     <string name="careportal_cgm_site_management">CGM 植入部位</string>
     <string name="careportal_cgmsensorstart">傳感器啟動</string>
@@ -467,7 +467,7 @@
     <string name="treatment_bg_check_desc">記錄血糖量測</string>
     <string name="treatment_exercise_desc">記錄運動活動</string>
     <string name="treatment_announcement_desc">發布公告</string>
-    <string name="treatment_sensor_insert_desc">記錄 CGM 傳感器插入</string>
+    <string name="treatment_sensor_insert_desc">記錄 CGM 傳感器植入</string>
     <string name="treatment_battery_change_desc">記錄幫浦電池更換</string>
     <string name="treatment_cannula_change_desc">記錄導管／輸注組更換</string>
     <string name="treatment_fill_desc">預充並填充導管</string>
