@@ -1,10 +1,10 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
-import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.shared.tests.TestBase
@@ -181,7 +181,7 @@ class NeedsBasalCorrectionTest : TestBase() {
             rate              = 0.0
         )
         // createLastBolus sets startTime = now, satisfying the < 5 min recency check
-        sut.createLastBolus(requestedUnits = 1.0, historyId = 1L, bolusType = BS.Type.NORMAL)
+        sut.createLastBolus(requestedUnits = 1.0, historyId = 1L, bolusType = BolusType.DEFAULT)
         setDrift(10, 0, 0.55)   // drift = -0.05
         assertThat(sut.needsBasalCorrection()).isTrue()
     }
