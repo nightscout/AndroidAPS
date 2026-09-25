@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
+import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
@@ -66,7 +67,8 @@ class SceneExecutor(
     private val translator: Translator,
     private val profileSwitchSilentGate: ProfileSwitchSilentGate,
     private val notificationManager: NotificationManager,
-    private val sceneExpiryScheduler: SceneExpiryScheduler
+    private val sceneExpiryScheduler: SceneExpiryScheduler,
+    private val sceneChainResolver: SceneChainResolver
 ) {
 
     /** A parked scene activation awaiting [commitScene] — the two-step master-authoritative path. */
@@ -155,12 +157,19 @@ class SceneExecutor(
         return WizardBolusExecutor.ConfirmResult.Delivered
     }
 
-    /** The master-authored confirmation lines for a scene — name + duration + one line per action (authored ONCE here). */
+    /**
+     * The master-authored confirmation lines for a scene — name + duration + one line per action
+     * (authored ONCE here), and the follow-up that starts when it ends, so the wearer knows what
+     * they are setting in motion before they confirm. The catalog check is enough here: whether
+     * the follow-up can run is decided when this scene ends, not now.
+     */
     private fun buildSceneLines(scene: Scene, durationMinutes: Int): List<ConfirmationLine> = buildList {
         add(ConfirmationLine(ConfirmationRole.SCENE, scene.name))
         if (durationMinutes > 0)
             add(ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.duration), formatMinutesAsDuration(durationMinutes, rh))))
         scene.actions.forEach { add(ConfirmationLine(ConfirmationRole.NORMAL, sceneActionLine(it))) }
+        // The same "→ X" the Scenes list shows, in the scene colour on both the phone and the watch
+        sceneChainResolver.resolveCatalogChainTarget(scene)?.let { add(ConfirmationLine(ConfirmationRole.SCENE, rh.gs(CoreUiStrings.scene_chain_indicator, it.name))) }
     }
 
     private fun sceneActionLine(action: SceneAction): String = when (action) {
