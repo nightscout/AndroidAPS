@@ -274,7 +274,7 @@ class LocalImportExportPrefs(
         transfer.importResult(file.content, password, config.isEngineeringMode())
             .also { if (it is ImportDecryptResult.Error) aapsLogger.error(LTag.CORE, "Reading ${file.name} failed: ${it.message}") }
 
-    override fun executeImport(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome {
+    override suspend fun executeImport(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome {
         activePlugin.beforeImport()
         val outcome = applier.apply(prefs, keepPumpSettings)
         activePlugin.afterImport()

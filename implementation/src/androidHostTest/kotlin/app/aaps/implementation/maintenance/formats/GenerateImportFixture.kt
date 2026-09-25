@@ -175,6 +175,10 @@ class GenerateImportFixture {
         store.putString("aps_mode", "CLOSED")
 
         // --- Temp target presets, with values well away from the defaults so a silent reset shows. ---
+        // mg/dL-sized numbers beside `units = "mmol"` below, and that combination is deliberate: it is
+        // what a user who set these while on mg/dL and later switched the display to mmol/L actually
+        // has. 3.3 stored a `UnitDoubleKey` raw and decoded it by magnitude on the way out, so the
+        // units switch rewrote nothing. A migration that trusts `units` turns 100 into 1801 mg/dL.
         store.putString("eatingsoon_target", "100.0")
         store.putString("eatingsoon_duration", "30")
         store.putString("activity_target", "150.0")

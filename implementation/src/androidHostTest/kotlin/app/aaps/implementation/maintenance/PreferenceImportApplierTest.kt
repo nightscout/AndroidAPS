@@ -2,9 +2,11 @@ package app.aaps.implementation.maintenance
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -19,8 +21,10 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.implementation.maintenance.migration.PreferenceMigrations
 import app.aaps.implementation.sharedPreferences.PreferenceKeyResolverFactory
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
@@ -60,13 +64,14 @@ class PreferenceImportApplierTest {
             resolverFactory = PreferenceKeyResolverFactory(preferences, activePlugin),
             config = config,
             aapsLogger = mock<AAPSLogger>(),
-            dateUtil = mock<DateUtil>()
+            dateUtil = mock<DateUtil>(),
+            migrations = PreferenceMigrations(mock<AAPSLogger>(), config, mock<PersistenceLayer>(), mock<DateUtil>(), mock<ProfileUtil>())
         )
     }
 
     private fun prefs(vararg pairs: Pair<String, String>) = Prefs(mapOf(*pairs), mutableMapOf())
 
-    @Test fun `a changed value is written and published once`() {
+    @Test fun `a changed value is written and published once`() = runTest {
         store.putBoolean(BooleanKey.GeneralSimpleMode.key, true)
 
         val outcome = sut().apply(prefs(BooleanKey.GeneralSimpleMode.key to "false"), keepPumpSettings = false)
@@ -76,7 +81,7 @@ class PreferenceImportApplierTest {
         verify(preferences).reloadFromStore()
     }
 
-    @Test fun `an unchanged value is not written at all`() {
+    @Test fun `an unchanged value is not written at all`() = runTest {
         store.putBoolean(BooleanKey.GeneralSimpleMode.key, false)
 
         val outcome = sut().apply(prefs(BooleanKey.GeneralSimpleMode.key to "false"), keepPumpSettings = false)
@@ -91,7 +96,7 @@ class PreferenceImportApplierTest {
      * The one line that enforces "device state never arrives from a file". Old export files still
      * carry these names, because the flag changed after they were written.
      */
-    @Test fun `a non-exportable key in the file is refused`() {
+    @Test fun `a non-exportable key in the file is refused`() = runTest {
         val outcome = sut().apply(prefs(StringNonKey.ActivePumpSerialNumber.key to "999"), keepPumpSettings = false)
 
         assertThat(outcome.notExportable).isEqualTo(1)
@@ -99,14 +104,14 @@ class PreferenceImportApplierTest {
         assertThat(store.getString(StringNonKey.ActivePumpSerialNumber.key, "")).isEmpty()
     }
 
-    @Test fun `a name this build does not know is left alone, not dropped`() {
+    @Test fun `a name this build does not know is left alone, not dropped`() = runTest {
         val outcome = sut().apply(prefs("key_from_a_newer_aaps" to "x"), keepPumpSettings = false)
 
         assertThat(outcome.unresolved).containsExactly("key_from_a_newer_aaps")
         assertThat(outcome.changed).isEqualTo(0)
     }
 
-    @Test fun `a value that will not parse is skipped, not guessed`() {
+    @Test fun `a value that will not parse is skipped, not guessed`() = runTest {
         store.putInt(IntKey.ApsDynIsfAdjustmentFactor.key, 50)
 
         val outcome = sut().apply(prefs(IntKey.ApsDynIsfAdjustmentFactor.key to "not a number"), keepPumpSettings = false)
@@ -119,7 +124,7 @@ class PreferenceImportApplierTest {
      * Today's import guesses the type from the text: `if (value == "true") putBoolean else putString`.
      * A StringKey whose value happens to be "true" is then stored as a Boolean.
      */
-    @Test fun `a string whose text looks like a boolean stays a string`() {
+    @Test fun `a string whose text looks like a boolean stays a string`() = runTest {
         val outcome = sut().apply(prefs(StringKey.GeneralUnits.key to "true"), keepPumpSettings = false)
 
         assertThat(outcome.changed).isEqualTo(1)
@@ -135,7 +140,7 @@ class PreferenceImportApplierTest {
      * written, and the effective value stayed the COMPUTED default. For
      * `ns_allow_client_control` that means an import saying remote control is OFF left it ON.
      */
-    @Test fun `a key absent from the store is always written, even if it equals the static default`() {
+    @Test fun `a key absent from the store is always written, even if it equals the static default`() = runTest {
         val key = BooleanKey.GeneralSimpleMode          // any key; the point is that it is absent
         assertThat(store.raw).doesNotContainKey(key.key)
 
@@ -151,7 +156,7 @@ class PreferenceImportApplierTest {
      * "3.3" the file carries. Every double in every import counted as a change, which made the count
      * on the confirm screen meaningless.
      */
-    @Test fun `a double that only differs at float precision is unchanged`() {
+    @Test fun `a double that only differs at float precision is unchanged`() = runTest {
         val key = DoubleKey.ApsMaxBasal
         store.putDouble(key.key, 3.3.toFloat().toDouble())   // what Android would have stored
 
@@ -166,7 +171,7 @@ class PreferenceImportApplierTest {
      * type can throw. That used to abort the entire import; now it writes, which also repairs the
      * wrongly-typed entry.
      */
-    @Test fun `a stored value of the wrong native type is overwritten, not thrown on`() {
+    @Test fun `a stored value of the wrong native type is overwritten, not thrown on`() = runTest {
         val key = BooleanKey.GeneralSimpleMode
         store.raw[key.key] = "true"                     // a String where a Boolean belongs
 
@@ -178,7 +183,7 @@ class PreferenceImportApplierTest {
 
     // ---- the checkbox ----
 
-    @Test fun `keeping pump settings skips pump-owned keys and counts them`() {
+    @Test fun `keeping pump settings skips pump-owned keys and counts them`() = runTest {
         val pumpKey = StringKey.GeneralUnits          // stand-in: whatever the pump plugin claims
         store.putString(pumpKey.key, "mgdl")
 
@@ -190,7 +195,7 @@ class PreferenceImportApplierTest {
         assertThat(store.getString(pumpKey.key, "")).isEqualTo("mgdl")
     }
 
-    @Test fun `a full import writes the same pump key`() {
+    @Test fun `a full import writes the same pump key`() = runTest {
         val pumpKey = StringKey.GeneralUnits
         store.putString(pumpKey.key, "mgdl")
 
@@ -206,7 +211,7 @@ class PreferenceImportApplierTest {
      * this phone's pump settings is the one combination that was explicitly ruled out: it leaves the
      * driver from the file pointed at configuration that belongs to a different pump.
      */
-    @Test fun `keeping pump settings also skips the pump's ConfigBuilder entry`() {
+    @Test fun `keeping pump settings also skips the pump's ConfigBuilder entry`() = runTest {
         val pumpSelection = BooleanComposedKey.ConfigBuilderEnabled.composeKey("PUMP_SomePumpPlugin")
         val otherSelection = BooleanComposedKey.ConfigBuilderEnabled.composeKey("APS_OpenAPSSMBPlugin")
 
@@ -227,7 +232,7 @@ class PreferenceImportApplierTest {
      * stamp, `ClientControlReceiver` sees `pushed.lastModified > ours`, accepts it, and the imported
      * value is gone - with the import log still saying it applied.
      */
-    @Test fun `a master stamps the synced keys it imported`() {
+    @Test fun `a master stamps the synced keys it imported`() = runTest {
         val synced = BooleanKey.GeneralSimpleMode      // SyncSpec(Cold, Bidirectional)
         store.putBoolean(synced.key, true)
 
@@ -238,7 +243,7 @@ class PreferenceImportApplierTest {
         verify(preferences).put(eq(LongComposedKey.SyncedPrefModified), anyVararg(), value = any())
     }
 
-    @Test fun `an unchanged synced key is not stamped`() {
+    @Test fun `an unchanged synced key is not stamped`() = runTest {
         val synced = BooleanKey.GeneralSimpleMode
         store.putBoolean(synced.key, false)
 
@@ -249,7 +254,7 @@ class PreferenceImportApplierTest {
 
     // ---- client ----
 
-    @Test fun `a client never writes a synced key`() {
+    @Test fun `a client never writes a synced key`() = runTest {
         // GeneralSimpleMode is Bidirectional. On a client it belongs to the master, and writing it
         // would be reverted by the master's next cold publish anyway.
         val outcome = sut(client = true).apply(prefs(BooleanKey.GeneralSimpleMode.key to "true"), keepPumpSettings = false)
@@ -258,7 +263,7 @@ class PreferenceImportApplierTest {
         assertThat(store.raw).doesNotContainKey(BooleanKey.GeneralSimpleMode.key)
     }
 
-    @Test fun `a master does write a synced key`() {
+    @Test fun `a master does write a synced key`() = runTest {
         val outcome = sut(client = false).apply(prefs(BooleanKey.GeneralSimpleMode.key to "false"), keepPumpSettings = false)
 
         assertThat(outcome.syncedSkipped).isEqualTo(0)
@@ -267,7 +272,7 @@ class PreferenceImportApplierTest {
 
     // ---- preview ----
 
-    @Test fun `preview reports the same counts and writes nothing`() {
+    @Test fun `preview reports the same counts and writes nothing`() = runTest {
         store.putBoolean(BooleanKey.GeneralSimpleMode.key, true)
         val file = prefs(BooleanKey.GeneralSimpleMode.key to "false")
 

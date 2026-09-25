@@ -68,6 +68,14 @@ class RawPreferenceStoreScanTest {
         // bypassing the key system, only the per-key write.
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/PreferenceImportApplier.kt" to
             "applies an import as one batched write, then republishes through Preferences.reloadFromStore()",
+        // The preference migrations. They rename keys this build no longer registers, so by definition
+        // they cannot go through `Preferences` - an unregistered name is what they exist to deal with.
+        // Taking the store as a parameter is the design: start up hands them the device's store, an
+        // import hands them the file, and one copy of the functions serves both.
+        "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/migration/PreferenceMigrations.kt" to
+            "migrates keys this build no longer registers, over whichever store it is handed",
+        "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/migration/FileKeyValueStore.kt" to
+            "an in-memory store over an import file, so the migrations above run on it without touching the device",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/CloudStorageManager.kt" to "moves export files to and from cloud storage",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/GoogleDriveProvider.kt" to "cloud export, shared part",
         "implementation/src/androidMain/kotlin/app/aaps/implementation/maintenance/cloud/AndroidGoogleDriveProvider.kt" to "cloud export, Android part",
