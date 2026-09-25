@@ -29,7 +29,7 @@ composeUi = "1.12.1"
 # Compose Multiplatform. Separate from the androidx Compose above: CMP publishes the same
 # androidx.compose.* package names and its Android variants delegate to androidx, so the
 # composeBom still decides the Android versions.
-composeMultiplatform = "1.12.0"
+composeMultiplatform = "1.12.1"
 jetbrainsLifecycle = "2.11.0"
 
 [plugins]
