@@ -2,10 +2,13 @@ package app.aaps.wear.heartrate
 
 import android.content.Context
 import android.content.Context.SENSOR_SERVICE
+import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.BatteryManager
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -52,6 +55,7 @@ class HeartRateListener(
     /** How often we send values to the phone. */
     private val samplingIntervalMillis = 60_000L
     private val sampler = Sampler(now, sp)
+    private var offBody = false
     private var schedule: Disposable? = null
 
     /** We only use values with these accuracies and ignore NO_CONTACT and UNRELIABLE. */
@@ -72,6 +76,13 @@ class HeartRateListener(
                 aapsLogger.warn(LTag.WEAR, "Cannot get heart rate sensor")
             } else {
                 sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL)
+            }
+
+            val offBodySensor = sensorManager.getDefaultSensor(Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT)
+            if (offBodySensor == null) {
+                aapsLogger.warn(LTag.WEAR, "Cannot get off body sensor")
+            } else {
+                sensorManager.registerListener(this, offBodySensor, SensorManager.SENSOR_DELAY_NORMAL)
             }
         }
         schedule = aapsSchedulers.io.schedulePeriodicallyDirect(
@@ -101,6 +112,26 @@ class HeartRateListener(
         send(System.currentTimeMillis())
     }
 
+    fun isDeviceCharging(context: Context): Boolean {
+        val batteryStatus: Intent? = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+
+        val chargePlug = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
+
+        val isCharging =  status == BatteryManager.BATTERY_STATUS_CHARGING ||
+            chargePlug == BatteryManager.BATTERY_PLUGGED_AC ||
+            chargePlug == BatteryManager.BATTERY_PLUGGED_USB ||
+            chargePlug == BatteryManager.BATTERY_PLUGGED_WIRELESS
+
+        if (isCharging) {
+            sampler.setHeartRate(System.currentTimeMillis(), null)
+        }
+
+        return isCharging
+    }
+
+
+
     @VisibleForTesting
     fun send(timestampMillis: Long) {
         sampler.getAndReset(timestampMillis)?.let { hr ->
@@ -128,12 +159,24 @@ class HeartRateListener(
 
     @VisibleForTesting
     fun onSensorChanged(sensorType: Int?, accuracy: Int, timestampMillis: Long, values: FloatArray) {
-        if (sensorType == null || sensorType != Sensor.TYPE_HEART_RATE || values.isEmpty()) {
+
+        if (sensorType == null || values.isEmpty()) {
             aapsLogger.error(LTag.WEAR, "Invalid SensorEvent $sensorType $accuracy $timestampMillis ${values.joinToString()}")
             return
         }
-        val heartRate = values[0].toDouble().takeIf { accuracy in goodAccuracies }
-        sampler.setHeartRate(timestampMillis, heartRate)
+        if (sensorType == Sensor.TYPE_LOW_LATENCY_OFFBODY_DETECT) {
+            val offBodyDataFloat = values[0];
+            offBody = offBodyDataFloat.roundToInt() == 0;
+            if(offBody) {
+                sampler.setHeartRate(timestampMillis, null)
+            }
+            return
+        }
+
+        if (sensorType == Sensor.TYPE_HEART_RATE && !offBody && !isDeviceCharging(ctx)) {
+            val heartRate = values[0].toDouble().takeIf { accuracy in goodAccuracies }
+            sampler.setHeartRate(timestampMillis, heartRate)
+        }
     }
 
     private class Sampler(timestampMillis: Long, val sp: SP) {
