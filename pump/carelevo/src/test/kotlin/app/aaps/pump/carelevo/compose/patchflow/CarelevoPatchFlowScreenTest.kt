@@ -28,7 +28,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -137,7 +136,6 @@ class CarelevoPatchFlowScreenTest {
     private lateinit var profileRepository: ProfileRepository
     private lateinit var insulinManager: InsulinManager
     private lateinit var persistenceLayer: PersistenceLayer
-    private lateinit var sp: SP
     private lateinit var bleSession: CarelevoBleSession
     private lateinit var transport: CarelevoBleTransport
     private lateinit var scanner: BleScanner
@@ -186,7 +184,6 @@ class CarelevoPatchFlowScreenTest {
         profileRepository = mock()
         insulinManager = mock()
         persistenceLayer = mock()
-        sp = mock()
         bleSession = mock()
         transport = mock()
         scanner = mock()
@@ -228,7 +225,7 @@ class CarelevoPatchFlowScreenTest {
             aapsSchedulers = aapsSchedulers,
             carelevoPatch = carelevoPatch,
             commandQueue = commandQueue,
-            sp = sp,
+            preferences = preferences,
             bleSession = bleSession,
             transport = transport,
             connectNewPatchUseCase = connectNewPatchUseCase,

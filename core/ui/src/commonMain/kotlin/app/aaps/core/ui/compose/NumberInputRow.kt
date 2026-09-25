@@ -26,12 +26,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import kotlin.math.roundToInt
@@ -130,8 +135,26 @@ fun NumberInputRow(
     // Range text
     val rangeText = "${effectiveValueFormat.format(valueRange.start)} — ${effectiveValueFormat.format(valueRange.endInclusive)}"
 
+    // Names for the +/- buttons read by a screen reader. Without the label every number row on a
+    // screen would sound the same, so the label is included when there is one.
+    //
+    // The step carries its unit, so this says "increment Bolus by 0.1 U" and not a bare "by 0.1",
+    // matching what SliderWithButtons speaks. Joined through a format resource rather than in code,
+    // because a translator has to be able to move the unit relative to the number.
+    val stepNumber = effectiveValueFormat.format(step)
+    val stepText =
+        if (resolvedUnitLabel.isNotEmpty()) stringResource(CoreUiStrings.value_with_unit, stepNumber, resolvedUnitLabel)
+        else stepNumber
+    val decreaseDescription =
+        if (label.isNotEmpty()) stringResource(CoreUiStrings.a11y_min_button_description, label, stepText)
+        else stringResource(CoreUiStrings.decrement)
+    val increaseDescription =
+        if (label.isNotEmpty()) stringResource(CoreUiStrings.a11y_plus_button_description, label, stepText)
+        else stringResource(CoreUiStrings.increment)
+
     // Pre-resolve error strings for use in non-composable validateAndCommit
     val errorInvalidNumber = stringResource(CoreUiStrings.invalid_number)
+    val errorOutOfRange = stringResource(InterfacesStrings.confirmation_line, stringResource(CoreUiStrings.error), rangeText)
 
     fun validateAndCommit(text: String) {
         val cleaned = text.trim().replace(",", ".")
@@ -202,7 +225,12 @@ fun NumberInputRow(
 
                         cleaned.toDouble() !in valueRange -> {
                             isError = true
-                            errorMessage = rangeText
+                            // Not the bare range: that is the very text already shown when the value
+                            // is fine, so the supporting line would change colour and nothing else.
+                            // A screen reader is never told - Compose drops a semantics change whose
+                            // new value equals the old one, so the live region below stayed silent -
+                            // and a colour-blind user sees no change either.
+                            errorMessage = errorOutOfRange
                         }
 
                         else                              -> {
@@ -249,14 +277,36 @@ fun NumberInputRow(
             // Errors still surface so the user isn't stuck.
             if (!compact || isError) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        // Compact mode only: this row is composed for the first time at the moment
+                        // the value is rejected, and a live region stays silent for a node that was
+                        // not in the tree on the previous pass (sendSemanticsPropertyChangeEvents
+                        // skips a node with no previous entry). So the appearing row carries a
+                        // paneTitle instead, which is sent as CONTENT_CHANGE_TYPE_PANE_APPEARED
+                        // with the error text. When one error replaces another the title change is
+                        // announced too.
+                        .then(
+                            if (compact) Modifier.semantics { paneTitle = errorMessage }
+                            else Modifier
+                        ),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
                         text = if (isError) errorMessage else rangeText,
                         style = MaterialTheme.typography.bodySmall,
                         color = if (isError) MaterialTheme.colorScheme.error
-                        else MaterialTheme.colorScheme.onSurfaceVariant
+                        else MaterialTheme.colorScheme.onSurfaceVariant,
+                        // Not compact: this Text is composed with or without an error and only its
+                        // content changes, from the allowed range to the error message. That is the
+                        // case where a live region really fires, so a blind user hears that the
+                        // value was refused instead of typing on unaware.
+                        //
+                        // Assertive on purpose: the user is in the middle of entering a number and
+                        // has to be interrupted. It cannot flood, because this line changes only
+                        // when the value crosses in or out of the allowed range, not per keystroke.
+                        modifier = if (compact) Modifier
+                        else Modifier.semantics { liveRegion = LiveRegionMode.Assertive }
                     )
                     val rightText = displayValue ?: formattedDisplay.takeIf { showFormattedDisplay }
                     if (rightText != null && !isError) {
@@ -277,7 +327,7 @@ fun NumberInputRow(
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
-                contentDescription = "Decrease",
+                contentDescription = decreaseDescription,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -287,7 +337,7 @@ fun NumberInputRow(
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
-                contentDescription = "Increase",
+                contentDescription = increaseDescription,
                 modifier = Modifier.size(20.dp)
             )
         }

@@ -210,11 +210,11 @@ class DataHandlerMobile(
         // From Wear
         onEventSync<EventData.ActionPong> { fabricPrivacy.logCustom("WearOS_${it.apiLevel}") }
         onEventSync<EventData.CancelBolus> {
-            if (!config.appInitialized) return@onEventSync
+            if (rejectIfNotReady()) return@onEventSync
             activePlugin.activePump.stopBolusDelivering()
         }
         onEvent<EventData.OpenLoopRequestConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             loop.acceptChangeRequest()
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.NOTIFICATION_ID)
         }
@@ -291,15 +291,15 @@ class DataHandlerMobile(
         // ConfigBuilder.initialize() has run verifySelectionInCategories() the active APS is still null, so a
         // dose recompute would hit ProfileSealed's "APS not defined" guard.
         onEvent<EventData.ActionFillPresetPreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleFillPresetPreCheck(it)
         }
         onEvent<EventData.ActionFillPreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleFillPreCheck(it)
         }
         onEvent<EventData.ActionFillConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             // Defense-in-depth: Fill is off-relay and delivered locally only — a client must never reach here.
             if (rejectIfAapsClient()) return@onEvent
             if (constraintChecker.applyBolusConstraints(ConstraintObject(it.insulin, aapsLogger)).value() - it.insulin != 0.0) {
@@ -315,11 +315,11 @@ class DataHandlerMobile(
         // refuses before init, so this is defence in depth - but it keeps the refusal in one place with the
         // rest, so a later direct call here cannot bring back the "APS not defined" crash.
         onEvent<EventData.ActionQuickWizardPreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleQuickWizardPreCheck(it)
         }
         onEvent<EventData.ActionWizardPreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleWizardPreCheck(it)
         }
         onEvent<EventData.ActionWizardConfirmed> {
@@ -334,31 +334,31 @@ class DataHandlerMobile(
             }
         }
         onEvent<EventData.ActionUserActionPreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleUserActionPreCheck(it)
         }
         onEvent<EventData.ActionUserActionConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleUserActionConfirmed(it)
         }
         onEvent<EventData.ActionScenePreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleScenePreCheck(it)
         }
         onEvent<EventData.ActionSceneConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleSceneConfirmed(it)
         }
         onEvent<EventData.ActionSceneStop> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             scenes.stopActiveScene()
         }
         onEvent<EventData.ActionSceneStopPreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleSceneStopPreCheck()
         }
         onEvent<EventData.ActionSceneStopConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             onCommitResult(sceneActions.stop(triggerChain = false))
         }
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
@@ -580,6 +580,35 @@ class DataHandlerMobile(
     private fun rejectIfAapsClient(): Boolean {
         if (config.AAPSCLIENT) {
             sendError(rh.gs(SyncStrings.wear_remote_insulin_not_allowed_in_client))
+            return true
+        }
+        return false
+    }
+
+    /**
+     * The phone cannot act on this yet, and the watch is told so instead of being left waiting.
+     *
+     * [app.aaps.core.interfaces.configuration.Config.appInitialized] is false in two situations, and the
+     * watch cannot tell them apart or do anything about either: start up has not finished, or a settings
+     * import is rebuilding plugin state. In both, reading the active plugin would hit `PluginStore`'s
+     * deliberate "No pump selected" assertion.
+     *
+     * Every handler guarded by this is something the user just did on the watch - cancel a bolus, accept
+     * a change request, fill. A bare `return` there leaves the watch showing a spinner that never
+     * resolves, so the action looks accepted when nothing happened. Saying "try again" is the whole
+     * difference.
+     *
+     * The three gates on the DATA path (`resendData` and the two display builders) deliberately do NOT
+     * use this: nothing asked for them, so there is nobody to answer, and they retry on the next state
+     * change by themselves.
+     */
+    // internal, not private, so the test can drive it directly - the same reason the handlers are.
+    // Driving it through rxBus instead would re-enter the bus while the incoming event is still being
+    // collected, and the reply is then not seen by a test collector.
+    internal fun rejectIfNotReady(): Boolean {
+        if (!config.appInitialized) {
+            aapsLogger.debug(LTag.WEAR, "Refusing a watch action: app not initialized or reconfiguring")
+            sendError(rh.gs(SyncStrings.wear_phone_not_ready))
             return true
         }
         return false

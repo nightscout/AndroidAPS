@@ -4,6 +4,7 @@ import app.aaps.core.data.model.devAssert
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -24,8 +25,9 @@ abstract class PumpPluginBase(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
     preferences: Preferences,
-    val commandQueue: CommandQueue
-) : PluginBaseWithPreferences(pluginDescription, ownPreferences, aapsLogger, rh, preferences) {
+    val commandQueue: CommandQueue,
+    notificationManager: NotificationManager
+) : PluginBaseWithPreferences(pluginDescription, ownPreferences, aapsLogger, rh, preferences, notificationManager) {
 
     private var initialReadStatusJob: Job? = null
 

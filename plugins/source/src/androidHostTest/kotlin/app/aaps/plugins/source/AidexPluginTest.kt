@@ -47,11 +47,6 @@ class AidexPluginTest : TestBase() {
         assertThat(aidexPlugin.hasSensorError()).isFalse()
     }
 
-    @Test
-    fun `specialEnableCondition is true`() {
-        assertThat(aidexPlugin.specialEnableCondition()).isTrue()
-    }
-
     // The if/else structure in handleSensorNotifications guarantees that each of the 5 conditions
     // calls either post() OR dismiss(). Verifying dismiss (which has a simple non-vararg signature)
     // tells us which branch fired without having to wrestle Mockito matchers around the post()

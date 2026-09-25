@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.smsCommunicator
 
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
 import android.Manifest
@@ -22,14 +23,12 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -40,7 +39,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.smsCommunicator.smsFromMessage
@@ -122,7 +121,7 @@ import org.joda.time.DateTime
 @Inject
 class SmsCommunicatorPlugin(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     private val smsManager: SmsManager?,
     preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
@@ -143,10 +142,9 @@ class SmsCommunicatorPlugin(
     private val decimalFormatter: DecimalFormatter,
     private val configBuilder: ConfigBuilder,
     private val pumpStatusProvider: PumpStatusProvider,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val runningModeGuard: RunningModeGuard,
     private val bolusProgressData: BolusProgressData,
-    @ApplicationScope private val appScope: CoroutineScope,
     val repository: SmsCommunicatorRepository
 ) : PluginBaseWithPreferences(
     PluginDescription()
@@ -157,7 +155,7 @@ class SmsCommunicatorPlugin(
         .shortName(SyncStrings.smscommunicator_shortname)
         .description(SyncStrings.description_sms_communicator),
     ownPreferences = SmsIntentKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), SmsCommunicator {
 
     private var scope: CoroutineScope? = null
@@ -1001,7 +999,6 @@ class SmsCommunicatorPlugin(
                     dateUtil = dateUtil,
                     rh = rh,
                     uel = uel,
-                    appScope = appScope,
                     sendSMSToAllNumbers = ::sendSMSToAllNumbers
                 )
             )

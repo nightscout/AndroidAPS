@@ -406,10 +406,10 @@ abstract class AbstractDanaEmulatorUiTest {
         assertThat(isTempBasalRunning()).isFalse()
         waitForQueueIdle()
         openManageAction("Temp basal")
-        openVia("Temp basal", expect = "Decrease")   // the TBR dialog (its steppers)
+        openViaDescContains("Temp basal", expect = DECREMENT)   // the TBR dialog (its steppers)
         // Raise the percent above 100 so the confirm button enables; the duration is pre-set to the
-        // pump's step. The first "Increase" stepper is the percent (duration is the second).
-        repeat(TBR_INCREASE_TAPS) { withStaleRetry { device.findObjects(byDesc("Increase")).first().click() } }
+        // pump's step. The first plus stepper is the percent (duration is the second).
+        repeat(TBR_INCREASE_TAPS) { withStaleRetry { device.findObjects(byDescContains(INCREMENT)).first().click() } }
         clickRegex("""\d+\s*%""")   // confirm button, labelled with the chosen percent
         click("OK")                 // ElementConfirmationDialog → commit
         val applied = awaitTrue(COMMAND_TIMEOUT) {
@@ -427,9 +427,9 @@ abstract class AbstractDanaEmulatorUiTest {
         assertThat(isExtendedBolusRunning()).isFalse()
         waitForQueueIdle()
         openManageAction("Extended bolus")
-        openVia("Extended bolus", expect = "Decrease")
-        // First "Increase" stepper is the insulin amount; raise it above 0 to enable the confirm.
-        repeat(EXTENDED_INCREASE_TAPS) { withStaleRetry { device.findObjects(byDesc("Increase")).first().click() } }
+        openViaDescContains("Extended bolus", expect = DECREMENT)
+        // First plus stepper is the insulin amount; raise it above 0 to enable the confirm.
+        repeat(EXTENDED_INCREASE_TAPS) { withStaleRetry { device.findObjects(byDescContains(INCREMENT)).first().click() } }
         clickRegex("""\d+\.\d+\s*U""")   // confirm button, labelled with the chosen amount
         click("OK")
         val applied = awaitTrue(COMMAND_TIMEOUT) {
@@ -462,6 +462,18 @@ abstract class AbstractDanaEmulatorUiTest {
 
     protected fun byDesc(s: String): BySelector =
         By.desc(Pattern.compile(Pattern.quote(s), Pattern.CASE_INSENSITIVE))
+
+    /**
+     * Like [byDesc], but matches any content description that *contains* [s].
+     *
+     * A [Pattern] in a [BySelector] is a whole-string match, and the number steppers are no longer
+     * described by a fixed English word: their description is localized and carries the field label
+     * and the step, e.g. "increment Temp basal by 10" (`a11y_plus_button_description`). So [DECREMENT]
+     * and [INCREMENT] can only be matched as a part of the description. [byDesc] stays exact — the
+     * other call sites rely on that.
+     */
+    protected fun byDescContains(s: String): BySelector =
+        By.desc(Pattern.compile(".*" + Pattern.quote(s) + ".*", Pattern.CASE_INSENSITIVE or Pattern.DOTALL))
 
     protected fun find(label: String, timeout: Long = STEP_TIMEOUT): UiObject2 {
         val end = SystemClock.uptimeMillis() + timeout
@@ -527,10 +539,29 @@ abstract class AbstractDanaEmulatorUiTest {
         error("'$expect' not visible after $attempts taps on '$open'")
     }
 
+    /** [openVia] for a screen recognised by a content description that only *contains* [expect] (see [byDescContains]). */
+    protected fun openViaDescContains(open: String, expect: String, attempts: Int = 4) {
+        repeat(attempts) {
+            click(open)
+            if (waitForDescContains(expect)) return
+        }
+        error("no description containing '$expect' after $attempts taps on '$open'")
+    }
+
     protected fun waitForVisible(label: String, timeout: Long = STEP_TIMEOUT): Boolean {
         val end = SystemClock.uptimeMillis() + timeout
         while (SystemClock.uptimeMillis() < end) {
             if (device.findObject(byText(label)) != null || device.findObject(byDesc(label)) != null) return true
+            device.waitForIdle(IDLE_MS)
+        }
+        return false
+    }
+
+    /** [waitForVisible] for a content description that only *contains* [desc] (see [byDescContains]). */
+    protected fun waitForDescContains(desc: String, timeout: Long = STEP_TIMEOUT): Boolean {
+        val end = SystemClock.uptimeMillis() + timeout
+        while (SystemClock.uptimeMillis() < end) {
+            if (device.findObject(byDescContains(desc)) != null) return true
             device.waitForIdle(IDLE_MS)
         }
         return false
@@ -576,6 +607,12 @@ abstract class AbstractDanaEmulatorUiTest {
 
         /** `core.ui.R.string.pump_management` — the Manage sheet's entry onto the active pump. */
         private const val PUMP_MANAGEMENT = "Pump"
+
+        // The first word of every number stepper's description (`core.ui.R.string.increment` /
+        // `decrement`, and the start of `a11y_plus_button_description` / `a11y_min_button_description`).
+        // Only usable with byDescContains — see there. Non-private: subclasses tap steppers too.
+        const val INCREMENT = "increment"
+        const val DECREMENT = "decrement"
 
         private const val PROFILE_NAME = "LocalProfile1"
 

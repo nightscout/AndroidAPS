@@ -9,9 +9,11 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class SensitivityOref1PluginTest : SensitivityTestBase() {
@@ -19,7 +21,7 @@ class SensitivityOref1PluginTest : SensitivityTestBase() {
     private lateinit var sut: SensitivityOref1Plugin
 
     @BeforeEach fun prepare() {
-        sut = SensitivityOref1Plugin(aapsLogger, rh, preferences, dateUtil)
+        sut = SensitivityOref1Plugin(aapsLogger, generatedTextResolver("sensitivity" to SensitivityStringsValues::textOf), preferences, dateUtil, mock())
     }
 
     private fun detect(
@@ -132,7 +134,6 @@ class SensitivityOref1PluginTest : SensitivityTestBase() {
 
     @Test
     fun isUAMEnabled_deniedWhenPluginNotSelected() {
-        whenever(rh.gs(SensitivityStrings.uam_disabled_oref1_not_selected)).thenReturn("UAM disabled")
         val constraint = ConstraintObject(true, aapsLogger)
         sut.isUAMEnabled(constraint)
         assertThat(constraint.value()).isFalse()

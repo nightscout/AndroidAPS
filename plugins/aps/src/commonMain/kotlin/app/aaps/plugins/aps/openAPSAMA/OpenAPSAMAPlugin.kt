@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -79,7 +80,8 @@ class OpenAPSAMAPlugin(
     private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
     private val apsResultProvider: () -> APSResult,
     private val ch: ConcentrationHelper,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    notificationManager: NotificationManager
 ) : PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -98,7 +100,7 @@ class OpenAPSAMAPlugin(
         .showInList { config.APS || config.AAPSCLIENT }   // AAPSCLIENT: visible so a client can select the master's APS
         .description(ApsStrings.description_ama),
     ownPreferences = ApsIntentKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), APS, PluginConstraints {
 
     // last values
@@ -106,24 +108,8 @@ class OpenAPSAMAPlugin(
     override val algorithm = APSResult.Algorithm.AMA
     override var lastAPSResult: APSResult? = null
 
-    override fun specialEnableCondition(): Boolean {
-        return try {
-            val pump = activePlugin.activePump
-            pump.pumpDescription.isTempBasalCapable
-        } catch (_: Exception) {
-            // may fail during initialization
-            true
-        }
-    }
-
-    override fun specialShowInListCondition(): Boolean {
-        try {
-            val pump = activePlugin.activePump
-            return pump.pumpDescription.isTempBasalCapable
-        } catch (_: Exception) {
-            return true
-        }
-    }
+    // No temp basal check here - see the note in OpenAPSSMBPlugin. SafetyPlugin.isLoopInvocationAllowed
+    // owns that rule.
 
     override suspend fun invoke(initiator: String, tempBasalFallback: Boolean) = withContext(Dispatchers.Default) {
 

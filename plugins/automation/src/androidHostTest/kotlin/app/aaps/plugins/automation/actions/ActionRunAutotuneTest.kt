@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.keys.IntKey
@@ -9,9 +8,6 @@ import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.kotlin.any
-import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.whenever
 
 /**
@@ -25,8 +21,7 @@ class ActionRunAutotuneTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("desc")
-        sut = ActionRunAutotune(aapsLogger, rh, { pumpEnactResultProvider() }, rh, autotunePlugin, profileFunction, activePlugin, preferences)
+        sut = ActionRunAutotune(aapsLogger, text, { pumpEnactResultProvider() }, text, autotunePlugin, profileFunction, activePlugin, preferences)
     }
 
     @Test fun friendlyName() {
@@ -34,7 +29,7 @@ class ActionRunAutotuneTest : ActionsTestBase() {
     }
 
     @Test fun shortDescription() {
-        assertThat(sut.shortDescription()).isEqualTo("desc")
+        assertThat(sut.shortDescription()).isEqualTo("Autotune profile ")
     }
 
     @Test fun iconAndElementTypeAndDialog() {

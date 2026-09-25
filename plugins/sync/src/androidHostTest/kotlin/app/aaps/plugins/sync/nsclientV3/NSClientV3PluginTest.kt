@@ -40,7 +40,9 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
+import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlinx.coroutines.CoroutineScope
@@ -72,6 +74,9 @@ import kotlin.reflect.KClass
 @Suppress("SpellCheckingInspection")
 @OptIn(ExperimentalAtomicApi::class)
 internal class NSClientV3PluginTest : TestBaseWithProfile() {
+
+    /** Real English; the sync owner is not one of the five :shared:tests can see. */
+    private val text = generatedTextResolver("sync" to SyncStringsValues::textOf)
 
     @Mock lateinit var receiverDelegate: ReceiverDelegate
     @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
@@ -117,10 +122,10 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
         sut =
             NSClientV3Plugin(
-                aapsLogger, rh, preferences, rxBus,
+                aapsLogger, text, preferences, rxBus,
                 receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
                 nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel,
-                mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, nsConnection, nsLoadExecutor
+                mock(), mock(), mock(), mock(), mock(), mock(), profileRepository, nsConnection, nsLoadExecutor, mock()
             )
         whenever(nsConnection.connected).thenReturn(wsConnectedState)
         // idle is collected in onStart; a mock would hand back null and NPE there.
@@ -160,10 +165,10 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     private fun buildPlugin(orphanDetector: OrphanDetector): NSClientV3Plugin =
         NSClientV3Plugin(
-            aapsLogger, rh, preferences, rxBus,
+            aapsLogger, text, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel,
-            mock(), mock(), mock(), orphanDetector, mock(), mock(), profileRepository, nsConnection, nsLoadExecutor
+            mock(), mock(), mock(), orphanDetector, mock(), mock(), profileRepository, nsConnection, nsLoadExecutor, mock()
         ).also { extraPlugins += it }
 
     /** Poll the (WhileSubscribed) flow's value until it settles to [expected]; a live collector keeps it computing. */

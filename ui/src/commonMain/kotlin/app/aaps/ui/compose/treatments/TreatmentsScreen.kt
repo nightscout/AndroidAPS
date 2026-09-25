@@ -65,7 +65,7 @@ fun TreatmentsScreen(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
+                        contentDescription = stringResource(CoreUiStrings.back)
                     )
                 }
             },

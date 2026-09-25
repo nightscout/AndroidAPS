@@ -197,7 +197,7 @@ class QuickLaunchConfigViewModel(
             // a client) must not be offered as a quick-launch either.
             .filter {
                 it.isEnabled(it.pluginDescription.mainType) && it.hasComposeContent() &&
-                    it.showInList(it.pluginDescription.mainType)
+                    it.showInList()
             }
 
         return typeOrder.mapNotNull { type ->

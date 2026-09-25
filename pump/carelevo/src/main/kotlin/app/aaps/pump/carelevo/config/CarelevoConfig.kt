@@ -24,15 +24,8 @@ class FillConfig {
     }
 }
 
-class PrefEnvConfig {
-    companion object {
-
-        const val PATCH_INFO = "carelevo_patch_info"
-        const val BASAL_INFUSION_INFO = "carelevo_basal_infusion_info"
-        const val TEMP_BASAL_INFUSION_INFO = "carelevo_temp_basal_infusion_info"
-        const val IMME_BOLUS_INFUSION_INFO = "carelevo_imme_bolus_infusion_info"
-        const val EXTEND_BOLUS_INFUSION_INFO = "carelevo_extend_bolus_infusion_info"
-        const val USER_SETTING_INFO = "carelevo_user_setting_info"
-        const val CARELEVO_ALARM_INFO_LIST = "carelevo_alarm_info_list"
-    }
-}
+// PrefEnvConfig was here. Its seven preference keys are now
+// app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey, registered through the plugin's
+// ownPreferences, so the preference registry can see them - an unregistered key looks like rubbish to
+// a settings import, and these hold the state of a running patch. The stored key strings are
+// unchanged; CarelevoStringNonKeyTest pins them, as this file's own test used to.

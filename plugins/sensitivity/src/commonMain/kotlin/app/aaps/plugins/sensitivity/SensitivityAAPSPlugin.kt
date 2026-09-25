@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -44,21 +45,23 @@ class SensitivityAAPSPlugin(
     rh: TextResolver,
     preferences: Preferences,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    notificationManager: NotificationManager
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
         .pluginName(SensitivityStrings.sensitivity_aaps)
         .shortName(SensitivityStrings.sensitivity_plugin_shortname)
+        // Only meaningful with the AMA algorithm, so it is hidden while another APS is active. Still shown
+        // when no APS is elected yet, so the plugin does not vanish during start-up.
+        .showInList {
+            val aps = activePlugin.activeAPS
+            aps == null || aps.algorithm == APSResult.Algorithm.AMA
+        }
         .description(SensitivityStrings.description_sensitivity_aaps),
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ) {
-
-    override fun specialShowInListCondition(): Boolean {
-        val aps = activePlugin.activeAPS ?: return true
-        return aps.algorithm == APSResult.Algorithm.AMA
-    }
 
     override fun detectSensitivity(
         ads: AutosensDataStore,

@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
@@ -524,8 +525,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                         clientControlActionDispatcher = clientControlActionDispatcher,
                         commandQueue = commandQueue,
                         pumpCommunicationStatus = pumpCommunicationStatus,
-                        appName = getString(R.string.app_name),
-                        authorizationFailedMessage = getString(R.string.authorizationfailed),
+                        appName = stringResource(R.string.app_name),
+                        authorizationFailedMessage = stringResource(R.string.authorizationfailed),
                         onNavigate = { request -> handleNavigationRequest(request, navController) },
                         onSearchResultClick = { entry -> handleSearchResultClick(entry, navController) },
                         onNotificationActionClick = { notification -> handleNotificationAction(notification.id, navController) },

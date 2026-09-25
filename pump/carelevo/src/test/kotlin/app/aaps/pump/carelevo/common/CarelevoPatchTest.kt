@@ -3,7 +3,6 @@ package app.aaps.pump.carelevo.common
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.ble.UnsolicitedMessage
@@ -58,7 +57,6 @@ internal class CarelevoPatchTest {
     @Mock lateinit var transport: CarelevoBleTransport
     @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var rxBus: RxBus
-    @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var infusionInfoMonitorUseCase: CarelevoInfusionInfoMonitorUseCase
@@ -108,7 +106,6 @@ internal class CarelevoPatchTest {
             transport = transport,
             aapsSchedulers = aapsSchedulers,
             rxBus = rxBus,
-            sp = sp,
             preferences = preferences,
             aapsLogger = aapsLogger,
             infusionInfoMonitorUseCase = infusionInfoMonitorUseCase,

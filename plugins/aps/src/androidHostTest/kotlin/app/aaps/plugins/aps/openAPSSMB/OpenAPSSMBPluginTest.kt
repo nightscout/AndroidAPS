@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMB
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -32,14 +33,9 @@ class OpenAPSSMBPluginTest : TestBaseWithProfile() {
         )
     }
 
+    /** See the note in `OpenAPSAMAPluginTest`: construction is the coverage this class still carries. */
     @Test
-    fun specialEnableConditionTest() {
-        assertThat(openAPSSMBPlugin.specialEnableCondition()).isTrue()
+    fun `the plugin constructs and is an APS`() {
+        assertThat(openAPSSMBPlugin.getType()).isEqualTo(PluginType.APS)
     }
-
-    @Test
-    fun specialShowInListConditionTest() {
-        assertThat(openAPSSMBPlugin.specialShowInListCondition()).isTrue()
-    }
-
 }

@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.command.CmdDiscard
@@ -51,7 +51,7 @@ class CarelevoPatchConnectViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val carelevoPatch: CarelevoPatch,
     private val commandQueue: CommandQueue,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val bleSession: CarelevoBleSession,
     private val transport: CarelevoBleTransport,
     private val connectNewPatchUseCase: CarelevoConnectNewPatchUseCase,
@@ -233,11 +233,11 @@ class CarelevoPatchConnectViewModel @Inject constructor(
         }
         val request = CarelevoConnectNewPatchRequestModel(
             volume = inputInsulin,
-            expiry = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key, 116),
+            expiry = preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS),
             remains = userSettingInfo.lowInsulinNoticeAmount!!,
             maxBasalSpeed = userSettingInfo.maxBasalSpeed!!,
             maxVolume = userSettingInfo.maxBolusDose!!,
-            isBuzzOn = sp.getBoolean(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER.key, false)
+            isBuzzOn = preferences.get(CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER)
         )
 
         setUiState(UiState.Loading)

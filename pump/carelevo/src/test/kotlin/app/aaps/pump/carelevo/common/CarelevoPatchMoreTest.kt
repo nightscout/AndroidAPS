@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
@@ -24,6 +23,7 @@ import app.aaps.pump.carelevo.ble.data.NotificationState
 import app.aaps.pump.carelevo.ble.data.PeripheralConnectionState
 import app.aaps.pump.carelevo.ble.data.ServiceDiscoverState
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.common.model.PatchState
 import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
@@ -61,6 +61,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -89,7 +90,6 @@ internal class CarelevoPatchMoreTest {
     @Mock lateinit var transport: CarelevoBleTransport
     @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var rxBus: RxBus
-    @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var infusionInfoMonitorUseCase: CarelevoInfusionInfoMonitorUseCase
@@ -153,7 +153,6 @@ internal class CarelevoPatchMoreTest {
             transport = transport,
             aapsSchedulers = aapsSchedulers,
             rxBus = rxBus,
-            sp = sp,
             preferences = preferences,
             aapsLogger = aapsLogger,
             infusionInfoMonitorUseCase = infusionInfoMonitorUseCase,
@@ -192,7 +191,8 @@ internal class CarelevoPatchMoreTest {
         // Default: no persisted edge-detection baseline (applyActiveAlarmSnapshots' snapshot-cause
         // store) — every snapshot poll behaves as a first-ever poll unless a test overrides this
         // with a real fake (see fakeSnapshotCauseStore) to exercise the persistence across polls.
-        whenever(sp.getString(any<String>(), any<String>())).thenAnswer { it.getArgument<String>(1) }
+        whenever(preferences.get(CarelevoStringNonKey.LastSnapshotAlarmCauses))
+            .thenReturn(CarelevoStringNonKey.LastSnapshotAlarmCauses.defaultValue)
         whenever(pumpResumeUseCase.persistResumed()).thenReturn(true)
         whenever(pumpStopUseCase.persistStopped(any())).thenReturn(true)
         whenever(activeAlarmSnapshotAlarmMapper.map(any(), any(), any())).thenAnswer { invocation ->
@@ -537,15 +537,14 @@ internal class CarelevoPatchMoreTest {
         assertThat(sut.patchInfo.value?.get()?.mode).isEqualTo(0)
     }
 
-    /** Minimal fake backing [sp] so the edge-detection baseline actually persists across calls. */
+    /** Minimal fake backing [preferences] so the edge-detection baseline actually persists across calls. */
     private fun fakeSnapshotCauseStore() {
-        val store = mutableMapOf<String, String>()
-        whenever(sp.getString(any<String>(), any<String>())).thenAnswer { inv ->
-            store[inv.getArgument<String>(0)] ?: inv.getArgument(1)
-        }
-        whenever(sp.putString(any<String>(), any<String>())).thenAnswer { inv ->
-            store[inv.getArgument<String>(0)] = inv.getArgument(1)
-        }
+        var stored = CarelevoStringNonKey.LastSnapshotAlarmCauses.defaultValue
+        whenever(preferences.get(CarelevoStringNonKey.LastSnapshotAlarmCauses)).thenAnswer { stored }
+        doAnswer { inv ->
+            stored = inv.getArgument(1)
+            null
+        }.whenever(preferences).put(eq(CarelevoStringNonKey.LastSnapshotAlarmCauses), any<String>())
     }
 
     @Test
@@ -789,7 +788,7 @@ internal class CarelevoPatchMoreTest {
     fun `a missing user setting record seeds the defaults from the preferences`() {
         whenever(userSettingInfoMonitorUseCase.execute())
             .thenReturn(Observable.just(ResponseResult.Success<CarelevoUseCaseResponse>(null)))
-        whenever(sp.getInt(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key, 30)).thenReturn(12)
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(12)
         whenever(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(7.5)
         sut = createPatch()
 

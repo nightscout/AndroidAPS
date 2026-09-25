@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
@@ -42,17 +43,19 @@ class SensitivityOref1Plugin(
     aapsLogger: AAPSLogger,
     override val rh: TextResolver,
     preferences: Preferences,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    notificationManager: NotificationManager
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
         .pluginName(SensitivityStrings.sensitivity_oref1)
         .shortName(SensitivityStrings.sensitivity_plugin_shortname)
-        .enableByDefault(true)
         .description(SensitivityStrings.description_sensitivity_oref1)
+        // No enableByDefault: .setDefault() already covers a fresh install. loadPref enables nothing,
+        // then verifySelectionInCategories finds no enabled SENSITIVITY plugin and elects this one.
         .setDefault(),
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), PluginConstraints {
 
     override fun detectSensitivity(

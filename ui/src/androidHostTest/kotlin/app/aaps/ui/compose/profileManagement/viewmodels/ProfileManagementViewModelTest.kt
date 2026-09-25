@@ -13,13 +13,12 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.SingleProfile
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.core.ui.compose.ScreenMode
@@ -51,7 +50,7 @@ internal class ProfileManagementViewModelTest {
 
     @Mock private lateinit var profileRepository: ProfileRepository
     @Mock private lateinit var profileFunction: ProfileFunction
-    @Mock private lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver()
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var activePlugin: ActivePlugin
@@ -294,9 +293,6 @@ internal class ProfileManagementViewModelTest {
     @Test
     fun `a failed commit reports it and leaves reorder mode`() = runTest {
         givenProfiles(3)
-        whenever(rh.gs(any<Int>())).thenReturn("message")
-        // The screens name their strings now, so the TextRef overload is the one they call.
-        whenever(rh.gs(any<TextRef>())).thenReturn("message")
         whenever(profileRepository.reorder(any()))
             .thenReturn(Result.failure(IllegalArgumentException("list replaced mid-reorder")))
         sut.enterReorderMode()
@@ -309,9 +305,6 @@ internal class ProfileManagementViewModelTest {
     @Test
     fun `a same-size replacement of the profile list aborts the commit`() = runTest {
         givenProfiles(3)
-        whenever(rh.gs(any<Int>())).thenReturn("message")
-        // The screens name their strings now, so the TextRef overload is the one they call.
-        whenever(rh.gs(any<TextRef>())).thenReturn("message")
         sut.enterReorderMode()
         sut.moveReorderItem(0, 2)
 

@@ -112,7 +112,8 @@ class ImportExportPrefsImpl(
     private val cloudStorageManager: CloudStorageManager,
     private val userEntryPresentationHelper: UserEntryPresentationHelper,
     private val storage: Storage,
-    private val cryptoUtil: CryptoUtil
+    private val cryptoUtil: CryptoUtil,
+    private val applier: PreferenceImportApplier
 ) : ImportExportPrefs {
 
     private var pendingExportFile: DocumentFile? = null
@@ -618,18 +619,23 @@ class ImportExportPrefsImpl(
         }
     }
 
-    override fun executeImport(prefs: Prefs) {
+    override fun executeImport(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome {
         activePlugin.beforeImport()
-        sp.clear()
-        for ((key, value) in prefs.values) {
-            if (value == "true" || value == "false") {
-                sp.putBoolean(key, value.toBoolean())
-            } else {
-                sp.putString(key, value)
-            }
-        }
+        val outcome = applier.apply(prefs, keepPumpSettings)
         activePlugin.afterImport()
+        aapsLogger.info(
+            LTag.CORE,
+            "Import applied: ${outcome.changed} changed, ${outcome.unchanged} already matched, " +
+                "${outcome.pumpSkipped} pump settings kept (${outcome.pumpWouldChange} would have changed), " +
+                "${outcome.syncedSkipped} synced keys left to the master, ${outcome.notExportable} refused as device state, " +
+                "${outcome.unresolved.size} unknown names left alone, ${outcome.unreadable.size} unreadable values skipped"
+        )
+        if (outcome.unresolved.isNotEmpty()) aapsLogger.debug(LTag.CORE, "Import: names this build does not know: ${outcome.unresolved}")
+        return outcome
     }
+
+    override fun previewImport(prefs: Prefs, keepPumpSettings: Boolean): ImportExportPrefs.ImportOutcome =
+        applier.preview(prefs, keepPumpSettings)
 
     override fun prepareImportedSettings() {
         rxBus.send(EventDiaconnG8PumpLogReset())

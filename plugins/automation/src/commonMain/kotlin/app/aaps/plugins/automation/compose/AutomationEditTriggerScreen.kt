@@ -2,6 +2,7 @@ package app.aaps.plugins.automation.compose
 
 import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -171,7 +172,7 @@ private fun ConnectorCard(
                     }
                     if (!isRoot) {
                         IconButton(onClick = onRemoveSelf) {
-                            Icon(Icons.Default.Delete, contentDescription = null)
+                            Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.remove))
                         }
                     }
                 }
@@ -288,7 +289,7 @@ private fun LeafCard(
                     onClick = onRemove,
                     modifier = Modifier.size(32.dp)
                 ) {
-                    Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.remove), modifier = Modifier.size(18.dp))
                 }
             }
             TriggerEditor(

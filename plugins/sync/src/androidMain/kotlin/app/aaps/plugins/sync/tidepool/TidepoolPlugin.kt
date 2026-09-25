@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tidepool
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.data.model.GV
@@ -69,6 +70,7 @@ class TidepoolPlugin(
     private val tidepoolRepository: TidepoolRepository,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
+    notificationManager: NotificationManager,
 ) : Sync, Tidepool, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -91,7 +93,7 @@ class TidepoolPlugin(
         }
         .description(SyncStrings.description_tidepool),
     ownPreferences = TidepoolBooleanKey.entries + TidepoolLongNonKey.entries + TidepoolStringNonKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ) {
 
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)

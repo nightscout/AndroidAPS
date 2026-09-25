@@ -1,8 +1,7 @@
 package app.aaps.pump.carelevo.data.dao
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-
-import app.aaps.pump.carelevo.config.PrefEnvConfig
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import io.reactivex.rxjava3.core.Observable
@@ -17,7 +16,7 @@ import kotlin.jvm.optionals.getOrNull
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class CarelevoPatchInfoDaoImpl @Inject constructor(
-    private val prefManager: SP
+    private val preferences: Preferences
 ) : CarelevoPatchInfoDao {
 
     private val _patchInfo: BehaviorSubject<Optional<CarelevoPatchInfoEntity>> = BehaviorSubject.create()
@@ -25,7 +24,7 @@ class CarelevoPatchInfoDaoImpl @Inject constructor(
     override fun getPatchInfo(): Observable<Optional<CarelevoPatchInfoEntity>> {
         if (_patchInfo.value == null) {
             runCatching {
-                val patchInfoString = prefManager.getString(PrefEnvConfig.PATCH_INFO, "")
+                val patchInfoString = preferences.get(CarelevoStringNonKey.PatchInfo)
                 if (patchInfoString == "") {
                     throw NullPointerException("patch info is empty")
                 }
@@ -46,7 +45,7 @@ class CarelevoPatchInfoDaoImpl @Inject constructor(
     override fun getPatchInfoBySync(): CarelevoPatchInfoEntity? {
         if (_patchInfo.value == null) {
             runCatching {
-                val patchInfoString = prefManager.getString(PrefEnvConfig.PATCH_INFO, "")
+                val patchInfoString = preferences.get(CarelevoStringNonKey.PatchInfo)
                 if (patchInfoString == "") {
                     throw NullPointerException("patch info is empty")
                 }
@@ -68,7 +67,7 @@ class CarelevoPatchInfoDaoImpl @Inject constructor(
     override fun updatePatchInfo(info: CarelevoPatchInfoEntity): Boolean {
         return runCatching {
             val patchInfoString = CarelevoGsonHelper.sharedGson().toJson(info)
-            prefManager.putString(PrefEnvConfig.PATCH_INFO, patchInfoString)
+            preferences.put(CarelevoStringNonKey.PatchInfo, patchInfoString)
         }.fold(
             onSuccess = {
                 _patchInfo.onNext(Optional.ofNullable(info))
@@ -83,7 +82,7 @@ class CarelevoPatchInfoDaoImpl @Inject constructor(
 
     override fun deletePatchInfo(): Boolean {
         return runCatching {
-            prefManager.remove(PrefEnvConfig.PATCH_INFO)
+            preferences.remove(CarelevoStringNonKey.PatchInfo)
         }.fold(
             onSuccess = {
                 _patchInfo.onNext(Optional.ofNullable(null))

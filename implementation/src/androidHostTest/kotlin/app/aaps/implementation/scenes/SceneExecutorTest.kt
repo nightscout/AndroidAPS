@@ -13,9 +13,9 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -60,7 +60,7 @@ class SceneExecutorTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         sut = SceneExecutor(
             persistenceLayer, profileFunction, profileRepository, preferences, activeSceneManager,
-            uel, dateUtil, aapsLogger, rh, rxBus, loop, activePlugin, profileUtil, translator,
+            uel, dateUtil, aapsLogger, generatedTextResolver(), rxBus, loop, activePlugin, profileUtil, translator,
             profileSwitchSilentGate, notificationManager, expiryScheduler
         )
         runBlocking {
@@ -76,8 +76,6 @@ class SceneExecutorTest : TestBaseWithProfile() {
             whenever(profileRepository.profiles).thenReturn(MutableStateFlow(listOf(singleProfile)))
             whenever(activeSceneManager.isActive()).thenReturn(false)
         }
-        whenever(rh.gs(CoreUiStrings.profile_switch_no_insulin)).thenReturn("No insulin in use")
-        whenever(rh.gs(CoreUiStrings.scene_some_actions_failed)).thenReturn("Some actions failed")
     }
 
     // A scene runs unattended, so with nothing in force there is nobody to ask which insulin to record: the action
@@ -88,7 +86,8 @@ class SceneExecutorTest : TestBaseWithProfile() {
         val result = sut.activate(scene, durationMinutes = 0)
 
         assertThat(result.success).isFalse()
-        assertThat(result.actionResults.single().errorMessage).isEqualTo("No insulin in use")
+        assertThat(result.actionResults.single().errorMessage)
+            .isEqualTo("Cannot switch profile: no insulin is in use, and none was selected.")
         verifyBlocking(profileFunction, never()) {
             createProfileSwitch(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
         }

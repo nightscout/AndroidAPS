@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -91,7 +90,6 @@ abstract class CarelevoPumpPluginTestBase {
     @Mock lateinit var aapsSchedulers: AapsSchedulers
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var sp: SP
 
     @Mock lateinit var fabricPrivacy: FabricPrivacy
 
@@ -235,7 +233,6 @@ abstract class CarelevoPumpPluginTestBase {
             preferences = preferences,
             commandQueue = commandQueue,
             aapsSchedulers = aapsSchedulers,
-            sp = sp,
             fabricPrivacy = fabricPrivacy,
             profileFunction = profileFunction,
             context = context,
@@ -252,7 +249,8 @@ abstract class CarelevoPumpPluginTestBase {
             tempBasalCoordinator = tempBasalCoordinator,
             connectionCoordinator = connectionCoordinator,
             settingsCoordinator = settingsCoordinator,
-            activationExecutor = activationExecutor
+            activationExecutor = activationExecutor,
+            notificationManager = mock()
         )
         plugin.bleSession = bleSession
         whenever { bleSession.readInfusionInfo(any()) }.thenReturn(

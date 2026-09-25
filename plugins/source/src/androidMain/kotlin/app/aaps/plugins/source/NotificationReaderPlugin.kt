@@ -5,6 +5,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -34,6 +35,7 @@ class NotificationReaderPlugin(
     preferences: Preferences,
     config: Config,
     private val context: Context,
+    notificationManager: NotificationManager,
 ) : AbstractBgSourcePlugin(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -47,7 +49,7 @@ class NotificationReaderPlugin(
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_notification_reader)),
     ownPreferences = emptyList(),
-    aapsLogger, rh, preferences, config
+    aapsLogger, rh, preferences, config, notificationManager
 ), BgSource {
 
     @Volatile var packageConfig: PackageConfig = loadPackageConfig()

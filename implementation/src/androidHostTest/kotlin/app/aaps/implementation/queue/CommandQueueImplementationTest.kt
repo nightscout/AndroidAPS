@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.PowerManager
 import androidx.compose.ui.text.font.FontWeight
 import app.aaps.core.data.model.BS
-import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -23,7 +22,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CustomCommand
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
@@ -36,6 +35,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import java.util.Calendar
 import kotlin.reflect.KClass
@@ -81,7 +81,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     class CommandQueueMocked(
         aapsLogger: AAPSLogger,
         rxBus: RxBus,
-        rh: ResourceHelper,
+        rh: TextResolver,
         constraintChecker: ConstraintsChecker,
         profileFunction: ProfileFunction,
         activePlugin: ActivePlugin,
@@ -110,6 +110,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     }
 
+    /** Real English for the generated strings, falling through to the mock for the ids that remain. */
+    private val text by lazy { generatedTextResolver(rh) }
+
     private lateinit var commandQueue: CommandQueueImplementation
 
     @BeforeEach
@@ -119,7 +122,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             commandQueue = CommandQueueMocked(
                 aapsLogger,
                 rxBus,
-                rh,
+                text,
                 constraintChecker,
                 profileFunction,
                 activePlugin,
@@ -167,7 +170,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             whenever(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
             whenever(rh.gs(app.aaps.implementation.R.string.executing_right_now)).thenReturn("Executing right now")
             whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("Replaced by newer command")
-            whenever(rh.gs(InterfacesStrings.format_insulin_units)).thenReturn("%1\$.2f U")
             whenever(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
         }
     }
@@ -176,14 +178,14 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun commandIsPickedUp() = runTest {
         lateinit var executor: CommandExecutor
         commandQueue = CommandQueueImplementation(
-            aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
             { executor }, testScope, bolusProgressData
         )
         // Real executor sharing this queue: notifyAboutNewCommand() signals it and it drains on its own thread.
         executor = CommandExecutor(
-            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, rh, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
         )
 
         // start with empty queue
@@ -220,13 +222,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // so the user knows to re-enter the carbs. See CommandQueueImplementation.bolus() post-bolus catch.
         lateinit var executor: CommandExecutor
         commandQueue = CommandQueueImplementation(
-            aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, config, dateUtil,
+            aapsLogger, rxBus, text, constraintChecker, profileFunction, activePlugin, config, dateUtil,
             fabricPrivacy, notificationManager, persistenceLayer, decimalFormatter, { pumpEnactResultProvider() },
             pumpSync, preferences, profileSwitchSilentGate, localAlertUtilsProvider, smsCommunicatorProvider,
             { executor }, testScope, bolusProgressData
         )
         executor = CommandExecutor(
-            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, rh, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
+            aapsLogger, fabricPrivacy, commandQueue, rxBus, activePlugin, text, preferences, config, bolusProgressData, TestCommandExecutionPlatform()
         )
         whenever(rh.gs(app.aaps.core.ui.R.string.carbs_not_saved_after_bolus)).thenReturn("Carbs could not be saved")
         // The pump delivers successfully (TestPumpPlugin), but storing carbs blows up.
@@ -304,7 +306,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Test
     fun postProfileWriteResult_updated_postsOkAndClearsFailure() {
         // profile updated: success=true, enacted=true, not silent → confirmation shown, stale failure cleared.
-        whenever(rh.gs(CoreUiStrings.profile_set_ok)).thenReturn("Basal profile in pump updated")
 
         val persisted = commandQueue.postProfileWriteResult(enactResult(isSuccess = true, isEnacted = true), silent = false)
 
@@ -884,8 +885,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
      * this has to hand back the template rather than the finished string.
      */
     private fun stubStatusCaptions() {
-        whenever(rh.gs(CoreUiStrings.read_status)).thenReturn("READSTATUS %1\$s")
-        whenever(rh.gs(CoreUiStrings.load_events)).thenReturn("LOAD EVENTS")
     }
 
     @Test
@@ -1060,6 +1059,23 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     /**
+     * What the `success` flag actually costs. `CommandExecutor` drops the queue when the pump is not
+     * configured - selected but never paired - and it used to do that with `success = true`. [bolus]
+     * persists the accompanying carbs on a successful result, so the carbs were written for insulin
+     * that never left the pump, and the loop then counted them.
+     */
+    @Test
+    fun `carbs are not persisted when the bolus was dropped`() = runTest {
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0; carbs = 20.0 }) }
+        yield()
+
+        commandQueue.cancelAll(TextRef.Literal("pump not configured"), success = false)
+        yield()
+
+        verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+    }
+
+    /**
      * Dropping is not failing. The alarm in `WizardBolusExecutorImpl` fires on `!success`, so
      * without this flag the import would start raising BOLUS_DELIVERY_FAILED where nothing failed -
      * the same reason a bolus the user stopped does not alarm.
@@ -1075,7 +1091,10 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         var noOp: PumpEnactResult? = null
         backgroundScope.launch { noOp = commandQueue.bolus(DetailedBolusInfo()) }
         yield()
-        commandQueue.cancelAll(TextRef.Literal("pump not configured"), success = true)
+        // A drain that still reports success. No production caller passes true any more - the last one,
+        // CommandExecutor's "pump not configured", was flipped to false - but the flag is part of the
+        // API, and the point here is that `cancelled` is set either way.
+        commandQueue.cancelAll(TextRef.Literal("drained, reported as success"), success = true)
         yield()
 
         assertThat(failed!!.cancelled).isTrue()

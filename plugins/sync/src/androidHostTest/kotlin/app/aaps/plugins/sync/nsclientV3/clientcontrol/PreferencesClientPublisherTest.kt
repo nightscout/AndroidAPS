@@ -1,11 +1,10 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import org.mockito.kotlin.doAnswer
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.clientcontrol.ClientControlActionDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.plugins.sync.SyncStringsValues
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongComposedKey
@@ -36,7 +35,7 @@ class PreferencesClientPublisherTest {
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var clientControlRoundTrip: ClientControlRoundTrip
     @Mock lateinit var config: Config
-    @Mock lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("sync" to SyncStringsValues::textOf)
     @Mock lateinit var aapsLogger: AAPSLogger
 
     private val changes = MutableSharedFlow<NonPreferenceKey>(extraBufferCapacity = 10)
@@ -48,7 +47,6 @@ class PreferencesClientPublisherTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
         whenever(config.AAPSCLIENT).thenReturn(true)
-        doAnswer { "update settings" }.whenever(rh).gs(any<TextRef>())
         whenever(preferences.syncedLocalChanges).thenReturn(changes)
         whenever(preferences.get(key as BooleanNonPreferenceKey)).thenReturn(true)
         whenever(preferences.get(LongComposedKey.SyncedPrefModified, key.key)).thenReturn(100L)

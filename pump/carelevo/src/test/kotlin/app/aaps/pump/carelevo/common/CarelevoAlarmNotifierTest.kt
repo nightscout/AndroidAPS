@@ -10,8 +10,9 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.common.keys.CarelevoIntPreferenceKey
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.type.AlarmCause
@@ -52,7 +53,7 @@ import org.robolectric.shadows.ShadowNotificationManager
  * notifications all execute for real.
  *
  * Only the non-Android collaborators are mocked ([aapsLogger], [aapsSchedulers], [dateUtil], the
- * AAPS [NotificationManager] interface, [sp], [alarmActionHandler]). Assertions are made against:
+ * AAPS [NotificationManager] interface, [preferences], [alarmActionHandler]). Assertions are made against:
  *  - the mocked AAPS [NotificationManager] (the in-app "top notification" cards),
  *  - the [CarelevoAlarmNotifier.alarms] StateFlow and the `onAlarmsUpdated` callback,
  *  - Robolectric's [ShadowNotificationManager] for the system-tray notifications and channel.
@@ -71,7 +72,7 @@ class CarelevoAlarmNotifierTest {
     private lateinit var aapsSchedulers: AapsSchedulers
     private lateinit var dateUtil: DateUtil
     private lateinit var notificationManager: NotificationManager
-    private lateinit var sp: SP
+    private lateinit var preferences: Preferences
     private lateinit var alarmActionHandler: CarelevoAlarmActionHandler
 
     private lateinit var sut: CarelevoAlarmNotifier
@@ -100,7 +101,7 @@ class CarelevoAlarmNotifierTest {
         aapsSchedulers = mock()
         dateUtil = mock()
         notificationManager = mock()
-        sp = mock()
+        preferences = mock()
         alarmActionHandler = mock()
 
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
@@ -113,7 +114,7 @@ class CarelevoAlarmNotifierTest {
             aapsSchedulers = aapsSchedulers,
             dateUtil = dateUtil,
             notificationManager = notificationManager,
-            sp = sp,
+            preferences = preferences,
             alarmActionHandler = alarmActionHandler
         )
     }
@@ -245,35 +246,32 @@ class CarelevoAlarmNotifierTest {
 
     @Test
     fun `showTopNotification for low-insulin notice reads the low-insulin reminder preference`() {
-        whenever(sp.getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key), any()))
-            .thenReturn(25)
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(25)
 
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_LOW_INSULIN)))
 
-        verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key), eq(30))
+        verify(preferences).get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
         verifyPosted(NotificationLevel.NORMAL)
     }
 
     @Test
     fun `showTopNotification for out-of-insulin alert reads the low-insulin reminder preference`() {
-        whenever(sp.getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key), any()))
-            .thenReturn(25)
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)).thenReturn(25)
 
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_ALERT_OUT_OF_INSULIN)))
 
-        verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS.key), eq(30))
+        verify(preferences).get(CarelevoIntPreferenceKey.CARELEVO_LOW_INSULIN_REMINDER_UNITS)
         verifyPosted(NotificationLevel.IMPORTANT)
     }
 
     @Test
     fun `showTopNotification for patch-expired notice reads the patch-expiration preference and formats text`() {
-        whenever(sp.getInt(eq(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key), any()))
-            .thenReturn(50)
+        whenever(preferences.get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)).thenReturn(50)
 
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_NOTICE_PATCH_EXPIRED)))
 
         // 50h -> 2 days 2 hours split fed into the description template; the formatted text is real.
-        verify(sp).getInt(eq(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key), eq(116))
+        verify(preferences).get(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS)
         val text = capturePostedText()
         assertThat(text).isNotEmpty()
         // Locale-independent: the "%s days %s hours" template embeds the digits 2 and 2.
@@ -313,7 +311,7 @@ class CarelevoAlarmNotifierTest {
     fun `showTopNotification for a cause with no description args posts without reading preferences`() {
         sut.showTopNotification(listOf(alarm(AlarmCause.ALARM_WARNING_NEEDLE_INSERTION_ERROR)))
 
-        verify(sp, never()).getInt(any<String>(), any())
+        verify(preferences, never()).get(any<IntPreferenceKey>())
         verifyPosted(NotificationLevel.IMPORTANT)
     }
 

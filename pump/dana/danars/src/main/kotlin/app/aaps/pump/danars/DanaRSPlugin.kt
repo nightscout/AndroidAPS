@@ -1,6 +1,7 @@
 package app.aaps.pump.danars
 
 import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -93,7 +94,8 @@ class DanaRSPlugin(
     private val decimalFormatter: DecimalFormatter,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val blePreCheck: BlePreCheck,
-    private val bolusProgressData: BolusProgressData
+    private val bolusProgressData: BolusProgressData,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -111,7 +113,7 @@ class DanaRSPlugin(
         .description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_rs)),
     ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries + DanaStringComposedKey.entries +
         DanaLongKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, Dana, PumpPluginConstraints, OwnDatabasePlugin {
 
     private var danaRSService: DanaRSService? = null

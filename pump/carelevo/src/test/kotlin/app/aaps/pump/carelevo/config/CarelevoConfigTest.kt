@@ -1,5 +1,6 @@
 package app.aaps.pump.carelevo.config
 
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import com.google.common.truth.Truth.assertThat
 import java.util.UUID
 import org.junit.jupiter.api.Test
@@ -66,43 +67,44 @@ internal class CarelevoConfigTest {
         assertThat(FillConfig.FILL_MAX_UNITS % FillConfig.FILL_STEP_UNITS).isEqualTo(0)
     }
 
-    // ---------- PrefEnvConfig ----------
+    // ---------- CarelevoStringNonKey ----------
+    //
+    // These three moved here from `PrefEnvConfig`, which is gone: the keys are registered enum entries
+    // now. The tests themselves matter more than where they live - they pin the STORED STRINGS, and a
+    // stored string is what connects a running patch to its own state. Changing one does not migrate a
+    // value, it abandons it, and for PatchInfo or the infusion records that means a live patch coming
+    // back as if it were new.
 
     @Test
-    fun `PrefEnvConfig keys hold the expected values`() {
-        assertThat(PrefEnvConfig.PATCH_INFO).isEqualTo("carelevo_patch_info")
-        assertThat(PrefEnvConfig.BASAL_INFUSION_INFO).isEqualTo("carelevo_basal_infusion_info")
-        assertThat(PrefEnvConfig.TEMP_BASAL_INFUSION_INFO).isEqualTo("carelevo_temp_basal_infusion_info")
-        assertThat(PrefEnvConfig.IMME_BOLUS_INFUSION_INFO).isEqualTo("carelevo_imme_bolus_infusion_info")
-        assertThat(PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO).isEqualTo("carelevo_extend_bolus_infusion_info")
-        assertThat(PrefEnvConfig.USER_SETTING_INFO).isEqualTo("carelevo_user_setting_info")
-        assertThat(PrefEnvConfig.CARELEVO_ALARM_INFO_LIST).isEqualTo("carelevo_alarm_info_list")
+    fun `stored keys hold the expected values`() {
+        assertThat(CarelevoStringNonKey.PatchInfo.key).isEqualTo("carelevo_patch_info")
+        assertThat(CarelevoStringNonKey.BasalInfusionInfo.key).isEqualTo("carelevo_basal_infusion_info")
+        assertThat(CarelevoStringNonKey.TempBasalInfusionInfo.key).isEqualTo("carelevo_temp_basal_infusion_info")
+        assertThat(CarelevoStringNonKey.ImmeBolusInfusionInfo.key).isEqualTo("carelevo_imme_bolus_infusion_info")
+        assertThat(CarelevoStringNonKey.ExtendBolusInfusionInfo.key).isEqualTo("carelevo_extend_bolus_infusion_info")
+        assertThat(CarelevoStringNonKey.UserSettingInfo.key).isEqualTo("carelevo_user_setting_info")
+        assertThat(CarelevoStringNonKey.AlarmInfoList.key).isEqualTo("carelevo_alarm_info_list")
+        assertThat(CarelevoStringNonKey.LastSnapshotAlarmCauses.key).isEqualTo("carelevo_last_snapshot_alarm_causes")
     }
 
     @Test
-    fun `PrefEnvConfig keys are all carelevo-namespaced`() {
-        listOf(
-            PrefEnvConfig.PATCH_INFO,
-            PrefEnvConfig.BASAL_INFUSION_INFO,
-            PrefEnvConfig.TEMP_BASAL_INFUSION_INFO,
-            PrefEnvConfig.IMME_BOLUS_INFUSION_INFO,
-            PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO,
-            PrefEnvConfig.USER_SETTING_INFO,
-            PrefEnvConfig.CARELEVO_ALARM_INFO_LIST
-        ).forEach { assertThat(it).startsWith("carelevo_") }
+    fun `stored keys are all carelevo-namespaced`() {
+        CarelevoStringNonKey.entries.forEach { assertThat(it.key).startsWith("carelevo_") }
     }
 
     @Test
-    fun `PrefEnvConfig keys are unique`() {
-        val keys = listOf(
-            PrefEnvConfig.PATCH_INFO,
-            PrefEnvConfig.BASAL_INFUSION_INFO,
-            PrefEnvConfig.TEMP_BASAL_INFUSION_INFO,
-            PrefEnvConfig.IMME_BOLUS_INFUSION_INFO,
-            PrefEnvConfig.EXTEND_BOLUS_INFUSION_INFO,
-            PrefEnvConfig.USER_SETTING_INFO,
-            PrefEnvConfig.CARELEVO_ALARM_INFO_LIST
-        )
+    fun `stored keys are unique`() {
+        val keys = CarelevoStringNonKey.entries.map { it.key }
         assertThat(keys.toSet()).hasSize(keys.size)
+    }
+
+    /**
+     * None of these was ever in an export file - they were unregistered, and `isExportableKey` answers
+     * false for anything it does not know. Registering them must not change that: it is plumbing, not a
+     * decision about what an export carries. See the enum's own KDoc.
+     */
+    @Test
+    fun `stored keys are not exportable`() {
+        CarelevoStringNonKey.entries.forEach { assertThat(it.exportable).isFalse() }
     }
 }

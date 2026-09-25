@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.objectives
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -15,8 +13,9 @@ import app.aaps.core.interfaces.constraints.Objectives.Companion.LGS_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.di.APS
-import kotlin.jvm.JvmSuppressWildcards
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -24,8 +23,9 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginObjectives
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.plugins.constraints.objectives.compose.ObjectivesComposeContent
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
@@ -36,6 +36,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.IntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
+import kotlin.jvm.JvmSuppressWildcards
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @APS
@@ -47,7 +48,8 @@ class ObjectivesPlugin(
     override val rh: TextResolver,
     preferences: Preferences,
     config: Config,
-    val objectives: List<@JvmSuppressWildcards Objective>
+    val objectives: List<@JvmSuppressWildcards Objective>,
+    notificationManager: NotificationManager
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -55,10 +57,14 @@ class ObjectivesPlugin(
         .icon(IcPluginObjectives)
         .pluginName(CoreUiStrings.objectives)
         .shortName(ConstraintsStrings.objectives_shortname)
-        .enableByDefault(config.APS)
+        // Objectives must be present on a master and must not be switchable off. Declared even though a
+        // CONSTRAINTS plugin is enabled by registration anyway (see PluginBase.enforcedState): stating the
+        // rule keeps it true if the plugin's mainType ever changes, and it is what makes canToggle false so
+        // the Config Builder shows a locked switch rather than a live one that does nothing.
+        .enforce(EnforcedState.Enabled) { config.APS }
         .description(ConstraintsStrings.description_objectives),
     ownPreferences = ObjectivesBooleanComposedKey.entries + ObjectivesLongComposedKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), PluginConstraints, Objectives {
 
     fun reset() {

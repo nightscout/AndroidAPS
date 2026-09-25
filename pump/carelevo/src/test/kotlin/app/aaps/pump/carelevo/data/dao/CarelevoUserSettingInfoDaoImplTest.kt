@@ -1,7 +1,9 @@
 package app.aaps.pump.carelevo.data.dao
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.carelevo.config.PrefEnvConfig
+import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import com.google.common.truth.Truth.assertThat
@@ -23,17 +25,17 @@ import org.mockito.quality.Strictness
 /**
  * Pure-JVM round-trip coverage for [CarelevoUserSettingInfoDaoImpl].
  *
- * The DAO persists a single JSON blob under [PrefEnvConfig.USER_SETTING_INFO] via [SP] and caches
- * the parsed entity in an internal `BehaviorSubject`. We back the mocked [SP] with an in-memory map
- * (the "fake preferences" approach) so save/load/update/delete really round-trip through the real
- * gson used by production code, and we can spawn a fresh DAO instance sharing the same store to
- * exercise the cold-read (cache-miss) branches.
+ * The DAO persists a single JSON blob under [CarelevoStringNonKey.UserSettingInfo] via [Preferences]
+ * and caches the parsed entity in an internal `BehaviorSubject`. We back the mocked [Preferences]
+ * with an in-memory map (the "fake preferences" approach) so save/load/update/delete really
+ * round-trip through the real gson used by production code, and we can spawn a fresh DAO instance
+ * sharing the same store to exercise the cold-read (cache-miss) branches.
  */
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class CarelevoUserSettingInfoDaoImplTest {
 
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     private val store = mutableMapOf<String, String>()
 
@@ -58,28 +60,27 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         )
 
     private fun storeJson(entity: CarelevoUserSettingInfoEntity) {
-        store[PrefEnvConfig.USER_SETTING_INFO] = CarelevoGsonHelper.sharedGson().toJson(entity)
+        store[CarelevoStringNonKey.UserSettingInfo.key] = CarelevoGsonHelper.sharedGson().toJson(entity)
     }
 
     @BeforeEach
     fun setUp() {
-        // Fake preferences backed by [store]: getString reads the map (falling back to the default),
-        // putString writes it, remove deletes it.
-        whenever(sp.getString(any<String>(), any<String>())).thenAnswer { inv ->
-            val key = inv.getArgument<String>(0)
-            val def = inv.getArgument<String>(1)
-            store[key] ?: def
+        // Fake preferences backed by [store]: get reads the map (falling back to the key's own
+        // default), put writes it, remove deletes it.
+        whenever(preferences.get(any<StringNonPreferenceKey>())).thenAnswer { inv ->
+            val key = inv.getArgument<StringNonPreferenceKey>(0)
+            store[key.key] ?: key.defaultValue
         }
         doAnswer { inv ->
-            store[inv.getArgument<String>(0)] = inv.getArgument<String>(1)
+            store[inv.getArgument<StringNonPreferenceKey>(0).key] = inv.getArgument<String>(1)
             null
-        }.whenever(sp).putString(any<String>(), any<String>())
+        }.whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
         doAnswer { inv ->
-            store.remove(inv.getArgument<String>(0))
+            store.remove(inv.getArgument<NonPreferenceKey>(0).key)
             null
-        }.whenever(sp).remove(any<String>())
+        }.whenever(preferences).remove(any<NonPreferenceKey>())
 
-        sut = CarelevoUserSettingInfoDaoImpl(sp)
+        sut = CarelevoUserSettingInfoDaoImpl(preferences)
     }
 
     // region getUserSetting (Observable)
@@ -103,7 +104,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
 
     @Test
     fun `getUserSetting emits empty when the stored JSON is malformed`() {
-        store[PrefEnvConfig.USER_SETTING_INFO] = "{{{not-valid-json"
+        store[CarelevoStringNonKey.UserSettingInfo.key] = "{{{not-valid-json"
 
         val emitted = sut.getUserSetting().blockingFirst()
 
@@ -117,7 +118,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         sut.getUserSetting().blockingFirst()
         sut.getUserSetting().blockingFirst()
 
-        verify(sp, times(1)).getString(any<String>(), any<String>())
+        verify(preferences, times(1)).get(any<StringNonPreferenceKey>())
     }
 
     // endregion
@@ -138,7 +139,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
 
     @Test
     fun `getUserSettingBySync returns null when the stored JSON is malformed`() {
-        store[PrefEnvConfig.USER_SETTING_INFO] = "@@not-json@@"
+        store[CarelevoStringNonKey.UserSettingInfo.key] = "@@not-json@@"
 
         assertThat(sut.getUserSettingBySync()).isNull()
     }
@@ -150,7 +151,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         sut.getUserSettingBySync()
         sut.getUserSettingBySync()
 
-        verify(sp, times(1)).getString(any<String>(), any<String>())
+        verify(preferences, times(1)).get(any<StringNonPreferenceKey>())
     }
 
     // endregion
@@ -163,8 +164,8 @@ internal class CarelevoUserSettingInfoDaoImplTest {
 
         assertThat(sut.updateUserSetting(setting)).isTrue()
 
-        verify(sp).putString(any<String>(), any<String>())
-        assertThat(store[PrefEnvConfig.USER_SETTING_INFO])
+        verify(preferences).put(any<StringNonPreferenceKey>(), any<String>())
+        assertThat(store[CarelevoStringNonKey.UserSettingInfo.key])
             .isEqualTo(CarelevoGsonHelper.sharedGson().toJson(setting))
     }
 
@@ -176,12 +177,12 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         assertThat(sut.getUserSettingBySync()).isEqualTo(setting)
         assertThat(sut.getUserSetting().blockingFirst().get()).isEqualTo(setting)
 
-        verify(sp, never()).getString(any<String>(), any<String>())
+        verify(preferences, never()).get(any<StringNonPreferenceKey>())
     }
 
     @Test
     fun `updateUserSetting returns false when persisting throws`() {
-        doThrow(RuntimeException("disk full")).whenever(sp).putString(any<String>(), any<String>())
+        doThrow(RuntimeException("disk full")).whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
 
         assertThat(sut.updateUserSetting(sampleSetting())).isFalse()
     }
@@ -196,8 +197,8 @@ internal class CarelevoUserSettingInfoDaoImplTest {
 
         assertThat(sut.deleteUserSetting()).isTrue()
 
-        verify(sp).remove(any<String>())
-        assertThat(store).doesNotContainKey(PrefEnvConfig.USER_SETTING_INFO)
+        verify(preferences).remove(any<NonPreferenceKey>())
+        assertThat(store).doesNotContainKey(CarelevoStringNonKey.UserSettingInfo.key)
     }
 
     @Test
@@ -207,12 +208,12 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         assertThat(sut.deleteUserSetting()).isTrue()
         assertThat(sut.getUserSettingBySync()).isNull()
 
-        verify(sp, never()).getString(any<String>(), any<String>())
+        verify(preferences, never()).get(any<StringNonPreferenceKey>())
     }
 
     @Test
     fun `deleteUserSetting returns false when removal throws`() {
-        doThrow(RuntimeException("io error")).whenever(sp).remove(any<String>())
+        doThrow(RuntimeException("io error")).whenever(preferences).remove(any<NonPreferenceKey>())
 
         assertThat(sut.deleteUserSetting()).isFalse()
     }
@@ -226,7 +227,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         val setting = sampleSetting()
         sut.updateUserSetting(setting)
 
-        val fresh = CarelevoUserSettingInfoDaoImpl(sp)
+        val fresh = CarelevoUserSettingInfoDaoImpl(preferences)
 
         assertThat(fresh.getUserSettingBySync()).isEqualTo(setting)
     }
@@ -236,7 +237,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         val setting = sampleSetting(maxBolusDose = null)
         sut.updateUserSetting(setting)
 
-        val fresh = CarelevoUserSettingInfoDaoImpl(sp)
+        val fresh = CarelevoUserSettingInfoDaoImpl(preferences)
 
         assertThat(fresh.getUserSetting().blockingFirst().get()).isEqualTo(setting)
     }
@@ -246,7 +247,7 @@ internal class CarelevoUserSettingInfoDaoImplTest {
         sut.updateUserSetting(sampleSetting())
         sut.deleteUserSetting()
 
-        val fresh = CarelevoUserSettingInfoDaoImpl(sp)
+        val fresh = CarelevoUserSettingInfoDaoImpl(preferences)
 
         assertThat(fresh.getUserSettingBySync()).isNull()
         assertThat(fresh.getUserSetting().blockingFirst().isPresent).isFalse()

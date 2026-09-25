@@ -1,5 +1,6 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -62,7 +63,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 decimalFormatter,
                 pumpEnactResultProvider,
                 blePreCheck,
-                bolusProgressData
+                bolusProgressData, org.mockito.kotlin.mock<NotificationManager>()
             )
         danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo()
     }

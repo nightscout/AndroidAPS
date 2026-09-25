@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class EopatchPumpPluginTest : EopatchTestBase() {
@@ -54,7 +55,7 @@ class EopatchPumpPluginTest : EopatchTestBase() {
         plugin = EopatchPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, aapsSchedulers, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
-            protectionCheck, blePreCheck, bolusProgressData
+            protectionCheck, blePreCheck, bolusProgressData, mock()
         )
     }
 

@@ -28,9 +28,11 @@ import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
@@ -90,14 +92,16 @@ class IobCobCalculatorPlugin(
     private val decimalFormatter: DecimalFormatter,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val signals: CalculationSignalsEmitter,
+    notificationManager: NotificationManager,
+    // Last on purpose: the call site in HistoryWindowGraph passes it as a trailing lambda.
     private val cache: () -> OverviewDataCache
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(MainStrings.iob_cob_calculator)
         .showInList { false }
-        .alwaysEnabled(true),
-    aapsLogger, rh
+        .enforce(EnforcedState.Enabled),
+    aapsLogger, rh, notificationManager
 ), IobCobCalculator {
 
     private var scope: CoroutineScope? = null

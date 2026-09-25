@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -43,21 +44,22 @@ class SensitivityWeightedAveragePlugin(
     rh: TextResolver,
     preferences: Preferences,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    notificationManager: NotificationManager
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
         .pluginName(SensitivityStrings.sensitivity_weighted_average)
         .shortName(SensitivityStrings.sensitivity_plugin_shortname)
+        // Only meaningful with the AMA algorithm - see SensitivityAAPSPlugin, same rule.
+        .showInList {
+            val aps = activePlugin.activeAPS
+            aps == null || aps.algorithm == APSResult.Algorithm.AMA
+        }
         .description(SensitivityStrings.description_sensitivity_weighted_average),
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ) {
-
-    override fun specialShowInListCondition(): Boolean {
-        val aps = activePlugin.activeAPS ?: return true
-        return aps.algorithm == APSResult.Algorithm.AMA
-    }
 
     override fun detectSensitivity(
         ads: AutosensDataStore,

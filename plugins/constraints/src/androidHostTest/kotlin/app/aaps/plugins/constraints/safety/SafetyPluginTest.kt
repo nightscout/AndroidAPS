@@ -1,6 +1,5 @@
 package app.aaps.plugins.constraints.safety
 
-import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -17,20 +16,21 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.source.GlimpPlugin
+import app.aaps.plugins.constraints.ConstraintsStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
@@ -49,6 +49,12 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var determineBasalSMB: DetermineBasalSMB
     @Mock lateinit var loop: Loop
 
+    /**
+     * Real English for every reason these plugins build, so the sentences asserted below are the ones the
+     * user reads. `:shared:tests` cannot see this module, so the generated map is handed over here.
+     */
+    private val text = generatedTextResolver("constraints" to ConstraintsStringsValues::textOf)
+
     private lateinit var safetyPlugin: SafetyPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
@@ -62,46 +68,23 @@ class SafetyPluginTest : TestBaseWithProfile() {
             whenever(persistenceLayer.getApsResults(any(), any())).thenReturn(emptyList())
         }
 
-        whenever(rh.gs(app.aaps.plugins.constraints.ConstraintsStrings.hardlimit)).thenReturn("hard limit")
-        whenever(rh.gs(CoreUiStrings.itmustbepositivevalue)).thenReturn("it must be positive value")
-        whenever(rh.gs(CoreUiStrings.pumplimit)).thenReturn("pump limit")
-        whenever(rh.gs(app.aaps.plugins.constraints.ConstraintsStrings.maxvalueinpreferences)).thenReturn("max value in preferences")
-        // :plugins:aps resolves its own strings through TextRef, so these need the ApsStrings key, not ConstraintsStrings.
-        whenever(rh.gs(ApsStrings.hardlimit)).thenReturn("hard limit")
-        whenever(rh.gs(CoreUiStrings.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        whenever(rh.gs(ApsStrings.maxvalueinpreferences)).thenReturn("max value in preferences")
-        whenever(rh.gs(ApsStrings.limiting_iob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
-        whenever(rh.gs(ApsStrings.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
-        whenever(rh.gs(ApsStrings.max_basal_multiplier)).thenReturn("max basal multiplier")
-        whenever(rh.gs(CoreUiStrings.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
-        whenever(rh.gs(CoreUiStrings.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        whenever(rh.gs(CoreUiStrings.limiting_iob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
-        whenever(rh.gs(app.aaps.plugins.constraints.ConstraintsStrings.limitingcarbs)).thenReturn("Limiting carbs to %1\$d g because of %2\$s")
-        whenever(rh.gs(CoreUiStrings.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        whenever(rh.gs(app.aaps.plugins.constraints.ConstraintsStrings.pumpisnottempbasalcapable)).thenReturn("Pump is not temp basal capable")
-        whenever(rh.gs(ApsStrings.increasing_max_basal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile")
-        whenever(rh.gs(ApsStrings.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
-        whenever(rh.gs(app.aaps.plugins.constraints.ConstraintsStrings.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
-        whenever(rh.gs(app.aaps.plugins.constraints.ConstraintsStrings.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
-        whenever(rh.gs(app.aaps.plugins.constraints.ConstraintsStrings.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        whenever(rh.gs(CoreUiStrings.lowglucosesuspend)).thenReturn("Low Glucose Suspend")
 
         whenever(activePlugin.activePump).thenReturn(pumpWithConcentration)
         whenever(pumpWithConcentration.pumpDescription).thenReturn(pumpDescription)
         whenever(config.APS).thenReturn(true)
-        safetyPlugin = SafetyPlugin(aapsLogger, rh, preferences, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, notificationManager, decimalFormatter)
+        safetyPlugin = SafetyPlugin(aapsLogger, text, preferences, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, notificationManager, decimalFormatter)
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
-                aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin, iobCobCalculator,
+                aapsLogger, rxBus, constraintChecker, text, profileFunction, profileUtil, config, activePlugin, iobCobCalculator,
                 hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, glucoseStatusProvider, tddCalculator, bgQualityCheck,
                 notificationManager, determineBasalSMB, profiler, GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider() }, ch,
                 fabricPrivacy
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
-                aapsLogger, rxBus, constraintChecker, rh, config, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
+                aapsLogger, rxBus, constraintChecker, text, config, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
                 hardLimits, dateUtil, persistenceLayer, glucoseStatusProvider, preferences, determineBasalAMA,
-                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider() }, ch, fabricPrivacy
+                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), { apsResultProvider() }, ch, fabricPrivacy, mock()
             )
     }
 
@@ -144,7 +127,9 @@ class SafetyPluginTest : TestBaseWithProfile() {
     fun bgSourceShouldPreventSMBAlways() = runTest {
         whenever(persistenceLayer.isAdvancedFilteringSupported()).thenReturn(false)
         val c = safetyPlugin.isAdvancedFilteringEnabled(ConstraintObject(true, aapsLogger))
-        assertThat(c.getReasons()).isEqualTo("Safety: SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
+        // A plain apostrophe. `strings.xml` writes it `\'` because AAPT needs the escape, and the old stub
+        // repeated the escape into the expected value - so the test asserted text no user ever saw.
+        assertThat(c.getReasons()).isEqualTo("Safety: SMB always and after carbs disabled because active BG source doesn't support advanced filtering")
         assertThat(c.value()).isFalse()
     }
 

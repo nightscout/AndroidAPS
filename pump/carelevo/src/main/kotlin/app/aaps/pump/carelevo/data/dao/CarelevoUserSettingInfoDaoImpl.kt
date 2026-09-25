@@ -1,7 +1,7 @@
 package app.aaps.pump.carelevo.data.dao
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.carelevo.config.PrefEnvConfig
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import io.reactivex.rxjava3.core.Observable
@@ -16,7 +16,7 @@ import kotlin.jvm.optionals.getOrNull
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class CarelevoUserSettingInfoDaoImpl @Inject constructor(
-    private val prefManager: SP
+    private val preferences: Preferences
 ) : CarelevoUserSettingInfoDao {
 
     private val _userSettingInfo: BehaviorSubject<Optional<CarelevoUserSettingInfoEntity>> = BehaviorSubject.create()
@@ -24,7 +24,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
     override fun getUserSetting(): Observable<Optional<CarelevoUserSettingInfoEntity>> {
         if (_userSettingInfo.value == null) {
             runCatching {
-                val userSettingInfoString = prefManager.getString(PrefEnvConfig.USER_SETTING_INFO, "")
+                val userSettingInfoString = preferences.get(CarelevoStringNonKey.UserSettingInfo)
                 if (userSettingInfoString == "") {
                     throw NullPointerException("user setting info is empty")
                 }
@@ -46,7 +46,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
     override fun getUserSettingBySync(): CarelevoUserSettingInfoEntity? {
         if (_userSettingInfo.value == null) {
             runCatching {
-                val userSettingInfoString = prefManager.getString(PrefEnvConfig.USER_SETTING_INFO, "")
+                val userSettingInfoString = preferences.get(CarelevoStringNonKey.UserSettingInfo)
                 if (userSettingInfoString == "") {
                     throw NullPointerException("user setting info is empty")
                 }
@@ -67,7 +67,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
     override fun updateUserSetting(setting: CarelevoUserSettingInfoEntity): Boolean {
         return runCatching {
             val userSettingInfoString = CarelevoGsonHelper.sharedGson().toJson(setting)
-            prefManager.putString(PrefEnvConfig.USER_SETTING_INFO, userSettingInfoString)
+            preferences.put(CarelevoStringNonKey.UserSettingInfo, userSettingInfoString)
         }.fold(
             onSuccess = {
                 _userSettingInfo.onNext(Optional.ofNullable(setting))
@@ -82,7 +82,7 @@ class CarelevoUserSettingInfoDaoImpl @Inject constructor(
 
     override fun deleteUserSetting(): Boolean {
         return runCatching {
-            prefManager.remove(PrefEnvConfig.USER_SETTING_INFO)
+            preferences.remove(CarelevoStringNonKey.UserSettingInfo)
         }.fold(
             onSuccess = {
                 _userSettingInfo.onNext(Optional.ofNullable(null))

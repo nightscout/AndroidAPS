@@ -29,6 +29,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -96,6 +98,8 @@ fun StatsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { viewModel.toggleTddExpanded() }
+                            // A heading, so a screen reader can jump between the sections of this screen.
+                            .semantics { heading() }
                             .padding(bottom = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -150,6 +154,8 @@ fun StatsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { viewModel.toggleTirExpanded() }
+                            // A heading, so a screen reader can jump between the sections of this screen.
+                            .semantics { heading() }
                             .padding(bottom = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -199,6 +205,8 @@ fun StatsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { viewModel.toggleDexcomTirExpanded() }
+                            // A heading, so a screen reader can jump between the sections of this screen.
+                            .semantics { heading() }
                             .padding(bottom = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -248,6 +256,8 @@ fun StatsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { viewModel.toggleActivityExpanded() }
+                            // A heading, so a screen reader can jump between the sections of this screen.
+                            .semantics { heading() }
                             .padding(bottom = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -302,6 +312,8 @@ fun StatsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { viewModel.toggleTddCycleExpanded() }
+                            // A heading, so a screen reader can jump between the sections of this screen.
+                            .semantics { heading() }
                             .padding(bottom = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {

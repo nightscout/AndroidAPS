@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -13,7 +12,8 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.plugins.sync.SyncStringsValues
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
@@ -109,7 +109,7 @@ class ClientControlUplinkIntegrationTest {
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var wizardBolusExecutor: WizardBolusExecutor
     @Mock private lateinit var notificationManager: NotificationManager
-    @Mock private lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("sync" to SyncStringsValues::textOf)
     @Mock private lateinit var masterConfig: Config
     @Mock private lateinit var bolusProgressData: BolusProgressData
     @Mock private lateinit var commandQueue: CommandQueue
@@ -143,7 +143,6 @@ class ClientControlUplinkIntegrationTest {
 
         // ---------- client Preferences fake ----------
         whenever(clientConfig.AAPSCLIENT).thenReturn(true)
-        doAnswer { "update settings" }.whenever(rh).gs(any<TextRef>())
         whenever(clientPrefs.syncedLocalChanges).thenReturn(syncedLocalChanges)
         clientStrings[StringNonKey.AutomationEvents.key] = automationJson
         whenever(clientPrefs.get(any<StringNonPreferenceKey>())).thenAnswer { clientStrings[it.getArgument<StringNonPreferenceKey>(0).key] ?: "" }

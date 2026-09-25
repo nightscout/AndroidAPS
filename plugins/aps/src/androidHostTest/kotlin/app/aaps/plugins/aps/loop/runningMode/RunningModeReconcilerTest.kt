@@ -109,6 +109,32 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         )
     }
 
+    /**
+     * Nothing is issued while the command queue is held for a settings import.
+     *
+     * This method cancels an extended bolus and THEN issues a zero temp basal. Held, the executor picks
+     * up neither - so starting anyway would cancel the extended bolus, leave the zero TBR waiting in the
+     * queue, and run FULL BASAL while the app shows the pump as suspended. Skipping is safe: the
+     * reconciler runs again and re-derives the whole state from the mode.
+     */
+    @Test
+    fun `issues nothing while the queue is held for an import`() = runTest {
+        testPumpPlugin.pumpDescription = PumpDescription().apply {
+            tempBasalStyle = PumpDescription.ABSOLUTE
+        }
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        val activeMode = temporaryMode(RM.Mode.DISCONNECTED_PUMP, timestamp = now, durationMs = T.mins(30).msecs())
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(activeMode)
+        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
+        whenever(persistenceLayer.getExtendedBolusActiveAt(anyLong())).thenReturn(null)
+        whenever(commandQueue.isHeld()).thenReturn(true)
+
+        reconciler.start()
+
+        verify(commandQueue, never()).tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())
+        verify(commandQueue, never()).cancelExtended()
+    }
+
     // --- Startup idempotency ---
 
     @Test

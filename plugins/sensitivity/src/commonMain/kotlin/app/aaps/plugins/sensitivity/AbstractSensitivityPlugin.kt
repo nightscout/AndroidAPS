@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
@@ -23,8 +24,9 @@ abstract class AbstractSensitivityPlugin(
     pluginDescription: PluginDescription,
     aapsLogger: AAPSLogger,
     rh: TextResolver,
-    protected val preferences: Preferences
-) : PluginBase(pluginDescription, aapsLogger, rh), Sensitivity {
+    protected val preferences: Preferences,
+    notificationManager: NotificationManager
+) : PluginBase(pluginDescription, aapsLogger, rh, notificationManager), Sensitivity {
 
     abstract override fun detectSensitivity(
         ads: AutosensDataStore,

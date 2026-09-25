@@ -1,7 +1,9 @@
 package app.aaps.pump.carelevo.data.dao
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.pump.carelevo.config.PrefEnvConfig
+import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import com.google.common.truth.Truth.assertThat
@@ -23,17 +25,17 @@ import org.mockito.quality.Strictness
 /**
  * Pure-JVM round-trip coverage for [CarelevoPatchInfoDaoImpl].
  *
- * The DAO persists a single JSON blob under [PrefEnvConfig.PATCH_INFO] via [SP] and caches the
- * parsed entity in an internal `BehaviorSubject`. We back the mocked [SP] with an in-memory map (the
- * "fake preferences" approach) so save/load/update/delete really round-trip through the real gson
- * used by production code, and we spawn a fresh DAO instance sharing the same store to exercise the
- * cold-read (cache-miss) branches.
+ * The DAO persists a single JSON blob under [CarelevoStringNonKey.PatchInfo] via [Preferences] and
+ * caches the parsed entity in an internal `BehaviorSubject`. We back the mocked [Preferences] with an
+ * in-memory map (the "fake preferences" approach) so save/load/update/delete really round-trip
+ * through the real gson used by production code, and we spawn a fresh DAO instance sharing the same
+ * store to exercise the cold-read (cache-miss) branches.
  */
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class CarelevoPatchInfoDaoImplTest {
 
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     private val store = mutableMapOf<String, String>()
 
@@ -61,26 +63,27 @@ internal class CarelevoPatchInfoDaoImplTest {
         )
 
     private fun storeJson(entity: CarelevoPatchInfoEntity) {
-        store[PrefEnvConfig.PATCH_INFO] = CarelevoGsonHelper.sharedGson().toJson(entity)
+        store[CarelevoStringNonKey.PatchInfo.key] = CarelevoGsonHelper.sharedGson().toJson(entity)
     }
 
     @BeforeEach
     fun setUp() {
-        whenever(sp.getString(any<String>(), any<String>())).thenAnswer { inv ->
-            val key = inv.getArgument<String>(0)
-            val def = inv.getArgument<String>(1)
-            store[key] ?: def
+        // Fake preferences backed by [store]: get reads the map (falling back to the key's own
+        // default), put writes it, remove deletes it.
+        whenever(preferences.get(any<StringNonPreferenceKey>())).thenAnswer { inv ->
+            val key = inv.getArgument<StringNonPreferenceKey>(0)
+            store[key.key] ?: key.defaultValue
         }
         doAnswer { inv ->
-            store[inv.getArgument<String>(0)] = inv.getArgument<String>(1)
+            store[inv.getArgument<StringNonPreferenceKey>(0).key] = inv.getArgument<String>(1)
             null
-        }.whenever(sp).putString(any<String>(), any<String>())
+        }.whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
         doAnswer { inv ->
-            store.remove(inv.getArgument<String>(0))
+            store.remove(inv.getArgument<NonPreferenceKey>(0).key)
             null
-        }.whenever(sp).remove(any<String>())
+        }.whenever(preferences).remove(any<NonPreferenceKey>())
 
-        sut = CarelevoPatchInfoDaoImpl(sp)
+        sut = CarelevoPatchInfoDaoImpl(preferences)
     }
 
     // region getPatchInfo (Observable)
@@ -104,7 +107,7 @@ internal class CarelevoPatchInfoDaoImplTest {
 
     @Test
     fun `getPatchInfo emits empty when the stored JSON is malformed`() {
-        store[PrefEnvConfig.PATCH_INFO] = "{{{not-valid-json"
+        store[CarelevoStringNonKey.PatchInfo.key] = "{{{not-valid-json"
 
         val emitted = sut.getPatchInfo().blockingFirst()
 
@@ -118,7 +121,7 @@ internal class CarelevoPatchInfoDaoImplTest {
         sut.getPatchInfo().blockingFirst()
         sut.getPatchInfo().blockingFirst()
 
-        verify(sp, times(1)).getString(any<String>(), any<String>())
+        verify(preferences, times(1)).get(any<StringNonPreferenceKey>())
     }
 
     // endregion
@@ -139,7 +142,7 @@ internal class CarelevoPatchInfoDaoImplTest {
 
     @Test
     fun `getPatchInfoBySync returns null when the stored JSON is malformed`() {
-        store[PrefEnvConfig.PATCH_INFO] = "@@not-json@@"
+        store[CarelevoStringNonKey.PatchInfo.key] = "@@not-json@@"
 
         assertThat(sut.getPatchInfoBySync()).isNull()
     }
@@ -151,7 +154,7 @@ internal class CarelevoPatchInfoDaoImplTest {
         sut.getPatchInfoBySync()
         sut.getPatchInfoBySync()
 
-        verify(sp, times(1)).getString(any<String>(), any<String>())
+        verify(preferences, times(1)).get(any<StringNonPreferenceKey>())
     }
 
     // endregion
@@ -164,8 +167,8 @@ internal class CarelevoPatchInfoDaoImplTest {
 
         assertThat(sut.updatePatchInfo(info)).isTrue()
 
-        verify(sp).putString(any<String>(), any<String>())
-        assertThat(store[PrefEnvConfig.PATCH_INFO])
+        verify(preferences).put(any<StringNonPreferenceKey>(), any<String>())
+        assertThat(store[CarelevoStringNonKey.PatchInfo.key])
             .isEqualTo(CarelevoGsonHelper.sharedGson().toJson(info))
     }
 
@@ -177,12 +180,12 @@ internal class CarelevoPatchInfoDaoImplTest {
         assertThat(sut.getPatchInfoBySync()).isEqualTo(info)
         assertThat(sut.getPatchInfo().blockingFirst().get()).isEqualTo(info)
 
-        verify(sp, never()).getString(any<String>(), any<String>())
+        verify(preferences, never()).get(any<StringNonPreferenceKey>())
     }
 
     @Test
     fun `updatePatchInfo returns false when persisting throws`() {
-        doThrow(RuntimeException("disk full")).whenever(sp).putString(any<String>(), any<String>())
+        doThrow(RuntimeException("disk full")).whenever(preferences).put(any<StringNonPreferenceKey>(), any<String>())
 
         assertThat(sut.updatePatchInfo(samplePatch())).isFalse()
     }
@@ -197,8 +200,8 @@ internal class CarelevoPatchInfoDaoImplTest {
 
         assertThat(sut.deletePatchInfo()).isTrue()
 
-        verify(sp).remove(any<String>())
-        assertThat(store).doesNotContainKey(PrefEnvConfig.PATCH_INFO)
+        verify(preferences).remove(any<NonPreferenceKey>())
+        assertThat(store).doesNotContainKey(CarelevoStringNonKey.PatchInfo.key)
     }
 
     @Test
@@ -208,12 +211,12 @@ internal class CarelevoPatchInfoDaoImplTest {
         assertThat(sut.deletePatchInfo()).isTrue()
         assertThat(sut.getPatchInfoBySync()).isNull()
 
-        verify(sp, never()).getString(any<String>(), any<String>())
+        verify(preferences, never()).get(any<StringNonPreferenceKey>())
     }
 
     @Test
     fun `deletePatchInfo returns false when removal throws`() {
-        doThrow(RuntimeException("io error")).whenever(sp).remove(any<String>())
+        doThrow(RuntimeException("io error")).whenever(preferences).remove(any<NonPreferenceKey>())
 
         assertThat(sut.deletePatchInfo()).isFalse()
     }
@@ -227,7 +230,7 @@ internal class CarelevoPatchInfoDaoImplTest {
         val info = samplePatch()
         sut.updatePatchInfo(info)
 
-        val fresh = CarelevoPatchInfoDaoImpl(sp)
+        val fresh = CarelevoPatchInfoDaoImpl(preferences)
 
         assertThat(fresh.getPatchInfoBySync()).isEqualTo(info)
     }
@@ -237,7 +240,7 @@ internal class CarelevoPatchInfoDaoImplTest {
         val info = samplePatch(insulinRemain = null, mode = null)
         sut.updatePatchInfo(info)
 
-        val fresh = CarelevoPatchInfoDaoImpl(sp)
+        val fresh = CarelevoPatchInfoDaoImpl(preferences)
 
         assertThat(fresh.getPatchInfo().blockingFirst().get()).isEqualTo(info)
     }
@@ -247,7 +250,7 @@ internal class CarelevoPatchInfoDaoImplTest {
         sut.updatePatchInfo(samplePatch())
         sut.deletePatchInfo()
 
-        val fresh = CarelevoPatchInfoDaoImpl(sp)
+        val fresh = CarelevoPatchInfoDaoImpl(preferences)
 
         assertThat(fresh.getPatchInfoBySync()).isNull()
         assertThat(fresh.getPatchInfo().blockingFirst().isPresent).isFalse()

@@ -21,7 +21,9 @@ import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
+import app.aaps.plugins.automation.AutomationStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +67,9 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 class AutomationRuntimeProcessingTest : TestBaseWithProfile() {
 
+    /** Real English, so an unstubbed automation string fails instead of becoming its own name. */
+    private val text = generatedTextResolver("automation" to AutomationStringsValues::textOf)
+
     @Mock lateinit var actionFactory: ActionFactory
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var locationServiceController: LocationServiceController
@@ -78,7 +83,7 @@ class AutomationRuntimeProcessingTest : TestBaseWithProfile() {
 
     private val triggerDeps: TriggerDeps by lazy {
         TriggerDeps(
-            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), mock(),
+            aapsLogger, rxBus, text, profileFunction, profileUtil, preferences, mock(), mock(),
             activePlugin, iobCobCalculator, smbGlucoseStatusProvider, dateUtil
         )
     }
@@ -102,7 +107,7 @@ class AutomationRuntimeProcessingTest : TestBaseWithProfile() {
         whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
 
         runtime = AutomationRuntime(
-            mock<LocationPermissions>(), eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker,
+            mock<LocationPermissions>(), eventFactory, aapsLogger, text, preferences, loop, rxBus, constraintChecker,
             config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
             uel, profileRepository, sceneApi, mock()
         )

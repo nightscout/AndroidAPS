@@ -63,6 +63,9 @@
     <string name="configbuilder_switch_confirmation">This will disable %1$s and enable %2$s.</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Completed</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Expanded</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Collapsed</string>
     <string name="no_compose_preferences">No preferences available for this plugin</string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="confirm_pin_hint">Confirm PIN</string>
@@ -116,7 +119,7 @@
     <string name="profile_switch_no_insulin">Cannot switch profile: no insulin is in use, and none was selected.</string>
     <string name="profile_switch_select_insulin_hint">No insulin is in use yet. Select the insulin you are using, so this profile switch can record it.</string>
     <string name="insulin_activation_failed">The insulin was not switched. Your previous insulin is still in use.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">The insulin was not switched: %1$s. Your previous insulin is still in use.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">The insulin was not switched: %1$s Your previous insulin is still in use.</string>
     <string name="insulin_activation_unconfirmed">The insulin switch could not be confirmed. Check which insulin is active in your profile before dosing.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nThe insulin was also not switched.</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -174,6 +177,7 @@
     <string name="notconfigured">Not configured</string>
     <string name="loop_suspended_by_dst">Loop suspended by DST</string>
     <string name="required">req</string>
+    <string name="a11y_arrow_triple_down">falling very rapidly</string>
     <string name="a11y_arrow_double_down">falling rapidly</string>
     <string name="a11y_arrow_single_down">falling</string>
     <string name="a11y_arrow_forty_five_down">falling slowly</string>
@@ -181,8 +185,13 @@
     <string name="a11y_arrow_forty_five_up">rising slowly</string>
     <string name="a11y_arrow_single_up">rising</string>
     <string name="a11y_arrow_double_up">rising rapidly</string>
+    <string name="a11y_arrow_triple_up">rising very rapidly</string>
     <string name="a11y_arrow_none">none</string>
     <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">decrement %1$s by %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">increment %1$s by %2$s</string>
+    <string name="decrement">decrement</string>
+    <string name="increment">increment</string>
     <string name="a11y_high">high</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>
@@ -451,7 +460,7 @@
     <string name="treatment_insulin_desc">Deliver bolus manually</string>
     <string name="treatment_carbs_desc">Record carbs without insulin</string>
     <string name="treatment_calculator_desc">Calculate bolus</string>
-    <string name="insulin_management">Insulin</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Insulin settings</string>
     <string name="manage_insulin_desc">Manage and activate insulin configurations</string>
     <string name="concentration_disable_blocked">Cannot disable concentration support while non-U100 insulins exist. Remove all non-U100 insulin configurations and switch to a U100 profile first.</string>
     <string name="simple_mode_blocked_by_concentration">Cannot enable simple mode while using non-U100 insulin. Switch to U100 insulin first.</string>
@@ -473,6 +482,9 @@
     <string name="treatment_cannula_change_desc">Record cannula/infusion set change</string>
     <string name="treatment_fill_desc">Prime and fill cannula</string>
     <string name="temp_basal">Temp basal</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Above profile</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Below profile</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">None</string>
     <string name="user_entry">User entry</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Finger</string>
@@ -712,6 +724,7 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensitivity</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens off</string>
     <string name="isf_for_carbs">Average ISF for Calculator and Carbs Absorption: %1$.1f</string>
     <string name="isf_profile">Profile ISF: %1$.1f</string>
     <string name="isf_variable">Variable ISF: %1$.1f</string>
@@ -754,7 +767,7 @@
     <string name="wizard_include_iob">Include IOB</string>
     <string name="wizard_include_cob">Include COB</string>
     <string name="wizard_calculation">Calculation</string>
-    <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="no_action_selected">No action selected, nothing will happen.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Max removal: %1$d g (carbs on board)</string>
     <string name="wizard_no_insulin_required">No insulin required</string>
     <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
@@ -809,6 +822,7 @@
     <string name="initializing">Initializing…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Warning</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Critical</string>
     <string name="alert" comment="Generic alert dialog title">Alert</string>
     <string name="retry" comment="Button label to retry a failed operation">Retry</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Finish</string>
@@ -960,7 +974,7 @@
     <string name="reorder">Reorder</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Move earlier</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Move later</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Show details</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Show details</string>
     <string name="presets_changed_reorder_aborted">Presets changed elsewhere. The new order was not saved.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d of %2$d</string>
@@ -1093,8 +1107,18 @@
     <string name="import_wrong_password">Wrong password</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Import anyway</string>
-    <string name="import_apply_title">Settings imported</string>
-    <string name="import_apply_message">The imported settings will now be applied. Plugins that changed will be restarted.</string>
+    <string name="import_apply_title">Apply imported settings?</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Settings to change: %1$d. Plugins that changed will be restarted.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Settings to change: %1$d. Pump settings kept: %2$d, so your pump keeps working.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">The imported settings selected no pump this phone has. %1$s is now active — check your pump settings.</string>
+    <string name="import_applying">Applying settings…</string>
+    <string name="import_replace_pump_settings">Also replace pump settings</string>
+    <string name="import_replace_pump_settings_summary">Leave this off to keep the pump this phone is paired with. Turn it on when restoring onto a new phone with the same pump.</string>
     <string name="import_apply_waiting">Waiting for pump…</string>
     <string name="import_apply_pump_busy">The pump is still busy, so the settings were not applied.</string>
     <string name="import_apply_retry_question">Try again now?</string>

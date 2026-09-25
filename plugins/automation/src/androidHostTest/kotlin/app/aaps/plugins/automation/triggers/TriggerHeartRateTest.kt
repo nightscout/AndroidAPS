@@ -23,9 +23,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
     @Test
     fun friendlyDescription() {
         val t = TriggerHeartRate(triggerDeps)
-        whenever(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
-        whenever(rh.gs(AutomationStrings.triggerHeartRateDesc, ">", 80.0)).thenReturn("test")
-        assertThat(t.friendlyDescription()).isEqualTo("test")
+        assertThat(t.friendlyDescription()).isEqualTo("HR is equal or greater than 80")
     }
 
     @Test

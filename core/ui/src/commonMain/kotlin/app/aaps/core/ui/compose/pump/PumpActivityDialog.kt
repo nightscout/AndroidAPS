@@ -1,14 +1,9 @@
 package app.aaps.core.ui.compose.pump
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,9 +16,10 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,17 +48,26 @@ fun PumpActivityDialog(
     onDismiss: () -> Unit
 ) {
     if (isModal) {
-        // Modal: full-screen scrim + centered card, not dismissable
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f))
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = { } // consume touches
-                ),
-            contentAlignment = Alignment.Center
+        // Modal (standard bolus): a real Dialog, so it gets its own window and the app behind it
+        // leaves the accessibility tree.
+        //
+        // This used to be a Box with a scrim and a clickable that only consumed TOUCHES. That
+        // blocks a finger, but a screen reader does not use touches - it activates controls
+        // through accessibility actions, which a touch handler does not stop - and a sibling Box
+        // removes nothing from the semantics tree. So during a bolus a blind user was never told
+        // delivery had started and could still reach and operate the UI behind the scrim,
+        // including starting a second treatment.
+        //
+        // Not dismissable, as before: no dismiss on back press or on a tap outside, and the
+        // dialog goes away only when the caller stops composing it. usePlatformDefaultWidth is
+        // off so the card keeps the full-bleed width it had inside the Box.
+        Dialog(
+            onDismissRequest = { },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false
+            )
         ) {
             PumpActivityCard(
                 bolusState = bolusState,
@@ -181,6 +186,13 @@ private fun BolusProgressSection(
             text = statusText,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
+            // Deliberately NOT a liveRegion. This line is rebuilt on every progress frame -
+            // BolusProgressData.updateProgress puts the delivered amount into a whole sentence, and
+            // the Dana drivers call it per 0.01 U - so a live region here fires as often as Compose
+            // allows (one per 100 ms). TalkBack queues polite announcements, so the user would get
+            // a growing backlog of "Delivering 1.23 U, Delivering 1.24 U ..." and could not hear
+            // anything else, including the Stop button. The amount is on screen to be read on
+            // demand; it does not need to interrupt.
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(AapsSpacing.large))
@@ -215,22 +227,38 @@ private fun BolusProgressSection(
         // before a terminal frame. Stop can't reach the master either, so offer a manual dismiss that
         // only hides this dialog — it does NOT stop the pump.
         state.stalled -> {
-            Text(
-                text = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_title),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(AapsSpacing.medium))
-            Text(
-                text = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_body),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
+            val stalledTitle = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_title)
+            // paneTitle, NOT liveRegion. This whole branch is composed for the first time at the
+            // moment of the stall, and Compose only fires a live region for a node that was already
+            // in the tree on the previous pass - sendSemanticsPropertyChangeEvents skips a node with
+            // no previous entry - so a liveRegion here announces nothing at all. The same flip also
+            // removes the running status line, which was the only node still speaking, so the moment
+            // we lose track of a bolus would otherwise be met with silence. A newly appearing
+            // paneTitle is the supported way to say "this just appeared": it sends
+            // CONTENT_CHANGE_TYPE_PANE_APPEARED carrying the title.
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { paneTitle = stalledTitle }
+            ) {
+                Text(
+                    text = stalledTitle,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(AapsSpacing.medium))
+                Text(
+                    text = stringResource(CoreUiStrings.clientcontrol_bolus_progress_stalled_body),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Spacer(modifier = Modifier.height(AapsSpacing.large))
             Row(
                 modifier = Modifier.fillMaxWidth(),

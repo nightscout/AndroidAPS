@@ -13,14 +13,46 @@ import kotlinx.coroutines.withTimeoutOrNull
  * @param current Current item being processed (for determinate progress)
  * @param total Total items to process (for determinate progress, 0 = indeterminate)
  * @param done True when initialization is complete
+ * @param reconfiguringDepth How many reconfigurations are in progress; see [reconfiguring]
  */
 data class InitProgress(
     val step: String = "",
     val current: Int = 0,
     val total: Int = 0,
     val done: Boolean = false,
-    val error: String? = null
-)
+    val error: String? = null,
+    val reconfiguringDepth: Int = 0
+) {
+
+    /**
+     * Plugin state is being rebuilt right now, so nothing may read it.
+     *
+     * Kept HERE, beside [done], rather than as a second flow, for one reason: [done] must not be
+     * cleared to express this. It is also the splash gate - `AapsAppRoot` renders the splash under
+     * `AnimatedVisibility(visible = !initProgress.done)` and the app content under
+     * `AnimatedVisibility(visible = initProgress.done)`, and `AnimatedVisibility` REMOVES the subtree
+     * from composition. Clearing [done] would put the splash over a running app and take the import
+     * screen performing the apply off the display, mid-apply. So [done] stays true and this says the
+     * rest.
+     *
+     * A depth rather than a flag because the windows nest: an import brackets the preference rewrite
+     * and then the apply, and a caller must never be able to end someone else's window early.
+     */
+    val reconfiguring: Boolean get() = reconfiguringDepth > 0
+
+    /** One more reconfiguration in progress. See [reconfiguring]. */
+    fun enteringReconfigure(): InitProgress = copy(reconfiguringDepth = reconfiguringDepth + 1)
+
+    /**
+     * One fewer reconfiguration in progress, never below zero.
+     *
+     * The clamp matters: an unbalanced end that drove this negative would make the next real
+     * [enteringReconfigure] look like "still not reconfiguring", and the window would silently stop
+     * working. Failing open here is the safe direction - the worst case is a window that closes early
+     * once, not one that never opens again.
+     */
+    fun leavingReconfigure(): InitProgress = copy(reconfiguringDepth = maxOf(0, reconfiguringDepth - 1))
+}
 
 enum class ExternalOptions(val filename: String) {
     ENGINEERING_MODE("engineering_mode"),
@@ -116,13 +148,34 @@ interface Config {
     val initProgressFlow: StateFlow<InitProgress>
     val initSnackbarFlow: SharedFlow<String>
 
-    /** Whether the app has completed initialization. Derived from [initProgressFlow]. */
-    val appInitialized: Boolean get() = initProgressFlow.value.done
+    /**
+     * Whether the app is initialized AND its plugin state is valid to read right now.
+     *
+     * Derived from [initProgressFlow]: initialization has finished once and no reconfiguration is in
+     * progress. The second half matters because a settings import rebuilds plugin state on a running
+     * app, and during that rebuild there is a moment with no pump elected - reading the active plugin
+     * then hits `PluginStore`'s deliberate "No pump selected" assertion. Roughly 35 call sites already
+     * guard on this property, so they all close during an import with no change of their own.
+     */
+    val appInitialized: Boolean get() = initProgressFlow.value.run { done && !reconfiguring }
 
     fun updateInitProgress(step: String, current: Int = 0, total: Int = 0)
     fun initCompleted()
     fun initFailed(error: String)
     fun showInitSnackbar(message: String)
+
+    /**
+     * Open a window in which plugin state is being rebuilt and must not be read.
+     *
+     * Prefer [whileReconfiguring] - it pairs this with [endReconfiguring] in a `finally`. Calling this
+     * without a guaranteed matching end leaves [appInitialized] false for the rest of the process, and
+     * `WizardBolusExecutorImpl` refuses on that in two places: the user could not bolus. That is worse
+     * than the window this closes.
+     */
+    fun beginReconfiguring()
+
+    /** Close one window opened by [beginReconfiguring]. Never drops below zero. */
+    fun endReconfiguring()
 
     fun isDev(): Boolean
     fun isEngineeringModeOrRelease(): Boolean
@@ -142,6 +195,25 @@ interface Config {
 suspend fun Config.awaitInitialized(timeoutMs: Long = 30_000L): Boolean {
     if (appInitialized) return true
     return withTimeoutOrNull(timeoutMs) {
-        initProgressFlow.first { it.done }
+        // `done && !reconfiguring`, not `done` alone. During an import `done` is already true, so
+        // waiting on it would return instantly and let the caller read plugin state in exactly the
+        // window it was trying to avoid - KeepAliveWorker fires every five minutes and then calls
+        // checkPump().
+        initProgressFlow.first { it.done && !it.reconfiguring }
     } != null
+}
+
+/**
+ * Run [block] with plugin state marked as being rebuilt, and always unmark it afterwards.
+ *
+ * The `finally` is the point. Neither `executeImport` implementation has one today, so a throw while
+ * rewriting the preferences would otherwise leave the window open forever - see [Config.beginReconfiguring].
+ */
+suspend fun <T> Config.whileReconfiguring(block: suspend () -> T): T {
+    beginReconfiguring()
+    try {
+        return block()
+    } finally {
+        endReconfiguring()
+    }
 }

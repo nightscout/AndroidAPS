@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.wear
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
@@ -84,6 +85,7 @@ class WearPlugin(
     private val bolusProgressData: BolusProgressData,
     private val persistenceLayer: PersistenceLayer,
     private val scenes: SceneAutomationApi,
+    notificationManager: NotificationManager,
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -92,7 +94,7 @@ class WearPlugin(
         .shortName(SyncStrings.wear_shortname)
         .description(SyncStrings.description_wear)
         .composeContent { WearComposeContent() },
-    aapsLogger = aapsLogger, rh = rh, preferences = preferences
+    aapsLogger = aapsLogger, rh = rh, preferences = preferences, notificationManager = notificationManager
 ) {
 
     private var scope: CoroutineScope? = null

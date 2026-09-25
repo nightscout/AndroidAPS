@@ -103,6 +103,6 @@ class TriggerLocationTest : TriggerTestBase() {
     }
 
     @Test fun friendlyDescriptionTest() = runTest {
-        assertThat(TriggerLocation(triggerDeps).friendlyDescription()).isEqualTo("locationis") // nothing stubbed, so the name is the fallback
+        assertThat(TriggerLocation(triggerDeps).friendlyDescription()).isEqualTo("When you are inside the area  ")
     }
 }

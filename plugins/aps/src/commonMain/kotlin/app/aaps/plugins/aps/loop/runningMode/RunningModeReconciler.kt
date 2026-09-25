@@ -198,6 +198,20 @@ class RunningModeReconciler(
             aapsLogger.warn(LTag.APS, "RunningModeReconciler: pump not initialized, skipping zero-TBR issue")
             return
         }
+        // Worse here than anywhere else, which is why it is checked before the first command rather
+        // than before each one. This method cancels an extended bolus and THEN issues a zero temp
+        // basal. A hold granted between those two leaves the extended bolus cancelled, the zero TBR
+        // waiting in the queue, and FULL BASAL running - while the app believes the pump is suspended.
+        // Skipping is safe: the reconciler runs again and re-derives the whole state from the mode.
+        if (commandQueue.isHeld()) {
+            aapsLogger.warn(LTag.APS, "RunningModeReconciler: queue is held (settings being applied), skipping zero-TBR issue")
+            return
+        }
+        // Worse here than anywhere else, which is why it is checked before the first command rather
+        // than before each one. This method cancels an extended bolus and THEN issues a zero temp
+        // basal. A hold granted between those two leaves the extended bolus cancelled, the zero TBR
+        // waiting in the queue, and FULL BASAL running - while the app believes the pump is suspended.
+        // Skipping is safe: the reconciler runs again and re-derives the whole state from the mode.
         val remainingMinutes = remainingMinutes(activeMode, now)
         if (remainingMinutes <= 0) {
             aapsLogger.debug(LTag.APS, "RunningModeReconciler: RM has no remaining time, skipping zero-TBR")

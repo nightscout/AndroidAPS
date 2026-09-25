@@ -70,7 +70,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     protected var activePlugin: ActivePlugin,
     protected var dateUtil: DateUtil,
     protected var pumpSync: PumpSync,
-    protected var notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     protected var danaHistoryDatabase: DanaHistoryDatabase,
     protected var decimalFormatter: DecimalFormatter,
     protected var pumpEnactResultProvider: () -> PumpEnactResult
@@ -88,7 +88,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         .shortName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarpump_shortname))
         .description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_r)),
     ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaIntNonKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, Dana, PumpPluginConstraints, OwnDatabasePlugin {
 
     protected var executionService: AbstractDanaRExecutionService? = null

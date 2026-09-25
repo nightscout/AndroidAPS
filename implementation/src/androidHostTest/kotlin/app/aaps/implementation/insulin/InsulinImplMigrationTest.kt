@@ -10,12 +10,11 @@ import app.aaps.core.interfaces.insulin.InsulinManager.UpdateResult
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +52,8 @@ import kotlin.reflect.KClass
 class InsulinImplMigrationTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var rh: ResourceHelper
+    /** Real English, so "nickname == template label" is asserted against the text a user sees. */
+    private val rh = generatedTextResolver()
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var config: Config
@@ -73,20 +73,6 @@ class InsulinImplMigrationTest : TestBase() {
         whenever(persistenceLayer.observeChanges(any<KClass<*>>())).thenReturn(emptyFlow())
         // getProfile() is suspend & returns a nullable type → an unstubbed mock already returns null,
         // which is the "no active profile" case (iCfg then falls back to insulins[0]).
-        // Deterministic, unique string per resource id — avoids depending on real translations while
-        // still letting us assert "nickname == template label" by calling the same stub.
-        whenever(rh.gs(any<Int>())).thenAnswer { "S" + it.getArgument<Int>(0) }
-        // InsulinType.label is a TextRef now, and gs(TextRef) is a DEFAULT interface method: a mock
-        // intercepts it and returns null instead of running the body that would delegate to gs(id).
-        // So it needs its own stub, following the same "unique string per reference" rule.
-        whenever(rh.gs(any<TextRef>())).thenAnswer {
-            when (val ref = it.getArgument<TextRef>(0)) {
-                is TextRef.Named      -> "S" + ref.name
-                is TextRef.AndroidRes -> "S" + ref.id
-                is TextRef.Literal    -> ref.text
-            }
-        }
-
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenAnswer { storedConfig }
         // InsulinImpl observes the key on the master too now. A flow that never emits keeps these tests
         // about the init-time migration only; adopting a change at runtime is InsulinImplSyncTest's job.
