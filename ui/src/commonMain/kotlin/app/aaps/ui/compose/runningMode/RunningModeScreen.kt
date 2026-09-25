@@ -248,7 +248,6 @@ private fun SuspendSection(
     onAction: (PendingRunningModeAction) -> Unit
 ) {
     val isSuspended = currentMode == RM.Mode.SUSPENDED_BY_USER
-    val title = if (isSuspended) stringResource(CoreUiStrings.resumeloop) else stringResource(CoreUiStrings.suspendloop)
 
     val resumeText = stringResource(UiStrings.resume)
     val duration1hText = stringResource(UiStrings.duration1h)
@@ -256,14 +255,18 @@ private fun SuspendSection(
     val duration3hText = stringResource(UiStrings.duration3h)
     val duration10hText = stringResource(UiStrings.duration10h)
 
-    SectionCard(title = title) {
+    // While suspended both rows are shown: Resume, and the durations to extend the suspend.
+    // A duration picked while suspended starts a new suspend from now.
+    SectionCard(title = stringResource(CoreUiStrings.suspendloop)) {
         if (isSuspended && allowedModes.contains(RM.Mode.RESUME)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 CompactButton(
                     resumeText, RM.Mode.RESUME,
                     { onAction(PendingRunningModeAction(RM.Mode.RESUME, Action.RESUME, 0)) })
             }
-        } else if (allowedModes.contains(RM.Mode.SUSPENDED_BY_USER)) {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        if (allowedModes.contains(RM.Mode.SUSPENDED_BY_USER)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 CompactButton(
                     duration1hText, RM.Mode.SUSPENDED_BY_USER,
@@ -299,7 +302,6 @@ private fun PumpDisconnectSection(
     onAction: (PendingRunningModeAction) -> Unit
 ) {
     val isDisconnected = currentMode == RM.Mode.DISCONNECTED_PUMP
-    val title = if (isDisconnected) stringResource(UiStrings.reconnect) else stringResource(UiStrings.disconnectpump)
 
     val reconnectText = stringResource(UiStrings.reconnect)
     val duration15mText = stringResource(UiStrings.duration15m)
@@ -308,14 +310,18 @@ private fun PumpDisconnectSection(
     val duration2hText = stringResource(UiStrings.duration2h)
     val duration3hText = stringResource(UiStrings.duration3h)
 
-    SectionCard(title = title) {
+    // While disconnected both rows are shown: Reconnect, and the durations to extend the disconnect.
+    // A duration picked while disconnected starts a new disconnect from now.
+    SectionCard(title = stringResource(UiStrings.disconnectpump)) {
         if (isDisconnected && allowedModes.contains(RM.Mode.RESUME)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 CompactButton(
                     reconnectText, RM.Mode.RESUME,
                     { onAction(PendingRunningModeAction(RM.Mode.RESUME, Action.RECONNECT, 0)) })
             }
-        } else if (allowedModes.contains(RM.Mode.DISCONNECTED_PUMP)) {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        if (allowedModes.contains(RM.Mode.DISCONNECTED_PUMP)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 if (tempDurationStep15mAllowed) {
                     CompactButton(
