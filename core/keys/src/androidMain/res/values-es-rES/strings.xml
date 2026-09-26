@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Emitir alarmas urgentes como notificaciones de Android</string>
     <string name="pref_title_alert_increase_volume">Aumentar gradualmente el volumen de las notificaciones</string>
     <string name="pref_title_alert_override_dnd">Anular el modo \"No molestar\"</string>
+    <string name="pref_summary_alert_override_dnd">Si está activado, las alarmas de AAPS sonarán aunque el teléfono esté en silencio o en modo No molestar. Si está desactivado, las alarmas permanecerán en silencio en esos modos</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Subir datos de glucemia a Nightscout</string>
     <string name="pref_title_bg_source_create_sensor_change">Registrar cambio de sensor</string>
@@ -144,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Incluir COB en el asistente</string>
     <string name="pref_title_wear_wizard_iob">Incluir IOB en el asistente</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizar esferas de reloj personalizadas</string>
+    <string name="pref_title_wear_pushed_watchface">Esfera instalada en el reloj</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Esfera de complicaciones</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Esfera personalizada</string>
     <string name="pref_title_wear_notify_on_smb">Notificar sobre SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Enviar notificaciones al reloj cuando se administra un SMB</string>
     <string name="pref_title_wear_broadcast_data">Transmitir datos al reloj</string>
@@ -177,6 +181,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Tiempo de espera de protección</string>
     <string name="pref_title_protection_type_application">Nivel 0: Protección de la aplicación</string>
+    <string name="pref_summary_protection_type_application">Al iniciar la app y al volver a ella. Independiente de otros niveles</string>
     <string name="pref_title_protection_type_bolus">Nivel 1: Protección de bolo</string>
     <string name="pref_summary_protection_type_bolus">Tratamientos, activación de perfil. Requiere Nivel 2</string>
     <string name="pref_title_protection_type_settings">Nivel 2: Protección de ajustes</string>
@@ -235,6 +240,7 @@
     <string name="pref_title_units">Unidades</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Idioma</string>
     <string name="lang_default">Predeterminado del sistema</string>
     <string name="lang_en">Inglés</string>
     <string name="lang_af">Afrikáans</string>
