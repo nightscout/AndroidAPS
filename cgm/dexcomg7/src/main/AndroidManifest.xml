@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+
+    <!-- Only for scanning the barcode on the sensor applicator. The code can also be typed. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
+
+    <!-- To warn when another app that talks to the sensor is installed. A sensor accepts one phone app. -->
+    <queries>
+        <package android:name="com.dexcom.g7" />
+        <package android:name="com.dexcom.dexcomone" />
+        <package android:name="com.dexcom.one" />
+        <package android:name="com.dexcom.stelo" />
+        <package android:name="com.eveningoutpost.dexdrip" />
+        <package android:name="tk.glucodata" />
+    </queries>
+</manifest>

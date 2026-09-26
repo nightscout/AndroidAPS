@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Plugin -->
+    <string name="dexcom_g7_direct">Dexcom G7 Direct</string>
+    <string name="dexcom_g7_direct_short">G7D</string>
+    <string name="description_dexcom_g7_direct">Get readings straight from a Dexcom G7 or ONE+ sensor over Bluetooth. No Dexcom app or xDrip is needed. Pair the sensor with the code on its applicator.</string>
+    <string name="dexcom_g7_permission_bluetooth_title">Bluetooth</string>
+    <string name="dexcom_g7_permission_bluetooth_description">Needed to find the sensor and to receive its readings.</string>
+
+    <!-- Status screen -->
+    <string name="dexcom_g7_sensor">Sensor</string>
+    <string name="dexcom_g7_pair_new_sensor">Pair new sensor</string>
+    <string name="dexcom_g7_pair_sensor">Pair sensor</string>
+    <string name="dexcom_g7_calibrate">Calibrate</string>
+    <string name="dexcom_g7_cancel_calibration">Cancel calibration</string>
+    <string name="dexcom_g7_communication_log">Communication log</string>
+    <string name="dexcom_g7_forget_sensor">Forget sensor</string>
+    <string name="dexcom_g7_forget_sensor_text">AAPS will stop reading this sensor and forget its key. The sensor keeps its phone slot for this phone for about 15 minutes. To use it with another app, wait that long first.</string>
+
+    <string name="dexcom_g7_state_unpaired">No sensor paired</string>
+    <string name="dexcom_g7_state_connecting">Paired. Waiting for the first reading (can take 5 minutes)</string>
+    <string name="dexcom_g7_state_warmup">Warmup ends in %1$s</string>
+    <string name="dexcom_g7_state_ok">Sensor ends in %1$s</string>
+    <string name="dexcom_g7_state_grace_period">Sensor expired. Readings go on for up to 12 hours. Replace the sensor.</string>
+    <string name="dexcom_g7_state_expired">Sensor session ended. Apply and pair a new sensor.</string>
+    <string name="dexcom_g7_state_failed">Sensor failed. Remove it and start a new sensor. Check your glucose with a meter.</string>
+    <string name="dexcom_g7_status_bluetooth_blocked">Bluetooth is off or not allowed</string>
+
+    <string name="dexcom_g7_connection_stopped">Not running</string>
+    <string name="dexcom_g7_connection_unpaired">No sensor</string>
+    <string name="dexcom_g7_connection_waiting">Waiting for next reading</string>
+    <string name="dexcom_g7_connection_connected">Connected</string>
+    <string name="dexcom_g7_connection_pairing">Pairing</string>
+
+    <string name="dexcom_g7_row_how_to_start">Start</string>
+    <string name="dexcom_g7_row_how_to_start_text">Press \"Pair new sensor\" and scan the applicator</string>
+    <string name="dexcom_g7_row_sensor">Sensor</string>
+    <string name="dexcom_g7_row_last_reading">Last reading</string>
+    <string name="dexcom_g7_row_sensor_state">Sensor state</string>
+    <string name="dexcom_g7_row_connection">Connection</string>
+    <string name="dexcom_g7_row_last_connect">Last connection</string>
+    <string name="dexcom_g7_row_started">Started</string>
+    <string name="dexcom_g7_row_warmup_ends">Warmup ends</string>
+    <string name="dexcom_g7_row_expires">Expires</string>
+    <string name="dexcom_g7_row_grace_ends">Grace period ends</string>
+    <string name="dexcom_g7_row_session_length">Session length</string>
+    <string name="dexcom_g7_row_serial">Serial number</string>
+    <string name="dexcom_g7_row_pairing_code">Pairing code</string>
+    <string name="dexcom_g7_row_firmware">Firmware</string>
+    <string name="dexcom_g7_row_paired">Paired</string>
+    <string name="dexcom_g7_row_calibration">Last calibration</string>
+    <string name="dexcom_g7_row_previous_sensor">Previous sensor</string>
+    <string name="dexcom_g7_previous_sensor_text">%1$s, started %2$s, ended %3$s</string>
+    <string name="dexcom_g7_days">%1$d days</string>
+    <string name="dexcom_g7_duration_days_hours">%1$d d %2$d h</string>
+    <string name="dexcom_g7_duration_hours_minutes">%1$d h %2$d min</string>
+    <string name="dexcom_g7_duration_minutes">%1$d min</string>
+
+    <string name="dexcom_g7_refused_slot_taken">The sensor is used by another phone or app. A sensor works with one phone app at a time. Stop the other app from using this sensor, then wait 15 minutes.</string>
+    <string name="dexcom_g7_refused_key">The sensor refused this phone\'s key. Pair the sensor again.</string>
+    <string name="dexcom_g7_refused_wrong_code">The sensor does not match the stored pairing code. Pair the sensor again.</string>
+    <string name="dexcom_g7_refused_other">The sensor refused the connection. AAPS tries again in 15 minutes.</string>
+
+    <!-- Calibration -->
+    <string name="dexcom_g7_calibration_guidance">The sensor is calibrated in the factory. Only calibrate when readings are clearly wrong. Wash your hands, use a fresh meter reading, and do not calibrate while glucose changes fast. The value goes to the sensor at its next reading.</string>
+    <string name="dexcom_g7_calibration_value">Meter value (%1$s)</string>
+    <string name="dexcom_g7_calibration_not_now">A calibration can only be sent to a sensor that is running normally (not in warmup, expired or failed).</string>
+    <string name="dexcom_g7_calibration_pending">%1$s entered at %2$s, waiting for the sensor</string>
+    <string name="dexcom_g7_calibration_rejected">%1$s refused by the sensor (status %2$d)</string>
+    <string name="dexcom_g7_calibration_processing">%1$s accepted at %2$s, the sensor is still applying it</string>
+    <string name="dexcom_g7_calibration_accepted">%1$s accepted at %2$s</string>
+
+    <!-- Pairing -->
+    <string name="dexcom_g7_cancel_pairing_title">Cancel pairing</string>
+    <string name="dexcom_g7_cancel_pairing_text">Stop pairing the sensor?</string>
+    <string name="dexcom_g7_conflicting_apps">These apps are installed: %1$s. A sensor works with one phone app at a time. Make sure they do not use this sensor, or uninstall them.</string>
+    <string name="dexcom_g7_intro_title">Apply the sensor</string>
+    <string name="dexcom_g7_intro_replacing">The current sensor will be replaced by the new one.</string>
+    <string name="dexcom_g7_intro_step_1">1. Keep the applicator: its barcode or 4-digit code is needed for pairing.</string>
+    <string name="dexcom_g7_intro_step_2">2. Apply the sensor to the back of your upper arm, as the Dexcom instructions say.</string>
+    <string name="dexcom_g7_intro_step_3">3. Keep the phone close to the sensor during pairing. Android may ask to pair with the sensor: accept it.</string>
+    <string name="dexcom_g7_intro_step_4">4. After pairing, the sensor warms up for about 30 minutes (up to an hour for 15-day sensors). Readings come every 5 minutes.</string>
+    <string name="dexcom_g7_code_explanation">Scan the barcode on the applicator, or type the 4-digit pairing code printed on it.</string>
+    <string name="dexcom_g7_scan_barcode">Scan applicator barcode</string>
+    <string name="dexcom_g7_pairing_code">Pairing code</string>
+    <string name="dexcom_g7_pairing_code_hint">4 digits</string>
+    <string name="dexcom_g7_pair">Pair</string>
+    <string name="dexcom_g7_scan_explanation">Point the camera at the square barcode on the applicator.</string>
+    <string name="dexcom_g7_type_code_instead">Type the code instead</string>
+    <string name="dexcom_g7_scan_found">Code %1$s found (serial %2$s)</string>
+    <string name="dexcom_g7_scan_not_dexcom">This barcode does not look like a Dexcom product. Check the code.</string>
+    <string name="dexcom_g7_scan_no_code">This barcode has no pairing code. Scan the barcode on the applicator.</string>
+    <string name="dexcom_g7_pairing_starting">Starting</string>
+    <string name="dexcom_g7_pairing_scanning">Looking for the sensor</string>
+    <string name="dexcom_g7_pairing_scanning_found">Looking for the sensor. Found: %1$s</string>
+    <string name="dexcom_g7_pairing_authenticating">Pairing with %1$s (attempt %2$d)</string>
+    <string name="dexcom_g7_pairing_elapsed">%1$d:%2$02d</string>
+    <string name="dexcom_g7_pairing_hint">A sensor used by another phone in the last 15 minutes can take up to 20 minutes to be found.</string>
+    <string name="dexcom_g7_pairing_done">Paired with %1$s</string>
+    <string name="dexcom_g7_pairing_done_hint">The first reading comes within 5 minutes. A new sensor warms up first.</string>
+    <string name="dexcom_g7_try_again">Try again</string>
+    <string name="dexcom_g7_pairing_failed_invalid_code">The pairing code is the 4-digit number printed on the applicator.</string>
+    <string name="dexcom_g7_pairing_failed_bluetooth">Bluetooth is off or not allowed. Turn it on and allow AAPS to use it.</string>
+    <string name="dexcom_g7_pairing_failed_no_sensor">No sensor was found. Make sure the sensor is applied, the phone is close to it, and no other phone or app uses it.</string>
+    <string name="dexcom_g7_pairing_failed_all">Could not pair with any sensor in range. Check the code.</string>
+
+    <!-- Log -->
+    <string name="dexcom_g7_copy_log">Copy</string>
+    <string name="dexcom_g7_clear_log">Clear</string>
+    <string name="dexcom_g7_log_empty">Nothing yet</string>
+
+    <!-- Alerts -->
+    <string name="dexcom_g7_alert_expiring_soon">Dexcom G7: the sensor ends in about 24 hours. Have a new sensor ready.</string>
+    <string name="dexcom_g7_alert_expiring_imminently">Dexcom G7: the sensor ends in about 2 hours. Change it soon to avoid a gap in readings.</string>
+    <string name="dexcom_g7_alert_expired">Dexcom G7: the sensor has expired. Readings go on for up to 12 hours. Replace it before then.</string>
+    <string name="dexcom_g7_alert_session_ended">Dexcom G7: the sensor session has ended and readings have stopped. Apply and pair a new sensor.</string>
+    <string name="dexcom_g7_alert_sensor_failed">Dexcom G7: the sensor has failed and sends no usable readings. Remove it and start a new sensor. Check your glucose with a meter.</string>
+    <string name="dexcom_g7_alert_connection_refused">Dexcom G7: the sensor refused the connection. It may be used by another phone or app. Open Dexcom G7 Direct for details.</string>
+    <string name="dexcom_g7_alert_warmup_finished">Dexcom G7: warmup finished, readings are in use.</string>
+</resources>

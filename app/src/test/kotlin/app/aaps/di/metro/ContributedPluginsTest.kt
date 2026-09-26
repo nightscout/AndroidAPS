@@ -37,7 +37,8 @@ class ContributedPluginsTest {
             // sensitivity
             100, 110, 120,
             200, 210, 220, 230, 240,
-            400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,
+            // BG sources. 445 is Dexcom G7 Direct, from :cgm:dexcomg7.
+            400, 410, 420, 430, 440, 445, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550,
             // sync - the every-build part of the 300 block. SmsCommunicator 300 and Tidepool 320 are
             // @NotNSClient; 340 (OpenHumans) comes from its own graph extension.
             310, 330, 350, 360, 370,

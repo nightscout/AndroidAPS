@@ -20,6 +20,7 @@ ktor = "3.6.0"
 cryptographyKotlin = "0.6.0"
 work = "2.11.2"
 datastorePreferences = "1.2.1"
+camerax = "1.6.2"
 
 # Compose
 wearCompose = "1.6.2"
@@ -73,6 +74,10 @@ com-google-code-gson = { group = "com.google.code.gson", name = "gson", version 
 com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.23.0" }
 com-google-truth = { group = "com.google.truth", name = "truth", version = "1.4.5" }
 com-google-zxing-core = { group = "com.google.zxing", name = "core", version = "3.5.4" }
+# Camera preview and frames for scanning the Dexcom G7 applicator barcode (:cgm:dexcomg7).
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
