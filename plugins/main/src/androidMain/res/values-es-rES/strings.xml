@@ -9,6 +9,7 @@
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
+    <string name="basal_shortname">BAS</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
