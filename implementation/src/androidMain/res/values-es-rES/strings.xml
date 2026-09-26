@@ -17,6 +17,8 @@
     <string name="permission_directory_description">Seleccione un directorio para los ajustes de la aplicación y los archivos de registro</string>
     <string name="permission_notifications_title">Notificaciones</string>
     <string name="permission_notifications_description">Necesario para mostrar alertas, alarmas y actualizaciones del estado de la bomba</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmas y recordatorios</string>
+    <string name="permission_schedule_exact_alarm_description">Necesario para que las alarmas puedan encender la pantalla mientras AAPS está en segundo plano y para que los recordatorios suenen a tiempo</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
@@ -56,6 +58,7 @@
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no compatible o no especificado!</string>
     <string name="metadata_label_format">Formato de archivo</string>
     <string name="metadata_label_created_at">Creado el</string>
+    <string name="metadata_label_aaps_version">Versión de AAPS</string>
     <string name="metadata_label_aaps_flavour">Variante de compilación</string>
     <string name="metadata_label_device_name">Nombre del paciente del dispositivo de exportación</string>
     <string name="metadata_label_device_model">Modelo del dispositivo de exportación</string>
