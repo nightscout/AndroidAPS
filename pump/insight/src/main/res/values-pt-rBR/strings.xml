@@ -46,4 +46,7 @@
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="pump_alert">Alerta da Bomba</string>
+    <string name="unpair">Desfazer pareamento</string>
+    <string name="reset_pairing">Redefinir informações de pareamento?</string>
+    <string name="reservoir_level">Nível do reservatório</string>
 </resources>

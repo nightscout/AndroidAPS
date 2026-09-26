@@ -145,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Inkluder COB i kalkulatorberegninger</string>
     <string name="pref_title_wear_wizard_iob">Inkluder IOB i kalkulatorberegninger</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autoriser tilpassede urskiver</string>
+    <string name="pref_title_wear_pushed_watchface">Urskive installert på klokken</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Komplikasjons-urskive</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Egendefinert urskive</string>
     <string name="pref_title_wear_notify_on_smb">Varsle ved SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Send varsler til klokken når SMB leveres.</string>
     <string name="pref_title_wear_broadcast_data">Send data til klokken</string>

@@ -65,5 +65,4 @@
     <string name="string_resumed_insulin_delivery_message">הזרקת האינסולין התחדשה.</string>
     <string name="string_temp_basal_remained_hhmm">זמן נותר: %1$s:%2$s</string>
     <string name="string_resume_failed">חידוש ההזרקה נכשל.</string>
-    <!-- Permission rationales -->
 </resources>

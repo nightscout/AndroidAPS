@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="calibration_shortname">CAL</string>
+    <string name="no_calibration_name">Žiadna kalibrácia</string>
+    <string name="description_no_calibration">"Nie je použité žiadne prepísanie kalibrácie. Hodnoty senzora sú použité také, aké sú. Použite to, pokiaľ je senzor už kalibrovaný továrensky a je presný."</string>
+    <string name="linear_calibration_name">Lineárna kalibrácia</string>
+    <string name="description_linear_calibration">"Lineárne kalibračné prepísanie (sklon a posun) vypočítané z hodnôt z prsta pre každý senzor. Nedávne položky majú vyššiu váhu. Prepísanie je aplikované po spustení aktuálnej relácie senzora; prvé 2 hodiny sú preskočené ako zahrievanie."</string>
+    <string name="sensor_change_detected_text">%1$s bola zistená možná zmena senzora. Označiť ako nový senzor?</string>
+    <string name="sensor_change_detected_action">Zaznamenať výmenu senzora</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Zaznamenajte zmenu senzora pre povolenie kalibrácie.</string>
+    <string name="cal_status_warmup">Zahríevanie senzora — kalibrácia bude aktívna po %1$s.</string>
+    <string name="cal_status_need_more_entries">Vyžadujú sa aspoň 2 záznamy odberu krvi z prsta (aktuálne %1$d).</string>
+    <string name="cal_status_unsafe_fit">Hodnota mimo bezpečného rozsahu – kalibrácia nebola aplikovaná.</string>
+    <string name="cal_status_applied">Kalibrácia aplikovaná.</string>
+    <string name="cal_status_applied_offset_only">Kalibrácia použitá iba pri offsete – vzdialenosti hodnôt senzora sú príliš blízko seba pre daný sklon.</string>
+    <string name="cal_status_applied_slope_clamped">Kalibrácia aplikovaná – sklon obmedzený na bezpečný rozsah. Pridajte ďalšie záznamy na uvoľnenie obmedzenia.</string>
+    <string name="cal_slope_offset">Sklon %1$.2f, korekcia stredného rozsahu %2$s</string>
+    <string name="cal_session_started">Relácia sa začala: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Zaznamenať výmenu senzora</string>
+    <string name="cal_add_calibration">Pridať kalibráciu</string>
+    <string name="cal_entries_header">Záznamy odberu krvi z prsta (%1$d)</string>
+    <string name="cal_no_entries">Zatiaľ žiadne záznamy odberu krvi z prsta.</string>
+    <string name="cal_entry_pair">Odber z prsta %1$s → senzor %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">Odstrániť záznam?</string>
+    <string name="cal_remove_entry_message">Toto zruší platnosť záznamu. Prispôsobenie bude prepočítané.</string>
+    <string name="cal_chart_entry_readout">Položka %1$d/%2$d · %3$s · senzor %4$s → Gly %5$s</string>
 </resources>

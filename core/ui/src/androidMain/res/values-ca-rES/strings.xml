@@ -316,7 +316,6 @@
     <string name="urgent_alarm">Alarma urgent</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
-    <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
     <!--    Preferences-->
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
@@ -435,6 +434,11 @@
     <string name="delete_logs">Eliminar logs</string>
     <string name="import_setting">Importar configuració</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="nav_resetdb">Restablir bases de dades</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->

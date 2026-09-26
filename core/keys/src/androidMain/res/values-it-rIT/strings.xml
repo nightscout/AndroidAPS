@@ -145,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Includi COB nella procedura guidata</string>
     <string name="pref_title_wear_wizard_iob">Includi IOB nella procedura guidata</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizza watchface personalizzate</string>
+    <string name="pref_title_wear_pushed_watchface">Watchface installata sull\'orologio</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Complicazioni watchface</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Watchface personalizzata</string>
     <string name="pref_title_wear_notify_on_smb">Notifica su SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Invia notifiche per quando SMB viene erogato.</string>
     <string name="pref_title_wear_broadcast_data">Trasmetti i dati all\'orologio</string>

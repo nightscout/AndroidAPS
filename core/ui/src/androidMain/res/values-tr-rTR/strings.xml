@@ -124,6 +124,8 @@
     <string name="a11y_arrow_double_up">hızla yükseliyor</string>
     <string name="a11y_arrow_none">yok</string>
     <string name="a11y_arrow_unknown">bilinmiyor</string>
+    <string name="decrement">azalma</string>
+    <string name="increment">artış</string>
     <string name="a11y_high">yüksek</string>
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
@@ -405,7 +407,6 @@
     <string name="bolus_advisor">Bolus danışmanı</string>
     <string name="bolus_advisor_message">Yüksek glisemiksiniz. Şimdi yemek yemek yerine daha iyi glisemi beklemeniz önerilir. Şimdi bir düzeltme bolusu yapmak ve yemek zamanı geldiğinde size hatırlatmak ister misiniz? Bu durumda karbonhidrat kaydı yapılmaz ve size hatırlattığımızda sihirbazı tekrar kullanmanız gerekir.</string>
     <string name="set">Uygula</string>
-    <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
     <string name="wizard_no_actual_bg">Hesaplamayı temel alacak yeni bir KŞ yok!</string>
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
@@ -578,6 +579,11 @@
     <string name="aaps_directory">AAPS dizini</string>
     <string name="import_setting">Ayarları içe aktarın</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="reset_aps_results">APS sonuçlarını sıfırla</string>
     <string name="database_cleanup">Veritabanı temizleme</string>
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>

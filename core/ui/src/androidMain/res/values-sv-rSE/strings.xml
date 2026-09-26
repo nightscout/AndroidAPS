@@ -100,6 +100,8 @@
     <string name="a11y_arrow_double_up">stiger snabbt</string>
     <string name="a11y_arrow_none">ingen</string>
     <string name="a11y_arrow_unknown">okänd</string>
+    <string name="decrement">minska</string>
+    <string name="increment">öka</string>
     <string name="a11y_high">hög</string>
     <string name="a11y_inrange">inom målområdet</string>
     <string name="a11y_low">låg</string>
@@ -334,7 +336,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusguide</string>
     <string name="bolus_advisor_message">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrigeringsbolus nu och få en påminnelse när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
-    <string name="no_action_selected">Ingen åtgärd vald. Inget ändras.</string>
     <string name="wizard_no_actual_bg">Inget nytt BG-värde att basera beräkning på!</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil vald!</string>
     <string name="wizard_carbs_constraint">Max KH uppnått!</string>
@@ -449,6 +450,11 @@
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->

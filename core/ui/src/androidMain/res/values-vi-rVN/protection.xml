@@ -33,4 +33,5 @@
     <string name="current_master_password">Mật khẩu chính hiện tại</string>
     <string name="master_password_not_set">Chưa thiết lập mật khẩu chính</string>
     <string name="aaps_directory_not_selected">Chưa chọn thư mục AAPS</string>
+    <string name="aaps_directory_access_lost">Đã mất quyền truy cập vào thư mục AAPS, nên các cài đặt không còn được lưu trên điện thoại. Vui lòng chọn lại thư mục.</string>
 </resources>

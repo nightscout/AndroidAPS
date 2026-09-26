@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nunca contatado</string>
+    <string name="pump_status_sleeping">Dormindo</string>
+    <string name="pump_status_waking_up">Acordando</string>
+    <string name="pump_status_active">Ativo</string>
+    <string name="pump_status_error_comm">Erro de comunicação</string>
+    <string name="pump_status_timeout_comm">Tempo limite de comunicação excedido</string>
+    <string name="pump_status_invalid_config">Configuração inválida</string>
+    <string name="medtronic_pump_encoding_title">Codificação Medtronic</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Codificação 4b6b do software</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificação 4b6b de hardware</string>
+    <string name="medtronic_pump_frequency_us_ca">EUA &amp; Canadá (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Mundial (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_scan_scanning">A procurar</string>
     <string name="riley_link_ble_config_connected_never">Nunca</string>
@@ -60,4 +72,6 @@
     </plurals>
     <string name="orange_use_scanning_level">Usar escaneamento</string>
     <string name="orange_use_scanning_level_summary">Escanear antes de se conectar ao OrangeLink. Isto deve melhorar as conexões (também pode ser usado com outros clones do RileyLink, se necessário)</string>
+    <string name="rileylink_pair">Parear RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink pareado com sucesso</string>
 </resources>

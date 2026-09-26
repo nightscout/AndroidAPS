@@ -2,13 +2,14 @@
 <resources>
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val. ar mažiau</string>
-    <string name="dst_loop_disabled_warning">Laiko persukimas įvyko prieš mažiau nei 3 val. - Uždaras ciklas išjungtas</string>
+    <string name="dst_loop_disabled_warning">Laiko persukimas įvyko prieš mažiau nei 3 val. - uždaras ciklas išjungtas</string>
     <!-- Storage constraint -->
     <string name="disk_full">Atlaisvinkite ne mažiau kaip %1$d MB vidinėje atmintyje! Ciklas išjungtas!</string>
     <!-- Version Checker -->
     <string name="application_expired">Programa nebenaudojama</string>
     <string name="running_invalid_version">Nustatyta, kad naudojate nebegaliojančią versiją. Ciklas išjungtas!</string>
     <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
+    <string name="version_expire">Versijos %1$s galiojimas baigsis %2$s, tada bus įjungtas LGS režimas</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Naudojami perskaičiuoti duomenys</string>
@@ -19,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Ištęstas bolusas ribojamas iki %1$.1f v dėl %2$s</string>
     <string name="limitingcarbs">Ribojami angliavandeniai iki %1$d g dėl %2$s</string>
+    <string name="safety">Sauga</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
     <string name="closed_loop_disabled_with_eb">Uždara ciklas išjungtas dėl ištęsto boluso veikimo</string>
@@ -40,4 +42,5 @@
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
+    <string name="bg_doubled_lgs">Įjungtas LGS režimas dėl dubliuojamų gliukozės duomenų</string>
 </resources>

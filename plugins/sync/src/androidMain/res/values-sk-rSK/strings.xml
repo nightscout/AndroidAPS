@@ -4,11 +4,13 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Nastavenie pripojenia</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Synchronizuje vaše dáta s Nightscoutom prostredníctvom v3 API</string>
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
     <string name="no_connectivity">Žiadne pripojenie</string>
     <string name="unsupported_ns_version">Nepodporovaná verzia Nighscoutu</string>
     <!-- AAPSClient -->
+    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Autorizovaní klienti</string>
     <string name="authorized_clients_add">Pridať klienta</string>
@@ -108,6 +110,7 @@
     <string name="user_action_not_available">Vybratá akcia užívateľa %1$s už viac nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="scene_not_available">Vybratá scéna %1$s nie je dostupná, prosím obnovte svoju dlaždicu</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Vzdialené príkazy pre inzulín sú v klientskom režime zakázané</string>
+    <string name="wear_phone_not_ready">Telefón sa stále spúšťa alebo aplikuje nastavenia. Skúste to znova o chvíľu.</string>
     <string name="wear_action_tempt_unit_error">Použité rozdielne jednotky v hodinkách a v telefóne!</string>
     <string name="wear_action_tempt_min_bg_error">Minimálna glykémia mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximálna glykémia mimo rozsah!</string>
@@ -116,6 +119,11 @@
     <string name="wear_general_settings">Všeobecné nastavenia</string>
     <string name="wear_custom_watchface_settings">Nastavenie vlastného ciferníka</string>
     <string name="wear_custom_watchface">Vlastný ciferník: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Inštalácia...</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Hodinky zobrazujú Ciferník s komplikáciami. Vyberte si Vlastný ciferník, ak chcete na hodinkách zobraziť %1$s.</string>
+    <string name="wear_pushed_watchface_confirm_title">Zmeniť ciferník na hodinkách?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s nahradí %2$s na hodinkách.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s budú nahradené %2$s na hodinkách. Komplikácie, ktoré ste zmenili v editore ciferníka, sa vrátia na predvolené hodnoty.</string>
     <string name="wear_load_watchface">Nahrať ciferník</string>
     <string name="wear_infos_watchface">Informácie o ciferníku</string>
     <string name="wear_export_watchface">Exportovať šablónu</string>
@@ -131,6 +139,7 @@
     <string name="disabled">Vypnuté</string>
     <string name="pump_fetching_data">pokus o načítanie dát z pumpy.</string>
     <string name="pump_old_data">CDD: Stále staré dáta! Nie je možné načítať z pumpy.</string>
+    <string name="units_short">U</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="target_only_aps_mode">Ciele sa použijú iba v režime APS!</string>

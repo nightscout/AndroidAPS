@@ -40,6 +40,8 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
 3. Tente parear novamente</string>
     <string name="combov2_enter_pin">Inserir PIN</string>
     <string name="combov2_cancel_pairing">Pareamento cancelado</string>
+    <string name="combov2_confirm_cancel_pairing_message">Você realmente deseja cancelar o pareamento?</string>
+    <string name="combov2_confirm_unpair_message">Você realmente deseja desfazer o pareamento da bomba?</string>
     <string name="combov2_pin_hint">PIN de 10 dígitos</string>
     <string name="combov2_pairing_finished_successfully">Pareamento com a Bomba Accu-Chek Combo realizado com sucesso!</string>
     <string name="combov2_pairing_cancelled">Pareamento com Combo cancelado pelo usuário</string>
@@ -88,6 +90,9 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (menos de 1 minuto restante)</string>
     <string name="combov2_load_tdds_cancelled">Carregamento TDDs cancelado</string>
     <string name="combov2_retrieving_tdds_failed">Falha na recuperação de TDDs</string>
+    <string name="combov2_battery_empty">Vazia</string>
+    <string name="combov2_battery_low">Baixa</string>
+    <string name="combov2_battery_full">Cheia</string>
     <string name="combov2_battery_low_warning">A bateria da bomba está fraca</string>
     <string name="combov2_reservoir_low_warning">O nível do cartucho da bomba está baixo</string>
     <string name="combov2_setting_tbr_succeeded">Configuração TBT bem-sucedida</string>
@@ -95,6 +100,7 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_set_emulated_100_tbr">Definir emulação 100% de TBT</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Deixando a taxa basal temporária emulada de 100% continuar até o final</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorando uma solicitação redundante de taxa basal temporária emulada de 100%</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Limite inesperado encontrado ao ajustar a TBR: a porcentagem alvo era %1$d%%, mas o limite foi atingido em %2$d%%.</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Não é possível definir TBT absoluto se a taxa basal de base é zero</string>
     <string name="combov2_unpair_pump_summary">Desemparelhar o AndroidAPS e o Android da bomba Accu-Chek Combo atualmente pareada</string>
     <string name="combov2_unknown_tbr_detected">TBT desconhecido foi detectada e parada; porcentagem: %1$d%%; duração restante: %2$s</string>
@@ -110,4 +116,6 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_refresh_pump_status_after_error">Atualizando o status da bomba depois que a bomba relatou um erro</string>
     <string name="combov2_go_back">Voltar</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Não é possível realizar o pareamento porque o driver não foi inicializado. Isso geralmente ocorre porque as permissões Bluetooth necessárias não foram concedidas. Volte, conceda as permissões Bluetooth e tente novamente o pareamento.</string>
+    <string name="combov2_bluetooth_disabled">Não é possível iniciar o driver — o Bluetooth está desativado</string>
+    <string name="combov2_bluetooth_not_supported">Não é possível executar o driver — este dispositivo não é compatível com Bluetooth</string>
 </resources>

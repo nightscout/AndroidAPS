@@ -145,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">在嚮導中包含活性碳水化合物</string>
     <string name="pref_title_wear_wizard_iob">在嚮導中包含活性胰島素</string>
     <string name="pref_title_wear_custom_watchface_authorization">授權自訂錶盤</string>
+    <string name="pref_title_wear_pushed_watchface">已在手錶上安裝錶面</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">小工具錶面</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">自訂錶面</string>
     <string name="pref_title_wear_notify_on_smb">微量注射時通知</string>
     <string name="pref_summary_wear_notify_on_smb">當執行微量注射時，將通知傳送到手錶。</string>
     <string name="pref_title_wear_broadcast_data">廣播資料到手錶</string>

@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">O que é verdadeiro sobre o DAI?</string>
     <string name="dia_label_exam">Duração da Atividade da Insulina (DAI)</string>
+    <string name="dia_profile">Você deve definir o valor de DIA na configuração da sua insulina.</string>
     <string name="dia_minimumis5h">A menor duração permitida é de 5 horas.</string>
     <string name="dia_meaningisequaltodiapump">Se você estiver satisfeito com um valor de DIA que funcionava bem na sua bomba antes do AndroidAPS, não há necessidade de modificar esse valor quando você começa o loop.</string>
     <string name="dia_valuemustbedetermined">Você deve determinar por si mesmo o valor apropriado para a DAI.</string>
@@ -53,6 +54,7 @@
     <string name="basaltest_fixed">Uma vez definido e validado, estes valores não deveriam mudar ao longo do tempo.</string>
     <string name="prerequisites_label">Pré-requisitos</string>
     <string name="prerequisites_what">O que é essencial para configurar e usar o AndroidAPS?</string>
+    <string name="prerequisites_build">Uma forma de compilar o AAPS: pelo navegador ou em um computador com o Android Studio instalado.</string>
     <string name="prerequisites_pump">Uma bomba de insulina compatível se você pretender usar o loop fechado.</string>
     <string name="prerequisites_nightscout">Nightscout, para manter um registro de todos os dados e revisar configurações.</string>
     <string name="prerequisites_beanandroiddeveloper">Experiência na programação ou editação de código.</string>
@@ -63,12 +65,16 @@
     <string name="prerequisites2_internet">O AndoidAPS requer uma conexão com a internet para ser executado em Loop fechado.</string>
     <string name="prerequisites2_supportedcgm">Um CGM compatível com um app apropriado para receber os valores de glicose no telefone/dispositivo.</string>
     <string name="update_label">Atualizando o AAPS</string>
+    <string name="update_git">Você precisa ter o Git instalado e configurado no computador ou usar a compilação pelo navegador.</string>
     <string name="update_asap">Quando versões atualizadas do AAPS são lançadas, versões anteriores podem ser limitadas remotamente após um determinado tempo.</string>
+    <string name="update_keys">Se você usar o Android Studio para compilar, salve e anote o local do seu keystore e use a mesma chave de assinatura das atualizações anteriores.</string>
     <string name="update_askfriend">Se você tiver dificuldades criando o apk, você pode instalar um apk que foi criado por um amigo.</string>
     <string name="troubleshooting_label">Resolução de problemas</string>
     <string name="troubleshooting_wheretoask">Onde você pode encontrar ajuda com o AAPS?</string>
     <string name="troubleshooting_fb">Você pode perguntar em grupos de usuários do AndroidAPS no Facebook.</string>
     <string name="troubleshooting_wiki">Você pode ler (e reler) a documentação do AAPS.</string>
+    <string name="troubleshooting_discord">Você pode pedir ajuda, discutir problemas técnicos e solicitar recursos no Discord do AAPS.</string>
+    <string name="troubleshooting_github">Você pode enviar problemas, como bugs e solicitações de recursos, ao GitHub.</string>
     <string name="troubleshooting_yourendo">Você deveria pedir/perguntar à sua clínica de diabetes/endocrinologista.</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
@@ -77,6 +83,7 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
+    <string name="insulin_actrapid">Actrapid®/Humulin R®/insulina humana \"regular\".</string>
     <string name="sensitivity_label">Tópico: Plugins de Sensibilidade</string>
     <string name="sensitivity_adjust">Plugins de sensibilidade permitem ao AAPS ajustar de forma temporária ou por uma curta duração alterações na sensibilidade à insulina (por exemplo, mudanças hormonais ou problemas com absorção de insulina no local onde ela é aplicada).</string>
     <string name="sensitivity_edit">Os plugins de sensibilidade fornecem ao usuário sugestões de alterações nas taxas basais, relações I:C e ISF, que podem ser usadas para editar o perfil.</string>
@@ -162,4 +169,19 @@
     <string name="profileswitch4_multi">Múltiplos perfis podem ser configurados e selecionados para acomodar mudanças de circunstâncias (por exemplo, alterações hormonais, mudança de trabalho, dias de semana/fim de semana).</string>
     <string name="other_medication_label">Outros Medicamentos. Por favor, leia a declaração abaixo e depois marque a caixa para aceitar a declaração.</string>
     <string name="other_medication_text">AAPS reduz as taxas basais ou suspende a entrega de insulina para aumentar o açúcar no sangue. Medicamentos da classe inibidores de SGLT2 (gliflozinas) podem impedir aumentos na glicemia e, assim, podem produzir uma perigosa deficiência de insulina levando a DKA. \nNomes comuns de marca são: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®. \n\nEu prometo que não tomarei tais medicamentos ao usar AAPS ou desativarei o loop antes de usar tais medicamentos.</string>
+    <string name="concentration_feature_label">Gerenciamento da concentração de insulina</string>
+    <string name="u200_with_profile">Antes de o AAPS oferecer suporte a concentrações de insulina, os usuários usavam U200 configurando um perfil de 50% para reduzir todos os valores pela metade. Nesse cenário, quais afirmações são verdadeiras?</string>
+    <string name="u200_with_profile_reports">Meu banco de dados interno do AAPS e os relatórios do NS ficam incorretos; todos os valores (bolus, taxas, TDD) devem ser multiplicados por 2 para ver o estado real, especialmente para médicos e equipe de saúde.</string>
+    <string name="u200_with_profile_pens">Não preciso gerenciar nenhuma conversão entre o AAPS e a caneta se usar uma caneta U200 para administrar um bolus externo.</string>
+    <string name="u200_with_profile_pens2">Independentemente de a caneta usada para administrar um bolus externo ser U100 ou U200, preciso converter entre a quantidade calculada pelo AAPS e a quantidade que seleciono na caneta para cada bolus externo.</string>
+    <string name="switch_u200_profile">Você usa a solução alternativa do perfil de 50% com U200 e quer mudar para o novo recurso Concentração de insulina. Quais afirmações são verdadeiras?</string>
+    <string name="switch_u200_profile_any_time">Posso mudar a qualquer momento; já tenho a insulina U200 correta na minha bomba.</string>
+    <string name="switch_u200_profile_ps">Preciso preparar um perfil duas vezes mais agressivo (200% em comparação com o perfil padrão atual) e sincronizar esse novo perfil após a próxima troca de patch/reservatório, quando a insulina U200 estiver selecionada.</string>
+    <string name="switch_u200_profile_dynisf">Preciso desativar o recurso DynISF por pelo menos uma semana para que o TDD fique perfeitamente consistente com o valor real de TDD calculado em unidades internacionais.</string>
+    <string name="switch_u200_profile_mental">Após a mudança, precisarei ter muito cuidado durante várias semanas para acostumar meu cérebro a pensar em unidades internacionais ao considerar bolus, taxas basais e valores de TDD.</string>
+    <string name="switch_u100_u200">Você usa U100 atualmente e planeja mudar para outra concentração usando o novo recurso Concentração de insulina. O que devo fazer?</string>
+    <string name="switch_u100_u200_profile">Preciso modificar meu perfil.</string>
+    <string name="switch_u100_u200_tube">Nunca devo usar a interface da bomba (em bombas com tubo) para administrar bolus.</string>
+    <string name="switch_u100_u200_pen">Ainda preciso gerenciar a conversão entre o AAPS e os bolus externos com a caneta após a mudança.</string>
+    <string name="switch_u100_u200_change">A concentração de insulina só pode ser alterada quando a insulina do reservatório for trocada ou quando um patch/Pod for trocado.</string>
 </resources>

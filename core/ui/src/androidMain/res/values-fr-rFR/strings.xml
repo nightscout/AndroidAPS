@@ -116,7 +116,6 @@
     <string name="profile_switch_no_insulin">Impossible de changer de profil : aucune insuline n\'est utilisée, et aucune insuline n\'a été sélectionnée.</string>
     <string name="profile_switch_select_insulin_hint">Aucune insuline n\'est encore utilisée. Sélectionnez l\'insuline que vous utilisez, afin que le changement de profil puisse l\'enregistrer.</string>
     <string name="insulin_activation_failed">L\'insuline n\'a pas été changée. Votre insuline précédente est toujours utilisée.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">L\'insuline n\'a pas été changée: %1$s. Votre insuline précédente est toujours utilisée.</string>
     <string name="insulin_activation_unconfirmed">Le changement d\'insuline n\'a pas pu être confirmé. Vérifiez quelle insuline est active dans votre profil avant d\'injecter.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nL\'insuline n\'a pas non plus été changée.</string>
     <string name="active"><![CDATA[<Actif>]]></string>
@@ -173,6 +172,7 @@
     <string name="pump_running">Pompe en fonctionnement</string>
     <string name="notconfigured">Non configuré</string>
     <string name="loop_suspended_by_dst">Boucle suspendue par le changement d\'heure</string>
+    <string name="required">requis</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
     <string name="a11y_arrow_single_down">en baisse</string>
     <string name="a11y_arrow_forty_five_down">en baisse lente</string>
@@ -182,6 +182,8 @@
     <string name="a11y_arrow_double_up">en hausse rapide</string>
     <string name="a11y_arrow_none">aucun</string>
     <string name="a11y_arrow_unknown">inconnu</string>
+    <string name="decrement">diminuer</string>
+    <string name="increment">augmenter</string>
     <string name="a11y_high">haut</string>
     <string name="a11y_inrange">dans la cible</string>
     <string name="a11y_low">bas</string>
@@ -244,6 +246,8 @@
     <string name="location_permission_not_granted">Autorisation de localisation non accordée. À autoriser dans les paramètres Android.</string>
     <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
     <string name="not_available_full">Non disponible</string>
+    <string name="not_implemented_yet">Cette fonction n\'est pas encore prête sur cette plateforme</string>
+    <string name="not_available_on_platform">Cette fonction n\'est pas encore prête sur cette plateforme</string>
     <string name="engineering_mode_enabled">Mode ingénierie actif</string>
     <string name="back">Précédent</string>
     <string name="next">Suivant</string>
@@ -256,6 +260,7 @@
     <string name="pin_dont_match">Les codes PIN ne correspondent pas</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Annuler Basal Temp</string>
     <string name="let_temp_basal_run">Laisser démarrer le Basal Temp</string>
@@ -283,6 +288,7 @@
     <string name="veryHigh" comment="above 13.9">Très haut</string>
     <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
     <string name="detailed_14_days">Détail de 14 jours</string>
+    <string name="day_tir">TIR du jour</string>
     <string name="night_tir">TIR Nuit</string>
     <string name="hba1c">HbA1c : </string>
     <string name="std_deviation">SD : %1$s</string>
@@ -429,7 +435,6 @@
     <string name="treatment_insulin_desc">Injecter le bolus manuellement</string>
     <string name="treatment_carbs_desc">Enregistrer les glucides sans insuline</string>
     <string name="treatment_calculator_desc">Calculer le bolus</string>
-    <string name="insulin_management">Insuline</string>
     <string name="manage_insulin_desc">Gérer et activer les insulines</string>
     <string name="concentration_disable_blocked">Impossible de désactiver la gestion de la concentration alors que les insulines non-U100 existent. Supprimez toutes les insulines non-U100 et activez une insuline U100 d\'abord.</string>
     <string name="simple_mode_blocked_by_concentration">Impossible d\'activer le mode simple en utilisant une insuline non-U100. Passez d\'abord à l\'insuline U100.</string>
@@ -715,7 +720,6 @@
     <string name="wizard_include_iob">Inclure IA</string>
     <string name="wizard_include_cob">Inclure GA</string>
     <string name="wizard_calculation">Calcul</string>
-    <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Suppression max : %1$d g (glucides actifs)</string>
     <string name="wizard_no_insulin_required">Pas d\'insuline requise</string>
     <string name="wizard_no_actual_bg">Pas de glycémie récente pour calculer !</string>
@@ -893,7 +897,7 @@
     <string name="reorder">Réordonner</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Déplacer avant</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Déplacer après</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Afficher les détails</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Afficher les détails</string>
     <string name="presets_changed_reorder_aborted">Les présélections ont été modifiées ailleurs. La nouvelle commande n\'a pas été enregistrée.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Position %1$d de %2$d</string>
@@ -1013,6 +1017,11 @@
     <string name="import_wrong_password">Mot de passe incorrect</string>
     <string name="import_btn">Import</string>
     <string name="import_anyway_btn">Importer quand même</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Charger plus</string>

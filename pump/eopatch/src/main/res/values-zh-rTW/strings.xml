@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">要退出取消註冊嚮導嗎？貼片可能仍保持啟動並持續輸注胰島素。</string>
     <string name="patch_force_reset">強制重設</string>
     <string name="patch_force_reset_confirm">這將在本機清除貼片狀態，不會向貼片發送指令。僅在一般取消註冊失敗時使用。貼片將持續輸注，直到電池耗盡或手動關閉。</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">精確鬧鐘</string>
-    <string name="permission_exact_alarm_description">應用程式需要排程精確鬧鐘的權限，以進行貼片管理</string>
 </resources>

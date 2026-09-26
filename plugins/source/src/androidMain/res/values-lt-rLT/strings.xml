@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="ns_client_bg">NSClient</string>
-    <string name="ns_client_bg_short">NS Glik</string>
+    <string name="ns_client_bg">NSClient glikemija</string>
+    <string name="ns_client_bg_short">NS KG</string>
     <string name="description_source_ns_client">Gauti glikemijos duomenis iš Nightscout</string>
     <string name="source_xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Gauti glikemijos reikšmes iš xDrip+ ir suderinamų programų (Juggluco ir kt.).</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Gauti glikemijos duomenis iš \'Build Your Own Dexcom App\'</string>
@@ -23,12 +24,20 @@
     <string name="description_source_tomato">Gauti glikemijos duomenis iš Tomato (MiaoMiao)</string>
     <string name="random_bg">Atsitiktinė glikemija</string>
     <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
-    <string name="random_bg_short">AG</string>
+    <string name="random_bg_short">KG</string>
     <!-- Patched Syai Tag App -->
     <!-- Patched SI App -->
     <!-- Patched Sino App -->
     <!-- Instara App -->
+    <string name="description_source_instara_app">Gauti glikemijos reikšmes iš Instara App.</string>
     <!-- Instara preferences -->
     <!-- Notification Reader -->
+    <string name="description_source_notification_reader">Nuskaityti gliukozės reikšmes iš oficialių CGM programų (Dexcom, Medtronic, Eversense ir kt.) pranešimų.</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Programai reikia leidimo gauti CGM duomenis iš Dexcom programos</string>
+    <string name="permission_notification_listener_description">Reikalinga gliukozės reikšmėms nuskaityti iš CGM app pranešimų</string>
+    <string name="aidex">MicroTech CGM App</string>
+    <string name="aidex_short">CGM App</string>
+    <string name="description_source_aidex">Gauti CGM reikšmes iš LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 ir kt.</string>
 </resources>

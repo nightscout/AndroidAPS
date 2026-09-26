@@ -54,6 +54,7 @@
     <string name="objectives_exam_learned_isf">Bạn đã học được ý nghĩa của giá trị ISF và cách nó ảnh hưởng đến lượng insulin được sử dụng để điều chỉnh đường huyết.</string>
     <string name="objectives_exam_learned_ic">Bạn đã học được ý nghĩa của giá trị IC và cách nó ảnh hưởng đến lượng insulin cần thiết để bù cho lượng carbs.</string>
     <string name="objectives_exam_learned_hypott">Mục tiêu tạm thời Hypo (Hypo temp target) chỉ nên được sử dụng để tránh điều chỉnh quá mức sau hạ đường huyết, khi thường có IOB âm tích lũy. Cần xem xét thêm các biện pháp bổ sung để ngăn tình huống này lặp lại trong dự kiến.</string>
+    <string name="objectives_exam_learned_profileswitch">Việc sử dụng phần trăm không ảnh hưởng đến mục tiêu đường huyết, nhưng liều nền, ISF và IC sẽ được điều chỉnh để cấp nhiều insulin hơn (trên 100%) hoặc ít insulin hơn (dưới 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Bằng cách sử dụng dịch chuyển thời gian trong chuyển đổi cấu hình, bạn có thể điều chỉnh cấu hình theo nhịp sinh học để thích ứng với những thay đổi bất thường, như việc thức dậy muộn.</string>
     <string name="objectives_exam_learned_profileswitch4">Chỉ chỉnh sửa cấu hình thôi là chưa đủ để áp dụng thay đổi. Bạn vẫn cần thực hiện chuyển đổi cấu hình để kích hoạt các thay đổi.</string>
     <string name="objectives_exam_learned_exercise">Bạn nên giảm lượng insulin trong cơ thể ít nhất 1 giờ trước khi bắt đầu tập thể dục bằng cách chọn cấu hình dưới 100%.</string>

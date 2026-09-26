@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatizacija</string>
+    <string name="automation_enabled">Įjungta</string>
+    <string name="automation_read_only">Tik skaityti</string>
+    <string name="automation_new_rule">Nauja taisyklė</string>
+    <string name="automation_empty_desc">Sukurkite taisyklę, kuri automatiškai atliks veiksmus pagal nustatytas sąlygas.</string>
+    <string name="automation_edit_rule">Redaguoti taisyklę</string>
+    <string name="automation_discard_title">Atmesti pakeitimus?</string>
+    <string name="automation_discard_message">Taisyklė nebaigta, todėl jos įrašyti negalima. Atmesti pakeitimus?</string>
+    <string name="automation_discard_confirm">Atmesti</string>
+    <string name="automation_category_time">Laikas &amp; tvarkaraštis</string>
+    <string name="automation_category_glucose">Gliukozė &amp; terapija</string>
+    <string name="automation_category_device">Įrenginio būsena</string>
+    <string name="automation_category_sensors">Jutikliai &amp; ryšys</string>
+    <string name="automation_category_other">Kita</string>
+    <string name="automation_choose_trigger">Pridėti sąlygą</string>
+    <string name="automation_add_group">Grupė</string>
+    <string name="automation_choose_action">Pridėti veiksmą</string>
+    <string name="automation_category_targets">Tikslai</string>
+    <string name="automation_category_profile">Profilis</string>
+    <string name="automation_category_loop">Ciklas &amp; insulinas</string>
+    <string name="automation_category_alerts">Įspėjimai</string>
+    <string name="automation_category_system">Sistema</string>
+    <string name="automation_category_scenes">Scenarijai</string>
+    <string name="action_run_scene">Paleisti scenarijų</string>
+    <string name="action_run_scene_short">Paleisti scenarijų: %1$s</string>
+    <string name="action_enable_scene">Įjungti scenarijų</string>
+    <string name="action_enable_scene_short">Įjungti scenarijų: %1$s</string>
+    <string name="action_disable_scene">Išjungti scenarijų</string>
+    <string name="action_disable_scene_short">Išjungti scenarijų: %1$s</string>
+    <string name="action_scene_label">Scenarijus</string>
+    <string name="trigger_scene_active">Scenarijus</string>
+    <string name="trigger_scene_active_compared">Scenarijus %1$s</string>
+    <string name="action_scene_not_found">Scenarijus nerastas</string>
+    <string name="action_scene_disabled">Scenarijus išjungtas</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">k./min.</string>
     <string name="automation_missing_task_name">Įveskite užduoties pavadinimą.</string>
     <string name="automation_missing_trigger">Nurodykite mažiausiai vieną sąlygą.</string>
     <string name="automation_missing_action">Nurodykite mažiausiai vieną veiksmą.</string>
@@ -13,7 +48,7 @@
     <string name="profilename">Pakeisti profilį</string>
     <string name="changengetoprofilename">Pakeisti profilį %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Paskutinis prisijungimas prie pompos</string>
-    <string name="automation_trigger_pump_last_connection_compared">Paskutinis prijungimas prie pompos prieš %1$s%2$s min.</string>
+    <string name="automation_trigger_pump_last_connection_compared">Paskutinis prijungimas prie pompos prieš %1$s%2$s min</string>
     <string name="alreadyset">Jau nustatyta</string>
     <string name="profilepercentage">Profilio procentas</string>
     <string name="startprofileforever">Pradėti profilį %1$d%%</string>
@@ -62,15 +97,15 @@
     <string name="currentlocation">Dabartinė vieta</string>
     <string name="location">Vieta</string>
     <string name="lastboluslabel">Paskutinis bolusas</string>
-    <string name="lastboluscompared">Paskutinis Bolusas prieš %1$s %2$s min</string>
+    <string name="lastboluscompared">Paskutinis bolusas prieš %1$s %2$s min</string>
     <string name="triggercoblabel">AAO</string>
     <string name="cobcompared">AAO %1$s %2$.0f</string>
     <string name="triggerHeartRate">Pulsas</string>
     <string name="triggerHeartRateDesc">Pulsas %1$s %2$.0f</string>
     <string name="triggerSensorAgeLabel">Sensoriaus laikas</string>
     <string name="triggerSensorAgeDesc">Sensoriaus laikas %1$s %2$.1f val.</string>
-    <string name="triggerCannulaAgeLabel">Kateterio laikas</string>
-    <string name="triggerCannulaAgeDesc">Kateterio laikas %1$s %2$.1f val.</string>
+    <string name="triggerCannulaAgeLabel">Kaniulės laikas</string>
+    <string name="triggerCannulaAgeDesc">Kaniulės laikas %1$s %2$.1f val.</string>
     <string name="triggerPodChangeLabel">Pod aktyvavimas</string>
     <string name="triggerPodChangeDesc">Pod aktyvuotas</string>
     <string name="triggerInsulinAgeLabel">Insulino laikas</string>
@@ -95,7 +130,7 @@
     <string name="add_automation">Pridėti taisyklę</string>
     <string name="stop_processing">Stabdyti apdorojimą</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
+    <string name="time_to_eat">Laikas valgyti!\nNaudokite skaičiuotuvą.</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="error_setting_reminder">Klaida nustatant ateities perspėjimus</string>
     <!--    Autotune-->
@@ -110,9 +145,23 @@
     <string name="triggerStepsCountDesc">Žingsnių skaičius per %1$s min %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Trukmė</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Įjungti/išjungti SMB</string>
+    <string name="changeSmbTo">Pakeisti SMB į %1$s</string>
+    <string name="newSmbMode">Naujas SMB režimas:</string>
     <string name="on">ĮJUNGTA</string>
     <string name="off">IŠJUNGTA</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Keisti glodinimą</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Pakeisti glodinimą į %1$s</string>
+    <string name="smoothing_label">Glodinimas</string>
+    <string name="precondition_smoothing_not_active_name">Glodinimas neaktyvus</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Glodinimas %1$s neaktyvus</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Pasirinkti žemėlapyje</string>
+    <string name="tap_to_select_location">Bakstelėkite žemėlapyje, kad pasirinktumėte vietą</string>
+    <string name="selected_coords">Pasirinkta: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Vietovė</string>
+    <string name="permission_location_description">Reikalinga vietove pagrįstoms automatizacijos sąlygoms ir WiFi tinklui nustatyti</string>
+    <string name="permission_background_location_description">Reikalinga, kad automatizacijos sąlygos veiktų ir tada, kai programėlė veikia fone</string>
 </resources>

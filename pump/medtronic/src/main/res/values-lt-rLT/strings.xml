@@ -11,14 +11,31 @@
     <string name="medtronic_pump_max_basal">Maks val. bazė pompoje (v/val)</string>
     <string name="medtronic_custom_action_wake_and_tune">Pažadinti ir nustatyti</string>
     <string name="medtronic_custom_action_clear_bolus_block">Išvalyti Boluso bloką</string>
+    <string name="medtronic_custom_action_reset_rileylink">Nustatyti RileyLink iš naujo</string>
     <string name="medtronic_pump_battery_select">Baterijos tipas (pagal galią)</string>
     <string name="medtronic_pump_battery_no">Nepasirinkta (paprastas vaizdas)</string>
-    <string name="medtronic_pump_battery_alkaline">Šarminė (išplėstinis vaizdas)</string>
+    <string name="medtronic_pump_battery_alkaline">Šarminė baterija (išplėstinis rodinys)</string>
     <string name="medtronic_pump_battery_lithium">Ličio (išplėstinis vaizdas)</string>
-    <string name="medtronic_pump_battery_nizn">Šarminė (išplėstinis vaizdas)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn baterija (išplėstinis rodinys)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (išplėstinis vaizdas)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Kita (nepalaikoma)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A arba senesnė)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A arba senesnė)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink baterija</string>
     <!-- MDT Errors -->
@@ -42,9 +59,9 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Atšaukėte bolusą, kuris jau buvo nustatytas pompoje. Medronic pompa nepalaiko šio atšaukimo, todėl turite jį atšaukti rankiniu būdu. Sustabdykite pompą ir vėl ją paleiskite (jei vis dar norite atšaukti bolusą). Programa perims pokyčius su kitu atnaujinimu (per mažiau nei 5 minutes).</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Atšaukėte bolusą, kuris jau buvo nustatytas pompoje. Medronic pompa nepalaiko šio atšaukimo, todėl turite jį atšaukti rankiniu būdu. Sustabdykite pompą ir vėl ją paleiskite (jei vis dar norite atšaukti bolusą). Programa perims pokyčius su kitu atnaujinimu (per mažiau nei 5 min).</string>
     <string name="medtronic_cmd_cant_read_tbr">Negalima sužinoti dabartinės laikinos bazės.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Negalima atšaukti dabartinės laikinos bazės. Operacija stabdoma.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Negalima atšaukti dabartinės laikinos bazės. Stabdoma.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Profilio nustatymas nepavyko dėl per didelės nustatytos bazės: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolusas nesuleistas.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolusas nesuleistas, nes turimas insulino kiekis (%1$.2f) yra mažesnis, nei nustatytas Bolusas (%2$.2f).</string>

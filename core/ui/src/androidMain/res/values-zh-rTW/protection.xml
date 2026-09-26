@@ -33,4 +33,5 @@
     <string name="current_master_password">目前的主密碼</string>
     <string name="master_password_not_set">未設置主密碼</string>
     <string name="aaps_directory_not_selected">未選擇 AAPS 目錄</string>
+    <string name="aaps_directory_access_lost">已失去 AAPS 目錄的存取權限，因此設定將不再儲存到手機。請重新選擇目錄。</string>
 </resources>

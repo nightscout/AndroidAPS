@@ -93,6 +93,11 @@
     <string name="pref_show_week_number">Zobraziť číslo týždňa</string>
     <string name="pref_show_date">Zobraziť dátum</string>
     <string name="pref_show_seconds">Zobraziť sekundy</string>
+    <string name="pref_show_complication1">Zobraziť komplikáciu 1</string>
+    <string name="pref_show_complication2">Zobraziť komplikáciu 2</string>
+    <string name="pref_show_complication3">Zobraziť komplikáciu 3</string>
+    <string name="pref_show_complication4">Zobraziť komplikáciu 4</string>
+    <string name="pref_show_complication5">Zobraziť komplikáciu 5</string>
     <string name="default_custom_watchface_comment">Predvolený ciferník. Môžete kliknúť na tlačítko EXPORTOVAŤ CIFERNÍK pre vygenerovanie šablóny</string>
     <string name="default_custom_watchface_external_comment">Predvolený ciferník vrátane externých zobrazení pre sledovateľov, môžete kliknúť na tlačidlo EXPORTOVAŤ CIFERNÍK ak chcete vygenerovať šablónu</string>
     <string name="wear_default_watchface">Predvolený ciferník</string>
@@ -154,4 +159,6 @@
     <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
     <string name="wizard_ecarbs">eSacharidy %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Spustenie zásuvného modulu %1$s zlyhalo a preto nemusí fungovať. Prosím reštartujte AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">V zásuvnom module %1$s došlo k chybe a jeho časť prestala fungovať. Reštartujte, prosím, AndroidAPS.</string>
 </resources>

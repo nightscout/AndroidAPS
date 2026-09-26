@@ -118,6 +118,8 @@
     <string name="a11y_arrow_double_up">a subir rapidamente</string>
     <string name="a11y_arrow_none">nenhuma</string>
     <string name="a11y_arrow_unknown">desconhecido</string>
+    <string name="decrement">diminuir</string>
+    <string name="increment">aumentar</string>
     <string name="a11y_high">hiper</string>
     <string name="a11y_inrange">no alvo</string>
     <string name="a11y_low">hipo</string>
@@ -368,7 +370,6 @@
     <string name="urgent_alarm">Alarme Urgente</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
-    <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize o ecrã</string>
     <!--    Preferences-->
     <string name="teenage">Adolescente</string>
@@ -495,6 +496,11 @@
     <string name="delete_logs">Eliminar registos</string>
     <string name="import_setting">Importar definições</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="database_cleanup">Limpar base de dados</string>
     <string name="nav_resetdb">Reinicializar base de dados</string>
     <!--    BLE Scan Step (shared pump pairing) -->

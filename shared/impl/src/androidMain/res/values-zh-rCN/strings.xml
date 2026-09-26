@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">背景图片</string>
     <string name="cwf_comment_chart">图表(血糖, 基础率, 预测线...)</string>
     <string name="cwf_comment_cover_chart">图形前面和文本字段后面的图像</string>
+    <string name="cwf_comment_complication">小工具容器</string>
     <string name="cwf_comment_freetext1">自由文本 1</string>
     <string name="cwf_comment_freetext2">自由文本 2</string>
     <string name="cwf_comment_freetext3">自由文本 3</string>

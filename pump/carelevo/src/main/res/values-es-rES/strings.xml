@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Integración de la bomba CareLevo</string>
+    <string name="carelevo_alarm_channel_name">Alarmas de Carelevo</string>
+    <string name="carelevo_alarm_channel_description">Notificaciones de alarmas de CareLevo</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Estado del Bluetooth</string>
+    <string name="carelevo_serial_number_key">Número de serie</string>
+    <string name="carelevo_boot_date_time_key">Hora de activación</string>
+    <string name="carelevo_expiration_key">Expiración</string>
+    <string name="carelevo_basal_rate_key">Tasa basal</string>
+    <string name="carelevo_temp_basal_rate_key">Tasa basal temporal</string>
+    <string name="carelevo_insulin_remain_key">Insulina restante</string>
+    <string name="carelevo_running_remain_time">Tiempo restante del parche</string>
+    <string name="carelevo_total_insulin_key">Total de insulina administrada</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d hrs %d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d hrs</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/hr</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">¿Deseas reanudar la infusión?</string>
+    <string name="carelevo_pump_resume_description">La infusión se reanudará cuando pulses Confirmar</string>
+    <string name="carelevo_pump_stop_duration_title">Por favor, establece el tiempo de pausa de la infusión</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 minutos</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 hora</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 hora 30 minutos</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 horas</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 horas 30 minutos</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 horas</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 horas 30 minutos</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 horas</string>
+    <string name="common_unit_value_day_hour_min">%1$d dias %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">%d min %02d seg restantes</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Guía de insulina</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Desactivar parche</string>
+    <string name="carelevo_btn_input_search_patch">Buscar parche</string>
+    <string name="carelevo_btn_retry">Reintentar</string>
+    <string name="carelevo_btn_next">Siguiente</string>
+    <string name="carelevo_btn_safety_check">Comprobación de seguridad</string>
+    <string name="carelevo_btn_cancel">Cancelar</string>
+    <string name="carelevo_btn_confirm">Confirmar</string>
+    <string name="carelevo_btn_research">Reescanear</string>
+    <string name="carelevo_btn_needle_insert_check">Confirmar inserción</string>
+    <string name="carelevo_state_none_value">Sin parche activo</string>
+    <string name="carelevo_state_disconnected_value">Desconectado</string>
+    <string name="carelevo_state_connected_value">Conectado</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Gira la tapa de seguridad en la dirección de la flecha y retírala</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Inserta la aguja</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Presiona el botón del aplicador hasta el fondo. Sonará un pitido cuando la inserción se haya completado con éxito</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Mantén presionado durante 10 segundos</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">%d intento(s) de inserción de aguja restante(s)</string>
+    <string name="carelevo_dialog_patch_discard_message_title">¿Deseas desactivar el parche y activar uno nuevo?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Al pulsar el botón [OK], se detendrá la insulina</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">¿Finalizar sin iniciar la administración?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Al pulsar el botón [OK], este parche quedará inutilizable</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">¿Cancelar la activación del parche?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Al pulsar el botón [OK], se descartará la información introducida</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Si el parche detectado a continuación es correcto, pulsa el botón Confirmar</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Inserción de la aguja completada y retiro del aplicador</string>
+    <string name="carelevo_dialog_connect_detached">Aplicador retirado</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+        Presiona los agarres a ambos lados del aplicador para desengancharlo del parche y,\n
+        a continuación, pulsa el botón «Aplicador retirado». Comenzará el suministro de insulina.
+    </string>
+    <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">El Bluetooth no está activado. Por favor, compruébalo</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Sin parche conectado</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">El parche aún no está conectado. Por favor, inténtalo de nuevo en un momento</string>
+    <string name="carelevo_toast_msg_scan_failed">Error de escaneo. Por favor, inténtalo de nuevo</string>
+    <string name="carelevo_toast_msg_patch_not_found">No se ha encontrado ningún parche. Por favor, inténtalo de nuevo</string>
+    <string name="carelevo_toast_msg_connect_failed">Error de conexión del parche. Por favor, inténtalo de nuevo</string>
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">El perfil no está configurado</string>
+    <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Error en la comprobación de la aguja</string>
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Error al descartar el parche. Por favor, inténtalo de nuevo</string>
+    <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Error en la solicitud de administración basal. Por favor, inténtalo de nuevo</string>
+    <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Error al reanudar la administración. Por favor, inténtalo de nuevo</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Error al suspender la administración. Por favor, inténtalo de nuevo</string>
+    <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Error en la comprobación de seguridad</string>
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Insulina baja</string>
+    <string name="alarm_feat_title_warning_expired_patch">Parche caducado</string>
+    <string name="alarm_feat_title_warning_low_battery">Batería baja</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">Temperatura alta/baja</string>
+    <string name="alarm_feat_title_warning_not_used_app">Apagado automático</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">Bluetooth no conectado</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Tiempo de aplicación del parche agotado</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Error en el autodiagnóstico</string>
+    <string name="alarm_feat_title_warning_patch_error">Error del parche</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Oclusión</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Error de inserción de la aguja</string>
+    <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[Quedan menos de <b>10 U</b> de insulina; administración de insulina detenida.<br><b>Toca el botón [Desactivar parche] y cambia el parche ahora</b>]]></string>
+    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[Parche caducado; administración de insulina detenida.<br><b>Toca el botón [Desactivar parche] y cambia el parche ahora</b>]]></string>
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Batería baja; administración de insulina detenida.<br><b>Toca el botón [Descartar parche] y cambia el parche ahora</b>]]></string>
+    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[Administración de insulina detenida.<br><b>Pásate a una temperatura adecuada ahora (4 °C ~ 37 °C)</b>]]></string>
+    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[Administración de insulina detenida.<br><b>Toca el botón [Iniciar insulina] y reanuda la administración basal</b>]]></string>
+    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[Se ha agotado el tiempo para aplicar el parche.<br><b>Toca el botón [Desactivar parche] y cambia el parche ahora</b>]]></string>
+    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[Error en el autodiagnóstico.<br><b>Toca el botón [Desactivar parche] y cambia el parche ahora</b>]]></string>
+    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[Administración de insulina detenida por un error imprevisto.<br><b>Toca el botón [Desactivar parche] y cambia el parche ahora</b>]]></string>
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[Administración de insulina detenida por oclusión.<br><b>Toca el botón [Desactivar parche] y cambia el parche ahora</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Error al insertar la aguja.<br><b>Toca el botón [Desactivar parche] y cambia el parche ahora</b>]]></string>
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Insulina baja</string>
+    <!-- Alert Descriptions -->
+    <!-- Notice Titles -->
+    <!-- Notice Descriptions -->
+    <!-- Action Buttons -->
+    <!-- General Messages -->
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_failed_safety_check">Error en el autodiagnóstico. Toca el botón [Desactivar parche] y cambia el parche ahora</string>
+    <string name="alarm_notification_desc_warning_patch_error">Administración de insulina detenida por un error imprevisto. Toca el botón [Desactivar parche] y cambia el parche ahora</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Administración de insulina detenida por oclusión. Toca el botón [Desactivar parche] y cambia el parche ahora</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Error al insertar la aguja. Toca el botón [Desactivar parche] y cambia el parche ahora</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Quedan menos de %s U de insulina. Prepárate para cambiar el parche</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">Parche caducado. Cambia el parche ahora</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">El parche caducará pronto. Cambia el parche ahora</string>
+    <string name="alarm_notification_desc_alert_low_battery">Batería baja. Prepárate para cambiar el parche</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Administración de insulina en pausa debido a una temperatura extrema. Trasládate a un entorno de entre 4°C a 37°C para reanudar</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Toca [Aceptar]. Si se ignora, se elevará a una alarma crítica y se detendrá la administración de insulina</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Toca el botón [Aceptar] para completar la activación del parche</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">La pausa de insulina ha finalizado. Toca [Iniciar insulina] para empezar</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Se requiere Bluetooth para usar el parche. Toca [Aceptar] y activa el Bluetooth</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Quedan menos de %s U de insulina. Prepárate para cambiar el parche</string>
+    <string name="alarm_notification_desc_notice_expired_patch">El tiempo de uso del parche es de %s días y %s horas. Tenlo en cuenta durante su uso</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">La zona horaria ha cambiado de %s (UTC %s) a %s (UTC %s)</string>
+    <string name="alarm_notification_desc_notice_check_bg">Han transcurrido %s desde tu bolo. Por favor, comprueba tu glucemia</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS iniciado</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS finalizado debido a la desconexión del parche o del MCG</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS finalizado debido a la pausa de LGS</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS finalizado porque ha transcurrido el tiempo programado</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS finalizado porque se ha desactivado LGS</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS finalizado porque el nivel de MCG ha superado el umbral establecido</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS finalizado por un motivo desconocido</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Por favor, comprueba la conexión del parche y del MCG</string>
+    <string name="carelevo_profile_update_skip_comment">Omitido: actualización demasiado reciente</string>
+</resources>

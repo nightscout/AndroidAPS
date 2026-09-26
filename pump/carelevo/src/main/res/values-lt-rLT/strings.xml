@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Carelevo pompos integracija</string>
+    <string name="carelevo_alarm_channel_name">Carelevo signalai</string>
+    <string name="carelevo_alarm_channel_description">Pranešimai apie Carelevo pompos signalus</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Bluetooth būsena</string>
+    <string name="carelevo_serial_number_key">Serijos Nr.</string>
+    <string name="carelevo_boot_date_time_key">Aktyvinimo laikas</string>
+    <string name="carelevo_expiration_key">Galiojimo pabaiga</string>
+    <string name="carelevo_basal_rate_key">Bazė</string>
+    <string name="carelevo_temp_basal_rate_key">Laikina bazė</string>
+    <string name="carelevo_insulin_remain_key">Likęs insulino kiekis</string>
+    <string name="carelevo_running_remain_time">Likęs pompos veikimo laikas</string>
+    <string name="carelevo_total_insulin_key">Iš viso suleista insulino</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d val. %d min</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d val.</string>
+    <string name="common_label_unit_value_dose_with_space">%s V</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f V/val.</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">Atnaujinti insulino tiekimą?</string>
+    <string name="carelevo_pump_resume_description">Paspaudus Patvirtinti, insulino tiekimas bus atnaujintas.</string>
+    <string name="carelevo_pump_stop_duration_title">Nustatykite insulino tiekimo pristabdymo trukmę.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 min</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 valanda</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 valanda 30 min</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 valandos</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 valandos 30 min</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 valandos</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 valandos 30 min</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 valandos</string>
+    <string name="common_unit_value_day_hour_min">%1$d d. %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">liko %d min %02d s</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">Insulino pildymo vedlys</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">Išjungti rezervuarą</string>
+    <string name="carelevo_btn_input_search_patch">Ieškoti pompos</string>
+    <string name="carelevo_btn_retry">Bandyti dar kartą</string>
+    <string name="carelevo_btn_next">Toliau</string>
+    <string name="carelevo_btn_safety_check">Saugos patikra</string>
+    <string name="carelevo_btn_cancel">Atšaukti</string>
+    <string name="carelevo_btn_confirm">Patvirtinti</string>
+    <string name="carelevo_btn_research">Ieškoti iš naujo</string>
+    <string name="carelevo_btn_needle_insert_check">Patvirtinti adatos įvedimą</string>
+    <string name="carelevo_state_none_value">Nėra aktyvaus pompos modulio</string>
+    <string name="carelevo_state_disconnected_value">Atjungta</string>
+    <string name="carelevo_state_connected_value">Prijungta</string>
+    <string name="carelevo_overview_connect_btn_label">Aktyvuoti</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Pašalinti rezervuarą</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">Sustabdyti insulino tiekimą</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Atnaujinti insulino tiekimą</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">Pasirinkite pripildyto insulino kiekį.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Diapazonas: %1$d–%2$d V</string>
+    <string name="carelevo_insulin_refill_step1">1. Nuplėškite apsauginį popierių nuo pompos lizdinės pakuotės.</string>
+    <string name="carelevo_insulin_refill_step2">2. Spiritiniu tamponu dezinfekuokite insulino flakono guminį kamštelį.</string>
+    <string name="carelevo_insulin_refill_step3">3. Tiesiai traukdami nuimkite insulino švirkšto adatos apsauginį dangtelį.</string>
+    <string name="carelevo_insulin_refill_step4">4. Atitraukite švirkšto stūmoklį ir pripildykite švirkštą maždaug 2 ml oro.</string>
+    <string name="carelevo_insulin_refill_step5">5. Įdurkite oro pripildytą švirkštą į insulino flakoną ir suleiskite orą.</string>
+    <string name="carelevo_insulin_refill_step6">6. Neištraukę švirkšto, apverskite flakoną su švirkštu ir pritraukite į švirkštą maždaug 2 ml insulino.</string>
+    <string name="carelevo_insulin_refill_step7">7. Vertikaliai įdurkite švirkšto adatą į pompos pildymo angą (①), kol ji pasieks dugną. Patraukite stūmoklį iki galo į viršų ir atleiskite. Ištraukite švirkštą iš užpildymo angos.</string>
+    <string name="carelevo_insulin_refill_step8">8. Laikykite švirkštą vertikaliai ir švelniai patapšnokite jo šoną, kad visi oro burbuliukai susikauptų viršuje.</string>
+    <string name="carelevo_insulin_refill_step9">9. Vėl įdurkite adatą į insulino flakoną, išstumkite į jį visą orą ir pritraukite tiek insulino, kiek sunaudosite per pompos naudojimo laiką.</string>
+    <string name="carelevo_insulin_refill_step10">10. Ištraukite švirkštą iš flakono. Jei yra oro burbulų, laikykite švirkštą vertikaliai, patapšnokite jo šoną, kad burbuliukai pakiltų į viršų, ir pašalinkite iš švirkšto visą orą.</string>
+    <string name="carelevo_insulin_refill_step11">11. Tiksliai nustatykite insulino dozę, sulygiuodami stūmoklio viršų su skalės žyma.</string>
+    <string name="carelevo_insulin_refill_step12">12. Vertikaliai įdurkite adatą į pompos pildymo angą (①), kol ji pasieks dugną, ir lėtai nuspauskite stūmoklį, kad visas insulinas būtų suleistas.</string>
+    <string name="carelevo_connect_prepare_title">Pompa aktyvuota</string>
+    <string name="carelevo_connect_patch_title">Prijungti pompą</string>
+    <string name="carelevo_connect_safety_check_title">Saugos patikra</string>
+    <string name="carelevo_connect_patch_attach_title">Priklijuoti pompą</string>
+    <string name="carelevo_connect_needle_check_title">Įvesti adatą</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Pompos informacinis įspėjimas</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Pranešimo apie senkantį insuliną nustatymas</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Pranešimo apie pompos naudojimo laiką nustatymas</string>
+    <string name="carelevo_title_fill_insulin">Pripildyti pompą insulinu</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">Pripildykite pompą insulinu (%1$d–%2$d V), atsižvelgdami į numatomą naudojimo trukmę (iki 168 val.). Paspauskite [Užpildymo kiekis] ir nurodykite pripildyto insulino kiekį.</string>
+    <string name="carelevo_patch_step_1">1 ŽINGSNIS.</string>
+    <string name="carelevo_patch_step_2">2 ŽINGSNIS.</string>
+    <string name="carelevo_patch_step_3">3 ŽINGSNIS.</string>
+    <string name="carelevo_patch_connect_step_1_title">Nuimkite adatos dangtelį</string>
+    <string name="carelevo_patch_connect_step_1_desc">Išimkite pompą iš lizdinės pakuotės ir nuimkite adatos dangtelį.</string>
+    <string name="carelevo_patch_connect_step_2_title">Įjungimas ir prijungimas</string>
+    <string name="carelevo_patch_connect_step_2_desc">Palaikykite maitinimo mygtuką ilgiau nei 1 sekundę. Išgirdę pyptelėjimą, paspauskite mygtuką [Ieškoti pompos] apačioje.</string>
+    <string name="carelevo_patch_safety_check_start_title">Saugos patikra</string>
+    <string name="carelevo_patch_safety_check_end_title">Saugos patikra baigta</string>
+    <string name="carelevo_patch_safety_check_start_desc">Pompa sėkmingai prijungta.\nPaspauskite mygtuką [Saugos patikra].</string>
+    <string name="carelevo_patch_safety_check_progress_desc">Vykdoma saugos patikra.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Saugos patikra baigta.\nPaspauskite mygtuką \'Toliau\'.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Patikrinkite, ar ant adatos galiuko atsirado insulino lašelis.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Jei insulino lašelio nematyti, paspauskite mygtuką [Bandyti dar kartą].</string>
+    <string name="carelevo_patch_attach_step1_title">Dezinfekuokite pompos tvirtinimo vietą</string>
+    <string name="carelevo_patch_attach_step1_desc">Kruopščiai nuvalykite spiritiniu tamponu.</string>
+    <string name="carelevo_patch_attach_step2_title">Nuimkite apsauginį popierių</string>
+    <string name="carelevo_patch_attach_step2_desc">Išimkite pompą iš lizdinės pakuotės ir nuimkite adatos dangtelį.</string>
+    <string name="carelevo_patch_attach_step3_title">Priklijuokite pompą</string>
+    <string name="carelevo_patch_attach_step3_desc">Priklijuokite pompos modulį prie odos taip, kad pažymėtas taškas būtų nukreiptas į viršų.</string>
+    <string name="carelevo_patch_attach_step4_desc">Priklijavę pompą, paspauskite mygtuką Paruošta.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Nuimkite apsauginį dangtelį</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Pasukite apsauginį dangtelį rodyklės kryptimi ir nuimkite.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Įveskite adatą</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Iki galo nuspauskite aplikatoriaus mygtuką. Sėkmingai įvedus adatą pasigirs pyptelėjimas.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Paspauskite ir palaikykite 10 sekundžių.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">Liko bandymų įvesti adatą: %d.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Pašalinti rezervuarą ir pradėti naudoti naują?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Paspaudus [OK], insulino tiekimas bus sustabdytas.</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">Baigti nepradėjus insulino tiekimo?</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Paspaudus [OK], šio rezervuaro nebebus galima naudoti.</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">Atšaukti aktyvavimą?</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">Paspaudus [OK], įvesti duomenys bus panaikinti.</string>
+    <!-- Connection -->
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profilis nenustatytas.</string>
+    <!-- Needle Insertion -->
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">Nepavyko pašalinti. Bandykite dar kartą.</string>
+    <!-- Basal Delivery -->
+    <!-- Delivery Resume/Suspend -->
+    <!-- Safety Check -->
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Mažas insulino kiekis</string>
+    <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Baterijos įkrovos lygis mažas; insulino tiekimas sustabdytas.<br><b>Spauskite [Pašalinti rezervuarą] ir pakeiskite rezervuarą.</b>]]></string>
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[Dėl užsikimšimo insulino tiekimas sustabdytas.<br><b>Bakstelėkite [Išjungti pompos modulį] ir nedelsdami pakeiskite pompos modulį.</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Nepavyko įvesti adatos.<br><b>Bakstelėkite [Išjungti pompos modulį] ir nedelsdami pakeiskite pompos modulį.</b>]]></string>
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Mažas insulino kiekis</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">Baigėsi pompos modulio veikimo laikas</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">Netrukus baigsis pompos modulio galiojimas</string>
+    <string name="alarm_feat_title_alert_low_battery">Mažas baterijos įkrovos lygis</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">Per aukšta arba per žema temperatūra</string>
+    <string name="alarm_feat_title_alert_not_used_app">Automatinis išjungimas</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE neprijungtas</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Pompos modulis nebaigtas aktyvinti</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Įjungti Bluetooth</string>
+    <!-- Alert Descriptions -->
+    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[Paspauskite [OK].<br>Jei nepaisysite, pranešimas taps kritiniu pavojaus signalu ir <b>insulino tiekimas bus sustabdytas.</b>]]></string>
+    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[Paspauskite [OK], kad užbaigtumėte rezervuaro aktyvavimą.]]></string>
+    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[Norint naudoti pompą, reikia Bluetooth ryšio.<br><b>Paspauskite [OK] ir įjunkite Bluetooth.</b>]]></string>
+    <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_lgs_started">LGS pradėtas</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS baigtas</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS negalimas</string>
+    <!-- Notice Descriptions -->
+    <string name="alarm_feat_desc_notice_lgs_started">LGS pradėtas.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS baigtas, nes atsijungė pompos rezervuaras arba jutiklis.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS baigtas, nes buvo pristabdytas.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_time_over">LGS baigtas, nes praėjo nustatytas laikas.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS baigtas, nes buvo išjungtas.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">Stabdymo prie žemos glikemijos režimas išjungtas, nes gliukozės reikšmė pakilo virš nustatytos ribos.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_unknown">LGS baigtas dėl nežinomos priežasties.</string>
+    <string name="alarm_feat_desc_notice_lgs_error">Patikrinkite pompos rezervuaro ir jutiklio ryšį.</string>
+    <string name="alarm_feat_desc_unknown">Netikėta pompos modulio klaida.</string>
+    <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Pašalinti rezervuarą</string>
+    <string name="alarm_feat_btn_patch_force_discard">Pašalinti rezervuarą</string>
+    <string name="alarm_feat_btn_resume_infusion">Pradėti insulino tiekimą</string>
+    <!-- General Messages -->
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_battery">Baterijos įkrovos lygis mažas; insulino tiekimas sustabdytas. Spauskite [Pašalinti rezervuarą] ir pakeiskite rezervuarą.</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Insulino tiekimas sustabdytas. Bakstelėkite [Pradėti insulino tiekimą] ir iš naujo paleiskite bazinio insulino tiekimą.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Paspauskite [OK]. Jei nepaisysite, pranešimas taps kritiniu pavojaus signalu ir insulino tiekimas bus sustabdytas.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Paspauskite [OK], kad užbaigtumėte rezervuaro aktyvavimą.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Norint naudoti pompą, reikia Bluetooth ryšio. Paspauskite [OK] ir įjunkite Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS pradėtas</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS baigtas, nes atsijungė pompos rezervuaras arba jutiklis.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS baigtas, nes buvo pristabdytas.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS baigtas, nes praėjo nustatytas laikas.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS baigtas, nes buvo išjungtas.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">Stabdymo prie žemos glikemijos režimas išjungtas, nes gliukozės reikšmė pakilo virš nustatytos ribos.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS baigtas dėl nežinomos priežasties.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Patikrinkite pompos rezervuaro ir jutiklio ryšį.</string>
+</resources>

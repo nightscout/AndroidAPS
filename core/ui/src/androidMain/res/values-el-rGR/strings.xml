@@ -118,6 +118,8 @@
     <string name="a11y_arrow_double_up">ταχεία αύξηση</string>
     <string name="a11y_arrow_none">κανένα</string>
     <string name="a11y_arrow_unknown">άγνωστο</string>
+    <string name="decrement">μείωση</string>
+    <string name="increment">αύξηση</string>
     <string name="a11y_high">υψηλό</string>
     <string name="a11y_inrange">εντός στόχου</string>
     <string name="a11y_low">χαμηλό</string>
@@ -377,7 +379,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Σύμβουλος Bolus</string>
     <string name="bolus_advisor_message">Έχετε υπεργλυκαιμία. Αντί να φάτε τώρα συνιστάτε να περιμένετε μια καλύτερη γλυκαιμία. Θέλετε να κάνετε ένα διορθωτικό bolus τώρα και να γίνει υπενθύμιση όταν έρθει η ώρα να φάτε; Σε αυτή την περίπτωση δε θα καταγραφούν καθόλου υδατάνθρακες και θα πρέπει να χρησιμοποιήσετε τον οδηγό ξανά μετά την υπενθύμιση.</string>
-    <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
     <string name="wizard_no_actual_bg">Δεν υπάρχει πρόσφατή γλυκόζη αίματος για να γίνει υπολογισμός!</string>
     <string name="wizard_no_active_profile">Δεν ορίστηκε ενεργό προφίλ!</string>
     <string name="wizard_carbs_constraint">Παραβίαση περιορισμού υδατανθράκων!</string>
@@ -526,6 +527,11 @@
     <string name="delete_logs">Διαγραφή αρχείων καταγραφής</string>
     <string name="import_setting">Εισαγωγή ρυθμίσεων</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="database_cleanup">Εκκαθάριση βάσης δεδομένων</string>
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <!--    BLE Scan Step (shared pump pairing) -->

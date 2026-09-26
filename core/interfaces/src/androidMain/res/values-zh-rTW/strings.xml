@@ -96,6 +96,11 @@ Other
     <string name="pref_show_week_number">顯示週數</string>
     <string name="pref_show_date">顯示日期</string>
     <string name="pref_show_seconds">顯示秒數</string>
+    <string name="pref_show_complication1">顯示小工具 1</string>
+    <string name="pref_show_complication2">顯示小工具 2</string>
+    <string name="pref_show_complication3">顯示小工具 3</string>
+    <string name="pref_show_complication4">顯示小工具 4</string>
+    <string name="pref_show_complication5">顯示小工具 5</string>
     <string name="default_custom_watchface_comment">預設錶盤，您可以點擊匯出錶盤按鈕來生成模板</string>
     <string name="default_custom_watchface_external_comment">預設錶盤包含外部視圖供追蹤者使用，您可以點擊匯出錶盤按鈕來生成模板</string>
     <string name="wear_default_watchface">預設錶盤</string>
@@ -157,4 +162,6 @@ Other
     <string name="advisoralarm">當到達用餐時間時提醒我</string>
     <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">外掛程式 %1$s 啟動失敗，可能無法正常運作。請重新啟動 AndroidAPS。</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">外掛程式 %1$s 發生錯誤，部分功能已停止運作。請重新啟動 AndroidAPS。</string>
 </resources>

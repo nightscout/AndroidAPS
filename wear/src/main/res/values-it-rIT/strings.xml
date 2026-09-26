@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Personalizzato)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Custom) sempre attivo</string>
     <string name="label_actions_tile">Azioni</string>
     <string name="label_temp_target_tile">Target Temporaneo</string>
     <string name="label_quick_wizard_tile">Procedura Guidata Veloce</string>
@@ -148,6 +149,21 @@
     <string name="pref_simplify_ui">Semplifica UI</string>
     <string name="pref_vibrate_hourly">Vibra a ogni ora</string>
     <string name="pref_show_weeknumber">Mostra numero settimana</string>
+    <string name="pref_complication_1">Complicazione 1</string>
+    <string name="pref_complication_2">Complicazione 2</string>
+    <string name="pref_complication_3">Complicazione 3</string>
+    <string name="pref_complication_4">Complicazione 4</string>
+    <string name="pref_complication_5">Complicazione 5</string>
+    <string name="complication_summary_none">Tocca per selezionare una sorgente dati</string>
+    <string name="pref_complication_type_priority">Priorità tipo di complicazione</string>
+    <string name="pref_complication_type_priority_all">Predefinito per tutti gli slot</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Una modifica qui si applica la prossima volta che si sceglie una fonte di dati. Scegliere la stessa non è sufficiente: scegliere prima una fonte di dati diversa, poi scegliere quella che si desidera.</string>
+    <string name="complication_type_priority_value">Valore o indicatore</string>
+    <string name="complication_type_priority_text">Testo</string>
+    <string name="complication_type_priority_icon">Icona</string>
+    <string name="complication_type_priority_use_default">Usa predefinito</string>
+    <string name="cwf_complication_layout">Layout di complicazioni</string>
+    <string name="cwf_complication_layout_description">Posizione e dimensione delle complicazioni, prese dalla faccia dell\'orologio personalizzato caricato.</string>
     <string name="pref_include_external">Includi viste esterne nel modello</string>
     <string name="pref_switch_external">Cambia dati esterni in Watchface</string>
     <string name="custom_pref_show_seconds">Mostra secondi</string>
@@ -220,6 +236,12 @@
     <string name="complication_blood_glucose_ext1">Glicemia Ext1</string>
     <string name="complication_blood_glucose_ext2">Glicemia Ext2</string>
     <string name="complication_bg_graph">Grafico BG</string>
+    <string name="complication_cwf_image">Watchface personalizzata</string>
+    <string name="complication_cwf_ambient_bg">Glucosio della Watchface personalizzata</string>
+    <string name="complication_cwf_ambient_status">Stato della Watchface personalizzata</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Sfondo personalizzato della Watchface</string>
+    <string name="complication_cwf_upper">Orologio della Watchface personalizzata</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>

@@ -11,11 +11,11 @@
     <string name="application_pin">Programėlės PIN</string>
     <string name="bolus_password">Bolusų slaptažodis</string>
     <string name="bolus_pin">Boluso PIN</string>
-    <string name="protection_timeout_title">Slaptažodžio ir PIN įvedimo laikas [s]</string>
+    <string name="protection_timeout_title">Slaptažodžio ir PIN įsiminimo trukmė [s]</string>
     <string name="protection_timeout_summary">Laikas, per kurį turi būti įvestas slaptažodis ar PIN kodas</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Nesaugus atsarginis įrašas</string>
-    <string name="unsecure_fallback_descriotion_biometric">Saugumui užtikrinti, biometrinei apsaugai reikia pagrindinio slaptažodžio atsarginiam įrašui.\n\nĮveskite pagrindinį slaptažodį!</string>
+    <string name="unsecure_fallback_descriotion_biometric">Biometrinei apsaugai reikalingas atsarginis pagrindinis slaptažodis.\n\nNustatykite pagrindinį slaptažodį!</string>
     <string name="password_set">Slaptažodis nustatytas!</string>
     <string name="datastore_password_cleared">Išsaugotas slaptažodis išvalytas!</string>
     <string name="pin_set">PIN nustatytas!</string>

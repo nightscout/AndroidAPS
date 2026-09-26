@@ -145,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">向导中包含COB</string>
     <string name="pref_title_wear_wizard_iob">向导中包含 IOB</string>
     <string name="pref_title_wear_custom_watchface_authorization">授权自定义看板</string>
+    <string name="pref_title_wear_pushed_watchface">表盘已安装到手表</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">小工具表盘</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">自定义表盘</string>
     <string name="pref_title_wear_notify_on_smb">在 SMB 上通知</string>
     <string name="pref_summary_wear_notify_on_smb">当执行微型大剂量（SMB）时，向手表发送通知。</string>
     <string name="pref_title_wear_broadcast_data">向手表广播数据</string>
