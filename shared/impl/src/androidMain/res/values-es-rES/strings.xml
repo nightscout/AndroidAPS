@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Imagen de fondo</string>
     <string name="cwf_comment_chart">Gráficos (Glucosa, basal, líneas de predicción...)</string>
     <string name="cwf_comment_cover_chart">Imagen frente al gráfico y detrás de campos de texto</string>
+    <string name="cwf_comment_complication">Contenedor para la complicación</string>
     <string name="cwf_comment_freetext1">Texto libre 1</string>
     <string name="cwf_comment_freetext2">Texto libre 2</string>
     <string name="cwf_comment_freetext3">Texto libre 3</string>
@@ -50,6 +51,7 @@
     <string name="cwf_comment_direction">Flecha de dirección</string>
     <string name="cwf_comment_timestamp">Minutos atrás del último valor de glucosa recibido</string>
     <string name="cwf_comment_sgv">Valor de glucosa</string>
+    <string name="cwf_comment_cover_plate">Imagen de portada delante del texto (esferas…)</string>
     <string name="cwf_comment_hour_hand">Imagen de la aguja horaria (reloj analógico)</string>
     <string name="cwf_comment_minute_hand">Imagen del minutero (reloj analógico)</string>
     <string name="cwf_comment_second_hand">Imagen del segundero (reloj analógico)</string>
