@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Integración de la bomba CareLevo</string>
+    <string name="carelevo_alarm_channel_name">Alarmas de Carelevo</string>
+    <string name="carelevo_alarm_channel_description">Notificaciones de alarmas de CareLevo</string>
+    <string name="common_btn_ok">OK</string>
+    <string name="carelevo_bluetooth_state_key">Estado del Bluetooth</string>
+    <string name="carelevo_serial_number_key">Número de serie</string>
+    <string name="carelevo_boot_date_time_key">Hora de activación</string>
+    <string name="carelevo_expiration_key">Expiración</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
