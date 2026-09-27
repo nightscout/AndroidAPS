@@ -23,7 +23,7 @@
     <string name="time_2hr">2 val</string>
     <string name="patch_safe_deactivation_desc">Norėdami aktyvuoti naują rezervuarą, dabartinį turite pašalinti. Insulino tiekimas bus nutrauktas.</string>
     <string name="patch_discard_complete_title">Rezervuaras pašalintas.</string>
-    <string name="patch_discard_complete_desc">Rezervuaras išjungtas.\nBPašalinkite rezervuarą.\nPašalinkite pompą nuo kūno.</string>
+    <string name="patch_discard_complete_desc">Pompa išjungta.\nBaikite naudoti pompą.\nPašalinkite pompą nuo kūno.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Šiuo metu leidžiamas bolusas. Ar tikrai norite nutraukti insulino leidimą ir išjungti rezervuarą?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">Šiuo metu leidžiama laikina bazė. Ar tikrai norite nutraukti insulino leidimą ir pašalinti rezervuarą?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Šiuo metu leidžiamas bolusas ir veikia laikina bazė. Ar tikrai norite nutraukti insulino leidimą ir pašalinti rezervuarą?</string>
@@ -31,7 +31,7 @@
     <string name="patch_forced_discard">Pašalinti</string>
     <string name="patch_comm_error_during_discard_desc_2">Vienpusiam deaktyvavimui spauskite \'Pašalinti\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Rankiniu būdu išjungti rezervuaro aliarmus</string>
-    <string name="patch_manually_turning_off_alarm_desc_1">Vienpusiškai deaktyvavus, dėl ryšio klaidos rezervuaro aliarmo garsas gali nesustoti.</string>
+    <string name="patch_manually_turning_off_alarm_desc_1">Vienpusiškai deaktyvavus, dėl ryšio klaidos pompos aliarmas gali nesibaigti.</string>
     <string name="patch_manually_turning_off_alarm_desc_2">Tokiu atveju Jūs galite jį visiškai nutildyti, pradurdami rankinio aliarmo atšaukimo prievadą, kaip nurodyta toliau:</string>
     <string name="patch_manually_turning_off_alarm_step_1">1. Pašalinkite rezervuarą nuo kūno ir nulupkite lipnią juostą.</string>
     <string name="patch_manually_turning_off_alarm_step_2">2. Naudodami smeigtuką pradurkite skylę šalia insulino užpildymo porto.</string>
@@ -80,7 +80,7 @@
     <string name="retry">Kartoti</string>
     <string name="string_are_you_sure_to_discard_current_patch">Ar tikrai pašalinti rezervuarą?</string>
     <string name="needle_insertion_error_1">Adatos įvedimo klaida.</string>
-    <string name="needle_insertion_error_3">Norėdami pašalinti rezervuarą spauskite \'Pašalinti\'.</string>
+    <string name="needle_insertion_error_3">Norėdami pašalinti pompą spauskite \'Pašalinti\'.</string>
     <string name="string_suspend_time_insulin_delivery_title">Bazės sustabdymo laikas</string>
     <string name="string_resume_insulin_delivery_title">Atnaujinti insulino tiekimą</string>
     <string name="string_resume_insulin_delivery_message">Insulino tiekimo sustabdymas baigėsi.\nPaspauskite \'Patvirtinti\', kad atnaujintumėte insulino tiekimą.\n\nKol to nepadarysite, insulino tiekimas nebus atnaujintas.\nGali išsivystyti hiperglikemija.</string>
