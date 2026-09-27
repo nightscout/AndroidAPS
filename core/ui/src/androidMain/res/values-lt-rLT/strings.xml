@@ -579,6 +579,7 @@
     <string name="wizard_bg_label">KG</string>
     <string name="wizard_correction">Taisymas</string>
     <string name="set">Nustatyti</string>
+    <string name="wizard_set_alarm">Nustatyti įspėjimą</string>
     <string name="wizard_include_bg">Įtraukti glikemiją</string>
     <string name="wizard_no_actual_bg">Nėra naujausių glikemijos duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
