@@ -87,7 +87,7 @@
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Priminimas apie galiojimo pabaigą (72 val.)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Galiojimo laiko priminimas įjungtas</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Įjungus Pod pypsės, atėjus nustatytam laikui bei 1 val. prieš išsijungimą</string>
-    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Priminimas apie išsijungimą (80 val.)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Įspėjimas apie išsijungimą (80 val.)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Įjungtas perspėjimas apie senkantį rezervuarą</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Vienetų skaičius</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Automatiškai nutildyti Pod perspėjimus</string>
