@@ -128,11 +128,11 @@
     <string name="u500">U500</string>
     <string name="profile_isf_units_mgdl">mg/dL/U</string>
     <string name="profile_isf_units_mmol">mmol/l/V</string>
-    <string name="formatsignedinsulinunits">%1$+.2f vv</string>
+    <string name="formatsignedinsulinunits">%1$+.2f V</string>
     <string name="format_carbs">%1$d g</string>
     <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Angliavandeniai</string>
-    <string name="alarminxmin">Pranešti po %1$d min</string>
+    <string name="alarminxmin">Įspėti po %1$d min</string>
     <string name="pumpsuspended">Pompa sustabdyta</string>
     <string name="loopsuspended">Ciklas sustabdytas</string>
     <string name="pump_disconnected">Pompa atjungta</string>
@@ -156,7 +156,7 @@
     <string name="slowabsorptiondetected_plain">!!!!! Aptiktas lėtas angliavandenių įsisavinimas: %1$d%% laiko. Dar kartą patikrinkite skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino !!!!!</string>
     <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
-    <string name="advisoralarm">Pranešti apie laiką valgyti</string>
+    <string name="advisoralarm">Įspėti apie laiką valgyti</string>
     <string name="wizard_ecarbs">iAV %1$d g / %2$d val. (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f V</string>
     <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Nepavyko paleisti įskiepio %1$s ir jis gali neveikti. Paleiskite AAPS iš naujo.</string>
