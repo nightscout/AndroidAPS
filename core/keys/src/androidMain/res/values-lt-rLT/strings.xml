@@ -120,7 +120,12 @@
     <string name="pref_title_ns_use_on_battery">Sinchronizuoti neįkraunant</string>
     <string name="pref_title_ns_use_on_charging">Sinchronizuoti įkraunant</string>
     <string name="pref_title_ns_log_app_start">Registruoti programos paleidimą</string>
-    <string name="pref_title_ns_create_announcements_from_errors">Iš klaidų kurti NS pranešimus</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Kurti pranešimus iš klaidų</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Kurti pranešimus, kai reikia angliavandenių</string>
+    <string name="pref_title_ns_slow_sync">Naudoti lėtą sinchronizavimą</string>
+    <string name="pref_title_ns_use_ws">Naudoti WebSocket</string>
+    <string name="pref_summary_ns_use_ws">Naudoti WebSocket realiojo laiko ryšiui su Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">Leisti valdyti iš kliento</string>
     <string name="pref_summary_ns_allow_client_control">Leisti susietiems kliento įrenginiams per Nightscout siųsti pasirašytas komandas (pvz., paleisti ar sustabdyti scenarijus).</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Tik per Wi‑Fi</string>
@@ -201,13 +206,20 @@
     <string name="carbs_req_threshold_summary">Minimalus angliavandenių kiekis gramais, apie kurį reikia įspėti. Angliavandenių pasiūlymai, mažesni už šį kiekį, nebus pranešami.</string>
     <string name="pref_title_half_basal_exercise_target">Sporto laikinas tikslas, kurį įjungus bazė mažinama perpus</string>
     <string name="half_basal_exercise_target_summary">Nustatykite skaičių, pvz., 8,0, kuris reiškia, kad kai laikinas tikslas yra 8,0 mmol/l ir aukštas laikinas tikslas padidina jautrumą = TAIP, nustatykite 50%% laikiną bazę šiame lygyje (6,0 = 75%%; 4,8 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">AIO ribos procentas</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Didžiausio AIO procentas, virš kurio SMB yra išjungiami.\nNumatytoji reikšmė: 100%\nEsant 100%, ši funkcija yra išjungta.</string>
+    <string name="pref_title_dynisf_adjustment_factor">DynamicISF derinimo faktorius</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Dinaminio JIF derinimo faktorius. Nustatykite daugiau nei 100% agresyvesniam koregavimui arba mažiau nei 100% švelnesniam koregavimui.</string>
+    <string name="pref_title_autosens_period">Autosens laikotarpis</string>
     <string name="openapsama_autosens_period_summary">Valandų skaičius praeityje jautrumo nustatymui (angliavandenių įsisavinimo laikas neįtrauktas)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Siunčiamų įrašų skaičius</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Pasenusių duomenų riba</string>
+    <string name="pref_title_pump_unreachable_threshold">Perspėjimo apie nepasiekiamą pompą riba</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Numatytasis dienų skaičius derinimui</string>
     <string name="autotune_default_tune_days_summary">Numatytasis dienų, kurias Autotune turi apdoroti, skaičius (iki 30)</string>
     <!-- IntKey: SMS preferences -->
     <string name="pref_title_sms_remote_bolus_distance">Mažiausias intervalas tarp nuotolinių bolusų</string>
@@ -216,6 +228,8 @@
     <string name="pref_title_random_bg_randomize">Atsitiktinai keisti glikemijos duomenis</string>
     <string name="pref_summary_random_bg_randomize">Pridėti triukšmo, atsitiktinai keisti laiko žymas ir tendencijos rodykles, kartais sugeneruoti atsitiktinių angliavandenių. Išjunkite, jei norite grynos deterministinės sinusoidės, kurios tendencijos rodyklė nustatoma pagal sinusoidės nuolydį.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Pasenusių duomenų aliarmo riba</string>
+    <string name="pref_title_urgent_alarm_stale_data">Skubaus įspėjimo apie pasenusius duomenis riba</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Naudotojo profilis infuzijos vietų rotacijai</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
