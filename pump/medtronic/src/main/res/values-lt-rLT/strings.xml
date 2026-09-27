@@ -7,8 +7,8 @@
     <string name="medtronic_pump_type">Pompos tipas</string>
     <string name="medtronic_pump_frequency">Pompos dažnis</string>
     <string name="medtronic_pump_bolus_delay">Užlaikymas prieš Boluso suleidimą (s)</string>
-    <string name="medtronic_pump_max_bolus">Max Bolusas pompoje (vv)</string>
-    <string name="medtronic_pump_max_basal">Maks val. bazė pompoje (v/val)</string>
+    <string name="medtronic_pump_max_bolus">Maks bolusas pompoje (V)</string>
+    <string name="medtronic_pump_max_basal">Maks val. bazė pompoje (V/val)</string>
     <string name="medtronic_custom_action_wake_and_tune">Pažadinti ir nustatyti</string>
     <string name="medtronic_custom_action_clear_bolus_block">Išvalyti Boluso bloką</string>
     <string name="medtronic_custom_action_reset_rileylink">Nustatyti RileyLink iš naujo</string>
