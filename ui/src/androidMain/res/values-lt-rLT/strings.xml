@@ -120,7 +120,7 @@
     <string name="psychology_icon_label">Protas</string>
     <string name="star_icon_label">Žvaigždė</string>
     <string name="speed_icon_label">Greitis</string>
-    <string name="alarm_icon_label">Signalas</string>
+    <string name="alarm_icon_label">Įspėjimas</string>
     <string name="event_icon_label">Įvykis</string>
     <string name="flag_icon_label">Vėliavėlė</string>
     <string name="bookmark_icon_label">Žymelė</string>
@@ -176,6 +176,9 @@
     <string name="careportal_remove_started_events">Ištrinti AAPS paleidimo žymas</string>
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="clone_label">Klonuoti</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Gliukozės grafikas. Naujausios vertės %1$s. %2$s. %3$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Gliukozės grafikas. Naujausios vertės %1$s</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Vykdyti</string>
     <string name="add_new_profile">Pridėti naują profilį</string>
     <string name="edit_label">Redaguoti</string>
     <string name="activate_label">Aktyvuoti</string>
@@ -229,7 +232,7 @@
     <string name="trend_positive_only">Tik teigiamą</string>
     <string name="trend_negative_only">Tik neigiamą</string>
     <string name="use_temp_target">Naudoti laikiną tikslą</string>
-    <string name="use_alarm">Naudoti signalą</string>
+    <string name="use_alarm">Naudoti įspėjimą</string>
     <string name="device_selection">Įrenginio pasirinkimas</string>
     <string name="show_on_phone">Rodyti telefone</string>
     <string name="show_on_watch">Rodyti laikrodyje</string>
