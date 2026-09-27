@@ -16,7 +16,7 @@
     <string name="tt_label">LT</string>
     <string name="pump_unreachable">Pompa nepasiekiama</string>
     <string name="insulin_unit_shortname">V</string>
-    <string name="pump_base_basal_rate">%1$.2f vv/val</string>
+    <string name="pump_base_basal_rate">%1$.2f V/val</string>
     <string name="pump_not_initialized_profile_not_set">Pompa neprijungta, profilis nepasirinktas!</string>
     <string name="failed_update_basal_profile">Nepavyko atnaujinti bazės profilio</string>
     <string name="no_valid_basal_rate">Bazė iš pompos nenuskaityta</string>
@@ -46,6 +46,9 @@
     <string name="configbuilder_switch_confirmation">%1$s bus išjungtas, o %2$s — įjungtas.</string>
     <string name="expand">Išskleisti</string>
     <string name="collapse">Suskleisti</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Užbaigta</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Išskleista</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Suskleista</string>
     <string name="no_compose_preferences">Šiam įskiepiui nėra nuostatų</string>
     <string name="confirm_password_hint">Patvirtinkite slaptažodį</string>
     <string name="confirm_pin_hint">Patvirtinkite PIN</string>
@@ -83,7 +86,7 @@
     <string name="running">Vykdoma</string>
     <string name="tdd_total">BPD viso</string>
     <string name="tdd_old_data">Seni duomenys</string>
-    <string name="goingtodeliver">Bus suleista %1$.2f vv</string>
+    <string name="goingtodeliver">Bus suleista %1$.2f V</string>
     <string name="carbs_not_saved_after_bolus">Bolusas suleistas, bet angliavandenių išsaugoti nepavyko. Įveskite juos dar kartą.</string>
     <string name="androidaps_start">AAPS paleista</string>
     <string name="format_carbs_split" comment="Compact carbs summary when a food type splits the entry into immediate + extended carbs. %1$d=immediate carbs (g), %2$d=extended (eCarbs) carbs (g). Example: 9+2 g">%1$d+%2$d g</string>
@@ -99,6 +102,7 @@
     <string name="profile_switch_no_insulin">Profilio keitimas negalimas: nepasirinktas insulinas.</string>
     <string name="profile_switch_select_insulin_hint">Insulinas dar nepasirinktas. Pasirinkite naudojamą insuliną, kad šis profilio pakeitimas galėtų jį įrašyti.</string>
     <string name="insulin_activation_failed">Insulinas nepakeistas. Toliau naudojamas ankstesnis insulinas.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Insulinas nepakeistas: %1$s Naudojamas ankstesnis insulinas.</string>
     <string name="insulin_activation_unconfirmed">Insulino pakeitimo patvirtinti nepavyko. Prieš leisdami insuliną patikrinkite, kuris insulinas aktyvuotas profilyje.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInsulinas taip pat nepakeistas.</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -124,7 +128,7 @@
     <string name="exit">Išeiti</string>
     <string name="removerecord">Ištrinti įrašą</string>
     <string name="loopisdisabled">Ciklas išjungtas</string>
-    <string name="alarm">Aliarmas</string>
+    <string name="alarm">Įspėjimas</string>
     <string name="exportsettings">Eksportuoti nustatymus</string>
     <string name="disableloop">Išjungti Ciklą</string>
     <string name="disabled_loop">Išjungtas ciklas</string>
@@ -156,6 +160,7 @@
     <string name="notconfigured">Nesukonfigūruota</string>
     <string name="loop_suspended_by_dst">Ciklas sustabdytas dėl laiko persukimo</string>
     <string name="required">reikal.</string>
+    <string name="a11y_arrow_triple_down">greitai mažėja</string>
     <string name="a11y_arrow_double_down">greitai mažėja</string>
     <string name="a11y_arrow_single_down">mažėja</string>
     <string name="a11y_arrow_forty_five_down">lėtai mažėja</string>
@@ -163,8 +168,11 @@
     <string name="a11y_arrow_forty_five_up">lėtai didėja</string>
     <string name="a11y_arrow_single_up">didėja</string>
     <string name="a11y_arrow_double_up">greitai didėja</string>
+    <string name="a11y_arrow_triple_up">greitai didėja</string>
     <string name="a11y_arrow_none">nėra</string>
     <string name="a11y_arrow_unknown">nežinoma</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">sumažėjimas %1$s per %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">padidėjimas %1$s per %2$s</string>
     <string name="decrement">mažėjimas</string>
     <string name="increment">didėjimas</string>
     <string name="a11y_high">hiper</string>
@@ -209,12 +217,12 @@
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <string name="loopstatus_targets">TIKSLAI:</string>
     <string name="loopstatus_OAPS_result">OAPS REZULTATAS:</string>
-    <string name="extended_bolus_data_point_graph">%1$.2f vv ( %2$.2f vv/h )</string>
-    <string name="temp_basal_tsf_fake_extended">%1$.2f vv/val (%2$.2fE) @%3$s</string>
-    <string name="temp_basal_tsf_absolute">%1$.2f vv/val @%2$s</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f V ( %2$.2f V/val. )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f V/val. (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f V/val. @%2$s</string>
     <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
-    <string name="extended_bolus_full">E %1$.2f vv/h @%2$s %3$s/%4$s min</string>
-    <string name="extended_bolus_medium">%1$.2f vv/h %2$s/%3$s\'</string>
+    <string name="extended_bolus_full">E %1$.2f V/val. @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f V/val. %2$s/%3$s\'</string>
     <string name="nav_export">Eksportuoti nustatymus</string>
     <string name="location_permission_not_granted">Vietos nustatymo leidimas nesuteiktas. Suteikite leidimą Android nustatymuose.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versija:</string>
@@ -286,8 +294,32 @@
     <string name="careportal_openapsoffline">OpenAPS neprisijungus</string>
     <string name="pump_battery_change">Baterijos keitimas</string>
     <string name="temporary_target">Laikinas tikslas</string>
+    <string name="pump_reconnect">Iš naujo prijungti pompą</string>
+    <string name="scene">Scenarijus</string>
+    <string name="scenes">Scenarijai</string>
+    <string name="scene_desc">Situacijų ruošiniai — keli veiksmai aktyvuojami iš karto</string>
+    <string name="scene_activate">Aktyvuoti</string>
+    <string name="scene_deactivate">Baigti scenarijų</string>
+    <string name="scene_active">Aktyvus</string>
+    <string name="scene_ended">Scenarijus baigtas</string>
+    <string name="scene_end_active">Baigti aktyvų scenarijų</string>
+    <string name="scene_confirm_activate">Aktyvuoti scenarijų %1$s\"?</string>
+    <string name="scene_confirm_deactivate">Baigti scenarijų „%1$s“ ir atšaukti pakeitimus?</string>
+    <string name="scene_conflict_active_tt">Aktyvus laikinas tikslas bus pakeistas</string>
     <string name="scene_conflict_active_profile">Aktyvus profilis bus pakeistas</string>
+    <string name="scene_conflict_active_running_mode">Aktyvus veikimo režimas bus pakeistas</string>
+    <string name="scene_conflict_active_scene">Pirmiausia bus baigtas aktyvus scenarijus „%1$s“</string>
+    <string name="scene_action_tt">Laikinas tikslas: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profilis: %1$s %2$d%%</string>
+    <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profilis: %1$d%%</string>
+    <string name="scene_action_smb_on">Įjungti SMB</string>
+    <string name="scene_action_smb_off">Išjungti SMB</string>
+    <string name="scene_action_running_mode">Veikimo režimas: %1$s</string>
     <string name="scene_action_careportal">Įrašas: %1$s</string>
+    <string name="scene_management">Scenarijai</string>
+    <string name="scene_management_desc">Kurti, redaguoti ir tvarkyti scenarijus</string>
+    <string name="scene_action_count">Veiksmų: %1$d</string>
+    <string name="scene_start_from_template">Pradėti nuo ruošinio</string>
     <string name="scene_editor_target">Tikslas</string>
     <string name="scene_editor_tt_preset">Laikino tikslo ruošinys</string>
     <string name="scene_editor_no_tt_presets">Nėra nustatytų laikinų tikslų ruošinių</string>
@@ -344,6 +376,9 @@
     <string name="clientcontrol_fail_no_pending_bolus">Bolusas nustojo galioti arba buvo pakeistas. Paspauskite mygtuką dar kartą.</string>
     <string name="clientcontrol_fail_bolus_compute">Pagrindiniam įrenginiui nepavyko apskaičiuoti boluso (trūksta gliukozės ar profilio duomenų arba pompa nepasiruošusi).</string>
     <string name="clientcontrol_fail_internal">Įvyko klaida.</string>
+    <string name="clientcontrol_fail_unknown">Komanda neįvykdyta.</string>
+    <string name="clientcontrol_unconfirmed_wear">Būsena nežinoma — prieš pakartotinai leisdami bolusą patikrinkite telefoną arba Nightscout.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Ryšys nutrūko — suleidimo būsena nežinoma</string>
     <string name="scene_revert_tt">Atšaukti laikiną tikslą</string>
     <string name="scene_revert_profile">Atšaukti profilio keitimą</string>
     <string name="scene_revert_loop_mode">Atšaukti veikimo režimo pakeitimą</string>
@@ -360,6 +395,7 @@
     <string name="careportal_temporarytargetvalue">Laikino tikslo reikšmė</string>
     <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
     <string name="boluswizard">Boluso patarėjas</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Insulino nustatymai</string>
     <string name="simple_mode_blocked_by_concentration">Naudojant ne U100 insuliną paprastojo režimo įjungti negalima. Pirmiausia perjunkite į U100 insuliną.</string>
     <string name="manage_temp_basal_desc">Pradėti laikiną bazinį greitį</string>
     <string name="manage_site_rotation_desc">Stebėti infuzijos vietų rotaciją</string>
@@ -370,6 +406,9 @@
     <string name="treatment_sensor_insert_desc">Registruoti jutiklio įvedimą</string>
     <string name="treatment_cannula_change_desc">Registruoti kaniulės ar infuzijos rinkinio pakeitimą</string>
     <string name="treatment_fill_desc">Užpildyti sistemą ir kaniulę</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Didesnė už profilio bazę</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Mažesnė už profilio bazę</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Nėra</string>
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="glucosetype_finger">Iš piršto</string>
     <string name="glucosetype_sensor">Sensorius</string>
@@ -542,14 +581,14 @@
     <string name="carbs_g">AV %1$d g</string>
     <string name="extended_bolus_u_min">IŠTĘSTAS BOLUSAS %1$.2f V %2$d min</string>
     <string name="load_events">GAUTI ĮVYKIUS</string>
-    <string name="clear_alarms">IŠVALYTI ALIARMUS</string>
+    <string name="clear_alarms">IŠVALYTI ĮSPĖJIMUS</string>
     <string name="deactivate">IŠJUNGTI</string>
     <string name="update_time">ATNAUJINTI LAIKĄ</string>
     <string name="load_history">GAUTI ISTORIJĄ %1$d</string>
     <string name="load_tdds">GAUTI BPD</string>
     <string name="set_profile">NUSTATYTI PROFILĮ</string>
     <string name="set_user_settings">PASIRINKTI NAUDOTOJO NUSTATYMUS</string>
-    <string name="smb_bolus_u">SMB BOLUSAS %1$.2f vv</string>
+    <string name="smb_bolus_u">SMB BOLUSAS %1$.2f V</string>
     <string name="start_pump">Paleisti pompą</string>
     <string name="stop_pump">Sustabdyti pompą</string>
     <string name="temp_basal_absolute">LAIKINA BAZĖ %1$.2f V/val. %2$d min</string>
@@ -563,6 +602,7 @@
     <string name="basal">Valandinė bazė</string>
     <string name="basalpct">Valandinė bazė %</string>
     <string name="sensitivity">Jautrumas insulinui</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens išjungtas</string>
     <string name="isf_profile">Profilio JIF: %1$.1f</string>
     <string name="autosens_long">Autosens vertė: %.0f%%</string>
     <string name="algorithm_long">Autosens algoritme: %.0f%%</string>
@@ -571,7 +611,7 @@
     <string name="autotune_tune_days">Dienų sk :</string>
     <string name="autotune_select_profile">Pasirinkite profilį tikslinimui</string>
     <!-- Alerts -->
-    <string name="urgent_alarm">Kritiniai perspėjimai</string>
+    <string name="urgent_alarm">Kritiniai įspėjimai</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Boluso patarėjas</string>
@@ -581,6 +621,7 @@
     <string name="set">Nustatyti</string>
     <string name="wizard_set_alarm">Nustatyti įspėjimą</string>
     <string name="wizard_include_bg">Įtraukti glikemiją</string>
+    <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks.</string>
     <string name="wizard_no_actual_bg">Nėra naujausių glikemijos duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="wizard_carbs_constraint">AV apribojimų pažeidimas!</string>
@@ -624,12 +665,13 @@
     <string name="password_cleared">Slaptažodis išvalytas!</string>
     <string name="pairing">Susiejimas</string>
     <string name="secs" comment="second short">%1$d sek.</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritiška</string>
     <!--    Constraints-->
-    <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
+    <string name="limitingbasalratio">Apribota maksimali bazė%1$.2f V/val. dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
     <string name="limitingpercentrate">Ribojamas maks procentų skaičius %1$d%%, nes %2$s</string>
     <string name="itmustbepositivevalue">reikšmė turi būti teigiama</string>
-    <string name="limitingbolus">Bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
+    <string name="limitingbolus">Apribotas bolusas iki %1$.1f V dėl %2$s</string>
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
     <string name="message">Pranešimas</string>
