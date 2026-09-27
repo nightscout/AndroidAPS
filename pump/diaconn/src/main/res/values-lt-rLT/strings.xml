@@ -28,7 +28,7 @@
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
-    <string name="boluserrorcode">Įvesta: %1$.2fvv Suleista: %2$.2fvv Klaidos kodas: %3$s</string>
+    <string name="boluserrorcode">Įvesta: %1$.2fV Suleista: %2$.2fV. Klaidos kodas: %3$s</string>
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="bolus_step">Boluso žingsnis</string>
     <string name="basal_step">Bazės žingsnis</string>
@@ -67,8 +67,8 @@
     <string name="diaconn_g8_loginsulinshorage">Insulino trūkumas</string>
     <string name="diaconn_g8_logbatteryshorage">Nepakankama baterijos įkrova</string>
     <string name="diaconn_g8_logneedleprime">Užpildyti kaniulę: %1$.2fV</string>
-    <string name="diaconn_g8_loginjectorprime">Užpildyti injektorių: %1$.2fvv</string>
-    <string name="diaconn_g8_logtubeprime">Vamzdelio užpildymas: %1$.2fvv</string>
+    <string name="diaconn_g8_loginjectorprime">Užpildyti injektorių: %1$.2fV</string>
+    <string name="diaconn_g8_logtubeprime">Vamzdelio užpildymas: %1$.2fV</string>
     <string name="diaconn_g8_resetfactoryreset">Iš naujo nustatyti po gamyklinių nustatymų atkūrimo</string>
     <string name="diaconn_g8_resetemergencyoff">Iš naujo nustatyti po avarinio išjungimo</string>
     <string name="diaconn_g8_resetbatteryreplacement">Iš naujo nustatyti po baterijos pakeitimo</string>
