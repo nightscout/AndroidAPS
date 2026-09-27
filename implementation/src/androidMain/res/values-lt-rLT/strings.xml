@@ -8,6 +8,7 @@
     <!--    Permissions-->
     <string name="permission_notifications_description">Reikalinga įspėjimams, pavojaus signalams ir pompos būsenos atnaujinimams rodyti</string>
     <string name="permission_schedule_exact_alarm_title">Signalai ir priminimai</string>
+    <string name="permission_schedule_exact_alarm_description">Reikalinga, kad AAPS veikiant fone įspėjimai galėtų įjungti ekraną, o priminimai nuskambėtų laiku</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
