@@ -25,24 +25,35 @@
     <string name="scene_wizard_info_post_exercise_night">Po fizinio aktyvumo raumenys dar daug valandų atkuria glikogeno atsargas, todėl jautrumas insulinui gali išlikti padidėjęs 24–48 valandas. Didžiausia naktinės hipoglikemijos rizika dažniausiai būna praėjus 6–12 valandų po fizinio krūvio. Sumažinus profilį, naktį tiekiama mažiau bazinio insulino. Aukštesnis laikinas gliukozės tikslas suteikia algoritmui daugiau saugumo, o išjungus SMB sumažėja rizika, kad trumpalaikiai gliukozės pakilimai bus koreguojami per agresyviai. Šį scenarijų rekomenduojama įjungti prieš miegą tomis dienomis, kai sportavote, ypač po ilgesnio fizinio krūvio ar išbandžius naują veiklą. Prie lovos turėkite greitai pasisavinamų angliavandenių, o jei reikia, naktį papildomai pasitikrinkite gliukozę.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
     <string name="scene_template_pre_meal">Prieš valgį</string>
+    <string name="scene_wizard_pre_meal_desc">Žemesnis tikslas padeda sumažinti gliukozės šuolį po valgio.</string>
     <string name="scene_wizard_info_pre_meal">Nustačius žemesnį gliukozės tikslą likus 30–60 min. iki valgio, algoritmas gali iš anksto padidinti aktyvaus insulino kiekį dar prieš pradedant veikti su maistu gautiems angliavandeniams. Tai padeda sumažinti po valgio kylantį gliukozės šuolį, kai gliukozė iš maisto į kraują patenka greičiau, nei spėja suveikti insulinas. Šį scenarijų geriausia naudoti tada, kai žinote, kad netrukus valgysite.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
     <string name="scene_template_alcohol">Alkoholis</string>
     <string name="scene_wizard_alcohol_desc">LGS režimas, sumažintas profilis ir išjungti SMB apsaugo nuo uždelstos alkoholio sukeltos hipoglikemijos.</string>
     <string name="scene_wizard_info_alcohol">Alkoholis žmonėms, sergantiems 1 tipo diabetu, gali gerokai padidinti uždelstos hipoglikemijos riziką. Kepenys pirmiausia skaido alkoholį, todėl tuo metu išskiria mažiau gliukozės. Dėl to hipoglikemija gali pasireikšti po 6–24 val., dažnai naktį miegant. LGS režimas mažina arba sustabdo insulino tiekimą gliukozei krentant. Sumažintas profilis ir išjungtas SMB dar labiau sumažina aktyvaus insulino kiekį. Prieš miegą visada pasitikrinkite gliukozę, o prireikus nustatykite žadintuvą papildomam patikrinimui naktį.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Vairavimas</string>
+    <string name="scene_wizard_driving_desc">Šiek tiek aukštesnis tikslas didesniam saugumui vairuojant.</string>
     <string name="scene_wizard_info_driving">Saugiam vairavimui gliukozė turėtų būti stabili ir ne mažesnė kaip 5,0 mmol/l (90 mg/dl). Kai kuriose šalyse prieš vairuojant ir ilgesnių kelionių metu ją tikrinti privaloma. Aukštesnis gliukozės tikslas suteikia papildomą saugumo atsargą ir padeda sumažinti hipoglikemijos riziką. Jei vairuojant gliukozė nukrenta per žemai, saugiai sustokite, koreguokite hipoglikemiją ir, gliukozei grįžus į normą, prieš tęsdami kelionę palaukite bent 45 min.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
     <string name="scene_template_bathing">Maudymasis</string>
     <string name="scene_wizard_bathing_desc">Atjungti pompą prausiantis duše, plaukiojant, maudantis vonioje ar užsiimant kita veikla vandenyje.</string>
     <string name="scene_wizard_info_bathing">Atjungus pompą, insulino tiekimas visiškai sustoja – neleidžiama nei bazė, nei boliusai ar korekcijos. Algoritmas persijungia į atjungtos pompos režimą ir nebeatlieka korekcijų. Trumpam laikui, pavyzdžiui, prausiantis duše, maudantis ar plaukiojant, tai normalu. Scenarijui pasibaigus, pompa vėl prijungiama, o algoritmas automatiškai atnaujina darbą. Pompą laikykite atjungtą kuo trumpiau – negaunant bazinio insulino, gliukozė gali pradėti kilti jau po 1–2 val.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Liuteininė fazė</string>
+    <string name="scene_wizard_luteal_phase_desc">Padidintas profilis prieš mėnesines padidėjusiam atsparumui insulinui kompensuoti.</string>
     <string name="scene_wizard_info_luteal_phase" formatted="false">Daugeliui moterų liuteininėje fazėje, maždaug 1–2 savaites iki menstruacijų, padidėja atsparumas insulinui. Dėl kylančio progesterono kiekio jautrumas insulinui sumažėja. Poveikis labai individualus: vienoms insulino poreikis padidėja 10–30 %, kitoms pokytis beveik nepastebimas. Pradėkite nuo nedidelio profilio padidinimo, pavyzdžiui, iki 115 %, ir koreguokite pagal kelių ciklų metu pastebėtus dėsningumus. Žymėdamos šiuos pokyčius Terapijoje, galėsite lengviau nustatyti savo individualų ciklo poveikį gliukozės kontrolei.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Karštas oras</string>
+    <string name="scene_wizard_hot_weather_desc">Sumažintas profilis — karštis spartina insulino pasisavinimą.</string>
     <string name="scene_wizard_info_hot_weather">Aukšta temperatūra plečia kraujagysles, todėl insulinas įsisavinamas greičiau – ta pati dozė gali pradėti veikti sparčiau ir stipriau. Dėl to gali netikėtai pasireikšti hipoglikemija, ypač aktyviai leidžiant laiką lauke. Nedidelis profilio sumažinimas iki 85 % padeda kompensuoti spartesnį insulino pasisavinimą. Gerkite pakankamai skysčių, gliukozę stebėkite dažniau ir turėkite omenyje, kad šilumoje laikomas insulinas pompoje ar švirkštiklyje gali prarasti dalį veiksmingumo. Jei karštyje dar ir sportuojate, papildomai apsaugai verta šį nustatymą derinti su fizinio aktyvumo režimu.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Medicininė procedūra</string>
+    <string name="scene_wizard_medical_procedure_desc">Atvirasis ciklas ir išjungti SMB operacijos ar medicininės procedūros metu.</string>
     <string name="scene_wizard_info_medical_procedure">Operacijos ar medicininės procedūros metu anestezija ir streso hormonai gali nenuspėjamai paveikti gliukozės kiekį. Rekomenduojamas atviro ciklo režimas, nes tokiomis sąlygomis algoritmas negali patikimai numatyti organizmo reakcijos. Aukštesnis gliukozės tikslas (8,3 mmol/l) suteikia papildomą apsaugą nuo hipoglikemijos procedūros metu. Išjungus SMB, sumažėja netikėto papildomo insulino tiekimo rizika. Visada informuokite medicinos personalą, kad naudojate insulino pompą ir CGM. Jei procedūra trunka ilgiau nei 3 val., medikų komanda gali nuspręsti pereiti prie intraveninio insulino.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Tuščias</string>
+    <string name="scene_wizard_blank_desc">Pradėti nuo pradžių be iš anksto pasirinktų veiksmų.</string>
     <!-- Scene wizard: action step education -->
     <string name="scene_wizard_tt_info">Laikinas glikemijos tikslas nurodo algoritmui tam tikrą laiką siekti kitokios gliukozės reikšmės. Nustačius aukštesnį tikslą, algoritmas gliukozės kilimą koreguoja švelniau ir skiria mažiau insulino, todėl sumažėja hipoglikemijos rizika fizinio aktyvumo metu. Nustačius žemesnį tikslą, algoritmas reaguoja anksčiau ir gali skirti daugiau insulino – tai naudinga ruošiantis valgyti. Pasirinkite vieną iš žemiau pateiktų ruošinių – tikslinė gliukozės reikšmė ir paskirtis juose jau nustatytos.</string>
     <string name="scene_wizard_smb_info">Supermikrobolusai (SMB) leidžia algoritmui iš anksto suleisti dalį insulino mažais bolusais, tuo pat metu laikinai sumažinant ar sustabdant bazinį insuliną. Taip dalis būsimo insulino tarsi „pasiskolinama“, kad reakcija būtų greitesnė. Išjungus SMB, algoritmas koreguoja tik bazinį insuliną. Reakcija tampa lėtesnė ir tolygesnė, todėl toks režimas dažnai tinkamesnis fizinio aktyvumo metu ar miegant.</string>
@@ -50,7 +61,20 @@
     <string name="scene_wizard_careportal_info">Terapijos įvykis – tai tik įrašas žurnale. Jis nekeičia insulino tiekimo ir neturi įtakos algoritmo veikimui. Naudokite jį veiklai, situacijoms ar pastaboms pažymėti savo terapijos istorijoje. Šiuos įrašus galite peržiūrėti Terapijos skiltyje ir Nightscout. Tai gali padėti jums ir gydytojui pastebėti pasikartojančius dėsningumus.</string>
     <string name="scene_wizard_duration_info">Trukmė nustato, kiek laiko šis scenarijus išliks aktyvus. Pasibaigus nustatytam laikui, nuo trukmės priklausantys veiksmai – laikinas gliukozės tikslas, profilio keitimas ir veikimo režimas – baigsis automatiškai, o nuolatiniai pakeitimai, pavyzdžiui, SMB įjungimas ar išjungimas, bus automatiškai grąžinti į ankstesnę būseną. Nustačius trukmę 0, scenarijus veiks neribotą laiką – visi veiksmai liks aktyvūs tol, kol scenarijų išjungsite rankiniu būdu.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Įtraukti %1$s į scenarijų</string>
+    <string name="scene_wizard_finish">Baigti</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Tolesnis scenarijus</string>
+    <string name="scene_chain_none">Nėra</string>
+    <string name="scene_skip_to_format">Pereiti prie %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Susietas scenarijus pašalintas</string>
     <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">Scenarijus „%1$s“ baigtas</string>
+    <string name="scene_chained_format">Scenarijai susieti: %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s baigtas — tolesnis scenarijus praleistas: %2$s</string>
+    <string name="scene_chain_skipped_deleted">tikslo scenarijus pašalintas</string>
+    <string name="scene_chain_skipped_disabled">„%1$s“ išjungtas</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: nepavyko %3$d iš %4$d veiksmų</string>
 </resources>
