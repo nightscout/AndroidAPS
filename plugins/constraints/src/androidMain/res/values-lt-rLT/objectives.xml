@@ -19,7 +19,7 @@
     <string name="objectives_maxiobzero_gate">Kelias dienas naudokite uždarą ciklą LGS (insulino tiekimo stabdymo esant žemai gliukozei) režimu. Maks AIO automatiškai nustatomas į 0. Stebėkite, kad LGS įvykių nebūtų per daug.</string>
     <string name="objectives_maxiobzero_learned">Nustačius nulinį maks AIO, sistema saugos Jus nuo hipoglikemijų ir nedidins nustatytos bazės (išskyrus tas situacijas, kai AIO yra minusinis)</string>
     <string name="objectives_maxiob_objective">Koreguokite savo uždarąjį ciklą po truputį didindami maks AIO ir mažindami tikslinę glikemijos reikšmę</string>
-    <string name="objectives_maxiob_gate">Praleiskite keletą dienų ir bent vieną naktį be hipoglikemijos aliarmų</string>
+    <string name="objectives_maxiob_gate">Praleiskite keletą dienų ir bent vieną naktį be hipoglikemijos įspėjimų</string>
     <string name="objectives_maxiob_learned">Vaikui augant atnaujinkite maks AIO. Neleiskite sistemai suleisti daugiau insulino, nei galite kompensuoti maistu — labai didelė reikšmė yra blogas pasirinkimas. Paprastajame režime maks AIO reikšmė apskaičiuojama automatiškai, todėl jos nustatyti nereikia.</string>
     <string name="maxiobset">Maks AIO nustatytas tinkamai (paprastajame režime nebūtina)</string>
     <string name="objectives_autosens_objective">Jei reikia, paderinkite valandines bazės vertes bei pagrindinius parametrus ir įgalinkite Autosens funkciją</string>
