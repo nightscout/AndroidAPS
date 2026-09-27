@@ -32,7 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Rodyti skubius įspėjimus kaip Android pranešimus</string>
     <string name="pref_title_alert_increase_volume">Palaipsniui didinti pranešimų garsumą</string>
     <string name="pref_title_alert_override_dnd">Nepaisyti netrukdymo režimo</string>
-    <string name="pref_summary_alert_override_dnd">Įjungus šią parinktį AAPS pavojaus signalai skambės net nutildžius telefoną arba įjungus netrukdymo režimą. Išjungus parinktį šiais režimais įspėjimai bus be garso.</string>
+    <string name="pref_summary_alert_override_dnd">Įjungus šią parinktį AAPS įspėjimai skambės net nutildžius telefoną arba įjungus netrukdymo režimą. Išjungus parinktį šiais režimais įspėjimai bus be garso.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Įkelti glikemijos duomenis į NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Registruoti jutiklio pakeitimą</string>
@@ -112,7 +112,7 @@
     <string name="pref_summary_ns_receive_running_mode">Priimti veikimo režimo pakeitimus iš Nightscout.</string>
     <string name="pref_title_ns_receive_tbr_eb">Gauti laikinas bazes/ištęstus bolusus iš NS</string>
     <string name="pref_summary_ns_receive_tbr_eb">Priimti laikinas bazes/ištęstus bolusus iš Nightscout.</string>
-    <string name="pref_title_ns_notifications_from_alarms">NS aliarmai</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS įspėjimai</string>
     <string name="pref_title_ns_notifications_from_announcements">NS pranešimai</string>
     <string name="pref_title_ns_use_cellular">Naudoti mobiliuosius duomenis</string>
     <string name="pref_title_ns_use_roaming">Naudoti tarptinklinį ryšį</string>
@@ -228,7 +228,7 @@
     <string name="pref_title_random_bg_randomize">Atsitiktinai keisti glikemijos duomenis</string>
     <string name="pref_summary_random_bg_randomize">Pridėti triukšmo, atsitiktinai keisti laiko žymas ir tendencijos rodykles, kartais sugeneruoti atsitiktinių angliavandenių. Išjunkite, jei norite grynos deterministinės sinusoidės, kurios tendencijos rodyklė nustatoma pagal sinusoidės nuolydį.</string>
     <!-- IntKey: NS Client preferences -->
-    <string name="pref_title_alarm_stale_data">Pasenusių duomenų aliarmo riba</string>
+    <string name="pref_title_alarm_stale_data">Pasenusių duomenų įspėjimo riba</string>
     <string name="pref_title_urgent_alarm_stale_data">Skubaus įspėjimo apie pasenusius duomenis riba</string>
     <!-- IntKey: Site rotation preferences -->
     <string name="pref_title_site_rotation_profile">Naudotojo profilis infuzijos vietų rotacijai</string>
@@ -237,12 +237,47 @@
     <string name="site_rotation_profile_woman">Moteris</string>
     <string name="site_rotation_profile_child">Vaikas</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Vienetai</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Kalba</string>
+    <string name="lang_default">Sistemos numatytoji</string>
+    <string name="lang_en">English</string>
+    <string name="lang_af">Afrikaans</string>
+    <string name="lang_bg">Bulgarian</string>
+    <string name="lang_cs">Czech</string>
+    <string name="lang_de">German</string>
+    <string name="lang_dk">Danish</string>
+    <string name="lang_fr">French</string>
+    <string name="lang_nl">Dutch</string>
+    <string name="lang_es">Spanish</string>
+    <string name="lang_el">Greek</string>
+    <string name="lang_ga">Irish</string>
+    <string name="lang_it">Italian</string>
+    <string name="lang_ko">Korean</string>
+    <string name="lang_lt">Lietuvių</string>
+    <string name="lang_nb">Norwegian</string>
+    <string name="lang_pl">Polish</string>
+    <string name="lang_pt">Portuguese</string>
+    <string name="lang_pt_br">Portuguese, Brazilian</string>
+    <string name="lang_ro">Romanian</string>
+    <string name="lang_ru">Russian</string>
+    <string name="lang_sk">Slovak</string>
+    <string name="lang_sv">Swedish</string>
+    <string name="lang_tr">Turkish</string>
+    <string name="lang_zh_tw">Chinese, Traditional</string>
+    <string name="lang_zh_cn">Chinese, Simplified</string>
     <string name="pref_title_patient_name">Vardas</string>
     <string name="pref_summary_patient_name">Pavadinimas šiai AAPS sistemai atpažinti (rodomas ataskaitose ir sinchronizuojant).</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS katalogas</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Pagrindinis slaptažodis</string>
+    <string name="pref_title_settings_password">Nustatymų slaptažodis</string>
+    <string name="pref_title_settings_pin">Nustatymų PIN</string>
+    <string name="pref_title_application_password">Programėlės slaptažodis</string>
+    <string name="pref_title_application_pin">Programėlės PIN</string>
+    <string name="pref_title_bolus_password">Boluso slaptažodis</string>
     <string name="pref_title_bolus_pin">Boluso PIN</string>
     <!-- Theme switcher dark and light mode-->
     <string name="pref_summary_theme_switcher">Pasirinkite tamsią, šviesią arba sistemos temą</string>
