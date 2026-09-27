@@ -74,7 +74,7 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_verbose_logging">Įgalinti išsamius Combo įrašus</string>
     <string name="combov2_getting_basal_profile">Nuskaitoma bazė; %1$d elementų nuskaityta</string>
     <string name="combov2_setting_basal_profile">Įrašoma bazė; %1$d elementų įrašyta</string>
-    <string name="combov2_delivering_bolus">Leidžiamas bolusas (suleista %1$.1f iš %2$.1f v)</string>
+    <string name="combov2_delivering_bolus">Leidžiamas bolusas (suleista %1$.1f iš %2$.1f V)</string>
     <string name="combov2_cannot_deliver_pump_suspended">Negalima atlikti veiksmo - pompa sustabdyta</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Nepakanka insulino rezervuare</string>
     <string name="combov2_bolus_cancelled">Bolusas atšauktas</string>
