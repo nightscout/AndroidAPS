@@ -41,8 +41,8 @@
     <string name="automation_missing_action">Nurodykite mažiausiai vieną veiksmą.</string>
     <string name="exportsettings_message">Nustatymų eksportas: %1$s</string>
     <string name="export_settings_short">Tekstas terapijoje:</string>
-    <string name="alarm_message">Aliarmas: %1$s</string>
-    <string name="alarm_short">Aliarmas:</string>
+    <string name="alarm_message">Įspėjimas: %1$s</string>
+    <string name="alarm_short">Įspėjimas:</string>
     <string name="message_short">Žin:</string>
     <string name="notification_message">Įspėjimas: %1$s</string>
     <string name="profilename">Pakeisti profilį</string>
@@ -132,7 +132,7 @@
     <!--    Reminders-->
     <string name="time_to_eat">Laikas valgyti!\nNaudokite skaičiuotuvą.</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
-    <string name="error_setting_reminder">Klaida nustatant ateities perspėjimus</string>
+    <string name="error_setting_reminder">Klaida nustatant būsimus įspėjimus</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">Autotune profilis %1$s</string>
     <string name="autotune_run">Paleisti Autotune</string>
