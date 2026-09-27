@@ -34,9 +34,9 @@
     <string name="equil_change">Pakeisti pompą</string>
     <string name="equil_change_content">Atjunkite pompą nuo jos pagrindo.</string>
     <string name="equil_unpair_alert">Ar tikrai norite atsisakyti kontrolės per %1$s?</string>
-    <string name="equil_record_basal">Valandinė bazė  %1$s vv/val.</string>
-    <string name="equil_record_basal_temp">Laikina valandinė bazė %1$s vv/val.</string>
-    <string name="equil_record_bolus">Bolusas %1$s vv</string>
+    <string name="equil_record_basal">Valandinė bazė  %1$s V/val.</string>
+    <string name="equil_record_basal_temp">Laikina valandinė bazė %1$s V/val.</string>
+    <string name="equil_record_bolus">Bolusas %1$s V</string>
     <string name="equil_error_set_temp_basal_failed_validation">TBR trukmė turi būti didesnė už nulį ir būti %1$s minučių kartotinis.</string>
     <string name="equil_basal_exceeds_max">Profilio valandinė bazė %1$s V/val. viršija didžiausią pompos valandinę bazę %2$s U/h. Padidinkite didžiausios valandinė bazės nustatymą ir iš naujo prijunkite pompą.</string>
     <string name="equil_not_enough_insulin">Rezervuare nepakanka insulino</string>
@@ -53,7 +53,7 @@
     <string name="equil_shutdown_be">Equil atsijungs automatiškai</string>
     <string name="equil_shutdown">Equil automatinis atsijungimas</string>
     <string name="equil_common_history_tbr_value">Dydis： %1$.2f V/val.，trukmė： %2$d min</string>
-    <string name="equil_common_history_bolus_value">%1$.2f vv</string>
+    <string name="equil_common_history_bolus_value">%1$.2f V</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Nustatyti bolusą</string>
     <string name="equil_common_cmd_cancel_bolus">Atšaukti bolusą</string>
@@ -70,10 +70,10 @@
     <string name="equil_common_cmd_cancel_extended_bolus">Atšaukti ištęstą bolusą</string>
     <!--    推杆回退-->
     <string name="equil_common_change_insulin">Stūmoklio atitraukimas pompoje</string>
-    <string name="equil_common_set_alarm_tone">Konfigūruoti tik pranešimo garsui</string>
-    <string name="equil_common_set_alarm_shake">Konfigūruoti tik vibracijai</string>
-    <string name="equil_common_set_alarm_mute">Konfigūruoti tyliajam režimui</string>
-    <string name="equil_common_set_alarm_tone_and_shake">Konfigūruoti pranešimo garsui ir vibracijai</string>
+    <string name="equil_common_set_alarm_tone">Nustatyti tik pranešimo garsą</string>
+    <string name="equil_common_set_alarm_shake">Nustatyti tik vibraciją</string>
+    <string name="equil_common_set_alarm_mute">Nustatyti tylųjį režimą</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Nustatyti pranešimo garsą ir vibraciją</string>
     <string name="equil_common_read_devices">Nuskaityti įrenginio informaciją</string>
     <string name="equil_common_cmd_fill">Užpildyti</string>
     <string name="history_manual_confirm">Rankinis patvirtinimas</string>
