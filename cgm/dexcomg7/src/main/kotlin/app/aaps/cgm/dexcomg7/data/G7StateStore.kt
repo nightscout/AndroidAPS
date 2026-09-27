@@ -19,7 +19,10 @@ enum class G7StringNonKey(
     override val exportable: Boolean = false
 ) : StringNonPreferenceKey {
 
-    State("dexcom_g7_direct_state", "")
+    State("dexcom_g7_direct_state", ""),
+
+    /** Where each alarm stands (going off, snoozed), so a restart does not ring again at once. */
+    AlarmState("dexcom_g7_direct_alarm_state", "")
 }
 
 /**

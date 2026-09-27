@@ -558,6 +558,28 @@ sealed class EventData : Event() {
     @Serializable
     data class SnoozeAlert(val timeStamp: Long) : EventData()
 
+    /**
+     * Mobile→Wear: a CGM alarm is going off (sent again for each reminder). The watch shows it with an
+     * Acknowledge button and vibrates for [vibrationSeconds] (0 = no vibration).
+     * [id] names the alarm, so a later [CgmAlarmCancel] or [CgmAlarmAcknowledge] can refer to it.
+     */
+    @Serializable
+    data class CgmAlarm(
+        val id: String,
+        val title: String,
+        val message: String,
+        val vibrationSeconds: Int,
+        val urgent: Boolean
+    ) : EventData()
+
+    /** Mobile→Wear: the alarm [id] is over (acknowledged somewhere or gone). Stop and remove it. */
+    @Serializable
+    data class CgmAlarmCancel(val id: String) : EventData()
+
+    /** Wear→Mobile: the wearer acknowledged the alarm [id] on the watch. */
+    @Serializable
+    data class CgmAlarmAcknowledge(val id: String) : EventData()
+
     // Wear -> Wear (workaround)
     @Serializable
     data class RunningModePreSelect(

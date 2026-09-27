@@ -214,6 +214,18 @@ class EventDataTest {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
             assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
         }
+        EventData.CgmAlarm("URGENT_LOW", "Urgent low", "52 mg/dl ↓", 7, true).let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.CgmAlarmCancel("URGENT_LOW").let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
+        EventData.CgmAlarmAcknowledge("URGENT_LOW").let {
+            assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)
+            assertThat(EventData.deserialize(it.serialize())).isEqualTo(it)
+        }
         // Running mode now rides the generic confirm path: Selected/Confirmed + the master-authored lines.
         EventData.RunningModeSelected(1, 2, 60).let {
             assertThat(EventData.deserializeByte(it.serializeByte())).isEqualTo(it)

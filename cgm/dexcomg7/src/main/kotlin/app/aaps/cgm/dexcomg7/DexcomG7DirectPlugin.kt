@@ -2,6 +2,10 @@ package app.aaps.cgm.dexcomg7
 
 import android.Manifest
 import android.content.Context
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmActionKey
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmKeys
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmType
+import app.aaps.cgm.dexcomg7.alarm.G7Alarms
 import app.aaps.cgm.dexcomg7.data.G7StateStore
 import app.aaps.cgm.dexcomg7.data.G7StringNonKey
 import app.aaps.cgm.dexcomg7.session.G7Alerts
@@ -72,6 +76,7 @@ class DexcomG7DirectPlugin(
     private val session: G7Session,
     private val pairing: G7PairingService,
     private val alerts: G7Alerts,
+    private val alarms: G7Alarms,
     private val blePreCheck: BlePreCheck
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
@@ -81,7 +86,7 @@ class DexcomG7DirectPlugin(
         .shortName(TextRef.AndroidRes(R.string.dexcom_g7_direct_short))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_dexcom_g7_direct)),
-    ownPreferences = G7StringNonKey.entries,
+    ownPreferences = G7StringNonKey.entries + G7AlarmKeys.all,
     aapsLogger = aapsLogger,
     rh = rh,
     preferences = preferences,
@@ -95,15 +100,33 @@ class DexcomG7DirectPlugin(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var readingsJob: Job? = null
 
+    /**
+     * The settings screen draws two levels only: this card, and the sections in it. A section inside a
+     * section is silently not drawn. So every alarm is its own section here, next to the general one,
+     * rather than nested under it.
+     */
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
         key = "dexcom_g7_direct_settings",
         // a BG source plugin always names itself
         title = pluginDescription.pluginName!!,
         items = listOf(
             BooleanKey.BgSourceUploadToNs,
-            BooleanKey.BgSourceCreateSensorChange
-        ),
+            BooleanKey.BgSourceCreateSensorChange,
+            PreferenceSubScreenDef(key = "dexcom_g7_alarms", titleResId = R.string.dexcom_g7_alarms_general, items = G7AlarmKeys.global)
+        ) + G7AlarmType.entries.map { alarmScreen(it) },
         icon = pluginDescription.icon
+    )
+
+    private fun alarmScreen(type: G7AlarmType) = PreferenceSubScreenDef(
+        key = "dexcom_g7_alarm_${type.id}",
+        title = TextRef.AndroidRes(R.string.dexcom_g7_alarm_section, listOf(rh.gs(TextRef.AndroidRes(type.title)))),
+        summary = TextRef.AndroidRes(type.summary),
+        items = G7AlarmKeys.of(type).all + G7AlarmActionKey(
+            key = "dexcom_g7_alarm_${type.id}_test",
+            title = TextRef.AndroidRes(R.string.dexcom_g7_alarm_test),
+            summary = TextRef.AndroidRes(R.string.dexcom_g7_alarm_test_summary),
+            onClick = { alarms.testSound(type) }
+        )
     )
 
     override fun requiredPermissions(): List<PermissionGroup> = listOf(
@@ -119,6 +142,7 @@ class DexcomG7DirectPlugin(
         readingsJob?.cancel()
         readingsJob = scope.launch { session.readings.collect { store(it) } }
         alerts.start()
+        alarms.start()
         session.start()
     }
 
@@ -126,6 +150,7 @@ class DexcomG7DirectPlugin(
         pairing.cancel()
         session.stop()
         alerts.stop()
+        alarms.stop()
         readingsJob?.cancel()
         readingsJob = null
         super.onStop()

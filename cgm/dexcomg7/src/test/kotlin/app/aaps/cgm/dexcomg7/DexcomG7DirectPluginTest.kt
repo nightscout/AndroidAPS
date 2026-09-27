@@ -1,6 +1,8 @@
 package app.aaps.cgm.dexcomg7
 
 import android.content.Context
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmKeys
+import app.aaps.cgm.dexcomg7.alarm.G7Alarms
 import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.data.G7StateStore
 import app.aaps.cgm.dexcomg7.protocol.AlgorithmState
@@ -18,7 +20,10 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -44,6 +49,7 @@ class DexcomG7DirectPluginTest : TestBase() {
     @Mock lateinit var session: G7Session
     @Mock lateinit var pairing: G7PairingService
     @Mock lateinit var alerts: G7Alerts
+    @Mock lateinit var alarms: G7Alarms
     @Mock lateinit var blePreCheck: BlePreCheck
 
     private lateinit var plugin: DexcomG7DirectPlugin
@@ -53,7 +59,8 @@ class DexcomG7DirectPluginTest : TestBase() {
     @BeforeEach
     fun setUp() {
         whenever(rh.gs(any<Int>())).thenReturn("")
-        plugin = DexcomG7DirectPlugin(rh, aapsLogger, preferences, notificationManager, context, persistenceLayer, store, session, pairing, alerts, blePreCheck)
+        whenever(rh.gs(any<TextRef>())).thenReturn("")
+        plugin = DexcomG7DirectPlugin(rh, aapsLogger, preferences, notificationManager, context, persistenceLayer, store, session, pairing, alerts, alarms, blePreCheck)
         whenever(store.value).thenReturn(G7State(address = "AA", activatedAt = now - 60_000_000))
     }
 
@@ -107,5 +114,18 @@ class DexcomG7DirectPluginTest : TestBase() {
     fun mapsEveryTrend() {
         assertThat(DexcomG7DirectPlugin.trendArrow(null)).isEqualTo(TrendArrow.NONE)
         assertThat(G7Trend.entries.map { DexcomG7DirectPlugin.trendArrow(it) }).containsNoDuplicates()
+    }
+
+    /**
+     * The settings screen draws the plugin card and the sections in it, and silently drops a section
+     * inside a section. So no section may hold another, and every alarm setting must be in one of them.
+     */
+    @Test
+    fun everyAlarmSettingIsOnTheScreen() {
+        val screen = plugin.getPreferenceScreenContent()
+        val sections = screen.items.filterIsInstance<PreferenceSubScreenDef>()
+        sections.forEach { assertThat(it.items.filterIsInstance<PreferenceSubScreenDef>()).isEmpty() }
+        val shown = (screen.items + sections.flatMap { it.items }).filterIsInstance<PreferenceKey>().map { it.key }
+        assertThat(shown).containsAtLeastElementsIn(G7AlarmKeys.all.map { it.key })
     }
 }

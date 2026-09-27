@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.wear.comm.CgmAlarmWear
 import app.aaps.wear.comm.DataHandlerWear
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import app.aaps.wear.comm.ExceptionHandlerWear
@@ -41,6 +42,7 @@ class WearApp : Application(), MetroMemberInjector {
 
     @Suppress("unused")
     @Inject lateinit var dataHandlerWear: DataHandlerWear // instantiate only
+    @Inject lateinit var cgmAlarmWear: CgmAlarmWear // instantiate only: listens for CGM alarms from the phone
     @Inject lateinit var exceptionHandlerWear: ExceptionHandlerWear
     @Inject lateinit var watchFacePushHelper: WatchFacePushHelper
     @Inject lateinit var cwfComplicationUpdater: CwfComplicationUpdater

@@ -117,4 +117,90 @@
     <string name="dexcom_g7_alert_sensor_failed">Dexcom G7: the sensor has failed and sends no usable readings. Remove it and start a new sensor. Check your glucose with a meter.</string>
     <string name="dexcom_g7_alert_connection_refused">Dexcom G7: the sensor refused the connection. It may be used by another phone or app. Open Dexcom G7 Direct for details.</string>
     <string name="dexcom_g7_alert_warmup_finished">Dexcom G7: warmup finished, readings are in use.</string>
+    <!-- Alarms -->
+    <string name="dexcom_g7_alarms_general">Alarms: general</string>
+    <string name="dexcom_g7_alarm_section" comment="%1$s=alarm name. Example: Alarm: Urgent low">Alarm: %1$s</string>
+    <string name="dexcom_g7_alarms_enabled">Use Dexcom G7 alarms</string>
+    <string name="dexcom_g7_alarms_enabled_summary">Glucose and sensor alarms like in the Dexcom G7 app. They sound even when the phone is on silent or vibrate.</string>
+    <string name="dexcom_g7_alarm_minimum_volume">Minimum alarm volume</string>
+    <string name="dexcom_g7_alarm_minimum_volume_summary">Alarms use the phone\'s alarm volume. If it is lower than this, it is raised while an alarm sounds and put back afterwards.</string>
+    <string name="dexcom_g7_alarm_minimum_volume_off">Use the phone\'s alarm volume</string>
+    <string name="dexcom_g7_alarm_minimum_volume_percent" comment="%1$d=percent of the maximum volume. Example: At least 70 %">At least %1$d %%</string>
+    <string name="dexcom_g7_alarm_sound_until_acknowledged">Sound until acknowledged</string>
+    <string name="dexcom_g7_alarm_sound_until_acknowledged_summary">Play the sound again and again until you acknowledge the alarm. When off, the sound plays once and the alarm comes back every 5 minutes, like in the Dexcom app.</string>
+    <string name="dexcom_g7_alarm_channel">Dexcom G7 alarms</string>
+    <string name="dexcom_g7_alarm_acknowledge">Acknowledge</string>
+    <string name="dexcom_g7_alarm_banner" comment="%1$s=alarm name, %2$s=details. Example: Urgent low: 52 mg/dl ↓">%1$s: %2$s</string>
+    <string name="dexcom_g7_alarm_body_glucose" comment="%1$s=glucose with unit, %2$s=trend arrow. Example: 52 mg/dl ↓">%1$s %2$s</string>
+    <string name="dexcom_g7_alarm_body_signal_loss" comment="%1$s=time of the last reading. Example: 14:05">No readings from the sensor since %1$s. Keep the phone close to the sensor and check that Bluetooth is on.</string>
+    <string name="dexcom_g7_alarm_body_sensor_issue">The sensor has a brief issue and sends no readings. They usually come back on their own. Check your glucose with a meter if you need to.</string>
+
+    <string name="dexcom_g7_alarm_urgent_low">Urgent low</string>
+    <string name="dexcom_g7_alarm_urgent_low_summary">Glucose at or below 55 mg/dl (3.1 mmol/l). Always on.</string>
+    <string name="dexcom_g7_alarm_urgent_low_soon">Urgent low soon</string>
+    <string name="dexcom_g7_alarm_urgent_low_soon_summary">Glucose is falling and will be at or below 55 mg/dl (3.1 mmol/l) within 20 minutes.</string>
+    <string name="dexcom_g7_alarm_low">Low</string>
+    <string name="dexcom_g7_alarm_low_summary">Glucose at or below the level you set.</string>
+    <string name="dexcom_g7_alarm_high">High</string>
+    <string name="dexcom_g7_alarm_high_summary">Glucose at or above the level you set.</string>
+    <string name="dexcom_g7_alarm_fall_rate">Fall rate</string>
+    <string name="dexcom_g7_alarm_fall_rate_summary">Glucose is falling fast.</string>
+    <string name="dexcom_g7_alarm_rise_rate">Rise rate</string>
+    <string name="dexcom_g7_alarm_rise_rate_summary">Glucose is rising fast.</string>
+    <string name="dexcom_g7_alarm_signal_loss">Signal loss</string>
+    <string name="dexcom_g7_alarm_signal_loss_summary">No readings from the sensor for the time you set.</string>
+    <string name="dexcom_g7_alarm_sensor_issue">Brief sensor issue</string>
+    <string name="dexcom_g7_alarm_sensor_issue_summary">The sensor is connected but sends no usable readings.</string>
+    <string name="dexcom_g7_alarm_sensor_failed">Sensor failed</string>
+    <string name="dexcom_g7_alarm_sensor_failed_summary">The sensor has stopped working. Always on.</string>
+    <string name="dexcom_g7_alarm_sensor_ended">Sensor ended</string>
+    <string name="dexcom_g7_alarm_sensor_ended_summary">The sensor session is over and readings have stopped.</string>
+
+    <string name="dexcom_g7_alarm_enabled">On</string>
+    <string name="dexcom_g7_alarm_level">Level</string>
+    <string name="dexcom_g7_alarm_rate">Rate</string>
+    <string name="dexcom_g7_alarm_rate_2">2 mg/dl/min (0.11 mmol/l/min) or more</string>
+    <string name="dexcom_g7_alarm_rate_3">3 mg/dl/min (0.17 mmol/l/min) or more</string>
+    <string name="dexcom_g7_alarm_delay_first">Delay first alarm</string>
+    <string name="dexcom_g7_alarm_delay_for_more_than">For more than</string>
+    <string name="dexcom_g7_alarm_delay_none">No delay</string>
+    <string name="dexcom_g7_alarm_repeat">Repeat</string>
+    <string name="dexcom_g7_alarm_repeat_summary">After you acknowledge, the alarm comes back after this time if the condition is still there.</string>
+    <string name="dexcom_g7_alarm_repeat_never">Never</string>
+    <string name="dexcom_g7_alarm_sound">Sound</string>
+    <string name="dexcom_g7_alarm_vibrate_first">First alarm vibrate only</string>
+    <string name="dexcom_g7_alarm_vibrate_first_summary">The first alarm only vibrates. If you do not acknowledge it within 5 minutes, it sounds.</string>
+    <string name="dexcom_g7_alarm_test">Test sound</string>
+    <string name="dexcom_g7_alarm_test_summary">Play the chosen sound once, at alarm volume.</string>
+    <string name="dexcom_g7_alarm_watch_vibration">Watch vibration</string>
+    <string name="dexcom_g7_alarm_watch_vibration_summary">How long the AAPS watch app vibrates for this alarm. It needs the Wear plugin and the AAPS watch app.</string>
+    <string name="dexcom_g7_alarm_watch_vibration_night">Watch vibration at night</string>
+    <string name="dexcom_g7_alarm_watch_vibration_off">No vibration</string>
+    <string name="dexcom_g7_alarm_watch_night">Night settings for the watch</string>
+    <string name="dexcom_g7_alarm_watch_night_summary">Between these hours, alarms use the night watch vibration, for example a longer one to wake you up.</string>
+    <string name="dexcom_g7_alarm_watch_night_start">Night starts</string>
+    <string name="dexcom_g7_alarm_watch_night_end">Night ends</string>
+    <string name="dexcom_g7_seconds" comment="%1$d=number of seconds. Example: 5 s">%1$d s</string>
+    <string name="dexcom_g7_hour_of_day" comment="%1$d=hour of the day, 0 to 23. Example: 22:00">%1$02d:00</string>
+    <string name="dexcom_g7_minutes" comment="%1$d=number of minutes. Example: 15 min">%1$d min</string>
+    <string name="dexcom_g7_hours" comment="%1$d=number of hours. Example: 2 h">%1$d h</string>
+
+    <string name="dexcom_g7_sound_soft">Dexcom soft</string>
+    <string name="dexcom_g7_sound_medium">Dexcom medium</string>
+    <string name="dexcom_g7_sound_intense">Dexcom intense</string>
+    <string name="dexcom_g7_sound_classic">Dexcom classic</string>
+    <string name="dexcom_g7_sound_classic_2">Dexcom classic 2</string>
+    <string name="dexcom_g7_sound_baby_cry">Baby cry</string>
+    <string name="dexcom_g7_sound_beep">Beep</string>
+    <string name="dexcom_g7_sound_blamo_dings">Blamo dings</string>
+    <string name="dexcom_g7_sound_buzzer_alarm_clock">Buzzer alarm clock</string>
+    <string name="dexcom_g7_sound_dinging">Dinging</string>
+    <string name="dexcom_g7_sound_door_bell">Door bell</string>
+    <string name="dexcom_g7_sound_nerd_alert">Nerd alert</string>
+    <string name="dexcom_g7_sound_police_siren">Police siren</string>
+    <string name="dexcom_g7_sound_short_beeps">Short beeps</string>
+    <string name="dexcom_g7_sound_sonar_horn">Sonar horn</string>
+    <string name="dexcom_g7_sound_tacataca">Tacataca</string>
+    <string name="dexcom_g7_sound_truck_siren">Truck siren</string>
+    <string name="dexcom_g7_sound_uh_oh">Uh oh</string>
 </resources>

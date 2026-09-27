@@ -1,0 +1,3 @@
+# Dexcom's own alarm sounds. Not ours to publish, so they stay out of git.
+# Run copy-dexcom-sounds.sh to put them in place before building.
+src/main/res/raw/g7_*.m4a

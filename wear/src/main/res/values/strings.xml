@@ -417,4 +417,6 @@
     <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
     <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
+    <string name="cgm_alarm_channel">CGM alarms</string>
+    <string name="cgm_alarm_acknowledge">Acknowledge</string>
 </resources>

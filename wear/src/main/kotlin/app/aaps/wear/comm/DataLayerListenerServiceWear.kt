@@ -55,6 +55,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var watchFacePushHelper: WatchFacePushHelper
+    @Inject lateinit var cgmAlarmWear: CgmAlarmWear
 
     private val dataClient by lazy { Wearable.getDataClient(this) }
     private val messageClient by lazy { Wearable.getMessageClient(this) }
@@ -160,6 +161,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
             INTENT_WEAR_TO_MOBILE      -> sendMessage(rxPath, intent.extras?.getString(KEY_ACTION_DATA))
             INTENT_CANCEL_NOTIFICATION -> (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(CHANGE_NOTIF_ID)
+            INTENT_CGM_ALARM_ACKNOWLEDGE -> intent.getStringExtra(KEY_CGM_ALARM_ID)?.let { cgmAlarmWear.acknowledge(it) }
         }
         return START_STICKY
     }
@@ -292,9 +294,11 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         val INTENT_CANCEL_BOLUS = DataLayerListenerServiceWear::class.java.name + ".CancelBolus"
         val INTENT_WEAR_TO_MOBILE = DataLayerListenerServiceWear::class.java.name + ".WearToMobile"
         val INTENT_CANCEL_NOTIFICATION = DataLayerListenerServiceWear::class.java.name + ".CancelNotification"
+        val INTENT_CGM_ALARM_ACKNOWLEDGE = DataLayerListenerServiceWear::class.java.name + ".CgmAlarmAcknowledge"
 
         //data keys
         const val KEY_ACTION_DATA = "actionData"
+        const val KEY_CGM_ALARM_ID = "cgmAlarmId"
         const val KEY_WIZARD_DETAIL = "wizardDetail"
 
         // Master-authored confirmation rows (parallel arrays: role name + text) rendered verbatim by AcceptActivity.

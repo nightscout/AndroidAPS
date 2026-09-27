@@ -4,12 +4,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BluetoothDisabled
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.cgm.dexcomg7.R
+import app.aaps.cgm.dexcomg7.alarm.G7AlarmRuntime
+import app.aaps.cgm.dexcomg7.alarm.G7Alarms
 import app.aaps.cgm.dexcomg7.data.G7CalibrationRecord
 import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.data.G7StateStore
@@ -62,7 +65,8 @@ class G7OverviewViewModel(
     private val dateUtil: DateUtil,
     private val profileUtil: ProfileUtil,
     private val store: G7StateStore,
-    private val session: G7Session
+    private val session: G7Session,
+    private val alarms: G7Alarms
 ) : ViewModel() {
 
     val events = MutableSharedFlow<G7OverviewEvent>(extraBufferCapacity = 4)
@@ -75,7 +79,7 @@ class G7OverviewViewModel(
     }
 
     val uiState: StateFlow<PumpOverviewUiState> =
-        combine(store.state, session.status, ticker) { state, status, now -> build(state, status, now) }
+        combine(store.state, session.status, alarms.runtime, ticker) { state, status, alarm, now -> build(state, status, alarm, now) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PumpOverviewUiState())
 
     val canCalibrate: Boolean get() = store.value.lifecycleState(System.currentTimeMillis()) == G7LifecycleState.OK
@@ -91,12 +95,20 @@ class G7OverviewViewModel(
         session.forgetSensor(removeBond = true)
     }
 
-    private fun build(state: G7State, status: G7ConnectionStatus, now: Long): PumpOverviewUiState {
+    private fun build(state: G7State, status: G7ConnectionStatus, alarm: G7AlarmRuntime, now: Long): PumpOverviewUiState {
         val lifecycle = state.lifecycleState(now)
+        val raised = alarm.raised.firstOrNull()
         return PumpOverviewUiState(
-            statusBanner = banner(state, lifecycle, status, now),
+            statusBanner = raised?.let { StatusBanner(rh.gs(R.string.dexcom_g7_alarm_banner, rh.gs(it.title), alarms.body(it, state)), StatusLevel.CRITICAL) }
+                ?: banner(state, lifecycle, status, now),
             infoRows = rows(state, lifecycle, status, now),
             primaryActions = listOf(
+                PumpAction(
+                    label = rh.gs(R.string.dexcom_g7_alarm_acknowledge),
+                    icon = Icons.Filled.NotificationsOff,
+                    visible = raised != null,
+                    onClick = { alarms.acknowledge() }
+                ),
                 PumpAction(
                     label = rh.gs(R.string.dexcom_g7_pair_new_sensor),
                     icon = Icons.Filled.Add,
