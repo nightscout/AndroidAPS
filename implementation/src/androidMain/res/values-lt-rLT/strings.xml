@@ -6,6 +6,8 @@
     <string name="carbs_short" comment="max 6 characters">AV</string>
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
+    <string name="permission_notifications_description">Reikalinga įspėjimams, pavojaus signalams ir pompos būsenos atnaujinimams rodyti</string>
+    <string name="permission_schedule_exact_alarm_title">Signalai ir priminimai</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
