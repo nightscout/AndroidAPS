@@ -34,7 +34,7 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.compose.icons.IcGenericCgm
+import app.aaps.cgm.dexcomg7.ui.IcDexcomG7
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -81,7 +81,7 @@ class DexcomG7DirectPlugin(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .icon(IcGenericCgm)
+        .icon(IcDexcomG7)
         .pluginName(TextRef.AndroidRes(R.string.dexcom_g7_direct))
         .shortName(TextRef.AndroidRes(R.string.dexcom_g7_direct_short))
         .preferencesVisibleInSimpleMode(false)
@@ -113,7 +113,7 @@ class DexcomG7DirectPlugin(
             BooleanKey.BgSourceUploadToNs,
             BooleanKey.BgSourceCreateSensorChange,
             PreferenceSubScreenDef(key = "dexcom_g7_alarms", titleResId = R.string.dexcom_g7_alarms_general, items = G7AlarmKeys.global)
-        ) + G7AlarmType.entries.map { alarmScreen(it) },
+        ) + G7AlarmType.SETTINGS_ORDER.map { alarmScreen(it) },
         icon = pluginDescription.icon
     )
 

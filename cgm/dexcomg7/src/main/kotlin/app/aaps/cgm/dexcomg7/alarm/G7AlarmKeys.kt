@@ -172,10 +172,6 @@ object G7AlarmKeys {
         dependency = AlarmsEnabled
     )
 
-    val SoundUntilAcknowledged = G7AlarmBooleanKey(
-        "dexcom_g7_alarm_sound_until_acknowledged", false, TextRef.AndroidRes(R.string.dexcom_g7_alarm_sound_until_acknowledged),
-        TextRef.AndroidRes(R.string.dexcom_g7_alarm_sound_until_acknowledged_summary), AlarmsEnabled
-    )
 
     /** Use the night watch vibration between the two hours below. */
     val WatchNight = G7AlarmBooleanKey(
@@ -195,7 +191,7 @@ object G7AlarmKeys {
 
     fun of(type: G7AlarmType): G7AlarmTypeKeys = types.getValue(type)
 
-    val global: List<PreferenceKey> = listOf(AlarmsEnabled, MinimumVolume, SoundUntilAcknowledged, WatchNight, WatchNightStart, WatchNightEnd)
+    val global: List<PreferenceKey> = listOf(AlarmsEnabled, MinimumVolume, WatchNight, WatchNightStart, WatchNightEnd)
 
     val all: List<PreferenceKey> = global + types.values.flatMap { it.all }
 }

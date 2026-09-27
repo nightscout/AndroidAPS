@@ -21,20 +21,31 @@ enum class G7LifecycleState {
     EXPIRED
 }
 
-/** Sensor lifecycle alerts. Missing readings are not here: AAPS has its own alarm for that. */
+/**
+ * The moments before and after the end of a sensor session that the user is told about, in time order.
+ *
+ * The session ends at its nominal end ([G7Lifecycle.expiresAt], 10 or 15 days). A 12-hour grace period
+ * follows, in which readings go on; its end ([G7Lifecycle.endsAt]) is the real end, when readings stop.
+ * [beforeExpiryMs] is where the moment lies: positive before the nominal end, negative after it.
+ */
+enum class G7SessionMilestone(val beforeExpiryMs: Long) {
+
+    ENDS_IN_24H(24L * 60 * 60 * 1000),
+    ENDS_IN_6H(6L * 60 * 60 * 1000),
+    ENDS_IN_2H(2L * 60 * 60 * 1000),
+
+    /** The nominal end: the grace period starts. */
+    GRACE_STARTED(0),
+    GRACE_ENDS_IN_6H(-G7Lifecycle.GRACE_PERIOD_MS + 6L * 60 * 60 * 1000),
+    GRACE_ENDS_IN_2H(-G7Lifecycle.GRACE_PERIOD_MS + 2L * 60 * 60 * 1000),
+
+    /** The grace period is over, or the sensor says its session has ended: readings stop. */
+    ENDED(-G7Lifecycle.GRACE_PERIOD_MS)
+}
+
+/** Sensor lifecycle alerts other than the session end ([G7SessionMilestone]). Missing readings are not here. */
 enum class G7LifecycleAlert {
 
-    /** 24 hours before the nominal end. */
-    EXPIRING_SOON,
-
-    /** 2 hours before the nominal end. */
-    EXPIRING_IMMINENTLY,
-
-    /** Nominal end; readings go on through the grace period. */
-    EXPIRED,
-
-    /** End of the grace period; readings stop. */
-    SESSION_ENDED,
     SENSOR_FAILED,
 
     /** The sensor refused the connection, or a stored key stopped working. */
@@ -51,8 +62,8 @@ object G7Lifecycle {
     const val DEFAULT_WARMUP_MS = 27L * 60 * 1000
     const val GRACE_PERIOD_MS = 12L * 60 * 60 * 1000
 
+    /** From this long before the nominal end, the status screen shows the end date as a warning. */
     const val EXPIRING_SOON_LEAD_MS = 24L * 60 * 60 * 1000
-    const val EXPIRING_IMMINENTLY_LEAD_MS = 2L * 60 * 60 * 1000
 
     /** How far back to ask for backfill when nothing is known about the gap (a fresh pairing). */
     const val BACKFILL_WINDOW_MS = 3L * 60 * 60 * 1000
@@ -103,21 +114,20 @@ object G7Lifecycle {
     }
 
     /**
-     * The latest session-clock alert whose moment has passed, or null before the first one.
-     * The caller posts it once per sensor. A later moment replaces an earlier one, because only the
-     * newest says what matters now.
+     * The latest [G7SessionMilestone] whose moment has passed, or null before the first one. The caller
+     * tells the user once for each. A later moment replaces an earlier one, because only the newest says
+     * what matters now. [sessionEnded] is the sensor itself saying its session is over, which counts as
+     * [G7SessionMilestone.ENDED] whatever the clock says.
      */
-    fun currentSessionAlert(activatedAt: Long, sessionLengthSeconds: Long?, now: Long): G7LifecycleAlert? {
+    fun currentMilestone(activatedAt: Long, sessionLengthSeconds: Long?, now: Long, sessionEnded: Boolean = false): G7SessionMilestone? {
+        if (sessionEnded) return G7SessionMilestone.ENDED
         val expiresAt = expiresAt(activatedAt, sessionLengthSeconds)
-        val endsAt = endsAt(activatedAt, sessionLengthSeconds)
-        return when {
-            now >= endsAt                                     -> G7LifecycleAlert.SESSION_ENDED
-            now >= expiresAt                                  -> G7LifecycleAlert.EXPIRED
-            now >= expiresAt - EXPIRING_IMMINENTLY_LEAD_MS    -> G7LifecycleAlert.EXPIRING_IMMINENTLY
-            now >= expiresAt - EXPIRING_SOON_LEAD_MS          -> G7LifecycleAlert.EXPIRING_SOON
-            else                                              -> null
-        }
+        return G7SessionMilestone.entries.lastOrNull { now >= expiresAt - it.beforeExpiryMs }
     }
+
+    /** When [milestone] comes for this sensor. */
+    fun milestoneAt(activatedAt: Long, sessionLengthSeconds: Long?, milestone: G7SessionMilestone): Long =
+        expiresAt(activatedAt, sessionLengthSeconds) - milestone.beforeExpiryMs
 
     /**
      * The backfill request range in sensor seconds, or null when nothing is missing.

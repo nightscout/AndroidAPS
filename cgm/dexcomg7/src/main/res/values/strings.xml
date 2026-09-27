@@ -108,17 +108,22 @@
     <string name="dexcom_g7_copy_log">Copy</string>
     <string name="dexcom_g7_clear_log">Clear</string>
     <string name="dexcom_g7_log_empty">Nothing yet</string>
+    <string name="dexcom_g7_save_log">Save to file</string>
+    <string name="dexcom_g7_log_saved" comment="%1$s=file name in the AAPS folder. Example: exports/DexcomG7_log_2026-09-27_154500.txt">Saved to %1$s in the AAPS folder</string>
+    <string name="dexcom_g7_log_save_failed">The log could not be saved</string>
+    <string name="dexcom_g7_log_no_directory">No AAPS folder is set. Choose it in Maintenance first.</string>
 
     <!-- Alerts -->
-    <string name="dexcom_g7_alert_expiring_soon">Dexcom G7: the sensor ends in about 24 hours. Have a new sensor ready.</string>
-    <string name="dexcom_g7_alert_expiring_imminently">Dexcom G7: the sensor ends in about 2 hours. Change it soon to avoid a gap in readings.</string>
-    <string name="dexcom_g7_alert_expired">Dexcom G7: the sensor has expired. Readings go on for up to 12 hours. Replace it before then.</string>
-    <string name="dexcom_g7_alert_session_ended">Dexcom G7: the sensor session has ended and readings have stopped. Apply and pair a new sensor.</string>
+    <string name="dexcom_g7_notification" comment="%1$s=the message. Example: Dexcom G7: the sensor session ends in about 6 hours">Dexcom G7: %1$s</string>
+    <string name="dexcom_g7_end_in_hours" comment="%1$d=hours, %2$s=date and time of the end. Example: The sensor session ends in about 6 hours, at 9/28/26 14:05. ...">The sensor session ends in about %1$d hours, at %2$s. After that, a 12-hour grace period follows. Have a new sensor ready.</string>
+    <string name="dexcom_g7_grace_started" comment="%1$s=date and time when readings stop">The sensor session has ended. The 12-hour grace period starts now: readings go on until %1$s, then they stop. Replace the sensor before then.</string>
+    <string name="dexcom_g7_grace_ends_in_hours" comment="%1$d=hours, %2$s=date and time when readings stop">The grace period ends in about %1$d hours, at %2$s. Then readings stop. Replace the sensor.</string>
+    <string name="dexcom_g7_session_over">The sensor session and its grace period are over, and readings have stopped. Apply and pair a new sensor.</string>
     <string name="dexcom_g7_alert_sensor_failed">Dexcom G7: the sensor has failed and sends no usable readings. Remove it and start a new sensor. Check your glucose with a meter.</string>
     <string name="dexcom_g7_alert_connection_refused">Dexcom G7: the sensor refused the connection. It may be used by another phone or app. Open Dexcom G7 Direct for details.</string>
     <string name="dexcom_g7_alert_warmup_finished">Dexcom G7: warmup finished, readings are in use.</string>
     <!-- Alarms -->
-    <string name="dexcom_g7_alarms_general">Alarms: general</string>
+    <string name="dexcom_g7_alarms_general">Alarms: General</string>
     <string name="dexcom_g7_alarm_section" comment="%1$s=alarm name. Example: Alarm: Urgent low">Alarm: %1$s</string>
     <string name="dexcom_g7_alarms_enabled">Use Dexcom G7 alarms</string>
     <string name="dexcom_g7_alarms_enabled_summary">Glucose and sensor alarms like in the Dexcom G7 app. They sound even when the phone is on silent or vibrate.</string>
@@ -126,8 +131,6 @@
     <string name="dexcom_g7_alarm_minimum_volume_summary">Alarms use the phone\'s alarm volume. If it is lower than this, it is raised while an alarm sounds and put back afterwards.</string>
     <string name="dexcom_g7_alarm_minimum_volume_off">Use the phone\'s alarm volume</string>
     <string name="dexcom_g7_alarm_minimum_volume_percent" comment="%1$d=percent of the maximum volume. Example: At least 70 %">At least %1$d %%</string>
-    <string name="dexcom_g7_alarm_sound_until_acknowledged">Sound until acknowledged</string>
-    <string name="dexcom_g7_alarm_sound_until_acknowledged_summary">Play the sound again and again until you acknowledge the alarm. When off, the sound plays once and the alarm comes back every 5 minutes, like in the Dexcom app.</string>
     <string name="dexcom_g7_alarm_channel">Dexcom G7 alarms</string>
     <string name="dexcom_g7_alarm_acknowledge">Acknowledge</string>
     <string name="dexcom_g7_alarm_banner" comment="%1$s=alarm name, %2$s=details. Example: Urgent low: 52 mg/dl ↓">%1$s: %2$s</string>
@@ -147,14 +150,14 @@
     <string name="dexcom_g7_alarm_fall_rate_summary">Glucose is falling fast.</string>
     <string name="dexcom_g7_alarm_rise_rate">Rise rate</string>
     <string name="dexcom_g7_alarm_rise_rate_summary">Glucose is rising fast.</string>
+    <string name="dexcom_g7_alarm_sensor_end">Sensor end</string>
+    <string name="dexcom_g7_alarm_sensor_end_summary">24, 6 and 2 hours before the sensor session ends, when the 12-hour grace period starts, 6 and 2 hours before the grace period ends, and when readings stop.</string>
     <string name="dexcom_g7_alarm_signal_loss">Signal loss</string>
     <string name="dexcom_g7_alarm_signal_loss_summary">No readings from the sensor for the time you set.</string>
     <string name="dexcom_g7_alarm_sensor_issue">Brief sensor issue</string>
     <string name="dexcom_g7_alarm_sensor_issue_summary">The sensor is connected but sends no usable readings.</string>
     <string name="dexcom_g7_alarm_sensor_failed">Sensor failed</string>
     <string name="dexcom_g7_alarm_sensor_failed_summary">The sensor has stopped working. Always on.</string>
-    <string name="dexcom_g7_alarm_sensor_ended">Sensor ended</string>
-    <string name="dexcom_g7_alarm_sensor_ended_summary">The sensor session is over and readings have stopped.</string>
 
     <string name="dexcom_g7_alarm_enabled">On</string>
     <string name="dexcom_g7_alarm_level">Level</string>

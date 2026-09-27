@@ -25,7 +25,6 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
-import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.core.ui.compose.pump.PumpOverviewScreen
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 
@@ -56,7 +55,7 @@ class G7ComposeContent(
         val readings = remember(pluginName) {
             BgSourceComposeContent(title = pluginName) {
                 IconButton(onClick = { screen = G7Screen.OVERVIEW }) {
-                    Icon(IcGenericCgm, contentDescription = sensorLabel)
+                    Icon(IcDexcomG7, contentDescription = sensorLabel)
                 }
             }
         }

@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.app.NotificationCompat
 import app.aaps.cgm.dexcomg7.R
+import app.aaps.cgm.dexcomg7.data.G7CommLog
 import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.data.G7StateStore
 import app.aaps.cgm.dexcomg7.data.G7StringNonKey
@@ -70,6 +71,7 @@ class G7Alarms(
     private val iconsProvider: IconsProvider,
     private val rxBus: RxBus,
     private val player: G7AlarmPlayer,
+    private val commLog: G7CommLog,
     private val aapsLogger: AAPSLogger
 ) {
 
@@ -94,7 +96,7 @@ class G7Alarms(
             scope.launch {
                 try {
                     when (intent.action) {
-                        ACTION_ACKNOWLEDGE -> doAcknowledge(intent.getStringExtra(EXTRA_TYPE)?.let { name -> G7AlarmType.entries.firstOrNull { it.name == name } })
+                        ACTION_ACKNOWLEDGE -> doAcknowledge(intent.getStringExtra(EXTRA_TYPE)?.let { name -> G7AlarmType.entries.firstOrNull { it.name == name } }, "on the phone notification")
                         ACTION_CHECK       -> check(store.value)
                     }
                 } finally {
@@ -114,8 +116,8 @@ class G7Alarms(
         job = scope.launch {
             launch { store.state.collect { check(it) } }
             // From the AAPS watch app: its Acknowledge button, and its snooze button (which silences every alarm).
-            launch { rxBus.toFlow(EventData.CgmAlarmAcknowledge::class).collect { ack -> G7AlarmType.entries.firstOrNull { it.name == ack.id }?.let { doAcknowledge(it) } } }
-            launch { rxBus.toFlow(EventData.SnoozeAlert::class).collect { doAcknowledge(null) } }
+            launch { rxBus.toFlow(EventData.CgmAlarmAcknowledge::class).collect { ack -> G7AlarmType.entries.firstOrNull { it.name == ack.id }?.let { doAcknowledge(it, "on the watch") } } }
+            launch { rxBus.toFlow(EventData.SnoozeAlert::class).collect { doAcknowledge(null, "with the watch snooze") } }
             // Settings changes and time based conditions, while the phone is awake.
             while (isActive) {
                 delay(CHECK_INTERVAL_MS)
@@ -136,20 +138,26 @@ class G7Alarms(
 
     /** Acknowledge [type], or every alarm going off when null. */
     fun acknowledge(type: G7AlarmType? = null) {
-        scope.launch { doAcknowledge(type) }
+        scope.launch { doAcknowledge(type, "on the status screen") }
     }
 
     /** Plays the chosen sound of [type] once, so the user can hear it. */
     fun testSound(type: G7AlarmType) {
         val cfg = config()
-        player.play(cfg[type].sound, loop = false, minimumVolumePercent = preferences.get(G7AlarmKeys.MinimumVolume))
+        log("Alarm ${name(type)}: test sound (${rh.gs(cfg[type].sound.label)})")
+        player.play(cfg[type].sound, minimumVolumePercent = preferences.get(G7AlarmKeys.MinimumVolume))
         player.vibrate(type.urgent)
     }
 
-    private fun doAcknowledge(type: G7AlarmType?) {
+    /** [where] is for the log: where the acknowledge came from. */
+    private fun doAcknowledge(type: G7AlarmType?, where: String) {
         val config = config()
-        aapsLogger.debug(LTag.BGSOURCE, "Dexcom G7: alarm acknowledged: ${type ?: "all"}")
-        execute(G7AlarmEngine.acknowledge(_runtime.value, config, type, System.currentTimeMillis()), config)
+        val step = G7AlarmEngine.acknowledge(_runtime.value, config, type, System.currentTimeMillis())
+        step.actions.forEach {
+            val repeat = config[it.type].repeatMinutes
+            log("Alarm ${name(it.type)}: acknowledged $where; " + if (repeat > 0) "quiet for $repeat min" else "quiet until the condition is gone")
+        }
+        execute(step, config, logClears = false)
         // The engine gives the next snooze end only; a new check works out everything else.
         check(store.value)
     }
@@ -159,12 +167,14 @@ class G7Alarms(
         execute(G7AlarmEngine.step(state, config, _runtime.value, System.currentTimeMillis()), config)
     }
 
-    private fun execute(step: G7AlarmStep, config: G7AlarmConfig) {
+    /** [logClears] is false when the caller has logged why the alarms stop. */
+    private fun execute(step: G7AlarmStep, config: G7AlarmConfig, logClears: Boolean = true) {
         if (step.runtime != _runtime.value) {
             _runtime.value = step.runtime
             preferences.put(G7StringNonKey.AlarmState, json.encodeToString(G7AlarmRuntime.serializer(), step.runtime))
         }
         for (action in step.actions.filterIsInstance<G7AlarmAction.Clear>()) {
+            if (logClears) log("Alarm ${name(action.type)}: stopped, the condition has gone or a more important alarm took over")
             manager?.cancel(notificationId(action.type))
             rxBus.send(EventMobileToWear(EventData.CgmAlarmCancel(action.type.name)))
             if (playing == action.type) {
@@ -174,16 +184,21 @@ class G7Alarms(
         }
         val raises = step.actions.filterIsInstance<G7AlarmAction.Raise>()
         raises.forEach {
+            val what = when {
+                it.reminder   -> "not acknowledged, goes off again with sound"
+                it.withSound  -> "goes off with sound (${rh.gs(config[it.type].sound.label)})"
+                else          -> "goes off, vibrate only (first alarm)"
+            }
+            log("Alarm ${name(it.type)}: $what: ${body(it.type, store.value)}")
             notify(it)
             sendToWatch(it.type)
         }
         // Most important first. A sound already playing for a more important alarm keeps playing.
         raises.firstOrNull()?.let { top ->
-            aapsLogger.debug(LTag.BGSOURCE, "Dexcom G7: alarm ${top.type} (sound ${top.withSound}, reminder ${top.reminder})")
             player.vibrate(top.type.urgent)
             val current = playing
             if (top.withSound && (current == null || current.ordinal >= top.type.ordinal || !step.runtime[current].isRaised)) {
-                player.play(config[top.type].sound, preferences.get(G7AlarmKeys.SoundUntilAcknowledged), preferences.get(G7AlarmKeys.MinimumVolume))
+                player.play(config[top.type].sound, preferences.get(G7AlarmKeys.MinimumVolume))
                 playing = top.type
             }
         }
@@ -248,7 +263,9 @@ class G7Alarms(
 
     private fun sendToWatch(type: G7AlarmType) {
         val keys = G7AlarmKeys.of(type)
-        val seconds = preferences.get(if (isNight()) keys.watchVibrationNight else keys.watchVibration)
+        val night = isNight()
+        val seconds = preferences.get(if (night) keys.watchVibrationNight else keys.watchVibration)
+        log("Alarm ${name(type)}: sent to the watch, vibrates $seconds s" + if (night) " (night)" else "")
         rxBus.send(EventMobileToWear(EventData.CgmAlarm(type.name, rh.gs(type.title), body(type, store.value), seconds, type.urgent)))
     }
 
@@ -268,7 +285,8 @@ class G7Alarms(
         }
 
         G7AlarmType.SENSOR_FAILED                                                                                                           -> rh.gs(R.string.dexcom_g7_alert_sensor_failed)
-        G7AlarmType.SENSOR_ENDED                                                                                                            -> rh.gs(R.string.dexcom_g7_alert_session_ended)
+        G7AlarmType.SENSOR_END                                                                                                              ->
+            G7AlarmEngine.milestone(state, System.currentTimeMillis())?.let { DexcomG7Formatting.milestone(rh, dateUtil, it, state) } ?: rh.gs(R.string.dexcom_g7_session_over)
         G7AlarmType.SIGNAL_LOSS                                                                                                             ->
             rh.gs(R.string.dexcom_g7_alarm_body_signal_loss, state.latestReadingAt?.let { dateUtil.timeString(it) } ?: "?")
 
@@ -312,6 +330,12 @@ class G7Alarms(
     }
 
     private fun notificationId(type: G7AlarmType) = NOTIFICATION_ID_BASE + type.ordinal
+
+    /** The alarm's name as the user sees it, for the log. */
+    private fun name(type: G7AlarmType): String = rh.gs(type.title)
+
+    /** Alarm events go to the G7 log (and from there to the AAPS log), so a saved log shows them. */
+    private fun log(text: String) = commLog.add(text)
 
     companion object {
 

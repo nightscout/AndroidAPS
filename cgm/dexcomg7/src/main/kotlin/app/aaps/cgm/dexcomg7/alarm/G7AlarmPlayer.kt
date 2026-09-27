@@ -45,11 +45,12 @@ class G7AlarmPlayer(
     private var volumeSet: Int? = null
 
     /**
-     * Play [sound] once, or on a loop until [stop] when [loop] is true. The alarm stream is raised to
-     * at least [minimumVolumePercent] of its range while it plays; 0 leaves it alone.
+     * Play [sound] once. An alarm that is not acknowledged plays it again as its 5-minute reminder, like
+     * the Dexcom app. The alarm stream is raised to at least [minimumVolumePercent] of its range while it
+     * plays; 0 leaves it alone.
      */
-    fun play(sound: G7AlarmSound, loop: Boolean, minimumVolumePercent: Int) {
-        handler.post { doPlay(sound, loop, minimumVolumePercent) }
+    fun play(sound: G7AlarmSound, minimumVolumePercent: Int) {
+        handler.post { doPlay(sound, minimumVolumePercent) }
     }
 
     fun stop() {
@@ -72,7 +73,7 @@ class G7AlarmPlayer(
         }
     }
 
-    private fun doPlay(sound: G7AlarmSound, loop: Boolean, minimumVolumePercent: Int) {
+    private fun doPlay(sound: G7AlarmSound, minimumVolumePercent: Int) {
         doStop()
         raiseVolume(minimumVolumePercent)
         try {
@@ -81,7 +82,7 @@ class G7AlarmPlayer(
             // Keeps the CPU up while the sound plays, even in Doze.
             mp.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK)
             context.resources.openRawResourceFd(sound.rawRes).use { afd -> mp.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length) }
-            mp.isLooping = loop
+            mp.isLooping = false
             mp.setVolume(1f, 1f)
             mp.setOnPreparedListener { if (player === it) it.start() else it.release() }
             mp.setOnCompletionListener { if (player === it) doStop() else it.release() }

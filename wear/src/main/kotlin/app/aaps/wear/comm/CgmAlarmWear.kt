@@ -30,7 +30,8 @@ import kotlinx.coroutines.SupervisorJob
  * CGM alarms from the phone ([EventData.CgmAlarm]): a notification with an Acknowledge button, and a
  * vibration for as long as the phone asks, so a low at night can wake the wearer.
  *
- * The vibration is marked as an alarm, which the watch's silent setting does not block. The channel
+ * The vibration is marked as an alarm, which the watch's silent setting does not block, and runs at
+ * the motor's full strength where the watch lets us set it. The channel
  * itself neither sounds nor vibrates, so the length is exactly the one chosen on the phone.
  *
  * Acknowledge (the button, or swiping the notification away) goes back to the phone, which then
@@ -96,7 +97,12 @@ class CgmAlarmWear(
     private fun vibrate(seconds: Int, urgent: Boolean) {
         val vibrator = vibrator ?: return
         if (seconds <= 0 || !vibrator.hasVibrator()) return
-        val effect = VibrationEffect.createWaveform(pattern(seconds, urgent), -1)
+        val timings = pattern(seconds, urgent)
+        // Full strength. Without amplitudes the watch uses its default strength, well below what a
+        // strong motor (Galaxy Watch Ultra) can do, and a low at night has to wake the wearer.
+        val effect =
+            if (vibrator.hasAmplitudeControl()) VibrationEffect.createWaveform(timings, amplitudes(timings), -1)
+            else VibrationEffect.createWaveform(timings, -1)
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 vibrator.vibrate(effect, VibrationAttributes.createForUsage(VibrationAttributes.USAGE_ALARM))
@@ -126,6 +132,9 @@ class CgmAlarmWear(
         const val CHANNEL_ID = "AndroidAPS-CgmAlarm"
         private const val NOTIFICATION_ID_BASE = 7700
 
+        /** The strongest amplitude [VibrationEffect.createWaveform] accepts (its range is 1..255). */
+        const val MAX_AMPLITUDE = 255
+
         /**
          * On/off pulses (ms) that fill [seconds]: long pulses for urgent alarms, shorter ones otherwise.
          * Starts at once (the first value is the wait before the first pulse).
@@ -147,5 +156,9 @@ class CgmAlarmWear(
             }
             return timings.toLongArray()
         }
+
+        /** Maximum strength for each pulse in [timings] (odd positions), off for the gaps. */
+        fun amplitudes(timings: LongArray): IntArray =
+            IntArray(timings.size) { if (it % 2 == 1) MAX_AMPLITUDE else 0 }
     }
 }

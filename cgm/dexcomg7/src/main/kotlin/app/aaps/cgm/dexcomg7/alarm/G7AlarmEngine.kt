@@ -2,7 +2,9 @@ package app.aaps.cgm.dexcomg7.alarm
 
 import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.protocol.AlgorithmState
+import app.aaps.cgm.dexcomg7.protocol.G7Lifecycle
 import app.aaps.cgm.dexcomg7.protocol.G7LifecycleState
+import app.aaps.cgm.dexcomg7.protocol.G7SessionMilestone
 import app.aaps.cgm.dexcomg7.protocol.G7Trend
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
@@ -40,7 +42,12 @@ data class G7AlarmTrack(
     /** Acknowledged: quiet until then, even if the condition lasts. */
     val snoozedUntil: Long? = null,
     /** Acknowledged with repeat set to never: quiet until the condition has gone away. */
-    val quietUntilCleared: Boolean = false
+    val quietUntilCleared: Boolean = false,
+    /**
+     * Which occurrence of the condition this is, for an alarm that has several in a row (the sensor-end
+     * milestones). When it changes, the alarm starts over as a new alert.
+     */
+    val episode: String? = null
 ) {
 
     val isRaised: Boolean get() = raisedAt != null
@@ -108,7 +115,15 @@ object G7AlarmEngine {
         for (type in G7AlarmType.entries) {
             val cfg = config[type]
             var track = runtime[type]
-            val raw = cfg.enabled && condition(type, state, cfg, now)
+            val episode = if (cfg.enabled) episode(type, state, cfg, now) else null
+            val raw = episode != null
+            if (raw && track.episode != null && track.episode != episode) {
+                // The next moment of the same alarm, such as "ends in 2 hours" after "ends in 6 hours":
+                // a new alert, whatever was acknowledged before.
+                track = G7AlarmTrack()
+            }
+            track = track.copy(episode = episode)
+            nextEpisodeAt(type, state, cfg, now)?.let { next += it }
 
             track = if (raw) track.copy(conditionSince = track.conditionSince ?: now, clearSince = null)
             else track.copy(conditionSince = null, clearSince = if (track.quietUntilCleared) track.clearSince ?: now else null)
@@ -171,6 +186,30 @@ object G7AlarmEngine {
     fun clearAll(runtime: G7AlarmRuntime): G7AlarmStep =
         G7AlarmStep(G7AlarmRuntime(), runtime.raised.map { G7AlarmAction.Clear(it) }, null)
 
+    /**
+     * Which occurrence of the condition of [type] holds now, before its delay, or null when it does not
+     * hold. Only the sensor end has more than one ([G7SessionMilestone]); the others are simply on.
+     */
+    fun episode(type: G7AlarmType, state: G7State, cfg: G7AlarmTypeConfig, now: Long): String? {
+        if (type == G7AlarmType.SENSOR_END) return milestone(state, now)?.name
+        return if (condition(type, state, cfg, now)) ON else null
+    }
+
+    /** The newest sensor-end milestone that has come, or null. */
+    fun milestone(state: G7State, now: Long): G7SessionMilestone? {
+        val activatedAt = state.activatedAt ?: return null
+        if (!state.isPaired) return null
+        val sessionEnded = state.latestAlgorithmState?.let { AlgorithmState(it).isSessionEnded } == true
+        return G7Lifecycle.currentMilestone(activatedAt, state.sessionLengthSeconds, now, sessionEnded)
+    }
+
+    /** When the next sensor-end milestone comes, so the engine looks again at that moment. */
+    private fun nextEpisodeAt(type: G7AlarmType, state: G7State, cfg: G7AlarmTypeConfig, now: Long): Long? {
+        if (type != G7AlarmType.SENSOR_END || !cfg.enabled || !state.isPaired) return null
+        val activatedAt = state.activatedAt ?: return null
+        return G7SessionMilestone.entries.map { G7Lifecycle.milestoneAt(activatedAt, state.sessionLengthSeconds, it) }.firstOrNull { it > now }
+    }
+
     /** Whether the condition of [type] holds now, before its delay. */
     fun condition(type: G7AlarmType, state: G7State, cfg: G7AlarmTypeConfig, now: Long): Boolean {
         if (!state.isPaired) return false
@@ -190,7 +229,7 @@ object G7AlarmEngine {
             G7AlarmType.FALL_RATE       -> rate != null && cfg.rate != null && rate <= -cfg.rate
             G7AlarmType.RISE_RATE       -> rate != null && cfg.rate != null && rate >= cfg.rate
             G7AlarmType.SENSOR_FAILED   -> lifecycle == G7LifecycleState.FAILED || algorithm?.sensorFailed == true
-            G7AlarmType.SENSOR_ENDED    -> lifecycle == G7LifecycleState.EXPIRED
+            G7AlarmType.SENSOR_END      -> milestone(state, now) != null
             // Its "for more than" time is counted from the last packet, not from when we noticed.
             G7AlarmType.SIGNAL_LOSS     -> signalLossDueAt(type, state, cfg)?.let { it <= now } == true && lifecycle in RUNNING
             // A packet came, but without a usable value, and the sensor has not failed or ended.
@@ -213,6 +252,9 @@ object G7AlarmEngine {
     }
 
     private val RUNNING = setOf(G7LifecycleState.WARMUP, G7LifecycleState.OK, G7LifecycleState.GRACE_PERIOD)
+
+    /** The episode of an alarm with only one kind of occurrence. */
+    private const val ON = "on"
 }
 
 /** The night hours for the watch vibration. */

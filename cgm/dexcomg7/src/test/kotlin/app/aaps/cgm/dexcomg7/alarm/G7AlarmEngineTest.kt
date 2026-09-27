@@ -238,4 +238,40 @@ class G7AlarmEngineTest {
             assertThat(it.watchVibrationNight.entries).containsKey(it.watchVibrationNight.defaultValue)
         }
     }
+
+    @Test
+    fun eachSensorEndMilestoneIsANewAlert() {
+        val expires = start + 10 * 24 * 60 * minute   // 907 200 s session = 10 days + 12 h grace
+        val hour = 60 * minute
+        fun at(time: Long) = state(120, at = time)
+
+        // Nothing yet a day and a bit before.
+        val before = G7AlarmEngine.step(at(expires - 25 * hour), config(), G7AlarmRuntime(), expires - 25 * hour)
+        assertThat(raises(before)).isEmpty()
+        assertThat(before.nextCheckAt).isAtMost(expires - 24 * hour)
+
+        // 24 h before: goes off. Acknowledged with repeat "never" it stays quiet...
+        val day = G7AlarmEngine.step(at(expires - 24 * hour), config(), before.runtime, expires - 24 * hour)
+        assertThat(raises(day).map { it.type }).containsExactly(G7AlarmType.SENSOR_END)
+        val ack = G7AlarmEngine.acknowledge(day.runtime, config(), G7AlarmType.SENSOR_END, expires - 24 * hour)
+        val later = G7AlarmEngine.step(at(expires - 7 * hour), config(), ack.runtime, expires - 7 * hour)
+        assertThat(raises(later)).isEmpty()
+
+        // ...until the next moment, which is a new alert.
+        val six = G7AlarmEngine.step(at(expires - 6 * hour), config(), later.runtime, expires - 6 * hour)
+        assertThat(raises(six).map { it.type }).containsExactly(G7AlarmType.SENSOR_END)
+        assertThat(six.runtime[G7AlarmType.SENSOR_END].episode).isEqualTo("ENDS_IN_6H")
+
+        // The grace period start also goes off, even if the 6 h one was never acknowledged.
+        val grace = G7AlarmEngine.step(at(expires), config(), six.runtime, expires)
+        assertThat(raises(grace)).containsExactly(G7AlarmAction.Raise(G7AlarmType.SENSOR_END, withSound = true, reminder = false))
+        assertThat(G7AlarmEngine.milestone(at(expires), expires)?.name).isEqualTo("GRACE_STARTED")
+    }
+
+    @Test
+    fun settingsListEveryAlarmOnce() {
+        assertThat(G7AlarmType.SETTINGS_ORDER).containsExactlyElementsIn(G7AlarmType.entries)
+        assertThat(G7AlarmType.SETTINGS_ORDER.first()).isEqualTo(G7AlarmType.LOW)
+        assertThat(G7AlarmType.SETTINGS_ORDER.last()).isEqualTo(G7AlarmType.SENSOR_END)
+    }
 }

@@ -2,7 +2,9 @@ package app.aaps.cgm.dexcomg7.ui
 
 import app.aaps.cgm.dexcomg7.R
 import app.aaps.cgm.dexcomg7.data.G7SensorRecord
+import app.aaps.cgm.dexcomg7.data.G7State
 import app.aaps.cgm.dexcomg7.protocol.G7Lifecycle
+import app.aaps.cgm.dexcomg7.protocol.G7SessionMilestone
 import app.aaps.cgm.dexcomg7.protocol.G7Trend
 import app.aaps.cgm.dexcomg7.session.G7Session
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -38,6 +40,21 @@ object DexcomG7Formatting {
         val days = record.sessionLengthSeconds?.let { " " + rh.gs(R.string.dexcom_g7_days, G7Lifecycle.lifetimeMs(it) / (24 * 60 * 60 * 1000L)) } ?: ""
         val started = record.activatedAt?.let { dateUtil.dateAndTimeString(it) } ?: "?"
         return rh.gs(R.string.dexcom_g7_previous_sensor_text, name + days, started, dateUtil.dateAndTimeString(record.endedAt))
+    }
+
+    /** What to tell the user at a [G7SessionMilestone]: when the session or its grace period ends. */
+    fun milestone(rh: ResourceHelper, dateUtil: DateUtil, milestone: G7SessionMilestone, state: G7State): String {
+        val expires = state.expiresAt?.let { dateUtil.dateAndTimeString(it) } ?: "?"
+        val ends = state.endsAt?.let { dateUtil.dateAndTimeString(it) } ?: "?"
+        return when (milestone) {
+            G7SessionMilestone.ENDS_IN_24H      -> rh.gs(R.string.dexcom_g7_end_in_hours, 24, expires)
+            G7SessionMilestone.ENDS_IN_6H       -> rh.gs(R.string.dexcom_g7_end_in_hours, 6, expires)
+            G7SessionMilestone.ENDS_IN_2H       -> rh.gs(R.string.dexcom_g7_end_in_hours, 2, expires)
+            G7SessionMilestone.GRACE_STARTED    -> rh.gs(R.string.dexcom_g7_grace_started, ends)
+            G7SessionMilestone.GRACE_ENDS_IN_6H -> rh.gs(R.string.dexcom_g7_grace_ends_in_hours, 6, ends)
+            G7SessionMilestone.GRACE_ENDS_IN_2H -> rh.gs(R.string.dexcom_g7_grace_ends_in_hours, 2, ends)
+            G7SessionMilestone.ENDED            -> rh.gs(R.string.dexcom_g7_session_over)
+        }
     }
 
     fun arrow(trend: G7Trend?): String = when (trend) {

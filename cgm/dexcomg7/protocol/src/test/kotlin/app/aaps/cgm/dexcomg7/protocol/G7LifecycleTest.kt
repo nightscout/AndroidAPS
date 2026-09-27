@@ -36,19 +36,25 @@ class G7LifecycleTest {
     }
 
     @Test
-    fun sessionAlertsComeInOrder() {
-        fun alertAt(time: Long) = G7Lifecycle.currentSessionAlert(start, tenDaySession, time)
+    fun sessionMilestonesComeInOrder() {
+        fun at(time: Long) = G7Lifecycle.currentMilestone(start, tenDaySession, time)
         val expires = start + 10 * day
-        assertThat(alertAt(expires - 25 * hour)).isNull()
-        assertThat(alertAt(expires - 24 * hour)).isEqualTo(G7LifecycleAlert.EXPIRING_SOON)
-        assertThat(alertAt(expires - 2 * hour)).isEqualTo(G7LifecycleAlert.EXPIRING_IMMINENTLY)
-        assertThat(alertAt(expires)).isEqualTo(G7LifecycleAlert.EXPIRED)
-        assertThat(alertAt(expires + 12 * hour)).isEqualTo(G7LifecycleAlert.SESSION_ENDED)
+        assertThat(at(expires - 25 * hour)).isNull()
+        assertThat(at(expires - 24 * hour)).isEqualTo(G7SessionMilestone.ENDS_IN_24H)
+        assertThat(at(expires - 7 * hour)).isEqualTo(G7SessionMilestone.ENDS_IN_24H)
+        assertThat(at(expires - 6 * hour)).isEqualTo(G7SessionMilestone.ENDS_IN_6H)
+        assertThat(at(expires - 2 * hour)).isEqualTo(G7SessionMilestone.ENDS_IN_2H)
+        assertThat(at(expires)).isEqualTo(G7SessionMilestone.GRACE_STARTED)
+        assertThat(at(expires + 6 * hour)).isEqualTo(G7SessionMilestone.GRACE_ENDS_IN_6H)
+        assertThat(at(expires + 10 * hour)).isEqualTo(G7SessionMilestone.GRACE_ENDS_IN_2H)
+        assertThat(at(expires + 12 * hour)).isEqualTo(G7SessionMilestone.ENDED)
+        assertThat(G7Lifecycle.currentMilestone(start, tenDaySession, start + day, sessionEnded = true)).isEqualTo(G7SessionMilestone.ENDED)
+        assertThat(G7Lifecycle.milestoneAt(start, tenDaySession, G7SessionMilestone.GRACE_ENDS_IN_2H)).isEqualTo(expires + 10 * hour)
     }
 
     @Test
     fun fifteenDaySensorMovesTheAlerts() {
-        assertThat(G7Lifecycle.currentSessionAlert(start, fifteenDaySession, start + 10 * day)).isNull()
+        assertThat(G7Lifecycle.currentMilestone(start, fifteenDaySession, start + 10 * day)).isNull()
     }
 
     @Test

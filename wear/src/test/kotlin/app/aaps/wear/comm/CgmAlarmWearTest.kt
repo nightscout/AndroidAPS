@@ -19,4 +19,12 @@ class CgmAlarmWearTest {
             }
         }
     }
+
+    @Test
+    fun pulsesAtFullStrength() {
+        val timings = CgmAlarmWear.pattern(5, urgent = true)
+        val amplitudes = CgmAlarmWear.amplitudes(timings)
+        assertThat(amplitudes.size).isEqualTo(timings.size)
+        amplitudes.forEachIndexed { i, a -> assertThat(a).isEqualTo(if (i % 2 == 1) 255 else 0) }
+    }
 }

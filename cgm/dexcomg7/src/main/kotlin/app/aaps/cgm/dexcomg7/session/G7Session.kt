@@ -89,6 +89,10 @@ class G7Session(
     private var client: G7GattClient? = null
     private var watchdog: Job? = null
     private var rearmJob: Job? = null
+    private var idleJob: Job? = null
+
+    /** The "came back right after its reading" line was logged for the current reading cycle. */
+    private var quietLogged = false
     private var followUps: Job? = null
 
     /** Phone time of the sensor's second zero for this connection. See [G7Lifecycle.clockAnchor]. */
@@ -218,6 +222,7 @@ class G7Session(
 
     private fun closeClient() {
         rearmJob?.cancel()
+        idleJob?.cancel()
         followUps?.cancel()
         client?.let {
             it.events = null
@@ -269,9 +274,24 @@ class G7Session(
         }
         if (isRightAfterReading()) {
             // The sensor still advertises for a moment after it ends a cycle, and the standing
-            // connection request picks that up. A handshake now fails anyway; leave it for the next reading.
-            log("The sensor came back right after its reading; leaving it until the next one")
-            c.disconnect()
+            // connection request picks that up. A handshake now fails anyway, so leave it for the next
+            // reading. Keep the link open and idle rather than hanging up: hanging up re-armed the request
+            // at once, the sensor was still advertising, and phone and sensor went round that loop about
+            // a hundred times a second. The sensor ends an idle link itself; the job below is only a
+            // fallback in case it does not.
+            if (!quietLogged) {
+                log("The sensor came back right after its reading; leaving the link idle until the next one")
+                quietLogged = true
+            }
+            _status.value = G7ConnectionStatus.WAITING
+            idleJob?.cancel()
+            idleJob = scope.launch {
+                delay(maxOf(0L, lastReadingReceivedAt + QUIET_AFTER_READING_MS - System.currentTimeMillis()))
+                if (c === client && c.isConnected) {
+                    log("Ending the idle link so the next reading can connect")
+                    c.disconnect()
+                }
+            }
             return
         }
         _status.value = G7ConnectionStatus.CONNECTED
@@ -350,6 +370,7 @@ class G7Session(
 
     private fun handleDisconnected(c: G7GattClient, status: Int) {
         if (c !== client) return
+        idleJob?.cancel()
         flushBackfill()
         followUps?.cancel()
         pendingAnswer?.second?.cancel()
@@ -481,6 +502,7 @@ class G7Session(
         restartsSinceReading = 0
         gotReadingThisConnection = true
         lastReadingReceivedAt = now
+        quietLogged = false
 
         store.update { state ->
             state.copy(

@@ -6,9 +6,11 @@ import app.aaps.cgm.dexcomg7.data.G7StateStore
 import app.aaps.cgm.dexcomg7.protocol.AlgorithmState
 import app.aaps.cgm.dexcomg7.protocol.G7Lifecycle
 import app.aaps.cgm.dexcomg7.protocol.G7LifecycleAlert
+import app.aaps.cgm.dexcomg7.ui.DexcomG7Formatting
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -22,8 +24,10 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 /**
- * Posts the sensor lifecycle alerts: expiring in 24 h and in 2 h, expired, session ended, sensor failed,
- * connection refused, and warmup finished. Each one once per sensor.
+ * Posts the sensor lifecycle alerts to the AAPS notification list: each sensor-end milestone
+ * (ends in 24, 6 and 2 hours, grace period started, grace ends in 6 and 2 hours, ended), sensor failed,
+ * connection refused, and warmup finished. Each one once per sensor. The "Sensor end" alarm sounds for
+ * the same milestones; this is the written record in AAPS.
  *
  * Missing readings are not here. AAPS already has an alarm for that which works for every source.
  */
@@ -33,7 +37,8 @@ import kotlinx.coroutines.launch
 class G7Alerts(
     private val store: G7StateStore,
     private val notificationManager: NotificationManager,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private val dateUtil: DateUtil
 ) {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default.limitedParallelism(1))
@@ -63,45 +68,35 @@ class G7Alerts(
         val algorithmState = state.latestAlgorithmState?.let { AlgorithmState(it) }
 
         if (activatedAt != null) {
-            when (G7Lifecycle.currentSessionAlert(activatedAt, state.sessionLengthSeconds, now)) {
-                G7LifecycleAlert.EXPIRING_SOON       -> once(state, G7LifecycleAlert.EXPIRING_SOON) {
-                    notificationManager.post(NotificationId.DEXCOM_G7_SENSOR_EXPIRING, rh.gs(R.string.dexcom_g7_alert_expiring_soon))
+            G7Lifecycle.currentMilestone(activatedAt, state.sessionLengthSeconds, now, algorithmState?.isSessionEnded == true)?.let { milestone ->
+                once(state, milestone.name) {
+                    val text = rh.gs(R.string.dexcom_g7_notification, DexcomG7Formatting.milestone(rh, dateUtil, milestone, state))
+                    if (milestone.beforeExpiryMs > 0) notificationManager.post(NotificationId.DEXCOM_G7_SENSOR_EXPIRING, text)
+                    else {
+                        // From the nominal end on, the warning before it is out of date.
+                        notificationManager.dismiss(NotificationId.DEXCOM_G7_SENSOR_EXPIRING)
+                        notificationManager.post(NotificationId.DEXCOM_G7_SENSOR_EXPIRED, text)
+                    }
                 }
-
-                G7LifecycleAlert.EXPIRING_IMMINENTLY -> once(state, G7LifecycleAlert.EXPIRING_IMMINENTLY) {
-                    notificationManager.post(NotificationId.DEXCOM_G7_SENSOR_EXPIRING, rh.gs(R.string.dexcom_g7_alert_expiring_imminently))
-                }
-
-                G7LifecycleAlert.EXPIRED             -> once(state, G7LifecycleAlert.EXPIRED) {
-                    notificationManager.dismiss(NotificationId.DEXCOM_G7_SENSOR_EXPIRING)
-                    notificationManager.post(NotificationId.DEXCOM_G7_SENSOR_EXPIRED, rh.gs(R.string.dexcom_g7_alert_expired))
-                }
-
-                G7LifecycleAlert.SESSION_ENDED       -> once(state, G7LifecycleAlert.SESSION_ENDED) {
-                    notificationManager.dismiss(NotificationId.DEXCOM_G7_SENSOR_EXPIRING)
-                    notificationManager.post(NotificationId.DEXCOM_G7_SENSOR_EXPIRED, rh.gs(R.string.dexcom_g7_alert_session_ended))
-                }
-
-                else                                 -> Unit
             }
         }
 
         if (algorithmState?.sensorFailed == true) {
-            once(state, G7LifecycleAlert.SENSOR_FAILED) {
+            once(state, G7LifecycleAlert.SENSOR_FAILED.name) {
                 notificationManager.post(NotificationId.DEXCOM_G7_SENSOR_FAILED, rh.gs(R.string.dexcom_g7_alert_sensor_failed))
             }
         }
 
         // Only for a sensor we saw warming up, not one adopted in the middle of its session.
         if (algorithmState?.hasReliableGlucose == true && activatedAt != null && now - activatedAt < WARMUP_ALERT_WINDOW_MS) {
-            once(state, G7LifecycleAlert.WARMUP_FINISHED) {
+            once(state, G7LifecycleAlert.WARMUP_FINISHED.name) {
                 notificationManager.post(NotificationId.DEXCOM_G7_WARMUP_FINISHED, rh.gs(R.string.dexcom_g7_alert_warmup_finished), validMinutes = 60)
             }
         }
 
         // Posted once per run of refusals; cleared by the next reading.
         if (state.lastAuthenticationFailure != null) {
-            once(state, G7LifecycleAlert.CONNECTION_REFUSED) {
+            once(state, G7LifecycleAlert.CONNECTION_REFUSED.name) {
                 notificationManager.post(NotificationId.DEXCOM_G7_CONNECTION_REFUSED, rh.gs(R.string.dexcom_g7_alert_connection_refused))
             }
         } else if (G7LifecycleAlert.CONNECTION_REFUSED.name in state.alertsIssued) {
@@ -111,10 +106,11 @@ class G7Alerts(
         }
     }
 
-    private fun once(state: G7State, alert: G7LifecycleAlert, post: () -> Unit) {
-        if (alert.name in state.alertsIssued) return
+    /** Runs [post] once per sensor for the alert named [name]. */
+    private fun once(state: G7State, name: String, post: () -> Unit) {
+        if (name in state.alertsIssued) return
         post()
-        store.update { it.copy(alertsIssued = it.alertsIssued + alert.name) }
+        store.update { it.copy(alertsIssued = it.alertsIssued + name) }
     }
 
     companion object {

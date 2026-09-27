@@ -127,10 +127,16 @@ enum class G7AlarmType(
         defaultSound = G7AlarmSound.RISE_RATE_MEDIUM,
         urgent = false
     ),
-    SENSOR_ENDED(
+    /**
+     * Goes off at each [app.aaps.cgm.dexcomg7.protocol.G7SessionMilestone]: 24, 6 and 2 hours before the
+     * session ends, when the grace period starts, 6 and 2 hours before it ends, and when readings stop.
+     * Each moment is a new alert, so acknowledging one does not quiet the next. The id keeps its old
+     * name so the stored settings stay.
+     */
+    SENSOR_END(
         id = "sensor_ended",
-        title = R.string.dexcom_g7_alarm_sensor_ended,
-        summary = R.string.dexcom_g7_alarm_sensor_ended_summary,
+        title = R.string.dexcom_g7_alarm_sensor_end,
+        summary = R.string.dexcom_g7_alarm_sensor_end_summary,
         group = G7AlarmGroup.SENSOR,
         family = G7SoundFamily.SYSTEM,
         canTurnOff = true,
@@ -175,5 +181,10 @@ enum class G7AlarmType(
         const val URGENT_LOW_SOON_LOOKAHEAD_MINUTES = 20
 
         val REPEAT_CHOICES = listOf(0, 5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 240)
+
+        /** The order of the alarms in the settings. Not the order of importance, which is the enum order. */
+        val SETTINGS_ORDER = listOf(
+            LOW, URGENT_LOW, URGENT_LOW_SOON, HIGH, RISE_RATE, FALL_RATE, SIGNAL_LOSS, SENSOR_ISSUE, SENSOR_FAILED, SENSOR_END
+        )
     }
 }
