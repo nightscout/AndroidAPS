@@ -69,7 +69,7 @@
     <string name="step_attach">Prijungti rezervuarą</string>
     <string name="step_activate">Aktyvuojama...</string>
     <string name="step_activate_complete">Aktyvuota</string>
-    <string name="step_deactivate">Išjungti rezervuarą</string>
+    <string name="step_deactivate">Išjungti pompą</string>
     <string name="step_deactivating">Išjungiama...</string>
     <string name="step_deactivate_complete">Išjungta</string>
     <string name="unpair_confirm_message">Bus ištrintas išsaugotas pompos serijos numeris ir ryšys nutrauktas. Aktyvuokite naują rezervuarą, kad būtų ieškoma pompos.</string>
@@ -79,7 +79,7 @@
     <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Toliau</b> ir pradėkite aktyvavimą.</string>
     <string name="connect_pump_base">Įsitikinkite, kad pompos pagrindas prijungtas prie rezervuaro, pašalinkite likusį orą, pripildykite insulino ir paspauskite <b>Toliau</b>.</string>
     <string name="note_min_70_units">Svarbu: būtina užpildyti bent 70 v.</string>
-    <string name="reservoir_text_and_level">Rezervuaras: %.2f vv</string>
+    <string name="reservoir_text_and_level">Rezervuaras: %.2f V</string>
     <string name="do_not_attach_to_body">Kol kas neklijuokite pompos prie kūno.</string>
     <string name="half_press_needle">Iki pusės nuspauskite adatos mygtuką. Spauskite <b>Toliau</b> pildymui pradėti.</string>
     <string name="wait_for_priming">Palaukite, kol baigsis pildymas.</string>
@@ -90,7 +90,7 @@
     <string name="activating_complete">Naujas rezervuaras įjungtas. Yra %.2f v insulino.</string>
     <string name="can_export_settings">Galite eksportuoti nustatymus, kad vėliau galėtumėte atkurti šios pompos sesiją.</string>
     <string name="press_OK_to_return">Norėdanu grįžti į pradžios ekraną, spauskite <b>OK</b>.</string>
-    <string name="deactivate_sure">Ar tikrai norite išjungti rezervuarą?</string>
+    <string name="deactivate_sure">Ar tikrai norite išjungti pompą?</string>
     <string name="cancel_sure">Ar tikrai norite nutraukti įjungimą?</string>
     <string name="medtrum_deactivate_pump_confirm">Ar tikrai norite tęsti? Veiksmo nebus galima atšaukti!</string>
     <string name="press_next_or_cancel">Norėdami išjungti, spauskite <b>Toliau</b>; norėdami grįžti į pradžios ekraną, spauskite <b>Atšaukti</b>.</string>
@@ -114,12 +114,12 @@
     <string name="alarm_setting_beep">Garso signalas</string>
     <string name="alarm_setting_silent">Be garso</string>
     <string name="pump_warning_notification_title">Pompos pranešimas apie įspėjimą</string>
-    <string name="pump_warning_notification_summary">Rodyti pranešimą apie nekritinius pompos įspėjimus: senkanti baterija, tuščias rezervuaras (20 vv) ir artėjantis galiojimo laikas. Rekomenduojama palikti įjungtus, ypač kai pompos signalai nustatyti tyliajame režime.</string>
+    <string name="pump_warning_notification_summary">Rodyti pranešimą apie nekritinius pompos įspėjimus: senkanti baterija, tuščias rezervuaras (20 V) ir artėjanti naudojimo pabaiga. Rekomenduojama palikti įjungtą, kai pompos įspėjimų garsas išjungtas.</string>
     <string name="pump_warning_expiry_hour_title">Įspėjimas apie pompos galiojimo laiką [valandos]</string>
     <string name="pump_warning_expiry_hour_summary">Rodyti pranešimą nurodytą valandą po aktyvavimo.</string>
     <string name="patch_expiration_title">Rezervuaras išsijungs</string>
     <string name="patch_expiration_summary">Įgalinus, rezervuaras išsijungs po 3 parų ir 8 val.</string>
-    <string name="hourly_max_insulin_title">Valandos insulino limitas</string>
+    <string name="hourly_max_insulin_title">Valandos insulino limitas [V]</string>
     <string name="hourly_max_insulin_summary">Nustatykite maksimalų insulino kiekį valandai. Jį viršijus pompa bus sustabdyta.</string>
     <string name="daily_max_insulin_title">Paros insulino limitas</string>
     <string name="daily_max_insulin_summary">Nustatykite maksimalų insulino kiekį parai. Jį viršijus pompa bus sustabdyta.</string>
