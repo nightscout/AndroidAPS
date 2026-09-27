@@ -40,7 +40,7 @@
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Nepavyko nustatyti laiko. Insulino tiekimas sustabdytas! Rankiniu būdu atnaujinkite insulino tiekimą Omnipod skirtuke.</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Nepavyko automatiškai pakeisti Pod laiko. Jūs turėtumėte sinchronizuoti laiką rankiniu būdu Omnipod skirtuke.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Nepavyko patikrinti, ar buvo suleistas bolusas. Patikrinkite, ar Pod leidžia bolusą klausydami tiksėjimo. <b>Jei esate tikri, kad bolusas nebuvo suleistas, turite rankiniu būdu ištrinti boluso įrašą iš Terapijos, net jei dabar spustelėjote mygtuką „Atšaukti bolusą“!</b></string>
-    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nepavyko patikrinti, ar SMB (%1$.2fvv) suleistas. <b>Jei esate tikri, kad bolusas nebuvo suleistas, turite rankiniu būdu pašalinti SMB įrašą iš Terapijos.</b></string>
+    <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nepavyko patikrinti, ar SMB (%1$.2fV) suleistas. <b>Jei esate tikri, kad bolusas nebuvo suleistas, pašalinkite SMB įrašą iš terapijos.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pompoje veikia laikina bazė, tačiau AAPS apie ją nežino. Atšaukite laikiną bazę rankiniu būdu.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink statistika</string>
