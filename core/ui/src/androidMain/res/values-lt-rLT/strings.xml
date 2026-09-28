@@ -110,7 +110,7 @@
     <string name="format_hours">%1$.2f val.</string>
     <string name="format_mins">%1$d min</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
-    <string name="objectives">Tikslai</string>
+    <string name="objectives">Mokymo etapai</string>
     <string name="please_wait">Palaukite…</string>
     <string name="stop">Stop</string>
     <string name="stop_pressed">SUSTABDYTA</string>
@@ -613,7 +613,7 @@
     <string name="uel_error_dialog_mute_5min">NUTILDYTI KLAIDOS PRANEŠIMĄ 5MIN</string>
     <string name="uel_objective_started">TIKSLAS PRADĖTAS</string>
     <string name="uel_objective_unstarted">TIKSLAS NEPRADĖTAS</string>
-    <string name="uel_objectives_skipped">TIKSLAS PRALEISTAS</string>
+    <string name="uel_objectives_skipped">ETAPAI PRALEISTI</string>
     <string name="uel_stat_reset">IŠVALYTI STATISTIKĄ</string>
     <string name="uel_delete_logs">IŠTRINTI ĮRAŠUS</string>
     <string name="uel_delete_future_treatments">IŠTRINTI BŪSIMĄ TERAPIJĄ</string>
@@ -829,16 +829,26 @@
     <string name="export_result_message_disabled">Įspėjimas (automatizacija): Nustatymų eksportavimas neįjungtas!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Sėkmingai eksportuota į debesį</string>
-    <string name="cloud_directory">Cloud aplankas</string>
+    <string name="export_cloud_failed">Eksportuoti į debesį NEPAVYKO!</string>
+    <string name="cloud_directory">Debesies aplankas</string>
+    <string name="cloud_token_expired_or_invalid">Debesies saugyklos prieigos leidimas nebegalioja arba yra netinkamas. Suteikite prieigą iš naujo.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_cloud">Debesis</string>
     <string name="data_choices">Duomenų pasirinkimas</string>
     <string name="unattended_settings_export">Automatinis nustatymų eksportavimas</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_aaps_directory_desc">Pasirinkite vidinės saugyklos aplanką</string>
-    <string name="maintenance_cloud_directory_desc">Nustatyti Cloud saugyklą (Google Drive)</string>
+    <string name="maintenance_cloud_directory_desc">Nustatyti debesies saugyklą (Google Drive)</string>
     <string name="maintenance_export_csv_desc">Eksportuoti terapijos istoriją į lentelę</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Pasirinkite saugyklos tipą</string>
+    <string name="clear_cloud_action">Išvalyti nustatymus</string>
+    <string name="clear_cloud_settings">Išvalyti debesies nustatymus</string>
+    <string name="clear_cloud_settings_message">Bus pereita prie vietinio saugojimo, o debesies saugyklos prieigos leidimas bus pašalintas. Tęsti?</string>
+    <string name="cloud_revoke_incomplete">Debesies saugyklos nustatymai šiame įrenginyje pašalinti, tačiau nepavyko prisijungti prie paskyros ir visiškai atšaukti prieigos. Jei reikia, pašalinkite ją rankiniu būdu paskyros nustatymuose.</string>
+    <string name="cloud_connection_failed">Nepavyko prisijungti prie debesies saugyklos</string>
+    <string name="cloud_reauthorize_message">Nepavyko prisijungti prie debesies saugyklos. Ar norite prisijungti iš naujo?</string>
+    <string name="cloud_auth_success">Prisijungimas prie debesies saugyklos sėkmingas</string>
     <!-- datetime layout -->
     <string name="event_time_label">Įvykio laikas</string>
     <!-- BluetoothDevicePreference -->
@@ -1017,7 +1027,7 @@
     <string name="import_applied_message">Importuoti nustatymai dabar naudojami.</string>
     <string name="import_apply_pump_changed">Atšaukta: importuojant nustatymus pompa buvo pakeista</string>
     <string name="import_source_local">Vietinė saugykla</string>
-    <string name="import_source_cloud">Cloud</string>
+    <string name="import_source_cloud">Debesis</string>
     <string name="import_load_more">Įkelti daugiau</string>
     <string name="import_no_files">Nustatymų failų nerasta</string>
     <string name="import_decrypt_ok">Iššifruota sėkmingai. Paruošta importuoti.</string>
