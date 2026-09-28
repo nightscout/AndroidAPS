@@ -20,15 +20,18 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
     <string name="syncinfotext">Sinchronizuokite duomenis debesyje. Jūs galite kol kas praleisti šį veiksmą, bet negalėsite baigti mokymosi programos, kol nenustatysite duomenų perdavimo į Nightscout arba Tidepool.</string>
+    <string name="status_label">Būsena:</string>
     <string name="diawarning">Svarbu: DKS profiliuose IVT turi būti bent 5 val. Tai atitinka 3 val. IVT įprastoje pompos terapijoje.</string>
     <string name="profile">Profilis</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Pasirinkite vieną iš galimų algoritmų. Jie surikiuoti nuo seniausio iki naujausio. Naujesni algoritmai paprastai turi daugiau galimybių. Prieš naudodami būtinai perskaitykite AAPS dokumentaciją ir tinkamai sukonfigūruokite pasirinktą algoritmą.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Nustatykite RileyLink. Pasirinkę RileyLink, galėsite tęsti sąranką, kai tik RileyLink statusas bus „Prisijungta“. Tai gali užtrukti apie minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galėsite tęsti, kai prijungsite pompą.\n</string>
     <string name="startobjective">Pradėti Jūsų pirmąjį tikslą</string>
+    <string name="open_objectives">Atidaryti mokymo programą</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink būklė:</string>
     <string name="setupwizard_ns_receive_info">Tiesioginis terapijos įrašų ir duomenų priėmimas iš Nightscout (mažiau saugus būdas) dabar pagal numatytuosius nustatymus yra išjungtas. Žemiau esančius nustatymus įjunkite tik jei ši funkcija vis dar reikalinga. Ji būtina, jei duomenis norite įvesti per Nightscout arba trečiųjų šalių programėles.</string>
     <string name="readstatus">Būsenos nuskaitymas</string>
