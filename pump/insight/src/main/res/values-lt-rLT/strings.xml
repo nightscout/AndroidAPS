@@ -43,7 +43,7 @@
     <string name="log_operating_mode_changes">Įrašyti darbo režimo pakeitimus</string>
     <string name="log_alerts">Įrašyti įspėjimus</string>
     <string name="enable_tbr_emulation">Aktyvuoti laikinos bazės emuliaciją</string>
-    <string name="enable_tbr_emulation_summary">Naudoti ištęstinius bolusus vietoj laikinos bazės, kai viršijama 250%% riba</string>
+    <string name="enable_tbr_emulation_summary">Naudoti ištęstus bolusus vietoj laikinos bazės, kai viršijama 250%% riba</string>
     <string name="disconnect_delay">Atjungimo vėlavimas [s]</string>
     <string name="max_recovery_duration">Didž. atkūrimo trukmė [s]</string>
     <string name="min_recovery_duration">Min. atkūrimo trukmė [s]</string>
