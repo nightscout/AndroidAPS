@@ -611,8 +611,8 @@
     <string name="uel_error_dialog_ok">DIALOGO KLAIDA OK</string>
     <string name="uel_error_dialog_mute">DIALOGO KLAIDA NUTILDYTI </string>
     <string name="uel_error_dialog_mute_5min">NUTILDYTI KLAIDOS PRANEŠIMĄ 5MIN</string>
-    <string name="uel_objective_started">TIKSLAS PRADĖTAS</string>
-    <string name="uel_objective_unstarted">TIKSLAS NEPRADĖTAS</string>
+    <string name="uel_objective_started">ETAPAS PRADĖTAS</string>
+    <string name="uel_objective_unstarted">ETAPAS NEPRADĖTAS</string>
     <string name="uel_objectives_skipped">ETAPAI PRALEISTI</string>
     <string name="uel_stat_reset">IŠVALYTI STATISTIKĄ</string>
     <string name="uel_delete_logs">IŠTRINTI ĮRAŠUS</string>
@@ -720,7 +720,7 @@
     <string name="bolus_advisor">Boluso patarėjas</string>
     <string name="bolus_advisor_message">Gliukozė šiuo metu aukšta, todėl rekomenduojama su maistu palaukti, kol ji sumažės. Ar norite dabar suleisti korekcinį boliusą ir gauti priminimą, kada galėsite valgyti? Tokiu atveju angliavandeniai nebus įrašyti. Gavę priminimą, skaičiuotuvą turėsite paleisti iš naujo.</string>
     <string name="wizard_bg_label">KG</string>
-    <string name="wizard_correction">Taisymas</string>
+    <string name="wizard_correction">Taisyti</string>
     <string name="wizard_subtotal">Tarpinė suma</string>
     <string name="carbs_type_bread">Duona, nesaldūs kepiniai, jogurtas, vaisiai (obuoliai, bananai, kriaušės), bulvės, ryžiai, grikiai, avižinė košė, lėtai pasisavinamas ir mažai angliavandenių turintis maistas, daržovės</string>
     <string name="carbs_type_cake">Koldūnai, makaronai, daug angliavandenių ir riebalų turinti Azijos virtuvė, saldūs ir mieliniai kepiniai, dribsniai, grūdų košės, medus, uogienė</string>
@@ -795,6 +795,9 @@
     <string name="retry" comment="Button label to retry a failed operation">Bandyti dar kartą</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Baigti</string>
     <string name="firmware" comment="Pump firmware version label">Programinės įrangos versija</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Boluso greitis</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Istorija</string>
+    <string name="overview_reservoir_concentration_value_over">Liko daugiau nei %1$s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Apribota maksimali bazė%1$.2f V/val. dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -806,6 +809,7 @@
     <string name="message">Pranešimas</string>
     <string name="ok">OK</string>
     <string name="cancel">Atšaukti</string>
+    <string name="dismiss">Atmesti</string>
     <string name="yes">Taip</string>
     <string name="no">Ne</string>
     <string name="close">Uždaryti</string>
@@ -818,6 +822,7 @@
     <string name="export_failed">Nepavyko</string>
     <string name="export_alert">DĖMESIO</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Pagrindinis slaptažodis nenustatytas!\n\nPirmiausia nustatykite pagrindinį slaptažodį, tada bandykite dar kartą.</string>
     <string name="export_to">Eksportuoti nustatymus</string>
     <string name="password_preferences_encrypt_prompt">Turėsite įrašyti slaptažodį, kuris bus naudojamas užšifruojant eksportuojamus nustatymus.</string>
     <string name="preferences_export_canceled">Eksportas nutrauktas! Nustatymai NE eksportuoti!</string>
@@ -830,16 +835,33 @@
     <!-- Cloud export -->
     <string name="export_cloud_success">Sėkmingai eksportuota į debesį</string>
     <string name="export_cloud_failed">Eksportuoti į debesį NEPAVYKO!</string>
+    <string name="csv_exported">Naudotojo įrašai eksportuoti</string>
+    <string name="csv_export_failed">Naudotojo įrašų eksportuoti NEPAVYKO!</string>
+    <string name="logs_sent">Įrašai išsiųsti el. paštu</string>
+    <string name="logs_send_failed">Įrašų išsiųsti nepavyko</string>
     <string name="cloud_directory">Debesies aplankas</string>
     <string name="cloud_token_expired_or_invalid">Debesies saugyklos prieigos leidimas nebegalioja arba yra netinkamas. Suteikite prieigą iš naujo.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Vietinė saugykla</string>
     <string name="chip_cloud">Debesis</string>
+    <string name="chip_email">El. paštas</string>
+    <string name="send_logs">Siųsti įrašus</string>
+    <string name="file_management">Failų tvarkymas</string>
+    <string name="database_management">Duomenų bazės tvarkymas</string>
     <string name="data_choices">Duomenų pasirinkimas</string>
     <string name="unattended_settings_export">Automatinis nustatymų eksportavimas</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Nustatyti įrašų išsamumo lygius</string>
+    <string name="maintenance_send_logs_desc">Bendrinti žurnalų failus trikčių diagnostikai</string>
+    <string name="maintenance_delete_logs_desc">Pašalinti senus žurnalų failus</string>
     <string name="maintenance_aaps_directory_desc">Pasirinkite vidinės saugyklos aplanką</string>
     <string name="maintenance_cloud_directory_desc">Nustatyti debesies saugyklą (Google Drive)</string>
+    <string name="maintenance_export_desc">Išsaugoti šifruotą nustatymų atsarginę kopiją</string>
+    <string name="maintenance_import_desc">Atkurti nustatymus iš atsarginės kopijos</string>
     <string name="maintenance_export_csv_desc">Eksportuoti terapijos istoriją į lentelę</string>
+    <string name="maintenance_cleanup_db_desc">Pašalinti senus įrašus iš duomenų bazės</string>
+    <string name="maintenance_reset_aps_results_desc">Išvalyti išsaugotus algoritmo rezultatus</string>
+    <string name="maintenance_reset_db_desc">Ištrinti visas duomenų bazes ir įkelti iš naujo</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Pasirinkite saugyklos tipą</string>
     <string name="clear_cloud_action">Išvalyti nustatymus</string>
@@ -848,7 +870,11 @@
     <string name="cloud_revoke_incomplete">Debesies saugyklos nustatymai šiame įrenginyje pašalinti, tačiau nepavyko prisijungti prie paskyros ir visiškai atšaukti prieigos. Jei reikia, pašalinkite ją rankiniu būdu paskyros nustatymuose.</string>
     <string name="cloud_connection_failed">Nepavyko prisijungti prie debesies saugyklos</string>
     <string name="cloud_reauthorize_message">Nepavyko prisijungti prie debesies saugyklos. Ar norite prisijungti iš naujo?</string>
+    <string name="reauthorize">Autentifikuoti iš naujo</string>
     <string name="cloud_auth_success">Prisijungimas prie debesies saugyklos sėkmingas</string>
+    <string name="authorization_status">Autorizacijos būsena</string>
+    <string name="format_hour_minute" comment="%1$d=hours, %2$d=minutes. Example: 1 h 23 min">%1$d val. %2$d min</string>
+    <string name="format_hours_only" comment="%1$d=hours, when minutes are zero. Example: 4 h">%1$d val.</string>
     <!-- datetime layout -->
     <string name="event_time_label">Įvykio laikas</string>
     <!-- BluetoothDevicePreference -->
@@ -856,19 +882,32 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Naudotojo užklausa</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Susieti</string>
+    <string name="pump_unpair">Atsieti</string>
+    <string name="pump_unpair_confirm_title">Atsieti pompą?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa susieta</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
     <string name="ble_not_supported_or_not_paired">Nepalaikomas BLE arba įrenginys nesusietas.</string>
     <string name="ble_not_enabled">Bluetooth neįjungta.</string>
+    <string name="ble_permissions_missing">Bluetooth leidimas nesuteiktas. Suteikite jį programos nustatymuose.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Įskiepių nustatymai</string>
     <!-- Navigation -->
+    <string name="nav_about">Apie</string>
+    <string name="nav_about_desc">Peržiūrėti programos versiją ir informaciją</string>
     <string name="nav_exit">Išeiti</string>
     <string name="open_navigation">Atidaryti meniu</string>
     <string name="nav_history_browser">Istorija</string>
+    <string name="nav_history_browser_desc">Naršyti ankstesnius grafikus</string>
+    <string name="appearance">Išvaizda</string>
+    <string name="manage">Tvarkyti</string>
+    <string name="localprofile">Profilis</string>
     <string name="nav_setupwizard">Sąrankos vedlys</string>
+    <string name="nav_setupwizard_desc">Žingsnis po žingsnio konfigūruokite AAPS</string>
     <string name="statistics">Statistika</string>
+    <string name="statistics_desc">Peržiūrėti statistiką ir ataskaitas</string>
+    <string name="tdd_cycle_pattern">BPD ciklo dėsningumas</string>
     <string name="tdd_cycle_pattern_desc">Palyginti paros insulino kiekius 28 dienų ciklais, kad būtų lengviau pastebėti pasikartojančius dėsningumus</string>
     <string name="nav_profile_helper">Profilio pagalbininkas</string>
     <string name="nav_profile_helper_desc">Kurti profilį pagal kūno svorį arba BPD</string>
@@ -1045,9 +1084,58 @@
     <string name="graph_new">Naujas grafikas</string>
     <string name="graph_number">%1$d grafikas</string>
     <string name="graph_bg">KG grafikas</string>
+    <string name="graph_height">Grafiko aukštis [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PROGN</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAZ</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">NUOKR</string>
     <string name="activity_shortname" comment="Short label for Activity graph series">AKT</string>
     <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-KGĮ</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">ŽINGSNIAI</string>
+    <string name="units_days">d.</string>
+    <string name="units_format_days">%1$d d.</string>
+    <string name="units_format_days_range">%1$d d. (%2$d - %3$d)</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="units_format_double_3">%1$.3f</string>
+    <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_hours">%1$d val.</string>
+    <string name="units_format_hours_double">%1$.1f val.</string>
+    <string name="units_format_hours_double_range">%1$.1f val. (%2$.1f - %3$.1f)</string>
+    <string name="units_format_hours_range">%1$d val. (%2$d - %3$d)</string>
+    <string name="units_format_insulin">%1$.1f V</string>
+    <string name="units_format_insulin_int">%1$d V</string>
+    <string name="units_format_insulin_int_range">%1$d V (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f V (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate">%1$.1f V/val.</string>
+    <string name="units_format_insulin_rate_range">%1$.1f V/val. (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_min">%1$d min</string>
+    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_sec">%1$d sek.</string>
+    <string name="units_format_sec_range">%1$d sek. (%2$d - %3$d)</string>
+    <string name="units_grams">g</string>
+    <string name="units_hours">val.</string>
     <string name="units_insulin">V</string>
+    <string name="units_insulin_rate">V/val.</string>
+    <string name="units_kg">kg</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_min">min</string>
+    <string name="units_mmol">mmol/l</string>
+    <string name="units_percent">%</string>
+    <string name="units_sec">sek</string>
+    <string name="units_years">m.</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
 </resources>
