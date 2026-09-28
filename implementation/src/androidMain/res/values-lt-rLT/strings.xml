@@ -5,20 +5,37 @@
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">AV</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_bolus">Pask. bolusas: %1$s @ %2$s</string>
+    <string name="short_status_temp_basal">Laik. bazė: %1$s</string>
+    <string name="short_status_battery">Bat: %1$d%%</string>
+    <string name="short_status_not_initialized">Pompa neprijungta</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Baterijos optimizavimas</string>
+    <string name="permission_battery_description">Kad programa patikimai veiktų fone, jai turi būti netaikomas baterijos optimizavimas</string>
     <string name="permission_directory_title">AAPS aplankas</string>
     <string name="permission_directory_description">Pasirinkite programos nustatymų ir įrašų aplanką</string>
+    <string name="permission_notifications_title">Pranešimai</string>
     <string name="permission_notifications_description">Reikalinga įspėjimams, pavojaus signalams ir pompos būsenos atnaujinimams rodyti</string>
     <string name="permission_schedule_exact_alarm_title">Signalai ir priminimai</string>
     <string name="permission_schedule_exact_alarm_description">Reikalinga, kad AAPS veikiant fone įspėjimai galėtų įjungti ekraną, o priminimai nuskambėtų laiku</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0V (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">V%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
     <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
     <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/val.</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Nustatymai sėkmingai eksportuoti į Cloud saugyklą</string>
+    <string name="export_to_cloud_failed">Nepavyko eksportuoti į Cloud saugyklą</string>
+    <string name="csv_uploaded_to_cloud">Naudotojo įrašų CSV failas sėkmingai įkeltas į debesies saugyklą</string>
     <string name="exported">Nustatymai eksportuoti</string>
     <string name="exported_failed">Nustatymų eksportavimas nepavyko!</string>
     <string name="filenotfound">Failas nerastas</string>
     <string name="ue_exported">Naudotojo įrašai eksportuoti</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportuota prieš %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">eksportuota %1$s</string>
     <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
     <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), Jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
