@@ -14,7 +14,7 @@
     <string name="resetpairing">Panaikinti susiejimo informaciją?</string>
     <string name="dana_model">%1$s\nModelis: %2$02X\nProtokolas: %3$02X\nKodas: %4$02X</string>
     <string name="processinghistory">Apdorojama</string>
-    <string name="danar_enableextendedbolus">Aktyvuoti ištęstinius bolusus pompoje</string>
+    <string name="danar_enableextendedbolus">Aktyvuoti ištęstus bolusus pompoje</string>
     <string name="danar_disablebolusblock">Pompoje įjungtas boluso blokavimas. Kol jis aktyvus, AAPS negali suleisti insulino. Išjunkite boluso blokavimą pompos nustatymuose.</string>
     <string name="overview_bolusprogress_stoped">Sustabdyta</string>
     <string name="unsupportedfirmware">Pompos programinės įrangos versija nepalaikoma</string>
@@ -33,7 +33,7 @@
     <string name="missedbolus">Nesuleistas bolusas</string>
     <string name="invalidpairing">Netinkama susiejimo informacija. Bandoma susieti iš naujo</string>
     <string name="gettingpumpstatus">Gaunama pompos būklė</string>
-    <string name="gettingextendedbolusstatus">Gaunama ištęstinio boluso būklė</string>
+    <string name="gettingextendedbolusstatus">Gaunama ištęsto boluso būsena</string>
     <string name="gettingbolusstatus">Gaunama boluso būklė</string>
     <string name="gettingtempbasalstatus">Gaunama laikinos bazės būklė</string>
     <string name="gettingpumpsettings">Gaunami pompos nustatymai</string>
