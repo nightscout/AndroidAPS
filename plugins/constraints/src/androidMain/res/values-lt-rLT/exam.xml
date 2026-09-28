@@ -106,7 +106,7 @@
     <string name="wrongcarbs_treatmentstab">Ištrinti neteisingą įrašą Terapijos skiltyje ir įvesti teisingą angliavandenių kiekį.</string>
     <string name="wrongcarbs_addinsulin">Suleisti bolusą, naudojant infuzijos rinkinio užpildymo funkciją.</string>
     <string name="wrongcarbs_donothing">Nedaryti nieko - AAPS padarys atitinkamus pakeitimus.</string>
-    <string name="wrongcarbs_bolus">Suleisti bolusą, naudojant mygtuką Insulinas, esantį pagrindiniame lange.</string>
+    <string name="wrongcarbs_bolus">Suleisti bolusą, naudojant mygtuką Insulinas, esantį pagrindiniame ekrane.</string>
     <string name="wronginsulin_label">Insulino suleidimo / įrašymo klaidos</string>
     <string name="wronginsulin_whattodo">Ką daryti, jei buvo suleista mažiau insulino nei rodo pompos istorija, pvz. dėl užsikimšimo, užlinkusios kaniulės ar pamiršus po dušo vėl prijungti pompą?</string>
     <string name="wronginsulin_careportal">Ištrinti insulino suleidimo įrašą per Nightscout Careportal, kad jis būtų pašalintas iš pompos istorijos.</string>
@@ -194,5 +194,6 @@
     <string name="switch_u200_profile">Iki šiol su U200 insulinu naudojote 50 % profilio metodą, o dabar norite pereiti prie naujos insulino koncentracijos funkcijos. Kurie iš šių teiginių yra teisingi?</string>
     <string name="switch_u200_profile_any_time">Galiu pereiti bet kuriuo metu, nes pompoje jau yra tinkamas U200 insulinas.</string>
     <string name="switch_u200_profile_ps">Turiu sukurti dvigubai agresyvesnį profilį (200 % dabartinio profilio) ir, pasirinkus U200 insuliną, jį sinchronizuoti po kito pompos rezervuaro keitimo.</string>
+    <string name="switch_u100_u200_tube">Bolusų niekada nereikėtų leisti naudojant pačios pompos valdymo ekrano (įprastoms pompoms su vamzdeliais).</string>
     <string name="switch_u100_u200_change">Insulino koncentraciją galima pakeisti tik keičiant insuliną rezervuare arba keičiant Pod.</string>
 </resources>
