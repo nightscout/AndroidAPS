@@ -13,7 +13,7 @@
     <string name="patch_not_active">Rezervuaras neaktyvus</string>
     <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
     <string name="pump_sync_error">Klaida įkeliant pompos istoriją: įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar rezervuarą.</string>
-    <string name="patch_reset_after_primed_error">Pompos rezervuaras persikrovė ir prarado sesiją. Jis nebegali tiekti insulino. Nuimkite rezervuarą ir aktyvuokite naują.</string>
+    <string name="patch_reset_after_primed_error">Pompa persikrovė ir prarado sesiją. Ji nebegali tiekti insulino. Nuimkite pompą ir aktyvuokite naują.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktyvus bolusas</string>
     <string name="pump_state_label">Pompos būsena</string>
@@ -72,7 +72,7 @@
     <string name="step_deactivate">Išjungti pompą</string>
     <string name="step_deactivating">Išjungiama...</string>
     <string name="step_deactivate_complete">Išjungta</string>
-    <string name="unpair_confirm_message">Bus ištrintas išsaugotas pompos serijos numeris ir ryšys nutrauktas. Aktyvuokite naują rezervuarą, kad būtų ieškoma pompos.</string>
+    <string name="unpair_confirm_message">Bus ištrintas išsaugotas pompos serijos numeris ir ryšys nutrauktas. Aktyvuokite naują pompą, kad būtų galima ją aptikti.</string>
     <string name="step_retry_activation">Įjungiama</string>
     <string name="unexpected_state">Netikėta būsena: %1$s</string>
     <string name="ble_scan_connect_pump_base_first">Prijunkite pompos pagrindą prie naujo rezervuaro, kad pompa įsijungtų, tada pasirinkite ją toliau pateikiamame sąraše.</string>
@@ -89,7 +89,7 @@
     <string name="activating_pump">Palaukite, kol bus aktyvuota pompa ir nustatyta pradinė bazė.</string>
     <string name="activating_complete">Naujas rezervuaras įjungtas. Yra %.2f v insulino.</string>
     <string name="can_export_settings">Galite eksportuoti nustatymus, kad vėliau galėtumėte atkurti šios pompos sesiją.</string>
-    <string name="press_OK_to_return">Norėdanu grįžti į pradžios ekraną, spauskite <b>OK</b>.</string>
+    <string name="press_OK_to_return">Norėdami grįžti į pradžios ekraną, spauskite <b>OK</b>.</string>
     <string name="deactivate_sure">Ar tikrai norite išjungti pompą?</string>
     <string name="cancel_sure">Ar tikrai norite nutraukti įjungimą?</string>
     <string name="medtrum_deactivate_pump_confirm">Ar tikrai norite tęsti? Veiksmo nebus galima atšaukti!</string>
@@ -98,7 +98,7 @@
     <string name="deactivating_error">Išjungti nepavyko, spauskite <b>Pašalinti</b>.</string>
     <string name="retract_needle">Ištraukite adatą. Nuimkite pompą nuo kūno.</string>
     <string name="remove_base_discard_patch">Nuimkite pompos pagrindą ir tinkamai pašalinkite naudotą rezervuarą.</string>
-    <string name="press_next_or_OK">Norėdami grįžti į pradžios ekraną, spauskite <b>OK</b>. Norėdami įjungti naują rezervuarą, spauskite <b>Toliau</b>.</string>
+    <string name="press_next_or_OK">Norėdami grįžti į pradžios ekraną, spauskite <b>OK</b>. Norėdami aktyvuoti pompą, spauskite <b>Toliau</b>.</string>
     <string name="activation_in_progress">Ups! Panašu, kad įjungimo procesas jau vyksta.</string>
     <string name="press_retry_or_discard">Norėdami atnaujinti aktyvavimą, spauskite <b>Toliau</b>, norėdami atšaukti, spauskite <b>Pašalinti</b>.</string>
     <string name="reading_activation_status">Palaukite, nuskaitoma pompos aktyvavimo būklė.</string>
