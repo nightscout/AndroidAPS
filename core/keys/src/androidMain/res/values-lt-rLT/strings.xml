@@ -270,7 +270,7 @@
     <string name="pref_title_patient_name">Vardas</string>
     <string name="pref_summary_patient_name">Pavadinimas šiai AAPS sistemai atpažinti (rodomas ataskaitose ir sinchronizuojant).</string>
     <!-- StringKey: Directory preferences -->
-    <string name="pref_title_aaps_directory">AAPS katalogas</string>
+    <string name="pref_title_aaps_directory">AAPS aplankas</string>
     <!-- StringKey: Protection preferences -->
     <string name="pref_title_master_password">Pagrindinis slaptažodis</string>
     <string name="pref_title_settings_password">Nustatymų slaptažodis</string>
