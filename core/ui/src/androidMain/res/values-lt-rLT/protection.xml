@@ -29,7 +29,9 @@
     <string name="auth_hint_master_password">Įveskite pagrindinį slaptažodį</string>
     <string name="auth_hint_master_or_pin">Įveskite pagrindinį slaptažodį arba PIN</string>
     <string name="auth_hint_master_or_password">Įveskite pagrindinį arba pasirinktinį slaptažodį</string>
+    <string name="use_pin_password">Naudoti PIN / slaptažodį</string>
     <string name="current_master_password">Dabartinis pagrindinis slaptažodis</string>
     <string name="master_password_not_set">Pagrindinis slaptažodis nenustatytas</string>
-    <string name="aaps_directory_not_selected">Neparinktas AAPS katalogas</string>
+    <string name="aaps_directory_not_selected">Nepasirinktas AAPS aplankas</string>
+    <string name="aaps_directory_access_lost">Prarasta prieiga prie AAPS aplanko, todėl nustatymai telefone nebeišsaugomi. Pasirinkite aplanką iš naujo.</string>
 </resources>
