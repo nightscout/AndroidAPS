@@ -111,15 +111,33 @@
     <string name="carelevo_dialog_patch_discard_unused_desc">Paspaudus [OK], šios pompos nebebus galima naudoti.</string>
     <string name="carelevo_dialog_patch_activation_cancel_title">Atšaukti aktyvavimą?</string>
     <string name="carelevo_dialog_patch_activation_cancel_desc">Paspaudus [OK], įvesti duomenys bus panaikinti.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">Jei žemiau aptikta pompa yra tinkama, paspauskite mygtuką Patvirtinti.</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">Adata įvesta, galima nuimti aplikatorių</string>
+    <string name="carelevo_dialog_connect_detached">Aplikatorius nuimtas</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+        Suspauskite aplikatoriaus laikiklius abiejose pusėse, kad atskirtumėte jį nuo pompos,\n
+        tada paspauskite mygtuką `Aplikatorius nuimtas`. Prasidės insulino tiekimas.
+    </string>
     <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth neįjungtas. Patikrinkite nustatymus.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">Pompa neprijungta</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">Pompa dar neprijungta. Netrukus bandykite dar kartą.</string>
+    <string name="carelevo_toast_msg_scan_failed">Nuskaityti nepavyko. Bandykite dar kartą.</string>
+    <string name="carelevo_toast_msg_patch_not_found">Pompa nerasta. Bandykite dar kartą.</string>
+    <string name="carelevo_toast_msg_connect_failed">Nepavyko prijungti pompos. Bandykite dar kartą.</string>
     <!-- Profile -->
     <string name="carelevo_toast_msg_profile_not_set">Profilis nenustatytas.</string>
     <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">Nepavyko patikrinti adatos.</string>
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_failed">Nepavyko pašalinti. Bandykite dar kartą.</string>
     <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">Nepavyko pateikti bazės tiekimo užklausos. Bandykite dar kartą.</string>
     <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Nepavyko atnaujinti insulino tiekimo. Bandykite dar kartą.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Nepavyko sustabdyti insulino tiekimo. Bandykite dar kartą.</string>
     <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">Saugos patikra nepavyko.</string>
     <!-- Warning Titles -->
     <string name="alarm_feat_title_warning_low_insulin">Senka rezervuaras</string>
     <string name="alarm_feat_title_warning_expired_patch">Pompos naudojimo laikas baigėsi</string>
@@ -208,10 +226,16 @@
     <string name="alarm_notification_desc_alert_low_insulin">Liko mažiau nei %s V insulino. Pasiruoškite pakeisti pompą.</string>
     <string name="alarm_notification_desc_alert_expired_patch_phase2">Pompos naudojimo laikas baigėsi. Nedelsdami pakeiskite pompą.</string>
     <string name="alarm_notification_desc_alert_expired_patch_phase1">Pompos naudojimo laikas netrukus baigsis. Nedelsdami pakeiskite pompą.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Senka baterija. Pasiruoškite pakeisti pompą.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Dėl ekstremalios temperatūros insulino tiekimas pristabdytas. Kad jis būtų atnaujintas, pereikite į 40℉–99℉ temperatūros aplinką.</string>
     <string name="alarm_notification_desc_alert_not_used_app">Paspauskite [OK]. Jei nepaisysite, pranešimas taps kritiniu pavojaus signalu ir insulino tiekimas bus sustabdytas.</string>
     <string name="alarm_notification_desc_alert_incomplete_patch_setting">Paspauskite [OK], kad užbaigtumėte aktyvavimą.</string>
     <string name="alarm_notification_desc_alert_resume_infusion">Insulino tiekimo pristabdymas baigėsi. Paspauskite [Pradėti insulino tiekimą].</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">Norint naudoti pompą, reikia Bluetooth ryšio. Paspauskite [OK] ir įjunkite Bluetooth.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Liko mažiau nei %s V insulino. Pasiruoškite pakeisti pompą.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Pompa naudojama %s d. %s val. Naudodami į tai atsižvelkite.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Laiko juosta pakeista iš %s (UTC %s) į %s (UTC %s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">Po boluso praėjo %s. Patikrinkite gliukozės kiekį kraujyje.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS pradėtas</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS baigtas, nes atsijungė pompa arba jutiklis.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS baigtas, nes buvo pristabdytas.</string>
@@ -220,4 +244,5 @@
     <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS (stabdymo esant žemai glikemijai) režimas išjungtas, nes gliukozės reikšmė pakilo virš nustatytos ribos.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS baigtas dėl nežinomos priežasties.</string>
     <string name="alarm_notification_desc_notice_lgs_error">Patikrinkite pompos ir jutiklio ryšį.</string>
+    <string name="carelevo_profile_update_skip_comment">Praleista: nuo ankstesnio naujinimo praėjo per mažai laiko.</string>
 </resources>
