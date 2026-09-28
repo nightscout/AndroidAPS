@@ -160,6 +160,8 @@ danars_v3_pairing_key_%s|DanaStringComposedKey|true
 danars_v3_randompairing_key_%s|DanaStringComposedKey|true
 danars_v3_randomsync_key_%s|DanaStringComposedKey|true
 device_type|MedtrumIntNonKey|true
+dexcom_g7_direct_alarm_state|G7StringNonKey|false
+dexcom_g7_direct_state|G7StringNonKey|false
 dexcom_lognssensorchange|BooleanKey|true
 dexcomg5_nsupload|BooleanKey|true
 diaconn_bt_selector|DiaconnIntentKey|false
