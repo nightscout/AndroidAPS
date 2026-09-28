@@ -166,7 +166,7 @@
     <string name="missing_carbs">Trūksta %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100 % greitai pasisavinamų angliavandenių, be ištęstų angliavandenių</string>
     <string name="wizard_carbs_type_desc">Angliavandeniai sumažinti %1$d%%, pridėta %2$d%% i-AV, atidėtų %3$dmin ir paskirstytų per %4$dh</string>
-    <string name="wizard_include_info">Bakstelėkite, kad įtrauktumėte į skaičiavimą arba pašalintumėte iš jo:\n• KG — kraujo gliukozė (pradžioje ĮJUNGTA)\n• LT — laikinas tikslas (pradžioje ĮJUNGTA)\n• Tendencija — KG tendencija (įsimenama paskutinė būsena)\n• AIO — aktyvus insulinas organizme (pradžioje ĮJUNGTA)\n• AAO — aktyvūs angliavandeniai organizme (įsimenama paskutinė būsena)</string>
+    <string name="wizard_include_info">Paspauskite, kad įtrauktumėte į skaičiavimą arba pašalintumėte iš jo:\n• KG — kraujo gliukozė (pradžioje ĮJUNGTA)\n• LT — laikinas tikslas (pradžioje ĮJUNGTA)\n• Tendencija — KG tendencija (įsimenama paskutinė būsena)\n• AIO — aktyvus insulinas organizme (pradžioje ĮJUNGTA)\n• AAO — aktyvūs angliavandeniai organizme (įsimenama paskutinė būsena)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
     <string name="treatments_iob_label_string">AIO:</string>
@@ -224,14 +224,14 @@
     <string name="a11y_history_next_window">Kitas langas</string>
     <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
     <string name="calculator_options">Skaičiuotuvo parinktys</string>
-    <string name="use_bg">Naudoti KG</string>
-    <string name="use_cob">Naudoti AAO</string>
-    <string name="use_iob">Naudoti AIO</string>
-    <string name="use_trend">Naudoti tendenciją</string>
+    <string name="use_bg">Įtraukti KG</string>
+    <string name="use_cob">Įtraukti AAO</string>
+    <string name="use_iob">Įtraukti AIO</string>
+    <string name="use_trend">Įtraukti tendenciją</string>
     <string name="trend_all">Visas</string>
     <string name="trend_positive_only">Tik teigiamą</string>
     <string name="trend_negative_only">Tik neigiamą</string>
-    <string name="use_temp_target">Naudoti laikiną tikslą</string>
+    <string name="use_temp_target">Įtraukti laikiną tikslą</string>
     <string name="use_alarm">Naudoti įspėjimą</string>
     <string name="device_selection">Įrenginio pasirinkimas</string>
     <string name="show_on_phone">Rodyti telefone</string>
