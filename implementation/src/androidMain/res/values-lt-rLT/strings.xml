@@ -6,6 +6,8 @@
     <string name="carbs_short" comment="max 6 characters">AV</string>
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
+    <string name="permission_directory_title">AAPS aplankas</string>
+    <string name="permission_directory_description">Pasirinkite programos nustatymų ir įrašų aplanką</string>
     <string name="permission_notifications_description">Reikalinga įspėjimams, pavojaus signalams ir pompos būsenos atnaujinimams rodyti</string>
     <string name="permission_schedule_exact_alarm_title">Signalai ir priminimai</string>
     <string name="permission_schedule_exact_alarm_description">Reikalinga, kad AAPS veikiant fone įspėjimai galėtų įjungti ekraną, o priminimai nuskambėtų laiku</string>
@@ -44,5 +46,6 @@
     <string name="metadata_label_encryption">Failo šifravimas</string>
     <string name="metadata_format_new">Naujas šifruotas formatas</string>
     <string name="metadata_format_other">Nežinomas eksporto formatas</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">Klaida pasiekiant failų sistemą. Tinkamai pasirinkite AAPS katalogą.</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Klaida pasiekiant failų sistemą. Tinkamai pasirinkite AAPS aplanką.</string>
+    <string name="cloud_directory_path">Cloud aplankas: %1$s</string>
 </resources>
