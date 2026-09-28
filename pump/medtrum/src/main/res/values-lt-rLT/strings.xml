@@ -126,7 +126,7 @@
     <string name="scan_on_connection_error_title">Skenuoti, jei kyla ryšio klaida</string>
     <string name="scan_on_connection_error_summary">ĮSPĖJIMAS: Įjunkite tik jei patiriate ryšio nesklandumų. Įjungus bus skenuojama pompa prieš bandant prisijungti iš naujo. Įsitikinkite, kad vietos nustatymo leidimas nustatytas „Leisti visada“ </string>
     <!-- treatment state-->
-    <string name="getting_pump_status">Gaunama pompos būklė</string>
+    <string name="getting_pump_status">Gaunama pompos būsena</string>
     <string name="syncing_records">Sinchronizuojami įrašai, liko %1$d</string>
     <string name="getting_bolus_status">Gaunama boluso būklė</string>
     <string name="getting_temp_basal_status">Gaunama laikinos bazės būklė</string>
