@@ -457,34 +457,63 @@
     <string name="manage_temp_basal_desc">Pradėti laikiną bazinį greitį</string>
     <string name="manage_extended_bolus_desc">Pradėti ištęstą bolusą</string>
     <string name="manage_site_rotation_desc">Stebėti infuzijos vietų rotaciją</string>
-    <string name="manage_quickwizard_desc">Tvarkyti greitojo vedlio išankstinius nustatymus</string>
+    <string name="manage_quickwizard_desc">Tvarkyti greitojo vedlio ruošinius</string>
     <string name="treatment_note_desc">Pridėti pastabas prie įrašų</string>
     <string name="treatment_question_desc">Užregistruoti klausimą gydymo komandai</string>
-    <string name="treatment_cgm_desc">Atverti CGM programėlę</string>
+    <string name="treatment_cgm_desc">Atidaryti CGM programėlę</string>
     <string name="treatment_calibration_desc">Kalibruoti jutiklį</string>
     <string name="treatment_bg_check_desc">Įrašyti gliukozės matavimą</string>
-    <string name="treatment_exercise_desc">Registruoti fizinį aktyvumą</string>
+    <string name="treatment_exercise_desc">Įrašyti fizinį aktyvumą</string>
     <string name="treatment_announcement_desc">Paskelbti pranešimą</string>
-    <string name="treatment_sensor_insert_desc">Registruoti jutiklio įvedimą</string>
+    <string name="treatment_sensor_insert_desc">Įrašyti jutiklio įvedimą</string>
     <string name="treatment_battery_change_desc">Įrašyti pompos baterijos keitimą</string>
-    <string name="treatment_cannula_change_desc">Registruoti kaniulės ar infuzijos rinkinio pakeitimą</string>
+    <string name="treatment_cannula_change_desc">Įrašyti kaniulės ar infuzijos rinkinio pakeitimą</string>
     <string name="treatment_fill_desc">Užpildyti sistemą ir kaniulę</string>
+    <string name="temp_basal">Laikina bazė</string>
     <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Didesnė už profilio bazę</string>
     <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Mažesnė už profilio bazę</string>
     <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Nėra</string>
     <string name="user_entry">Naudotojo įrašas</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Iš piršto</string>
     <string name="glucosetype_sensor">Sensorius</string>
     <string name="manual">Rankiniu būdu</string>
+    <string name="unknown">Nežinoma</string>
     <string name="eatingsoon">Netrukus valgysiu</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Fizinis aktyvumas</string>
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="automation">Automatizacija</string>
+    <string name="automation_management_desc">Kurkite taisykles, kurios automatiškai atliks veiksmus pagal nustatytas sąlygas</string>
     <string name="settingsexport">Nustatymų eksportavimas</string>
     <string name="custom">Pasirinktinis</string>
+    <string name="preset_settings">Ruošinių nustatymai</string>
+    <string name="activation">Aktyvavimas</string>
+    <string name="temp_target_management">Laikinas tikslas</string>
+    <string name="revert_to_defaults">Grąžinti pradines reikšmes</string>
     <string name="loop">Ciklas</string>
     <string name="ns">NS</string>
+    <string name="location_front_right_upper_chest">Dešinė krūtinės pusė</string>
+    <string name="location_front_left_upper_chest">Kairė krūtinės pusė</string>
+    <string name="location_side_right_upper_arm">Dešinės žasto išorinės pusės viršus</string>
+    <string name="location_side_left_upper_arm">Kairės žasto išorinės pusės viršus</string>
+    <string name="location_back_right_upper_arm">Dešinės žasto užpakalinės pusės viršus</string>
+    <string name="location_back_left_upper_arm">Kairės žasto užpakalinės pusės viršus</string>
+    <string name="location_side_right_upper_abdomen">Dešinės pilvo išorinės pusės viršus</string>
+    <string name="location_side_left_upper_abdomen">Kairės pilvo išorinės pusės viršus</string>
+    <string name="location_side_right_lower_abdomen">Dešinės pilvo išorinės pusės apačia</string>
+    <string name="location_side_left_lower_abdomen">Kairės pilvo išorinės pusės apačia</string>
+    <string name="location_front_right_upper_abdomen">Dešinės pilvo priekinės pusės viršus</string>
+    <string name="location_front_left_upper_abdomen">Kairės pilvo priekinės pusės viršus</string>
+    <string name="location_front_right_lower_abdomen">Dešinės pilvo priekinės pusės apačia</string>
+    <string name="location_front_left_lower_abdomen">Kairės pilvo priekinės pusės apačia</string>
+    <string name="location_back_right_buttock">Dešinysis sėdmuo</string>
+    <string name="location_back_left_buttock">Kairysis sėdmuo</string>
+    <string name="location_back_right_lower_back">Dešinė apatinė nugaros dalis</string>
+    <string name="location_back_left_lower_back">Kairė apatinė nugaros dalis</string>
+    <string name="location_side_right_upper_thigh">Dešinės šlaunies išorinės pusės viršus</string>
+    <string name="location_side_left_upper_thigh">Kairės šlaunies išorinės pusės viršus</string>
+    <string name="location_side_right_lower_thigh">Dešinės šlaunies išorinės pusės apačia</string>
     <string name="location_side_left_lower_thigh">Kairės šlaunies išorinės pusės apačia</string>
     <string name="location_front_right_upper_thigh">Dešinės šlaunies priekinės pusės viršus</string>
     <string name="location_front_left_upper_thigh">Kairės šlaunies priekinės pusės viršus</string>
@@ -587,7 +616,7 @@
     <string name="uel_objectives_skipped">TIKSLAS PRALEISTAS</string>
     <string name="uel_stat_reset">IŠVALYTI STATISTIKĄ</string>
     <string name="uel_delete_logs">IŠTRINTI ĮRAŠUS</string>
-    <string name="uel_delete_future_treatments">IŠTRINTI ATEITIES TERAPIJĄ</string>
+    <string name="uel_delete_future_treatments">IŠTRINTI BŪSIMĄ TERAPIJĄ</string>
     <string name="uel_export_settings">EKSPORTUOTI NUSTATYMUS</string>
     <string name="uel_import_settings">IMPORTUOTI NUSTATYMUS</string>
     <string name="uel_select_directory">APLANKO PARINKIMAS</string>
@@ -624,14 +653,21 @@
     <string name="uel_scene_deactivated">SCENARIJUS IŠJUNGTAS</string>
     <string name="uel_remote_config_changed">NUOTOLINĖ KONFIGŪRACIJA PAKEISTA</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Apatinė laikino tikslo reikšmė</string>
     <string name="temp_target_high_target">Laikino tikslo viršutinė riba</string>
     <string name="temp_target_value">Laikino tikslo reikšmė</string>
+    <string name="insulin_dia">IVT reikšmė</string>
+    <string name="insulin_peak">Insulino piko reikšmė</string>
     <string name="profile_max_daily_basal_value">Maksimali profilio VB reikšmė</string>
     <string name="current_basal_value">Dabartinė bazė</string>
     <string name="valuelimitedto">%1$.2f apribota iki %2$.2f</string>
     <string name="valueoutofrange">»%1$s« viršija griežtą limitą</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Profilis nepasirinktas</string>
     <string name="missing_profile_name">Nėra profilio pavadinimo</string>
+    <string name="profile_not_saved_activate">Profilis neišsaugotas. Išsaugokite profilį prieš jį aktyvuodami.</string>
+    <string name="profile_basal_not_compatible_with_pump">Bazė nesuderinama su šiuo metu naudojama pompa, todėl profilio aktyvuoti negalima. Sumažinkite procentą arba pakoreguokite bazinę dozę.</string>
+    <string name="profile_pump_incompatible_label">Pompos riba</string>
     <string name="error_in_ic_values">Insulino ir AV santykio (I:A) reikšmės klaida</string>
     <string name="error_in_isf_values">JIF reikšmės klaida</string>
     <string name="error_in_basal_values">Bazės reikšmių klaida</string>
@@ -666,8 +702,12 @@
     <string name="basalpct">Valandinė bazė %</string>
     <string name="sensitivity">Jautrumas insulinui</string>
     <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens išjungtas</string>
+    <string name="isf_for_carbs">Vidutinis JIF skaičiuotuvui ir angliavandenių įsisavinimui: %1$.1f</string>
     <string name="isf_profile">Profilio JIF: %1$.1f</string>
+    <string name="isf_variable">Kintamas JIF: %1$.1f</string>
+    <string name="isf_effective">Faktinis JIF: %1$.1f</string>
     <string name="autosens_long">Autosens vertė: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens algoritme: %.0f%%</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
@@ -681,6 +721,14 @@
     <string name="bolus_advisor_message">Gliukozė šiuo metu aukšta, todėl rekomenduojama su maistu palaukti, kol ji sumažės. Ar norite dabar suleisti korekcinį boliusą ir gauti priminimą, kada galėsite valgyti? Tokiu atveju angliavandeniai nebus įrašyti. Gavę priminimą, skaičiuotuvą turėsite paleisti iš naujo.</string>
     <string name="wizard_bg_label">KG</string>
     <string name="wizard_correction">Taisymas</string>
+    <string name="wizard_subtotal">Tarpinė suma</string>
+    <string name="carbs_type_bread">Duona, nesaldūs kepiniai, jogurtas, vaisiai (obuoliai, bananai, kriaušės), bulvės, ryžiai, grikiai, avižinė košė, lėtai pasisavinamas ir mažai angliavandenių turintis maistas, daržovės</string>
+    <string name="carbs_type_cake">Koldūnai, makaronai, daug angliavandenių ir riebalų turinti Azijos virtuvė, saldūs ir mieliniai kepiniai, dribsniai, grūdų košės, medus, uogienė</string>
+    <string name="carbs_type_pizza">Lazanija, pica, mėsainiai, gruzdintos ir keptos bulvės, traškučiai bei panašūs užkandžiai</string>
+    <string name="wizard_total">Iš viso</string>
+    <string name="wizard_carb_time">Angliavandenių laikas</string>
+    <string name="carb_time_now">Dabar</string>
+    <string name="change">Keisti</string>
     <string name="grant">Suteikti</string>
     <string name="set">Nustatyti</string>
     <string name="wizard_set_alarm">Nustatyti įspėjimą</string>
@@ -693,12 +741,15 @@
     <string name="wizard_calculation">Skaičiavimas</string>
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Daugiausia galima pašalinti: %1$d g (aktyvių angliavandenių)</string>
+    <string name="wizard_no_insulin_required">Insulino nereikia</string>
     <string name="wizard_no_actual_bg">Nėra naujausių glikemijos duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="wizard_carbs_constraint">AV apribojimų pažeidimas!</string>
+    <string name="wizard_trend_detail">15 min. tendencija (%1$s %2$s)</string>
     <string name="wizard_constraint_bolus_size">Insulino apribojimų pažeidimas!\nNesuleista %1$.2fv</string>
     <string name="wizard_pump_not_available">Pompa nepasiekiama!</string>
     <string name="quick_wizard_not_available">Pasirinktas greitasis patarėjas nebepasiekiamas, atnaujinkite valdiklį</string>
+    <string name="quickwizard_managemnt">Greitasis vedlys</string>
     <!--    Preferences-->
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
@@ -724,6 +775,7 @@
     <string name="connecting">Jungiamasi</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Spausta \"jungtis su pompa\"</string>
     <string name="daily_units">Paros insulinas</string>
+    <string name="max_daily_units">Didžiausias vienetų skaičius per parą</string>
     <string name="pump_history">Pompos istorija</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pompos valdiklio keitimas.</string>
     <string name="device_changed" comment="26 characters max for translation">Įrenginys pakeistas</string>
@@ -735,8 +787,14 @@
     <string name="reading_pump_history">Skaitoma pompos istorija</string>
     <string name="password_cleared">Slaptažodis išvalytas!</string>
     <string name="pairing">Susiejimas</string>
+    <string name="initializing">Inicijuojama…</string>
     <string name="secs" comment="second short">%1$d sek.</string>
+    <string name="warning" comment="Generic warning dialog title">Įspėjimas</string>
     <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritiška</string>
+    <string name="alert" comment="Generic alert dialog title">Įspėjimas</string>
+    <string name="retry" comment="Button label to retry a failed operation">Bandyti dar kartą</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Baigti</string>
+    <string name="firmware" comment="Pump firmware version label">Programinės įrangos versija</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Apribota maksimali bazė%1$.2f V/val. dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -770,6 +828,7 @@
     <string name="export_result_message_expired">Nustatymų eksportavimas atšauktas: slaptažodis pasibaigęs. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite!</string>
     <string name="export_result_message_disabled">Įspėjimas (automatizacija): Nustatymų eksportavimas neįjungtas!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Sėkmingai eksportuota į debesį</string>
     <string name="cloud_directory">Cloud aplankas</string>
     <!-- Export destination chip labels -->
     <string name="data_choices">Duomenų pasirinkimas</string>
@@ -793,17 +852,37 @@
     <string name="ble_not_supported_or_not_paired">Nepalaikomas BLE arba įrenginys nesusietas.</string>
     <string name="ble_not_enabled">Bluetooth neįjungta.</string>
     <!--    Preferences -->
-    <string name="nav_plugin_preferences">Pradžios ekrano nustatymai</string>
+    <string name="nav_plugin_preferences">Įskiepių nustatymai</string>
     <!-- Navigation -->
     <string name="nav_exit">Išeiti</string>
     <string name="open_navigation">Atidaryti meniu</string>
     <string name="nav_history_browser">Istorija</string>
     <string name="nav_setupwizard">Sąrankos vedlys</string>
     <string name="statistics">Statistika</string>
+    <string name="tdd_cycle_pattern_desc">Palyginti paros insulino kiekius 28 dienų ciklais, kad būtų lengviau pastebėti pasikartojančius dėsningumus</string>
     <string name="nav_profile_helper">Profilio pagalbininkas</string>
+    <string name="nav_profile_helper_desc">Kurti profilį pagal kūno svorį arba BPD</string>
+    <string name="quick_launch_configure">Konfigūruoti QuickLaunch</string>
+    <string name="quick_launch_configure_desc">Tinkinti greitųjų veiksmų mygtukus pagrindiniame ekrane</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Lokalūs įspėjimai</string>
     <!-- Actions Screen -->
+    <string name="add">Pridėti</string>
+    <string name="remove">Pašalinti</string>
+    <string name="reorder">Keisti tvarką</string>
+    <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Perkelti anksčiau</string>
+    <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Perkelti vėliau</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Rodyti išsamią informaciją</string>
+    <string name="presets_changed_reorder_aborted">Ruošiniai buvo pakeisti kitur. Nauja jų tvarka neišsaugota.</string>
+    <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
+    <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">%1$d pozicija iš %2$d</string>
+    <string name="status">Būsena</string>
+    <string name="pump_actions">Pompos veiksmai</string>
+    <string name="tempbasal_button">Laikina bazė</string>
     <string name="extended_bolus_button">Ištęstas bolusas</string>
+    <string name="device_maintenance">Įrenginio priežiūra</string>
+    <string name="from_label">Nuo</string>
+    <string name="to_label">Iki</string>
     <string name="sensor_label">Sensorius</string>
     <string name="insulin_label">Insulinas</string>
     <string name="pb_label">Pompos baterija</string>
@@ -849,44 +928,112 @@
     <string name="weekday_monday_short">P</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f V</string>
+    <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Dydis: %1$.2f%% (%2$.2f V/val.) Trukmė: %3$d min</string>
     <string name="rate_percent_duration">Dydis: %1$.2f V/val. (%2$.2f%%) Trukmė: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f%% (%2$.2f V/val.)<br><b>Trukmė</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f V/val. (%2$.2f%%) <br><b>Trukmė</b>: %3$d min<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"Garsą atkuria AAPS"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAZ</string>
     <string name="target_short">TIKSLAS</string>
     <string name="profile_name">Profilio pavadinimas:</string>
+    <string name="edit_profile_name">Redaguoti profilio pavadinimą</string>
     <string name="units_colon">Vienetai:</string>
+    <string name="unsaved_changes">Neišsaugoti pakeitimai</string>
+    <string name="unsaved_changes_message">Turite neišsaugotų pakeitimų. Ką norėtumėte daryti?</string>
     <string name="discard">Pašalinti</string>
     <string name="ic_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti IA reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
     <string name="isf_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti JIF reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
+    <string name="add_time_block">Pridėti laiko intervalą</string>
+    <string name="remove_entry">Pašalinti įrašą</string>
+    <string name="target_low_label">Žemas</string>
+    <string name="target_high_label">Aukštas</string>
     <!--    Search-->
+    <string name="search">Ieškoti</string>
+    <string name="clear">Išvalyti</string>
+    <string name="search_category_categories">Nustatymų kategorijos</string>
+    <string name="search_category_preferences">Nustatymai</string>
+    <string name="search_category_dialogs">Dialogai</string>
+    <string name="search_category_plugins">Įskiepiai</string>
+    <string name="search_category_wiki">Dokumentacija</string>
+    <string name="wiki_search_offline">Norint ieškoti dokumentacijoje reikia interneto ryšio</string>
+    <string name="no_search_results">Rezultatų nerasta</string>
+    <string name="search_plugin_disabled">Įskiepis %1$s išjungtas</string>
     <!--    Food Management -->
+    <string name="food_management">Maistas</string>
+    <string name="food_deleted">Maistas pašalintas</string>
+    <string name="edit_food">Redaguoti maistą</string>
+    <string name="add_food">Pridėti maistą</string>
+    <string name="name">Pavadinimas</string>
     <string name="category">Kategorija</string>
     <string name="subcategory">Subkategorija</string>
+    <string name="portion">Porcija</string>
+    <string name="unit_label">Vienetas</string>
+    <string name="undo">Anuliuoti</string>
+    <string name="no_data">Nėra duomenų</string>
+    <string name="manage_food_desc">Tvarkyti maisto duomenų bazės įrašus</string>
+    <string name="label_carbs_g">Angliavandeniai (g)</string>
+    <string name="label_fat_g">Riebalai (g)</string>
+    <string name="label_protein_g">Baltymai (g)</string>
+    <string name="label_energy_kj">Energija (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Įrašų nustatymai</string>
     <string name="resettodefaults">Atkurti numatytuosius</string>
     <!--    Maintenance-->
     <string name="maintenance">Servisas</string>
     <string name="description_maintenance">Pateikia keletą serviso funkcijų (pvz., žurnalo įrašų siuntimas ar ištrynimas).</string>
     <string name="log_files">Žurnalo failai</string>
     <string name="delete_logs">Ištrinti įrašus</string>
+    <string name="logs_deleted">Įrašai ištrinti</string>
     <string name="aaps_directory">AAPS aplankas</string>
     <string name="import_setting">Importuoti nustatymus</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Iššifruoti &amp; peržiūrėti</string>
+    <string name="import_decrypt">Iššifruoti</string>
+    <string name="import_master_password">Pagrindinis slaptažodis</string>
+    <string name="import_decryption_password">Iššifravimo slaptažodis</string>
+    <string name="import_different_password_hint">Failas užšifruotas kitu slaptažodžiu</string>
+    <string name="import_wrong_password">Neteisingas slaptažodis</string>
+    <string name="import_btn">Importuoti</string>
+    <string name="import_anyway_btn">Vis tiek importuoti</string>
+    <string name="import_apply_title">Taikyti importuotus nustatymus?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Bus pakeista nustatymų: %1$d. Įskiepiai, kurių nustatymai pasikeitė, bus paleisti iš naujo.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Bus pakeista nustatymų: %1$d. Pompos nustatymai išsaugoti: %2$d, todėl pompa veiks toliau.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Importuotuose nustatymuose pasirinkta pompa šiame telefone nepasiekiama. Dabar aktyvi %1$s – patikrinkite pompos nustatymus.</string>
+    <string name="import_applying">Taikomi nustatymai…</string>
+    <string name="import_replace_pump_settings">Taip pat pakeisti pompos nustatymus</string>
+    <string name="import_replace_pump_settings_summary">Palikite išjungta, jei norite išsaugoti šiame telefone susietos pompos nustatymus. Įjunkite, jei atkuriate nustatymus naujame telefone ir naudosite tą pačią pompą.</string>
+    <string name="import_apply_waiting">Laukiama pompos…</string>
+    <string name="import_apply_pump_busy">Pompa vis dar užimta, todėl nustatymai nepritaikyti.</string>
+    <string name="import_apply_retry_question">Bandyti dar kartą dabar?</string>
+    <string name="import_applied_title">Nustatymai pritaikyti</string>
+    <string name="import_applied_message">Importuoti nustatymai dabar naudojami.</string>
     <string name="import_apply_pump_changed">Atšaukta: importuojant nustatymus pompa buvo pakeista</string>
+    <string name="import_source_local">Vietinė saugykla</string>
+    <string name="import_source_cloud">Cloud</string>
+    <string name="import_load_more">Įkelti daugiau</string>
+    <string name="import_no_files">Nustatymų failų nerasta</string>
     <string name="import_decrypt_ok">Iššifruota sėkmingai. Paruošta importuoti.</string>
+    <string name="import_decrypt_warn">Iššifruota sėkmingai, bet yra įspėjimų.</string>
+    <string name="import_decrypt_error">Iššifruota sėkmingai, bet importuoti negalima.</string>
     <string name="reset_aps_results">Iš naujo nustatyti APS rezultatus</string>
     <string name="database_cleanup">Duomenų bazės valymas</string>
     <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Rasti pompą</string>
+    <string name="ble_scan_select_pump">Toliau pateiktame sąraše pasirinkite savo pompą</string>
+    <string name="ble_scan_scanning">Ieškoma įrenginių…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Pridėti grafiką</string>
+    <string name="graph_new">Naujas grafikas</string>
+    <string name="graph_number">%1$d grafikas</string>
     <string name="graph_bg">KG grafikas</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="activity_shortname" comment="Short label for Activity graph series">AKT</string>
