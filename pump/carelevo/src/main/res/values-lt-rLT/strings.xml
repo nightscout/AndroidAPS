@@ -8,7 +8,7 @@
     <string name="common_btn_ok">OK</string>
     <string name="carelevo_bluetooth_state_key">Bluetooth būsena</string>
     <string name="carelevo_serial_number_key">Serijos Nr.</string>
-    <string name="carelevo_boot_date_time_key">Aktyvinimo laikas</string>
+    <string name="carelevo_boot_date_time_key">Aktyvavimo laikas</string>
     <string name="carelevo_expiration_key">Galiojimo pabaiga</string>
     <string name="carelevo_basal_rate_key">Bazė</string>
     <string name="carelevo_temp_basal_rate_key">Laikina bazė</string>
@@ -108,7 +108,7 @@
     <string name="carelevo_dialog_patch_discard_message_title">Išjungti pompą ir pradėti naudoti naują?</string>
     <string name="carelevo_dialog_patch_discard_message_desc">Paspaudus [OK], insulino tiekimas bus sustabdytas.</string>
     <string name="carelevo_dialog_patch_discard_unused_title">Baigti nepradėjus insulino tiekimo?</string>
-    <string name="carelevo_dialog_patch_discard_unused_desc">Paspaudus [OK], šio rezervuaro nebebus galima naudoti.</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">Paspaudus [OK], šios pompos nebebus galima naudoti.</string>
     <string name="carelevo_dialog_patch_activation_cancel_title">Atšaukti aktyvavimą?</string>
     <string name="carelevo_dialog_patch_activation_cancel_desc">Paspaudus [OK], įvesti duomenys bus panaikinti.</string>
     <!-- Connection -->
