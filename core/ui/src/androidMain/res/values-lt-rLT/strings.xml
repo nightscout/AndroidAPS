@@ -974,7 +974,7 @@
     <string name="weekday_thursday_short">K</string>
     <string name="weekday_wednesday_short">T</string>
     <string name="weekday_tuesday_short">A</string>
-    <string name="weekday_monday_short">P</string>
+    <string name="weekday_monday_short">Pr</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f V</string>
     <string name="format_insulin_units_signed">%1$+.2f U</string>
