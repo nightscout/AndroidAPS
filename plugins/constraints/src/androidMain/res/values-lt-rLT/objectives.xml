@@ -37,7 +37,7 @@
     <string name="accomplished">Įvykdyta: %1$s</string>
     <string name="objectives_usage_objective">Išmokite valdyti AAPS</string>
     <string name="objectives_usage_gate">Atlikite įvairius veiksmus su AAPS</string>
-    <string name="objectives_usage_learned">Sužinojote AAPS valdymo pagrindus. Pagrindiniai valdikliai yra Pradžios lange, pasiekiami spustelėjus arba ilgai spustelėjus. Daugiau valdiklių yra Veiksmų lange. Sužinojote, kaip iškelti įskiepio langą į viršutinį slenkantį meniu arba leisti jį rodyti viršutiniame kairiajame įgalintų įskiepių sąraše.</string>
+    <string name="objectives_usage_learned">Jau išmokote naudotis pagrindinėmis AAPS funkcijomis. Svarbiausi valdymo elementai yra pagrindiniame ekrane ir pasiekiami paspaudus arba palaikius nuspaudus atitinkamą elementą. Daugiau valdymo parinkčių rasite Veiksmų ekrane. Taip pat turėtumėte žinoti, kaip įskiepio ekraną pridėti prie viršutinio slenkamojo meniu arba palikti jį rodomą viršuje kairėje esančiame įjungtų įskiepių sąraše.</string>
     <string name="objectives_usereconnectpump">... ir iš naujo prijunkite tuo pačiu būdu</string>
     <string name="objectives_useloop">Peržiūrėkite Ciklo įskiepio turinį</string>
     <string name="objectives_usescale">Slinkti arba keisti gliukozės grafiko mastelį</string>
