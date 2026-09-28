@@ -8,7 +8,7 @@
     <string name="sensor_change_detected_text">Aptiktas galimas jutiklio pakeitimas %1$s. Pažymėti kaip naują jutiklį?</string>
     <string name="sensor_change_detected_action">Pažymėti jutiklio keitimą</string>
     <!-- Calibration management screen -->
-    <string name="cal_status_no_session">Užregistruokite jutiklio keitimą, kad galėtumėte naudoti kalibravimą.</string>
+    <string name="cal_status_no_session">Įrašykite jutiklio keitimą, kad galėtumėte naudoti kalibravimą.</string>
     <string name="cal_status_warmup">Jutiklis šyla — kalibravimas bus aktyvus po %1$s.</string>
     <string name="cal_status_need_more_entries">Reikia bent 2 matavimų iš piršto įrašų (dabar %1$d).</string>
     <string name="cal_status_unsafe_fit">Kalibravimo rezultatas nepatenka į saugų intervalą – kalibravimas nepritaikytas.</string>
@@ -17,7 +17,7 @@
     <string name="cal_status_applied_slope_clamped">Kalibravimas pritaikytas – nuolydis apribotas iki saugaus intervalo. Įveskite daugiau matavimų, kad apribojimą būtų galima sumažinti.</string>
     <string name="cal_slope_offset">Nuolydis %1$.2f, vidurinio diapazono korekcija %2$s</string>
     <string name="cal_session_started">Sesija pradėta: %1$s</string>
-    <string name="cal_mark_sensor_change_now">Registruoti jutiklio pakeitimą</string>
+    <string name="cal_mark_sensor_change_now">Įrašyti jutiklio pakeitimą</string>
     <string name="cal_add_calibration">Kalibruoti</string>
     <string name="cal_entries_header">Matavimų iš piršto įrašai (%1$d)</string>
     <string name="cal_no_entries">Matavimų iš piršto įrašų dar nėra.</string>
