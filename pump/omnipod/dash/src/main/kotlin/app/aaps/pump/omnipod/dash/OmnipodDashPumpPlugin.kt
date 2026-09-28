@@ -80,7 +80,7 @@ import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.ui.compose.OmnipodDashComposeContent
 import app.aaps.pump.omnipod.dash.util.Constants
-import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
+import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.CoroutineScope
@@ -425,7 +425,7 @@ class OmnipodDashPumpPlugin(
 
     private fun setNewBasalProfile(profile: Profile, historyType: OmnipodCommandType): PumpEnactResult {
         var deliverySuspended = false
-        val basalProgram = mapProfileToBasalProgram(profile)
+        val basalProgram = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         return executeProgrammingCommand(
             pre = suspendDeliveryIfActive().doOnComplete {
                 if (podStateManager.activeCommand == null) {
@@ -597,7 +597,7 @@ class OmnipodDashPumpPlugin(
             return false
         }
         val running = podStateManager.basalProgram
-        val equal = (mapProfileToBasalProgram(profile) == running)
+        val equal = (mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH) == running)
         aapsLogger.info(LTag.PUMP, "set: $equal. profile=$profile, running=$running")
         return equal
     }
@@ -1140,7 +1140,7 @@ class OmnipodDashPumpPlugin(
             executeProgrammingCommand(
                 pre = observeDeliverySuspended(),
                 historyEntry = history.createRecord(OmnipodCommandType.RESUME_DELIVERY, basalProfileRecord = BasalValuesRecord(it.getBasalValues().toList())),
-                command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(it), hasBasalBeepEnabled())
+                command = omnipodManager.setBasalProgram(mapProfileToBasalProgram(it, PumpType.OMNIPOD_DASH), hasBasalBeepEnabled())
                     .ignoreElements()
             ).doFinally {
                 notifyOnUnconfirmed(

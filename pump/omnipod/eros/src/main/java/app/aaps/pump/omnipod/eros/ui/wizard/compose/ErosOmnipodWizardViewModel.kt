@@ -4,9 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.model.TE
-import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
@@ -34,8 +31,6 @@ import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.rxSingle
 import dev.zacsweers.metro.Inject
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -51,32 +46,29 @@ class ErosOmnipodWizardViewModel(
     private val podStateManager: AapsErosPodStateManager,
     private val commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
-    private val insulinManager: InsulinManager,
+    insulinManager: InsulinManager,
     profileFunction: ProfileFunction,
     profileRepository: ProfileRepository,
-    private val persistenceLayer: PersistenceLayer,
+    persistenceLayer: PersistenceLayer,
     private val preferences: Preferences,
     pumpEnactResultProvider: () -> PumpEnactResult,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
-) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, profileRepository) {
-
-    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
-
-    init {
-        viewModelScope.launch {
-            val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
-            loadInsulins(insulins, activeLabel)
-            loadSiteRotationEntriesInternal()
-            resolveProfileGate()
-            _ready.value = true
-        }
-    }
+) : OmnipodWizardViewModel(
+    logger,
+    aapsSchedulers,
+    pumpEnactResultProvider,
+    profileFunction,
+    profileRepository,
+    insulinManager,
+    persistenceLayer
+) {
 
     override val pumpSource: Sources = Sources.OmnipodEros
 
-    override fun fallbackICfg(): ICfg? = insulinManager.insulins.firstOrNull()
+    init {
+        initializeWizard()
+    }
 
     override val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
@@ -87,38 +79,6 @@ class ErosOmnipodWizardViewModel(
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
 
-    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
-
-    private suspend fun loadSiteRotationEntriesInternal() {
-        _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
-            System.currentTimeMillis() - T.days(45).msecs(), false
-        ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
-    }
-
-    override fun executeInsulinProfileSwitch() {
-        val selected = selectedInsulin.value ?: return
-        val activeLabel = activeInsulinLabel.value
-        if (selected.insulinLabel == activeLabel) return
-        viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.OmnipodEros)
-        }
-    }
-
-    override fun saveSiteLocation() {
-        val location = getSelectedSiteLocation().takeIf { it != TE.Location.NONE } ?: return
-        val arrow = getSelectedSiteArrow().takeIf { it != TE.Arrow.NONE }
-        viewModelScope.launch {
-            try {
-                val now = System.currentTimeMillis()
-                val entries = persistenceLayer.getTherapyEventDataFromToTime(now - 60_000, now)
-                    .filter { it.type == TE.Type.CANNULA_CHANGE }
-                entries.firstOrNull()?.let { te ->
-                    persistenceLayer.insertOrUpdateTherapyEvent(te.copy(location = location, arrow = arrow))
-                }
-            } catch (_: Exception) {
-            }
-        }
-    }
 
     // region Action implementations — code copied verbatim from existing VMs
 

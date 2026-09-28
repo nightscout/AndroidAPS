@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -67,7 +70,9 @@ abstract class OmnipodWizardViewModel(
     private val aapsSchedulers: AapsSchedulers,
     protected val pumpEnactResultProvider: () -> PumpEnactResult,
     protected val profileFunction: ProfileFunction,
-    protected val profileRepository: ProfileRepository
+    protected val profileRepository: ProfileRepository,
+    private val insulinManager: InsulinManager,
+    private val persistenceLayer: PersistenceLayer
 ) : ViewModel(), SiteLocationStepHost, ProfileGateStepHost {
 
     // region Step navigation
@@ -138,6 +143,21 @@ abstract class OmnipodWizardViewModel(
         _selectedInsulin.value = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
     }
 
+    protected fun initializeWizard() {
+        viewModelScope.launch {
+            loadInsulins(
+                insulinManager.insulins.map { it.deepClone() },
+                profileFunction.getProfile()?.iCfg?.insulinLabel
+            )
+            _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
+                System.currentTimeMillis() - T.days(45).msecs(),
+                false
+            ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
+            resolveProfileGate()
+            _ready.value = true
+        }
+    }
+
     // endregion
 
     // region Site location (SiteLocationStepHost)
@@ -147,6 +167,8 @@ abstract class OmnipodWizardViewModel(
 
     private val _siteArrow = MutableStateFlow(TE.Arrow.NONE)
     override val siteArrow: StateFlow<TE.Arrow> = _siteArrow
+
+    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
 
     override fun updateSiteLocation(location: TE.Location) {
         _siteLocation.value = location
@@ -175,6 +197,8 @@ abstract class OmnipodWizardViewModel(
     /** Get the selected site arrow (for persisting after activation). */
     fun getSelectedSiteArrow(): TE.Arrow = _siteArrow.value
 
+    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
+
     // endregion
 
     // region Profile gate (ProfileGateStepHost)
@@ -192,7 +216,7 @@ abstract class OmnipodWizardViewModel(
     protected abstract val pumpSource: Sources
 
     /** Fallback insulin config used when creating a PS via the gate. Concrete VMs return their first available insulin. */
-    protected abstract fun fallbackICfg(): ICfg?
+    protected fun fallbackICfg(): ICfg? = insulinManager.insulins.firstOrNull()
 
     /** Concrete VMs call this from their init coroutine after profile data is available. */
     protected suspend fun resolveProfileGate() {
@@ -384,10 +408,28 @@ abstract class OmnipodWizardViewModel(
     @StringRes abstract fun getTextForStep(step: OmnipodWizardStep): Int
 
     /** Execute insulin profile switch if insulin was changed during activation. */
-    abstract fun executeInsulinProfileSwitch()
+    fun executeInsulinProfileSwitch() {
+        val selected = selectedInsulin.value ?: return
+        if (selected.insulinLabel == activeInsulinLabel.value) return
+        viewModelScope.launch {
+            profileFunction.createProfileSwitchWithNewInsulin(selected, pumpSource)
+        }
+    }
 
     /** Persist site location to therapy event after successful activation. */
-    abstract fun saveSiteLocation()
+    fun saveSiteLocation() {
+        val location = getSelectedSiteLocation().takeIf { it != TE.Location.NONE } ?: return
+        val arrow = getSelectedSiteArrow().takeIf { it != TE.Arrow.NONE }
+        viewModelScope.launch {
+            try {
+                val now = System.currentTimeMillis()
+                persistenceLayer.getTherapyEventDataFromToTime(now - 60_000, now)
+                    .firstOrNull { it.type == TE.Type.CANNULA_CHANGE }
+                    ?.let { persistenceLayer.insertOrUpdateTherapyEvent(it.copy(location = location, arrow = arrow)) }
+            } catch (_: Exception) {
+            }
+        }
+    }
 
     // endregion
 

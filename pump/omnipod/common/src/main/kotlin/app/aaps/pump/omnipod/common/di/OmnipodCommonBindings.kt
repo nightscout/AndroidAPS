@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManager
+import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodBleManager
 import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManagerImpl
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.device.BleDeviceManager
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnectionFactory
@@ -63,11 +63,11 @@ object OmnipodCommonBindings {
 
     @Provides
     @SingleIn(AppScope::class)
-    fun provideOmnipodDashBleManager(
+    fun provideOmnipodBleManager(
         aapsLogger: AAPSLogger,
         podState: OmnipodDashPodStateManager,
         config: Config,
         bleConnectionFactory: BleConnectionFactory,
         bleDeviceManager: BleDeviceManager
-    ): OmnipodDashBleManager = OmnipodDashBleManagerImpl(aapsLogger, podState, config, bleConnectionFactory, bleDeviceManager)
+    ): OmnipodBleManager = OmnipodDashBleManagerImpl(aapsLogger, podState, config, bleConnectionFactory, bleDeviceManager)
 }
