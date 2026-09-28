@@ -7,7 +7,7 @@
     <string name="bolus_delivered_so_far">Suleista %1$.2f V iš %2$.2f V</string>
     <string name="bolus_delivered_successfully">Sėkmingai suleistas %1$.2f V bolusas</string>
     <!-- PumpPluginBase -->
-    <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdiklis pakeistas.</string>
     <!--    DateUtil-->
     <string name="minago">prieš %1$d min</string>
     <string name="secago">prieš %1$d s</string>
