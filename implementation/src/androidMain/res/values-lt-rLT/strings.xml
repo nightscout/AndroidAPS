@@ -5,6 +5,7 @@
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">AV</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Ryšys prieš: %1$d min</string>
     <string name="short_status_last_bolus">Pask. bolusas: %1$s @ %2$s</string>
     <string name="short_status_temp_basal">Laik. bazė: %1$s</string>
     <string name="short_status_battery">Bat: %1$d%%</string>
@@ -55,6 +56,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Iššifravimas klaida, slaptažodis yra neteisingas arba nustatymų failas buvo pakeistas! Taip nutinka, jei importuotas failas buvo eksportuotas su kitu slaptažodžiu.</string>
     <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
+    <string name="metadata_label_format">Failo formatas</string>
     <string name="metadata_label_created_at">Sukurta</string>
     <string name="metadata_label_aaps_version">AAPS versija</string>
     <string name="metadata_label_aaps_flavour">Versijos variantas</string>
@@ -64,10 +66,20 @@
     <string name="metadata_format_new">Naujas šifruotas formatas</string>
     <string name="metadata_format_other">Nežinomas eksporto formatas</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Klaida pasiekiant failų sistemą. Tinkamai pasirinkite AAPS aplanką.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Kurti atsarginę kopiją Google Drive</string>
     <string name="csv_upload_failed">Nepavyko įkelti naudotojo įrašų CSV failo į debesies saugyklą</string>
     <string name="csv_upload_error">Įkeliant CSV į debesį įvyko klaida</string>
     <string name="uploading_to_cloud">Įkeliama į debesį...</string>
     <string name="cloud_directory_path">Debesies aplankas: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Nepavyko atnaujinti Google Drive prieigos rakto</string>
+    <string name="google_drive_token_refresh_error">Nepavyko atnaujinti Google Drive prieigos rakto: %1$s</string>
+    <string name="google_drive_connection_test_failed">Nepavyko patikrinti ryšio su Google Drive</string>
+    <string name="google_drive_connect_error">Nepavyko prisijungti prie Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Nepavyko gauti Google Drive aplankų sąrašo</string>
+    <string name="google_drive_list_folders_error">Gaunant aplankų sąrašą įvyko klaida: %1$s</string>
+    <string name="google_drive_upload_no_id">Įkelti pavyko, tačiau ID negautas</string>
+    <string name="google_drive_upload_verify_failed">Nepavyko patikrinti, ar failas įkeltas</string>
     <string name="google_drive_upload_failed">Nepavyko įkelti: %1$s</string>
     <string name="google_drive_upload_error">Įkeliant failą įvyko klaida: %1$s</string>
     <string name="google_drive_folder_access_error">Nepavyko sukurti arba pasiekti paskirties aplanko: %1$s</string>
