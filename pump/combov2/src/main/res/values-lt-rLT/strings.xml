@@ -18,7 +18,7 @@
     <string name="combov2_error_9">Skolintos pompos veikimo pabaiga</string>
     <string name="combov2_error_10">Rezervuaro klaida</string>
     <string name="combov2_error_11">Infuzijos sistema neužpildyta</string>
-    <string name="combov2_extended_bolus_not_supported">Ištęstinis bolusas nepalaikomas</string>
+    <string name="combov2_extended_bolus_not_supported">Ištęstas bolusas nepalaikomas</string>
     <string name="combov2_title">Accu-Chek Combo v2</string>
     <string name="combov2_pair_with_pump_title">Susieti pompą</string>
     <string name="combov2_unpair_pump_title">Atsieti pompą</string>
