@@ -105,8 +105,8 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_unknown_tbr_detected">Aptikta ir sustabdyta nežinoma laikina bazė: %1$d%%; likęs laikas: %2$s</string>
     <string name="combov2_connection_error">Sujungimo klaida: %1$s</string>
     <string name="combov2_short_status_alert">Perspėjimas: %s</string>
-    <string name="combov2_automatic_reservoir_entry">Automatiškai aptikti ir registruoti insulino rezervuaro keitimą</string>
-    <string name="combov2_automatic_battery_entry">Automatiškai aptikti ir registruoti baterijos keitimą</string>
+    <string name="combov2_automatic_reservoir_entry">Automatiškai aptikti ir įrašyti insulino rezervuaro keitimą</string>
+    <string name="combov2_automatic_battery_entry">Automatiškai aptikti ir įrašyti baterijos keitimą</string>
     <string name="combov2_timezone_changed">Laiko juosta pakeista</string>
     <string name="combov2_datetime_changed">Data ir/ar laikas pasikeitė</string>
     <string name="combov2_dst_started">Prasidėjo vasaros laikas</string>
