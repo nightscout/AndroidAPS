@@ -35,7 +35,7 @@
     <string name="pref_summary_alert_override_dnd">Įjungus šią parinktį AAPS įspėjimai skambės net nutildžius telefoną arba įjungus netrukdymo režimą. Išjungus parinktį šiais režimais įspėjimai bus be garso.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Įkelti glikemijos duomenis į NS</string>
-    <string name="pref_title_bg_source_create_sensor_change">Registruoti jutiklio pakeitimą</string>
+    <string name="pref_title_bg_source_create_sensor_change">Įrašyti jutiklio pakeitimą</string>
     <string name="pref_summary_bg_source_create_sensor_change">Pakeitus jutiklį sukurti terapijos įrašą.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Naudoti dinaminį jautrumą</string>
@@ -119,10 +119,10 @@
     <string name="pref_title_ns_use_wifi">Naudoti Wi‑Fi</string>
     <string name="pref_title_ns_use_on_battery">Sinchronizuoti neįkraunant</string>
     <string name="pref_title_ns_use_on_charging">Sinchronizuoti įkraunant</string>
-    <string name="pref_title_ns_log_app_start">Registruoti programos paleidimą</string>
+    <string name="pref_title_ns_log_app_start">Įrašyti programos paleidimą</string>
     <string name="pref_title_ns_create_announcements_from_errors">Kurti pranešimus iš klaidų</string>
     <string name="pref_title_ns_create_announcements_from_carbs_req">Kurti pranešimus, kai reikia angliavandenių</string>
-    <string name="pref_title_ns_slow_sync">Naudoti lėtą sinchronizavimą</string>
+    <string name="pref_title_ns_slow_sync">Sinchronizuoti lėtai</string>
     <string name="pref_title_ns_use_ws">Naudoti WebSocket</string>
     <string name="pref_summary_ns_use_ws">Naudoti WebSocket realiojo laiko ryšiui su Nightscout.</string>
     <string name="pref_title_ns_allow_client_control">Leisti valdyti iš kliento</string>
