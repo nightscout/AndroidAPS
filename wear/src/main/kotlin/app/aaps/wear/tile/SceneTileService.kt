@@ -15,6 +15,8 @@ class SceneTileService : TileBase() {
         super.onCreate()
     }
 
-    override val resourceVersion = "SceneTileService"
+    // Bumped when the icon set changed: the renderer keeps images by this version, and a new
+    // drawable under an old version shows as a blank button
+    override val resourceVersion = "SceneTileService2"
     override val source get() = sceneSource
 }
