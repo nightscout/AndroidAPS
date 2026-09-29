@@ -329,6 +329,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         mockCurrentMode(RM.Mode.SUSPENDED_BY_USER)
         val expectedModes = listOf(
             RM.Mode.DISCONNECTED_PUMP,
+            RM.Mode.SUSPENDED_BY_USER, // extend
             RM.Mode.RESUME
         )
 
@@ -347,6 +348,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         mockCurrentMode(RM.Mode.DISCONNECTED_PUMP)
         val expectedModes = listOf(
+            RM.Mode.DISCONNECTED_PUMP, // extend
             RM.Mode.RESUME
         )
 
@@ -355,6 +357,53 @@ class LoopPluginTest : TestBaseWithProfile() {
 
         // Assert
         assertThat(result).isEqualTo(expectedModes)
+    }
+
+    @Test
+    fun `handleRunningModeChange with the active temporary mode inserts a new row and ends the old one`() = runTest {
+        // Arrange: pump disconnected 20 min ago for 1 h, user picks 2 h again (extend)
+        val now = 1672531200000L
+        val current = RM(id = 7, mode = RM.Mode.DISCONNECTED_PUMP, timestamp = now - T.mins(20).msecs(), duration = T.hours(1).msecs())
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(persistenceLayer.getRunningModeActiveAt(now)).thenReturn(current)
+        whenever(persistenceLayer.insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any())).thenReturn(PersistenceLayer.TransactionResult())
+        whenever(persistenceLayer.cancelRunningMode(any(), any(), any(), any(), anyOrNull(), any())).thenReturn(PersistenceLayer.TransactionResult())
+
+        // Act
+        val result = loopPlugin.handleRunningModeChange(
+            newRM = RM.Mode.DISCONNECTED_PUMP, action = Action.DISCONNECT, source = Sources.LoopDialog,
+            listValues = emptyList(), durationInMinutes = 120, profile = validProfile
+        )
+
+        // Assert: the new row is inserted with the new duration from now ...
+        assertThat(result).isTrue()
+        val modeCaptor = argumentCaptor<RM>()
+        verify(persistenceLayer).insertOrUpdateRunningMode(modeCaptor.capture(), eq(Action.DISCONNECT), eq(Sources.LoopDialog), anyOrNull(), any())
+        assertThat(modeCaptor.firstValue.mode).isEqualTo(RM.Mode.DISCONNECTED_PUMP)
+        assertThat(modeCaptor.firstValue.timestamp).isEqualTo(now)
+        assertThat(modeCaptor.firstValue.duration).isEqualTo(T.mins(120).msecs())
+        // ... and the old row is ended at now, so the two do not overlap in history
+        verify(persistenceLayer).cancelRunningMode(eq(7L), eq(now), eq(Action.DISCONNECT), eq(Sources.LoopDialog), anyOrNull(), any())
+    }
+
+    @Test
+    fun `handleRunningModeChange from a permanent mode does not end any row`() = runTest {
+        // Arrange: closed loop (permanent), user suspends for 1 h
+        val now = 1672531200000L
+        val current = RM(id = 3, mode = RM.Mode.CLOSED_LOOP, timestamp = now - T.hours(5).msecs(), duration = 0)
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(persistenceLayer.getRunningModeActiveAt(now)).thenReturn(current)
+        whenever(persistenceLayer.insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any())).thenReturn(PersistenceLayer.TransactionResult())
+
+        // Act
+        loopPlugin.handleRunningModeChange(
+            newRM = RM.Mode.SUSPENDED_BY_USER, action = Action.SUSPEND, source = Sources.LoopDialog,
+            listValues = emptyList(), durationInMinutes = 60, profile = validProfile
+        )
+
+        // Assert
+        verify(persistenceLayer).insertOrUpdateRunningMode(any(), eq(Action.SUSPEND), eq(Sources.LoopDialog), anyOrNull(), any())
+        verify(persistenceLayer, never()).cancelRunningMode(any(), any(), any(), any(), anyOrNull(), any())
     }
 
     @Test

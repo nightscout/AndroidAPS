@@ -281,10 +281,11 @@ class LoopPlugin(
             RM.Mode.CLOSED_LOOP       -> mutableListOf(RM.Mode.DISABLED_LOOP, RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP_LGS, RM.Mode.DISCONNECTED_PUMP, RM.Mode.SUSPENDED_BY_USER, RM.Mode.SUPER_BOLUS)
             RM.Mode.CLOSED_LOOP_LGS   -> mutableListOf(RM.Mode.DISABLED_LOOP, RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP, RM.Mode.DISCONNECTED_PUMP, RM.Mode.SUSPENDED_BY_USER, RM.Mode.SUPER_BOLUS)
             RM.Mode.SUPER_BOLUS       -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME)
-            RM.Mode.DISCONNECTED_PUMP -> mutableListOf(RM.Mode.RESUME)
+            // The same temporary mode is allowed again: it means "new duration from now" (extend).
+            RM.Mode.DISCONNECTED_PUMP -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME)
             RM.Mode.SUSPENDED_BY_DST  -> mutableListOf(RM.Mode.DISCONNECTED_PUMP)
             RM.Mode.SUSPENDED_BY_PUMP -> mutableListOf() // handled independently
-            RM.Mode.SUSPENDED_BY_USER -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME)
+            RM.Mode.SUSPENDED_BY_USER -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.SUSPENDED_BY_USER, RM.Mode.RESUME)
             RM.Mode.RESUME            -> error("Invalid mode")
         }
         if (constraintChecker.isLoopInvocationAllowed().value().not()) {
@@ -334,6 +335,7 @@ class LoopPlugin(
             // Modes with zero temping
             RM.Mode.SUPER_BOLUS, RM.Mode.DISCONNECTED_PUMP                                         -> {
                 goToZeroTemp(durationInMinutes = durationInMinutes, mode = newRM, action = action, source = source, listValues = listValues)
+                endReplacedTemporaryMode(currentRM, newRM, now, action, source)
                 return true
             }
 
@@ -364,6 +366,7 @@ class LoopPlugin(
                     source = source,
                     listValues = listValues
                 )
+                endReplacedTemporaryMode(currentRM, newRM, now, action, source)
                 return true
             }
 
@@ -945,6 +948,19 @@ class LoopPlugin(
     }
 
     private fun allowPercentage(): Boolean = activePlugin.activePump.selectedActivePump() is VirtualPump
+
+    /**
+     * The user picked the temporary mode that is already active, to extend it (a second
+     * suspend or pump disconnect). The new row is inserted first, so it is already the active
+     * one and the `RunningModeReconciler` only sees the same mode with a longer duration: no
+     * cancel of the zero-TBR, no gap. Then the old row is ended at [now], so history and
+     * Nightscout do not keep two overlapping rows. Nothing to do when the mode is different
+     * or the current row is permanent.
+     */
+    private suspend fun endReplacedTemporaryMode(currentRM: RM, newRM: RM.Mode, now: Long, action: Action, source: Sources) {
+        if (currentRM.mode != newRM || !currentRM.isTemporary()) return
+        persistenceLayer.cancelRunningMode(id = currentRM.id, timestamp = now, action = action, source = source)
+    }
 
     /**
      * Enter a zero-delivery running mode (DISCONNECTED_PUMP / SUPER_BOLUS). Pure DB write:
