@@ -18,7 +18,7 @@ ktor = "3.6.0"
 # pairing path. It wraps each platform's vetted implementation (JCA, CryptoKit, OpenSSL 3) rather
 # than implementing the algorithms, which is what we want in a signing path.
 cryptographyKotlin = "0.6.0"
-work = "2.11.2"
+work = "2.12.0"
 datastorePreferences = "1.2.1"
 
 # Compose
