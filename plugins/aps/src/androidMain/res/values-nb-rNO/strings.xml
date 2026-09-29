@@ -44,6 +44,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">En bolus er gitt i løpet av de siste 3 minuttene, dropper SMB</string>
     <string name="pump_not_initialized">Pumpen er ikke initialisert!</string>
+    <string name="zero_basal_not_set">Pumpen godtok ikke nullbasal. Den kan fortsatt levere basalinsulin. Kontroller pumpen.</string>
     <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Aktiver eller deaktiver hendelsen som starter kjøring av loop.</string>
     <string name="no_aps_selected">INGEN APS ER VALGT ELLER HAR LEVERT RESULTAT</string>
