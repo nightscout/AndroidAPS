@@ -1788,6 +1788,12 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         assertThat(autosensDataStore.referenceTime).isEqualTo(T.mins(40).msecs())
         val bucketed = autosensDataStore.bucketedData!!
         assertThat(bucketed.count { !it.filledGap }).isAtLeast(5)
+        // What it costs: the newest bucket is the grid point BELOW the late reading, so the current BG
+        // that overview, wizard, wear and the loop trigger all read is 60 seconds behind it, and
+        // interpolated. Anchoring on the late reading instead made that bucket exact but put the other
+        // five off the grid, which is the worse trade.
+        assertThat(bucketed[0].timestamp).isEqualTo(T.mins(45).msecs())
+        assertThat(bucketed[0].filledGap).isTrue()
         assertThat(bucketed.first { it.timestamp == T.mins(40).msecs() }.value).isEqualTo(140.0)
         assertThat(bucketed.first { it.timestamp == T.mins(40).msecs() }.filledGap).isFalse()
         assertThat(bucketed.first { it.timestamp == T.mins(25).msecs() }.value).isEqualTo(110.0)
@@ -1849,6 +1855,40 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         // referenceTime would still be the oldest reading, set while normalizing.
         assertThat(autosensDataStore.referenceTime).isNotEqualTo(oldestTime)
         assertThat(autosensDataStore.referenceTime).isAtLeast(newestTime - T.mins(AutosensDataStoreObject.PHASE_SEED_MIN).msecs())
+    }
+
+    @Test
+    fun aNewestReadingFarOffTheChosenPhaseLeavesTheNewestBucketBehind() {
+        // The worst case of the seeding trade-off, pinned so it cannot drift unnoticed. Five regular
+        // readings plus a newest one 3 minutes off their phase: the seed follows the five, the newest
+        // grid point then lands 2 minutes AFTER the newest reading, and createBucketedDataRecalculated
+        // steps back a whole grid point rather than stamping a bucket in the future.
+        //
+        // So bucketedData[0] is 3 minutes older than the reading that exists. That matters beyond the
+        // display: GlucoseStatusCalculatorSMB and GlucoseStatusCalculatorAutoIsf both refuse data[0]
+        // older than 7 minutes, so the APS stops accepting this 4 minutes after the reading arrives
+        // rather than 7. The lag can reach 4.5 minutes, which leaves only 2.5 minutes of real margin.
+        val newest = T.mins(43).msecs()
+        autosensDataStore.bgReadings = listOf(43L, 40L, 35L, 30L, 25L, 20L).map { minute ->
+            GV(
+                raw = 0.0,
+                noise = 0.0,
+                value = 100.0,
+                timestamp = T.mins(minute).msecs(),
+                sourceSensor = SourceSensor.UNKNOWN,
+                trendArrow = TrendArrow.FLAT
+            )
+        }
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        assertThat(autosensDataStore.referenceTime).isEqualTo(T.mins(40).msecs())
+        val bucketed = autosensDataStore.bucketedData!!
+        assertThat(bucketed[0].timestamp).isEqualTo(T.mins(40).msecs())
+        assertThat(newest - bucketed[0].timestamp).isEqualTo(T.mins(3).msecs())
+        // The five regular readings are all real samples, which is the point of following their phase.
+        assertThat(bucketed.count { !it.filledGap }).isEqualTo(5)
     }
 
     @Test
