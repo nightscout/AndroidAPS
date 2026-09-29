@@ -15,6 +15,7 @@
     <string name="carelevo_insulin_remain_key">Zostávajúci inzulín</string>
     <string name="carelevo_running_remain_time">Zostávajúci čas náplasťovej pumpy</string>
     <string name="carelevo_total_insulin_key">Celkové množstvo podaného inzulínu</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d hod %2$d min</string>
     <string name="common_label_unit_value_minute">%d min</string>
     <string name="common_label_unit_value_duration_hour">%d hod</string>
     <string name="common_label_unit_value_dose_with_space">%s U</string>
@@ -33,6 +34,7 @@
     <string name="carelevo_pump_stop_duration_label_4_hour">4 hodiny</string>
     <string name="common_unit_value_day_hour_min">%1$d dní %2$02d - %3$02d</string>
     <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">Zostáva %1$d min %2$02d sec</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
     <string name="carelevo_btn_insulin_guide">Sprievodca inzulínom</string>
     <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
@@ -148,17 +150,6 @@
     <string name="alarm_feat_title_warning_patch_error">Chyba náplasťovej pumpy</string>
     <string name="alarm_feat_title_warning_infusion_clogged">Oklúzia</string>
     <string name="alarm_feat_title_warning_needle_injection_error">Chyba vloženia ihly</string>
-    <!-- Warning Descriptions -->
-    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[Zostáva menej ako <b>10 U</b>; podávanie inzulínu bolo zastavené.<br><b>Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
-    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[Platnosť náplasťovej pumpy vypršala; podávanie inzulínu sa zastavilo.<br><b>Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
-    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Nízky stav batérie; podávanie inzulínu zastavené.<br><b>Stlačte tlačidlo [Zahodiť náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
-    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[Podávanie inzulínu zastavené.<br><b>Presuňte sa do prostredia s vhodnou teplotou (4.4 °C až 37 °C).</b>]]></string>
-    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[Podávanie inzulínu zastavené.<br><b>Stlačte tlačidlo [Spustiť inzulín] a obnovte podávanie bazálnej dávky.</b>]]></string>
-    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[Životnosť náplasťovej pumpy uplynula.<br><b> Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
-    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[Samodiagnostika zlyhala.<br><b>Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
-    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[Podávanie inzulínu sa zastavilo v dôsledku neočakávanej chyby.<br><b>Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
-    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[Podávanie inzulínu bolo zastavené z dôvodu oklúzie.<br><b>Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
-    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Ihlu sa nepodarilo zaviesť.<br><b>Stlačte tlačidlo [Deaktivovať náplasťovú pumpu] a ihneď ju vymeňte.</b>]]></string>
     <!-- Alert Titles -->
     <string name="alarm_feat_title_alert_low_insulin">Nízka hladina inzulínu</string>
     <string name="alarm_feat_title_alert_expired_patch_phase2">Životnosť náplasťovej pumpy vypršala</string>
@@ -170,16 +161,6 @@
     <string name="alarm_feat_title_alert_incomplete_patch_setting">Aktivácia náplasťovej pumpy nebola dokončená</string>
     <string name="alarm_feat_title_alert_resume_infusion">Spustite inzulín</string>
     <string name="alarm_feat_title_alert_off_bluetooth">Zapnúť Bluetooth</string>
-    <!-- Alert Descriptions -->
-    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[Zostáva menej ako <b>%s U</b> inzulínu.<br><b>Pripravte sa na výmenu náplasťovej pumpy.</b>]]></string>
-    <string name="alarm_feat_desc_alert_expired_patch_phase2"><![CDATA[Platnosť náplasťovej pumpy vypršala.<br><b>Vymeňte náplasťovú pumpu.</b>]]></string>
-    <string name="alarm_feat_desc_alert_expired_patch_phase1"><![CDATA[Platnosť náplasťovej pumpy čoskoro vyprší.<br><b>Vymeňte náplasťovú pumpu.</b>]]></string>
-    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[Batéria je takmer vybitá.<br><b>Pripravte sa na výmenu náplasťovej pumpy.</b>]]></string>
-    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[Podávanie inzulínu pozastavené z dôvodu extrémnej teploty.</b><br>Presuňte sa do prostredia s teplotou 4° C – 37 °C, aby sa podávanie obnovilo.]]></string>
-    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[Stlačte [OK].<br>Ak túto výzvu odignorujete, prejde do stavu kritického alarmu a <b>podávanie inzulínu sa zastaví.</b>]]></string>
-    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[Stlačením tlačidla [OK] dokončíte aktiváciu náplasťovej pumpy.]]></string>
-    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[Pozastavenie podávania inzulínu sa skončilo.<br><b>Ťuknutím na [Spustiť inzulín] ho spustíte.</b>]]></string>
-    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[Na používanie náplasťovej pumpy je potrebné pripojenie Bluetooth.<br><b>Stlačte [OK] a zapnite Bluetooth.</b>]]></string>
     <!-- Notice Titles -->
     <string name="alarm_feat_title_notice_low_insulin">Nízka hladina inzulínu</string>
     <string name="alarm_feat_title_notice_expired_patch">Upozornenie na čas používania náplasťovej pumpy</string>
@@ -190,17 +171,6 @@
     <string name="alarm_feat_title_notice_lgs_ended">LGS ukončené</string>
     <string name="alarm_feat_title_notice_lgs_error">LGS nie je k dispozícii</string>
     <string name="alarm_feat_title_notice_unknown">Chyba náplasťovej pumpy</string>
-    <!-- Notice Descriptions -->
-    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Zostáva menej ako %s jednotiek inzulínu.<br><b>Pripravte sa na výmenu náplasťovej pumpy.</b>]]></string>
-    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[Od podania bolusu uplynulo %s.<br>Skontrolujte si hladinu glukózy v krvi.]]></string>
-    <string name="alarm_feat_desc_notice_lgs_started">LGS spustené</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS sa ukončil z dôvodu prerušenia spojenia s náplasťovou pumpou/CGM.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS sa skončilo z dôvodu pozastavenia LGS.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_time_over">LGS sa skončil, pretože uplynul naplánovaný čas.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS sa skončilo, pretože bolo vypnuté.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">Funkcia LGS sa ukončila, pretože hladina CGM prekročila nastavenú prahovú hodnotu.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_unknown">LGS sa ukončilo z neznámeho dôvodu.</string>
-    <string name="alarm_feat_desc_notice_lgs_error">Skontrolujte, prosím, pripojenie náplasťovej pumpy a CGM.</string>
     <string name="alarm_feat_desc_unknown">Neočakávaná chyba náplasťovej pumpy.</string>
     <!-- Action Buttons -->
     <string name="alarm_feat_btn_patch_discard">Deaktivovať náplasťovú pumpu</string>
@@ -229,6 +199,8 @@
     <string name="alarm_notification_desc_alert_resume_infusion">Pozastavenie podávania inzulínu sa skončilo. Ťuknutím na [Spustiť inzulín] ho spustíte.</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">Na používanie náplasťovej pumpy je potrebné pripojenie Bluetooth. Stlačte [OK] a zapnite Bluetooth.</string>
     <string name="alarm_notification_desc_notice_low_insulin">Zostáva menej ako %s U inzulínu. Pripravte sa na výmenu náplasťovej pumpy.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Doba používania náplasti je %1$s dní %2$s hodín. Majte to na pamäti počas používania.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Časové pásmo sa zmenilo z %1$s(UTC %2$s) na %3$s(UTC %4$s).</string>
     <string name="alarm_notification_desc_notice_check_bg">Od podania bolusu uplynulo %s. Skontrolujte si hladinu glukózy v krvi.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS spustený.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS sa ukončil z dôvodu prerušenia spojenia s náplasťovou pumpou/CGM.</string>
