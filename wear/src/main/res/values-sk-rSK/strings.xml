@@ -97,6 +97,7 @@
     <string name="action_user_action_confirmation">Vyžaduje sa akcia používateľa</string>
     <string name="action_scene_confirmation">Požadovaná scéna</string>
     <string name="scene_end">Koniec</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Preskočiť</string>
     <string name="action_treatment_confirmation">Požadované ošetrenie</string>
     <string name="action_bolus_confirmation">Požadovaný bolus</string>
     <string name="action_wizard_confirmation">Požadovaná kalkulačka</string>
@@ -317,6 +318,18 @@
     <string name="loop_status_target_range">Rozsah</string>
     <string name="loop_status_target">Cieľ</string>
     <string name="loop_status_adjusted_target">Upravený cieľ</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Do ukončenia</string>
+    <string name="loop_status_scene_ended">Ukončené</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Ďalší krok</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Nie je nastavený žiadny profil</string>
+    <string name="loop_status_profile_percentage">Percento</string>
+    <string name="loop_status_profile_timeshift">Časový posun</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Návrat na</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Citlivosť</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Nastavené podľa aktívneho režimu</string>
     <string name="loop_status">Stav okruhu</string>
     <string name="loop_status_refresh">Obnoviť</string>
     <string name="confirm">Potvrdiť</string>

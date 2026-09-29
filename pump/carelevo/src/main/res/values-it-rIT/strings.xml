@@ -15,7 +15,6 @@
     <string name="carelevo_insulin_remain_key">Insulina Rimanente</string>
     <string name="carelevo_running_remain_time">Tempo Della Patch Rimanente</string>
     <string name="carelevo_total_insulin_key">Insulina totale erogata</string>
-    <string name="common_label_unit_value_duration_hour_and_minute">%d ore %d min</string>
     <string name="common_label_unit_value_minute">%d min</string>
     <string name="common_label_unit_value_duration_hour">%d ore</string>
     <string name="common_label_unit_value_dose_with_space">%s U</string>
@@ -34,7 +33,6 @@
     <string name="carelevo_pump_stop_duration_label_4_hour">4 ore</string>
     <string name="common_unit_value_day_hour_min">%1$d giorni %2$02d - %3$02d</string>
     <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
-    <string name="common_unit_remain_min_sec">%d min %02d sec rimanenti</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
     <string name="carelevo_btn_insulin_guide">Guida All\'Insulina</string>
     <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
@@ -150,17 +148,6 @@
     <string name="alarm_feat_title_warning_patch_error">Errore patch</string>
     <string name="alarm_feat_title_warning_infusion_clogged">Occlusione</string>
     <string name="alarm_feat_title_warning_needle_injection_error">Errore inserimento ago</string>
-    <!-- Warning Descriptions -->
-    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[Meno di <b>10 U</b> insulina rimanente; la somministrazione di insulina è interrotta.<br><b>Tocca il pulsante [Disattiva cerotto] e cambia il cerotto ora.</b>]]></string>
-    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[Patch scaduta; la somministrazione di insulina è interrotta.<br><b>Tocca il pulsante [Disattiva Patch] e cambia patch ora.</b>]]></string>
-    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Batteria bassa; erogazione di insulina interrotta.<br><b>Tocca il pulsante [Scarta cerotto] e cambia patch ora.</b>]]></string>
-    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[Consegna di insulina interrotta.<br><b>Sposta ora ad una temperatura adeguata (40°F ~ 99°F).</b>]]></string>
-    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[Consegna di insulina interrotta.<br><b>Tocca il pulsante [Start Insulin] e riavvia l'erogazione basale.</b>]]></string>
-    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[Patch scaduta; la somministrazione di insulina è interrotta.<br><b>Tocca il pulsante [Disattiva Patch] e cambia patch ora.</b>]]></string>
-    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[Autodiagnosi non riuscita.<br><b>Tocca il pulsante [Disattiva patch] e cambia patch ora.</b>]]></string>
-    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[L'erogazione di insulina è interrotta a causa di un errore imprevisto.<br><b>Tocca il pulsante [Disattiva patch] e cambia la patch ora.</b>]]></string>
-    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[La somministrazione di insulina è interrotta a causa di occlusione.<br><b>Tocca il pulsante [Disattiva patch] e cambia la patch ora.</b>]]></string>
-    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Impossibile inserire l'ago.<br><b>Tocca il pulsante [Disattiva cerotto] e cambia la patch ora.</b>]]></string>
     <!-- Alert Titles -->
     <string name="alarm_feat_title_alert_low_insulin">Insulina Bassa</string>
     <string name="alarm_feat_title_alert_expired_patch_phase2">Ciclo Di Vita Operativa Scaduto</string>
@@ -172,16 +159,6 @@
     <string name="alarm_feat_title_alert_incomplete_patch_setting">Attivazione patch completata</string>
     <string name="alarm_feat_title_alert_resume_infusion">Seleziona Insulina</string>
     <string name="alarm_feat_title_alert_off_bluetooth">Attiva Bluetooth</string>
-    <!-- Alert Descriptions -->
-    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[Meno di <b>%s U</b> insulina rimanente. <br><b>Preparati a cambiare il cerotto.</b>]]></string>
-    <string name="alarm_feat_desc_alert_expired_patch_phase2"><![CDATA[Patch scaduta.<br><b>Cambiala ora.</b>]]></string>
-    <string name="alarm_feat_desc_alert_expired_patch_phase1"><![CDATA[Patch scadrà presto.<br><b>Cambiala ora.</b>]]></string>
-    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[Batteria scarica. <br><b>Preparati a cambiare il cerotto.</b>]]></string>
-    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[Erogazione di insulina in pausa a causa della temperatura estrema.</b><br>Spostare a 4°C–37°C per riprendere.]]></string>
-    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[Si prega di toccare [OK]. <br>Se ignorato, aumenta in un allarme critico e <b>la somministrazione di insulina sarà interrotta.</b>]]></string>
-    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[Toccare il pulsante [OK] per completare l’attivazione del cerotto.]]></string>
-    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[La pausa di insulina è terminata. <br><b>Tocca [Inizia insulina] per iniziare.</b>]]></string>
-    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[Il Bluetooth è necessario per utilizzare la patch. <br><b>Tocca [OK] e attiva il Bluetooth.</b>]]></string>
     <!-- Notice Titles -->
     <string name="alarm_feat_title_notice_low_insulin">Insulina Bassa</string>
     <string name="alarm_feat_title_notice_expired_patch">Notifica Ora Uso Patch</string>
@@ -192,19 +169,6 @@
     <string name="alarm_feat_title_notice_lgs_ended">LGS Terminato</string>
     <string name="alarm_feat_title_notice_lgs_error">LGS Non Disponibile</string>
     <string name="alarm_feat_title_notice_unknown">Errore patch</string>
-    <!-- Notice Descriptions -->
-    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Meno di %s U insulina rimanente. <br><b>Preparati a cambiare il cerotto.</b>]]></string>
-    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[La durata di utilizzo della patch è di <b>%s giorni %s ore</b>. <br>Tieni presente questo aspetto durante l'utilizzo.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Il fuso orario è cambiato da <b>%s(UTC %s) a %s(UTC %s)</b>.]]></string>
-    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[%s è passato dal tuo bolo. <br>Controlla la tua glicemia.]]></string>
-    <string name="alarm_feat_desc_notice_lgs_started">LGS avviato.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS è terminato a causa della disconnessione patch/CGM.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS terminato a causa della pausa LGS.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_time_over">LGS è terminato perché è trascorso l\'orario programmato.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS è terminato perché LGS è stato disattivato.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">LGS è terminato perché il livello di CGM ha superato la soglia stabilita.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_unknown">LGS è terminato per una ragione sconosciuta.</string>
-    <string name="alarm_feat_desc_notice_lgs_error">Controllare la connessione cerotto e CGM.</string>
     <string name="alarm_feat_desc_unknown">Errore di patch inatteso.</string>
     <!-- Action Buttons -->
     <string name="alarm_feat_btn_patch_discard">Disattiva patch</string>
@@ -233,8 +197,6 @@
     <string name="alarm_notification_desc_alert_resume_infusion">La pausa di insulina è terminata. Tocca [Inizia insulina] per iniziare.</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">Il Bluetooth è necessario per utilizzare la patch. Tocca [OK] e attiva il Bluetooth.</string>
     <string name="alarm_notification_desc_notice_low_insulin">Meno di %s U insulina rimanente. Preparati a cambiare il cerotto.</string>
-    <string name="alarm_notification_desc_notice_expired_patch">La durata di utilizzo della patch è di %s giorni %s ore. Tieni presente questo aspetto durante l\'utilizzo.</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">Il fuso orario è cambiato da %s(UTC %s) a %s(UTC %s).</string>
     <string name="alarm_notification_desc_notice_check_bg">%s è passato dal tuo bolo. Controlla la tua glicemia.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS avviato.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS è terminato a causa della disconnessione patch/CGM.</string>
