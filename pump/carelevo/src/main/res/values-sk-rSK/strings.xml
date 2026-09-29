@@ -15,7 +15,6 @@
     <string name="carelevo_insulin_remain_key">Zostávajúci inzulín</string>
     <string name="carelevo_running_remain_time">Zostávajúci čas náplasťovej pumpy</string>
     <string name="carelevo_total_insulin_key">Celkové množstvo podaného inzulínu</string>
-    <string name="common_label_unit_value_duration_hour_and_minute">%d hod %d min</string>
     <string name="common_label_unit_value_minute">%d min</string>
     <string name="common_label_unit_value_duration_hour">%d hod</string>
     <string name="common_label_unit_value_dose_with_space">%s U</string>
@@ -34,7 +33,6 @@
     <string name="carelevo_pump_stop_duration_label_4_hour">4 hodiny</string>
     <string name="common_unit_value_day_hour_min">%1$d dní %2$02d - %3$02d</string>
     <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
-    <string name="common_unit_remain_min_sec">Zostáva %d min %02d s</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
     <string name="carelevo_btn_insulin_guide">Sprievodca inzulínom</string>
     <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
@@ -194,8 +192,6 @@
     <string name="alarm_feat_title_notice_unknown">Chyba náplasťovej pumpy</string>
     <!-- Notice Descriptions -->
     <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Zostáva menej ako %s jednotiek inzulínu.<br><b>Pripravte sa na výmenu náplasťovej pumpy.</b>]]></string>
-    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Doba používania náplasťovej pumpy je <b>%s dní a %s hodín.</b><br>Majte to počas používania na pamäti.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Časové pásmo sa zmenilo z <b>%s (UTC %s) na %s (UTC %s)</b>.]]></string>
     <string name="alarm_feat_desc_notice_check_bg"><![CDATA[Od podania bolusu uplynulo %s.<br>Skontrolujte si hladinu glukózy v krvi.]]></string>
     <string name="alarm_feat_desc_notice_lgs_started">LGS spustené</string>
     <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS sa ukončil z dôvodu prerušenia spojenia s náplasťovou pumpou/CGM.</string>
@@ -233,8 +229,6 @@
     <string name="alarm_notification_desc_alert_resume_infusion">Pozastavenie podávania inzulínu sa skončilo. Ťuknutím na [Spustiť inzulín] ho spustíte.</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">Na používanie náplasťovej pumpy je potrebné pripojenie Bluetooth. Stlačte [OK] a zapnite Bluetooth.</string>
     <string name="alarm_notification_desc_notice_low_insulin">Zostáva menej ako %s U inzulínu. Pripravte sa na výmenu náplasťovej pumpy.</string>
-    <string name="alarm_notification_desc_notice_expired_patch">Doba životnosti náplasťovej je %s dní a %s hodín. Majte to počas používania na pamäti.</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">Časové pásmo sa zmenilo z %s (UTC %s) na %s (UTC %s).</string>
     <string name="alarm_notification_desc_notice_check_bg">Od podania bolusu uplynulo %s. Skontrolujte si hladinu glukózy v krvi.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS spustený.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS sa ukončil z dôvodu prerušenia spojenia s náplasťovou pumpou/CGM.</string>
