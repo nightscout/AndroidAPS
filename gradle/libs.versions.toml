@@ -110,7 +110,7 @@ androidx-browser = { group = "androidx.browser", name = "browser", version = "1.
 # is multiplatform, which is what keeps LongSparseArray usable from shared code.
 androidx-collection = { group = "androidx.collection", name = "collection", version = "1.6.0" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.2" }
-androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.0" }
+androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.1" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-legacy-support = { group = "androidx.legacy", name = "legacy-support-v13", version = "1.0.0" }
