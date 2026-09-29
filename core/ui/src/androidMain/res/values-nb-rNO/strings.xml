@@ -63,6 +63,7 @@
     <string name="configbuilder_switch_confirmation">Dette vil deaktivere %1$s og aktivere %2$s.</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Fullført</string>
     <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Utvidet</string>
     <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Kollapset</string>
     <string name="no_compose_preferences">Ingen innstillinger tilgjengelig for denne plugin</string>
@@ -348,6 +349,8 @@
     <string name="scene_active">Aktiv</string>
     <string name="scene_ended">Scene avsluttet</string>
     <string name="scene_end_active">Avslutt aktiv scene</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Hopp over til</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Oppfølgingsscenen %1$s vil ikke starte</string>
     <string name="scene_confirm_activate">Aktivere scene \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Avslutte scene \"%1$s\" og tilbakestille endringer?</string>
     <string name="scene_conflict_active_tt">Dette vil erstatte et aktivt midlertidig mål</string>
