@@ -349,6 +349,8 @@
     <string name="scene_active">Attivo</string>
     <string name="scene_ended">Scena conclusa</string>
     <string name="scene_end_active">Fine scena attiva</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Salta a</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Il follow-up %1$s non inizierà</string>
     <string name="scene_confirm_activate">Attivare la scena \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Terminare la scena \"%1$s\" e ripristinare le modifiche?</string>
     <string name="scene_conflict_active_tt">Il target temporaneo attivo verrà sostituito</string>
