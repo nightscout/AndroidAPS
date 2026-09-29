@@ -18,7 +18,7 @@
     <string name="carelevo_running_remain_time">Patch Time Remaining</string>
     <string name="carelevo_total_insulin_key">Total insulin delivered</string>
 
-    <string name="common_label_unit_value_duration_hour_and_minute">%d hrs %d min</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d hrs %2$d min</string>
     <string name="common_label_unit_value_minute">%d min</string>
     <string name="common_label_unit_value_duration_hour">%d hrs</string>
     <string name="common_label_unit_value_dose_with_space">%s U</string>
@@ -40,7 +40,7 @@
 
     <string name="common_unit_value_day_hour_min">%1$d days %2$02d:%3$02d</string>
     <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
-    <string name="common_unit_remain_min_sec">%d min %02d sec remaining</string>
+    <string name="common_unit_remain_min_sec">%1$d min %2$02d sec remaining</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
 
     <string name="carelevo_btn_insulin_guide">Insulin Guide</string>
@@ -231,8 +231,8 @@
 
     <!-- Notice Descriptions -->
     <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Less than %s U insulin remaining.<br><b>Prepare to change the patch.</b>]]></string>
-    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Patch usage time is <b>%s days %s hours.</b>.<br>Keep in mind during use.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Time zone has changed from <b>%s(UTC %s) to %s(UTC %s)</b>.]]></string>
+    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Patch usage time is <b>%1$s days %2$s hours</b>.<br>Keep in mind during use.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Time zone has changed from <b>%1$s(UTC %2$s) to %3$s(UTC %4$s)</b>.]]></string>
     <string name="alarm_feat_desc_notice_check_bg"><![CDATA[%s have passed since your bolus.<br>Please check your blood glucose.]]></string>
     <string name="alarm_feat_desc_notice_lgs_started">LGS started.</string>
     <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS ended due to patch/CGM disconnection.</string>
@@ -276,8 +276,8 @@
     <string name="alarm_notification_desc_alert_off_bluetooth">Bluetooth is required to use the patch. Tap [OK] and turn Bluetooth on.</string>
 
     <string name="alarm_notification_desc_notice_low_insulin">Less than %s U insulin remaining. Prepare to change the patch.</string>
-    <string name="alarm_notification_desc_notice_expired_patch">Patch usage time is %s days %s hours. Keep in mind during use.</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">Time zone has changed from %s(UTC %s) to %s(UTC %s).</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Patch usage time is %1$s days %2$s hours. Keep in mind during use.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Time zone has changed from %1$s(UTC %2$s) to %3$s(UTC %4$s).</string>
     <string name="alarm_notification_desc_notice_check_bg">%s have passed since your bolus. Please check your blood glucose.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS started.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS ended due to patch/CGM disconnection.</string>
