@@ -12,7 +12,6 @@
     <string name="carelevo_insulin_remain_key">Insulina restante</string>
     <string name="carelevo_running_remain_time">Tempo restante do patch</string>
     <string name="carelevo_total_insulin_key">Total de insulina administrada</string>
-    <string name="common_label_unit_value_duration_hour_and_minute">%d h %d min</string>
     <string name="common_label_unit_value_duration_hour">%d h</string>
     <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/h</string>
     <string name="carelevo_pump_resume_title">Você gostaria de retomar a infusão?</string>
@@ -27,7 +26,6 @@
     <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 horas e 30 minutos</string>
     <string name="carelevo_pump_stop_duration_label_4_hour">4 horas</string>
     <string name="common_unit_value_day_hour_min">%1$d dias %2$02d:%3$02d</string>
-    <string name="common_unit_remain_min_sec">%d min %02d s restantes</string>
     <string name="carelevo_btn_insulin_guide">Guia de insulina</string>
     <string name="carelevo_btn_patch_expiration">Desativar patch</string>
     <string name="carelevo_btn_input_search_patch">Buscar patch</string>
@@ -185,8 +183,6 @@
     <string name="alarm_feat_title_notice_unknown">Erro do patch</string>
     <!-- Notice Descriptions -->
     <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Restam menos de %s U de insulina.<br><b>Prepare-se para trocar o patch.</b>]]></string>
-    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[O tempo de uso do patch é de <b>%s dias %s horas.</b>.<br>Tenha isso em mente durante o uso.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[O fuso horário mudou de <b>%s(UTC %s) para %s(UTC %s)</b>.]]></string>
     <string name="alarm_feat_desc_notice_check_bg"><![CDATA[%s se passaram desde o seu bolus.<br>Verifique a glicemia.]]></string>
     <string name="alarm_feat_desc_notice_lgs_started">LGS iniciado.</string>
     <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS encerrado devido à desconexão do patch/CGM.</string>
@@ -224,8 +220,6 @@
     <string name="alarm_notification_desc_alert_resume_infusion">A pausa da insulina terminou. Toque em [Iniciar insulina] para iniciar.</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">O Bluetooth é necessário para usar o patch. Toque em [OK] e ative o Bluetooth.</string>
     <string name="alarm_notification_desc_notice_low_insulin">Restam menos de %s U de insulina. Prepare-se para trocar o patch.</string>
-    <string name="alarm_notification_desc_notice_expired_patch">O tempo de uso do patch é de %s dias %s horas. Tenha isso em mente durante o uso.</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">O fuso horário mudou de %s(UTC %s) para %s(UTC %s).</string>
     <string name="alarm_notification_desc_notice_check_bg">%s se passaram desde o seu bolus. Verifique a glicemia.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS iniciado.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS encerrado devido à desconexão do patch/CGM.</string>
