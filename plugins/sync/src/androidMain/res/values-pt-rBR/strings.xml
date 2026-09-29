@@ -4,13 +4,60 @@
     <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Definições de ligação</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
+    <string name="description_ns_client_v3">Sincroniza seus dados com o Nightscout usando a API v3</string>
     <string name="blocked_by_charging">Bloqueado pelas opções de carregamento</string>
     <string name="blocked_by_connectivity">Bloqueado pelas opções de conectividade</string>
+    <string name="no_connectivity">Sem conectividade</string>
     <string name="unsupported_ns_version">Versão não suportada do Nightscout</string>
     <!-- AAPSClient -->
     <!-- Authorized clients (paired devices that can issue signed commands) -->
+    <string name="authorized_clients_title">Clientes autorizados</string>
+    <string name="authorized_clients_add">Adicionar cliente</string>
+    <string name="authorized_clients_comm_switch_title">Permitir controle pelo cliente</string>
+    <string name="authorized_clients_comm_switch_summary">Permitir que clientes pareados enviem comandos assinados pelo Nightscout. Desative para interromper a comunicação sem removê-los.</string>
+    <string name="authorized_clients_needs_websocket">Os WebSockets estão desativados, portanto não é possível receber comandos dos clientes. Os clientes veem este dispositivo principal como não aceitando comandos até que você ative os WebSockets.</string>
+    <string name="authorized_clients_state_active">Ativo</string>
+    <string name="authorized_clients_state_pending">Pendente</string>
+    <string name="authorized_clients_last_seen">Visto pela última vez %1$s</string>
+    <string name="authorized_clients_never_seen">Nunca usado</string>
+    <string name="authorized_clients_pending_expires_in">O pareamento expira em %1$ss</string>
+    <string name="authorized_clients_empty_title">Nenhum cliente autorizado</string>
+    <string name="authorized_clients_empty_subtitle">Pareie um dispositivo cliente para permitir que ele envie comandos assinados para este dispositivo principal.</string>
+    <string name="authorized_clients_name_dialog_title">Novo cliente</string>
+    <string name="authorized_clients_name_placeholder">Nome do dispositivo</string>
+    <string name="authorized_clients_delete_dialog_title">Revogar acesso?</string>
+    <string name="authorized_clients_delete_dialog_message">%1$s não poderá mais enviar comandos.</string>
+    <string name="authorized_clients_pin_dialog_title">Parear cliente</string>
+    <string name="authorized_clients_pin_instructions">Digite este PIN no dispositivo cliente. O código é válido para apenas um pareamento.</string>
+    <string name="authorized_clients_pin_expires_in">Expira em %1$ss</string>
+    <string name="authorized_clients_pin_done">Concluído</string>
+    <string name="authorized_clients_pin_publishing">Enviando oferta de pareamento para o Nightscout…</string>
+    <string name="authorized_clients_pin_published">Oferta de pareamento pronta no Nightscout.</string>
+    <string name="authorized_clients_pin_publish_failed">Não foi possível enviar a oferta de pareamento.</string>
+    <string name="authorized_clients_pin_retry">Tentar novamente</string>
     <!-- Pair with master (client side PIN entry) -->
+    <string name="pair_with_master_title">Parear com o dispositivo principal</string>
+    <string name="pair_with_master_pin_entry_title">Digite o PIN de pareamento</string>
+    <string name="pair_with_master_pin_entry_message">Abra Clientes autorizados no dispositivo principal e adicione este cliente. Digite o PIN de 8 dígitos exibido lá.</string>
+    <string name="pair_with_master_pin_entry_label">PIN de 8 dígitos</string>
+    <string name="pair_with_master_pin_entry_submit">Parear</string>
+    <string name="pair_with_master_fetching">Buscando pareamento…</string>
+    <string name="pair_with_master_confirm_title">Parear com este dispositivo principal?</string>
+    <string name="pair_with_master_confirm_master">Dispositivo principal: %1$s</string>
+    <string name="pair_with_master_confirm_warning">Após o pareamento, este dispositivo principal poderá enviar comandos assinados para este dispositivo.</string>
+    <string name="pair_with_master_confirm_pair">Parear</string>
+    <string name="pair_with_master_error_title">Não é possível parear</string>
+    <string name="pair_with_master_error_wrong_pin">Nenhum pareamento encontrado para esse PIN. Verifique o PIN no dispositivo principal e tente novamente.</string>
+    <string name="pair_with_master_error_ambiguous_pin">Vários pareamentos correspondem a esse PIN. Peça ao dispositivo principal para gerar um novo e tente novamente.</string>
+    <string name="pair_with_master_error_expired">Este pareamento expirou. Gere um novo PIN no dispositivo principal.</string>
+    <string name="pair_with_master_error_network">Não foi possível acessar o Nightscout. Verifique a conexão e tente novamente.</string>
+    <string name="pair_with_master_retry">Tentar novamente</string>
+    <string name="pair_with_master_already_paired_title">Já pareado</string>
+    <string name="pair_with_master_already_paired_master">Atualmente pareado com o dispositivo principal %1$s. Desfaça o pareamento antes de inserir um novo PIN.</string>
+    <string name="pair_with_master_unpair">Desfazer pareamento</string>
+    <string name="pair_with_master_sending">Enviando mensagem de pareamento…</string>
     <!-- Client-control orphan notification (master no longer recognises this client) -->
+    <string name="clientcontrol_orphan_notification">O AAPS principal não reconhece mais este dispositivo. Abra a tela Gerenciar → Parear com o dispositivo principal para parear novamente.</string>
     <string name="ns_client">NSCliente</string>
     <string name="ns_client_url">URL:</string>
     <string name="deliver_now">Entregar agora</string>
@@ -20,12 +67,16 @@
     <string name="full_sync_comment">Sincronização completa? O processo pode levar muitas horas e durante esse período você não verá novos dados no NS.</string>
     <string name="ns_sync_options">Sincronização</string>
     <string name="ns_alarm_options">Opções Alarme</string>
+    <string name="ns_remote_control_options">Controle remoto</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_dev_servers">Se ativado, os uploads irão para servidores de teste em vez do servidor normal</string>
     <string name="title_tidepool_dev_servers">Usar servidores de integração (teste)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
     <string name="upload_now">Enviar agora</string>
+    <string name="tidepool_purge_data">Apagar todos os dados</string>
+    <string name="tidepool_purge_data_confirm">Excluir TODOS os dados que o AAPS enviou ao Tidepool? Isso não pode ser desfeito. Use esta opção para remover dados corrompidos por uma versão antiga e execute \"Sincronização completa\" novamente.</string>
     <string name="not_connected">Não conectado</string>
     <string name="read_only">Somente leitura</string>
     <string name="working">Trabalhando</string>
@@ -39,28 +90,44 @@
     <string name="xdrip_local_broadcasts_summary">Enviar dados de glicose e tratamentos para xDrip+. A fonte de dados \"xDrip+ Sync Seguidor\" deve ser selecionada e a aceitação de dados deve estar ativada nas configurações - Configurações entre apps - Aceitar Glucose/Tratamentos</string>
     <string name="xdrip_local_broadcasts_title">Ativar transmissões para xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Apps companheiros externos</string>
+    <string name="tizen_description">Ativa a transmissão de dados para vários apps companheiros externos</string>
     <!-- GarminPlugin -->
+    <string name="garmin_description">Conexão com dispositivo Garmin (Fenix, Edge, …)</string>
+    <string name="garmin_local_http_server_port">Porta do servidor HTTP local</string>
+    <string name="garmin_local_http_server">Servidor HTTP local</string>
     <!--    Wear-->
     <string name="description_wear">Monitore e controle AndroidAPS usando seu relógio WearOS.</string>
     <string name="no_watch_connected">(Nenhum relógio conectado)</string>
     <string name="pump_status">Estado da Bomba</string>
     <string name="loop_status">Status do loop</string>
+    <string name="user_action_not_available">A ação do usuário selecionada %1$s não está mais disponível. Atualize seu bloco.</string>
+    <string name="scene_not_available">O cenário %1$s não está mais disponível. Atualize seu bloco.</string>
+    <string name="wear_remote_insulin_not_allowed_in_client">Os comandos remotos de insulina estão desativados no modo cliente.</string>
     <string name="wear_action_tempt_unit_error">Unidades diferentes usadas no relógio e telefone!</string>
     <string name="wear_action_tempt_min_bg_error">Glicemia mínima fora do alvo!</string>
     <string name="wear_action_tempt_max_bg_error">Glicemia maxima fora da meta!</string>
+    <string name="wear_action_tempt_range_error">Intervalo inválido: o alvo baixo (%1$s) não pode ser maior que o alvo alto (%2$s)</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_general_settings">Configurações gerais</string>
     <string name="wear_custom_watchface_settings">Configurações personalizadas de Watchface</string>
     <string name="wear_custom_watchface">Watchface Personalizado: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Instalando…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">O relógio está usando o mostrador Complications. Selecione o mostrador Custom para ver %1$s no relógio.</string>
+    <string name="wear_pushed_watchface_confirm_title">Mudar o mostrador do relógio?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s substituirá %2$s no relógio.</string>
     <string name="wear_load_watchface">Carregar Watchface</string>
     <string name="wear_infos_watchface">Infos Watchface</string>
     <string name="wear_export_watchface">Exportar modelo</string>
     <string name="wear_new_custom_watchface_exported">Modelo de watchface personalizado exportado</string>
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições em Wear</string>
+    <string name="wear_import_custom_watchface_title">Selecionar mostrador Custom</string>
     <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
     <string name="cwf_infos_pref_required">Lista de preferências solicitadas pela Watchface</string>
     <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
+    <string name="enabled">Ativado</string>
+    <string name="disabled">Desativado</string>
     <string name="pump_fetching_data">tentando buscar dados da Bomba.</string>
     <string name="pump_old_data">TDD: Dados ainda antigos! Não é possível carregar da bomba.</string>
     <string name="units_short">U</string>
@@ -85,6 +152,11 @@
     <string name="tdd_line">%1$.2f / %1$.0f U%%</string>
     <string name="today">Hoje</string>
     <string name="weighted">ponderado</string>
+    <string name="full_xdrip_sync_comment">Sincronização completa? Isso pode levar algum tempo e, até terminar, você não verá dados novos no xDrip+.</string>
+    <string name="wear_action_loop_state_unauthorized">Tente novamente.</string>
+    <string name="wear_action_loop_state_invalid">Estado solicitado do loop inválido</string>
+    <string name="wear_action_running_mode_title">Modo de operação</string>
+    <string name="garmin_request_key">Chave de solicitação</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
@@ -116,6 +188,7 @@
     <string name="smscommunicator_stops_ns_with_code">Para desativar o Serviço Remoto SMS de responda com o código %1$s.\n\nTenha em mente que será capaz de o reativar diretamente apenas a partir do celular principal do AAPS.</string>
     <string name="smscommunicator_stopped_sms">SMS Serviço Remoto interrompido. Para reativá-lo, use o AAPS no telemóvel mestre.</string>
     <string name="smscommunicator_calibration_reply_with_code">Para enviar calibração %1$.2f responder com código %2$s</string>
+    <string name="smscommunicator_bolus_failed">Falha no bolus. Verifique o estado real antes de enviar outro comando!</string>
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U aplicado com sucesso</string>
     <string name="smscommunicator_meal_bolus_delivered">Bolus da refeição %1$.2f U aplicado com sucesso</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Alvo %1$s para %2$d minutos</string>
@@ -129,6 +202,7 @@
     <string name="smscommunicator_pump_disconnected">Bomba desconectada</string>
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remote_command_not_allowed">O comando remoto não é permitido</string>
+    <string name="smscommunicator_remote_command_not_possible">Não é possível executar o comando remoto.</string>
     <string name="smscommunicator_remote_bolus_not_allowed">O bolus remoto não está disponível. Tente novamente mais tarde.</string>
     <string name="smscommunicator_basal_reply_with_code">Para começar o basal %1$.2fU/h durante%2$d min responda com o código %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Para mudar o perfil para %1$s %2$d%% responda com o código %3$s</string>
@@ -138,6 +212,8 @@
     <string name="smscommunicator_suspend_reply_with_code">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Para retomar o loop responda com o código %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Para desativar o loop responda com o código %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">Para reiniciar o AAPS, responda com o código %1$s</string>
+    <string name="smscommunicator_restarting">O AAPS está reiniciando</string>
     <string name="smscommunicator_tempbasal_set">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
     <string name="smscommunicator_extended_set">Bólus estendido %1$.2fU/h para %2$d min iniciado com êxito</string>
     <string name="smscommunicator_carbs_set">Carboidratos %1$d  g inseridos com sucesso</string>
@@ -162,6 +238,7 @@
     <string name="smscommunicator_message_body">Corpo da mensagem inválido</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o modo do Loop para LGS (Suspensão de Baixa Glicemia), responda com o código %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Para mudar o modo do Loop para Loop Fechado, responda com o código %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modo de operação atual: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">GLIC:</string>
     <string name="sms_last_bg">Último BG:</string>
@@ -175,4 +252,5 @@
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração da basal temporária deve ser um múltiplo de %1$d minutos e maior que 0.</string>
     <string name="a11y_otp_qr_code">Código QR para configuração de senha de uso único</string>
+    <string name="permission_sms_description">O aplicativo precisa da permissão para SMS para permitir o controle remoto por mensagens de texto.</string>
 </resources>

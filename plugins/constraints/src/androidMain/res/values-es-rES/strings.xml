@@ -15,10 +15,12 @@
     <string name="recalculated_data_used">Datos recalculados usados</string>
     <string name="bg_too_close">Datos de glucosa demasiado cercanos:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">recalculado</string>
+    <string name="a11y_bg_quality_doubles">entradas duplicadas</string>
     <string name="a11y_bg_quality_flat">Datos planos. Considerados erróneos</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitando el bolo extendido a %1$.1f U debido a %2$s</string>
     <string name="limitingcarbs">Limitando carbohidratos a %1$d g debido a %2$s</string>
+    <string name="safety">Seguridad</string>
     <string name="pumpisnottempbasalcapable">La bomba no es capaz de realizar una basal temporal</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Bucle cerrado no disponible.</string>
     <string name="closed_loop_disabled_with_eb">Lazo cerrado deshabilitado debido a la ejecución de un bolo extendido</string>
@@ -34,6 +36,7 @@
     <string name="synchaswritepermission">El servicio de sincronización tiene permiso de escritura</string>
     <string name="loopenabled">Bucle activado</string>
     <string name="apsselected">APS seleccionado</string>
+    <string name="closedmodeenabled">Lazo cerrado activado</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Programa de aprendizaje</string>
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>

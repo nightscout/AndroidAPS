@@ -80,5 +80,4 @@
     <string name="string_resumed_insulin_delivery_message">Insulintilførsel genoptaget.</string>
     <string name="string_temp_basal_remained_hhmm">resterende tid: %1$s:%2$s</string>
     <string name="string_resume_failed">Genoptagelse mislykkedes.</string>
-    <!-- Permission rationales -->
 </resources>

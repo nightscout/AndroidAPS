@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_temp_basal_running">Nenhuma basal temporária em execução</string>
     <string name="start_activity_tt">Iniciar atividade TT</string>
     <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
     <string name="start_hypo_tt">Começar TT Hipo</string>
@@ -7,10 +8,25 @@
     <!--    Widget-->
     <string name="configure">Configurar opacidade</string>
     <string name="widget_description">Widget do AAPS</string>
+    <string name="widget_bg_graph_description">Gráfico de glicemia do AAPS</string>
+    <string name="widget_compact_bg_description">AAPS glicemia + IOB + COB (compacto)</string>
+    <string name="widget_small_description">AAPS Pequeno</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor de atividade</string>
     <string name="time_range">Intervalo de tempo</string>
+    <string name="cgp_title">Pentágono da glicose (CGP) — 14 dias</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Média</string>
+    <string name="cgp_reference">Pessoa saudável</string>
+    <string name="cgp_patient">Paciente</string>
+    <string name="cgp_pgr_very_low">Risco muito baixo</string>
+    <string name="cgp_pgr_low">Risco baixo</string>
+    <string name="cgp_pgr_moderate">Risco moderado</string>
+    <string name="cgp_pgr_high">Risco alto</string>
+    <string name="cgp_pgr_extremely_high">Risco extremamente alto</string>
     <string name="do_you_want_reset_stats">Quer reiniciar as estatísticas de atividade?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Deseja recalcular as estatísticas de TDD?</string>
     <string name="calculation_in_progress">Cálculo em andamento</string>
     <string name="age">Idade</string>
     <string name="weight_label">Peso</string>
@@ -20,19 +36,110 @@
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Editar</string>
+    <string name="record_site_location">Local de inserção: %1$s</string>
+    <string name="record_site_arrow">Direção: %1$s</string>
+    <string name="record_site_note">Nota: %1$s</string>
+    <string name="delete_site_note">Nota excluída</string>
     <!-- FillDialog -->
     <string name="fill_warning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
     <string name="record_pump_site_change">Registar mudança de sítio</string>
     <string name="record_insulin_cartridge_change">Registar mudança cartucho</string>
+    <string name="fill_prime_amount">Quantidade de preenchimento</string>
+    <string name="fill_pump_units_note">A quantidade de preenchimento está em unidades da bomba</string>
+    <string name="fill_insulin_change">Trocar insulina para: %1$s (a troca de perfil será aplicada)</string>
     <!-- Scene -->
+    <string name="scene_cat_activity">Atividade</string>
+    <string name="scene_cat_health">Saúde</string>
+    <string name="scene_cat_food">Alimentação</string>
+    <string name="scene_cat_sleep">Sono</string>
+    <string name="scene_cat_dailylife">Vida diária</string>
+    <string name="scene_cat_wellness">Bem-estar</string>
+    <string name="scene_cat_general">Geral</string>
+    <string name="aaps_tt_high_icon_label">Alvo temporário</string>
+    <string name="aaps_tt_activity_icon_label">TT atividade</string>
+    <string name="aaps_tt_eating_icon_label">TT comer em breve</string>
+    <string name="aaps_tt_hypo_icon_label">TT hipo</string>
+    <string name="aaps_tt_manual_icon_label">TT manual</string>
+    <string name="aaps_profile_icon_label">Perfil</string>
+    <string name="aaps_carbs_icon_label">Carboidratos</string>
+    <string name="aaps_tbr_icon_label">Basal temporária</string>
+    <string name="aaps_activity_icon_label">Exercício</string>
+    <string name="aaps_note_icon_label">Nota</string>
+    <string name="aaps_automation_icon_label">Automação</string>
+    <string name="aaps_calibration_icon_label">Calibração</string>
+    <string name="exercise_icon_label">Corrida</string>
+    <string name="swim_icon_label">Natação</string>
+    <string name="hiking_icon_label">Caminhada</string>
+    <string name="bike_icon_label">Ciclismo</string>
+    <string name="skateboard_icon_label">Skate</string>
+    <string name="tennis_icon_label">Tênis</string>
+    <string name="soccer_icon_label">Futebol</string>
+    <string name="baseball_icon_label">Rúgbi</string>
+    <string name="basketball_icon_label">Handebol</string>
+    <string name="volleyball_icon_label">Ginástica</string>
+    <string name="golf_icon_label">Golfe</string>
+    <string name="scubadiving_icon_label">Mergulho</string>
+    <string name="rowing_icon_label">Remo</string>
+    <string name="surfing_icon_label">Surfe</string>
+    <string name="medication_icon_label">Medicação</string>
+    <string name="thermostat_icon_label">Termostato</string>
+    <string name="blood_type_icon_label">Sangue</string>
+    <string name="health_safety_icon_label">Saúde</string>
+    <string name="healing_icon_label">Cura</string>
+    <string name="meal_icon_label">Refeição</string>
+    <string name="cafe_icon_label">Café</string>
+    <string name="lunch_icon_label">Almoço</string>
+    <string name="bakery_icon_label">Padaria</string>
+    <string name="sleep_icon_label">Sono</string>
+    <string name="night_icon_label">Noite</string>
+    <string name="nights_stay_icon_label">Pernoite</string>
+    <string name="seat_flat_icon_label">Descanso</string>
+    <string name="work_icon_label">Trabalho</string>
+    <string name="school_icon_label">Escola</string>
+    <string name="home_icon_label">Casa</string>
+    <string name="car_icon_label">Carro</string>
+    <string name="flight_icon_label">Voo</string>
+    <string name="shopping_icon_label">Compras</string>
+    <string name="relax_icon_label">Relaxar</string>
+    <string name="heart_icon_label">Coração</string>
+    <string name="psychology_icon_label">Mente</string>
+    <string name="star_icon_label">Estrela</string>
+    <string name="speed_icon_label">Velocidade</string>
+    <string name="alarm_icon_label">Alarme</string>
+    <string name="event_icon_label">Evento</string>
+    <string name="flag_icon_label">Bandeira</string>
+    <string name="bookmark_icon_label">Marcador</string>
+    <string name="label_icon_label">Rótulo</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Nome da insulina ausente</string>
+    <string name="insulin_name_exists">O nome da insulina %1$s já existe; selecione um novo nome</string>
+    <string name="insulin_external_update_title">Configuração da insulina alterada</string>
+    <string name="insulin_external_update_message">Um cliente pareado alterou a configuração da insulina. Toque em OK para carregar as alterações e descartar suas edições não salvas, ou em Cancelar para continuar editando (seu próximo salvamento substituirá as alterações do cliente).</string>
+    <string name="insulin_edit_target_gone">Esta insulina foi removida em outro local, portanto sua edição não pôde ser salva. A lista foi recarregada.</string>
+    <string name="insulin_activation_applied">Ativação da insulina aplicada</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Aplicando…</string>
+    <string name="clientcontrol_pending_working_text">Aguardando confirmação do dispositivo principal…</string>
+    <string name="clientcontrol_pending_rejected_title">Não aplicado</string>
+    <string name="clientcontrol_pending_failed_format">%1$s não pôde ser executado.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Aplicado parcialmente</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s foi aplicado, mas não foi possível executar algumas ações.\nVerifique o estado ativo.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Não foi possível confirmar</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s foi enviado, mas não houve confirmação.\n%2$s\nEle aparecerá aqui quando/se o dispositivo principal aplicá-lo.</string>
+    <string name="clientcontrol_pending_stop_waiting">Parar de esperar</string>
+    <string name="a11y_add_new_insulin">Adicionar nova insulina</string>
+    <string name="a11y_delete_current_insulin">Excluir insulina atual</string>
+    <string name="load_peak_from">Carregar pico de</string>
+    <string name="cannot_delete_last_insulin">Não é possível excluir a última insulina</string>
+    <string name="cannot_delete_active_insulin">Não é possível excluir a insulina ativa</string>
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="percentage_label">Porcentagem</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">Desconectar bomba</string>
     <string name="resume">Continuar</string>
     <string name="reconnect">Reconectar Bomba</string>
     <string name="duration15m">15 min</string>
@@ -43,6 +150,9 @@
     <string name="duration10h">10 horas</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Precisando de %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% de carboidratos imediatos, sem carboidratos estendidos</string>
+    <string name="wizard_carbs_type_desc">Carboidratos reduzidos em %1$d%%; eCarbs adicionados: %2$d%%, com atraso de %3$d min por %4$d h</string>
+    <string name="wizard_include_info">Toque para incluir/excluir do cálculo:\n• BG — glicemia (ATIVADO no início)\n• TT — alvo temporário (ATIVADO no início)\n• Tendência — tendência da glicemia (último estado lembrado)\n• IOB — insulina ativa (ATIVADO no início)\n• COB — carboidratos ativos (último estado lembrado)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nenhum registro disponível</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -52,12 +162,26 @@
     <string name="careportal_remove_started_events">Remover entradas do AAPS iniciadas</string>
     <string name="user_entry">Entrada do usuário</string>
     <string name="clone_label">Clonar</string>
+    <string name="add_new_profile">Adicionar novo perfil</string>
+    <string name="edit_label">Editar</string>
+    <string name="activate_label">Ativar</string>
     <string name="activate_profile">Ativar perfil</string>
+    <string name="remove_label">Remover</string>
+    <string name="active_profile_indicator">ATIVO</string>
+    <string name="confirm_remove_profile">Remover perfil \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Clonar perfil \"%1$s\"?</string>
+    <string name="profile_no_longer_exists">A lista de perfis mudou nesse meio-tempo — tente novamente</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tipo de perfil</string>
+    <string name="profile_parameters">Parâmetros do perfil</string>
+    <string name="active_profile">Perfil ativo</string>
+    <string name="available_profiles">Perfis disponíveis</string>
     <string name="profile_switches">Troca de Perfil</string>
     <string name="basal_pct_from_tdd_label">% da basal</string>
     <string name="selected_profile">Seleccionado:</string>
+    <string name="comparation">Comparação</string>
+    <string name="profile_tab_1">Perfil 1</string>
+    <string name="profile_tab_2">Perfil 2</string>
     <string name="motol_default_profile">Perfil padrão</string>
     <string name="current_profile">Perfil atual</string>
     <string name="available_profile">Perfis disponíveis</string>
@@ -67,12 +191,98 @@
     <string name="dpv_default_profile">Perfil padrão DPV</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">Texto do botão</string>
+    <string name="quick_wizard_mode_wizard">Calculadora</string>
+    <string name="quick_wizard_mode_insulin">Insulina</string>
+    <string name="quick_wizard_mode_carbs">Carboidratos</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Somente IOB positivo</string>
     <!--    History browser-->
+    <string name="history_now">Agora</string>
+    <string name="a11y_history_previous_window">Janela anterior</string>
+    <string name="a11y_history_next_window">Próxima janela</string>
+    <string name="additional_ecarbs">Adicionar eCarbs</string>
+    <string name="calculator_options">Opções da calculadora</string>
+    <string name="use_bg">Usar glicemia</string>
+    <string name="use_cob">Usar COB</string>
+    <string name="use_iob">Usar IOB</string>
+    <string name="use_trend">Usar tendência</string>
+    <string name="trend_all">Todas</string>
+    <string name="trend_positive_only">Somente positivas</string>
+    <string name="trend_negative_only">Somente negativas</string>
+    <string name="use_temp_target">Usar alvo temporário</string>
+    <string name="use_alarm">Usar alarme</string>
+    <string name="device_selection">Seleção do dispositivo</string>
+    <string name="show_on_phone">Mostrar no telefone</string>
+    <string name="show_on_watch">Mostrar no relógio</string>
+    <string name="ecarbs_additional">Carboidratos adicionais</string>
+    <string name="valid_from_to">Intervalo de validade</string>
+    <string name="carb_time">Horário dos carboidratos</string>
+    <string name="save_changes_question">Salvar alterações desta entrada?</string>
+    <string name="wizard_no_insulin_required">Nenhuma insulina necessária</string>
+    <string name="carbs_constraint_violation">Carboidratos limitados pelas restrições</string>
+    <string name="insulin_constraint_violation">Insulina limitada pelas restrições</string>
+    <string name="confirm_treatment">Confirme o tratamento</string>
+    <string name="recalculate">Recalcular</string>
     <!--    Widget-->
+    <string name="use_black_color">Usar cor preta</string>
+    <string name="widget_configuration">Configuração do widget</string>
+    <string name="until_changed">Até ser alterado</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Permissões necessárias</string>
+    <string name="permission_sheet_subtitle">Algumas permissões são necessárias para o app funcionar corretamente</string>
+    <string name="permission_grant">Conceder</string>
+    <string name="permission_change">Alterar</string>
+    <string name="permission_denied_go_to_settings">Permissão negada permanentemente. Ative-a nas configurações do app.</string>
+    <string name="permission_open_settings">Configurações</string>
+    <string name="permission_directory_picker_error">Não foi possível abrir o seletor de diretório. Geralmente é um problema do Android ou do Family Link.</string>
+    <string name="permission_nav_label">Permissões</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Deslocamento do ciclo</string>
+    <string name="raw_tdd">TDD bruto</string>
+    <string name="cleaned_tdd">TDD limpo</string>
+    <string name="cleaned_tdd_explanation">TDD menos a insulina dos carboidratos.</string>
+    <string name="cycle_lines_legend">Ciclos individuais</string>
+    <string name="cycles_found">%1$d ciclos (%2$d dias)</string>
+    <string name="cycle_day1_date">Dia 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Calculando… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Dados insuficientes (são necessários pelo menos 56 dias para 2 ciclos)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Ambos</item>
+        <item>Somente positivos</item>
+        <item>Somente negativos</item>
+    </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Ações selecionadas</string>
+    <string name="quick_launch_no_dynamic_items">Nenhum item disponível</string>
+    <string name="quick_launch_category_treatment">Tratamento</string>
+    <string name="quick_launch_category_care">CarePortal</string>
+    <string name="quick_launch_category_profile">Perfil</string>
+    <string name="quick_launch_category_temp_target">Predefinições de alvo temporário</string>
+    <string name="quick_launch_category_quick_wizard">Assistente rápido</string>
+    <string name="quick_launch_category_automation">Automação</string>
+    <string name="quick_launch_all_selected">Todos os itens selecionados</string>
+    <string name="quick_launch_no_quick_wizard">Adicione entradas do Assistente rápido para usá-las aqui</string>
+    <string name="quick_launch_no_automation">Crie ações de automação do usuário para usá-las aqui</string>
+    <string name="quick_launch_no_tt_presets">Adicione predefinições de alvo temporário para usá-las aqui</string>
+    <string name="quick_launch_no_profiles">Crie perfis em Perfil local para usá-los aqui</string>
+    <string name="quick_launch_edit_profile_preset">Editar predefinição de perfil</string>
+    <string name="quick_launch_profile_permanent">Permanente</string>
+    <string name="select_arrow">Selecionar seta</string>
+    <string name="loop_accept_set_basal_question">Aceitar nova basal temporária:</string>
+    <string name="loop_accept_perform">Executar</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_disabled">Desativado</string>
+    <string name="widget_rm_suspended">Suspenso</string>
+    <string name="widget_rm_resume">Retomar</string>
     <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Calibração não salva: a glicemia está mudando rápido demais (Δ %1$s %3$s por 5 min, limite %2$s). Tente novamente quando a glicemia estiver estável.</string>
+    <string name="cal_reject_no_pair">Calibração não salva: nenhuma leitura do CGM foi encontrada nos 10 minutos anteriores.</string>
+    <string name="cal_reject_warmup">Calibração não salva: o sensor ainda está na janela de aquecimento de 2 horas.</string>
+    <string name="cal_reject_no_session">Calibração não salva: não há uma sessão de sensor ativa. Registre primeiro uma troca de sensor.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">O sensor ainda está aquecendo. A calibração estará disponível às %1$s.</string>
+    <string name="cal_precheck_no_session">Nenhuma sessão de sensor está ativa.</string>
+    <string name="cal_precheck_no_pair">Nenhuma leitura do CGM nos últimos 10 minutos. Verifique a conexão do sensor.</string>
+    <string name="cal_precheck_delta_too_high">A glicose está mudando rápido demais (Δ %1$s %3$s por 5 min, limite %2$s). Aguarde a estabilização.</string>
+    <string name="cal_precheck_mark_sensor_change">Registrar troca de sensor</string>
 </resources>

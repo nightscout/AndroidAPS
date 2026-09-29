@@ -87,6 +87,11 @@
     <string name="pref_show_week_number">Mostrar número de semana</string>
     <string name="pref_show_date">Mostrar fecha</string>
     <string name="pref_show_seconds">Mostrar segundos</string>
+    <string name="pref_show_complication1">Mostrar complicación 1</string>
+    <string name="pref_show_complication2">Mostrar complicación 2</string>
+    <string name="pref_show_complication3">Mostrar complicación 3</string>
+    <string name="pref_show_complication4">Mostrar complicación 4</string>
+    <string name="pref_show_complication5">Mostrar complicación 5</string>
     <string name="default_custom_watchface_comment">Esfera predeterminada, puedes hacer clic en el botón EXPORTAR ESFERA para generar una plantilla</string>
     <string name="default_custom_watchface_external_comment">Esfera de reloj predeterminada que incluye vistas externas para los seguidores. Puedes hacer clic en el botón EXPORTAR WATCHFACE para generar una plantilla</string>
     <string name="wear_default_watchface">Esfera por defecto</string>
@@ -125,13 +130,16 @@
     <string name="pumpsuspended">Bomba suspendida</string>
     <string name="loopsuspended">Bucle suspendido</string>
     <string name="pump_disconnected">Bomba desconectada</string>
+    <string name="basalprofilenotaligned">Valores de basal no alineados con las horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor basal cambiado al valor mínimo soportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor basal reemplazado por el valor máximo soportado: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Registro</string>
     <string name="bolus">Bolo</string>
     <string name="uel_extended_carbs">CARBOHIDRATOS EXTENDIDOS</string>
+    <string name="profile_low_target">Objetivo bajo del perfil</string>
     <string name="profile_high_target">Perfil de objetivo alto</string>
     <string name="profile_dia">Valor DIA del perfil</string>
     <string name="profile_sensitivity_value">Valor de sensibilidad del perfil</string>
@@ -145,4 +153,6 @@
     <string name="advisoralarm">Ejecutar alarma cuando sea hora de comer</string>
     <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">El complemento %1$s no pudo iniciarse y es posible que no funcione. Reinicia AndroidAPS</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">El complemento %1$s experimentó un error y una parte se ha detenido. Reinicia AndroidAPS</string>
 </resources>

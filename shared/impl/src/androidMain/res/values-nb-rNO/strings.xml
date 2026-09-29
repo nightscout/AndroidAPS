@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Bakgrunnsbilde</string>
     <string name="cwf_comment_chart">Grafer (BS, basal, prediksjonslinjer...)</string>
     <string name="cwf_comment_cover_chart">Bilde foran grafen og bak tekstfeltene</string>
+    <string name="cwf_comment_complication">Beholder for komplikasjon</string>
     <string name="cwf_comment_freetext1">Fritekst 1</string>
     <string name="cwf_comment_freetext2">Fritekst 2</string>
     <string name="cwf_comment_freetext3">Fritekst 3</string>

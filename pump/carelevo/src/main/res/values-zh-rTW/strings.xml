@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Carelevo 幫浦整合</string>
+    <string name="carelevo_alarm_channel_name">Carelevo 警報</string>
+    <string name="carelevo_alarm_channel_description">Carelevo 貼片警報通知</string>
+    <string name="common_btn_ok">確定</string>
+    <string name="carelevo_bluetooth_state_key">藍牙狀態</string>
+    <string name="carelevo_serial_number_key">序號</string>
+    <string name="carelevo_boot_date_time_key">啟用時間</string>
+    <string name="carelevo_expiration_key">到期時間</string>
+    <string name="carelevo_basal_rate_key">基礎率</string>
+    <string name="carelevo_temp_basal_rate_key">臨時基礎率</string>
+    <string name="carelevo_insulin_remain_key">剩餘胰島素</string>
+    <string name="carelevo_running_remain_time">貼片剩餘時間</string>
+    <string name="carelevo_total_insulin_key">胰島素總輸注量</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d 小時 %d 分鐘</string>
+    <string name="common_label_unit_value_minute">%d 分鐘</string>
+    <string name="common_label_unit_value_duration_hour">%d 小時</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/小時</string>
+    <string name="carelevo_insulin_remain_value" comment="%1$s=insulin remaining with unit (e.g. 42.5 U), %2$s=total filled insulin with unit (e.g. 300 U). Shown on the overview as remaining / total.">%1$s / %2$s</string>
+    <string name="carelevo_pump_resume_title">要恢復輸注嗎？</string>
+    <string name="carelevo_pump_resume_description">按下「確認」後將恢復輸注。</string>
+    <string name="carelevo_pump_stop_duration_title">請設定輸注暫停時間。</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30 分鐘</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1 小時</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1 小時 30 分鐘</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2 小時</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2 小時 30 分鐘</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3 小時</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3 小時 30 分鐘</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4 小時</string>
+    <string name="common_unit_value_day_hour_min">%1$d 天 %2$02d:%3$02d</string>
+    <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">剩餘 %d 分 %02d 秒</string>
+    <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
+    <string name="carelevo_btn_insulin_guide">胰島素指南</string>
+    <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
+    <string name="carelevo_btn_patch_expiration">停用貼片</string>
+    <string name="carelevo_btn_input_search_patch">搜尋貼片</string>
+    <string name="carelevo_btn_retry">重試</string>
+    <string name="carelevo_btn_next">下一步</string>
+    <string name="carelevo_btn_safety_check">安全檢查</string>
+    <string name="carelevo_btn_cancel">取消</string>
+    <string name="carelevo_btn_confirm">確認</string>
+    <string name="carelevo_btn_research">重新掃描</string>
+    <string name="carelevo_btn_needle_insert_check">確認插入</string>
+    <string name="carelevo_state_none_value">沒有啟動中的貼片</string>
+    <string name="carelevo_state_disconnected_value">已中斷連線</string>
+    <string name="carelevo_state_connected_value">已連線</string>
+    <string name="carelevo_overview_connect_btn_label">啟動貼片</string>
+    <string name="carelevo_overview_pump_discard_btn_label">丟棄貼片</string>
+    <string name="carelevo_overview_pump_suspend_btn_label">暫停輸注</string>
+    <string name="carelevo_overview_pump_resume_btn_label">繼續輸注</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">選擇充填量。</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">範圍：%1$d ~ %2$d U</string>
+    <string name="carelevo_insulin_refill_step1">1. 從貼片泡殼上撕下背襯紙。</string>
+    <string name="carelevo_insulin_refill_step2">2. 使用酒精棉片消毒胰島素小瓶的橡膠塞。</string>
+    <string name="carelevo_insulin_refill_step3">3. 將胰島素注射器的針頭保護套直拉取下。</string>
+    <string name="carelevo_insulin_refill_step4">4. 後拉注射器活塞，吸入約 2 mL 空氣。</string>
+    <string name="carelevo_insulin_refill_step5">5. 將充滿空氣的注射器插入胰島素小瓶，並把空氣注入瓶內。</string>
+    <string name="carelevo_insulin_refill_step6">6. 保持針頭插入，將小瓶與注射器一同倒置，利用壓力抽取約 2 mL 胰島素至注射器內。</string>
+    <string name="carelevo_insulin_refill_step7">7. 將針頭垂直插入貼片的胰島素注藥口 (①) 直到底部。把活塞完全拉至頂端後放開。將注射器自注藥口拔出。</string>
+    <string name="carelevo_insulin_refill_step8">8. 保持注射器直立，輕敲側面，使所有氣泡聚集至上方。</string>
+    <string name="carelevo_insulin_refill_step9">9. 將針頭重新插入胰島素小瓶，把空氣全部推回瓶內，然後抽取此貼片使用期間所需的胰島素劑量。</string>
+    <string name="carelevo_insulin_refill_step10">10. 將注射器自小瓶拔出。若仍有氣泡，保持直立並輕敲側面使氣泡上升，將空氣全部排出。</string>
+    <string name="carelevo_insulin_refill_step11">11. 使活塞頂端與刻度線對齊，以精準調整胰島素劑量。</string>
+    <string name="carelevo_insulin_refill_step12">12. 將針頭垂直插入貼片的胰島素注藥口 (①) 直到底部，緩慢推動活塞，將胰島素全部注入貼片。</string>
+    <string name="carelevo_connect_prepare_title">貼片已啟動</string>
+    <string name="carelevo_connect_patch_title">連線貼片</string>
+    <string name="carelevo_connect_safety_check_title">安全檢查</string>
+    <string name="carelevo_connect_patch_attach_title">貼上貼片</string>
+    <string name="carelevo_connect_needle_check_title">插入針頭</string>
+    <string name="carelevo_patch_buzzer_alarm_title">貼片資訊警報</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">胰島素不足通知設定</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">貼片使用通知設定</string>
+    <string name="carelevo_title_fill_insulin">為貼片填充胰島素</string>
+    <string name="carelevo_notice_fill_insulin_amount" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">依使用期間（最長 168 小時）將胰島素填入貼片（%1$d–%2$d U）。請點選 [填充量] 輸入已填入的胰島素量。</string>
+    <string name="carelevo_patch_step_1">步驟 1。</string>
+    <string name="carelevo_patch_step_2">步驟 2。</string>
+    <string name="carelevo_patch_step_3">步驟 3。</string>
+    <string name="carelevo_patch_connect_step_1_title">移除針帽</string>
+    <string name="carelevo_patch_connect_step_1_desc">從泡殼中取出貼片並移除針帽。</string>
+    <string name="carelevo_patch_connect_step_2_title">開機並連線</string>
+    <string name="carelevo_patch_connect_step_2_desc">長按電源鍵超過 1 秒。聽到嗶聲後，點選下方的 [搜尋貼片] 按鈕。</string>
+    <string name="carelevo_patch_safety_check_start_title">安全檢查</string>
+    <string name="carelevo_patch_safety_check_end_title">安全檢查完成</string>
+    <string name="carelevo_patch_safety_check_start_desc">已成功連線貼片。\n請點選 [安全檢查] 按鈕。</string>
+    <string name="carelevo_patch_safety_check_progress_desc">正在進行安全檢查。</string>
+    <string name="carelevo_patch_safety_check_end_desc">安全檢查完成。\n請按下 [下一步] 按鈕。</string>
+    <string name="carelevo_patch_safety_check_desc_warning">請確認針尖是否已形成胰島素小滴。</string>
+    <string name="carelevo_patch_safety_check_retry_desc">若未見到胰島素小滴，請按下 [重試] 按鈕。</string>
+    <string name="carelevo_patch_attach_step1_title">消毒貼片部位</string>
+    <string name="carelevo_patch_attach_step1_desc">請用酒精棉片徹底清潔。</string>
+    <string name="carelevo_patch_attach_step2_title">撕除背膠</string>
+    <string name="carelevo_patch_attach_step2_desc">從泡殼中取出貼片並移除針帽。</string>
+    <string name="carelevo_patch_attach_step3_title">貼上貼片</string>
+    <string name="carelevo_patch_attach_step3_desc">將貼片貼在皮膚上，並讓標示點朝上。</string>
+    <string name="carelevo_patch_attach_step4_desc">貼上貼片後，請按下 [就緒] 按鈕。</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">移除安全蓋</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">依箭頭方向旋轉並移除安全蓋。</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">插入針頭</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">將施打器的按鈕完全按到底。植入成功時會發出嗶聲。</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">請按住 10 秒。</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">針頭植入還可重試 %d 次。</string>
+    <string name="carelevo_dialog_patch_discard_message_title">要停用貼片並開始新貼片嗎？</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">按下 [確定] 將停止胰島素輸注。</string>
+    <string name="carelevo_dialog_patch_discard_unused_title">未開始輸注就結束嗎？</string>
+    <string name="carelevo_dialog_patch_discard_unused_desc">按下 [確定] 後，此貼片將無法使用。</string>
+    <string name="carelevo_dialog_patch_activation_cancel_title">要取消貼片啟用嗎？</string>
+    <string name="carelevo_dialog_patch_activation_cancel_desc">按下 [確定] 將放棄您輸入的內容。</string>
+    <string name="carelevo_dialog_patch_connect_message_title">若下方偵測到的貼片正確，請點選 [確認] 按鈕。</string>
+    <string name="carelevo_dialog_patch_connect_needle_injected">針頭植入完成並移除施打器</string>
+    <string name="carelevo_dialog_connect_detached">已移除施打器</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">
+        請按壓施打器兩側的握把，使其自貼片脫離，\n
+        然後按下 `已移除施打器` 按鈕。將開始胰島素輸注。
+</string>
+    <!-- Connection -->
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">未啟用藍牙。請確認。</string>
+    <string name="carelevo_toast_msg_patch_not_connected">尚未連線到貼片。</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">貼片尚未連線，請稍後再試。</string>
+    <string name="carelevo_toast_msg_scan_failed">掃描失敗，請再試一次。</string>
+    <string name="carelevo_toast_msg_patch_not_found">找不到貼片，請再試一次。</string>
+    <string name="carelevo_toast_msg_connect_failed">貼片連線失敗，請再試一次。</string>
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">尚未設定設定檔。</string>
+    <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_check_failed">針頭檢查失敗。</string>
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_failed">貼片放棄失敗，請再試一次。</string>
+    <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_failed">基礎輸注請求失敗，請再試一次。</string>
+    <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_fail">恢復輸注失敗，請再試一次。</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">暫停胰島素輸注失敗。請再試一次。</string>
+    <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_failed">安全檢查失敗。</string>
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">胰島素不足</string>
+    <string name="alarm_feat_title_warning_expired_patch">貼片已到期</string>
+    <string name="alarm_feat_title_warning_low_battery">電量不足</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">溫度過高/過低</string>
+    <string name="alarm_feat_title_warning_not_used_app">自動關閉</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE 未連線</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">貼片安裝逾時</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">自我診斷失敗</string>
+    <string name="alarm_feat_title_warning_patch_error">貼片錯誤</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">阻塞</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">針頭植入錯誤</string>
+    <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[剩餘胰島素少於 <b>10 U</b>；已停止胰島素輸注。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[貼片已到期；已停止胰島素輸注。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[電量不足；已停止胰島素輸注。<br><b>請點選 [丟棄貼片]，立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[已停止胰島素輸注。<br><b>請立即移至合適的溫度範圍 (40℉ ~ 99℉)。</b>]]></string>
+    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[已停止胰島素輸注。<br><b>請點選 [開始胰島素]，重新啟動基礎輸注。</b>]]></string>
+    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[貼片安裝時間已超時。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[自我診斷失敗。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[發生非預期錯誤，已停止胰島素輸注。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[因阻塞而停止胰島素輸注。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[針頭植入失敗。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">胰島素不足</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase2">貼片使用期限已到期</string>
+    <string name="alarm_feat_title_alert_expired_patch_phase1">貼片即將到期</string>
+    <string name="alarm_feat_title_alert_low_battery">電量不足</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">溫度過高/過低</string>
+    <string name="alarm_feat_title_alert_not_used_app">自動關閉</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE 未連線</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">貼片啟用未完成</string>
+    <string name="alarm_feat_title_alert_resume_infusion">開始胰島素</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">開啟藍牙</string>
+    <!-- Alert Descriptions -->
+    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[剩餘胰島素少於 <b>%s U</b>。<br><b>請準備更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_phase2"><![CDATA[貼片已到期。<br><b>請立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_phase1"><![CDATA[貼片即將到期。<br><b>請立即更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[電量不足。<br><b>請準備更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[因極端溫度已暫停胰島素輸注。</b><br>移至 40℉–99℉ 以繼續。]]></string>
+    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[請點選 [確定]。<br>若忽略，將升級為嚴重警報，並且<b>會停止胰島素輸注。</b>]]></string>
+    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[請點選 [確定] 以完成貼片啟用。]]></string>
+    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[暫停胰島素已結束。<br><b>請點選 [開始胰島素] 開始。</b>]]></string>
+    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[使用貼片需要藍牙。<br><b>請點選 [確定] 並開啟藍牙。</b>]]></string>
+    <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">胰島素不足</string>
+    <string name="alarm_feat_title_notice_expired_patch">貼片使用時間通知</string>
+    <string name="alarm_feat_title_notice_check_patch">貼片檢查通知</string>
+    <string name="alarm_feat_title_notice_change_time_zone">時區變更</string>
+    <string name="alarm_feat_title_notice_check_bg">檢查血糖</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS 已開始</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS 已結束</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS 無法使用</string>
+    <string name="alarm_feat_title_notice_unknown">貼片錯誤</string>
+    <!-- Notice Descriptions -->
+    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[剩餘胰島素少於 %s U。<br><b>請準備更換貼片。</b>]]></string>
+    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[貼片使用時間為 <b>%s 天 %s 小時。</b>。<br>使用期間請留意。]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[時區已從 <b>%s（UTC %s） 變更為 %s（UTC %s）</b>。]]></string>
+    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[自您上次注射已過 %s。<br>請檢查您的血糖。]]></string>
+    <string name="alarm_feat_desc_notice_lgs_started">LGS 已開始。</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">因貼片/CGM 中斷連線，LGS 已結束。</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">因 LGS 暫停，LGS 已結束。</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_time_over">因排程時間已到，LGS 已結束。</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">因已關閉 LGS，LGS 已結束。</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">因 CGM 數值超過設定門檻，LGS 已結束。</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_unknown">因未知原因，LGS 已結束。</string>
+    <string name="alarm_feat_desc_notice_lgs_error">請檢查貼片與 CGM 的連線。</string>
+    <string name="alarm_feat_desc_unknown">發生非預期的貼片錯誤。</string>
+    <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">停用貼片</string>
+    <string name="alarm_feat_btn_patch_force_discard">放棄貼片</string>
+    <string name="alarm_feat_btn_resume_infusion">開始輸注</string>
+    <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">請檢查貼片連線。</string>
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">剩餘胰島素少於 10 U；已停止輸注。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
+    <string name="alarm_notification_desc_warning_expired_patch">貼片已過期；已停止輸注。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
+    <string name="alarm_notification_desc_warning_low_battery">電量過低；已停止輸注。請點選 [放棄貼片] 按鈕，並立即更換貼片。</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">已停止輸注。請立即移至合適溫度環境（40℉ ～ 99℉）。</string>
+    <string name="alarm_notification_desc_warning_not_used_app">已停止輸注。請點選 [開始輸注] 按鈕以重新開始基礎輸注。</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">貼片使用時限已到。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">自我診斷失敗。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
+    <string name="alarm_notification_desc_warning_patch_error">因非預期錯誤，已停止輸注。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">因阻塞，已停止輸注。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">針頭植入失敗。請點選 [停用貼片] 按鈕，並立即更換貼片。</string>
+    <string name="alarm_notification_desc_alert_low_insulin">剩餘胰島素少於 %s U。請準備更換貼片。</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase2">貼片已過期。請立即更換貼片。</string>
+    <string name="alarm_notification_desc_alert_expired_patch_phase1">貼片即將到期。請立即更換貼片。</string>
+    <string name="alarm_notification_desc_alert_low_battery">電量偏低。請準備更換貼片。</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">因極端溫度已暫停輸注。請移至 40℉–99℉ 以恢復。</string>
+    <string name="alarm_notification_desc_alert_not_used_app">請點選 [OK]。若忽略，將升級為嚴重警報並停止輸注。</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">請點選 [OK] 按鈕以完成貼片啟用。</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">「暫停輸注」已結束。請點選 [開始輸注] 以開始。</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">使用貼片需要藍牙。請點選 [OK] 並開啟藍牙。</string>
+    <string name="alarm_notification_desc_notice_low_insulin">剩餘胰島素少於 %s U。請準備更換貼片。</string>
+    <string name="alarm_notification_desc_notice_expired_patch">貼片使用時間為 %s 天 %s 小時。使用期間請留意。</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">時區已從 %s（UTC %s） 變更為 %s（UTC %s）。</string>
+    <string name="alarm_notification_desc_notice_check_bg">自您上次注射已過 %s。請檢查您的血糖。</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS 已開始。</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">因貼片/CGM 中斷連線，LGS 已結束。</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">因 LGS 暫停，LGS 已結束。</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">因排程時間已到，LGS 已結束。</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">因已關閉 LGS，LGS 已結束。</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">因 CGM 數值超過設定門檻，LGS 已結束。</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">因未知原因，LGS 已結束。</string>
+    <string name="alarm_notification_desc_notice_lgs_error">請檢查貼片與 CGM 的連線。</string>
+    <string name="carelevo_profile_update_skip_comment">已略過：更新時機過早。</string>
+</resources>

@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Kruhový)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (vlastný)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (vlastné) vždy zapnuté</string>
     <string name="label_actions_tile">Akcie</string>
     <string name="label_temp_target_tile">Dočasný cieľ</string>
     <string name="label_quick_wizard_tile">Rýchly sprievodca</string>
@@ -159,6 +160,21 @@
     <string name="pref_simplify_ui">Zjednodušené užívateľské rozhranie</string>
     <string name="pref_vibrate_hourly">Vibrovať každú hodinu</string>
     <string name="pref_show_weeknumber">Zobraziť číslo týždňa</string>
+    <string name="pref_complication_1">Komplikácia 1</string>
+    <string name="pref_complication_2">Komplikácia 2</string>
+    <string name="pref_complication_3">Komplikácia 3</string>
+    <string name="pref_complication_4">Komplikácia 4</string>
+    <string name="pref_complication_5">Komplikácia 5</string>
+    <string name="complication_summary_none">Ťuknutím vyberte zdroj údajov</string>
+    <string name="pref_complication_type_priority">Priorita typu komplikácie</string>
+    <string name="pref_complication_type_priority_all">Predvolené pre všetky sloty</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Zmena vykonaná tu sa prejaví pri najbližšom výbere zdroja údajov. Nestačí vybrať ten istý zdroj znova – najprv vyberte iný zdroj údajov a až potom ten, ktorý chcete.</string>
+    <string name="complication_type_priority_value">Hodnota alebo mierka</string>
+    <string name="complication_type_priority_text">Text</string>
+    <string name="complication_type_priority_icon">Ikona</string>
+    <string name="complication_type_priority_use_default">Použiť prednastavené</string>
+    <string name="cwf_complication_layout">Rozloženie komplikácií</string>
+    <string name="cwf_complication_layout_description">Poloha a veľkosť komplikácií prevzaté z načítaného vlastného ciferníka.</string>
     <string name="pref_include_external">Zahrnúť externé zobrazenia do šablóny</string>
     <string name="pref_switch_external">Zobraziť externé dáta v ciferníku</string>
     <string name="custom_pref_show_seconds">Zobrazovať sekundy</string>
@@ -231,6 +247,12 @@
     <string name="complication_blood_glucose_ext1">Glykémia Ext1</string>
     <string name="complication_blood_glucose_ext2">Glykémia Ext2</string>
     <string name="complication_bg_graph">Graf glykémie</string>
+    <string name="complication_cwf_image">Vlastný ciferník</string>
+    <string name="complication_cwf_ambient_bg">Vlastný ciferník s údajmi o hladine glukózy</string>
+    <string name="complication_cwf_ambient_status">Stav vlastného ciferníka v pohotovostnom režime</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s %2$s</string>
+    <string name="complication_cwf_lower">Pozadie vlastného ciferníka</string>
+    <string name="complication_cwf_upper">Vlastný ciferník</string>
     <string name="complication_br_cob_iob">Bazál, COB &amp; IOB</string>
     <string name="complication_br_cob_iob_ext1">Bazál, COB &amp; IOB Ext1</string>
     <string name="complication_br_cob_iob_ext2">Bazál, COB &amp; IOB Ext2</string>
@@ -244,6 +266,8 @@
     <string name="complication_iob_icon">Ikona IOB</string>
     <string name="complication_iob_detailed">Detailný IOB</string>
     <string name="complication_uploader_phone_battery">Batéria telefónu/uploadera</string>
+    <string name="running_mode_resume">Pokračovať v uzavretom okruhu</string>
+    <string name="running_mode_reconnect">Znovu pripojiť pumpu</string>
     <string name="label_running_mode_title">Režim prevádzky</string>
     <string name="label_bg_graph_tile">Graf glykémie</string>
     <string name="tile_tap_action">Akcia pri poklepaní</string>

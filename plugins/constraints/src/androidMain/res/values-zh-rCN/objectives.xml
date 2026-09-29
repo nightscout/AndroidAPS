@@ -55,6 +55,7 @@
     <string name="objectives_exam_learned_isf">你学到了ISF值的含义，以及它如何影响到用于血糖校正的胰岛素数量。</string>
     <string name="objectives_exam_learned_ic">你学会了IC 值的含义以及它如何影响计算覆盖碳水所需的胰岛素量。</string>
     <string name="objectives_exam_learned_hypott">低血糖临时目标仅用于防止低血糖后的过度校正，通常这时有叠加的负IOB。应评估额外措施防止未来再次发生这种情况。</string>
+    <string name="objectives_exam_learned_profileswitch">使用百分比不会影响目标血糖，但基础率、ISF 和 IC 会随之调整，以输送更多胰岛素（高于 100%）或更少胰岛素（低于 100%）。</string>
     <string name="objectives_exam_learned_profileswitchtime">通过在配置文件切换中使用时间偏移，你可以使昼夜节律配置适应不规律的情况，如晚起。</string>
     <string name="objectives_exam_learned_profileswitch4">配置文件本身不足以进行修改。您仍然需要进行配置切换已启用更改。</string>
     <string name="objectives_exam_learned_exercise">在开始锻炼之前，您需要至少提前1小时将配置文件比例调整低于100%，以减少胰岛素的输注量。</string>

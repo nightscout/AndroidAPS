@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">Esci dalla procedura guidata di disattivazione? Il cerotto può rimanere attivo e continuare a fornire insulina.</string>
     <string name="patch_force_reset">Forza Reset</string>
     <string name="patch_force_reset_confirm">Questo cancellerà lo stato della patch localmente senza inviare comandi alla patch. Usare solo se la disattivazione normale fallisce. La patch continuerà a erogare fino a quando la batteria non si esaurirà o viene disattivata manualmente.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Allarmi Esatti</string>
-    <string name="permission_exact_alarm_description">L\'applicazione ha bisogno del permesso per pianificare gli avvisi esatti per la gestione delle patch</string>
 </resources>

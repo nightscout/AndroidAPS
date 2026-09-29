@@ -108,6 +108,8 @@
     <string name="a11y_arrow_double_up">snel stijgend</string>
     <string name="a11y_arrow_none">geen</string>
     <string name="a11y_arrow_unknown">onbekend</string>
+    <string name="decrement">verlaag</string>
+    <string name="increment">verhoog</string>
     <string name="a11y_high">hoog</string>
     <string name="a11y_inrange">binnen bereik</string>
     <string name="a11y_low">laag</string>
@@ -429,7 +431,6 @@
     <string name="bolus_advisor">Bolusadviseur</string>
     <string name="bolus_advisor_message">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je laten weten wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je er aan herinneren.</string>
     <string name="set">Stel in</string>
-    <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
     <string name="wizard_no_actual_bg">Geen recente BG om de berekening op te baseren!</string>
     <string name="wizard_no_active_profile">Geen actief profiel ingesteld!</string>
     <string name="wizard_carbs_constraint">Koolhydraten beperking overschreden!</string>
@@ -602,6 +603,11 @@
     <string name="aaps_directory">AAPS map</string>
     <string name="import_setting">Importeer instellingen</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="reset_aps_results">Reset APS resultaten</string>
     <string name="database_cleanup">Database opschonen</string>
     <string name="nav_resetdb">Reset database</string>
