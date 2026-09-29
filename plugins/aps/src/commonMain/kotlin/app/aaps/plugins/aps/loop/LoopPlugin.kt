@@ -71,6 +71,7 @@ import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.jsonObject
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
@@ -126,6 +127,7 @@ class LoopPlugin(
     private val decimalFormatter: DecimalFormatter,
     private val ch: ConcentrationHelper,
     private val loopNotifier: LoopNotifier,
+    private val runningModeReconciler: RunningModeReconciler,
 
     @ApplicationScope private val appScope: CoroutineScope
 ) : PluginBase(
@@ -404,6 +406,8 @@ class LoopPlugin(
      * blocking with `runBlocking`, and it was re-entered from inside [invokeMutex].
      */
     suspend fun runningModePreCheck() = reconcileMutex.withLock { reconcileRunningMode() }
+
+    override suspend fun verifyZeroDelivery() = runningModeReconciler.verifyZeroDelivery()
 
     /**
      * The body of [runningModePreCheck]. Call it only with [reconcileMutex] held.

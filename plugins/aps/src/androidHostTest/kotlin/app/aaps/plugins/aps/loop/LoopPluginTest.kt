@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
@@ -70,6 +71,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
     @Mock lateinit var loopNotifier: LoopNotifier
+    @Mock lateinit var runningModeReconciler: RunningModeReconciler
 
     private lateinit var loopPlugin: LoopPlugin
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -94,7 +96,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         // The shared test base still hands out a javax Provider, which other tests rely on;
         // LoopPlugin takes Metro's now, so it is adapted here rather than flipping the base.
         persistenceLayer, notificationManager, { pumpEnactResultProvider() },
-        processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, testScope
+        processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, loopNotifier, runningModeReconciler, testScope
     )
 
     /**

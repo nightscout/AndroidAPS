@@ -147,6 +147,23 @@ class ReconcilerDecisionTest : TestBase() {
     }
 
     @Test
+    fun `the same stopped mode again is no-op`() {
+        // Extending a suspend. A TBR active now was set by hand during the suspend - keep it.
+        stopped.forEach { mode ->
+            assertThat(ReconcilerDecision.decide(mode, mode))
+                .isEqualTo(ReconcilerDecision.Action.NoOp)
+        }
+    }
+
+    @Test
+    fun `a different stopped mode still cancels TBR`() {
+        assertThat(ReconcilerDecision.decide(RM.Mode.DISABLED_LOOP, RM.Mode.SUSPENDED_BY_USER))
+            .isEqualTo(ReconcilerDecision.Action.CancelTbr)
+        assertThat(ReconcilerDecision.decide(RM.Mode.SUSPENDED_BY_USER, RM.Mode.DISABLED_LOOP))
+            .isEqualTo(ReconcilerDecision.Action.CancelTbr)
+    }
+
+    @Test
     fun `suspended no tbr to stopped cancels TBR defensively`() {
         suspendedNoTbr.forEach { prev ->
             stopped.forEach { next ->
