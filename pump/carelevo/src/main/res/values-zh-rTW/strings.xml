@@ -148,17 +148,6 @@
     <string name="alarm_feat_title_warning_patch_error">貼片錯誤</string>
     <string name="alarm_feat_title_warning_infusion_clogged">阻塞</string>
     <string name="alarm_feat_title_warning_needle_injection_error">針頭植入錯誤</string>
-    <!-- Warning Descriptions -->
-    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[剩餘胰島素少於 <b>10 U</b>；已停止胰島素輸注。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[貼片已到期；已停止胰島素輸注。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[電量不足；已停止胰島素輸注。<br><b>請點選 [丟棄貼片]，立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[已停止胰島素輸注。<br><b>請立即移至合適的溫度範圍 (40℉ ~ 99℉)。</b>]]></string>
-    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[已停止胰島素輸注。<br><b>請點選 [開始胰島素]，重新啟動基礎輸注。</b>]]></string>
-    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[貼片安裝時間已超時。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[自我診斷失敗。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[發生非預期錯誤，已停止胰島素輸注。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[因阻塞而停止胰島素輸注。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[針頭植入失敗。<br><b>請點選 [停用貼片]，立即更換貼片。</b>]]></string>
     <!-- Alert Titles -->
     <string name="alarm_feat_title_alert_low_insulin">胰島素不足</string>
     <string name="alarm_feat_title_alert_expired_patch_phase2">貼片使用期限已到期</string>
@@ -170,16 +159,6 @@
     <string name="alarm_feat_title_alert_incomplete_patch_setting">貼片啟用未完成</string>
     <string name="alarm_feat_title_alert_resume_infusion">開始胰島素</string>
     <string name="alarm_feat_title_alert_off_bluetooth">開啟藍牙</string>
-    <!-- Alert Descriptions -->
-    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[剩餘胰島素少於 <b>%s U</b>。<br><b>請準備更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_alert_expired_patch_phase2"><![CDATA[貼片已到期。<br><b>請立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_alert_expired_patch_phase1"><![CDATA[貼片即將到期。<br><b>請立即更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[電量不足。<br><b>請準備更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[因極端溫度已暫停胰島素輸注。</b><br>移至 40℉–99℉ 以繼續。]]></string>
-    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[請點選 [確定]。<br>若忽略，將升級為嚴重警報，並且<b>會停止胰島素輸注。</b>]]></string>
-    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[請點選 [確定] 以完成貼片啟用。]]></string>
-    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[暫停胰島素已結束。<br><b>請點選 [開始胰島素] 開始。</b>]]></string>
-    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[使用貼片需要藍牙。<br><b>請點選 [確定] 並開啟藍牙。</b>]]></string>
     <!-- Notice Titles -->
     <string name="alarm_feat_title_notice_low_insulin">胰島素不足</string>
     <string name="alarm_feat_title_notice_expired_patch">貼片使用時間通知</string>
@@ -190,17 +169,6 @@
     <string name="alarm_feat_title_notice_lgs_ended">LGS 已結束</string>
     <string name="alarm_feat_title_notice_lgs_error">LGS 無法使用</string>
     <string name="alarm_feat_title_notice_unknown">貼片錯誤</string>
-    <!-- Notice Descriptions -->
-    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[剩餘胰島素少於 %s U。<br><b>請準備更換貼片。</b>]]></string>
-    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[自您上次注射已過 %s。<br>請檢查您的血糖。]]></string>
-    <string name="alarm_feat_desc_notice_lgs_started">LGS 已開始。</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">因貼片/CGM 中斷連線，LGS 已結束。</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">因 LGS 暫停，LGS 已結束。</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_time_over">因排程時間已到，LGS 已結束。</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">因已關閉 LGS，LGS 已結束。</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">因 CGM 數值超過設定門檻，LGS 已結束。</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_unknown">因未知原因，LGS 已結束。</string>
-    <string name="alarm_feat_desc_notice_lgs_error">請檢查貼片與 CGM 的連線。</string>
     <string name="alarm_feat_desc_unknown">發生非預期的貼片錯誤。</string>
     <!-- Action Buttons -->
     <string name="alarm_feat_btn_patch_discard">停用貼片</string>
