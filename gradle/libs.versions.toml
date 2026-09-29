@@ -22,7 +22,7 @@ work = "2.11.2"
 datastorePreferences = "1.2.1"
 
 # Compose
-wearCompose = "1.6.2"
+wearCompose = "1.7.0"
 lifecycleRuntimeKtx = "2.11.0"
 composeUi = "1.12.1"
 
