@@ -221,7 +221,12 @@ enum class NotificationId(
     // Work the plugin launched itself ended with an error. Separate from PLUGIN_START_FAILED because the
     // plugin did start - it is a polling loop or a queued command that died, so the text has to say
     // something else. Same reasons for allowMultiple.
-    PLUGIN_WORK_FAILED(URGENT, SYSTEM, allowMultiple = true);
+    PLUGIN_WORK_FAILED(URGENT, SYSTEM, allowMultiple = true),
+
+    // The pump is disconnected (or a super bolus runs) in AAPS, but the zero temp basal that stops the
+    // insulin is not on the pump, and sending it again did not help. The pump may still give basal
+    // while the user believes it does not. Appended at the END for the same reason as above.
+    ZERO_DELIVERY_NOT_SET(URGENT, PUMP);
 
     companion object {
 

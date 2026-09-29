@@ -42,6 +42,7 @@ import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.pump.common.defs.PumpHistoryEntryGroup
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
@@ -223,7 +224,15 @@ private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: 
 
         OmnipodCommandType.SET_BOLUS           -> {
             val bolus = record.record as? BolusRecord
-            bolus?.let { rh.gs(R.string.omnipod_common_history_bolus_value, it.amout) } ?: ""
+            bolus?.let {
+                val amount = rh.gs(R.string.omnipod_common_history_bolus_value, it.amout)
+                when (it.bolusType) {
+                    BolusType.DEFAULT          -> amount
+                    BolusType.SMB              -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_smb))
+                    BolusType.BASAL_CORRECTION -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_basal_correction))
+                    BolusType.PRIMING          -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_priming))
+                }
+            } ?: ""
         }
 
         OmnipodCommandType.SET_BASAL_PROFILE,

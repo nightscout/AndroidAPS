@@ -69,6 +69,14 @@ interface Loop {
     suspend fun handleRunningModeChange(newRM: RM.Mode, action: Action, source: Sources, listValues: List<ValueWithUnit> = emptyList(), durationInMinutes: Int = 0, profile: Profile): Boolean
 
     /**
+     * Periodic check that the pump really gives no insulin while the pump is disconnected or a super
+     * bolus runs. Sends the zero temp basal again when it is missing or ends soon, and raises an alarm
+     * when it stays missing. Never changes the running mode. Does nothing on a device that does not
+     * drive the pump.
+     */
+    suspend fun verifyZeroDelivery()
+
+    /**
      * Timestamp of last loop run triggered by new BG
      */
     var lastBgTriggeredRun: Long

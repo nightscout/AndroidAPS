@@ -11,6 +11,7 @@
     <string name="medtronic_pump_max_basal">Máxima Basal na Bomba (U/h)</string>
     <string name="medtronic_custom_action_wake_and_tune">Acordar e Configurar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Limpar Bloco de Bólus</string>
+    <string name="medtronic_custom_action_reset_rileylink">Redefinir RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipo de Bateria (Visão Detalhada)</string>
     <string name="medtronic_pump_battery_no">Não seleccionado (Visão simples)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Visão estendida)</string>
@@ -18,6 +19,13 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Outro (não suportado)</string>
+    <string name="medtronic_pump_type_523_24a">523 (FW 2.4A ou inferior)</string>
+    <string name="medtronic_pump_type_723_24a">723 (FW 2.4A ou inferior)</string>
+    <string name="medtronic_pump_type_554_eu">554 (UE FW. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (UE FW. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA FW. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA FW. &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Bateria RileyLink</string>

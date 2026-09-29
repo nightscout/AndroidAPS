@@ -13,9 +13,13 @@ enum class InsightIntKey(
     override val max: Int = Int.MAX_VALUE,
 ) : IntPreferenceKey {
 
-    MinRecoveryDuration("insight_min_recovery_duration", 5, titleResId = R.string.min_recovery_duration),
-    MaxRecoveryDuration("insight_max_recovery_duration", 20, titleResId = R.string.max_recovery_duration),
-    DisconnectDelay("insight_disconnect_delay", 5, titleResId = R.string.disconnect_delay),
+    // Bounds match the limits the driver already applies when it reads these values. Without them the
+    // preference screen offered the whole Int range and then silently clamped what the user typed.
+    // The driver keeps clamping on read, because a value stored before these bounds existed can still
+    // be out of range.
+    MinRecoveryDuration("insight_min_recovery_duration", 5, titleResId = R.string.min_recovery_duration, min = 0, max = 20),
+    MaxRecoveryDuration("insight_max_recovery_duration", 20, titleResId = R.string.max_recovery_duration, min = 0, max = 20),
+    DisconnectDelay("insight_disconnect_delay", 5, titleResId = R.string.disconnect_delay, min = 0, max = 15),
     ;
 
     override val title: TextRef = TextRef.AndroidRes(titleResId)

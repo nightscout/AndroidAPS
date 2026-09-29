@@ -22,6 +22,10 @@
     <string name="omnipod_dash_unknown">Neznámy stav príkazu</string>
     <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minut</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Korekcia bazálu</string>
+    <string name="omnipod_common_bolus_type_priming">Plnenie</string>
     <string name="omnipod_common_alert_delivery_suspended">Podávanie inzulínu je pozastavené</string>
     <string name="omnipod_common_history_total_delivered">Celkovo podané: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Už sa podáva iný bolus</string>

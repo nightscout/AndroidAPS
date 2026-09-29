@@ -41,6 +41,7 @@
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Upraviť</string>
     <string name="record_site_location">Miesto aplikácie: %1$s</string>
     <string name="record_site_arrow">Šípka miesta aplikácie: %1$s</string>
     <string name="record_site_note">Poznámka: %1$s</string>
@@ -152,6 +153,7 @@
     <string name="reuse_profile_pct_hours">Znovu použiť %1$d%% %2$dh</string>
     <string name="percentage_label">Percento</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">Odpojiť pumpu</string>
     <string name="resume">Pokračovať</string>
     <string name="reconnect">Znovu pripojiť pumpu</string>
     <string name="duration15m">15 minút</string>
@@ -174,6 +176,9 @@
     <string name="careportal_remove_started_events">Odstrániť všetky záznamy AAPS spustený</string>
     <string name="user_entry">Záznam užívateľa</string>
     <string name="clone_label">Klonovať</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Graf glukózy. Nedávne hodnoty %1$s. %2$s. %3$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Graf hladiny cukru v krvi. Najnovšie hodnoty %1$s</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Spustiť</string>
     <string name="add_new_profile">Pridať nový profil</string>
     <string name="edit_label">Upraviť</string>
     <string name="activate_label">Aktivovať</string>
@@ -182,6 +187,7 @@
     <string name="active_profile_indicator">AKTÍVNY</string>
     <string name="confirm_remove_profile">Odstrániť profil %1$s?</string>
     <string name="confirm_clone_profile">Klonovať profil %1$s?</string>
+    <string name="profile_no_longer_exists">Zoznam profilov sa medzičasom zmenil – prosím, skúste to znovu</string>
     <string name="tbr_type_flag_extended">E</string>
     <string name="tbr_type_flag_suspended">S</string>
     <string name="tbr_type_flag_emulated_suspended">ES</string>

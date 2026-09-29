@@ -116,7 +116,6 @@
     <string name="profile_switch_no_insulin">无法切换配置文件：没有正在使用的胰岛素，也未选择任何胰岛素。</string>
     <string name="profile_switch_select_insulin_hint">尚未使用任何胰岛素。请选择您正在使用的胰岛素，以便此次配置文件切换能够记录它。</string>
     <string name="insulin_activation_failed">胰岛素未切换。您之前的胰岛素仍在使用中。</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">胰岛素未切换：%1$s。您之前的胰岛素仍在使用中。</string>
     <string name="insulin_activation_unconfirmed">胰岛素切换无法确认。请在输注前检查配置文件中哪种胰岛素处于活动状态。</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -183,6 +182,8 @@
     <string name="a11y_arrow_double_up">快速上升</string>
     <string name="a11y_arrow_none">无</string>
     <string name="a11y_arrow_unknown">未知</string>
+    <string name="decrement">减少</string>
+    <string name="increment">增加</string>
     <string name="a11y_high">高</string>
     <string name="a11y_inrange">在范围内</string>
     <string name="a11y_low">低</string>
@@ -436,7 +437,6 @@
     <string name="treatment_insulin_desc">手动执行推注</string>
     <string name="treatment_carbs_desc">仅记录碳水化合物</string>
     <string name="treatment_calculator_desc">计算推注剂量</string>
-    <string name="insulin_management">胰岛素</string>
     <string name="manage_insulin_desc">管理并启用胰岛素配置</string>
     <string name="concentration_disable_blocked">如果系统中存在非 U100 胰岛素，则无法禁用浓度支持。请先移除所有非 U100 胰岛素配置，然后切换到 U100 胰岛素配置文件。</string>
     <string name="simple_mode_blocked_by_concentration">使用非 U100 胰岛素时无法启用简易模式。请先切换至 U100 胰岛素。</string>
@@ -723,7 +723,6 @@
     <string name="wizard_include_iob">包含 IOB</string>
     <string name="wizard_include_cob">包含 COB</string>
     <string name="wizard_calculation">计算</string>
-    <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">最大移除：%1$d g（COB）</string>
     <string name="wizard_no_insulin_required">不需要胰岛素</string>
     <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
@@ -904,7 +903,7 @@
     <string name="reorder">重新排序</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">前移</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">后移</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">显示详情</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">显示详情</string>
     <string name="presets_changed_reorder_aborted">预设已在别处更改。新顺序未保存。</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">位置 %1$d / %2$d</string>
@@ -1021,8 +1020,11 @@
     <string name="import_wrong_password">密码错误</string>
     <string name="import_btn">导入</string>
     <string name="import_anyway_btn">仍然导入</string>
-    <string name="import_apply_title">配置导入了</string>
-    <string name="import_apply_message">导入的设置现在将被应用。发生变更的插件将会重启</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_apply_waiting">正在等待泵…</string>
     <string name="import_apply_pump_busy">泵仍在忙碌中，因此设置未应用。</string>
     <string name="import_apply_retry_question">现在重试吗？</string>

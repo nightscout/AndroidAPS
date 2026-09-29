@@ -160,6 +160,8 @@ class KeepAliveWorker(
         // the WorkManager telemetry below.
         periodicMaintenance.runOnce()
         checkPump()
+        // Retries a missing zero TBR while the pump is disconnected - nothing else does, as the loop is paused
+        loop.verifyZeroDelivery()
         checkAPS()
         workerDbStatus()
         workerActiveStatus()

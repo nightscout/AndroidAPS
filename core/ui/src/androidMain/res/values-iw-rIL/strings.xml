@@ -66,6 +66,7 @@
     <string name="stop">עצור</string>
     <string name="invalid_profile">פרופיל לא חוקי!</string>
     <string name="no_profile_set">לא הוגדר פרופיל</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">האינסולין לא הוחלף: %1$s האינסולין הקודם עדיין פעיל.</string>
     <string name="active"><![CDATA[<פועל>]]></string>
     <string name="date">תאריך</string>
     <string name="units_label">יחידות</string>
@@ -118,6 +119,8 @@
     <string name="a11y_arrow_double_up">עלייה מהירה</string>
     <string name="a11y_arrow_none">ללא</string>
     <string name="a11y_arrow_unknown">לא ידוע</string>
+    <string name="decrement">הפחתה</string>
+    <string name="increment">תוספת</string>
     <string name="a11y_high">גבוה</string>
     <string name="a11y_inrange">בטווח</string>
     <string name="a11y_low">נמוך</string>
@@ -386,7 +389,6 @@
     <string name="bolus_advisor">יועץ הבולוסים</string>
     <string name="bolus_advisor_message">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
     <string name="set">הגדר</string>
-    <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
     <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
@@ -540,6 +542,11 @@
     <string name="aaps_directory">תיקיית AAPS</string>
     <string name="import_setting">ייבוא הגדרות</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="database_cleanup">ניקיון מסד הנתונים</string>
     <string name="nav_resetdb">איפוס מסדי נתונים</string>
     <!--    BLE Scan Step (shared pump pairing) -->

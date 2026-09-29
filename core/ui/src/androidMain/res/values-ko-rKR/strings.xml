@@ -119,6 +119,8 @@
     <string name="a11y_arrow_double_up">고속 상승</string>
     <string name="a11y_arrow_none">없음</string>
     <string name="a11y_arrow_unknown">알수없음</string>
+    <string name="decrement">감소</string>
+    <string name="increment">증가</string>
     <string name="a11y_high">대</string>
     <string name="a11y_inrange">범위 내</string>
     <string name="a11y_low">소</string>
@@ -380,7 +382,6 @@
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolus 조언자</string>
     <string name="bolus_advisor_message">현재 높은 혈당을 가지고 있습니다. 지금 먹는 대신 더 나은 혈당을 기다리는 게 좋습니다. 지금 교정bolus 을 진행하고, 식사 시간을 알려드릴까요? 이 경우 탄수화물은 기록되지 않으며, 다시 알림을 줄 때 마법사를 다시 사용해야 합니다.</string>
-    <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
     <string name="wizard_no_actual_bg">기저 계산에는 최근 BG가 없습니다!</string>
     <string name="wizard_no_active_profile">활성화된 프로파일 설정이 없습니다!</string>
     <string name="wizard_carbs_constraint">탄수화물 제한 위반!</string>
@@ -526,6 +527,11 @@
     <string name="delete_logs">로그 삭제하기</string>
     <string name="import_setting">설정 불러오기</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="database_cleanup">데이터베이스 정리하기</string>
     <string name="nav_resetdb">데이터베이스 초기화</string>
     <!--    BLE Scan Step (shared pump pairing) -->

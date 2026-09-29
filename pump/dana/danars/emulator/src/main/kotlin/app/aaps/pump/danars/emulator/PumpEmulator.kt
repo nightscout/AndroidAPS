@@ -197,6 +197,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     }
 
     private fun processSetTemporaryBasal(params: ByteArray): ByteArray {
+        if (state.rejectTempBasal) return byteArrayOf(0x01) // refused
         if (params.size >= 2) {
             val percent = params[0].toInt() and 0xFF
             val durationHours = params[1].toInt() and 0xFF
@@ -220,6 +221,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
     }
 
     private fun processApsSetTemporaryBasal(params: ByteArray): ByteArray {
+        if (state.rejectTempBasal) return byteArrayOf(0x01) // refused
         if (params.size >= 3) {
             val percent = (params[0].toInt() and 0xFF) or ((params[1].toInt() and 0xFF) shl 8)
             val durationMinutes = if (params[2].toInt() and 0xFF == 150) 15 else 30

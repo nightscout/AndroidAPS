@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">退出停用向导？贴片可能仍处于活动状态，并持续输送胰岛素。</string>
     <string name="patch_force_reset">强制重置</string>
     <string name="patch_force_reset_confirm">这将在本地清除贴片状态，不会向贴片发送命令。仅在正常停用失败时使用。贴片将继续运行，直至电池耗尽或手动关闭。</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">精确闹钟</string>
-    <string name="permission_exact_alarm_description">应用程序需要精确闹钟权限，以进行贴片管理</string>
 </resources>
