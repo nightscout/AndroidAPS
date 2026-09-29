@@ -15,7 +15,6 @@
     <string name="carelevo_insulin_remain_key">胰岛素余量</string>
     <string name="carelevo_running_remain_time">贴片剩余时间</string>
     <string name="carelevo_total_insulin_key">胰岛素总输注量</string>
-    <string name="common_label_unit_value_duration_hour_and_minute">%d 时 %d 分</string>
     <string name="common_label_unit_value_minute">%d 分</string>
     <string name="common_label_unit_value_duration_hour">%d 小时</string>
     <string name="common_label_unit_value_dose_with_space">%s U</string>
@@ -34,7 +33,6 @@
     <string name="carelevo_pump_stop_duration_label_4_hour">4 小时</string>
     <string name="common_unit_value_day_hour_min">%1$d 天 %2$02d:%3$02d</string>
     <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
-    <string name="common_unit_remain_min_sec">剩余 %d 分 %02d 秒</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
     <string name="carelevo_btn_insulin_guide">胰岛素指南</string>
     <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
@@ -194,8 +192,6 @@
     <string name="alarm_feat_title_notice_unknown">贴片错误</string>
     <!-- Notice Descriptions -->
     <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[剩余胰岛素不足 %s U。<br><b>请准备更换贴片。</b>]]></string>
-    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[贴片使用时间为 <b>%s 天 %s 小时。</b><br>使用期间请留意。]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[时区已从 <b>%s（UTC %s）更改为 %s（UTC %s）</b>。]]></string>
     <string name="alarm_feat_desc_notice_check_bg"><![CDATA[自您输注大剂量以来已过去 %s。<br>请检查您的血糖。]]></string>
     <string name="alarm_feat_desc_notice_lgs_started">LGS 已启动。</string>
     <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS 已结束，原因是贴片/CGM 断开连接。</string>
@@ -233,8 +229,6 @@
     <string name="alarm_notification_desc_alert_resume_infusion">暂停胰岛素已结束。点击 [启动胰岛素] 以开始。</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">使用贴片需要蓝牙。请点击 [确定] 并开启蓝牙。</string>
     <string name="alarm_notification_desc_notice_low_insulin">剩余胰岛素不足 %s U。请准备更换贴片。</string>
-    <string name="alarm_notification_desc_notice_expired_patch">贴片使用时间为 %s 天 %s 小时。使用期间请留意。</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">时区已从 %s（UTC %s）更改为 %s（UTC %s）。</string>
     <string name="alarm_notification_desc_notice_check_bg">自您输注大剂量以来已过去 %s。请检查您的血糖。</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS 已启动。</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS 已结束，原因是贴片/CGM 断开连接。</string>
