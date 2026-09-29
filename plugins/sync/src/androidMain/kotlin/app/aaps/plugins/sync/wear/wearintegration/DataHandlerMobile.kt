@@ -55,7 +55,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.chunkedOnQuietPeriod
 import app.aaps.core.interfaces.rx.collectResilient
@@ -132,7 +132,7 @@ class DataHandlerMobile(
     private val context: Context,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,

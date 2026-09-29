@@ -25,8 +25,9 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.QuickWizard
-import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -38,8 +39,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyVararg
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
@@ -83,8 +82,10 @@ class DataHandlerMobileSceneTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
+        // Real English text, so the asserts below check what the watch shows and nothing is stubbed
+        val text = generatedTextResolver("sync" to SyncStringsValues::textOf)
         sut = DataHandlerMobile(
-            context, rxBus, aapsLogger, rh, preferences, config,
+            context, rxBus, aapsLogger, text, preferences, config,
             iobCobCalculator, processedTbrEbData, smbGlucoseStatusProvider, profileFunction, profileUtil,
             loop, processedDeviceStatusData, receiverStatusStore, quickWizard, trendCalculator, dateUtil,
             constraintsChecker, activePlugin, commandQueue, fabricPrivacy, uiInteraction,
@@ -96,12 +97,6 @@ class DataHandlerMobileSceneTest : TestBaseWithProfile() {
         sut.sceneActions = sceneActions
         sut.activeSceneSync = activeSceneSync
         sut.sceneChainResolver = sceneChainResolver
-        whenever(rh.gs(CoreUiStrings.scenes)).thenReturn("Scenes")
-        whenever(rh.gs(CoreUiStrings.scene_ended)).thenReturn("Scene ended")
-        whenever(rh.gs(CoreUiStrings.error)).thenReturn("Error")
-        whenever(rh.gs(CoreUiStrings.scene_end_active)).thenReturn("End active scene")
-        whenever(rh.gs(CoreUiStrings.scene_skip_to_label)).thenReturn("Skip to")
-        whenever(rh.gs(eq(CoreUiStrings.scene_end_follow_up_not_started), anyVararg())).thenReturn("Follow-up Wake up will not start")
         whenever(scenes.hasSceneToStop()).thenReturn(true)
     }
 

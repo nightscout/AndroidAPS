@@ -23,8 +23,11 @@ import org.mockito.kotlin.whenever
  * rules moved here from the chips ViewModel unchanged; these tests pin the standard autosens
  * branch, which is what most users run.
  *
- * The shared test base formats a stubbed template with the call's arguments, so the strings are
- * stubbed as templates on the plain lookup, not on the call with arguments.
+ * The strings resolve to their real English text through [baseText], so nothing is stubbed and the
+ * asserts check what the user reads.
+ *
+ * The expected ISF lines are built from the profile, not written as numbers. The test profile has a
+ * different ISF before and after 02:00, and the profile reads the real clock, not the base's `now`.
  */
 class SensitivityOverviewImplTest : TestBaseWithProfile() {
 
@@ -38,7 +41,7 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
     fun prepare() {
         sut = SensitivityOverviewImpl(
             iobCobCalculator, loop, config, constraintsChecker, profileFunction, processedDeviceStatusData,
-            profileUtil, activePlugin, rh, decimalFormatter, dateUtil, aapsLogger, preferences
+            profileUtil, activePlugin, baseText, decimalFormatter, dateUtil, aapsLogger, preferences
         )
         whenever(config.APS).thenReturn(true)
         whenever(iobCobCalculator.ads).thenReturn(ads)
@@ -49,17 +52,18 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
             whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
             whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         }
-        whenever(rh.gs(CoreUiStrings.autosens_short)).thenReturn("%.0f%%")
-        whenever(rh.gs(CoreUiStrings.autosens_long)).thenReturn("Autosens Value: %.0f%%")
-        // The ISF values come from the test profile and are not the point here
-        whenever(rh.gs(CoreUiStrings.isf_profile)).thenReturn("ISF (profile)")
-        whenever(rh.gs(CoreUiStrings.isf_effective)).thenReturn("ISF (effective)")
     }
 
     private fun autosensRatio(ratio: Double) {
         val data = mock<AutosensData>().also { whenever(it.autosensResult).thenReturn(AutosensResult(ratio = ratio)) }
         whenever(ads.getLastAutosensData(any(), any(), any())).thenReturn(data)
     }
+
+    private fun profileIsfLine(): String =
+        baseText.gs(CoreUiStrings.isf_profile, effectiveProfile.getProfileIsfMgdl())
+
+    private fun effectiveIsfLine(ratio: Double): String =
+        baseText.gs(CoreUiStrings.isf_effective, effectiveProfile.getProfileIsfMgdl() * ratio)
 
     @Test
     fun `without an autosens result only the profile ISF is known`() = runBlocking {
@@ -70,7 +74,7 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
         assertThat(data.hasData).isFalse()
         assertThat(data.ratio).isEqualTo(1.0)
         assertThat(data.asText).isEmpty()
-        assertThat(data.lines).containsExactly("ISF (profile)")
+        assertThat(data.lines).containsExactly(profileIsfLine())
         assertThat(data.isEnabled).isTrue()
     }
 
@@ -83,7 +87,7 @@ class SensitivityOverviewImplTest : TestBaseWithProfile() {
         assertThat(data.hasData).isTrue()
         assertThat(data.ratio).isEqualTo(1.2)
         assertThat(data.asText).isEqualTo("120%")
-        assertThat(data.lines).containsExactly("Autosens Value: 120%", "ISF (profile)", "ISF (effective)").inOrder()
+        assertThat(data.lines).containsExactly("Autosens Value: 120%", profileIsfLine(), effectiveIsfLine(1.2)).inOrder()
     }
 
     @Test
