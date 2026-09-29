@@ -1852,6 +1852,42 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun bucketsLandOnTheAnchorGridWhenTheAnchorIsNewerThanTheData() {
+        // adjustToReferenceTime used to take abs() of the distance to the anchor, which throws away the
+        // direction. For a time OLDER than the anchor it then moved the right distance the wrong way
+        // and landed between grid points. createBucketedData5min calls it exactly that way, on the
+        // oldest reading, and lays its whole series out from the answer - so every bucket sat off the
+        // anchor's own grid, and the two bucketing paths built on different grids. Switching between
+        // them orphaned every cached autosensDataTable entry, which is the cost referenceTime surviving
+        // clone() exists to avoid (issue #5066).
+        val fiveMin = T.mins(5).msecs()
+        autosensDataStore.bgReadings = listOf(35L, 30L, 25L, 20L, 15L, 10L).map { minute ->
+            GV(
+                raw = 0.0,
+                noise = 0.0,
+                value = 100.0,
+                timestamp = T.mins(minute).msecs(),
+                sourceSensor = SourceSensor.UNKNOWN,
+                trendArrow = TrendArrow.FLAT
+            )
+        }
+        // Newer than every reading, and 60s off their phase - close enough that the 90 second re-anchor
+        // in the 5 minute path leaves it alone, so the grid under test is this one.
+        val anchor = T.mins(49).msecs()
+        autosensDataStore.referenceTime = anchor
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        val bucketed = autosensDataStore.bucketedData!!
+        assertThat(bucketed).hasSize(6)
+        assertThat(autosensDataStore.referenceTime).isEqualTo(anchor)
+        // Every bucket a whole number of 5 minute steps from the anchor. Before, they were 2 minutes
+        // off it - on their own grid, not this one.
+        bucketed.forEach { assertThat((it.timestamp - anchor) % fiveMin).isEqualTo(0L) }
+    }
+
+    @Test
     fun anAnchorAlreadySetIsNotReSeeded() {
         // Seeding runs only when there is no anchor yet. Once set it stays for the life of the process,
         // because autosens keys, the COB chain and carb slotting all depend on the grid not moving.

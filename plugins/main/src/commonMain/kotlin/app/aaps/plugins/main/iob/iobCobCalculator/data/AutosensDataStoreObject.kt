@@ -229,10 +229,26 @@ class AutosensDataStoreObject : AutosensDataStore {
             referenceTime = someTime
             return someTime
         }
-        var diff = abs(someTime - referenceTime)
-        diff %= T.mins(5).msecs()
-        return if (diff > T.mins(2).plus(T.secs(30)).msecs()) someTime + abs(diff - T.mins(5).msecs()) // Adjust to the future
-        else someTime - diff // adjust to the past
+        val offset = gridOffset(someTime, referenceTime)
+        return if (offset > T.mins(2).plus(T.secs(30)).msecs()) someTime + (T.mins(5).msecs() - offset) // Adjust to the future
+        else someTime - offset // adjust to the past
+    }
+
+    /**
+     * How far [someTime] sits above the grid point below it, for the 5 minute grid [anchor] defines.
+     * Always in 0 until 5 minutes.
+     *
+     * This used to be `abs(someTime - referenceTime) % 5min` inside [adjustToReferenceTime]. Taking the
+     * absolute value first throws away the direction, and for a time OLDER than the anchor the result
+     * then moved the right distance the wrong way and landed between grid points. createBucketedData5min
+     * calls [adjustToReferenceTime] exactly that way - on the oldest reading - and lays its whole series
+     * out from the answer, so every bucket sat off the anchor's own grid and the two bucketing paths
+     * built on different grids. The magnitudes matched, which is why the 90 second re-anchor test next
+     * to it still behaved, and why this stayed hidden.
+     */
+    private fun gridOffset(someTime: Long, anchor: Long): Long {
+        val fiveMin = T.mins(5).msecs()
+        return ((someTime - anchor) % fiveMin + fiveMin) % fiveMin
     }
 
     /**
@@ -266,16 +282,12 @@ class AutosensDataStoreObject : AutosensDataStore {
 
     /**
      * Distance from [someTime] to the nearest point of the 5 minute grid that [anchor] defines, always
-     * positive.
-     *
-     * A real modulo, not [adjustToReferenceTime]. That one takes the absolute difference from the
-     * anchor first, so for a time OLDER than the anchor it moves the right distance in the wrong
-     * direction and lands off the grid. Most times measured here are older than their candidate.
+     * positive. Unlike [adjustToReferenceTime] it takes the anchor as a parameter, because the seeding
+     * scores candidate anchors before one is chosen.
      */
     private fun distanceToGrid(someTime: Long, anchor: Long): Long {
-        val fiveMin = T.mins(5).msecs()
-        val offset = ((someTime - anchor) % fiveMin + fiveMin) % fiveMin
-        return min(offset, fiveMin - offset)
+        val offset = gridOffset(someTime, anchor)
+        return min(offset, T.mins(5).msecs() - offset)
     }
 
     fun isAbout5minData(aapsLogger: AAPSLogger): Boolean {
