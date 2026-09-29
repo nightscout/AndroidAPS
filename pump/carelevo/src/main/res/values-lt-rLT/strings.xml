@@ -15,7 +15,6 @@
     <string name="carelevo_insulin_remain_key">Likęs insulino kiekis</string>
     <string name="carelevo_running_remain_time">Likęs pompos veikimo laikas</string>
     <string name="carelevo_total_insulin_key">Iš viso suleista insulino</string>
-    <string name="common_label_unit_value_duration_hour_and_minute">%d val. %d min</string>
     <string name="common_label_unit_value_minute">%d min</string>
     <string name="common_label_unit_value_duration_hour">%d val.</string>
     <string name="common_label_unit_value_dose_with_space">%s V</string>
@@ -34,7 +33,6 @@
     <string name="carelevo_pump_stop_duration_label_4_hour">4 valandos</string>
     <string name="common_unit_value_day_hour_min">%1$d d. %2$02d:%3$02d</string>
     <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
-    <string name="common_unit_remain_min_sec">liko %d min %02d s</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
     <string name="carelevo_btn_insulin_guide">Insulino pildymo vedlys</string>
     <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
@@ -194,8 +192,6 @@
     <string name="alarm_feat_title_notice_unknown">Pompos klaida</string>
     <!-- Notice Descriptions -->
     <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Liko mažiau nei %s V insulino.<br><b>Pasiruoškite pakeisti pompą.</b>]]></string>
-    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Pompa naudojama <b>%s d. %s val.</b>.<br>Atsižvelkite į tai naudodami toliau.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Laiko juosta pakeista iš <b>%s (UTC %s) į %s (UTC %s)</b>.]]></string>
     <string name="alarm_feat_desc_notice_check_bg"><![CDATA[Po boluso praėjo %s.<br>Patikrinkite gliukozės kiekį kraujyje.]]></string>
     <string name="alarm_feat_desc_notice_lgs_started">LGS pradėtas.</string>
     <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS baigtas, nes atsijungė pompos rezervuaras arba jutiklis.</string>
@@ -233,8 +229,6 @@
     <string name="alarm_notification_desc_alert_resume_infusion">Insulino tiekimo pristabdymas baigėsi. Paspauskite [Pradėti insulino tiekimą].</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">Norint naudoti pompą, reikia Bluetooth ryšio. Paspauskite [OK] ir įjunkite Bluetooth.</string>
     <string name="alarm_notification_desc_notice_low_insulin">Liko mažiau nei %s V insulino. Pasiruoškite pakeisti pompą.</string>
-    <string name="alarm_notification_desc_notice_expired_patch">Pompa naudojama %s d. %s val. Naudodami į tai atsižvelkite.</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">Laiko juosta pakeista iš %s (UTC %s) į %s (UTC %s).</string>
     <string name="alarm_notification_desc_notice_check_bg">Po boluso praėjo %s. Patikrinkite gliukozės kiekį kraujyje.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS pradėtas</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS baigtas, nes atsijungė pompa arba jutiklis.</string>
