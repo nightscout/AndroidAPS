@@ -15,7 +15,6 @@
     <string name="carelevo_insulin_remain_key">Insulina restante</string>
     <string name="carelevo_running_remain_time">Tiempo restante del parche</string>
     <string name="carelevo_total_insulin_key">Total de insulina administrada</string>
-    <string name="common_label_unit_value_duration_hour_and_minute">%d hrs %d min</string>
     <string name="common_label_unit_value_minute">%d min</string>
     <string name="common_label_unit_value_duration_hour">%d hrs</string>
     <string name="common_label_unit_value_dose_with_space">%s U</string>
@@ -34,7 +33,6 @@
     <string name="carelevo_pump_stop_duration_label_4_hour">4 horas</string>
     <string name="common_unit_value_day_hour_min">%1$d dias %2$02d:%3$02d</string>
     <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
-    <string name="common_unit_remain_min_sec">%d min %02d seg restantes</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
     <string name="carelevo_btn_insulin_guide">Guía de insulina</string>
     <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
@@ -133,8 +131,6 @@
     <string name="alarm_notification_desc_alert_resume_infusion">La pausa de insulina ha finalizado. Toca [Iniciar insulina] para empezar</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">Se requiere Bluetooth para usar el parche. Toca [Aceptar] y activa el Bluetooth</string>
     <string name="alarm_notification_desc_notice_low_insulin">Quedan menos de %s U de insulina. Prepárate para cambiar el parche</string>
-    <string name="alarm_notification_desc_notice_expired_patch">El tiempo de uso del parche es de %s días y %s horas. Tenlo en cuenta durante su uso</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">La zona horaria ha cambiado de %s (UTC %s) a %s (UTC %s)</string>
     <string name="alarm_notification_desc_notice_check_bg">Han transcurrido %s desde tu bolo. Por favor, comprueba tu glucemia</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS iniciado</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS finalizado debido a la desconexión del parche o del MCG</string>
