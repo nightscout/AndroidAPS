@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.dash
 
 import android.os.Handler
 import android.os.HandlerThread
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -708,7 +709,7 @@ class OmnipodDashPumpPlugin(
                     bolusBeeps,
                     bolusBeeps
                 ).filter { podEvent -> podEvent.isCommandSent() }
-                    .concatMapCompletable { rxCompletable(Dispatchers.IO) { pumpSyncBolusStart(requestedBolusAmount, bolusType) } },
+                    .concatMapCompletable { rxCompletable(Dispatchers.IO) { pumpSyncBolusStart(requestedBolusAmount, detailedBolusInfo.bolusType) } },
                 post = waitForBolusDeliveryToComplete(requestedBolusAmount, bolusType)
                     .map {
                         deliveredBolusAmount = it
@@ -852,9 +853,11 @@ class OmnipodDashPumpPlugin(
         return ceil(requestedBolusAmount / PodConstants.POD_PULSE_BOLUS_UNITS).toLong() * 2 + 3
     }
 
+    // Takes BS.Type, not BolusType: a BASAL_CORRECTION has no BS.Type and must never be synced as a
+    // bolus, and a null type here would be stored as NORMAL.
     private suspend fun pumpSyncBolusStart(
         requestedBolusAmount: Double,
-        bolusType: BolusType
+        bolusType: BS.Type
     ): Boolean {
         require(requestedBolusAmount > 0) { "requestedBolusAmount has to be positive" }
 
@@ -869,7 +872,7 @@ class OmnipodDashPumpPlugin(
         val ret = pumpSync.syncBolusWithPumpId(
             timestamp = historyEntry.createdAt,
             amount = PumpInsulin(requestedBolusAmount),
-            type = bolusType.toBolusInfoBolusType(),
+            type = bolusType,
             pumpId = historyEntry.pumpId(),
             pumpType = PumpType.OMNIPOD_DASH,
             pumpSerial = serialNumber()
