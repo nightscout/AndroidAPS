@@ -65,6 +65,8 @@ enum class ExternalOptions(val filename: String) {
     EMULATE_DANA_RS_V1("emulate_dana_rs_v1"),
     EMULATE_DANA_RS_V3("emulate_dana_rs_v3"),
     EMULATE_DANA_BLE5("emulate_dana_ble5"),
+    // Test fault for the Dana RS emulator: the pump refuses every "set temp basal" command.
+    EMULATE_DANA_RS_REJECT_TBR("emulate_dana_rs_reject_tbr"),
     EMULATE_EQUIL("emulate_equil"),
     EMULATE_DANA_R("emulate_dana_r"),
     EMULATE_DANA_R_KOREAN("emulate_dana_r_korean"),
