@@ -1818,6 +1818,40 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun anAnchorInventedByThe5minPassIsNotCarriedIntoTheFallback() {
+        // Intervals of 5:30 four times and then 4:30 four times. Every single pair is within
+        // IRREGULAR_DATA_SEC of a 5 minute multiple and the signed deviations cancel, so
+        // isAbout5minData says yes and createBucketedData5min runs - but the drift adds up past the 90
+        // seconds its own loop tolerates, so it falls back part way through.
+        //
+        // By then it has already set referenceTime from the OLDEST reading. Keeping that would anchor
+        // the whole process on a phase the recent readings have drifted away from, which is the same
+        // starvation the seeding exists to prevent.
+        var time = T.mins(10).msecs()
+        val times = mutableListOf(time)
+        listOf(330L, 330L, 330L, 330L, 270L, 270L, 270L, 270L).forEach { step ->
+            time += T.secs(step).msecs()
+            times.add(time)
+        }
+        val oldestTime = times.first()
+        val newestTime = times.last()
+        autosensDataStore.bgReadings = times.reversed().map { t ->
+            GV(raw = 0.0, noise = 0.0, value = 100.0, timestamp = t, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
+        }
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
+
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+
+        // The 5 minute path is the one that ran - the fallback happens inside it and does not change
+        // this flag.
+        assertThat(autosensDataStore.lastUsed5minCalculation).isTrue()
+        // That it fell back, and that the fallback re-seeded, both show here: without the fallback
+        // referenceTime would still be the oldest reading, set while normalizing.
+        assertThat(autosensDataStore.referenceTime).isNotEqualTo(oldestTime)
+        assertThat(autosensDataStore.referenceTime).isAtLeast(newestTime - T.mins(AutosensDataStoreObject.PHASE_SEED_MIN).msecs())
+    }
+
+    @Test
     fun anAnchorAlreadySetIsNotReSeeded() {
         // Seeding runs only when there is no anchor yet. Once set it stays for the life of the process,
         // because autosens keys, the COB chain and carb slotting all depend on the grid not moving.

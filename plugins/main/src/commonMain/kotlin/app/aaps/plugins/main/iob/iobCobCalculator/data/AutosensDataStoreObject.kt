@@ -258,9 +258,10 @@ class AutosensDataStoreObject : AutosensDataStore {
     private fun seedReferenceTime() {
         val newest = bgReadings[0].timestamp
         val from = newest - T.mins(PHASE_SEED_MIN).msecs()
+        // Never empty: bgReadings[0] is `newest` itself, so it always passes the window test.
         val recent = bgReadings.asSequence().takeWhile { it.timestamp >= from }.map { it.timestamp }.toList()
         val tolerance = T.secs(IRREGULAR_DATA_SEC).msecs()
-        referenceTime = recent.maxByOrNull { candidate -> recent.count { distanceToGrid(it, candidate) <= tolerance } } ?: newest
+        referenceTime = recent.maxBy { candidate -> recent.count { distanceToGrid(it, candidate) <= tolerance } }
     }
 
     /**
@@ -449,6 +450,8 @@ class AutosensDataStoreObject : AutosensDataStore {
 
         // Normalize bucketed data
         val oldest = bData[bData.size - 1]
+        // Whether this pass is the one that establishes the anchor. Used only by the fallback below.
+        val anchorWasUnset = referenceTime == -1L
         // referenceTime now survives clone() and so lives as long as the process. A new sensor can
         // start on a different 5 minute phase. Keeping an anchor that far off would move every reading
         // away from the time it was really taken, so drop it and take the phase of the current data.
@@ -477,6 +480,15 @@ class AutosensDataStoreObject : AutosensDataStore {
             if (abs(adjusted + anchorShift) > 90) {
                 // too big adjustment, fallback to non 5 min data
                 aapsLogger.debug(LTag.AUTOSENS, "Fallback to non 5 min data")
+                // If this pass invented the anchor a few lines up, it took the phase of the OLDEST
+                // reading, and getting here says the newest readings have drifted away from that phase
+                // by more than the 90 seconds this loop tolerates. Anchoring the rest of the process on
+                // it would put every recent reading off the grid. Hand the fallback a clean slate so it
+                // seeds the anchor from the recent phase instead.
+                //
+                // Only an anchor this pass created. One that was already established stays: autosens
+                // keys, the COB chain and carb slotting all depend on the grid not moving (issue #5066).
+                if (anchorWasUnset) referenceTime = -1
                 createBucketedDataRecalculated(aapsLogger, dateUtil)
                 return
             }
