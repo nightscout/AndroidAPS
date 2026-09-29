@@ -44,6 +44,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Un bolo è stato erogato negli ultimi 3 minuti, SMB ignorato</string>
     <string name="pump_not_initialized">Micro non inizializzato!</string>
+    <string name="zero_basal_not_set">Il micro non ha accettato la basale temporanea pari a zero. Potrebbe comunque somministrare insulina basale. Controllare il micro.</string>
     <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
     <string name="no_aps_selected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
