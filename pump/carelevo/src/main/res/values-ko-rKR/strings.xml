@@ -10,7 +10,6 @@
     <string name="carelevo_insulin_remain_key">인슐린 잔량</string>
     <string name="carelevo_running_remain_time">패치 남은 시간</string>
     <string name="carelevo_total_insulin_key">총 인슐린 주입량</string>
-    <string name="common_label_unit_value_duration_hour_and_minute">%d시간 %d분</string>
     <string name="common_label_unit_value_minute">%d분</string>
     <string name="common_label_unit_value_duration_hour">%d시간</string>
     <string name="carelevo_pump_resume_title">주입을 재개 할까요?</string>
@@ -25,7 +24,6 @@
     <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3시간 30분</string>
     <string name="carelevo_pump_stop_duration_label_4_hour">4시간</string>
     <string name="common_unit_value_day_hour_min">%1$d일 %2$02d:%3$02d</string>
-    <string name="common_unit_remain_min_sec">%d분 %02d초 남음</string>
     <string name="carelevo_btn_insulin_guide">인슐린 채우기 가이드</string>
     <string name="carelevo_btn_patch_expiration">사용 종료</string>
     <string name="carelevo_btn_input_search_patch">패치 검색</string>
@@ -177,8 +175,6 @@
     <string name="alarm_feat_title_notice_unknown">패치 오류</string>
     <!-- Notice Descriptions -->
     <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[패치에 남은 인슐린이 %s U 미만입니다.<br><b>패치 교체를 준비해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[패치 사용 기간이 <b>%s일 %s시간</b>이 되었습니다.<br>패치 사용에 참고해 주세요.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[<b>%s(UTC %s)에서 %s(UTC %s)</b>(으)로 국가 표준시간이 변경되었습니다.]]></string>
     <string name="alarm_feat_desc_notice_check_bg"><![CDATA[볼러스 주입 후 <b>%s</b>이 지났습니다.<br>혈당을 확인해 주세요.]]></string>
     <string name="alarm_feat_desc_notice_lgs_started">LGS 작동이 시작 되었습니다.</string>
     <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">패치 또는 CGM 연결이 끊겨 LGS 작동이 종료 되었습니다.</string>
@@ -216,8 +212,6 @@
     <string name="alarm_notification_desc_alert_resume_infusion">주입 정지가 종료되었습니다. 주입 재개를 눌러 기저 주입을 다시 시작해 주세요.</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">패치 사용을 위해 블루투스가 필요합니다. 확인 버튼을 누르고 블루투스를 켜 주세요.</string>
     <string name="alarm_notification_desc_notice_low_insulin">패치에 남은 인슐린이 %s U 미만입니다. 패치 교체를 준비해 주세요.</string>
-    <string name="alarm_notification_desc_notice_expired_patch">패치 사용 기간이 %s일 %s시간이 되었습니다. 패치 사용에 참고해 주세요.</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">%s(UTC %s)에서 %s(UTC %s)(으)로 국가 표준시간이 변경되었습니다.</string>
     <string name="alarm_notification_desc_notice_check_bg">볼러스 주입 후 %s이 지났습니다. 혈당을 확인해 주세요.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS 작동이 시작 되었습니다.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">패치 또는 CGM 연결이 끊겨 LGS 작동이 종료 되었습니다.</string>
