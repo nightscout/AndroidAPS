@@ -9,7 +9,7 @@ room = "2.8.5"
 # the crash on zero-parameter member-injection functions, and the issue was closed between the two
 # releases. There is no 1.5.0.
 metro = "1.4.4"
-mockito = "5.23.0"
+mockito = "5.24.0"
 junit = "6.1.3"
 okhttp = "5.5.0"
 retrofit = "3.0.0"
