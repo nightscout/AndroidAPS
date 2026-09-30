@@ -73,6 +73,9 @@ abstract class MenuListActivity : WearMetroActivity() {
     /** Optional third line in secondary gray under [subtitle] (e.g. "1 h 20 min remaining"); null hides it */
     protected var subtitleSecondary by mutableStateOf<String?>(null)
 
+    /** Optional small icon after [subtitleSecondary] (e.g. the scene icon when a scene set the mode); null hides it */
+    protected var subtitleSecondaryIcon by mutableStateOf<Int?>(null)
+
     protected abstract fun provideElements(): List<MenuItem>
     protected abstract fun doAction(position: String)
     protected open fun provideTitleIcon(): Int? = null
@@ -99,6 +102,7 @@ abstract class MenuListActivity : WearMetroActivity() {
                     subtitle = subtitle,
                     subtitleColor = subtitleColor,
                     subtitleSecondary = subtitleSecondary,
+                    subtitleSecondaryIcon = subtitleSecondaryIcon,
                     elements = elements,
                     onAction = { doAction(it) }
                 )
@@ -133,6 +137,7 @@ private fun MenuListScreen(
     subtitle: String?,
     subtitleColor: Color?,
     subtitleSecondary: String?,
+    subtitleSecondaryIcon: Int?,
     elements: List<MenuListActivity.MenuItem>,
     onAction: (String) -> Unit
 ) {
@@ -168,13 +173,28 @@ private fun MenuListScreen(
                             modifier = Modifier.padding(top = 6.dp)
                         )
                         if (subtitleSecondary != null) {
-                            Text(
-                                text = subtitleSecondary,
-                                color = Color.White.copy(alpha = 0.6f),
-                                fontSize = 11.sp,
-                                textAlign = TextAlign.Center,
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(top = 2.dp)
-                            )
+                            ) {
+                                Text(
+                                    text = subtitleSecondary,
+                                    color = Color.White.copy(alpha = 0.6f),
+                                    fontSize = 11.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                                if (subtitleSecondaryIcon != null) {
+                                    // Its own colours: the icon says which feature set this, not a state
+                                    Icon(
+                                        painter = painterResource(subtitleSecondaryIcon),
+                                        contentDescription = null,
+                                        tint = Color.Unspecified,
+                                        modifier = Modifier
+                                            .padding(start = 4.dp)
+                                            .size(12.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }

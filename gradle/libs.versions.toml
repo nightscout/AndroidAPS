@@ -8,8 +8,8 @@ room = "2.8.5"
 # said to move back "as soon as 1.5.0 ships", but the fix landed in 1.4.3 instead - its notes list
 # the crash on zero-parameter member-injection functions, and the issue was closed between the two
 # releases. There is no 1.5.0.
-metro = "1.4.4"
-mockito = "5.23.0"
+metro = "1.4.5"
+mockito = "5.24.0"
 junit = "6.1.3"
 okhttp = "5.5.0"
 retrofit = "3.0.0"
@@ -18,18 +18,18 @@ ktor = "3.6.0"
 # pairing path. It wraps each platform's vetted implementation (JCA, CryptoKit, OpenSSL 3) rather
 # than implementing the algorithms, which is what we want in a signing path.
 cryptographyKotlin = "0.6.0"
-work = "2.11.2"
+work = "2.12.0"
 datastorePreferences = "1.2.1"
 
 # Compose
-wearCompose = "1.6.2"
+wearCompose = "1.7.0"
 lifecycleRuntimeKtx = "2.11.0"
 composeUi = "1.12.1"
 
 # Compose Multiplatform. Separate from the androidx Compose above: CMP publishes the same
 # androidx.compose.* package names and its Android variants delegate to androidx, so the
 # composeBom still decides the Android versions.
-composeMultiplatform = "1.12.0"
+composeMultiplatform = "1.12.1"
 jetbrainsLifecycle = "2.11.0"
 
 [plugins]
@@ -110,7 +110,7 @@ androidx-browser = { group = "androidx.browser", name = "browser", version = "1.
 # is multiplatform, which is what keeps LongSparseArray usable from shared code.
 androidx-collection = { group = "androidx.collection", name = "collection", version = "1.6.0" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.2" }
-androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.0" }
+androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.19.1" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-legacy-support = { group = "androidx.legacy", name = "legacy-support-v13", version = "1.0.0" }
@@ -166,7 +166,7 @@ org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.9.1" }
 
 org-mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 org-mockito-junit-jupiter = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
-org-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "6.3.0" }
+org-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "6.4.0" }
 org-slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.19" }
 com-github-tony19-logback-android = { group = "com.github.tony19", name = "logback-android", version = "3.0.0" }
 

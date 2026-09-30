@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">Ukončit průvodce deaktivací? Patch může zůstat aktivní a pokračovat v podávání inzulínu.</string>
     <string name="patch_force_reset">Vynutit reset</string>
     <string name="patch_force_reset_confirm">Toto vymaže stav patche lokálně bez zasílání příkazů patchi. Použijte pouze pokud selhala běžná deaktivace. Patch bude nadále podávat inzulín, dokud se nevybije baterie nebo dokud nebude ručně vypnut.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Přesné alarmy</string>
-    <string name="permission_exact_alarm_description">Aplikace potřebuje oprávnění pro plánování přesných alarmů pro správu patche</string>
 </resources>

@@ -87,6 +87,11 @@
     <string name="pref_show_week_number">Vis ukenummer</string>
     <string name="pref_show_date">Vis dato</string>
     <string name="pref_show_seconds">Vis sekunder</string>
+    <string name="pref_show_complication1">Vis komplikasjon 1</string>
+    <string name="pref_show_complication2">Vis komplikasjon 2</string>
+    <string name="pref_show_complication3">Vis komplikasjon 3</string>
+    <string name="pref_show_complication4">Vis komplikasjon 4</string>
+    <string name="pref_show_complication5">Vis komplikasjon 5</string>
     <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTER MAL for å lage en mal</string>
     <string name="default_custom_watchface_external_comment">Standard urskive inkludert eksterne visninger for følgere, du kan klikke på knappen EKSPORTER URSKIVE for å generere en mal</string>
     <string name="wear_default_watchface">Standard urskive</string>
@@ -148,4 +153,6 @@
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="wizard_ecarbs">eKarbo %1$dg / %2$dt (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f E</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s kunne ikke starte og vil kanskje ikke fungere. Start AndroidAPS på nytt.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Plugin %1$s støtte på en feil, og deler av den har stoppet. Vennligst start AndroidAPS på nytt.</string>
 </resources>

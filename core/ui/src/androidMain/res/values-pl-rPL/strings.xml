@@ -126,6 +126,8 @@
     <string name="a11y_arrow_double_up">szybko rośnie</string>
     <string name="a11y_arrow_none">brak</string>
     <string name="a11y_arrow_unknown">nieznany</string>
+    <string name="decrement">zmniejszenie</string>
+    <string name="increment">zwiększenie</string>
     <string name="a11y_high">wysokie</string>
     <string name="a11y_inrange">w zakresie</string>
     <string name="a11y_low">niskie</string>
@@ -451,7 +453,6 @@
     <string name="bolus_advisor_message">Masz wysoką glikemię. Zamiast jeść teraz, zaleca się poczekać na wyrównanie poziomu cukru. Czy chcesz wykonać teraz bolus korekcyjny i otrzymać przypomnienie, kiedy nadejdzie czas na posiłek? W tym przypadku żadne węglowodany nie zostaną zarejestrowane i należy ponownie użyć kalkulatora, po otrzymaniu przypomnienia o posiłku.</string>
     <string name="set">Ustaw</string>
     <string name="wizard_calculation">Obliczenie</string>
-    <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
     <string name="wizard_no_actual_bg">Brak niezbędnego do obliczeń bieżącego pomiaru glikemi!</string>
     <string name="wizard_no_active_profile">Nie ustawiono aktywnego profilu!</string>
     <string name="wizard_carbs_constraint">Naruszenie ograniczeń węglowodanów!</string>
@@ -627,6 +628,11 @@
     <string name="aaps_directory">katalog AAPS</string>
     <string name="import_setting">Importuj ustawienia</string>
     <!-- Import settings screen -->
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="reset_aps_results">Zresetuj wyniki APS</string>
     <string name="database_cleanup">Czyszczenie bazy danych</string>
     <string name="nav_resetdb">Zresetuj bazy danych</string>

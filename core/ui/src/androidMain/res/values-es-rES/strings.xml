@@ -63,6 +63,9 @@
     <string name="configbuilder_switch_confirmation">Esto deshabilitará %1$s y habilitará \%2$s</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Completado</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Ampliado</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Plegado</string>
     <string name="no_compose_preferences">No hay preferencias disponibles para este complemento</string>
     <string name="confirm_password_hint">Confirmar la contraseña</string>
     <string name="confirm_pin_hint">Confirmar PIN</string>
@@ -116,7 +119,7 @@
     <string name="profile_switch_no_insulin">No se puede cambiar de perfil: no hay ninguna insulina en uso y no se ha seleccionado ninguna</string>
     <string name="profile_switch_select_insulin_hint">Todavía no hay ninguna insulina en uso. Selecciona la insulina que estás utilizando para que este cambio de perfil pueda registrarla</string>
     <string name="insulin_activation_failed">La insulina no se ha cambiado. Se sigue utilizando tu insulina anterior</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">La insulina no se ha cambiado: %1$s. Se sigue utilizando tu insulina anterior</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">No se cambió la insulina: %1$s Su insulina anterior sigue en uso</string>
     <string name="insulin_activation_unconfirmed">No se ha podido confirmar el cambio de insulina. Comprueba qué insulina está activa en tu perfil antes de administrar la dosis</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nTampoco se ha cambiado la insulina</string>
     <string name="active"><![CDATA[<Activo>]]></string>
@@ -174,6 +177,7 @@
     <string name="notconfigured">Sin configurar</string>
     <string name="loop_suspended_by_dst">Lazo suspendido por DST (Horario de verano)</string>
     <string name="required">req</string>
+    <string name="a11y_arrow_triple_down">bajando muy rápido</string>
     <string name="a11y_arrow_double_down">bajando rápido</string>
     <string name="a11y_arrow_single_down">bajando</string>
     <string name="a11y_arrow_forty_five_down">bajando despacio</string>
@@ -181,8 +185,13 @@
     <string name="a11y_arrow_forty_five_up">subiendo lentamente</string>
     <string name="a11y_arrow_single_up">subiendo</string>
     <string name="a11y_arrow_double_up">subiendo rápido</string>
+    <string name="a11y_arrow_triple_up">subiendo muy rápidamente</string>
     <string name="a11y_arrow_none">ninguno</string>
     <string name="a11y_arrow_unknown">desconocido</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">disminuir %1$s en \%2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">incrementar %1$s en \%2$s</string>
+    <string name="decrement">decremento</string>
+    <string name="increment">incremento</string>
     <string name="a11y_high">alto</string>
     <string name="a11y_inrange">en rango</string>
     <string name="a11y_low">bajo</string>
@@ -245,6 +254,8 @@
     <string name="location_permission_not_granted">Permiso de ubicación no concedido. Permitir en la configuración de Android.</string>
     <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
     <string name="not_available_full">No disponible</string>
+    <string name="not_implemented_yet">Esta función aún no está disponible en esta plataforma</string>
+    <string name="not_available_on_platform">Esta función no está disponible en esta plataforma</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
     <string name="back">Atrás</string>
     <string name="next">Siguiente</string>
@@ -257,6 +268,7 @@
     <string name="pin_dont_match">Los códigos PIN no coinciden</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Iniciar perfil al %1$d%% durante %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Cancelar basal temporal</string>
     <string name="let_temp_basal_run">Deja ejecutar basal temporal</string>
@@ -293,6 +305,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Portal de cuidados</string>
     <string name="careportal_bgcheck">Medir glucosa</string>
     <string name="careportal_mbg">Glucemia manual o calibración</string>
     <string name="careportal_announcement">Aviso</string>
@@ -343,6 +356,7 @@
     <string name="scene_conflict_active_running_mode">El modo de funcionamiento activo será reemplazado</string>
     <string name="scene_conflict_active_scene">La escena activa \"%1$s\" finalizará primero</string>
     <string name="scene_action_tt">Objetivo temporal: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Perfil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Perfil: %1$d%%</string>
     <string name="scene_action_smb_on">Habilitar SMB</string>
     <string name="scene_action_smb_off">Deshabilitar SMB</string>
@@ -401,6 +415,9 @@
     <string name="clientcontrol_fail_scene_disabled">La escena está desactivada</string>
     <string name="clientcontrol_fail_partial">No se han podido aplicar algunas acciones</string>
     <string name="clientcontrol_fail_execution">El máster no ha podido aplicarlo</string>
+    <string name="clientcontrol_fail_cancelled">El comando se canceló antes de ejecutarse. No se envió nada a la bomba</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolo cancelado. No se administró insulina.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Cancelado</string>
     <string name="clientcontrol_fail_control_disabled">El control remoto está desactivado en el máster</string>
     <string name="clientcontrol_fail_no_pending_bolus">El bolo preparado ha caducado o ha sido reemplazado. Toca el botón de nuevo</string>
     <string name="clientcontrol_fail_bolus_compute">El máster no ha podido calcular el bolo (falta la glucemia, el perfil, o la bomba no está lista)</string>
@@ -431,7 +448,7 @@
     <string name="treatment_insulin_desc">Administrar bolo manualmente</string>
     <string name="treatment_carbs_desc">Registrar carbohidratos sin insulina</string>
     <string name="treatment_calculator_desc">Calcular el bolo de comida</string>
-    <string name="insulin_management">Insulina</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Configuración de insulina</string>
     <string name="manage_insulin_desc">Gestionar y activar configuraciones de insulina</string>
     <string name="concentration_disable_blocked">No se puede desactivar el soporte de concentración mientras existan insulinas que no sean U100. Elimine primero todas las configuraciones de insulina que no sean U100 y cambie a un perfil U100.</string>
     <string name="simple_mode_blocked_by_concentration">No se puede activar el modo simple mientras se use una insulina que no sea U100. Cambie primero a una insulina U100.</string>
@@ -453,6 +470,9 @@
     <string name="treatment_cannula_change_desc">Registrar cambio de cánula/set de infusión</string>
     <string name="treatment_fill_desc">Cargar y purgar cánula</string>
     <string name="temp_basal">Basal temporal</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Por encima del perfil</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Por debajo del perfil</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Ninguna</string>
     <string name="user_entry">Entrada de usuario</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Dedo</string>
@@ -633,6 +653,7 @@
     <string name="uel_scene_deactivated">ESCENA DESACTIVADA</string>
     <string name="uel_remote_config_changed">CAMBIO EN CONFIGURACIÓN REMOTA</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Valor inferior del objetivo temporal</string>
     <string name="temp_target_high_target">Valor superior objetivo temporal</string>
     <string name="temp_target_value">Valor objetivo temporal</string>
     <string name="insulin_dia">Valor de DIA de la insulina</string>
@@ -680,6 +701,7 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <string name="sensitivity">Sensibilidad</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens desactivado</string>
     <string name="isf_for_carbs">ISF promedio para la calculadora y la absorción de carbohidratos: %1$.1f</string>
     <string name="isf_profile">ISF del perfil: %1$.1f</string>
     <string name="isf_variable">ISF variable: %1$.1f</string>
@@ -717,7 +739,7 @@
     <string name="wizard_include_iob">Incluir IOB</string>
     <string name="wizard_include_cob">Incluir COB</string>
     <string name="wizard_calculation">Cálculo</string>
-    <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
+    <string name="no_action_selected">Ninguna acción seleccionada, no sucederá nada</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Eliminación máxima: %1$d g (carbohidratos activos)</string>
     <string name="wizard_no_insulin_required">No se requiere insulina</string>
     <string name="wizard_no_actual_bg">¡No hay valor de glucosa reciente en el que basar el cálculo!</string>
@@ -756,6 +778,7 @@
     <string name="max_daily_units">Máximo de unidades diarias</string>
     <string name="pump_history">Historial de la bomba</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Cambio de controlador de la bomba</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolo Correcto</string>
     <string name="temp_basal_delivery_error">Error en la entrega de la basal temporal</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de lazo cerrado (Closed Loop) mientras el bolo esté en curso. ¿Realmente quieres hacerlo?</string>
@@ -767,6 +790,8 @@
     <string name="initializing">Inicializando…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Advertencia</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Crítico</string>
+    <string name="alert" comment="Generic alert dialog title">Alerta</string>
     <string name="retry" comment="Button label to retry a failed operation">Reintentar</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Finalizar</string>
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
@@ -777,6 +802,7 @@
     <string name="limitingbasalratio">Limitando la basal máxima a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
     <string name="limitingpercentrate">Limitando el porcentaje máximo de la dosis a %1$d%% debido a %2$s</string>
+    <string name="itmustbepositivevalue">debe ser un valor positivo</string>
     <string name="limitingbolus">Limitando el bolo a %1$.1f U debido a %2$s</string>
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
@@ -789,6 +815,7 @@
     <string name="close">Cerrar</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <string name="export_warning">Advertencia</string>
     <string name="export_expired">Expirado</string>
     <string name="export_disabled">Desactivado</string>
@@ -855,6 +882,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Vincular</string>
     <string name="pump_unpair">Desemparejar</string>
     <string name="pump_unpair_confirm_title">¿Desvincular bomba?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
@@ -893,7 +921,7 @@
     <string name="reorder">Reordenar</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Elemento anterior</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Elemento siguiente</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Mostrar detalles</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Mostrar detalles</string>
     <string name="presets_changed_reorder_aborted">Los ajustes preestablecidos han cambiado en otro lugar. No se guardó el nuevo orden</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Posición %1$d de \%2$d</string>
@@ -951,6 +979,7 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"Reproducir audio de AAPS"</string>
     <!-- ProfileEditor -->
+    <string name="basal_short">BAS</string>
     <string name="target_short">OBJ</string>
     <string name="profile_name">Nombre del perfil:</string>
     <string name="edit_profile_name">Editar nombre del perfil</string>
@@ -1012,6 +1041,24 @@
     <string name="import_wrong_password">Contraseña incorrecta</string>
     <string name="import_btn">Importar</string>
     <string name="import_anyway_btn">Importar de todos modos</string>
+    <string name="import_apply_title">¿Aplicar la configuración importada?</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Configuraciones a cambiar: %1$d. Los complementos modificados se reiniciarán</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Configuraciones a cambiar: %1$d. Configuraciones de la bomba conservadas: %2$d, para que su bomba siga funcionando</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">La configuración importada no seleccionaba ninguna bomba que este teléfono tenga. %1$s está activa ahora; comprueba la configuración de tu bomba</string>
+    <string name="import_applying">Aplicando configuraciones...</string>
+    <string name="import_replace_pump_settings">También reemplazar la configuración de la bomba</string>
+    <string name="import_replace_pump_settings_summary">Déjalo desactivado para conservar la bomba con la que está vinculado este teléfono. Actívalo al restaurar en un teléfono nuevo con la misma bomba</string>
+    <string name="import_apply_waiting">Esperando a la bomba…</string>
+    <string name="import_apply_pump_busy">La bomba aún está ocupada, por lo que no se ha aplicado la configuración</string>
+    <string name="import_apply_retry_question">¿Reintentar ahora?</string>
+    <string name="import_applied_title">Configuración aplicada</string>
+    <string name="import_applied_message">Se ha aplicado la configuración importada</string>
+    <string name="import_apply_pump_changed">Cancelado: la bomba se ha cambiado mediante la importación de la configuración</string>
     <string name="import_source_local">Local</string>
     <string name="import_source_cloud">Nube</string>
     <string name="import_load_more">Cargar más</string>
@@ -1024,6 +1071,7 @@
     <string name="nav_resetdb">Restablecer bases de datos</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Buscar bomba</string>
+    <string name="ble_scan_select_pump">Selecciona tu bomba de la lista siguiente</string>
     <string name="ble_scan_scanning">Buscando dispositivos…</string>
     <!-- Graph configuration -->
     <string name="graph_add">Añadir gráfico</string>
@@ -1052,7 +1100,11 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.1f h</string>
+    <string name="units_format_hours_double_range">%1$.1f h (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>

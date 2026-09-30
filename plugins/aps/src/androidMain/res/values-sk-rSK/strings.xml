@@ -44,6 +44,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Podaný bolus v priebehu posledných 3 minút, SMB preskočené</string>
     <string name="pump_not_initialized">Pumpa nie je inicializovaná!</string>
+    <string name="zero_basal_not_set">Pumpa neprijala nulový dočasný bazál. Môže stále podávať bazálny inzulín. Skontrolujte pumpu.</string>
     <string name="loop_shortname">UZAVRETÝ OKRUH</string>
     <string name="description_loop">Aktivuje alebo deaktivuje spustenie uzavretého okruhu.</string>
     <string name="no_aps_selected">NEVYBRANÉ ŽIADNE APS, ALEBO NEBOL POSKYTNUTÝ ŽIADNY VÝSLEDOK</string>

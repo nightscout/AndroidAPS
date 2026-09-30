@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">¿Salir del asistente de desactivación? El parche podría permanecer activo y continuar administrando insulina.</string>
     <string name="patch_force_reset">Reinicio forzado</string>
     <string name="patch_force_reset_confirm">Esto borrará el estado del parche localmente sin enviarle comandos. Úselo solo si la desactivación normal falla. El parche seguirá administrando insulina hasta que se agote su batería o se apague manualmente.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Alarmas exactas</string>
-    <string name="permission_exact_alarm_description">La aplicación necesita permiso para programar alarmas exactas para la gestión del parche</string>
 </resources>

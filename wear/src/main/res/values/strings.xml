@@ -97,6 +97,7 @@
     <string name="action_user_action_confirmation">User Action Requested</string>
     <string name="action_scene_confirmation">Scene Requested</string>
     <string name="scene_end">End</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Skip</string>
     <string name="action_treatment_confirmation">Treatment Requested</string>
     <string name="action_bolus_confirmation">Bolus Requested</string>
     <string name="action_wizard_confirmation">Calculation Requested</string>
@@ -395,6 +396,18 @@
     <string name="loop_status_target_range">Range</string>
     <string name="loop_status_target">Target</string>
     <string name="loop_status_adjusted_target">Adjusted target</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Until ended</string>
+    <string name="loop_status_scene_ended">Ended</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Follow-up</string>
+    <string name="loop_status_profile">Profile</string>
+    <string name="loop_status_no_profile">No profile set</string>
+    <string name="loop_status_profile_percentage">Percentage</string>
+    <string name="loop_status_profile_timeshift">Timeshift</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Returns to</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Sensitivity</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Set by the active scene</string>
     <string name="loop_status">Loop status</string>
     <string name="loop_status_refresh">Refresh</string>
     <string name="confirm">Confirm</string>

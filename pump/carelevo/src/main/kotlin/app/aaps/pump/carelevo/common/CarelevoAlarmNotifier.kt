@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -126,7 +125,7 @@ class CarelevoAlarmNotifier @Inject constructor(
             val critical = newAlarm.alarmType.isCritical()
             notificationManager.post(
                 id = NotificationId.CARELEVO_PATCH_ALERT,
-                text = context.getString(titleRes) + "\n" + HtmlCompat.fromHtml(desc, HtmlCompat.FROM_HTML_MODE_LEGACY),
+                text = context.getString(titleRes) + "\n" + desc,
                 level = if (critical) NotificationLevel.IMPORTANT else NotificationLevel.NORMAL,
                 actions = listOf(
                     NotificationAction(TextRef.AndroidRes(btnRes)) {

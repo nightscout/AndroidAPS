@@ -115,7 +115,6 @@
     <string name="profile_switch_no_insulin">Не мога да сменя профил: няма избран инсулин.</string>
     <string name="profile_switch_select_insulin_hint">Няма избран инсулин. Изберете какъв използвате за да може профилът да го използва.</string>
     <string name="insulin_activation_failed">Превключването на инсулина не е направено. Старият ви инсулин е още избран.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Превключването на инсулина не е направено: %1$s. Използвам старият инсулин.</string>
     <string name="insulin_activation_unconfirmed">Не мога да потвърдя смяната на инсулин. Проверете кой инсулин е активен в профила преди да направите болус.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n Инсулинът не е сменен.</string>
     <string name="active"><![CDATA[<Активно>]]></string>
@@ -182,6 +181,8 @@
     <string name="a11y_arrow_double_up">бързо покачване</string>
     <string name="a11y_arrow_none">без</string>
     <string name="a11y_arrow_unknown">неизвестно</string>
+    <string name="decrement">Намаляване</string>
+    <string name="increment">Нарастване</string>
     <string name="a11y_high">висока</string>
     <string name="a11y_inrange">в диапазон</string>
     <string name="a11y_low">ниска</string>
@@ -430,7 +431,6 @@
     <string name="treatment_insulin_desc">Постави инсулина ръчно</string>
     <string name="treatment_carbs_desc">Запиши въглехидрати без инсулин</string>
     <string name="treatment_calculator_desc">Изчисли болус</string>
-    <string name="insulin_management">Инсулин</string>
     <string name="manage_insulin_desc">Редакция и активация на инсолинови конфигурации</string>
     <string name="concentration_disable_blocked">Не може да изключите поддръжката на концентрация докато има инсулини различни от 100E/мл съществуват. Изтрийте всички такива конфигурации и превключете на профил с концентрация U100.</string>
     <string name="simple_mode_blocked_by_concentration">Не може да включите опростен режим докато ползвате инсулин, който не е U100ед/мл. Първо превключете към такъв.</string>
@@ -716,7 +716,6 @@
     <string name="wizard_include_iob">Включи IOB</string>
     <string name="wizard_include_cob">Включи въглехидрати</string>
     <string name="wizard_calculation">Калкулация</string>
-    <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Макс премахване: %1$d гр (CoB)</string>
     <string name="wizard_no_insulin_required">Няма нужда от инсулин</string>
     <string name="wizard_no_actual_bg">Не е налична кръвна захар, върху която да се изчисли!</string>
@@ -896,7 +895,7 @@
     <string name="reorder">Подреди</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Премести по-рано</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Премести по-късно</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Повече информация</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Повече информация</string>
     <string name="presets_changed_reorder_aborted">Настройката е сменена на друго място. Новата последователност не е запазена.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Позиция %1$d от %2$d</string>
@@ -1016,6 +1015,11 @@
     <string name="import_wrong_password">Грешна парола</string>
     <string name="import_btn">Импорт</string>
     <string name="import_anyway_btn">Импортиране въпреки това</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
     <string name="import_source_local">Локално</string>
     <string name="import_source_cloud">Клауд</string>
     <string name="import_load_more">Зареди още</string>
