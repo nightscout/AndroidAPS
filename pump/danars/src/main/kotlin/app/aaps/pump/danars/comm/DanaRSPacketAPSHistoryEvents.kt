@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.toHex
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.keys.DanaBooleanKey
@@ -107,7 +108,15 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                 processMessage(message)
             }
             danaPump.historyDoneReceived = true
-        } else messageBuffer.add(data)
+        } else {
+            // Ignore invalid record  <<<<< APS_HISTORY_EVENTS B2 C2 04 00  00 00 00 00  00 00 00 00  82
+            try {
+                dateTime(data)
+                messageBuffer.add(data)
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "Ignore invalid record , data :${data.toHex()}", e)
+            }
+        }
     }
 
     private fun dateTime(data: ByteArray): Long =
