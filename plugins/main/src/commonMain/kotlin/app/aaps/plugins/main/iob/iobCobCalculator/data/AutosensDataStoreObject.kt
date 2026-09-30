@@ -81,6 +81,11 @@ class AutosensDataStoreObject : AutosensDataStore {
                 // 1 minute source the anchor then moves every reading, all bucket timestamps shift, and
                 // every cached autosensDataTable entry becomes unreachable (issue #5066).
                 it.referenceTime = this.referenceTime
+                // Must survive too, for the same reason. The calculation publishes its clone as the new
+                // live store, so without this the flag is back to null on every published store: the
+                // "mode changed, drop the cache" test in createBucketedData can then never fire, and
+                // BgQualityCheckPlugin reports UNKNOWN instead of clean / recalculated data.
+                it.lastUsed5minCalculation = this.lastUsed5minCalculation
                 it.bgReadings = this.bgReadings.toMutableList()
                 it.autosensDataTable = LongSparseArray<AutosensData>(this.autosensDataTable.size).apply { putAll(this@AutosensDataStoreObject.autosensDataTable) }
                 it.bucketedData = this.bucketedData?.toMutableList()

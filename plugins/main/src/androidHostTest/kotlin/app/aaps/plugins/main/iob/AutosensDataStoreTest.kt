@@ -1670,6 +1670,20 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun cloneKeepsLastUsed5minCalculation() {
+        val ads = AutosensDataStoreObject()
+        ads.lastUsed5minCalculation = true
+
+        val clone = ads.clone() as AutosensDataStoreObject
+
+        // The calculation publishes its clone as the new live store. When this flag did not survive, it
+        // was null on every published store, so the "mode changed, drop the cache" test in
+        // createBucketedData could never fire, and BgQualityCheckPlugin read UNKNOWN instead of saying
+        // whether the data is clean or recalculated.
+        assertThat(clone.lastUsed5minCalculation).isTrue()
+    }
+
+    @Test
     fun outOfPhaseReferenceTimeIsReAnchoredFor5minData() {
         val ads = AutosensDataStoreObject()
         // Anchor from an earlier sensor, 2 minutes out of phase with the readings below. Without the
