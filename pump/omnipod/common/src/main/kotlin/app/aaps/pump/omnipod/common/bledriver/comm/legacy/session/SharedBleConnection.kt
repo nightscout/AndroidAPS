@@ -44,7 +44,7 @@ abstract class SharedBleConnection(
 
     protected abstract val connectionName: String
     protected val incomingPackets = IncomingPackets()
-    protected val bleCommCallbacks = BleCommCallbacks(aapsLogger, incomingPackets, this)
+    protected val bleCommCallbacks by lazy { BleCommCallbacks(aapsLogger, incomingPackets, this) }
     protected var gattConnection: BluetoothGatt? = null
     private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
     private var connectionWaitCondition: ConnectionWaitCondition? = null
@@ -145,6 +145,7 @@ abstract class SharedBleConnection(
     }
 
     private fun waitForConnection(connectionWaitCond: ConnectionWaitCondition): ConnectionState {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "waitForConnection connectionWaitCond=$connectionWaitCond")
         try {
             connectionWaitCond.timeoutMs?.let(bleCommCallbacks::waitForConnection)
             val startWaiting = System.currentTimeMillis()
@@ -162,12 +163,15 @@ abstract class SharedBleConnection(
         return connectionState()
     }
 
-    final override fun connectionState(): ConnectionState =
-        if (bluetoothManager?.getConnectionState(podDevice, BluetoothProfile.GATT) == BluetoothProfile.STATE_CONNECTED) {
+    final override fun connectionState(): ConnectionState {
+        val connectionState = bluetoothManager?.getConnectionState(podDevice, BluetoothProfile.GATT)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "GATT connection state: $connectionState")
+        return if (connectionState == BluetoothProfile.STATE_CONNECTED) {
             Connected
         } else {
             NotConnected
         }
+    }
 
     final override fun establishSession(ltk: ByteArray, msgSeq: Byte, ids: Ids, eapSqn: ByteArray): EapSqn? {
         val messageIO = msgIO ?: throw ConnectException("Connection lost")

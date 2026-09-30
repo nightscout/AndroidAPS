@@ -45,8 +45,7 @@ class OmnipodDashComposeContent(
                 viewModel
             },
             onConfirmDiscardPod = overviewViewModel::confirmDiscardPod,
-            showExtraContentForHistory = true,
-            extraContent = { onBack ->
+            historyContent = { onBack ->
                 val historyViewModel: DashPodHistoryViewModel = metroViewModel()
                 val records by historyViewModel.records.collectAsStateWithLifecycle()
                 val title = stringResource(R.string.omnipod_common_pod_management_button_pod_history)

@@ -426,7 +426,8 @@ abstract class OmnipodWizardViewModel(
                 persistenceLayer.getTherapyEventDataFromToTime(now - 60_000, now)
                     .firstOrNull { it.type == TE.Type.CANNULA_CHANGE }
                     ?.let { persistenceLayer.insertOrUpdateTherapyEvent(it.copy(location = location, arrow = arrow)) }
-            } catch (_: Exception) {
+            } catch (exception: Exception) {
+                logger.error(LTag.PUMP, "Failed to save pod site location", exception)
             }
         }
     }

@@ -78,7 +78,6 @@ class OmnipodDashBleManagerImpl(
             if (config.DEBUG) aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${pairResult.ltk.toHex()}")
             emitter.onNext(PodEvent.EstablishingSession)
             establishSession(pairResult.msgSeq)
-            podState.successfulConnections++
             emitter.onNext(PodEvent.Connected)
             emitter.onComplete()
         } catch (ex: Exception) {
@@ -90,6 +89,6 @@ class OmnipodDashBleManagerImpl(
     }
 
     companion object {
-        const val CONTROLLER_ID = 4242
+        const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
 }

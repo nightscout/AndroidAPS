@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.common.di
+package app.aaps.pump.omnipod.dash.di
 
 import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
@@ -20,20 +20,12 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
 /**
- * Omnipod BLE and pod state, owned by Metro from `:app`.
- * Hand-written `@Provides` rather than `@ContributesBinding` on the classes, and deliberately kept that
- * way. The four bindings and the scope that matters are one short file you can read at once, instead of
- * eight annotations spread over four files in another module. Nothing tests the scoping either way -
- * `ContributedBindingsTest` asserts by hand on graph accessors, so contributing these would not put
- * them under a guard - and the failure the scope prevents is silent, so visibility is worth more here
- * than the few lines it costs.
- * `@SingleIn(AppScope::class)` on every provider. These hold live connection and pod state - a second
- * `OmnipodDashPodStateManagerImpl` would mean the driver and the UI reading different pods - so the
- * scope is the point, not an optimisation.
+ * Dash BLE and pod state, owned by Metro from `:app`.
+ * The state and connection providers are scoped because the driver and UI must share the same live pod state.
  */
 @ContributesTo(AppScope::class)
 @BindingContainer
-object OmnipodCommonBindings {
+object OmnipodDashBindings {
 
     @Provides
     @SingleIn(AppScope::class)
