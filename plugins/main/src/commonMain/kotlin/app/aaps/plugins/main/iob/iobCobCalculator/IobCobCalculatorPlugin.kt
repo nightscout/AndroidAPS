@@ -75,6 +75,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlin.concurrent.Volatile
 import kotlin.math.max
 import kotlin.math.min
 
@@ -109,7 +110,12 @@ class IobCobCalculatorPlugin(
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
 
-    override var ads: AutosensDataStore = AutosensDataStoreObject()
+    // Written by the calculation when it publishes its result (PrepareGraphDataRunner.publishAds) and
+    // read by the UI, the loop and the watch on other threads. Every store guards its own state, so a
+    // stale read cannot corrupt anything - but without @Volatile a reader can go on using the previous
+    // store after a newer one has been published, so a fresh result becomes visible later than it
+    // should. kotlin.concurrent.Volatile, which works in common code.
+    @Volatile override var ads: AutosensDataStore = AutosensDataStoreObject()
 
     private val dataLock = AapsLock()
 
