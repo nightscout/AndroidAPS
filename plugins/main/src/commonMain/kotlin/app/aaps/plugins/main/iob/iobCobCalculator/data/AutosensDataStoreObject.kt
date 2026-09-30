@@ -402,18 +402,55 @@ class AutosensDataStoreObject : AutosensDataStore {
             if (adjustedTime - lastBg.timestamp > T.secs(IRREGULAR_DATA_SEC).msecs()) adjustedTime - T.mins(5).msecs()
             else adjustedTime
         aapsLogger.debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(currentTime))
-        // findNewer() and findOlder() cannot bracket a time that is after every reading, so this bucket is
+        // The bracket search below cannot bracket a time that is after every reading, so this bucket is
         // taken from the newest reading and the loop starts one grid point below it.
         val firstBucket = if (currentTime > lastBg.timestamp) {
             val bucket = InMemoryGlucoseValue.fromGv(lastBg).copy(timestamp = currentTime)
             currentTime -= T.mins(5).msecs()
             bucket
         } else null
+        newBucketedData.addAll(bucketsDownFrom(readings, currentTime))
+        // Only when the loop found something to bucket. On its own this bucket would turn a result that
+        // used to be empty into a single point, and GlucoseStatus answers a lone point with delta 0
+        // instead of null, so the APS would run on a made up flat trend instead of declining to run.
+        if (firstBucket != null && newBucketedData.isNotEmpty()) newBucketedData.add(0, firstBucket)
+        bucketedData = newBucketedData
+    }
+
+    /**
+     * Same buckets as walking [currentTime] down from [startTime] and bracketing it with [findNewer] /
+     * [findOlder] at every step, in one pass instead of one search per bucket.
+     *
+     * [findNewer] and [findOlder] each scan [readings] from an end for every call, and the property
+     * getter they read takes [dataLock] on every access - a full pass used to re-enter a lock the
+     * caller already holds on the order of a million times for a day of 1 minute data. [currentTime]
+     * only moves down, and [readings] is sorted newest first, so the index of "the first reading at or
+     * before this time" only moves forward: one pass over one local snapshot gives the identical result.
+     */
+    private fun bucketsDownFrom(readings: List<GV>, startTime: Long): MutableList<InMemoryGlucoseValue> {
+        val newBucketedData = ArrayList<InMemoryGlucoseValue>()
+        val lastBg = readings[0]
+        val oldest = readings[readings.size - 1]
+        var currentTime = startTime
+        // Index of the first reading at or before currentTime, i.e. what findOlder(currentTime) would
+        // return. Only moves forward as currentTime decreases.
+        var index = 0
         while (true) {
-            // test if current value is older than current time
-            val newer = findNewer(currentTime)
-            val older = findOlder(currentTime)
-            if (newer == null || older == null) break
+            if (lastBg.timestamp < currentTime || oldest.timestamp > currentTime) break
+            while (readings[index].timestamp > currentTime) index++
+            val newer: GV
+            val older: GV
+            if (readings[index].timestamp == currentTime) {
+                // Same choice as findNewer/findOlder when several readings share this timestamp:
+                // findNewer skips the first if a second one ties it, findOlder takes the last tie.
+                newer = if (index == 0 && readings.size > 1 && readings[1].timestamp == currentTime) readings[1] else readings[index]
+                var last = index
+                while (last + 1 < readings.size && readings[last + 1].timestamp == currentTime) last++
+                older = readings[last]
+            } else {
+                newer = readings[index - 1]
+                older = readings[index]
+            }
             if (older.timestamp == newer.timestamp) { // direct hit
                 newBucketedData.add(InMemoryGlucoseValue.fromGv(newer))
             } else {
@@ -427,11 +464,7 @@ class AutosensDataStoreObject : AutosensDataStore {
             }
             currentTime -= T.mins(5).msecs()
         }
-        // Only when the loop found something to bucket. On its own this bucket would turn a result that
-        // used to be empty into a single point, and GlucoseStatus answers a lone point with delta 0
-        // instead of null, so the APS would run on a made up flat trend instead of declining to run.
-        if (firstBucket != null && newBucketedData.isNotEmpty()) newBucketedData.add(0, firstBucket)
-        bucketedData = newBucketedData
+        return newBucketedData
     }
 
     private fun createBucketedData5min(aapsLogger: AAPSLogger, dateUtil: DateUtil) {

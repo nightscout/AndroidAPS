@@ -1,6 +1,7 @@
 package app.aaps.plugins.main.iob
 
 import androidx.collection.LongSparseArray
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
@@ -14,6 +15,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
+import kotlin.math.roundToLong
+import kotlin.random.Random
 
 class AutosensDataStoreTest : TestBaseWithProfile() {
 
@@ -1969,5 +1972,69 @@ class AutosensDataStoreTest : TestBaseWithProfile() {
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
 
         assertThat(autosensDataStore.bucketedData).isEmpty()
+    }
+
+    /** Readings with jitter, some duplicate timestamps and some gaps, newest first. */
+    private fun messyReadings(seed: Int, newest: Long, stepSec: Long): List<GV> {
+        val random = Random(seed)
+        val out = ArrayList<GV>()
+        var time = newest
+        while (time > newest - T.hours(34).msecs()) {
+            val jitter = if (out.isEmpty()) 0L else random.nextLong(-20, 21) * 1000
+            val t = time + jitter
+            val value = 100.0 + (t / 60_000 % 50)
+            out.add(GV(raw = 0.0, noise = 0.0, value = value, timestamp = t, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT))
+            if (random.nextInt(40) == 0) out.add(out.last().copy(value = out.last().value + 1)) // same timestamp twice
+            time -= T.secs(stepSec).msecs() * (if (random.nextInt(60) == 0) random.nextLong(2, 8) else 1) // sometimes a gap
+        }
+        return out.sortedByDescending { it.timestamp }
+    }
+
+    /** The bucket loop as it was before the single sweep: findNewer/findOlder for every 5 minute step. */
+    private fun referenceBuckets(store: AutosensDataStoreObject, startTime: Long): List<Triple<Long, Double, Boolean>> {
+        val result = ArrayList<Triple<Long, Double, Boolean>>()
+        var currentTime = startTime
+        while (true) {
+            val newer = store.findNewer(currentTime)
+            val older = store.findOlder(currentTime)
+            if (newer == null || older == null) break
+            if (older.timestamp == newer.timestamp) {
+                result.add(Triple(newer.timestamp, newer.value, false))
+            } else {
+                val bgDelta = newer.value - older.value
+                val timeDiffToNew = newer.timestamp - currentTime
+                val timeDiffToOlder = currentTime - older.timestamp
+                val filledGap = minOf(timeDiffToOlder, timeDiffToNew) > T.secs(AutosensDataStoreObject.IRREGULAR_DATA_SEC).msecs()
+                val currentBg = newer.value - timeDiffToNew.toDouble() / (newer.timestamp - older.timestamp) * bgDelta
+                result.add(Triple(currentTime, currentBg.roundToLong().toDouble(), filledGap))
+            }
+            currentTime -= T.mins(5).msecs()
+        }
+        return result
+    }
+
+    private fun key(list: List<InMemoryGlucoseValue>) = list.map { Triple(it.timestamp, it.value, it.filledGap) }
+
+    @Test
+    fun singleSweepGivesTheSameBucketsAsFindNewerAndFindOlder() {
+        var compared = 0
+        for (seed in 0 until 40) {
+            val stepSec = listOf(60L, 60L, 120L, 300L)[seed % 4]
+            val store = AutosensDataStoreObject()
+            store.bgReadings = messyReadings(seed, T.hours(100).msecs() + seed * 7_000L, stepSec)
+            store.createBucketedData(aapsLogger, dateUtil)
+            if (store.lastUsed5minCalculation == true) continue // that path does not use this loop
+
+            val bucketed = store.bucketedData ?: continue
+            if (bucketed.isEmpty()) continue
+            // Skip the one bucket taken from the newest reading ahead of the loop, if there is one -
+            // referenceBuckets starts the loop itself and does not know about it.
+            val loopStart = if (bucketed[0].timestamp > store.bgReadings[0].timestamp) 1 else 0
+            if (loopStart >= bucketed.size) continue
+
+            assertThat(key(bucketed.drop(loopStart))).isEqualTo(referenceBuckets(store, bucketed[loopStart].timestamp))
+            compared++
+        }
+        assertThat(compared).isGreaterThan(30)
     }
 }
