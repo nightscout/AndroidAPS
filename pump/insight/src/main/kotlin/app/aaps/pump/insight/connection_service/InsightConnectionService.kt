@@ -11,6 +11,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.ActivityCompat
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.interfaces.Preferences
@@ -87,15 +88,18 @@ import app.aaps.pump.insight.utils.crypto.Cryptograph.deriveKeys
 import app.aaps.pump.insight.utils.crypto.Cryptograph.generateRSAKey
 import app.aaps.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import app.aaps.pump.insight.utils.crypto.KeyPair
-import dagger.android.DaggerService
 import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.security.SecureRandom
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
+// Fully qualified: this module has its own app_layer.Service, so the simple name is taken.
+class InsightConnectionService : android.app.Service(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var preferences: Preferences
@@ -122,12 +126,30 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         private set
     private val messageQueue = MessageQueue()
     private val activatedServices: MutableList<Service?> = ArrayList()
-    var lastDataTime: Long = 0
-        private set
+    /**
+     * When the pump last answered anything, as a flow so a reader always sees the live value.
+     *
+     * The plugin used to expose this through a getter, so every reader got the current value. Moving
+     * the Pump interface to flows turned that getter into a StateFlow the plugin only pushed while
+     * reading the pump status, so between two status reads it stood still even though the pump was
+     * answering commands - and the "pump unreachable" alarm, which is timed off it, fired on a pump
+     * that was perfectly reachable.
+     */
+    private val _lastDataTimeFlow = MutableStateFlow(0L)
+    val lastDataTimeFlow: StateFlow<Long> = _lastDataTimeFlow.asStateFlow()
+    var lastDataTime: Long
+        get() = _lastDataTimeFlow.value
+        private set(value) {
+            _lastDataTimeFlow.value = value
+        }
     var lastConnected: Long = 0
         private set
     @get:Synchronized var recoveryDuration: Long = 0
         private set
+
+    /** Attempts made in the current connection series, and when the series started. */
+    private var connectionAttempts = 0
+    private var connectionSeriesStart = 0L
     private var timeoutDuringHandshakeCounter = 0
     private var intKeyPair: KeyPair? = null
     val keyPair: KeyPair = intKeyPair ?: generateRSAKey().also { intKeyPair = it }
@@ -203,6 +225,33 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         return messageRequest
     }
 
+    /**
+     * Writes several configuration blocks inside ONE write session: one open, every write, one
+     * close. [requestMessage] gives each write its own session, which is not safe when the writes
+     * belong together - the pump commits each session on its own, so a connection lost between two
+     * of them leaves half the change applied.
+     *
+     * The writes are sent in the order given: [MessageQueue] sorts by priority only, and that sort
+     * is stable, so same priority messages keep the order they were enqueued in.
+     */
+    @Synchronized fun requestConfigurationWrites(messages: List<WriteConfigurationBlockMessage>): ConfigurationWriteSessionRequest {
+        val openRequest = MessageRequest(OpenConfigurationWriteSessionMessage())
+        val writeRequests = messages.map { MessageRequest(it) }
+        val closeRequest = MessageRequest(CloseConfigurationWriteSessionMessage())
+        if (state !== InsightState.CONNECTED) {
+            val exception = DisconnectedException()
+            openRequest.exception = exception
+            writeRequests.forEach { it.exception = exception }
+            closeRequest.exception = exception
+            return ConfigurationWriteSessionRequest(openRequest, writeRequests, closeRequest)
+        }
+        messageQueue.enqueueRequest(openRequest)
+        writeRequests.forEach { messageQueue.enqueueRequest(it) }
+        messageQueue.enqueueRequest(closeRequest)
+        requestNextMessage()
+        return ConfigurationWriteSessionRequest(openRequest, writeRequests, closeRequest)
+    }
+
     private fun requestNextMessage() {
         while (messageQueue.activeRequest == null && messageQueue.hasPendingMessages()) {
             messageQueue.nextRequest()
@@ -225,6 +274,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     @Synchronized override fun onCreate() {
+        // What MetroService does; this module does not depend on :core:objects, where that base lives.
+        injectMetroMembers(this)
         super.onCreate()
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             bluetoothAdapter = (applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
@@ -250,6 +301,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         disconnectTimer = null
         if (state === InsightState.DISCONNECTED && pairingDataStorage.paired) {
             recoveryDuration = 0
+            connectionAttempts = 0
             timeoutDuringHandshakeCounter = 0
             connect()
         }
@@ -259,6 +311,17 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         if (!connectionRequests.contains(lock)) return
         connectionRequests.remove(lock)
         if (connectionRequests.isEmpty()) {
+            // The other half of that line: nobody wants the pump any more and it was never reached.
+            // connectionAttempts is cleared on success, so anything left here means the series ended
+            // without one - between attempts or inside one, which is where the command queue's own
+            // budget usually runs out.
+            if (connectionAttempts > 0) {
+                aapsLogger.info(
+                    LTag.PUMP,
+                    "Gave up after $connectionAttempts attempt(s) in ${System.currentTimeMillis() - connectionSeriesStart} ms"
+                )
+                connectionAttempts = 0
+            }
             if (state === InsightState.RECOVERING) {
                 recoveryTimer?.interrupt()
                 recoveryTimer = null
@@ -315,6 +378,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         }
     }
 
+    /** " (cause: ...)" when the exception carries one, empty otherwise. */
+    private fun causeText(e: Exception): String =
+        e.cause?.let { " (cause: ${it.javaClass.simpleName}: ${it.message})" } ?: ""
+
     @Synchronized private fun handleException(e: Exception) {
         when (state) {
             InsightState.NOT_PAIRED,
@@ -323,7 +390,14 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
             else                    -> Unit
         }
-        aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
+        // Say what the platform reported, not just the class name. A connection failure is by far the
+        // most common one, and "out of range", "socket already used" and "refused" all looked the same
+        // before - which made connection trouble impossible to diagnose from a log.
+        val detail = when {
+            e is ConnectionFailedException -> " after ${e.durationOfConnectionAttempt} ms" + causeText(e)
+            else                           -> causeText(e).ifEmpty { e.message?.let { ": $it" } ?: "" }
+        }
+        aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName + detail)
         if (pairingDataStorage.paired) {
             if (e is TimeoutException && (state === InsightState.SATL_SYN_REQUEST || state === InsightState.APP_CONNECT_MESSAGE)) {
                 if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
@@ -333,9 +407,13 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 }
             }
             setState(if (connectionRequests.isNotEmpty()) InsightState.RECOVERING else InsightState.DISCONNECTED)
-            if (e is ConnectionFailedException) {
-                cleanup(e.durationOfConnectionAttempt <= 1000)
-            } else cleanup(true)
+            // Always drop the socket, whatever the attempt cost. A BluetoothSocket cannot be
+            // connected twice: once connect() has failed the socket is spent, and calling connect()
+            // on it again fails with "read failed, socket might closed or timeout, read ret: -1".
+            // The old rule only dropped it when the attempt failed within a second, and measured on
+            // a real pump no failure is ever that quick - the fastest of 579 took 2.0 s - so the
+            // spent socket was kept and reused for every retry of a series.
+            cleanup(true)
             messageQueue.completeActiveRequest(e)
             messageQueue.completePendingRequests(e)
             if (connectionRequests.isNotEmpty()) {
@@ -384,6 +462,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized private fun connect() {
         bluetoothAdapter?.let { bluetoothAdapter ->
             if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.macAddress)
+            if (connectionAttempts == 0) connectionSeriesStart = System.currentTimeMillis()
+            connectionAttempts++
             setState(InsightState.CONNECTING)
             bluetoothDevice?.let { bluetoothDevice ->
                 connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage.paired, bluetoothAdapter, bluetoothDevice, bluetoothSocket).also {
@@ -399,6 +479,13 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     @Synchronized override fun onConnectionSucceed() {
         try {
+            // One line per connection series, so a log says straight away how hard the pump was to
+            // reach. Reconstructing that from the state changes takes a script.
+            aapsLogger.info(
+                LTag.PUMP,
+                "Connected after $connectionAttempts attempt(s) in ${System.currentTimeMillis() - connectionSeriesStart} ms"
+            )
+            connectionAttempts = 0
             recoveryDuration = 0
             inputStreamReader = InputStreamReader(bluetoothSocket!!.inputStream, this).also { it.start() }
             outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this).also { it.start() }
@@ -701,7 +788,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     @Synchronized override fun onConnectionFail(e: Exception?, duration: Long) {
-        handleException(ConnectionFailedException(duration))
+        handleException(ConnectionFailedException(duration, e))
     }
 
     @Synchronized override fun onErrorWhileReading(e: Exception) {

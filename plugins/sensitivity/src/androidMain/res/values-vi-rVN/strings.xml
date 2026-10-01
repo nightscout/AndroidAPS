@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_plugin_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensitivity Oref1</string>
+    <string name="sensitivity_aaps">Sensitivity AAPS</string>
+    <string name="sensitivity_weighted_average">Sensitivity WeightedAverage</string>
+    <string name="description_sensitivity_aaps">Độ nhạy được tính theo cùng cách như Oref0, nhưng bạn có thể chỉ định khoảng thời gian trong quá khứ. Hấp thu carb tối thiểu được tính từ thời gian hấp thu carb tối đa trong phần Tùy chọn(preferences).</string>
+    <string name="description_sensitivity_oref1">Độ nhạy được tính từ dữ liệu 8 giờ hoặc 24 giờ trước đó (sử dụng giá trị nào nhạy hơn). Carbs (nếu chưa được hấp thu) sẽ bị cắt sau khoảng thời gian được chỉ định trong phần Tùy chọn. Plugin cũng tính cả UAM.</string>
+    <string name="description_sensitivity_weighted_average">Độ nhạy được tính như một giá trị trung bình có trọng số từ các sai lệch, trong đó các sai lệch mới hơn có trọng số cao hơn. Hấp thu carb tối thiểu được tính từ thời gian hấp thu carb tối đa trong phần Tùy chọn. Thuật toán này là nhanh nhất trong việc theo dõi các thay đổi về độ nhạy.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM bị tắt vì nó phụ thuộc vào plugin độ nhạy Oref1</string>
+    <string name="absorption_settings_title">Cài đặt hấp thụ</string>
+</resources>

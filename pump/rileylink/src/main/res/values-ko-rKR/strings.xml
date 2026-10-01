@@ -2,25 +2,11 @@
 <resources>
     <!-- PumpDeviceState -->
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">스캔하기</string>
-    <string name="riley_link_ble_config_scan_stop">정지</string>
-    <string name="riley_link_ble_config_scan_selected">선택됨</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink 스캔</string>
     <string name="riley_link_ble_config_scan_scanning">스캔중</string>
-    <string name="riley_link_ble_config_scan_finished">스캔 완료</string>
-    <string name="riley_link_ble_config_scan_error">스캔 에러: %1$d</string>
     <string name="riley_link_ble_config_connected_never">절대</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">현재 선택된 RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">삭제</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">RileyLink를 제거하는 것이 확실합니까?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">RileyLink 제거하기</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">선택된 RileyLink 없음</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">설정</string>
-    <string name="rileylink_settings_tab2">이력</string>
     <string name="rileylink_status">RileyLink 상태</string>
     <string name="medtronic_pump_status">펌프 상태</string>
-    <string name="title_activity_rileylink_settings">RileyLink 설정</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">주소:</string>
     <string name="rileylink_name">이름:</string>
@@ -57,7 +43,6 @@
     <string name="rileylink_error_bt_disabled">블루투스 비활성</string>
     <string name="rileylink_error_no_bt_adapter">블루투스 어댑터 없음</string>
     <string name="rileylink_error_tuneup_failed">튜닝 실패</string>
-    <string name="rileylink_error_pump_unreachable">펌프에 연결할 수 없습니다.</string>
     <string name="rileylink_error_pod_unreachable">포드에 연결할 수 없습니다.</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">메드트로닉 펌프</string>
@@ -73,5 +58,4 @@
     </plurals>
     <string name="orange_use_scanning_level">스캔 사용하기</string>
     <string name="orange_use_scanning_level_summary">OrangeLink에 연결하기 전에 스캔하면 연결이 향상됩니다 (필요한 경우 다른 RileyLink 클론과도 사용 가능합니다)</string>
-    <string name="rileylink_configuration">RileyLink 의 구성</string>
 </resources>

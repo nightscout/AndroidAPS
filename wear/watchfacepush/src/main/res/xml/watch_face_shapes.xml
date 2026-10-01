@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFaces>
+    <WatchFace
+        file="@raw/watchface"
+        height="450"
+        shape="CIRCLE"
+        width="450" />
+</WatchFaces>

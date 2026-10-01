@@ -1,22 +1,24 @@
 package app.aaps.pump.common.hw.rileylink.service
 
 import android.bluetooth.BluetoothAdapter
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
-import dagger.android.DaggerBroadcastReceiver
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class RileyLinkBluetoothStateReceiver : DaggerBroadcastReceiver() {
+class RileyLinkBluetoothStateReceiver : BroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil
 
     override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
+        // What MetroBroadcastReceiver does; this module does not depend on :core:objects.
+        context.injectMetroMembers(this)
         val action = intent.action
         if (action != null) {
             val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)

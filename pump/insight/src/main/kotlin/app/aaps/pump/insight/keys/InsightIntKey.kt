@@ -2,25 +2,25 @@ package app.aaps.pump.insight.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.pump.insight.R
 
 enum class InsightIntKey(
     override val key: String,
     override val defaultValue: Int,
+    private val titleResId: Int,
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
-    MinRecoveryDuration("insight_min_recovery_duration", 5),
-    MaxRecoveryDuration("insight_max_recovery_duration", 20),
-    DisconnectDelay("insight_disconnect_delay", 5),
+    // Bounds match the limits the driver already applies when it reads these values. Without them the
+    // preference screen offered the whole Int range and then silently clamped what the user typed.
+    // The driver keeps clamping on read, because a value stored before these bounds existed can still
+    // be out of range.
+    MinRecoveryDuration("insight_min_recovery_duration", 5, titleResId = R.string.min_recovery_duration, min = 0, max = 20),
+    MaxRecoveryDuration("insight_max_recovery_duration", 20, titleResId = R.string.max_recovery_duration, min = 0, max = 20),
+    DisconnectDelay("insight_disconnect_delay", 5, titleResId = R.string.disconnect_delay, min = 0, max = 15),
+    ;
+
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
 }

@@ -1,9 +1,9 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.comm.enums.CommandType.CANCEL_BOLUS
+import app.aaps.core.interfaces.di.MetroMemberInjector
 
-class CancelBolusPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+class CancelBolusPacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 
     init {
         opCode = CANCEL_BOLUS.code

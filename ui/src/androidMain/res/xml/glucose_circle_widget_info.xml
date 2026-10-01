@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="app.aaps.ui.widget.WidgetConfigureActivity"
+    android:description="@string/widget_glucose_circle_description"
+    android:initialKeyguardLayout="@layout/widget_layout"
+    android:initialLayout="@layout/widget_layout"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:minResizeWidth="40dp"
+    android:minResizeHeight="40dp"
+    android:previewLayout="@layout/widget_glucose_circle_preview"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    android:updatePeriodMillis="86400000"
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable|configuration_optional" />

@@ -1,11 +1,11 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
-import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.shared.tests.TestBase
@@ -75,7 +75,7 @@ class UpdatePodStateBolusTrackingTest : TestBase() {
     }
 
     @Test fun `completed bolus — new pulses not counted as bolus`() {
-        sut.createLastBolus(requestedUnits = 1.0, historyId = 1L, bolusType = BS.Type.NORMAL)
+        sut.createLastBolus(requestedUnits = 1.0, historyId = 1L, bolusType = BolusType.DEFAULT)
         sut.markLastBolusComplete()
         statusUpdate(totalPulsesDelivered = 103)
         assertThat(sut.podState.bolusPulsesDelivered).isEqualTo(60)
@@ -84,7 +84,7 @@ class UpdatePodStateBolusTrackingTest : TestBase() {
     // ---- active bolus in progress -------------------------------------------------------------
 
     @Test fun `active bolus, no concurrent basal — pulses attributed to bolus`() {
-        sut.createLastBolus(requestedUnits = 0.15, historyId = 1L, bolusType = BS.Type.NORMAL)
+        sut.createLastBolus(requestedUnits = 0.15, historyId = 1L, bolusType = BolusType.DEFAULT)
         // 3 new total pulses, 3 bolus pulses remaining → 0 now: clean bolus delivery
         statusUpdate(totalPulsesDelivered = 103, bolusPulsesRemaining = 0)
         assertThat(sut.podState.bolusPulsesDelivered).isEqualTo(63)
@@ -93,7 +93,7 @@ class UpdatePodStateBolusTrackingTest : TestBase() {
     @Test fun `active bolus with concurrent basal pulse — only bolus portion attributed`() {
         // 5 total new pulses: 3 from bolus (remaining 3→0) + 2 from basal running in parallel.
         // bolusPulsesDelivered must increase by 3 only; the 2 basal pulses must NOT be counted.
-        sut.createLastBolus(requestedUnits = 0.15, historyId = 1L, bolusType = BS.Type.NORMAL)
+        sut.createLastBolus(requestedUnits = 0.15, historyId = 1L, bolusType = BolusType.DEFAULT)
         // Set bolus remaining so previousBolusPulsesRemaining = 3
         sut.podState.lastBolus!!.bolusUnitsRemaining = 3 * 0.05
         statusUpdate(totalPulsesDelivered = 105, bolusPulsesRemaining = 0)
@@ -106,7 +106,7 @@ class UpdatePodStateBolusTrackingTest : TestBase() {
         // Simulate the correction scenario: an incomplete bolus exists (the correction
         // bolus itself), but basalCorrectionInProgress prevents those pulses from
         // being counted as bolus pulses. This keeps basalDelivered correct.
-        sut.createLastBolus(requestedUnits = 0.05, historyId = 1L, bolusType = BS.Type.NORMAL)
+        sut.createLastBolus(requestedUnits = 0.05, historyId = 1L, bolusType = BolusType.DEFAULT)
         sut.basalCorrectionInProgress = true
 
         statusUpdate(totalPulsesDelivered = 102, bolusPulsesRemaining = 0)
@@ -118,14 +118,14 @@ class UpdatePodStateBolusTrackingTest : TestBase() {
     }
 
     @Test fun `basal correction flag cleared after correction — subsequent bolus pulses tracked again`() {
-        sut.createLastBolus(requestedUnits = 0.05, historyId = 1L, bolusType = BS.Type.NORMAL)
+        sut.createLastBolus(requestedUnits = 0.05, historyId = 1L, bolusType = BolusType.DEFAULT)
         sut.basalCorrectionInProgress = true
         statusUpdate(totalPulsesDelivered = 101, bolusPulsesRemaining = 0)
         // correction delivered; flag cleared
         sut.basalCorrectionInProgress = false
 
         // Now a new bolus starts
-        sut.createLastBolus(requestedUnits = 0.10, historyId = 2L, bolusType = BS.Type.NORMAL)
+        sut.createLastBolus(requestedUnits = 0.10, historyId = 2L, bolusType = BolusType.DEFAULT)
         statusUpdate(totalPulsesDelivered = 103, bolusPulsesRemaining = 0)
 
         // 2 new pulses from the second bolus should be attributed

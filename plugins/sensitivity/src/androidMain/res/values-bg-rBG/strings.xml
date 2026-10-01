@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_plugin_shortname">ЧУВСТВ</string>
+    <string name="sensitivity_oref1">Чрез Oref1</string>
+    <string name="sensitivity_aaps">чрез AAPS</string>
+    <string name="sensitivity_weighted_average">чрез Среднопретеглената стойност</string>
+    <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
+    <string name="description_sensitivity_oref1">Чувствителността се изчислява за 8 или 24 назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките. Това е необходимо за изчисление на необявени хранения (UAM).</string>
+    <string name="description_sensitivity_weighted_average">Чувствителността се изчислява като среднопретеглена стойност от отклоненията. По-новите отклонения имат по-високо тегло. Минималната абсорбция на въглехидрати се изчислява от Време за макс усвояване на въглехидрати от опциите. Този алгоритъм е най-бързият при проследяването на промени в чувствителността.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM изключен, защото му трябва Oref1 плъгин за чувствителност </string>
+    <string name="absorption_settings_title">Настройки за абсорбция</string>
+</resources>

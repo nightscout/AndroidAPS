@@ -1,0 +1,187 @@
+package app.aaps.pump.medtrum.compose.steps
+
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.pump.WizardButton
+import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.pump.medtrum.R
+import app.aaps.pump.medtrum.code.PatchStep
+import app.aaps.pump.medtrum.compose.MedtrumPatchViewModel
+
+private const val PRIME_MAX_PROGRESS = 150f
+
+@Composable
+fun PrimeStep(
+    viewModel: MedtrumPatchViewModel,
+    onCancel: () -> Unit
+) {
+    val patchStep by viewModel.patchStep.collectAsStateWithLifecycle()
+    val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
+    val primeProgress by viewModel.medtrumPump.primeProgressFlow.collectAsStateWithLifecycle()
+
+    val isPriming = patchStep == PatchStep.PRIMING
+    val isPrimeComplete = patchStep == PatchStep.PRIME_COMPLETE
+
+    var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
+
+    // Trigger startPrime when entering PRIMING step
+    // Note: use Unit as key to only trigger once when entering the step, not on every patchStep change
+    // To avoid sending repeated commands and triggering errors and other unintended consequences
+    LaunchedEffect(Unit) {
+        if (patchStep == PatchStep.PRIMING) {
+            viewModel.startPrime()
+        }
+    }
+
+    // Auto-navigate on primed and handle unexpected states
+    LaunchedEffect(setupStep) {
+        when (patchStep) {
+            PatchStep.PRIME          -> {
+                if (setupStep != MedtrumPatchViewModel.SetupStep.FILLED && setupStep != MedtrumPatchViewModel.SetupStep.INITIAL)
+                    unexpectedStateMessage = setupStep.toString()
+            }
+
+            PatchStep.PRIMING        -> {
+                when (setupStep) {
+                    MedtrumPatchViewModel.SetupStep.INITIAL,
+                    MedtrumPatchViewModel.SetupStep.FILLED,
+                    MedtrumPatchViewModel.SetupStep.PRIMING -> Unit
+
+                    MedtrumPatchViewModel.SetupStep.PRIMED  -> viewModel.moveStep(PatchStep.PRIME_COMPLETE)
+                    else                                    -> unexpectedStateMessage = setupStep.toString()
+                }
+            }
+
+            PatchStep.PRIME_COMPLETE -> {
+                if (setupStep != MedtrumPatchViewModel.SetupStep.PRIMED)
+                    unexpectedStateMessage = setupStep.toString()
+            }
+
+            else                     -> Unit
+        }
+    }
+
+    val state = when {
+        patchStep == PatchStep.PRIME -> PrimeState.READY
+        isPriming                    -> PrimeState.PRIMING
+        isPrimeComplete              -> PrimeState.COMPLETE
+        else                         -> PrimeState.READY
+    }
+
+    PrimeStepContent(
+        state = state,
+        primeProgress = primeProgress,
+        onStartPrime = { viewModel.moveStep(PatchStep.PRIMING) },
+        onNext = { viewModel.moveAfterPriming() },
+        onCancel = onCancel
+    )
+
+    unexpectedStateMessage?.let { msg ->
+        OkDialog(
+            title = stringResource(app.aaps.core.ui.R.string.error),
+            message = stringResource(R.string.unexpected_state, msg),
+            onDismiss = {
+                unexpectedStateMessage = null
+                viewModel.moveStep(PatchStep.CANCEL)
+            }
+        )
+    }
+}
+
+internal enum class PrimeState { READY, PRIMING, COMPLETE }
+
+/**
+ * @see PreviewReady
+ * @see PreviewPriming
+ * @see PrimeStepPreviewComplete
+ */
+@Composable
+internal fun PrimeStepContent(
+    state: PrimeState,
+    primeProgress: Int = 0,
+    onStartPrime: () -> Unit,
+    onNext: () -> Unit,
+    onCancel: () -> Unit
+) {
+    WizardStepLayout(
+        primaryButton = when (state) {
+            PrimeState.READY    -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onStartPrime)
+            PrimeState.PRIMING  -> null
+            PrimeState.COMPLETE -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onNext)
+        },
+        secondaryButton = WizardButton(
+            text = stringResource(app.aaps.core.ui.R.string.cancel),
+            onClick = onCancel
+        )
+    ) {
+        when (state) {
+            PrimeState.READY    -> {
+                Text(
+                    text = stringResource(R.string.half_press_needle).stripHtml(),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.do_not_attach_to_body),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            PrimeState.PRIMING  -> {
+                Text(
+                    text = stringResource(R.string.wait_for_priming),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(Modifier.height(16.dp))
+                LinearProgressIndicator(
+                    progress = { (primeProgress / PRIME_MAX_PROGRESS).coerceIn(0f, 1f) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.do_not_attach_to_body),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(Modifier.height(48.dp))
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+
+            PrimeState.COMPLETE -> {
+                Text(
+                    text = stringResource(R.string.press_next).stripHtml(),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.do_not_attach_to_body),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
+}

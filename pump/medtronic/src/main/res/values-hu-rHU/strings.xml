@@ -9,26 +9,22 @@
     <string name="medtronic_pump_bolus_delay">Várakozás bólus indítása előtt (mp)</string>
     <string name="medtronic_pump_max_bolus">Max. Bólus a pumpán (E)</string>
     <string name="medtronic_pump_max_basal">Max. Bázis a pumpán (E/ó)</string>
-    <string name="medtronic_pump_encoding">Medtronic kódolás</string>
     <string name="medtronic_custom_action_wake_and_tune">Ébresztés és hangolás</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bólus blokk törlése</string>
-    <string name="medtronic_custom_action_reset_rileylink">RileyLink beállítás törlése</string>
     <string name="medtronic_pump_battery_select">Elem típusa (Töltöttség nézet)</string>
     <string name="medtronic_pump_battery_no">Nincs kiválasztás (Egyszerű nézet)</string>
     <string name="medtronic_pump_battery_alkaline">Alkáli (Kiterjesztett nézet)</string>
     <string name="medtronic_pump_battery_lithium">Lítium (Kiterjesztett nézet)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Kiterjesztett nézet)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (kiterjesztett nézet)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink elem</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Hibák</string>
-    <string name="medtronic_error_serial_not_set">Sorozatszám hiányzik.</string>
     <string name="medtronic_error_serial_invalid">Sorozatszám hibás.</string>
     <string name="medtronic_error_pump_type_not_set">Pumpa típusa hiányzik.</string>
     <string name="medtronic_error_pump_type_invalid">Pumpa típusa nem támogatott.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Pumpa frekvencia hiányzik.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Pumpa frekvencia nem támogatott.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink címe hibás.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Csatlakoztatott pumpa típusa eltér a beállított típustól.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Bázis profilok/sémák beállítás nincs engedélyezve a pumpán. Engedélyezze a pumpán.</string>
@@ -45,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Medtronic pumpa előzmények</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">A bólus a pumpára való elküldés után lett törölve. Mivel a Medtronic pumpa nem támogatja a törlést, ezért manuálisan kell törölni. Felfüggesztett módba kell állítani a pumpát, majd utána újraindítani (ha továbbra is meg akarja szakítani). Az alkalmazás a következő frissítéskor (kevesebb, mint 5 percen belül) veszi át a változásokat.</string>
     <string name="medtronic_cmd_cant_read_tbr">Jelenlegi ÁB lekérése nem sikerült.</string>
@@ -71,16 +66,10 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Átmeneti bázis törlése</string>
     <string name="medtronic_cmd_desc_set_bolus">Bólus beállítása</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Hátralévő inzulin</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pumpa nem elérhető</string>
-    <string name="medtronic_warning">Figyelmeztetés</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Most</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">ezelőtt</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Most</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">ezelőtt</string>
     <string name="medtronic_notification_check_time_date">Pumpa idő frissítése szükséges</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Pumpa idő frissítve</string>
     <string name="set_neutral_temps_title">Semleges átmeneti bázis beállítása</string>
     <string name="set_neutral_temps_summary">Ha be van kapcsolva, akkor minden óra végén törli az átmeneti bázist. Ez a módszer segíthet elkerülni bizonyos pumpákon az óránkénti hangjelzést/rezgést.</string>
-    <string name="mdt_tbr_remaining">%1$.1f E/ó (%2$d perc van hátra)</string>
 </resources>

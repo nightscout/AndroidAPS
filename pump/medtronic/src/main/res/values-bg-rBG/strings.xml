@@ -9,26 +9,39 @@
     <string name="medtronic_pump_bolus_delay">Изчакване преди старт на болус (сек)</string>
     <string name="medtronic_pump_max_bolus">Макс болус в помпата (Е)</string>
     <string name="medtronic_pump_max_basal">Максимален базал в помпата (Е/ч)</string>
-    <string name="medtronic_pump_encoding">Медтроник коодиране</string>
     <string name="medtronic_custom_action_wake_and_tune">Събуди и настрой</string>
     <string name="medtronic_custom_action_clear_bolus_block">Изчисти Bolus Block</string>
-    <string name="medtronic_custom_action_reset_rileylink">Изчисти RileyLink конфигурацията</string>
+    <string name="medtronic_custom_action_reset_rileylink">Ресет на RileyLink</string>
     <string name="medtronic_pump_battery_select">Тип батерия (напреднали)</string>
     <string name="medtronic_pump_battery_no">Не е избрано (общ)</string>
     <string name="medtronic_pump_battery_alkaline">Алкални</string>
     <string name="medtronic_pump_battery_lithium">Литиева</string>
     <string name="medtronic_pump_battery_nizn">NiZn батерия</string>
     <string name="medtronic_pump_battery_nimh">NiMH (батерия)</string>
+    <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Друга (неподдържана)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A или по-малко)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A или по-малко)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
+    <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 сек</string>
+    <string name="medtronic_bolus_delay_10s">10 сек</string>
+    <string name="medtronic_bolus_delay_15s">15 сек</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Батерия на RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Грешки</string>
-    <string name="medtronic_error_serial_not_set">Сериен номер не е зададен.</string>
     <string name="medtronic_error_serial_invalid">Грешен сериен номер.</string>
     <string name="medtronic_error_pump_type_not_set">Тип помпа не е зададен.</string>
     <string name="medtronic_error_pump_type_invalid">Този тип помпа не се поддържа.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Честота на помпата не е зададена.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Честотата не се поддържа.</string>
     <string name="medtronic_error_rileylink_address_invalid">Грешен RileyLink адрес.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Откритата помпа не е идентична с конфигурираната.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Базалните профили/настройки не са позволен в помпата. Включванете го от настройките на помпата.</string>
@@ -45,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">История на помпата</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Отказали сте болус след като е бил изпратен към помпата. Помпите Медтроник не го поддържат и ще трябва да го направите ръчно. Пуснете Suspend mode и след това Resume (ако оше искате да го откажете). Апликацията ще покаже промените след около 5 мин.</string>
     <string name="medtronic_cmd_cant_read_tbr">Не може да бъде прочетен вр. базал.</string>
@@ -71,21 +83,13 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Откажи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Оставащ инсулин</string>
-    <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
-    <string name="medtronic_warning">Внимание</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Сега</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">преди</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Сега</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">преди</string>
     <string name="medtronic_notification_check_time_date">Необходимо е сверяване на часа в помпата</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="set_neutral_temps_title">Прилагане на неутрални временни базали</string>
     <string name="set_neutral_temps_summary">Ако е вкл, то ще анулира временен базал на всеки час. Това може да помогне за спиране на  звук/вибрация от някой помпи на всеки час.</string>
-    <string name="mdt_tbr_remaining">%1$.1f Е/ч (%2$d мин остават)</string>
     <string name="invalid_history_data">Открити са невалидни данни за историята на помпата. Отворете \"нов проблем\" и предоставете логове.</string>
     <string name="riley_statistics">Статистика на RL</string>
-    <string name="medtronic_history_type">Тип:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Отбелязано обновяване</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Планирано обновяване на състоянието</string>
 </resources>

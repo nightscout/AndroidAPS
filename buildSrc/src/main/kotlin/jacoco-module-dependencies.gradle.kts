@@ -4,9 +4,12 @@ import java.io.File
 import java.util.Locale
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.withType
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlin.math.roundToInt
 
@@ -14,6 +17,11 @@ plugins {
     id("com.android.library")
     id("jacoco")
 }
+
+// The JaCoCo/Robolectric setting that used to be here now applies to every project from the root
+// build file. It was moved because this convention applies `com.android.library`, which AGP 9 refuses
+// next to the multiplatform plugin - so any module that flipped to KMP silently stopped recording
+// coverage for its Robolectric tests, while the tests kept passing.
 
 private val limits = mutableMapOf(
     "instruction" to 0.0,
@@ -90,8 +98,6 @@ val excludedFiles = mutableSetOf(
     "**/*\$Lambda\$*.*",
     "**/*Companion*.*",
     "**/*Module*.*",
-    "**/*Dagger*.*",
-    "**/*Hilt*.*",
     "**/*MembersInjector*.*",
     "**/*_MembersInjector.class",
     "**/*_Factory*.*",
@@ -117,12 +123,13 @@ fun Project.registerCodeCoverageTask(
         description = "Generate Jacoco coverage reports on the ${sourceName.replaceFirstChar(Char::titlecase)} build."
 
         val javaDirectories = fileTree(
-            layout.buildDirectory.dir("intermediates/classes/${sourcePath}")
-        ) { exclude(excludedFiles) }
+            layout.buildDirectory.dir("intermediates/javac/$sourceName")
+        ) { exclude(excludedFiles); include("**/*.class") }
 
-        val kotlinDirectories = fileTree(
-            layout.buildDirectory.dir("tmp/kotlin-classes/${sourcePath}")
-        ) { exclude(excludedFiles) }
+        val kotlinDirectories = files(
+            fileTree(layout.buildDirectory.dir("intermediates/built_in_kotlinc/$sourceName")) { exclude(excludedFiles); include("**/*.class") },
+            fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/$sourceName")) { exclude(excludedFiles); include("**/*.class") }
+        )
 
         val coverageSrcDirectories = listOf(
             "src/main/java",

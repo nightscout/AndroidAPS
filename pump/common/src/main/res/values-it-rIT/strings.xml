@@ -55,30 +55,5 @@
     <string name="time_last_4_days">Ultimi 4 giorni</string>
     <string name="time_last_week">Ultima settimana</string>
     <string name="time_last_month">Ultimo mese</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Scansione</string>
-    <string name="ble_config_scan_stop">Stop</string>
-    <string name="ble_config_scan_selected">Selezionato</string>
-    <string name="ble_config_scan_scanning">Scansione</string>
-    <string name="ble_config_scan_finished">Scansione terminata</string>
-    <string name="ble_config_scan_error">Errore scansione: %1$d</string>
-    <string name="ble_config_remove">Rimuovi</string>
     <!-- Pump History -->
-    <string name="pump_history_type">Tipo:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d giorno</item>
-        <item quantity="other">%1$d giorni</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d ora</item>
-        <item quantity="other">%1$d ore</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d ora fa</item>
-        <item quantity="other">%1$d ore fa</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d giorno fa</item>
-        <item quantity="other">%1$d giorni fa</item>
-    </plurals>
 </resources>

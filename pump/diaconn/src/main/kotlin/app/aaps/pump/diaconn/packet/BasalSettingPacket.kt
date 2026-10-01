@@ -1,16 +1,16 @@
 package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import javax.inject.Inject
+import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.Inject
 
 /**
  * BasalSettingPacket
  */
 @Suppress("SpellCheckingInspection")
 class BasalSettingPacket(
-    injector: HasAndroidInjector,
+    injector: MetroMemberInjector,
     private var pattern: Int, // pattern(1=basic, 2=life1, 3=life2, 4=life3, 5=dr1, 6=dr2)
     private var group: Int,  //hour group (1=00~05, 2=06~11, 3=12~17, 4=18~23)
     private var amount1: Int,

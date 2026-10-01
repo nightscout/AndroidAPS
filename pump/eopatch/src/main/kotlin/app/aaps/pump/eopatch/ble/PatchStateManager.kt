@@ -18,12 +18,13 @@ import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.Callable
 import java.util.stream.Stream
-import javax.inject.Inject
-import javax.inject.Singleton
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 
-@Suppress("PrivatePropertyName")
-@Singleton
-class PatchStateManager @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class PatchStateManager(
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,
     private val tempBasalManager: TempBasalManager,
@@ -31,7 +32,7 @@ class PatchStateManager @Inject constructor(
     private val readBolusFinishTimeTask: ReadBolusFinishTimeTask,
     private val readTempBasalFinishTimeTask: ReadTempBasalFinishTimeTask,
     private val internalSuspendedTask: InternalSuspendedTask,
-    private val FETCH_ALARM: FetchAlarmTask,
+    private val fetchAlarmTask: FetchAlarmTask,
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers
 ) {
@@ -62,7 +63,7 @@ class PatchStateManager @Inject constructor(
         newState.updatedTimestamp = System.currentTimeMillis()
 
         if (newState.isNewAlertAlarm) {
-            FETCH_ALARM.enqueue()
+            fetchAlarmTask.enqueue()
         }
 
         if (newState.isPatchInternalSuspended) {

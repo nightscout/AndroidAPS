@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-import java.util.*
+import java.util.Calendar
 
 class CommonUtilsTest {
 

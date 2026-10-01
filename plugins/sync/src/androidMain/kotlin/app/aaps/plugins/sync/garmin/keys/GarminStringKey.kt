@@ -1,0 +1,21 @@
+package app.aaps.plugins.sync.garmin.keys
+
+import app.aaps.plugins.sync.SyncStrings
+import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.StringPreferenceKey
+import app.aaps.core.keys.interfaces.StringValidator
+import app.aaps.core.keys.interfaces.TextRef
+
+enum class GarminStringKey(
+    override val key: String,
+    override val defaultValue: String,
+    override val title: TextRef,
+    override val isPassword: Boolean = false,
+    override val isPin: Boolean = false,
+    override val validator: StringValidator = StringValidator.NONE
+) : StringPreferenceKey {
+
+    RequestKey(key = "garmin_aaps_key", defaultValue = "", title = SyncStrings.garmin_request_key),
+    ;
+
+}

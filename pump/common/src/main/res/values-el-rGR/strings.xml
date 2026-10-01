@@ -43,24 +43,5 @@
     <string name="time_last_4_days">Τελευταίες 4 μέρες</string>
     <string name="time_last_week">Τελευταία εβδομάδα</string>
     <string name="time_last_month">Τελευταίος μήνας</string>
-    <!-- BLE Config -->
-    <string name="ble_config_scan_selected">Επιλεγμένο</string>
-    <string name="ble_config_scan_scanning">Σάρωση</string>
-    <string name="ble_config_scan_finished">Η σάρωση ολοκληρώθηκε</string>
-    <string name="ble_config_scan_error">Λάθος σάρωσης: %1$d</string>
-    <string name="ble_config_remove">Μετακίνηση</string>
     <!-- Pump History -->
-    <string name="pump_history_type">Τύπος:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d ημέρες</item>
-        <item quantity="other">%1$d ημέρες</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d ώρα πριν</item>
-        <item quantity="other">%1$d ώρες πριν</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d ημέρα πριν</item>
-        <item quantity="other">%1$d ημέρες πριν</item>
-    </plurals>
 </resources>

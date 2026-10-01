@@ -1,16 +1,17 @@
 package app.aaps.wear.tile
 
+import app.aaps.core.interfaces.di.injectMetroMembers
+import app.aaps.wear.di.WearMetroService
 import app.aaps.wear.tile.source.ActionSource
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
 class ActionsTileService : TileBase() {
 
     @Inject lateinit var actionSource: ActionSource
 
-    // Not derived from DaggerService, do injection here
+    // Not derived from WearMetroService, do injection here
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate()
     }
 

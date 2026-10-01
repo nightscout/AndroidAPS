@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">储药器已空\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a003">贴片过期\n贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a004">阻塞\n贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a005">检查失败\n贴片已停用。请立即更换贴片。</string>
+    <string name="string_a007">不适当的温度\n胰岛素输送或 \'启动贴片\' 进程已停止。现在避免极端温度。</string>
+    <string name="string_a016">针头植入错误\n检查旋钮位置并点击 ‘重试’</string>
+    <string name="string_a018">贴片电池故障\n 贴片已停用，胰岛素输注已停止。\n请立即更换贴片。</string>
+    <string name="string_a019">贴片电池故障\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a020">贴片激活错误\n“激活贴片”过程已过期。点击“确认”以停用当前贴片。立即更换贴片。</string>
+    <string name="string_a022">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a023">贴片错误\n 贴片已停用，胰岛素输注已停止。\n请立即更换贴片。</string>
+    <string name="string_a034">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a041">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a042">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a043">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a044">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a106">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a107">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a108">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a116">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a117">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_a118">贴片错误\n 贴片已停用，胰岛素输注已停止。请立即更换贴片。</string>
+    <string name="string_b000">贴片操作寿命将于 %s 到期。请准备更换贴片。</string>
+    <string name="string_b001">胰岛素中止结束\n点击“恢复”以重新开始胰岛素输注。</string>
+    <string name="string_b003">储药器低\n请尽快更换贴片。</string>
+    <string name="string_b005">贴片操作寿命到期\n请立即更换贴片</string>
+    <string name="string_b006">贴片即将到期\n请立即更换贴片</string>
+    <string name="string_b012">贴片激活未完成\n完成“激活贴片”过程。</string>
+    <string name="string_b018">贴片电池电量低\n可以更换贴片。</string>
+</resources>

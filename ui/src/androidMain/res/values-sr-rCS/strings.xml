@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="glucose_type">Tip glukoze</string>
+    <string name="bg_other">Ostalo</string>
+    <string name="bg_meter">Glucometar</string>
+    <string name="bg_sensor">Senzor</string>
+    <!-- WizardDialog -->
+    <!-- SiteRotationDialog -->
+    <!-- FillDialog -->
+    <!-- Scene -->
+    <!-- Insulin Management -->
+    <!-- Client→master round-trip pending dialog -->
+    <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <!-- %1$s = action label -->
+    <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <!-- LoopDialog -->
+    <!-- WizardDialog -->
+    <string name="missing_carbs">Nedostaje %1$d g</string>
+    <!-- Treatments -->
+    <string name="treatments_iob_label_string">IOB:</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
+    <!--QuickWizard-->
+    <!--    History browser-->
+    <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <!-- Calibration entry rejection reasons -->
+    <!-- Calibration preflight messages shown in the dialog before submit -->
+</resources>
