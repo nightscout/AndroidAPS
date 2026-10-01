@@ -16,8 +16,7 @@ import java.io.File
  * `exportable` decides whether a key is written into a settings export - and therefore whether
  * another phone's copy of it can arrive in an import. It is DEFAULTED to `true` on
  * [NonPreferenceKey], which is right about 91% of the time (25 of roughly 287 entries opt out), so
- * `_docs/PREFERENCE_MIGRATIONS_PLAN.md` 4.1 decision 1 keeps the default rather than making 287
- * entries declare it by hand.
+ * the default is kept rather than making 287 entries declare it by hand.
  *
  * That decision is only safe with this file. The three pump-runtime keys in `StringNonKey` were
  * exportable for a long time with nobody typing it: they sat in that enum beside fourteen neighbours

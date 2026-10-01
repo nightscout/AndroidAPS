@@ -1,6 +1,7 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
-import app.aaps.shared.tests.stubTextRefResolution
+import app.aaps.plugins.constraints.ConstraintsStringsValues
+import app.aaps.shared.tests.generatedTextResolver
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doAnswer
@@ -13,7 +14,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
@@ -29,7 +30,7 @@ import org.mockito.kotlin.whenever
 
 class BgQualityCheckPluginTest : TestBase() {
 
-    @Mock lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("constraints" to ConstraintsStringsValues::textOf)
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
@@ -44,7 +45,6 @@ class BgQualityCheckPluginTest : TestBase() {
         plugin =
             BgQualityCheckPlugin(aapsLogger, rh, rxBus, iobCobCalculator, dateUtil, org.mockito.kotlin.mock())
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        stubTextRefResolution(rh)
         whenever(dateUtil.now()).thenReturn(now)
     }
 

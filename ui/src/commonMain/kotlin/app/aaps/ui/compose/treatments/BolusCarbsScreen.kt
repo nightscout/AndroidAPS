@@ -44,7 +44,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
@@ -110,7 +109,7 @@ fun BolusCarbsScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.removerecord),
+            title = stringResource(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -156,7 +155,6 @@ fun BolusCarbsScreen(
                             },
                             onCalculatorClick = { bcr -> showInfoBcr = bcr },
                             profile = profile,
-                            rh = viewModel.rh,
                             showInvalidated = uiState.showInvalidated
                         )
                     }
@@ -188,7 +186,6 @@ private fun MealLinkItem(
     onLongPress: () -> Unit,
     onCalculatorClick: (BCR) -> Unit,
     profile: Profile?,
-    rh: TextResolver,
     showInvalidated: Boolean
 ) {
     val dateUtil = LocalDateUtil.current
@@ -396,20 +393,20 @@ private fun MealLinkItem(
                         )
 
                         Text(
-                            text = rh.gs(InterfacesStrings.carbs) + ":",
+                            text = stringResource(InterfacesStrings.carbs) + ":",
                             modifier = Modifier.padding(start = 8.dp, end = 4.dp),
                             fontSize = 14.sp
                         )
 
                         Text(
-                            text = rh.gs(InterfacesStrings.format_carbs, carbs.amount.toInt()),
+                            text = stringResource(InterfacesStrings.format_carbs, carbs.amount.toInt()),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
 
                         if (carbs.duration > 0) {
                             Text(
-                                text = rh.gs(CoreUiStrings.format_mins, T.msecs(carbs.duration).mins().toInt()),
+                                text = stringResource(CoreUiStrings.format_mins, T.msecs(carbs.duration).mins().toInt()),
                                 modifier = Modifier.padding(start = 8.dp),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold

@@ -8,10 +8,11 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.di.NotNSClient
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.LongComposedKey
@@ -32,7 +33,7 @@ import dev.zacsweers.metro.binding
 @Inject
 class VersionCheckerPlugin(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     preferences: Preferences,
     private val versionCheckerUtils: VersionCheckerUtils,
     private val config: Config,
@@ -41,7 +42,7 @@ class VersionCheckerPlugin(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .alwaysEnabled(true)
+        .enforce(EnforcedState.Enabled)
         .showInList { false }
         .pluginName(ConstraintsStrings.version_checker),
     ownPreferences = VersionCheckerLongKey.entries,

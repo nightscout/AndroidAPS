@@ -153,7 +153,7 @@ class ConfigurationViewModel(
                     description = plugin.description,
                     composeIcon = plugin.pluginDescription.icon,
                     isEnabled = pluginEnabled,
-                    canToggle = !plugin.pluginDescription.alwaysEnabled && (isMultiSelect || !pluginEnabled),
+                    canToggle = plugin.enforcedState() == null && (isMultiSelect || !pluginEnabled),
                     showPreferences = hasPreferences && pluginEnabled && (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode),
                     hasContent = plugin.hasComposeContent()
                 )

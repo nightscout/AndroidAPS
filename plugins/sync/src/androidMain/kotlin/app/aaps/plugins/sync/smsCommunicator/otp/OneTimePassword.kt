@@ -3,7 +3,7 @@ package app.aaps.plugins.sync.smsCommunicator.otp
 import app.aaps.core.ui.CoreUiStrings
 import android.util.Base64
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
@@ -23,7 +23,7 @@ import javax.crypto.spec.SecretKeySpec
 @Inject
 class OneTimePassword(
     private val preferences: Preferences,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val dateUtil: DateUtil
 ) {
 

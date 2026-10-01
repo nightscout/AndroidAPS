@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
@@ -116,7 +117,13 @@ open class OpenAPSAutoISFPlugin(
         .pluginName(ApsStrings.openaps_auto_isf)
         .shortName(ApsStrings.autoisf_shortname)
         .preferencesVisibleInSimpleMode(false)
-        .showInList { (config.APS || config.AAPSCLIENT) && config.isEngineeringMode() && config.isDev() }   // AAPSCLIENT: visible so a client can select the master's APS (still eng+dev only)
+        // AAPSCLIENT: visible so a client can select the master's APS. The engineering/dev half is NOT
+        // repeated here - the enforcement below carries it, and a plugin forced off is hidden by
+        // PluginBase.showInList.
+        .showInList { config.APS || config.AAPSCLIENT }
+        // AutoISF is a development feature, so it cannot be turned on outside an engineering dev build -
+        // not even by an imported settings file. Forced off only; inside such a build it stays selectable.
+        .enforce(EnforcedState.Disabled) { !(config.isEngineeringMode() && config.isDev()) }
         .description(ApsStrings.description_auto_isf),
     ownPreferences = ApsIntentKey.entries,
     aapsLogger, rh, preferences, notificationManager
@@ -203,25 +210,6 @@ open class OpenAPSAutoISFPlugin(
     }
 
     override fun getSensitivityOverviewString(): String? = null // placeholder for Auto ISF Detailed information for overview
-
-    override fun specialEnableCondition(): Boolean {
-        return config.isEngineeringMode() && config.isDev() &&
-            try {
-                activePlugin.activePump.pumpDescription.isTempBasalCapable
-            } catch (_: Exception) {
-                // may fail during initialization
-                true
-            }
-    }
-
-    override fun specialShowInListCondition(): Boolean {
-        try {
-            val pump = activePlugin.activePump
-            return pump.pumpDescription.isTempBasalCapable
-        } catch (_: Exception) {
-            return true
-        }
-    }
 
     private val autoIsfCache = LongSparseArray<Double>()
 

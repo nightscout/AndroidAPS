@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.time.T
 import app.aaps.plugins.automation.R
@@ -8,7 +7,6 @@ import app.aaps.plugins.automation.asJsonObject
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerTimeTest : TriggerTestBase() {
@@ -18,7 +16,6 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTest() = runTest {
-        whenever(rh.gs(AutomationStrings.atspecifiedtime)).thenReturn("At %1\$s")
 
         // scheduled 1 min before
         var t: TriggerTime = TriggerTime(triggerDeps).runAt(now - T.mins(1).msecs())
@@ -59,7 +56,6 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun friendlyDescriptionTest() = runTest {
-        whenever(rh.gs(AutomationStrings.atspecifiedtime)).thenReturn("At %1\$s")
         assertThat(TriggerTime(triggerDeps).friendlyDescription()).startsWith("At ")
     }
 }

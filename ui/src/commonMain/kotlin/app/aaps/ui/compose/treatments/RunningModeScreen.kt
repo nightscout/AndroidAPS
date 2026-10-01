@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
@@ -91,7 +90,7 @@ fun RunningModeScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.removerecord),
+            title = stringResource(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -137,7 +136,6 @@ fun RunningModeScreen(
                                     viewModel.enterSelectionMode(rm)
                                 }
                             },
-                            rh = viewModel.rh,
                             translator = translator
                         )
                     }
@@ -157,7 +155,6 @@ private fun RunningModeItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
-    rh: TextResolver,
     translator: Translator
 ) {
     val dateUtil = LocalDateUtil.current
@@ -204,9 +201,9 @@ private fun RunningModeItem(
                 // Duration
                 Text(
                     text = if (runningMode.duration > T.months(12).msecs()) {
-                        rh.gs(UiStrings.until_changed)
+                        stringResource(UiStrings.until_changed)
                     } else if (runningMode.isTemporary()) {
-                        rh.gs(CoreUiStrings.format_mins, T.msecs(runningMode.duration).mins())
+                        stringResource(CoreUiStrings.format_mins, T.msecs(runningMode.duration).mins())
                     } else {
                         ""
                     },

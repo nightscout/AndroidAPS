@@ -9,9 +9,9 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.cancel
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -31,9 +31,12 @@ class CommandSetProfileTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var commandQueue: CommandQueue
 
+    /** Real English for the Named strings; the mocked rh still answers the resource ids below. */
+    private val text by lazy { generatedTextResolver(rh) }
+
     private fun newCommand(hasNsId: Boolean = false, callback: Callback? = null) =
         CommandSetProfile(
-            aapsLogger, rh, smsCommunicator, activePlugin, dateUtil, commandQueue, config, persistenceLayer,
+            aapsLogger, text, smsCommunicator, activePlugin, dateUtil, commandQueue, config, persistenceLayer,
             pumpEnactResultProvider::invoke, effectiveProfile, hasNsId, callback
         )
 
@@ -52,7 +55,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
 
     @Test
     fun `execute calls pump setNewBasalProfile when profile differs`() = runTest {
-        val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
+        val pumpResult = PumpEnactResultObject(text).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
             on { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
         }
@@ -67,7 +70,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
 
     @Test
     fun `execute sends SMS notification when enacted and hasNsId and not AAPSCLIENT`() = runTest {
-        val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
+        val pumpResult = PumpEnactResultObject(text).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
             on { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
         }
@@ -77,16 +80,15 @@ class CommandSetProfileTest : TestBaseWithProfile() {
         whenever(config.AAPSCLIENT).thenReturn(false)
         whenever(config.isEnabled(eq(ExternalOptions.DO_NOT_SEND_SMS_ON_PROFILE_CHANGE))).thenReturn(false)
         whenever(smsCommunicator.isEnabled()).thenReturn(true)
-        whenever(rh.gs(CoreUiStrings.profile_set_ok)).thenReturn("profile set ok")
 
         newCommand(hasNsId = true).execute()
 
-        verify(smsCommunicator).sendNotificationToAllNumbers("profile set ok")
+        verify(smsCommunicator).sendNotificationToAllNumbers("Basal profile in pump updated")
     }
 
     @Test
     fun `execute does not send SMS when hasNsId is false`() = runTest {
-        val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
+        val pumpResult = PumpEnactResultObject(text).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
             on { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
         }
@@ -101,7 +103,7 @@ class CommandSetProfileTest : TestBaseWithProfile() {
 
     @Test
     fun `execute does not send SMS when AAPSCLIENT`() = runTest {
-        val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
+        val pumpResult = PumpEnactResultObject(text).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
             on { setNewBasalProfile(effectiveProfile) } doReturn pumpResult
         }

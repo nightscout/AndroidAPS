@@ -125,7 +125,14 @@ open class VirtualPumpPlugin(
         .description(VirtualStrings.description_pump_virtual)
         .setDefault()
         .showInList { !config.AAPSCLIENT },
-    ownPreferences = VirtualBooleanNonPreferenceKey.entries,
+    // The two core-enum keys are claimed here on purpose. Ownership is what decides whether an
+    // import's "keep pump settings" protects a key, and these are this pump's own configuration -
+    // the type it emulates and whether it uploads status - even though they live in StringKey and
+    // BooleanKey rather than in a driver enum. Without them an import replaced the virtual pump's
+    // settings in the very mode that promises not to. `registerPreferences` takes a Set, so naming a
+    // key the core list already seeds costs nothing.
+    ownPreferences = VirtualBooleanNonPreferenceKey.entries +
+        listOf(StringKey.VirtualPumpType, BooleanKey.VirtualPumpStatusUpload),
     aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, VirtualPump {
 

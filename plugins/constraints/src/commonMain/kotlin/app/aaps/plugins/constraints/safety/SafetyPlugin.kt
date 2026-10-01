@@ -1,8 +1,5 @@
 package app.aaps.plugins.constraints.safety
 
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Shield
 import app.aaps.core.data.plugin.PluginType
@@ -16,7 +13,9 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
@@ -33,7 +32,9 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.plugins.constraints.ConstraintsStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -60,7 +61,7 @@ class SafetyPlugin(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .alwaysEnabled(true)
+        .enforce(EnforcedState.Enabled)
         .showInList { false }
         .pluginName(ConstraintsStrings.safety)
         .icon(Icons.Default.Shield),

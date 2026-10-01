@@ -46,6 +46,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
@@ -508,7 +510,7 @@ fun QuickWizardManagementScreen(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Filled.ContentCopy,
-                                            contentDescription = "Clone",
+                                            contentDescription = stringResource(UiStrings.clone_label),
                                             tint = if (uiState.entries.isNotEmpty())
                                                 MaterialTheme.colorScheme.onSurface
                                             else
@@ -536,12 +538,18 @@ fun QuickWizardManagementScreen(
                         // FAB for Execute/Play. Hidden on a client whose master is unreachable — executing a
                         // QuickWizard is a (remote) action that couldn't be delivered.
                         if (editingEnabled && uiState.entries.isNotEmpty()) {
+                            // Name the entry this will run. The button acts on whichever card the
+                            // carousel has centred, and the carousel tells a screen reader nothing
+                            // about which that is, so "Execute" alone asked the user to deliver a
+                            // bolus without saying which one. Reads "Breakfast, Execute".
+                            val selectedName = uiState.entries.getOrNull(uiState.selectedIndex)?.buttonText() ?: ""
                             AapsFab(
-                                onClick = { onExecuteClick(uiState.selectedGuid) }
+                                onClick = { onExecuteClick(uiState.selectedGuid) },
+                                modifier = Modifier.semantics { contentDescription = selectedName }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.PlayArrow,
-                                    contentDescription = "Execute"
+                                    contentDescription = stringResource(UiStrings.execute_label)
                                 )
                             }
                         }

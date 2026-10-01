@@ -6,10 +6,13 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.plugins.automation.AutomationStringsValues
 import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.LastKnownLocation
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
@@ -25,6 +28,12 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpPluginWithConcentration: PumpWithConcentration
     val pumpDescription = PumpDescription()
+
+    /**
+     * Real English for every description a trigger renders, so the expected text is what the user reads.
+     * `:shared:tests` cannot see this module, so the generated map is handed over here.
+     */
+    val text: TextResolver = generatedTextResolver("automation" to AutomationStringsValues::textOf)
 
     @BeforeEach
     fun prepareMock1() {
@@ -44,7 +53,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
      */
     val triggerDeps: TriggerDeps by lazy {
         TriggerDeps(
-            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, lastKnownLocation,
+            aapsLogger, rxBus, text, profileFunction, profileUtil, preferences, lastKnownLocation,
             persistenceLayer, activePlugin, iobCobCalculator, smbGlucoseStatusProvider, dateUtil
         )
     }

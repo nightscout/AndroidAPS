@@ -49,6 +49,7 @@ import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
+import app.aaps.core.ui.extensions.directionToDescription
 import app.aaps.core.ui.extensions.directionToIcon
 import app.aaps.ui.compose.components.ContentContainer
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -277,7 +278,9 @@ private fun GlucoseValueItem(
             // Trend arrow
             Icon(
                 imageVector = glucoseValue.trendArrow.directionToIcon(),
-                contentDescription = glucoseValue.trendArrow.name,
+                // Not trendArrow.name: that is the enum constant, so a screen reader used to read
+                // out "FORTY_FIVE_DOWN" in English whatever the phone language was.
+                contentDescription = stringResource(glucoseValue.trendArrow.directionToDescription()),
                 modifier = Modifier
                     .padding(start = AapsSpacing.small)
                     .size(20.dp)

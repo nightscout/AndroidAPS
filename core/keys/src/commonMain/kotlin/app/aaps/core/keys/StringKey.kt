@@ -174,12 +174,14 @@ enum class StringKey(
      * Which embedded Watch Face Format face the wear app installs through Watch Face Push on a
      * Wear OS 6+ watch. Watch Face Push gives an app one slot, so this is a choice, not a set.
      * Values in [PushedWatchfaceId]. Older watches receive and keep the value but cannot act on it.
+     *
+     * Not in any preference screen: the Wear plugin's main page shows it as a card, and only once
+     * the watch has reported that it has Watch Face Push. No summary for that reason.
      */
     WearPushedWatchface(
         key = "wear_pushed_watchface",
         defaultValue = PushedWatchfaceId.CWF,
         title = KeysStrings.pref_title_wear_pushed_watchface,
-        summary = KeysStrings.pref_summary_wear_pushed_watchface,
         preferenceType = PreferenceType.LIST,
         entriesRefs = mapOf(
             PushedWatchfaceId.WFS to KeysStrings.wear_pushed_watchface_wfs,

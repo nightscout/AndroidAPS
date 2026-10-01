@@ -1,107 +1,102 @@
 package app.aaps.interfaces.pump
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.plugins.aps.loop.extensions.jsonObject
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
 
+/**
+ * Pilot for resolving real text in tests instead of stubbing it.
+ *
+ * Every string here used to be stubbed - ten `whenever(rh.gs(...))` lines returning text someone typed
+ * out by hand. [generatedTextResolver] answers from the generated English maps instead, so the asserts
+ * below check what a user actually sees rather than what the stubs claimed. The expected strings did
+ * not have to change: all ten matched `strings.xml` already, which is the point - a stub that agrees
+ * with reality proves nothing, and one that disagrees hides a bug.
+ */
 class PumpEnactResultTest : TestBaseWithProfile() {
 
-    @BeforeEach
-    fun mock() {
-        whenever(rh.gs(CoreUiStrings.success)).thenReturn("Success")
-        whenever(rh.gs(CoreUiStrings.enacted)).thenReturn("Enacted")
-        whenever(rh.gs(CoreUiStrings.comment)).thenReturn("Comment")
-        whenever(rh.gs(CoreUiStrings.configbuilder_insulin)).thenReturn("Insulin")
-        whenever(rh.gs(CoreUiStrings.smb_shortname)).thenReturn("SMB")
-        whenever(rh.gs(CoreUiStrings.insulin_unit_shortname)).thenReturn("U")
-        whenever(rh.gs(CoreUiStrings.cancel_temp)).thenReturn("Cancel temp basal")
-        whenever(rh.gs(CoreUiStrings.duration)).thenReturn("Duration")
-        whenever(rh.gs(CoreUiStrings.percent)).thenReturn("Percent")
-        whenever(rh.gs(CoreUiStrings.absolute)).thenReturn("Absolute")
-    }
+    private val text = generatedTextResolver()
 
     @Test fun successTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.success(true)
         assertThat(per.success).isTrue()
     }
 
     @Test fun enactedTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.enacted(true)
         assertThat(per.enacted).isTrue()
     }
 
     @Test fun commentTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.comment("SomeComment")
         assertThat(per.comment).isEqualTo("SomeComment")
     }
 
     @Test fun durationTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.duration(10)
         assertThat(per.duration.toLong()).isEqualTo(10L)
     }
 
     @Test fun absoluteTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.absolute(11.0)
         assertThat(per.absolute).isWithin(0.01).of(11.0)
     }
 
     @Test fun percentTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.percent(10)
         assertThat(per.percent).isEqualTo(10)
     }
 
     @Test fun isPercentTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.isPercent(true)
         assertThat(per.isPercent).isTrue()
     }
 
     @Test fun isTempCancelTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.isTempCancel(true)
         assertThat(per.isTempCancel).isTrue()
     }
 
     @Test fun bolusDeliveredTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.bolusDelivered(11.0)
         assertThat(per.bolusDelivered).isWithin(0.01).of(11.0)
     }
 
     @Test fun queuedTest() {
-        val per = PumpEnactResultObject(rh)
+        val per = PumpEnactResultObject(text)
 
         per.queued(true)
         assertThat(per.queued).isTrue()
     }
 
     @Test fun toStringTest() {
-        var per = PumpEnactResultObject(rh).enacted(true).bolusDelivered(10.0).comment("AAA")
-        assertThat(per.toText(rh)).isEqualTo(
+        var per = PumpEnactResultObject(text).enacted(true).bolusDelivered(10.0).comment("AAA")
+        assertThat(per.toText(text)).isEqualTo(
             """
     Success: false
     Enacted: true
@@ -109,8 +104,8 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Insulin: 10.0 U
     """.trimIndent()
         )
-        per = PumpEnactResultObject(rh).enacted(true).isTempCancel(true).comment("AAA")
-        assertThat(per.toText(rh)).isEqualTo(
+        per = PumpEnactResultObject(text).enacted(true).isTempCancel(true).comment("AAA")
+        assertThat(per.toText(text)).isEqualTo(
             """
     Success: false
     Enacted: true
@@ -118,8 +113,8 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Cancel temp basal
     """.trimIndent()
         )
-        per = PumpEnactResultObject(rh).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
-        assertThat(per.toText(rh)).isEqualTo(
+        per = PumpEnactResultObject(text).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
+        assertThat(per.toText(text)).isEqualTo(
             """
     Success: false
     Enacted: true
@@ -128,8 +123,8 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Percent: 90%
     """.trimIndent()
         )
-        per = PumpEnactResultObject(rh).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
-        assertThat(per.toText(rh)).isEqualTo(
+        per = PumpEnactResultObject(text).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
+        assertThat(per.toText(text)).isEqualTo(
             """
     Success: false
     Enacted: true
@@ -138,8 +133,8 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Absolute: 1.0 U/h
     """.trimIndent()
         )
-        per = PumpEnactResultObject(rh).enacted(false).comment("AAA")
-        assertThat(per.toText(rh)).isEqualTo(
+        per = PumpEnactResultObject(text).enacted(false).comment("AAA")
+        assertThat(per.toText(text)).isEqualTo(
             """
     Success: false
     Comment: AAA
@@ -153,13 +148,13 @@ class PumpEnactResultTest : TestBaseWithProfile() {
      * confined to these expectations. The cancel branch still reports integer `0`, and must.
      */
     @Test fun jsonTest() {
-        var per: PumpEnactResult = PumpEnactResultObject(rh).enacted(true).bolusDelivered(10.0).comment("AAA")
+        var per: PumpEnactResult = PumpEnactResultObject(text).enacted(true).bolusDelivered(10.0).comment("AAA")
         assertThat(per.jsonObject(validProfile.getBasal()).toString()).isEqualTo("""{"smb":10.0}""")
-        per = PumpEnactResultObject(rh).enacted(true).isTempCancel(true).comment("AAA")
+        per = PumpEnactResultObject(text).enacted(true).isTempCancel(true).comment("AAA")
         assertThat(per.jsonObject(validProfile.getBasal()).toString()).isEqualTo("""{"rate":0,"duration":0}""")
-        per = PumpEnactResultObject(rh).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
+        per = PumpEnactResultObject(text).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
         assertThat(per.jsonObject(validProfile.getBasal()).toString()).isEqualTo("""{"rate":0.9,"duration":20}""")
-        per = PumpEnactResultObject(rh).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
+        per = PumpEnactResultObject(text).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
         assertThat(per.jsonObject(validProfile.getBasal()).toString()).isEqualTo("""{"rate":1.0,"duration":30}""")
     }
 }

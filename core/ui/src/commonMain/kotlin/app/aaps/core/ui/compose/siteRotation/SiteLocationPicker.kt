@@ -171,7 +171,7 @@ fun SiteLocationPicker(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Info,
-                        contentDescription = null,
+                        contentDescription = stringResource(CoreUiStrings.carousel_show_card),
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -314,7 +314,7 @@ fun SiteLocationPickerWithFilters(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Info,
-                        contentDescription = null,
+                        contentDescription = stringResource(CoreUiStrings.carousel_show_card),
                         modifier = Modifier.size(20.dp)
                     )
                 }

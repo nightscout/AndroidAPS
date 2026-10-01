@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -37,6 +39,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,9 +55,11 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
 import app.aaps.core.interfaces.rx.weardata.OapsResultInfo
+import app.aaps.core.interfaces.rx.weardata.ProfileInfo
 import app.aaps.core.interfaces.rx.weardata.TargetRange
 import app.aaps.core.interfaces.rx.weardata.TempTargetInfo
 import app.aaps.core.interfaces.utils.DateUtil
@@ -63,6 +68,7 @@ import app.aaps.wear.interaction.actions.InsulinBlue
 import app.aaps.wear.interaction.actions.LoopClosedColor
 import app.aaps.wear.interaction.actions.LoopDisabledColor
 import app.aaps.wear.interaction.actions.LoopUnknownColor
+import app.aaps.wear.interaction.actions.ScenePurple
 import app.aaps.wear.interaction.actions.TempTargetYellow
 import app.aaps.wear.interaction.actions.WearDivider
 import app.aaps.wear.interaction.actions.WearSecondaryText
@@ -81,6 +87,12 @@ import kotlinx.coroutines.CoroutineStart
 private val TempBasalColor         = Color(0xFFFF9800)
 private val TargetsAccentColor     = Color(0xFF1E88E5)
 private val TempTargetBg           = Color(0x1AF4D700)
+private val SceneBg                = Color(0x1ACE93D8)
+// Profile: teal, deliberately far from the scene purple above it - two purples side by side on a
+// small screen read as the same thing
+private val ProfileAccentColor     = Color(0xFF26A69A)
+private val ProfileBg              = Color(0x1A26A69A)
+private val SensitivityAccentColor = Color(0xFFEC407A)
 private val AutosensTargetBg       = Color(0x1A77DD77)
 
 private fun loopAgeColor(ageMs: Long): Color {
@@ -202,14 +214,18 @@ private fun LoopStatusContent(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HeaderCard(mode = data.loopMode, apsName = data.apsName, modeEndTime = data.modeEndTime)
+        HeaderCard(mode = data.loopMode, apsName = data.apsName, modeEndTime = data.modeEndTime, modeFromScene = data.modeFromScene)
         ResultCard(
             lastRun = data.lastRun,
             lastEnact = data.lastEnact,
             oapsResult = data.oapsResult,
             dateUtil = dateUtil
         )
+        data.activeScene?.let { SceneCard(scene = it) }
         TargetsCard(tempTarget = data.tempTarget, autosensTarget = data.autosensTarget, defaultRange = data.defaultRange, dateUtil = dateUtil)
+        ProfileCard(profile = data.profile)
+        // Last: the longest card, and what profile runs matters more than how sensitive it is
+        if (data.sensitivity.isNotEmpty()) SensitivityCard(lines = data.sensitivity)
         RefreshButton(onClick = onRefresh)
     }
 }
@@ -295,6 +311,30 @@ private fun InfoRow(label: String, value: String, valueColor: Color = Color.Whit
     }
 }
 
+/**
+ * The "1h 15' (14:30)" line under a temporary target or profile switch, with the scene icon at its
+ * end when the active scene set it. The scene card says what the scene is; this says which of the
+ * things below it are the scene's doing.
+ */
+@Composable
+private fun DurationLine(text: String, fromScene: Boolean) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 3.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = text, color = WearSecondaryText, fontSize = 11.sp, modifier = Modifier.weight(1f))
+        if (fromScene) {
+            Image(
+                painter = painterResource(R.drawable.ic_scene_purple),
+                contentDescription = stringResource(R.string.loop_status_set_by_scene),
+                modifier = Modifier.size(12.dp)
+            )
+        }
+    }
+}
+
 @Composable
 private fun RowDivider() {
     Box(
@@ -308,7 +348,7 @@ private fun RowDivider() {
 // ─── Header Card ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndTime: Long?) {
+private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndTime: Long?, modeFromScene: Boolean) {
     val context = LocalContext.current
 
     StatusCard {
@@ -333,19 +373,34 @@ private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndT
         )
         // Remaining duration of a temporary mode (suspend/disconnect/superbolus); hidden once expired
         val remainingMinutes = modeEndTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() } ?: 0
-        if (modeEndTime != null && remainingMinutes > 0) {
+        val durationText = if (modeEndTime != null && remainingMinutes > 0) {
             val endTimeStr = remember(modeEndTime) {
                 DateFormat.getTimeFormat(context).format(Date(modeEndTime))
             }
-            Text(
-                text = stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr),
-                color = WearSecondaryText,
-                fontSize = 11.sp,
-                textAlign = TextAlign.Center,
+            stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr)
+        } else null
+        // The header is centred, unlike the cards below, so the scene mark sits beside the text
+        // rather than at the row's end. Shown on its own when a scene set a mode with no duration.
+        if (durationText != null || modeFromScene) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 2.dp)
-            )
+                    .padding(top = 2.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (durationText != null) {
+                    Text(text = durationText, color = WearSecondaryText, fontSize = 11.sp)
+                }
+                if (modeFromScene) {
+                    if (durationText != null) Spacer(Modifier.width(4.dp))
+                    Image(
+                        painter = painterResource(R.drawable.ic_scene_purple),
+                        contentDescription = stringResource(R.string.loop_status_set_by_scene),
+                        modifier = Modifier.size(12.dp)
+                    )
+                }
+            }
         }
         if (apsName != null) {
             Text(
@@ -357,6 +412,61 @@ private fun HeaderCard(mode: LoopStatusData.LoopMode, apsName: String?, modeEndT
                     .fillMaxWidth()
                     .padding(top = 2.dp)
             )
+        }
+    }
+}
+
+// ─── Scene Card ───────────────────────────────────────────────────────────────
+
+/**
+ * The active scene: its name, how long it still runs, and the follow-up that starts when it ends.
+ * After the loop result, so the header and the result stay together at the top, and the scene
+ * comes with the things it changes: the targets and the profile below it.
+ */
+@Composable
+private fun SceneCard(scene: ActiveSceneInfo) {
+    val context = LocalContext.current
+
+    StatusCard {
+        CardTitle(stringResource(R.string.label_scene_tile), ScenePurple)
+        Spacer(Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(4.dp))
+                .background(SceneBg)
+                .padding(8.dp)
+        ) {
+            Column {
+                Text(
+                    text = scene.name,
+                    color = ScenePurple,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                // A local, because a property from another module cannot be smart-cast
+                val endTime = scene.endTime
+                val remainingMinutes = endTime?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() } ?: 0
+                val timeLine = when {
+                    endTime == null      -> stringResource(R.string.loop_status_scene_until_ended)
+                    remainingMinutes > 0 -> {
+                        val endTimeStr = remember(endTime) { DateFormat.getTimeFormat(context).format(Date(endTime)) }
+                        stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr)
+                    }
+                    // Expired, banner still up on the phone: it can still be ended from the tile
+                    else                 -> stringResource(R.string.loop_status_scene_ended)
+                }
+                Text(
+                    text = timeLine,
+                    color = WearSecondaryText,
+                    fontSize = 11.sp,
+                    modifier = Modifier.padding(top = 3.dp)
+                )
+                scene.chainTargetName?.let {
+                    Spacer(Modifier.height(4.dp))
+                    InfoRow(label = stringResource(R.string.loop_status_scene_follow_up), value = it, valueColor = ScenePurple)
+                }
+            }
         }
     }
 }
@@ -595,11 +705,9 @@ private fun TargetsCard(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    Text(
+                    DurationLine(
                         text = stringResource(R.string.loop_status_duration_until, formatDurationMinutes(tempTarget.durationMinutes), endTimeStr),
-                        color = WearSecondaryText,
-                        fontSize = 11.sp,
-                        modifier = Modifier.padding(top = 3.dp)
+                        fromScene = tempTarget.fromScene
                     )
                 }
             }
@@ -645,6 +753,109 @@ private fun TargetsCard(
                 label = stringResource(R.string.loop_status_target),
                 value = "${defaultRange.targetDisplay} ${defaultRange.units}"
             )
+        }
+    }
+}
+
+// ─── Profile Card ─────────────────────────────────────────────────────────────
+
+/**
+ * The profile in force. A permanent switch is the name and, only when they differ from the
+ * defaults, its percentage and timeshift. A temporary switch gets the tinted box the temp target
+ * uses: name, percentage, timeshift, how long it still runs, and the profile that returns when it
+ * ends - the same rule as the phone's profile management, so the two never disagree.
+ */
+@Composable
+private fun ProfileCard(profile: ProfileInfo?) {
+    val context = LocalContext.current
+
+    StatusCard {
+        CardTitle(stringResource(R.string.loop_status_profile), ProfileAccentColor)
+        Spacer(Modifier.height(8.dp))
+
+        if (profile == null) {
+            Text(text = stringResource(R.string.loop_status_no_profile), color = WearSecondaryText, fontSize = 12.sp)
+            return@StatusCard
+        }
+
+        val endTime = profile.endTime
+        if (endTime != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(ProfileBg)
+                    .padding(8.dp)
+            ) {
+                Column {
+                    Text(
+                        text = profile.name,
+                        color = ProfileAccentColor,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    ProfileModifierRows(profile)
+                    // Remaining time; once past the end the phone has already put the next switch in force
+                    val remainingMinutes = ((endTime - System.currentTimeMillis()) / 60_000).toInt()
+                    if (remainingMinutes > 0) {
+                        val endTimeStr = remember(endTime) { DateFormat.getTimeFormat(context).format(Date(endTime)) }
+                        DurationLine(
+                            text = stringResource(R.string.loop_status_duration_until, formatDurationMinutes(remainingMinutes), endTimeStr),
+                            fromScene = profile.fromScene
+                        )
+                    }
+                    profile.returnsTo?.let {
+                        Spacer(Modifier.height(4.dp))
+                        InfoRow(label = stringResource(R.string.loop_status_profile_returns_to), value = it, valueColor = ProfileAccentColor)
+                    }
+                }
+            }
+        } else {
+            Text(
+                text = profile.name,
+                color = Color.White,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(4.dp))
+            ProfileModifierRows(profile)
+        }
+    }
+}
+
+/** Percentage and timeshift rows, each only when it changes something */
+@Composable
+private fun ProfileModifierRows(profile: ProfileInfo) {
+    if (profile.percentage != 100) {
+        InfoRow(
+            label = stringResource(R.string.loop_status_profile_percentage),
+            value = stringResource(R.string.loop_status_profile_percentage_value, profile.percentage)
+        )
+    }
+    if (profile.timeshiftHours != 0) {
+        InfoRow(
+            label = stringResource(R.string.loop_status_profile_timeshift),
+            value = stringResource(R.string.loop_status_profile_timeshift_value, profile.timeshiftHours)
+        )
+    }
+}
+
+// ─── Sensitivity Card ─────────────────────────────────────────────────────────
+
+/**
+ * The lines the phone's sensitivity dialog shows, as the phone built them: autosens, the ISF from
+ * the profile and the one in use. Finished text, so nothing is formatted here and the watch
+ * cannot disagree with the phone.
+ */
+@Composable
+private fun SensitivityCard(lines: List<String>) {
+    StatusCard {
+        CardTitle(stringResource(R.string.loop_status_sensitivity), SensitivityAccentColor)
+        Spacer(Modifier.height(8.dp))
+        lines.forEachIndexed { index, line ->
+            if (index > 0) Spacer(Modifier.height(3.dp))
+            Text(text = line, color = Color.White, fontSize = 12.sp)
         }
     }
 }

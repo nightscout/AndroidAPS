@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test
 class ComparatorConnectTest : TriggerTestBase() {
 
     @Test fun labelsTest() {
-        assertThat(ComparatorConnect.Compare.labels(rh)).hasSize(2)
+        assertThat(ComparatorConnect.Compare.labels(text)).hasSize(2)
     }
 
     @Test fun setValueTest() {
-        val c = ComparatorConnect(rh)
+        val c = ComparatorConnect(text)
         c.value = ComparatorConnect.Compare.ON_DISCONNECT
         assertThat(c.value).isEqualTo(ComparatorConnect.Compare.ON_DISCONNECT)
     }

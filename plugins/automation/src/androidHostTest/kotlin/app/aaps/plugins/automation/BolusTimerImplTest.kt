@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation
 
-import app.aaps.core.keys.interfaces.TextRef
 import android.content.Context
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.alerts.ReminderScheduler
@@ -13,7 +12,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.plugins.automation.AutomationStringsValues
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -27,8 +27,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
-import org.mockito.kotlin.doAnswer
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -46,7 +44,7 @@ class BolusTimerImplTest : TestBase() {
             activePlugin, mock(), mock(), dateUtil
         )
     }
-    @Mock lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("automation" to AutomationStringsValues::textOf)
     @Mock lateinit var context: Context
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var loop: Loop
@@ -68,7 +66,6 @@ class BolusTimerImplTest : TestBase() {
 
     @BeforeEach
     fun init() {
-        doAnswer { "" }.whenever(rh).gs(any<TextRef>())
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
         automationRuntime = AutomationRuntime(

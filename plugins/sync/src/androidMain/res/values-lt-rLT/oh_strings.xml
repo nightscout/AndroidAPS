@@ -15,6 +15,7 @@
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Spustelėkite čia, kad prisijungtumėte dar kartą, jei tai atsitiko netyčia.</string>
     <string name="next">Toliau</string>
     <string name="welcome_to_open_humans">Sveiki atvykę į Open Humans</string>
+    <string name="setup_data_upload">Norėdami nustatyti duomenų įkėlimą, spauskite \'Toliau\'.</string>
     <string name="consent">Sutikimas</string>
     <string name="terms_of_use">Naudojimosi sąlygos</string>
     <string name="please_read__information">Norėdami tęsti, atidžiai perskaitykite toliau pateiktą informaciją ir sutikite su naudojimo sąlygomis.</string>
@@ -24,8 +25,8 @@
     <string name="boluses">Bolusai</string>
     <string name="extended_boluses">Ištęsti bolusai</string>
     <string name="carbohydrates">AV</string>
-    <string name="careportal_events">Priežiūros įrašai (išskyrus pastabas)</string>
-    <string name="profile_switches">Profilio keitimai</string>
+    <string name="careportal_events">Terapijos įrašai (išskyrus pastabas)</string>
+    <string name="profile_switches">Profilio keitimas</string>
     <string name="total_daily_doses">Bendra Paros Dozė</string>
     <string name="temporary_basal_rates">Laikina bazė</string>
     <string name="temporary_targets">Laikini tikslai</string>

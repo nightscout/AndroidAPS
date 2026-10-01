@@ -80,5 +80,4 @@
     <string name="string_resumed_insulin_delivery_message">İnsülin iletimi yeniden başladı.</string>
     <string name="string_temp_basal_remained_hhmm">kalan süre: %1$s:%2$s</string>
     <string name="string_resume_failed">Devam başarısız oldu.</string>
-    <!-- Permission rationales -->
 </resources>

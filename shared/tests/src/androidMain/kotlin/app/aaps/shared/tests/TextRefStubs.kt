@@ -54,7 +54,13 @@ private fun resolve(rh: ResourceHelper, ref: TextRef): String = when (ref) {
 
     is TextRef.Named      -> namedIdOf(ref)
         ?.let { if (ref.args.isEmpty()) rh.gs(it) else rh.gs(it, *ref.args.toTypedArray()) }
-        ?: ref.name
+        ?: error(
+            "Unresolved string '${ref.name}' (owner '${ref.owner}'): either this module's id map is not one of the five " +
+                "known here, or the id is known but the mock has no stub for it. This used to answer with the NAME, so a " +
+                "test could assert \"${ref.name}\" and pass forever while the app showed something else. Use " +
+                "generatedTextResolver(\"${ref.owner}\" to ${ref.owner.replaceFirstChar { it.uppercase() }}StringsValues::textOf) " +
+                "for the real English text, or stub this ref on the mock."
+        )
 }
 
 /**
@@ -64,11 +70,18 @@ private fun resolve(rh: ResourceHelper, ref: TextRef): String = when (ref) {
  * the string. These are the five whose maps `:shared:tests` already depends on, so the mock does
  * exactly what production does.
  *
- * The other owners - `main`, `calibration`, `sensitivity`, `smoothing`, `source`, `virtual` - live in
- * modules this one does not depend on, and must NOT be added by taking a new dependency just to make
- * a test string resolve. They fall back to the raw name here, which is what the real resolver does
- * when nobody has claimed the owner. A test in one of those modules that needs the real text should
- * stub `gs(Int)` for the ids it cares about.
+ * The other eleven owners - `main`, `automation`, `sync`, `constraints`, `calibration`, `sensitivity`,
+ * `smoothing`, `source`, `virtual`, `configuration`, `ui` - live in modules this one does not depend
+ * on, and must NOT be added by taking a new dependency just to make a test string resolve.
+ *
+ * **They throw rather than falling back to the raw name.** Returning the name is what the real
+ * resolver does on a device when nobody registered the owner, but in a test it is poison: the string
+ * silently becomes its own snake_case name, and an assertion written against that name passes forever
+ * while the app shows something else. It hid four wrong assertions - `alreadyset`, `locationis`,
+ * `wifissidcompared` and an objective reason - until the migration to real text flushed them out.
+ *
+ * A test in one of those modules has two honest options: `generatedTextResolver("<owner>" to
+ * <Owner>StringsValues::textOf)` for the real English, or stubbing the ref it cares about on the mock.
  */
 private fun namedIdOf(ref: TextRef.Named): Int? = when (ref.owner) {
     "keys"           -> KeysStringIds.idOf(ref.name)

@@ -8,9 +8,9 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
  * These were `const val`s in `PrefEnvConfig`, read and written straight through `SP`. That made them
  * invisible twice over: the runtime guard in `PreferencesImpl` could not see them, and - the reason
  * this moved - a settings import cannot tell a key it has never heard of from rubbish left by an old
- * version. Under the removal rule in `_docs/PREFERENCE_MIGRATIONS_PLAN.md` 4.1 decision 4, an
- * unregistered key is trash and gets removed, which here would be the state of a patch that is
- * currently running.
+ * version. An import leaves unknown keys alone today (see `_docs/IMPORT.md`), but any future rule
+ * that removes them would treat an unregistered key as trash - which here would be the state of a
+ * patch that is currently running.
  *
  * **Not exportable, all of them, and that is the decision rather than the default.** This is the state
  * of THIS patch on THIS phone - which infusion is running, what the patch reported, which alarms have

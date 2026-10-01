@@ -7,15 +7,19 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ui.ConfirmationLine
+import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.SingleProfile
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -38,6 +42,7 @@ class SceneExecutorTest : TestBaseWithProfile() {
     @Mock lateinit var pump: PumpWithConcentration
     @Mock lateinit var translator: Translator
     @Mock lateinit var profileSwitchSilentGate: ProfileSwitchSilentGate
+    @Mock lateinit var sceneChainResolver: SceneChainResolver
 
     private lateinit var sut: SceneExecutor
     private val expiryScheduler = TestSceneExpiryScheduler()
@@ -60,8 +65,8 @@ class SceneExecutorTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         sut = SceneExecutor(
             persistenceLayer, profileFunction, profileRepository, preferences, activeSceneManager,
-            uel, dateUtil, aapsLogger, rh, rxBus, loop, activePlugin, profileUtil, translator,
-            profileSwitchSilentGate, notificationManager, expiryScheduler
+            uel, dateUtil, aapsLogger, generatedTextResolver(), rxBus, loop, activePlugin, profileUtil, translator,
+            profileSwitchSilentGate, notificationManager, expiryScheduler, sceneChainResolver
         )
         runBlocking {
             // Everything validateActivation() gates on, so the run reaches the action itself.
@@ -76,8 +81,6 @@ class SceneExecutorTest : TestBaseWithProfile() {
             whenever(profileRepository.profiles).thenReturn(MutableStateFlow(listOf(singleProfile)))
             whenever(activeSceneManager.isActive()).thenReturn(false)
         }
-        whenever(rh.gs(CoreUiStrings.profile_switch_no_insulin)).thenReturn("No insulin in use")
-        whenever(rh.gs(CoreUiStrings.scene_some_actions_failed)).thenReturn("Some actions failed")
     }
 
     // A scene runs unattended, so with nothing in force there is nobody to ask which insulin to record: the action
@@ -88,7 +91,8 @@ class SceneExecutorTest : TestBaseWithProfile() {
         val result = sut.activate(scene, durationMinutes = 0)
 
         assertThat(result.success).isFalse()
-        assertThat(result.actionResults.single().errorMessage).isEqualTo("No insulin in use")
+        assertThat(result.actionResults.single().errorMessage)
+            .isEqualTo("Cannot switch profile: no insulin is in use, and none was selected.")
         verifyBlocking(profileFunction, never()) {
             createProfileSwitch(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
         }
@@ -137,6 +141,23 @@ class SceneExecutorTest : TestBaseWithProfile() {
         sut.activate(smbScene, durationMinutes = 0)
 
         assertThat(expiryScheduler.scheduled).isEmpty()
+    }
+
+    // The confirmation says what the scene sets in motion, so a follow-up is named before the user confirms.
+    @Test fun `prepare names the follow-up scene in the confirmation`() = runBlocking {
+        whenever(sceneChainResolver.resolveCatalogChainTarget(smbScene)).thenReturn(Scene(id = "s3", name = "Cooldown"))
+
+        val result = sut.prepareScene(smbScene, durationMinutes = 0) as WizardBolusExecutor.PrepareResult.Preview
+
+        // Last, and in the scene colour like the name above it
+        assertThat(result.lines.last()).isEqualTo(ConfirmationLine(ConfirmationRole.SCENE, "→ Cooldown"))
+    }
+
+    @Test fun `prepare says nothing about a follow-up when there is none`() = runBlocking {
+        val result = sut.prepareScene(smbScene, durationMinutes = 0) as WizardBolusExecutor.PrepareResult.Preview
+
+        // The scene's name is the only scene-coloured line
+        assertThat(result.lines.count { it.role == ConfirmationRole.SCENE }).isEqualTo(1)
     }
 
     // Ending a scene early has to drop the pending expiry, or it fires later against whatever is active then.

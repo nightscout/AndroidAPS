@@ -12,8 +12,8 @@ import java.io.File
  * A key reached through `Preferences` is a registered key: the registry knows it, the snapshot in
  * `prefs-schema.txt` records it, and `isExportableKey` can answer for it. A key reached through `SP`
  * or `SharedPreferences` directly is invisible to all three - and an import cannot tell a key it has
- * never heard of from rubbish an old version left behind. Under the removal rule in
- * `_docs/PREFERENCE_MIGRATIONS_PLAN.md` 4.1 decision 4, invisible means deleted.
+ * never heard of from rubbish an old version left behind. It leaves both alone today (see
+ * `_docs/IMPORT.md`), so an invisible key is one that nothing can ever clean up.
  *
  * That is not hypothetical. CareLevo kept a running patch's state - `carelevo_patch_info`, the four
  * infusion records - in raw keys until 2026-09-22. They are registered now, and this test is what
@@ -60,6 +60,22 @@ class RawPreferenceStoreScanTest {
         "implementation/src/androidMain/kotlin/app/aaps/implementation/maintenance/ImportExportPrefsImpl.kt" to "the import/export itself - it copies the whole store by design",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/LocalImportExportPrefs.kt" to "the multiplatform half of the same import/export",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/formats/PrefsTransfer.kt" to "reads and writes the whole store for a transfer",
+        // Deliberately below `Preferences`, and the reason is the opposite of carelessness. It writes
+        // an import as ONE `edit(commit = true)` and then calls `Preferences.reloadFromStore()` once.
+        // Going through `preferences.put` per key would be ~500 separate commits, would let a live
+        // collector see a half-imported store, and would stamp and publish every Bidirectional key on
+        // the way past. It resolves each name to its key first, so the values are typed - it is not
+        // bypassing the key system, only the per-key write.
+        "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/PreferenceImportApplier.kt" to
+            "applies an import as one batched write, then republishes through Preferences.reloadFromStore()",
+        // The preference migrations. They rename keys this build no longer registers, so by definition
+        // they cannot go through `Preferences` - an unregistered name is what they exist to deal with.
+        // Taking the store as a parameter is the design: start up hands them the device's store, an
+        // import hands them the file, and one copy of the functions serves both.
+        "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/migration/PreferenceMigrations.kt" to
+            "migrates keys this build no longer registers, over whichever store it is handed",
+        "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/migration/FileKeyValueStore.kt" to
+            "an in-memory store over an import file, so the migrations above run on it without touching the device",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/CloudStorageManager.kt" to "moves export files to and from cloud storage",
         "implementation/src/commonMain/kotlin/app/aaps/implementation/maintenance/cloud/GoogleDriveProvider.kt" to "cloud export, shared part",
         "implementation/src/androidMain/kotlin/app/aaps/implementation/maintenance/cloud/AndroidGoogleDriveProvider.kt" to "cloud export, Android part",

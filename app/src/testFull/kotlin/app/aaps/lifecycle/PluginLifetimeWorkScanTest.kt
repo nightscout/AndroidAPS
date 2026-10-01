@@ -59,12 +59,14 @@ class PluginLifetimeWorkScanTest {
         "OmnipodErosPumpPlugin#pumpDescription" to "the statusChecker chain it re-posts is removed in onStop",
         "OmnipodErosPumpPlugin#onStart" to "the statusChecker it posts is removed in onStop",
         "LoopPlugin#onStart" to "the two appScope collectors are kept in `collectors` and cancelled in onStop",
+        "InsightPlugin#serviceConnection" to
+            "the lastDataTime collector is held in lastDataTimeJob and cancelled in onStop and on service disconnect",
     )
 
     /**
      * Work that OUTLIVES `onStop` - whether or not that is a problem on its own. The reason says which.
-     * This is the worklist for the `onStop` parity step of `_docs/PREFERENCE_MIGRATIONS_PLAN.md`, and it
-     * should only ever get shorter. Nothing may be added here without a decision recorded next to it.
+     * This is the worklist for the `onStop` parity step, and it should only ever get shorter.
+     * Nothing may be added here without a decision recorded next to it.
      */
     private val survivesStop: Map<String, String> = mapOf(
         "VirtualPumpPlugin#deliverTreatment" to

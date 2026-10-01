@@ -38,7 +38,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
-    # Skip the pull_request event ONLY where the push trigger already covers the same commit, which is
+    # First line: do not run inside somebody's fork. A fork PR against nightscout/AndroidAPS runs in
+    # THIS repo, so github.repository is still nightscout/AndroidAPS and fork PRs keep their CI - which
+    # is the whole point of this file. The check only stops runs that happen in the fork itself, where
+    # every sync of the fork's own dev/master was starting the full suite on the contributor's account.
+    # A fork that wants its own CI can opt back in by setting the repository variable RUN_CI to true.
+    #
+    # Rest: skip the pull_request event ONLY where the push trigger already covers the same commit, which is
     # exactly a same-repo PR opened FROM `dev` or `master` - the long-lived `dev` -> `master` one. Without
     # that skip every push to dev ran the whole suite twice: once as push, once as pull_request, and the
     # two do not cancel each other because the concurrency group keys on github.ref and those differ
@@ -50,9 +56,10 @@ jobs:
     #   master. This guard used to be fork-only, which meant a long-lived branch like `carelevo` got no
     #   unit run from either event - 83 commits with the suite never executed once.
     if: >-
-      github.event_name != 'pull_request' ||
+      (github.repository == 'nightscout/AndroidAPS' || vars.RUN_CI == 'true') &&
+      (github.event_name != 'pull_request' ||
       github.event.pull_request.head.repo.full_name != github.repository ||
-      (github.event.pull_request.head.ref != 'dev' && github.event.pull_request.head.ref != 'master')
+      (github.event.pull_request.head.ref != 'dev' && github.event.pull_request.head.ref != 'master'))
 
     # At job level so the coverage steps can ask whether a token exists at all. GitHub withholds
     # secrets from pull_request runs on forks - deliberately, since a fork's workflow must not be able

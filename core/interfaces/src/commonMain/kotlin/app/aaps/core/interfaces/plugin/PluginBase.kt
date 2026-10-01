@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationHandle
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.PluginBase.Companion.TRANSITION_WAIT
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.PreferenceItem
 import kotlinx.coroutines.CancellationException
@@ -178,10 +179,32 @@ abstract class PluginBase(
 
     open fun isEnabled() = isEnabled(pluginDescription.mainType)
 
+    /**
+     * What this build forces, or `null` when the user's stored choice decides. See [Enforcement].
+     *
+     * A CONSTRAINTS plugin is enabled by virtue of being registered: which constraint plugins exist is a
+     * property of the build, and one that is present must always be consulted. That is why the rule lives
+     * here rather than being declared on each of them - a new constraint plugin cannot forget it.
+     *
+     * Disabled wins a disagreement, so a wrong declaration fails closed.
+     */
+    fun enforcedState(): EnforcedState? {
+        if (pluginDescription.mainType == PluginType.CONSTRAINTS) return EnforcedState.Enabled
+        val applying = pluginDescription.enforcements.filter { it.applies() }
+        return when {
+            applying.any { it.state == EnforcedState.Disabled } -> EnforcedState.Disabled
+            applying.any { it.state == EnforcedState.Enabled }  -> EnforcedState.Enabled
+            else                                               -> null
+        }
+    }
+
     fun isEnabled(type: PluginType): Boolean {
-        if (pluginDescription.alwaysEnabled && type == pluginDescription.mainType) return true
         if (pluginDescription.mainType == PluginType.CONSTRAINTS && type == PluginType.CONSTRAINTS) return true
-        if (type == pluginDescription.mainType) return state == State.ENABLED && specialEnableCondition()
+        if (type == pluginDescription.mainType) return when (enforcedState()) {
+            EnforcedState.Enabled  -> true
+            EnforcedState.Disabled -> false
+            null                   -> state == State.ENABLED
+        }
         if (type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.PUMP && isEnabled(PluginType.PUMP)) return true
         return type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.APS && isEnabled(PluginType.APS)
     }
@@ -349,17 +372,25 @@ abstract class PluginBase(
         }
     }
 
-    fun showInList(type: PluginType): Boolean {
-        if (pluginDescription.mainType == type) return pluginDescription.showInList.invoke() && specialShowInListCondition()
-        return false
-    }
-
-    open fun specialEnableCondition(): Boolean {
-        return true
-    }
-
-    open fun specialShowInListCondition(): Boolean {
-        return true
+    /**
+     * Whether this plugin is offered in the Config Builder list.
+     *
+     * A plugin this build forces OFF is hidden without having to say so twice. Forced off means it cannot be
+     * used here at all, so there is nothing to offer and a switch locked in the off position tells the user
+     * nothing they can act on. `AutotunePlugin` and `OpenAPSAutoISFPlugin` used to repeat their enforcement
+     * condition here, and `LoopPlugin` and `RandomBgPlugin` forgot to - which is how the loop stayed listed
+     * on a client that could never run it.
+     *
+     * Forced ON is deliberately NOT derived. Those plugins differ: the framework ones say
+     * `showInList { false }` because they have no UI at all, while `ObjectivesPlugin` has a real screen and
+     * `NSClientSourcePlugin` has to stay selectable on a master, where it is not enforced.
+     *
+     * It took a [PluginType] until every caller turned out to pass `pluginDescription.mainType` - the other
+     * branch could only ever return false.
+     */
+    fun showInList(): Boolean {
+        if (enforcedState() == EnforcedState.Disabled) return false
+        return pluginDescription.showInList.invoke()
     }
 
     open suspend fun onStart() {}

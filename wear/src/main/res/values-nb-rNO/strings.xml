@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS (sirkel)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
     <string name="label_watchface_custom">AAPS(Tilpasset)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Egendefinert) alltid-på</string>
     <string name="label_actions_tile">Handlinger</string>
     <string name="label_temp_target_tile">Midlertidig mål</string>
     <string name="label_quick_wizard_tile">Hurtigknapp</string>
@@ -159,6 +160,21 @@
     <string name="pref_simplify_ui">Forenkle brukergrensesnittet</string>
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ukenummer</string>
+    <string name="pref_complication_1">Komplikasjon 1</string>
+    <string name="pref_complication_2">Komplikasjon 2</string>
+    <string name="pref_complication_3">Komplikasjon 3</string>
+    <string name="pref_complication_4">Komplikasjon 4</string>
+    <string name="pref_complication_5">Komplikasjon 5</string>
+    <string name="complication_summary_none">Trykk for å velge datakilde</string>
+    <string name="pref_complication_type_priority">Prioritet for komplikasjonstype</string>
+    <string name="pref_complication_type_priority_all">Standard for alle plasser</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">En endring her gjelder neste gang du velger en datakilde. Det er ikke nok å velge den samme på nytt: Velg først en annen datakilde, og velg deretter den du ønsker.</string>
+    <string name="complication_type_priority_value">Verdi eller måler</string>
+    <string name="complication_type_priority_text">Tekst</string>
+    <string name="complication_type_priority_icon">Ikon</string>
+    <string name="complication_type_priority_use_default">Bruk standard</string>
+    <string name="cwf_complication_layout">Komplikasjonslayout</string>
+    <string name="cwf_complication_layout_description">Plassering og størrelse på komplikasjonene, hentet fra den innlastede egendefinerte urskiven.</string>
     <string name="pref_include_external">Inkluder eksterne visninger i mal</string>
     <string name="pref_switch_external">Bytt ekstern dataer i urskiven</string>
     <string name="custom_pref_show_seconds">Vis sekunder</string>
@@ -231,6 +247,12 @@
     <string name="complication_blood_glucose_ext1">BS Ekstern1</string>
     <string name="complication_blood_glucose_ext2">BS Ekstern2</string>
     <string name="complication_bg_graph">BS-graf</string>
+    <string name="complication_cwf_image">Egendefinert urskive</string>
+    <string name="complication_cwf_ambient_bg">Egendefinert urskive – glukose i omgivelsesmodus</string>
+    <string name="complication_cwf_ambient_status">Egendefinert urskive – status i omgivelsesmodus</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Egendefinert urskive – bakgrunn</string>
+    <string name="complication_cwf_upper">Egendefinert urskive – klokke</string>
     <string name="complication_br_cob_iob">Basaldose, COB &amp; IOB</string>
     <string name="complication_br_cob_iob_ext1">Basal, COB &amp; IOB Eks1</string>
     <string name="complication_br_cob_iob_ext2">Basal, COB &amp; IOB Eks2</string>

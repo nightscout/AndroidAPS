@@ -13,11 +13,10 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.ui.CoreUiStrings
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,7 +47,6 @@ import org.mockito.kotlin.whenever
 internal class MaintenanceViewModelTest {
 
     @Mock private lateinit var aapsLogger: AAPSLogger
-    @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var l: L
     @Mock private lateinit var maintenance: Maintenance
     @Mock private lateinit var importExportPrefs: ImportExportPrefs
@@ -77,7 +75,7 @@ internal class MaintenanceViewModelTest {
         testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
         sut = MaintenanceViewModel(
-            aapsLogger, rh, l, maintenance, importExportPrefs, fileListProvider, cloudDirectoryManager,
+            aapsLogger, generatedTextResolver(), l, maintenance, importExportPrefs, fileListProvider, cloudDirectoryManager,
             activePlugin, persistenceLayer, fabricPrivacy, uel, dataSyncSelectorXdrip, pumpSync,
             iobCobCalculator, overviewData, overviewDataCache, nsClient
         )
@@ -147,38 +145,35 @@ internal class MaintenanceViewModelTest {
         // NotImplementedError is an Error rather than an Exception, so before the shared handler it
         // walked straight past `catch (e: Exception)` and took the app down.
         runEagerly()
-        whenever(rh.gs(CoreUiStrings.not_implemented_yet)).thenReturn("not ready here")
         whenever(maintenance.executeSendLogs()).thenAnswer { throw NotImplementedError("no mail composer") }
         val event = expectEvent()
 
         sut.sendLogs()
 
-        assertThat(event.await()).isEqualTo(MaintenanceEvent.Error("not ready here"))
+        assertThat(event.await()).isEqualTo(MaintenanceEvent.Error("This function is not ready on this platform yet"))
     }
 
     @Test
     fun `resetDatabases says so on screen when the platform cannot clear them`() = runBlocking {
         // Desktop still answers this way, and iOS did until the tables were cleared with SQL.
         runEagerly()
-        whenever(rh.gs(CoreUiStrings.not_implemented_yet)).thenReturn("not ready here")
         whenever(persistenceLayer.clearDatabases()).thenAnswer { throw UnsupportedOperationException("no clearAllTables") }
         val event = expectEvent()
 
         sut.resetDatabases()
 
-        assertThat(event.await()).isEqualTo(MaintenanceEvent.Error("not ready here"))
+        assertThat(event.await()).isEqualTo(MaintenanceEvent.Error("This function is not ready on this platform yet"))
     }
 
     @Test
     fun `a real failure gets the plain error message, not the not-ready one`() = runBlocking {
         runEagerly()
-        whenever(rh.gs(CoreUiStrings.error)).thenReturn("error")
         whenever(persistenceLayer.cleanupDatabase(any(), any())).thenAnswer { throw IllegalStateException("database is locked") }
         val event = expectEvent()
 
         sut.cleanupDatabases()
 
-        assertThat(event.await()).isEqualTo(MaintenanceEvent.Error("error"))
+        assertThat(event.await()).isEqualTo(MaintenanceEvent.Error("Error"))
     }
 
     @Test

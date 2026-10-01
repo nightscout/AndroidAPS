@@ -5,12 +5,10 @@ import app.aaps.core.data.model.PS
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +29,6 @@ internal class ProfileSwitchViewModelTest {
 
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var profileRepository: ProfileRepository
-    @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var rxBus: RxBus
@@ -47,7 +44,7 @@ internal class ProfileSwitchViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         whenever(persistenceLayer.observeChanges(PS::class)).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
-        sut = ProfileSwitchViewModel(persistenceLayer, profileRepository, rh, dateUtil, aapsLogger, rxBus)
+        sut = ProfileSwitchViewModel(persistenceLayer, profileRepository, generatedTextResolver(), dateUtil, aapsLogger, rxBus)
     }
 
     @AfterEach
@@ -105,9 +102,8 @@ internal class ProfileSwitchViewModelTest {
     fun `getDeleteConfirmationMessage empty when nothing selected, plural for many`() {
         assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("")
 
-        whenever(rh.gs(CoreUiStrings.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
         sut.enterSelectionMode(link())
         sut.toggleSelection(link())
-        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Remove 2 items")
+        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Are you sure you want to remove 2 items")
     }
 }

@@ -4,21 +4,29 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalAapsScale
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.extensions.directionToDescription
+import app.aaps.core.ui.extensions.directionToIcon
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
@@ -37,7 +45,12 @@ fun DialogStatusBar(
     Surface(
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
         shape = MaterialTheme.shapes.small,
-        modifier = modifier.fillMaxWidth()
+        // Read the whole bar as one item instead of up to nine separate stops. No
+        // contentDescription here on purpose: merging keeps the texts of the children,
+        // including the spoken name of the trend arrow, and setting one would drop them all.
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) { }
     ) {
         Row(
             modifier = Modifier
@@ -58,13 +71,17 @@ fun DialogStatusBar(
                     textDecoration = bgDecoration,
                     maxLines = 1
                 )
-                // Trend arrow
+                // Trend arrow. Draw the icon, not TrendArrow.symbol. That field has no glyph for
+                // NONE or for the triple arrows - it holds the placeholders "??" and "X", which
+                // users used to see here. The icon has a picture for every value and a spoken
+                // name, which a bare arrow character does not.
                 bg.trendArrow?.let { arrow ->
-                    Text(
-                        text = arrow.symbol,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = bgColor,
-                        maxLines = 1
+                    Icon(
+                        imageVector = arrow.directionToIcon(),
+                        contentDescription = stringResource(arrow.directionToDescription()),
+                        tint = bgColor,
+                        // Scale with the text beside it, as the Text this replaced did.
+                        modifier = Modifier.size(AapsSpacing.trendArrowSize * LocalAapsScale.current)
                     )
                 }
                 // Delta
@@ -123,7 +140,10 @@ private fun Separator() {
         text = "\u2022",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-        modifier = Modifier.padding(horizontal = 2.dp)
+        // The bullet is only a visual divider, so keep it out of the spoken text.
+        modifier = Modifier
+            .padding(horizontal = 2.dp)
+            .clearAndSetSemantics { }
     )
 }
 

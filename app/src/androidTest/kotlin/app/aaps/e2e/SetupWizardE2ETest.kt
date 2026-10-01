@@ -333,7 +333,7 @@ class SetupWizardE2ETest {
     /** Manage → Insulin: the insulin-management screen (carousel + nickname/peak/DIA editors). */
     private fun visitInsulinManagement() {
         openVia("Manage", expect = "Site Rotation")    // open the Manage sheet (distinctive marker)
-        openVia("Insulin", expect = "Add new insulin") // → insulin management screen
+        openVia("Insulin settings", expect = "Add new insulin") // → insulin management screen
         returnToOverview()
     }
 

@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">Déclencher les alarmes urgentes vers les notifications Android</string>
     <string name="pref_title_alert_increase_volume">Augmenter progressivement le volume des notifications</string>
     <string name="pref_title_alert_override_dnd">Outrepasser le mode Ne pas déranger</string>
+    <string name="pref_summary_alert_override_dnd">Lorsque cette option est activée, les alarmes AAPS sonnent même si le téléphone est en mode silencieux ou en mode Ne pas déranger. Lorsque désactivé, les alarmes restent silencieuses dans ces modes.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Télécharger des Gly vers NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Enreg. changement de capteur</string>
@@ -177,6 +178,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">Délai d\'attente de la protection</string>
     <string name="pref_title_protection_type_application">Niveau 0 : Protection de l\'application</string>
+    <string name="pref_summary_protection_type_application">Lancement de l\'application et lors du retour à l\'application. Indépendant des autres niveaux</string>
     <string name="pref_title_protection_type_bolus">Niveau 1 : Protection bolus</string>
     <string name="pref_summary_protection_type_bolus">Traitements, activation de profil. Nécessite le niveau 2</string>
     <string name="pref_title_protection_type_settings">Niveau 2 : Protection des paramètres</string>
@@ -235,6 +237,7 @@
     <string name="pref_title_units">Unités</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">Langue</string>
     <string name="lang_default">Système</string>
     <string name="lang_en">Anglais</string>
     <string name="lang_af">Africain</string>

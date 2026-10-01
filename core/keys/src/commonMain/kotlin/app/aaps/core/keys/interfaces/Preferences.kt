@@ -627,4 +627,29 @@ interface Preferences {
      */
     fun getAllPreferenceKeys(): List<PreferenceKey>
 
+    /**
+     * Every registered key, not only the ones with a preference screen behind them.
+     *
+     * [getAllPreferenceKeys] filters to [PreferenceKey], which leaves out every device-state and
+     * internal key - exactly the ones that decide whether a pump keeps working after an import. So
+     * anything that has to reason about the WHOLE store (`PreferenceKeyResolver`, the orphan sweep)
+     * needs this, and the narrower one stays as it is for the search index.
+     *
+     * @return every key handed to [registerPreferences], plus the core enums seeded at construction
+     */
+    fun getAllKeys(): List<NonPreferenceKey>
+
+    /**
+     * Re-reads every observed value from the store and publishes what changed.
+     *
+     * For a bulk write that did NOT go through this interface - a settings import writes all of its
+     * keys in one batch below `Preferences`, so that the write is atomic and does not stamp every
+     * synced key on the way past. Without this the store holds the imported values while every
+     * `observe(...)` flow still reports the old ones, for the life of the process.
+     *
+     * Safe to call at any time: a `StateFlow` conflates, so a value that did not actually change
+     * emits nothing and its observers stay quiet.
+     */
+    fun reloadFromStore()
+
 }

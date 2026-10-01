@@ -52,14 +52,14 @@ class SensitivityWeightedAveragePlugin(
         .icon(IcAs)
         .pluginName(SensitivityStrings.sensitivity_weighted_average)
         .shortName(SensitivityStrings.sensitivity_plugin_shortname)
+        // Only meaningful with the AMA algorithm - see SensitivityAAPSPlugin, same rule.
+        .showInList {
+            val aps = activePlugin.activeAPS
+            aps == null || aps.algorithm == APSResult.Algorithm.AMA
+        }
         .description(SensitivityStrings.description_sensitivity_weighted_average),
     aapsLogger, rh, preferences, notificationManager
 ) {
-
-    override fun specialShowInListCondition(): Boolean {
-        val aps = activePlugin.activeAPS ?: return true
-        return aps.algorithm == APSResult.Algorithm.AMA
-    }
 
     override fun detectSensitivity(
         ads: AutosensDataStore,

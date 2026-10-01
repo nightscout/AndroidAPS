@@ -3,7 +3,8 @@ package app.aaps.plugins.automation
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.plugins.automation.AutomationStringsValues
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.lenientDouble
@@ -34,7 +35,7 @@ class AutomationJsonRoundTripTest : TestBase() {
 
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("automation" to AutomationStringsValues::textOf)
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var pumpEnactResultProvider: () -> PumpEnactResult
 

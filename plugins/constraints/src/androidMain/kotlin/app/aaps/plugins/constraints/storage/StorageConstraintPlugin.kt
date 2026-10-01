@@ -1,8 +1,5 @@
 package app.aaps.plugins.constraints.storage
 
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
-import app.aaps.plugins.constraints.ConstraintsStrings
 import android.os.Environment
 import android.os.StatFs
 import app.aaps.annotations.OpenForTesting
@@ -14,10 +11,13 @@ import app.aaps.core.interfaces.di.APS
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
+import app.aaps.plugins.constraints.ConstraintsStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -33,12 +33,12 @@ import dev.zacsweers.metro.binding
 @Inject
 class StorageConstraintPlugin(
     aapsLogger: AAPSLogger,
-    override val rh: ResourceHelper,
+    override val rh: TextResolver,
     notificationManager: NotificationManager
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .alwaysEnabled(true)
+        .enforce(EnforcedState.Enabled)
         .showInList { false }
         .pluginName(ConstraintsStrings.storage),
     aapsLogger, rh, notificationManager

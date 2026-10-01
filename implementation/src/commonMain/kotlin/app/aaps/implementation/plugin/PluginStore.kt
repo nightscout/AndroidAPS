@@ -11,8 +11,6 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PermissionGroup
-import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.pump.Pump
@@ -20,12 +18,10 @@ import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.Sync
-import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.Job
@@ -119,7 +115,7 @@ class PluginStore(
     override fun getSpecificPluginsVisibleInList(type: PluginType): ArrayList<PluginBase> {
         val newList = ArrayList<PluginBase>()
         for (p in plugins) {
-            if (p.getType() == type) if (p.showInList(type)) newList.add(p)
+            if (p.getType() == type) if (p.showInList()) newList.add(p)
         }
         return newList
     }
@@ -190,12 +186,13 @@ class PluginStore(
      * If the active plugin is no longer visible in its category (e.g., sensitivity plugin
      * incompatible with the current APS algorithm), disable it and fall back to the default.
      *
-     * Framework plugins declared `alwaysEnabled` are exempt — they use `showInList { false }`
-     * to hide from the UI list but must stay functional regardless.
+     * A plugin whose state this build ENFORCES is exempt — framework plugins use `showInList { false }`
+     * to hide from the UI list but must stay functional regardless, and a forced-off plugin must not be
+     * re-elected here either.
      */
     private fun fallbackIfNotVisible(active: PluginBase, type: PluginType, jobs: MutableList<Job>): PluginBase {
-        if (active.pluginDescription.alwaysEnabled) return active
-        if (!active.showInList(type)) {
+        if (active.enforcedState() != null) return active
+        if (!active.showInList()) {
             active.setPluginEnabled(type, false)?.let(jobs::add)
             val default = getDefaultPlugin(type)
             default.setPluginEnabled(type, true)?.let(jobs::add)

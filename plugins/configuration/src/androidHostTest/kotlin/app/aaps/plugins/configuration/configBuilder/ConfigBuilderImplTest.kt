@@ -17,10 +17,8 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import com.google.common.truth.Truth.assertThat
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -37,6 +35,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Covers the PR2 ConfigBuilder ↔ ActivePlugin-key bridge write path: a plugin switch mirrors the new
@@ -69,7 +68,7 @@ internal class ConfigBuilderImplTest {
         whenever(sens2.getType()).thenReturn(PluginType.SENSITIVITY)
         whenever(sens2.pluginId).thenReturn("Sens2")
         whenever(sens2.pluginDescription).thenReturn(sens2Desc)
-        whenever(sens2Desc.alwaysEnabled).thenReturn(false)
+        whenever(sens2.enforcedState()).thenReturn(null)   // no enforcement: the stored choice decides
         whenever(sens2.isEnabled(PluginType.SENSITIVITY)).thenAnswer { sensEnabled }
         whenever(sens2.isEnabled()).thenAnswer { sensEnabled }
         // Returns the start/stop job now, so a caller can wait for the plugin to really start or stop.

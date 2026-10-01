@@ -423,24 +423,68 @@ class ProfileRepositoryImpl(
         createAndStoreConvertedProfile()
     }
 
-    /** Read the pre-JSON per-profile keys. Kept for upgrade and for downgrade compatibility. */
+    /**
+     * Read the pre-JSON per-profile keys. Kept for upgrade and for downgrade compatibility.
+     *
+     * The count and the content live in separate keys, so they can arrive apart, and the name key is
+     * what decides whether profile `i` is really there. Reading it with [Preferences.getIfExists]
+     * rather than [Preferences.get] is the whole guard: `get` answers the key's default, which is the
+     * CONSTANT "LocalProfile0" for every index, so an absent group used to produce a profile rather
+     * than nothing - one profile, because the duplicate-name skip below then folded every remaining
+     * index into it, carrying the schedule defaults, which are all `value: 0`. It did not look empty
+     * to the user, it looked like a real profile with zero ISF, zero IC, zero basal and zero targets.
+     * On a master [loadSettingsInternal] goes straight on to store it as a LOCAL write, so it was
+     * published to every paired client as well; the note on [addNewProfileInternal] records what a
+     * zero-seeded profile then does to the profile-store sync.
+     *
+     * A settings import is how this happens in practice: `LocalProfile_profiles` is a registered
+     * exportable key, but the per-profile names an older AAPS wrote are not keys this build knows, so
+     * the count is written and the content is dropped. The guard is here rather than in the import
+     * because a truncated file, a hand-edited one or the next key rename all arrive the same way.
+     *
+     * ## A profile is a group, not seven keys
+     *
+     * Every field is read with [Preferences.getIfExists] and a missing one drops the whole profile,
+     * because a half-read profile is the dangerous case rather than the harmless one. The schedule
+     * defaults are `value: 0` and the unit flag defaults to false, so filling in one absent field
+     * produces a profile that looks entirely real - a name the user recognises, four schedules they
+     * set, and a fifth that silently says zero. That is worse than the all-zero profile above, which
+     * at least looks wrong.
+     *
+     * The keys are written together and have been in every version - 3.3's `ProfilePlugin.storeSettings`
+     * wrote all eight in one loop, and so does the numbered generation - so a missing field means the
+     * group is broken, never that the profile is legitimately sparse.
+     *
+     * `dia` is not read here and so is not required; it is consumed by the database migration in
+     * `MainApp`, not by the profile itself.
+     */
     private fun loadFromLegacyKeysInternal() {
         val n = preferences.get(ProfileIntKey.AmountOfProfiles)
         for (i in 0 until n) {
-            val name = preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)
+            val name = preferences.getIfExists(ProfileComposedStringKey.LocalProfileNumberedName, i) ?: continue
             if (profilesList.any { it.name == name }) continue
+            val mgdl = preferences.getIfExists(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i)
+            val ic = preferences.getIfExists(ProfileComposedStringKey.LocalProfileNumberedIc, i)
+            val isf = preferences.getIfExists(ProfileComposedStringKey.LocalProfileNumberedIsf, i)
+            val basal = preferences.getIfExists(ProfileComposedStringKey.LocalProfileNumberedBasal, i)
+            val low = preferences.getIfExists(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)
+            val high = preferences.getIfExists(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)
+            if (mgdl == null || ic == null || isf == null || basal == null || low == null || high == null) {
+                aapsLogger.warn(LTag.PROFILE, "Legacy profile '$name' is missing at least one field, skipped")
+                continue
+            }
             try {
                 val entry = buildJsonObject {
-                    put(KEY_IC, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)))
-                    put(KEY_ISF, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)))
-                    put(KEY_BASAL, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)))
-                    put(KEY_TARGET_LOW, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)))
-                    put(KEY_TARGET_HIGH, parseArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i)))
+                    put(KEY_IC, parseArray(ic))
+                    put(KEY_ISF, parseArray(isf))
+                    put(KEY_BASAL, parseArray(basal))
+                    put(KEY_TARGET_LOW, parseArray(low))
+                    put(KEY_TARGET_HIGH, parseArray(high))
                 }
                 profilesList.add(
                     SingleProfile(
                         name = name,
-                        mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i),
+                        mgdl = mgdl,
                         ic = readSchedule(entry, KEY_IC, name),
                         isf = readSchedule(entry, KEY_ISF, name),
                         basal = readSchedule(entry, KEY_BASAL, name),

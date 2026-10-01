@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.ui.widget.glance.AapsGlanceWidget
 import app.aaps.ui.widget.glance.BgGraphGlanceWidget
 import app.aaps.ui.widget.glance.CompactBgGlanceWidget
+import app.aaps.ui.widget.glance.GlucoseCircleGlanceWidget
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -43,6 +44,8 @@ class WidgetUpdaterImpl(
                 .onFailure { aapsLogger.error(LTag.WIDGET, "updateBgGraphWidget failed: ${it.message}", it) }
             runCatching { CompactBgGlanceWidget().updateAll(context) }
                 .onFailure { aapsLogger.error(LTag.WIDGET, "updateCompactBgWidget failed: ${it.message}", it) }
+            runCatching { GlucoseCircleGlanceWidget().updateAll(context) }
+                .onFailure { aapsLogger.error(LTag.WIDGET, "updateGlucoseCircleWidget failed: ${it.message}", it) }
             runCatching { triggerSmallWidgetUpdate() }
                 .onFailure { aapsLogger.error(LTag.WIDGET, "updateSmallWidget failed: ${it.message}", it) }
         }

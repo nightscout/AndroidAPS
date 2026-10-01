@@ -38,6 +38,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -45,11 +47,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSheetContent
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.statusLevelToColor
+import app.aaps.core.ui.compose.statusLevelToDescription
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.overview.statusLights.StatusItem
 import app.aaps.ui.compose.overview.statusLights.StatusSectionContent
@@ -231,8 +236,31 @@ private fun CompactStatusItem(item: StatusItem) {
     val ageColor = statusLevelToColor(item.ageStatus)
     val levelColor = if (item.level != null) statusLevelToColor(item.levelStatus) else ageColor
 
+    // Severity is carried only by the colour of the spans inside the text below, so an overdue
+    // cannula or a nearly empty reservoir looked urgent and read as ordinary. This chip shows two
+    // values at once, so it speaks the worse of the two - saying both would be a mouthful on a chip
+    // whose whole job is to be glanceable.
+    val worstStatus = when {
+        item.ageStatus == StatusLevel.CRITICAL ||
+            (showLevel && item.levelStatus == StatusLevel.CRITICAL) -> StatusLevel.CRITICAL
+
+        item.ageStatus == StatusLevel.WARNING ||
+            (showLevel && item.levelStatus == StatusLevel.WARNING)  -> StatusLevel.WARNING
+
+        else                                                        -> StatusLevel.NORMAL
+    }
+    val severity = stringResourceOrNull(statusLevelToDescription(worstStatus))
+
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        // Merged so the icon's name, the values and the severity are one item. The description adds
+        // only the severity, because on a merging node it sits before the children rather than
+        // replacing them: "Critical, Cannula, 3d 50%".
+        modifier = if (severity != null) {
+            Modifier.semantics(mergeDescendants = true) { contentDescription = severity }
+        } else {
+            Modifier.semantics(mergeDescendants = true) { }
+        }
     ) {
         Icon(
             imageVector = item.icon,

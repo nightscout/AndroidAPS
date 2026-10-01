@@ -58,6 +58,6 @@ class TriggerWifiSsidTest : TriggerTestBase() {
     }
 
     @Test fun friendlyDescriptionTest() = runTest {
-        assertThat(triggerFactory.triggerWifiSsid().friendlyDescription()).isEqualTo("wifissidcompared") // nothing stubbed, so the name is the fallback
+        assertThat(triggerFactory.triggerWifiSsid().friendlyDescription()).isEqualTo("WiFi SSID is equal to ")
     }
 }

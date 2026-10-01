@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.stringResource
 
 /**
  * Shared wizard screen shell for pump activation/deactivation workflows.
@@ -78,7 +80,7 @@ fun <S> WizardScreen(
                     navigationIcon = {
                         if (canGoBack) {
                             IconButton(onClick = onRequestCancel) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(CoreUiStrings.back))
                             }
                         }
                     },

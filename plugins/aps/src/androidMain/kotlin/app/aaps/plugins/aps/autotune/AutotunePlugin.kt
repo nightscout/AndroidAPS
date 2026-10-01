@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -56,7 +57,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.IntKey as MetroIntKey
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.serialization.json.Json
@@ -67,6 +67,7 @@ import kotlinx.serialization.json.put
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone
+import dev.zacsweers.metro.IntKey as MetroIntKey
 
 /*
  * adaptation from oref0 autotune developed by philoul on 2022 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)
@@ -121,7 +122,10 @@ class AutotunePlugin(
                 atProfileProvider = atProfileProvider
             )
         }
-        .showInList { config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE) }
+        // Outside an engineering dev build, or without the opt-in option file, Autotune cannot be switched on
+        // at all. No showInList needed: a plugin forced off is hidden by PluginBase.showInList, so the
+        // condition is written once rather than here and negated there.
+        .enforce(EnforcedState.Disabled) { !(config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE)) }
         .description(TextRef.AndroidRes(R.string.autotune_description)),
     ownPreferences = AutotuneStringKey.entries,
     aapsLogger, rh, preferences, notificationManager
@@ -141,7 +145,6 @@ class AutotunePlugin(
     val days = WeekDay()
     val autotuneStartHour: Int = 4
 
-    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE)
 
     override suspend fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String, weekDays: BooleanArray?) {
         lastRunSuccess = false

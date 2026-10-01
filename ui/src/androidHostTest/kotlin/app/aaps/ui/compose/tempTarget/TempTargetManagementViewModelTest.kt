@@ -10,16 +10,13 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.ui.UiStringIds
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +50,7 @@ internal class TempTargetManagementViewModelTest {
     @Mock private lateinit var profileFunction: ProfileFunction
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var preferences: Preferences
-    @Mock private lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver()
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var rxBus: RxBus
@@ -302,9 +299,6 @@ internal class TempTargetManagementViewModelTest {
 
     @Test
     fun `a same-size replacement of the preset list aborts the commit`() = runTest {
-        whenever(rh.gs(any<Int>())).thenReturn("message")
-        // The screens name their strings now, so the TextRef overload is the one they call.
-        whenever(rh.gs(any<TextRef>())).thenReturn("message")
         givenPresets()
         sut.enterReorderMode()
         sut.moveReorderItem(4, 3)

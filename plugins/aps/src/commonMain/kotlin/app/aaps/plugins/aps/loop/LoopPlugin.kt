@@ -50,7 +50,6 @@ import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -63,6 +62,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
+import app.aaps.core.objects.extensions.jsonObject
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.objects.extensions.with
 import app.aaps.core.ui.CoreUiStrings
@@ -70,6 +70,8 @@ import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.aps.ApsStrings
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
+import app.aaps.plugins.aps.loop.extensions.jsonObject
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesIntoMap
@@ -90,12 +92,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
-import app.aaps.core.objects.extensions.jsonObject
-import app.aaps.plugins.aps.loop.extensions.jsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 import kotlin.concurrent.Volatile
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.seconds
 import dev.zacsweers.metro.IntKey as MetroIntKey
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
@@ -119,7 +120,6 @@ class LoopPlugin(
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
-    private val uiInteraction: UiInteraction,
     notificationManager: NotificationManager,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
@@ -127,6 +127,7 @@ class LoopPlugin(
     private val decimalFormatter: DecimalFormatter,
     private val ch: ConcentrationHelper,
     private val loopNotifier: LoopNotifier,
+    private val runningModeReconciler: RunningModeReconciler,
 
     @ApplicationScope private val appScope: CoroutineScope
 ) : PluginBase(
@@ -146,7 +147,11 @@ class LoopPlugin(
         .icon(IcLoopClosed)
         .pluginName(CoreUiStrings.loop)
         .shortName(ApsStrings.loop_shortname)
-        .alwaysEnabled(config.APS)
+        // Only a build with an APS of its own may run the loop, and it is not the user's to switch off
+        // where there is one. Both directions matter: without the forced-off half, a client that imports a
+        // master's settings gets ConfigBuilder_Enabled_LOOP_* = true and runs the algorithm on synced data.
+        // See #5145.
+        .enforceEnabledOnlyWhen { config.APS }
         .description(ApsStrings.description_loop),
     aapsLogger, rh, notificationManager
 ), Loop, PluginConstraints {
@@ -205,7 +210,7 @@ class LoopPlugin(
         // TempTarget changes
         persistenceLayer.observeChanges(TT::class)
             // Skip db change of ending previous TT
-            .debounce(10_000L)
+            .debounce(10.seconds)
             // try/catch keeps this app-lifetime subscription alive: an uncaught throw in onEach would
             // permanently cancel the collection (invoke() is try/finally, not try/catch, so it propagates).
             .onEach {
@@ -225,7 +230,7 @@ class LoopPlugin(
         // never EventPumpStatusChanged — so there is no feedback loop, and the debounce collapses
         // connection chatter.
         rxBus.toFlow(EventPumpStatusChanged::class)
-            .debounce(1000L)
+            .debounce(1.seconds)
             .onEach {
                 try {
                     runningModePreCheck()
@@ -245,16 +250,6 @@ class LoopPlugin(
         collectors.forEach { it.cancel() }
         collectors.clear()
         super.onStop()
-    }
-
-    override fun specialEnableCondition(): Boolean {
-        return try {
-            val pump = activePlugin.activePump
-            pump.pumpDescription.isTempBasalCapable
-        } catch (_: Exception) {
-            // may fail during initialization
-            true
-        }
     }
 
     override suspend fun minutesToEndOfSuspend(): Int =
@@ -288,10 +283,11 @@ class LoopPlugin(
             RM.Mode.CLOSED_LOOP       -> mutableListOf(RM.Mode.DISABLED_LOOP, RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP_LGS, RM.Mode.DISCONNECTED_PUMP, RM.Mode.SUSPENDED_BY_USER, RM.Mode.SUPER_BOLUS)
             RM.Mode.CLOSED_LOOP_LGS   -> mutableListOf(RM.Mode.DISABLED_LOOP, RM.Mode.OPEN_LOOP, RM.Mode.CLOSED_LOOP, RM.Mode.DISCONNECTED_PUMP, RM.Mode.SUSPENDED_BY_USER, RM.Mode.SUPER_BOLUS)
             RM.Mode.SUPER_BOLUS       -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME)
-            RM.Mode.DISCONNECTED_PUMP -> mutableListOf(RM.Mode.RESUME)
+            // The same temporary mode is allowed again: it means "new duration from now" (extend).
+            RM.Mode.DISCONNECTED_PUMP -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME)
             RM.Mode.SUSPENDED_BY_DST  -> mutableListOf(RM.Mode.DISCONNECTED_PUMP)
             RM.Mode.SUSPENDED_BY_PUMP -> mutableListOf() // handled independently
-            RM.Mode.SUSPENDED_BY_USER -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.RESUME)
+            RM.Mode.SUSPENDED_BY_USER -> mutableListOf(RM.Mode.DISCONNECTED_PUMP, RM.Mode.SUSPENDED_BY_USER, RM.Mode.RESUME)
             RM.Mode.RESUME            -> error("Invalid mode")
         }
         if (constraintChecker.isLoopInvocationAllowed().value().not()) {
@@ -341,6 +337,7 @@ class LoopPlugin(
             // Modes with zero temping
             RM.Mode.SUPER_BOLUS, RM.Mode.DISCONNECTED_PUMP                                         -> {
                 goToZeroTemp(durationInMinutes = durationInMinutes, mode = newRM, action = action, source = source, listValues = listValues)
+                endReplacedTemporaryMode(currentRM, newRM, now, action, source)
                 return true
             }
 
@@ -371,6 +368,7 @@ class LoopPlugin(
                     source = source,
                     listValues = listValues
                 )
+                endReplacedTemporaryMode(currentRM, newRM, now, action, source)
                 return true
             }
 
@@ -408,6 +406,8 @@ class LoopPlugin(
      * blocking with `runBlocking`, and it was re-entered from inside [invokeMutex].
      */
     suspend fun runningModePreCheck() = reconcileMutex.withLock { reconcileRunningMode() }
+
+    override suspend fun verifyZeroDelivery() = runningModeReconciler.verifyZeroDelivery()
 
     /**
      * The body of [runningModePreCheck]. Call it only with [reconcileMutex] held.
@@ -541,7 +541,7 @@ class LoopPlugin(
         val start = dateUtil.now()
         while (start + T.mins(maxMinutes).msecs() > dateUtil.now()) {
             if (commandQueue.size() == 0 && commandQueue.performing() == null) return true
-            delay(1000)
+            delay(1.seconds)
         }
         return false
     }
@@ -954,6 +954,19 @@ class LoopPlugin(
     private fun allowPercentage(): Boolean = activePlugin.activePump.selectedActivePump() is VirtualPump
 
     /**
+     * The user picked the temporary mode that is already active, to extend it (a second
+     * suspend or pump disconnect). The new row is inserted first, so it is already the active
+     * one and the `RunningModeReconciler` only sees the same mode with a longer duration: no
+     * cancel of the zero-TBR, no gap. Then the old row is ended at [now], so history and
+     * Nightscout do not keep two overlapping rows. Nothing to do when the mode is different
+     * or the current row is permanent.
+     */
+    private suspend fun endReplacedTemporaryMode(currentRM: RM, newRM: RM.Mode, now: Long, action: Action, source: Sources) {
+        if (currentRM.mode != newRM || !currentRM.isTemporary()) return
+        persistenceLayer.cancelRunningMode(id = currentRM.id, timestamp = now, action = action, source = source)
+    }
+
+    /**
      * Enter a zero-delivery running mode (DISCONNECTED_PUMP / SUPER_BOLUS). Pure DB write:
      * the RunningModeReconciler observes the change and issues zero-TBR (+ cancels any
      * active extended bolus) on the pump side.
@@ -997,7 +1010,7 @@ class LoopPlugin(
     internal fun scheduleSmbFallback(allowNotification: Boolean) {
         smbFallbackJob?.cancel()
         smbFallbackJob = appScope.launch {
-            delay(1000)
+            delay(1.seconds)
             invoke("tempBasalFallback", allowNotification, true)
         }
     }
@@ -1007,7 +1020,7 @@ class LoopPlugin(
         // steps stores the device status once, five seconds after the last of them.
         deviceStatusJob?.cancel()
         deviceStatusJob = appScope.launch {
-            delay(5000)
+            delay(5.seconds)
             buildAndStoreDeviceStatus(reason)
         }
     }
@@ -1081,9 +1094,4 @@ class LoopPlugin(
         ),
         icon = pluginDescription.icon
     )
-
-    companion object {
-
-        private const val CHANNEL_ID = "AAPS-OpenLoop"
-    }
 }

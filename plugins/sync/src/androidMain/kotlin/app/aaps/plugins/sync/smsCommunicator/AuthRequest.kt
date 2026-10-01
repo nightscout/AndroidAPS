@@ -6,7 +6,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
@@ -27,7 +27,7 @@ class AuthRequest(
     private val action: SmsAction,
     private val aapsLogger: AAPSLogger,
     private val smsCommunicator: SmsCommunicator,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val otp: OneTimePassword,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue

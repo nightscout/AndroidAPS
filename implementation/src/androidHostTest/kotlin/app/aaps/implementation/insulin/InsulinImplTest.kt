@@ -7,12 +7,12 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +33,7 @@ class InsulinImplTest : TestBase() {
     private val testScope = TestScope()
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver()
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var config: Config
@@ -51,7 +51,6 @@ class InsulinImplTest : TestBase() {
         // Template and concentration labels are TextRefs, used for the nickname and the label suffix.
         // gs(TextRef) is a DEFAULT interface method, so a mock returns null rather than running it - and
         // then the stored entry fails to parse.
-        whenever(rh.gs(any<TextRef>())).thenReturn("label")
         sut = InsulinImpl(preferences, rh, profileFunction, aapsLogger, config, hardLimits, uel, testScope)
     }
 

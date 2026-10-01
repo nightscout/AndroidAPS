@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import kotlinx.coroutines.delay
 import kotlin.math.pow
@@ -170,6 +171,23 @@ fun SliderWithButtons(
         asDuration = asDuration
     ) else ""
 
+    // Screen reader text for the +/- buttons. The dialog label is the name of the value being
+    // changed, so it is used when it is there; without it only the direction can be said.
+    val stepText = formatSliderDisplayValue(
+        value = step,
+        unitLabel = unitLabel,
+        valueFormatRef = valueFormatRef,
+        formatAsInt = formatAsInt,
+        valueFormat = valueFormat,
+        asDuration = asDuration
+    )
+    val minusDescription = dialogLabel
+        ?.let { stringResource(CoreUiStrings.a11y_min_button_description, it, stepText) }
+        ?: stringResource(CoreUiStrings.decrement)
+    val plusDescription = dialogLabel
+        ?.let { stringResource(CoreUiStrings.a11y_plus_button_description, it, stepText) }
+        ?: stringResource(CoreUiStrings.increment)
+
     BoxWithConstraints(modifier = modifier) {
         val showSlider = maxWidth >= 180.dp
 
@@ -189,7 +207,7 @@ fun SliderWithButtons(
             ) {
                 Icon(
                     imageVector = Icons.Default.Remove,
-                    contentDescription = "-",
+                    contentDescription = minusDescription,
                     modifier = Modifier.size(16.dp)
                 )
             }
@@ -224,7 +242,7 @@ fun SliderWithButtons(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "+",
+                    contentDescription = plusDescription,
                     modifier = Modifier.size(16.dp)
                 )
             }

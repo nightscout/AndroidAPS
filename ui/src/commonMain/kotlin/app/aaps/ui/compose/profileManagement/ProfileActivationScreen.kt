@@ -347,7 +347,7 @@ fun ProfileActivationScreen(
                             },
                             modifier = itemModifier
                         ) {
-                            Text(rh.gs(UiStrings.reuse_profile_pct_hours, currentPercentage, currentTimeshiftHours))
+                            Text(stringResource(UiStrings.reuse_profile_pct_hours, currentPercentage, currentTimeshiftHours))
                         }
                     }
 

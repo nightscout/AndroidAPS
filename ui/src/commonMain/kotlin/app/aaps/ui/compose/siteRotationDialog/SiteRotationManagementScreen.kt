@@ -298,7 +298,7 @@ internal fun SiteRotationManagementContent(
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Info,
-                                contentDescription = null,
+                                contentDescription = stringResource(CoreUiStrings.carousel_show_card),
                                 modifier = Modifier.size(20.dp)
                             )
                         }

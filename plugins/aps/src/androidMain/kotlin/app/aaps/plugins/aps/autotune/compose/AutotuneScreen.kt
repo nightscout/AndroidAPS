@@ -64,11 +64,13 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pickers.WeekDaySelector
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.plugins.aps.R
 
@@ -143,7 +145,7 @@ fun AutotuneScreen(
                     IconButton(onClick = onToggleWeekDays) {
                         Icon(
                             imageVector = Icons.Default.Visibility,
-                            contentDescription = null,
+                            contentDescription = stringResource(if (state.showWeekDays) CoreUiStrings.collapse else CoreUiStrings.expand),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -315,11 +317,11 @@ fun AutotuneScreen(
                             profile1 = profile1,
                             profile2 = profile2,
                             icsRows = buildIcRows(profile1, profile2, dateUtil),
-                            icUnits = rh.gs(app.aaps.core.interfaces.R.string.profile_carbs_per_unit),
+                            icUnits = stringResource(app.aaps.core.interfaces.R.string.profile_carbs_per_unit),
                             isfsRows = buildIsfRows(profile1, profile2, profileUtil, dateUtil),
-                            isfUnits = rh.gs(if (profileFunction.getUnits() == GlucoseUnit.MGDL) app.aaps.core.interfaces.R.string.profile_isf_units_mgdl else app.aaps.core.interfaces.R.string.profile_isf_units_mmol),
+                            isfUnits = stringResource(if (profileFunction.getUnits() == GlucoseUnit.MGDL) app.aaps.core.interfaces.R.string.profile_isf_units_mgdl else app.aaps.core.interfaces.R.string.profile_isf_units_mmol),
                             basalsRows = buildBasalRows(profile1, profile2, dateUtil),
-                            basalUnits = rh.gs(app.aaps.core.interfaces.R.string.profile_ins_units_per_hour),
+                            basalUnits = stringResource(app.aaps.core.interfaces.R.string.profile_ins_units_per_hour),
                             targetsRows = buildTargetRows(profile1, profile2, dateUtil, profileUtil),
                             targetUnits = profileFunction.getUnits().displayLabel,
                             profileName1 = dialog.data.profileName ?: "",

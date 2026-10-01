@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,7 @@ import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.pump.common.defs.PumpHistoryEntryGroup
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
@@ -129,11 +131,11 @@ private fun DashHistoryCard(
     dateUtil: DateUtil
 ) {
     HistoryCardContent(
-        commandName = rh.gs(record.commandType.resourceId),
+        commandName = stringResource(record.commandType.resourceId),
         time = dateUtil.timeString(record.displayTimestamp()),
         isSuccess = record.isSuccess(),
         description = formatValue(record, rh, profileUtil),
-        extra = record.totalAmountDelivered?.let { rh.gs(R.string.omnipod_common_history_total_delivered, it) }
+        extra = record.totalAmountDelivered?.let { stringResource(R.string.omnipod_common_history_total_delivered, it) }
     )
 }
 
@@ -222,7 +224,15 @@ private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: 
 
         OmnipodCommandType.SET_BOLUS           -> {
             val bolus = record.record as? BolusRecord
-            bolus?.let { rh.gs(R.string.omnipod_common_history_bolus_value, it.amout) } ?: ""
+            bolus?.let {
+                val amount = rh.gs(R.string.omnipod_common_history_bolus_value, it.amout)
+                when (it.bolusType) {
+                    BolusType.DEFAULT          -> amount
+                    BolusType.SMB              -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_smb))
+                    BolusType.BASAL_CORRECTION -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_basal_correction))
+                    BolusType.PRIMING          -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_priming))
+                }
+            } ?: ""
         }
 
         OmnipodCommandType.SET_BASAL_PROFILE,

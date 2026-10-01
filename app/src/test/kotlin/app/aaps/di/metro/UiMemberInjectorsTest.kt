@@ -3,6 +3,7 @@ package app.aaps.di.metro
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.widget.BgGraphWidget
 import app.aaps.ui.widget.CompactBgWidget
+import app.aaps.ui.widget.GlucoseCircleWidget
 import app.aaps.ui.widget.SmallWidget
 import app.aaps.ui.widget.Widget
 import app.aaps.ui.widget.WidgetConfigureActivity
@@ -26,11 +27,12 @@ class UiMemberInjectorsTest {
     private val injectors get() = testRoot().contributedMemberInjectors
 
     @Test
-    fun `the four home screen widgets have injectors`() {
+    fun `the five home screen widgets have injectors`() {
         assertThat(injectors.keys).containsAtLeast(
             Widget::class,
             BgGraphWidget::class,
             CompactBgWidget::class,
+            GlucoseCircleWidget::class,
             SmallWidget::class
         )
     }

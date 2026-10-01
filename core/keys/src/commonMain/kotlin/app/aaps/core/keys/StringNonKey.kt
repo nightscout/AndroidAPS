@@ -21,8 +21,22 @@ enum class StringNonKey(
     // matched against this pump's history. They still survive a restart - that is the preference
     // store, which `exportable` has nothing to do with.
     BolusInfoStorage(key = "key_bolus_storage", defaultValue = "", exportable = false),
-    ActivePumpType(key = "active_pump_type", defaultValue = ""),
-    ActivePumpSerialNumber(key = "active_pump_serial_number", defaultValue = ""),
+    /**
+     * Which pump this phone is currently paired with. NOT exportable, and this is the flag that
+     * decides whether a pump keeps delivering after an import.
+     *
+     * `PumpSyncImplementation.verifyPumpIdentification` compares these two against the live pump.
+     * They are core-enum keys owned by no plugin, so an owner-based rule classifies them as ordinary
+     * settings and would write them even when the user asked to keep their pump configuration. The
+     * live pump then fails the comparison and the import calls `connectNewPump()`, which writes a
+     * stop for the running temporary basal AND the running extended bolus and clears the identity -
+     * on a healthy, unchanged pump.
+     *
+     * Restoring them from a file can never be right: they describe the hardware in this user's hand,
+     * which the file cannot know about.
+     */
+    ActivePumpType(key = "active_pump_type", defaultValue = "", exportable = false),
+    ActivePumpSerialNumber(key = "active_pump_serial_number", defaultValue = "", exportable = false),
     SmsOtpSecret("smscommunicator_otp_secret", defaultValue = ""),
     TotalBaseBasal("TBB", defaultValue = "10.00"),
     // New key names because the format changed from XStream XML to JSON. Renaming rather than
@@ -35,7 +49,13 @@ enum class StringNonKey(
     PumpCommonTbrStorage(key = "pump_sync_storage_tbr_json", defaultValue = "", exportable = false),
     TempTargetPresets(key = "temp_target_presets", defaultValue = "[]", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     SceneDefinitions(key = "scene_definitions", defaultValue = "[]", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
-    ActiveScene(key = "active_scene", defaultValue = ""),
+    /**
+     * WHICH scene is running right now, as opposed to [SceneDefinitions] above, which is the list the
+     * user configured. The definitions are a setting and travel with an export; this is runtime
+     * state and does not - it is published on the hot channel (`RunningConfiguration.hotKeys`), and
+     * another phone's "currently active" is meaningless here.
+     */
+    ActiveScene(key = "active_scene", defaultValue = "", exportable = false),
 
     // Whole local profile list as one JSON document: {"lastChange": <ms>, "profiles": [ … ]}.
     // One key means one atomic apply and one last-writer-wins unit, which is what makes the profile

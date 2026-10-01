@@ -385,10 +385,10 @@ class DanaRsEmulatorUiTest : AbstractDanaEmulatorUiTest() {
         openVia("User options", expect = SAVE_USER_OPTIONS)
 
         val before = emulator.pumpState.lcdOnTimeSec
-        // Three steppers share the "Increase" description (LCD on time, Backlight on time,
-        // Shutdown); they are laid out in that order, so the first is LCD's. Its range is 5-240, so
-        // one step up is always in bounds.
-        withStaleRetry { device.findObjects(byDesc("Increase")).first().click() }
+        // Three plus steppers are on this screen (LCD on time, Backlight on time, Shutdown); they are
+        // laid out in that order, so the first is LCD's. Its range is 5-240, so one step up is always
+        // in bounds.
+        withStaleRetry { device.findObjects(byDescContains(INCREMENT)).first().click() }
         click(SAVE_USER_OPTIONS)
 
         // Asserts only that it grew, not by how much: the step is the screen's business (5 today),

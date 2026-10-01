@@ -75,7 +75,7 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
     @Mock lateinit var bolusProgressData: BolusProgressData
 
     private fun create() = WizardBolusExecutorImpl(
-        aapsLogger, rh, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, iobCobCalculator, constraintsChecker, activePlugin,
+        aapsLogger, baseText, config, quickWizard, bolusWizardProvider, profileFunction, profileRepository, iobCobCalculator, constraintsChecker, activePlugin,
         runningModeGuard, commandQueue, persistenceLayer, uel, loop, dateUtil, decimalFormatter, profileUtil, automation, notificationManager, bolusProgressData,
         CoroutineScope(Dispatchers.Unconfined)
     )

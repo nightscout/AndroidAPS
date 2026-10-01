@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="calibration_shortname">CAL</string>
+    <string name="no_calibration_name">Sin calibración</string>
+    <string name="description_no_calibration">"No se ha aplicado ninguna corrección de calibración. Los valores del sensor se usan tal cual. Utiliza esto cuando el sensor ya esté calibrado de fábrica y sea preciso"</string>
+    <string name="linear_calibration_name">Calibración lineal</string>
+    <string name="description_linear_calibration">"Corrección de calibración lineal por sensor (pendiente y desplazamiento) calculada a partir de las glucemias capilares introducidas. Las entradas recientes tienen un mayor peso. La corrección se aplica tras el inicio de la sesión actual del sensor; las primeras 2 horas se omiten como calentamiento"</string>
+    <string name="sensor_change_detected_text">Se ha detectado un posible cambio de sensor a las %1$s. ¿Marcar como nuevo sensor?</string>
+    <string name="sensor_change_detected_action">Marcar cambio de sensor</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">Registrar un cambio de sensor para habilitar la calibración</string>
+    <string name="cal_status_warmup">Calentamiento del sensor: la calibración estará activa tras %1$s</string>
+    <string name="cal_status_need_more_entries">Se necesitan al menos 2 glucemias capilares (actualmente %1$d)</string>
+    <string name="cal_status_unsafe_fit">Ajuste fuera del rango seguro: no se ha aplicado la calibración</string>
+    <string name="cal_status_applied">Calibración aplicada</string>
+    <string name="cal_status_applied_offset_only">Calibración solo de desplazamiento aplicada: rango del sensor demasiado estrecho para la pendiente</string>
+    <string name="cal_status_applied_slope_clamped">Calibración aplicada: la pendiente se ha limitado al rango seguro. Añade más entradas para flexibilizarla</string>
+    <string name="cal_slope_offset">Pendiente %1$.2f, corrección de rango medio %2$s</string>
+    <string name="cal_session_started">Sesión iniciada: %1$s</string>
+    <string name="cal_mark_sensor_change_now">Registrar cambio de sensor</string>
+    <string name="cal_add_calibration">Añadir calibración</string>
+    <string name="cal_entries_header">Glucemias capilares (%1$d)</string>
+    <string name="cal_no_entries">Aún no hay glucemias capilares</string>
+    <string name="cal_entry_pair">Glucemia capilar %1$s → Sensor %2$s (Δ %3$s)</string>
+    <string name="cal_remove_entry_title">¿Eliminar entrada?</string>
+    <string name="cal_remove_entry_message">Esto invalidará la entrada. Se recalculará el ajuste</string>
+    <string name="cal_chart_entry_readout">Entrada %1$d/%2$d · %3$s · Sensor %4$s → BG %5$s</string>
 </resources>

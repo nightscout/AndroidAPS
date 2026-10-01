@@ -2,9 +2,17 @@ package app.aaps.plugins.sync.xdrip.keys
 
 import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 
+/**
+ * How far THIS install has synced with xDrip. Every entry is a cursor, so the whole enum is
+ * `exportable = false` - same reasoning as `NsclientLongKey`: another phone's position in the
+ * upload stream makes this one skip records or re-send them.
+ *
+ * If a key is ever added here that is NOT a cursor, give it `exportable = true` explicitly.
+ */
 enum class XdripLongKey(
     override val key: String,
     override val defaultValue: Long,
+    override val exportable: Boolean = false
 ) : LongNonPreferenceKey {
 
     BolusLastSyncedId("xdrip_bolus_last_synced_id", 0L),

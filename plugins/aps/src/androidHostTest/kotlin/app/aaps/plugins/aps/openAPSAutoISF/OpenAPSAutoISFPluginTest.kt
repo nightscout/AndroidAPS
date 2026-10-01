@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
@@ -40,15 +41,16 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun specialEnableConditionTest() {
+    fun `an engineering dev build leaves the choice to the user`() {
         whenever(config.isEngineeringMode()).thenReturn(true)
         whenever(config.isDev()).thenReturn(true)
-        assertThat(openAPSAutoISFPlugin.specialEnableCondition()).isTrue()
+        assertThat(openAPSAutoISFPlugin.enforcedState()).isNull()
     }
 
     @Test
-    fun specialShowInListConditionTest() {
-        assertThat(openAPSAutoISFPlugin.specialShowInListCondition()).isTrue()
+    fun `any other build forces it off`() {
+        whenever(config.isEngineeringMode()).thenReturn(false)
+        assertThat(openAPSAutoISFPlugin.enforcedState()).isEqualTo(EnforcedState.Disabled)
     }
 
     @Suppress("KotlinConstantConditions")
