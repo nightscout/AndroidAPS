@@ -1,5 +1,6 @@
-package app.aaps.pump.omnipod.dash.util
+package app.aaps.pump.omnipod.common.util
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
@@ -9,7 +10,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 
-class FunctionsTest {
+class ProfileToBasalProgramTest {
 
     @Test fun validProfile() {
         val profile: Profile = mock()
@@ -22,7 +23,7 @@ class FunctionsTest {
             )
         )
 
-        val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
+        val basalProgram: BasalProgram = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         val entries: List<BasalProgram.Segment> = basalProgram.segments
         assertThat(entries).hasSize(3)
         val entry1: BasalProgram.Segment = entries[0]
@@ -45,7 +46,7 @@ class FunctionsTest {
         whenever(profile.getBasalValues()).thenReturn(emptyArray())
 
         val exception = assertFailsWith<IllegalArgumentException> {
-            mapProfileToBasalProgram(profile)
+            mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         }
         assertThat(exception.message).isEqualTo("Basal values should contain values")
     }
@@ -58,7 +59,7 @@ class FunctionsTest {
         )
 
         val exception = assertFailsWith<IllegalArgumentException> {
-            mapProfileToBasalProgram(profile)
+            mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         }
         assertThat(exception.message).isEqualTo("First basal segment start time should be 0")
     }
@@ -74,7 +75,7 @@ class FunctionsTest {
         )
 
         val exception = assertFailsWith<IllegalArgumentException> {
-            mapProfileToBasalProgram(profile)
+            mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         }
         assertThat(exception.message).isEqualTo("Basal segment start time can not be greater than 86400")
     }
@@ -87,7 +88,7 @@ class FunctionsTest {
         )
 
         val exception = assertFailsWith<IllegalArgumentException> {
-            mapProfileToBasalProgram(profile)
+            mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         }
         assertThat(exception.message).isEqualTo("Basal segment start time can not be less than 0")
     }
@@ -101,7 +102,7 @@ class FunctionsTest {
             )
         )
 
-        val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
+        val basalProgram: BasalProgram = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         val basalProgramElement: BasalProgram.Segment = basalProgram.segments[0]
         assertThat(basalProgramElement.basalRateInHundredthUnitsPerHour).isEqualTo(5)
     }

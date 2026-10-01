@@ -122,15 +122,15 @@ class OmnipodErosComposeContent(
                     }
 
                     is OmnipodOverviewEvent.ShowDialog              -> {
-                        if (event.title == context.getString(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_discard_pod)) {
-                            showDiscardConfirm = true
-                            dialogTitle = event.title
-                            dialogMessage = event.message
-                        } else {
-                            dialogTitle = event.title
-                            dialogMessage = event.message
-                            showDialog = true
-                        }
+                        dialogTitle = event.title
+                        dialogMessage = event.message
+                        showDialog = true
+                    }
+
+                    is OmnipodOverviewEvent.ConfirmDiscardPod        -> {
+                        dialogTitle = event.title
+                        dialogMessage = event.message
+                        showDiscardConfirm = true
                     }
 
                     is OmnipodOverviewEvent.ShowErrorDialog         -> {

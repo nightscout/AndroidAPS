@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.CountDownLatch
 import kotlin.reflect.KClass
 
-interface OmnipodDashBleManager {
+interface OmnipodBleManager {
 
     fun sendCommand(cmd: Command, responseType: KClass<out Response>): Observable<PodEvent>
 
