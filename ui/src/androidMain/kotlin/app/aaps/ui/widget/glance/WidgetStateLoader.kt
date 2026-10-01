@@ -212,6 +212,7 @@ class WidgetStateLoader(
             bgColor = bgColor,
             strikeThrough = strikeThrough,
             arrowResId = arrowResId,
+            trendArrow = lastBg?.let { trendArrow },
             arrowDescription = lastBg?.let { rh.gs(trendArrow.directionToDescription()) },
             tbrDescription = tbrDescription,
             iobLabel = rh.gs(CoreUiStrings.iob),
