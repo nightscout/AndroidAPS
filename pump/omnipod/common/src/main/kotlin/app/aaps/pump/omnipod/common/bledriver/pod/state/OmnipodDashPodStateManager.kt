@@ -77,6 +77,7 @@ interface OmnipodDashPodStateManager {
     val minutesSinceActivation: Short?
     val activeAlerts: EnumSet<AlertType>?
     val alarmType: AlarmType?
+    val pdmRef: String? // PDM-style "Ref: TT-VVVHH-IIIRR-FFF" fault reference, captured at the time the fault occurred
 
     var tempBasal: TempBasal?
     val tempBasalActive: Boolean

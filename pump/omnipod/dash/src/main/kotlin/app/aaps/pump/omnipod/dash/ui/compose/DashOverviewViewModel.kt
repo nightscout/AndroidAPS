@@ -308,12 +308,17 @@ class DashOverviewViewModel(
             // Errors
             val errors = buildList {
                 podStateManager.alarmType?.let {
-                    add(rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, it.value, it.toString()))
+                    add(rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, it.code, it.description))
                 }
             }
             val errorsText = if (errors.isEmpty()) PLACEHOLDER else errors.joinToString("\n")
             val errorsLevel = if (errors.isEmpty()) StatusLevel.NORMAL else StatusLevel.CRITICAL
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.errors), value = errorsText, level = errorsLevel))
+
+            // PDM-style Ref code, for a support call
+            podStateManager.pdmRef?.let { ref ->
+                add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_pod_status_pdm_ref_label), value = ref))
+            }
         }
     }
 

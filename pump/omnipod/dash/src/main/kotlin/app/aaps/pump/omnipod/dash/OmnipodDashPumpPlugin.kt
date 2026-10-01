@@ -72,6 +72,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
+import app.aaps.pump.omnipod.common.R as CommonR
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
@@ -397,15 +398,17 @@ class OmnipodDashPumpPlugin(
             }
             if (!podStateManager.alarmSynced) {
                 podStateManager.alarmType?.let {
+                    val faultText = rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, it.code, it.description) +
+                        (podStateManager.pdmRef?.let { ref -> "\n" + rh.gs(CommonR.string.omnipod_common_pod_status_pdm_ref, ref) } ?: "")
                     if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class)) {
                         showNotification(
                             NotificationId.OMNIPOD_POD_FAULT,
-                            it.toString(),
+                            faultText,
                             AlarmSound.BOLUS_ERROR
                         )
                     }
                     pumpSync.insertAnnouncement(
-                        error = it.toString(),
+                        error = faultText,
                         pumpId = System.currentTimeMillis(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber()
