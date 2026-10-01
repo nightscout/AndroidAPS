@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
@@ -111,6 +112,7 @@ class DanaRSService : MetroService() {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var bolusProgressData: BolusProgressData
+    @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var pumpEnactResultProvider: () -> PumpEnactResult
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
     @Inject lateinit var danaRSPacketAPSBasalSetTemporaryBasal: () -> DanaRSPacketAPSBasalSetTemporaryBasal
@@ -364,6 +366,9 @@ class DanaRSService : MetroService() {
             }
         }
         danaPump.bolusingDetailedBolusInfo = null
+        // We saw the bolus end (delivered or stopped), so now is the time the pump writes to the BOLUS record
+        if ((danaPump.bolusDone || danaPump.bolusStopped) && !start.failed && !connectionBroken)
+            updateStoredBolusTime(detailedBolusInfo, dateUtil.now())
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12
@@ -387,6 +392,20 @@ class DanaRSService : MetroService() {
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         }
         return !start.failed && !connectionBroken
+    }
+
+    /**
+     * `DanaRSPlugin.deliverTreatment` stores the bolus info with the estimated end time, because the pump
+     * writes the BOLUS record at the end of the bolus. A stopped bolus ends earlier. Then the history
+     * reading did not find the stored info (it looks only 1 minute around the record time), and the
+     * bolus type and the link to the bolus wizard were lost.
+     */
+    internal fun updateStoredBolusTime(detailedBolusInfo: DetailedBolusInfo, endTime: Long) {
+        // Finding removes the stored record, a copy with the real end time is stored again
+        val stored = detailedBolusInfoStorage.findDetailedBolusInfo(detailedBolusInfo.timestamp, detailedBolusInfo.insulin) ?: return
+        if (abs(stored.timestamp - endTime) > T.secs(1).msecs())
+            aapsLogger.debug(LTag.PUMPCOMM, "Bolus ended at ${dateUtil.dateAndTimeAndSecondsString(endTime)}, estimated ${dateUtil.dateAndTimeAndSecondsString(stored.timestamp)}")
+        detailedBolusInfoStorage.add(stored.copy().also { it.timestamp = endTime })
     }
 
     fun bolusStop() {
