@@ -117,6 +117,8 @@
     <string name="omnipod_common_pod_status_pod_fault">Pod Fault</string>
     <string name="omnipod_common_pod_status_inactive">Inactive</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Fault: %1$03d %2$s</string>
+    <string name="omnipod_common_pod_status_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
+    <string name="omnipod_common_pod_status_pdm_ref_label">Ref</string>
 
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod will expire soon</string>
