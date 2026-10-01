@@ -517,6 +517,14 @@ class OmnipodDashPumpPlugin(
         handler?.removeCallbacksAndMessages(null)
         handler?.looper?.quit()
         handler = null
+        // Switching away from this driver while activation is stuck mid-way (e.g. a failed
+        // cannula insertion with no way forward) is the user giving up on that attempt -
+        // clear it so a fresh activation isn't blocked by it. A running pod is never touched.
+        if (podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
+            podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
+        ) {
+            podStateManager.reset()
+        }
     }
 
     private fun deliverBasalCorrection(): PumpEnactResult {
