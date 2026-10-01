@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Metric
@@ -11,6 +12,7 @@ import androidx.core.app.NotificationCompat.Metric.FixedFloat
 import androidx.core.app.NotificationCompat.Metric.FixedInt
 import androidx.core.app.NotificationCompat.MetricStyle
 import androidx.core.app.RemoteInput
+import androidx.core.os.bundleOf
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
@@ -118,6 +120,21 @@ class PersistentNotificationPlugin(
     private val CONVERSATION_ID = "conversation_id"
     private val EXTRA_VOICE_REPLY = "extra_voice_reply"
     // End Android auto
+
+    // For Samsung Live Notifications / Now Bar
+    private val SAMSUNG_MANUFACTURER = "samsung"
+
+    // "android.ongoingActivityNoti.style" value for Samsung's "Standard" style (primary/secondary
+    // text, no progress bar). This is the only style this plugin needs; Samsung also defines a
+    // "Progress" style (2) and a "Custom" RemoteViews style, not used here.
+    private val SAMSUNG_LIVE_UPDATE_STANDARD_STYLE = 1
+    private val SAMSUNG_EXTRA_STYLE = "android.ongoingActivityNoti.style"
+    private val SAMSUNG_EXTRA_PRIMARY_INFO = "android.ongoingActivityNoti.primaryInfo"
+    private val SAMSUNG_EXTRA_SECONDARY_INFO = "android.ongoingActivityNoti.secondaryInfo"
+    private val SAMSUNG_EXTRA_CHIP_ICON = "android.ongoingActivityNoti.chipIcon"
+    private val SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO = "android.ongoingActivityNoti.nowbarPrimaryInfo"
+    private val SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO = "android.ongoingActivityNoti.nowbarSecondaryInfo"
+    // End Samsung Live Notifications / Now Bar
 
     private var scope: CoroutineScope? = null
     private val deferredStart = DeferredForegroundStart()
@@ -297,7 +314,8 @@ class PersistentNotificationPlugin(
         applyLiveUpdate(
             builder = builder,
             bgStatusChipText = bgStatusChipText,
-            bgMetric = bgMetric
+            bgMetric = bgMetric,
+            line2 = line2
         )
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
@@ -324,8 +342,14 @@ class PersistentNotificationPlugin(
     private fun applyLiveUpdate(
         builder: NotificationCompat.Builder,
         bgStatusChipText: String?,
-        bgMetric: Metric?
+        bgMetric: Metric?,
+        line2: String?
     ) {
+        // Samsung's own system UI (One UI 7+) does not render the standard Android promoted
+        // notification below - it shows the lock-screen "Now Bar" and drawer "Live Notifications"
+        // through its own proprietary extras, so that needs to be applied separately and does not
+        // depend on the Android version gating below.
+        applySamsungLiveUpdate(builder, bgStatusChipText, line2)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) return
         builder.setRequestPromotedOngoing(true)
         if (!bgStatusChipText.isNullOrBlank()) {
@@ -338,6 +362,30 @@ class PersistentNotificationPlugin(
                     .setCriticalMetric(0)
             )
         }
+    }
+
+    // Samsung Live Notifications / Now Bar (One UI 7+) are driven by this notification extras
+    // bundle plus the "com.samsung.android.support.ongoing_activity" manifest meta-data, not by
+    // NotificationCompat#setRequestPromotedOngoing(). Harmless on non-Samsung devices, but
+    // restricted to Samsung so no unused extras are attached elsewhere.
+    private fun applySamsungLiveUpdate(
+        builder: NotificationCompat.Builder,
+        bgStatusChipText: String?,
+        line2: String?
+    ) {
+        if (!Build.MANUFACTURER.equals(SAMSUNG_MANUFACTURER, ignoreCase = true)) return
+        if (bgStatusChipText.isNullOrBlank()) return
+        val extras = bundleOf(
+            SAMSUNG_EXTRA_STYLE to SAMSUNG_LIVE_UPDATE_STANDARD_STYLE,
+            SAMSUNG_EXTRA_PRIMARY_INFO to bgStatusChipText,
+            SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO to bgStatusChipText,
+            SAMSUNG_EXTRA_CHIP_ICON to Icon.createWithResource(context, iconsProvider.getNotificationIcon())
+        )
+        line2?.let {
+            extras.putString(SAMSUNG_EXTRA_SECONDARY_INFO, it)
+            extras.putString(SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO, it)
+        }
+        builder.addExtras(extras)
     }
 
     private fun Double.round(decimals: Int): Double {

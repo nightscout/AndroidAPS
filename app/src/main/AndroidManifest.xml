@@ -52,6 +52,16 @@
         android:theme="@style/AppTheme.Launcher">
         <profileable android:shell="true" />
 
+        <!-- Samsung One UI 7+ shows the persistent notification in its own "Live Notifications"
+             drawer section and lock-screen "Now Bar" through a proprietary mechanism, separate
+             from (and not yet replaced by) Android's standard promoted-notification APIs used in
+             PersistentNotificationPlugin. This meta-data is required for Samsung's system UI to
+             consider the app eligible; see the "android.ongoingActivityNoti.*" notification
+             extras added in PersistentNotificationPlugin.applySamsungLiveUpdate(). -->
+        <meta-data
+            android:name="com.samsung.android.support.ongoing_activity"
+            android:value="true" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
