@@ -60,12 +60,12 @@ kotlin {
                 implementation(project(":core:interfaces"))
                 implementation(project(":core:ui"))
 
-                implementation(libs.cmp.runtime)
-                implementation(libs.cmp.foundation)
-                implementation(libs.cmp.ui)
-                implementation(libs.cmp.material3)
-                implementation(libs.cmp.material.icons.extended)
-                implementation(libs.cmp.ui.tooling.preview)
+                implementation(libs.jetbrains.compose.runtime)
+                implementation(libs.jetbrains.compose.foundation)
+                implementation(libs.jetbrains.compose.ui)
+                implementation(libs.jetbrains.compose.material3)
+                implementation(libs.jetbrains.compose.material.icons.extended)
+                implementation(libs.jetbrains.compose.ui.tooling.preview)
                 // The multiplatform lifecycle: ViewModel, viewModelScope, viewModel { } and
                 // collectAsStateWithLifecycle all come from here rather than from androidx, which
                 // would pin the screen and its view model to Android.

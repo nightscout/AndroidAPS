@@ -1,13 +1,12 @@
 package app.aaps.plugins.source.compose
 
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import com.google.common.truth.Truth.assertThat
@@ -28,7 +27,6 @@ import org.mockito.kotlin.whenever
 internal class BgSourceViewModelTest {
 
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var aapsLogger: AAPSLogger
@@ -46,7 +44,7 @@ internal class BgSourceViewModelTest {
         // re-triggers loadData(). The initial loadData()'s background IO launch is intentionally left
         // unstubbed: it never mutates the structural fields asserted below.
         whenever(persistenceLayer.observeChanges(GV::class)).thenReturn(emptyFlow())
-        sut = BgSourceViewModel(persistenceLayer, rh, dateUtil, profileUtil, aapsLogger, rxBus)
+        sut = BgSourceViewModel(persistenceLayer, generatedTextResolver(), dateUtil, profileUtil, aapsLogger, rxBus)
     }
 
     @AfterEach
@@ -124,11 +122,10 @@ internal class BgSourceViewModelTest {
 
     @Test
     fun `getDeleteConfirmationMessage uses the plural string for multiple selection`() {
-        whenever(rh.gs(CoreUiStrings.confirm_remove_multiple_items, 2)).thenReturn("Remove 2 items")
         sut.enterSelectionMode(gv(id = 1L, timestamp = 1_000L))
         sut.toggleSelection(gv(id = 2L, timestamp = 2_000L))
 
-        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Remove 2 items")
+        assertThat(sut.getDeleteConfirmationMessage()).isEqualTo("Are you sure you want to remove 2 items")
     }
 
     @Test

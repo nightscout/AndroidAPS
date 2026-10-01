@@ -70,6 +70,22 @@ class PumpSyncImplementation(
         val storedSerial = preferences.get(StringNonKey.ActivePumpSerialNumber)
         if (activePlugin.activePump.selectedActivePump() is VirtualPump) return true
         if (type.description == storedType && serialNumber == storedSerial) return true
+        // A pump that has not been talked to yet does not know its own serial: Dana keeps
+        // `DanaPump.serialNumber` as "" and Diaconn keeps `serialNo` as 0 until the first connection,
+        // and both are plain in-memory fields that start empty on every app start. That is "I do not
+        // know yet", and reporting it as "a different pump" was doing real damage on an unchanged
+        // one - the only caller answers a false here by ending the running temporary basal and
+        // extended bolus in the database while the pump carries on delivering them, wiping the pump
+        // identity (so history older than the re-registration is then ignored) and failing whatever
+        // was queued.
+        //
+        // Saying "not changed" when the pump really did change is the safe direction, because it is
+        // caught: the serial arrives with the first history record and `confirmActivePump` rejects
+        // records that do not match, with a WRONG_PUMP_DATA notification. Nothing is silently mixed.
+        if (serialNumber.isBlank()) {
+            aapsLogger.debug(LTag.PUMP, "verifyPumpIdentification: $type has not reported its serial yet, treating as unchanged")
+            return true
+        }
         aapsLogger.debug(LTag.PUMP, "verifyPumpIdentification failed for $type $serialNumber")
         return false
     }

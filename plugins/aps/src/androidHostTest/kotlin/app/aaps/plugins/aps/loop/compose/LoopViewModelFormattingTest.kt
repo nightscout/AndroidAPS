@@ -383,7 +383,8 @@ internal class LoopViewModelFormattingTest {
         override var isPercent: Boolean = false,
         override var isTempCancel: Boolean = false,
         override var bolusDelivered: Double = 0.0,
-        override var queued: Boolean = false
+        override var queued: Boolean = false,
+        override var cancelled: Boolean = false
     ) : PumpEnactResult {
 
         override fun success(success: Boolean) = apply { this.success = success }
@@ -397,5 +398,6 @@ internal class LoopViewModelFormattingTest {
         override fun isTempCancel(isTempCancel: Boolean) = apply { this.isTempCancel = isTempCancel }
         override fun bolusDelivered(bolusDelivered: Double) = apply { this.bolusDelivered = bolusDelivered }
         override fun queued(queued: Boolean) = apply { this.queued = queued }
+        override fun cancelled(cancelled: Boolean) = apply { this.cancelled = cancelled }
     }
 }

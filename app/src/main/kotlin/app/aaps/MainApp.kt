@@ -42,13 +42,9 @@ import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.LongNonKey
-import app.aaps.core.keys.ProfileComposedBooleanKey
-import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
@@ -57,12 +53,13 @@ import app.aaps.di.metro.MetroGraphs
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.metro.MetroWorkerFactory
+import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue
+import app.aaps.implementation.maintenance.migration.PreferenceMigrations
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
-import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
@@ -77,6 +74,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.Json
@@ -88,8 +86,19 @@ import java.util.Locale
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, Configuration.Provider {
+
+    companion object {
+
+        /**
+         * How long start up waits for the plugins to finish starting before carrying on regardless.
+         * Matches `ConfigBuilderImpl.PLUGIN_SETTLE_WAIT`, which bounds the same wait on the import path -
+         * the two start paths should behave the same, which is the whole point of waiting here at all.
+         */
+        private val PLUGIN_START_WAIT = 30.seconds
+    }
 
     override fun injectMembers(target: Any): Boolean = metroGraphs.injectMembers(target)
 
@@ -166,6 +175,21 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     private var insulinPeakTime: Long = 0L
     private var profileNameToDia: Map<String, Double> = emptyMap()
 
+    /**
+     * The raw profile keys that [profileNameToDia] was built from, still in the old store.
+     *
+     * `doMigrations` used to remove them as it read them, which put the only copy of those DIA
+     * values in the map above - a field, in memory. `dataMigrations` is the only consumer and runs
+     * much later, after `vacuumDatabaseIfDue` (which documents that it can take the process down
+     * below the JVM, where no `catch` reaches) and after the plugins start. A death anywhere in that
+     * gap lost the DIA values for good: the next start finds no keys, takes the empty branch and
+     * stamps the old records with a substituted insulin instead. That is wrong IOB on historical
+     * records and it is one-way - the sentinel is consumed and those rows are never revisited.
+     *
+     * So they are removed only once the value they carry is safely in the insulin list.
+     */
+    private var legacyProfileKeysToRemove: List<String> = emptyList()
+
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshWidget: Runnable
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -178,6 +202,12 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         // Applies the analytics opt-out. Must come before configureLeakCanary below, which reports
         // through fabricPrivacy.
         fabricPrivacyImpl.start()
+        // Build identity goes on the crash report here, not in setUserStats() near the end of doInit.
+        // A crash during plugin initialization happens seconds before that runs, so those reports carried
+        // no HEAD and no Committed - exactly the ones where the build has to be known to tell a stale
+        // local build from a live bug. Collection is already gated by the call above, so an opted-out
+        // user still uploads nothing.
+        setBuildIdentityKeys()
 
         // Here should be everything injected
         aapsLogger.debug("onCreate")
@@ -202,10 +232,16 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 config.updateInitProgress(getString(R.string.migrating_preferences))
                 doMigrations()
 
-                // ProfileRepository is a @Singleton, so it already loaded during field injection —
-                // before doMigrations() converted the ancient raw SharedPreferences profile keys into
-                // the numbered ones. Re-read now, otherwise that upgrade would be picked up only on
-                // the next start (and the profile-to-JSON conversion with it).
+                // Re-read the profiles now that doMigrations() has converted the ancient raw
+                // SharedPreferences profile keys into the numbered ones. Without this the upgrade
+                // would only be picked up on the next start, and the profile-to-JSON conversion
+                // with it.
+                //
+                // This used to say the repository "already loaded during field injection". There is
+                // no field injection any more - it is a lazy `metroGraphs` accessor, so whether it
+                // was built before this line depends on what else happened to pull it in. Which is
+                // exactly why the call stays: it costs a re-read when nothing was loaded, and it is
+                // the difference between a right and a stale profile when something was.
                 profileRepository.reset()
 
                 // Defragment the DB while it is quiescent: plugins, loop, sync and UI all start
@@ -215,7 +251,13 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 // Register and initialize plugins
                 config.updateInitProgress(getString(R.string.initializing_plugins))
                 pluginStore.plugins = plugins
-                configBuilder.initialize()
+                // Wait for the plugins to actually start, not just to be marked enabled. initialize()
+                // only schedules onStart, and everything below reads plugin state - the reconciler asks
+                // for the active pump on the next line. Bounded for the same reason applyConfiguration
+                // bounds it: a driver whose onStart will not settle must not hold up start up for ever.
+                val started = configBuilder.initialize()
+                if (withTimeoutOrNull(PLUGIN_START_WAIT) { started.joinAll() } == null)
+                    aapsLogger.warn(LTag.CORE, "Plugins did not finish starting within $PLUGIN_START_WAIT")
 
                 // Running-mode reconciler + expiry scheduler. Start after plugins are registered:
                 // the reconciler's startup-drift check reads the active pump, which requires
@@ -367,21 +409,39 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         aapsLogger.debug("doInit end")
     }
 
-    private suspend fun setUserStats() {
-        if (!fabricPrivacy.fabricEnabled()) return
-        val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
-        val remote = config.REMOTE.lowercase(Locale.getDefault())
+    /** The build this is, in short form - "github:owner/repo". */
+    private val gitRemoteShort: String
+        get() = config.REMOTE.lowercase(Locale.getDefault())
             .replace("https://", "")
             .replace("http://", "")
             .replace(".git", "")
             .replace(".com/", ":")
             .replace(".org/", ":")
             .replace(".net/", ":")
+
+    /**
+     * Which build is running. All of it is known from BuildConfig before anything starts, so it is set as
+     * early as collection is allowed - see the call in [onCreate].
+     */
+    private fun setBuildIdentityKeys() {
+        FirebaseCrashlytics.getInstance().apply {
+            setCustomKey("HEAD", BuildConfig.HEAD)
+            setCustomKey("Version", config.VERSION_NAME)
+            setCustomKey("BuildType", config.BUILD_TYPE)
+            setCustomKey("BuildFlavor", config.FLAVOR)
+            setCustomKey("Remote", gitRemoteShort)
+            setCustomKey("Committed", config.COMMITTED)
+        }
+    }
+
+    private suspend fun setUserStats() {
+        if (!fabricPrivacy.fabricEnabled()) return
+        val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
         fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
         fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKey.GeneralLanguage) ?: Locale.getDefault().language)
         fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
         fabricPrivacy.setUserProperty("HEAD", BuildConfig.BUILDVERSION)
-        fabricPrivacy.setUserProperty("Remote", remote)
+        fabricPrivacy.setUserProperty("Remote", gitRemoteShort)
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
         activePlugin.activePumpInternal.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
@@ -389,12 +449,8 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             activePlugin.activeAPS?.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
         activePlugin.activeSensitivity.let { fabricPrivacy.setUserProperty("Sensitivity", it::class.java.simpleName) }
-        FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
-        FirebaseCrashlytics.getInstance().setCustomKey("Version", config.VERSION_NAME)
-        FirebaseCrashlytics.getInstance().setCustomKey("BuildType", config.BUILD_TYPE)
-        FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", config.FLAVOR)
-        FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
-        FirebaseCrashlytics.getInstance().setCustomKey("Committed", config.COMMITTED)
+        // HEAD/Version/BuildType/BuildFlavor/Remote/Committed are set in setBuildIdentityKeys() during
+        // onCreate. These two are not known that early.
         if (hashes.isNotEmpty()) FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
         FirebaseCrashlytics.getInstance().setCustomKey("Email", preferences.get(StringKey.MaintenanceIdentification))
     }
@@ -457,6 +513,21 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
                 actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.select)) {}),
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
+        // AAPS directory selected, but the permission behind it is gone.
+        //
+        // The check above only ever looked at whether the URI string is there, so this case was
+        // completely silent: the directory is still "selected", the folder and the old exports are
+        // still on the phone, and the Local export button simply goes grey. Android drops a persisted
+        // SAF grant on reinstall and on "clear storage", so it happens to people who did nothing
+        // wrong. Found on a real phone where the last local backup was four months old and nobody
+        // knew - and a user with no cloud set up has, at that point, no backup at all.
+        else if (!fileListProvider.isDirectoryAccessGranted())
+            notificationManager.post(
+                id = NotificationId.AAPS_DIR_ACCESS_LOST,
+                TextRef.AndroidRes(app.aaps.core.ui.R.string.aaps_directory_access_lost),
+                actions = listOf(NotificationAction(TextRef.AndroidRes(R.string.select)) {}),
+                validityCheck = { !fileListProvider.isDirectoryAccessGranted() }
+            )
     }
 
     private fun setRxErrorHandler() {
@@ -488,312 +559,154 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
     }
 
     private suspend fun doMigrations() {
-        // set values for different builds
-        // 3.3
-        if (preferences.get(UnitDoubleKey.OverviewLowMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewLowMark)
-        if (preferences.get(UnitDoubleKey.OverviewHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewHighMark)
-        // These three migrate bidirectionally-synced keys. Skip on a client: it adopts the value from
-        // the master via sync, and a local put here would now trigger a client→master round-trip (modal)
-        // at startup. The master migrates and publishes; the client follows.
+        // Which insulin curve the old records were delivered with, for the database migration in
+        // dataMigrations(). Read BEFORE the migrations, because the migration that deletes these dead
+        // ConfigBuilder rows is one of them now.
+        readInsulinForDataMigration()
+
+        // The preference migrations, in order, against this device's store.
+        //
+        // They live in :implementation and take the store to work on, because the settings IMPORT runs
+        // exactly the same functions over the imported file. An old backup's names never reach this
+        // store any more - PreferenceImportApplier drops what it cannot resolve - so a start-up only
+        // pass can no longer see them, and the user loses their profiles, plugin selection, objectives
+        // and loop mode. See PreferenceMigrations for what is in the list and what is deliberately not.
+        PreferenceMigrations(aapsLogger, config, persistenceLayer, dateUtil, profileUtil).migrate(sp)
+        // Those writes go below Preferences, so the cached flows have not seen them.
+        preferences.reloadFromStore()
+
+        // Seeds simple mode for an install that predates the key.
+        //
+        // NOT a migration and deliberately not in the list above: it invents a value rather than moving
+        // one, and `simple_mode` feeds PreferencesImpl.calculatedDefaultValue, so a wrong guess changes
+        // the effective value of a whole family of settings. Skipped on a client, which adopts the
+        // value from the master via sync - a local put here would trigger a client→master round-trip
+        // (modal) at startup. The master seeds and publishes; the client follows.
         if (!config.AAPSCLIENT && preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
             preferences.put(BooleanKey.GeneralSimpleMode, !preferences.get(BooleanNonKey.GeneralSetupWizardProcessed))
-        // Migrate from OpenAPSSMBDynamicISFPlugin
-        if (sp.getBoolean("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled", false)) {
-            sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled")
-            sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Visible")
-            sp.putBoolean("ConfigBuilder_APS_OpenAPSSMB_Enabled", true)
-            if (!config.AAPSCLIENT) preferences.put(BooleanKey.ApsUseDynamicSensitivity, true)
-        }
-        // convert Double to Int
-        try {
-            val dynIsf = sp.getDouble("DynISFAdjust", 0.0)
-            if (!config.AAPSCLIENT && dynIsf != 0.0 && dynIsf.toInt() != preferences.get(IntKey.ApsDynIsfAdjustmentFactor))
-                preferences.put(IntKey.ApsDynIsfAdjustmentFactor, dynIsf.toInt())
-        } catch (_: Exception) { /* ignore */
-        }
-        // Clear SmsOtpPassword if wrongly replaced
-        if (preferences.get(StringKey.SmsOtpPassword).length > 10) preferences.put(StringKey.SmsOtpPassword, "")
 
         val keys: Map<String, *> = sp.getAll()
-        // Migrate ActivityMonitor
-        for ((key, value) in keys) {
-            if (key.startsWith("Monitor") && key.endsWith("total")) {
-                val activity = key.split("_")[1]
-                if (value is String)
-                    preferences.put(LongComposedKey.ActivityMonitorTotal, activity, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(LongComposedKey.ActivityMonitorTotal, activity, value = value as Long)
-                sp.remove(key)
-            }
-            if (key.startsWith("Monitor") && key.endsWith("resumed")) {
-                val activity = key.split("_")[1]
-                if (value is String)
-                    preferences.put(LongComposedKey.ActivityMonitorResumed, activity, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(LongComposedKey.ActivityMonitorResumed, activity, value = value as Long)
-                sp.remove(key)
-            }
-            if (key.startsWith("Monitor") && key.endsWith("start")) {
-                val activity = key.split("_")[1]
-                if (value is String)
-                    preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(LongComposedKey.ActivityMonitorStart, activity, value = value as Long)
-                sp.remove(key)
-            }
-        }
-        // Migrate Objectives
-        for ((key, value) in keys) {
-            if (key.startsWith("Objectives_") && key.endsWith("_started")) {
-                val objective = key.split("_")[1]
-                if (value is String)
-                    preferences.put(ObjectivesLongComposedKey.Started, objective, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(ObjectivesLongComposedKey.Started, objective, value = value as Long)
-                sp.remove(key)
-            }
-            if (key.startsWith("Objectives_") && key.endsWith("_accomplished")) {
-                val objective = key.split("_")[1]
-                if (value is String)
-                    preferences.put(ObjectivesLongComposedKey.Accomplished, objective, value = SafeParse.stringToLong(value))
-                else
-                    preferences.put(ObjectivesLongComposedKey.Accomplished, objective, value = value as Long)
-                sp.remove(key)
-            }
-        }
-        // Migrate ConfigBuilder
-        for ((key, value) in keys) {
-            if (key.startsWith("ConfigBuilder_") && key.endsWith("_Enabled")) {
-                val plugin = key.split("_")[1] + "_" + key.split("_")[2]
-                preferences.put(BooleanComposedKey.ConfigBuilderEnabled, plugin, value = value as Boolean)
-                sp.remove(key)
-            }
-            if (key.startsWith("ConfigBuilder_") && key.endsWith("_Visible")) {
-                // Legacy fragment-visibility pref — no longer tracked; drop during migration.
-                sp.remove(key)
-            }
-        }
-        // Migrate Profile
+        // Harvest the DIA each old profile was using, for the database migration in dataMigrations().
+        //
+        // NOT a key migration and deliberately not in PreferenceMigrations: it fills fields this class
+        // reads much later. The migration writes the new `_name` key but leaves the raw one, exactly so
+        // this can still pair a profile with its DIA - see legacyProfileKeysToRemove, which collects
+        // those names here and drops them there, once the values they carry are safely in the insulin
+        // list.
         val indexToName = mutableMapOf<Int, String>()
         val indexToDia = mutableMapOf<Int, Double>()
+        val stillNeeded = mutableListOf<String>()
         for ((key, value) in keys) {
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_mgdl")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, SafeParse.stringToInt(number), value = value as Boolean)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_isf")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targetlow")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targethigh")) {
-                val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, SafeParse.stringToInt(number), value = value as String)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name")) {
-                val number = key.split("_")[1]
-                indexToName[SafeParse.stringToInt(number)] = value as String
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, SafeParse.stringToInt(number), value = value)
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_name_")) {
-                val number = key.split("_")[2]
-                indexToName[SafeParse.stringToInt(number)] = value as String
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia")) {
-                val number = SafeParse.stringToInt(key.split("_")[1])
-                indexToDia[number] = SafeParse.stringToDouble(value.toString())
-                sp.remove(key)
-            }
-            if (key.startsWith(Constants.LOCAL_PROFILE + "_dia_")) {
-                val number = SafeParse.stringToInt(key.split("_")[2])
-                indexToDia[number] = SafeParse.stringToDouble(value.toString())
-                sp.remove(key)
-            }
+            val parts = key.split("_")
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name"))
+                parts.getOrNull(1)?.toIntOrNull()?.let { number ->
+                    LegacyPreferenceValue.asString(value)?.let { name ->
+                        indexToName[number] = name
+                        stillNeeded += key
+                    }
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_name_"))
+                parts.getOrNull(2)?.toIntOrNull()?.let { number ->
+                    LegacyPreferenceValue.asString(value)?.let { indexToName[number] = it }
+                }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia"))
+                parts.getOrNull(1)?.toIntOrNull()?.let { number ->
+                    LegacyPreferenceValue.asDouble(value)?.let { dia ->
+                        indexToDia[number] = dia
+                        stillNeeded += key
+                    }
+                }
+            // The later spelling of the same thing. No key in this build owns it any more - the DIA
+            // belongs to the insulin now - so it is collected for removal exactly like the raw one
+            // above, and for the same reason: only once dataMigrations() has used the value.
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_dia_"))
+                parts.getOrNull(2)?.toIntOrNull()?.let { number ->
+                    LegacyPreferenceValue.asDouble(value)?.let { dia ->
+                        indexToDia[number] = dia
+                        stillNeeded += key
+                    }
+                }
         }
         profileNameToDia = indexToDia.mapNotNull { (index, dia) ->
             indexToName[index]?.let { name -> name to dia }
         }.toMap()
+        legacyProfileKeysToRemove = stillNeeded
 
-        // Migrate Tidepool from username/password to OAuth2
-        if (sp.contains("tidepool_username") || sp.contains("tidepool_password")) {
-            sp.remove("tidepool_username")
-            sp.remove("tidepool_password")
-            sp.remove("tidepool_test_login")
-            // Clear OAuth2 state to force re-authentication
-            sp.remove("tidepool_auth_state")
-            sp.remove("tidepool_service_configuration")
-            sp.remove("tidepool_subscription_id")
-        }
+        // Rebuilding them from the old keys is a migration and has already run above. This only fills
+        // in the three factory presets for an install that has none.
+        seedTempTargetPresets()
+    }
 
-        // Migrate loop mode
-        if (config.APS && sp.contains("aps_mode")) {
-            val mode = when (sp.getString("aps_mode", "CLOSED")) {
-                "OPEN"   -> RM.Mode.OPEN_LOOP
-                "CLOSED" -> RM.Mode.CLOSED_LOOP
-                "LGS"    -> RM.Mode.CLOSED_LOOP_LGS
-                else     -> RM.Mode.CLOSED_LOOP
-            }
-            persistenceLayer.insertOrUpdateRunningMode(
-                runningMode = RM(
-                    timestamp = dateUtil.now(),
-                    mode = mode,
-                    autoForced = false,
-                    duration = 0
-                ),
-                action = Action.CLOSED_LOOP_MODE,
-                source = Sources.Aaps,
-                listValues = listOf(ValueWithUnit.SimpleString("Migration"))
-            )
-            sp.remove("aps_mode")
-        }
+    /**
+     * Which insulin curve the old records were delivered with, for the database migration.
+     *
+     * Checks BOTH spellings - the legacy `ConfigBuilder_INSULIN_<X>_Enabled` and the
+     * `ConfigBuilder_Enabled_INSULIN_<X>` the rename produces - so it no longer matters whether the
+     * migrations have been past yet. That used to be an unwritten order dependency inside
+     * doMigrations: the rename had to run before this, and the sweep after it.
+     *
+     * Not a migration itself. It fills fields this class reads much later, and an import has no legacy
+     * database rows to stamp - there is no database import in AAPS.
+     */
+    private fun readInsulinForDataMigration() {
+        fun selected(plugin: String) =
+            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_$plugin", false) || sp.getBoolean("ConfigBuilder_INSULIN_${plugin}_Enabled", false)
 
-        // Migrate temp target presets from old preference keys to JSON array
-        migrateTempTargetPresets()
-
-        // Get Insulin plugin information for database migration
         insulinLabel = rh.gs(
             when {
-                sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false)      -> InsulinType.OREF_RAPID_ACTING.label
-                sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) -> InsulinType.OREF_ULTRA_RAPID_ACTING.label
-                sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin", false)         -> InsulinType.OREF_FREE_PEAK.label
-                sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin", false)              -> InsulinType.OREF_LYUMJEV.label
-                else                                                                                    -> InsulinType.OREF_RAPID_ACTING.label
+                selected("InsulinOrefRapidActingPlugin")      -> InsulinType.OREF_RAPID_ACTING.label
+                selected("InsulinOrefUltraRapidActingPlugin") -> InsulinType.OREF_ULTRA_RAPID_ACTING.label
+                selected("InsulinOrefFreePeakPlugin")         -> InsulinType.OREF_FREE_PEAK.label
+                selected("InsulinLyumjevPlugin")              -> InsulinType.OREF_LYUMJEV.label
+                else                                          -> InsulinType.OREF_RAPID_ACTING.label
             }
         )
         insulinPeakTime = when {
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false)      -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) -> InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin", false)         -> (sp.getInt("insulin_oref_peak", 75) * 60 * 1000).toLong()
-            sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin", false)              -> InsulinType.OREF_LYUMJEV.insulinPeakTime
-            else                                                                                    -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
-        }
-        // Migrate Insulin Plugins
-        if (sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin", false) ||
-            sp.getBoolean("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled", false) || sp.getBoolean("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin", false)
-        ) {
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Enabled")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefRapidActingPlugin_Visible")
-            sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinOrefRapidActingPlugin")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Enabled")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefUltraRapidActingPlugin_Visible")
-            sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinOrefUltraRapidActingPlugin")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Enabled")
-            sp.remove("ConfigBuilder_INSULIN_InsulinOrefFreePeakPlugin_Visible")
-            sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinOrefFreePeakPlugin")
-            sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Enabled")
-            sp.remove("ConfigBuilder_INSULIN_InsulinLyumjevPlugin_Visible")
-            sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin")
-            sp.remove("insulin_oref_peak")
+            selected("InsulinOrefRapidActingPlugin")      -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
+            selected("InsulinOrefUltraRapidActingPlugin") -> InsulinType.OREF_ULTRA_RAPID_ACTING.insulinPeakTime
+            selected("InsulinOrefFreePeakPlugin")         -> (sp.getInt("insulin_oref_peak", 75) * 60 * 1000).toLong()
+            selected("InsulinLyumjevPlugin")              -> InsulinType.OREF_LYUMJEV.insulinPeakTime
+            else                                          -> InsulinType.OREF_RAPID_ACTING.insulinPeakTime
         }
     }
 
     /**
-     * Migrates temp target presets from old individual preference keys to unified JSON storage.
-     * Creates 3 default presets (Eating Soon, Activity, Hypo) for new installations.
-     * For existing installations, migrates values from old keys.
-     * Old keys are kept for backward compatibility during migration period.
+     * Creates the three factory temp target presets for an install that has none.
+     *
+     * New-install bootstrap only. Rebuilding the presets from an older AAPS's keys is a migration and
+     * lives in `PreferenceMigrations`; this half cannot, because it INVENTS values, and over an
+     * imported file it would write factory presets on top of the ones the user actually has.
+     *
+     * Skipped on a client, which adopts the presets from the master over the sync channel - a local
+     * put here would trigger a client-to-master round trip at startup.
      */
-    private fun migrateTempTargetPresets() {
-        // Clean up zero-value old preferences (3.3 migration)
-        if (sp.getInt("eatingsoon_duration", 45) == 0) sp.remove("eatingsoon_duration")
-        if (sp.getDouble("eatingsoon_target", 90.0) == 0.0) sp.remove("eatingsoon_target")
-        if (sp.getInt("activity_duration", 90) == 0) sp.remove("activity_duration")
-        if (sp.getDouble("activity_target", 140.0) == 0.0) sp.remove("activity_target")
-        if (sp.getInt("hypo_duration", 60) == 0) sp.remove("hypo_duration")
-        if (sp.getDouble("hypo_target", 160.0) == 0.0) sp.remove("hypo_target")
-
-        // Seeds the bidirectionally-synced TempTargetPresets. Skip on a client: it adopts the presets
-        // from the master via sync, and a local put here would trigger a client→master round-trip
-        // (modal) at startup. The master seeds and publishes; the client follows.
+    private fun seedTempTargetPresets() {
         if (config.AAPSCLIENT) return
-
-        // Check if migration already completed
         val existing = preferences.get(StringNonKey.TempTargetPresets)
-        if (existing != "[]" && existing.isNotEmpty()) {
-            return // Already migrated
-        }
+        if (existing != "[]" && existing.isNotEmpty()) return
+        // Only when there is nothing to migrate from. PreferenceMigrations has already run and would
+        // have written the document if the old keys were there.
+        if (sp.contains("eatingsoon_target")) return
 
-        // Check if old preferences exist (existing installation vs new installation)
-        val hasOldPreferences = sp.contains("eatingsoon_target")
-
-        // Create 3 default presets - values always stored in mg/dL
         val presets = listOf(
             TTPreset(
-                id = "eatingsoon",
-                reason = TT.Reason.EATING_SOON,
-                targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdlDetect(sp.getDouble("eatingsoon_target", 90.0))
-                } else {
-                    Constants.DEFAULT_TT_EATING_SOON_TARGET
-                },
-                duration = if (hasOldPreferences) {
-                    sp.getInt("eatingsoon_duration", 45) * 60L * 1000L
-                } else {
-                    Constants.DEFAULT_TT_EATING_SOON_DURATION * 60L * 1000L
-                },
-                isDeletable = false
+                id = "eatingsoon", reason = TT.Reason.EATING_SOON,
+                targetValue = Constants.DEFAULT_TT_EATING_SOON_TARGET,
+                duration = Constants.DEFAULT_TT_EATING_SOON_DURATION * 60L * 1000L, isDeletable = false
             ),
             TTPreset(
-                id = "activity",
-                reason = TT.Reason.ACTIVITY,
-                targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdlDetect(sp.getDouble("activity_target", 140.0))
-                } else {
-                    Constants.DEFAULT_TT_ACTIVITY_TARGET
-                },
-                duration = if (hasOldPreferences) {
-                    sp.getInt("activity_duration", 90) * 60L * 1000L
-                } else {
-                    Constants.DEFAULT_TT_ACTIVITY_DURATION * 60L * 1000L
-                },
-                isDeletable = false
+                id = "activity", reason = TT.Reason.ACTIVITY,
+                targetValue = Constants.DEFAULT_TT_ACTIVITY_TARGET,
+                duration = Constants.DEFAULT_TT_ACTIVITY_DURATION * 60L * 1000L, isDeletable = false
             ),
             TTPreset(
-                id = "hypo",
-                reason = TT.Reason.HYPOGLYCEMIA,
-                targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdlDetect(sp.getDouble("hypo_target", 160.0))
-                } else {
-                    Constants.DEFAULT_TT_HYPO_TARGET
-                },
-                duration = if (hasOldPreferences) {
-                    sp.getInt("hypo_duration", 60) * 60L * 1000L
-                } else {
-                    Constants.DEFAULT_TT_HYPO_DURATION * 60L * 1000L
-                },
-                isDeletable = false
+                id = "hypo", reason = TT.Reason.HYPOGLYCEMIA,
+                targetValue = Constants.DEFAULT_TT_HYPO_TARGET,
+                duration = Constants.DEFAULT_TT_HYPO_DURATION * 60L * 1000L, isDeletable = false
             )
         )
-
-        // Save to new JSON format
         preferences.put(StringNonKey.TempTargetPresets, presets.toJson())
-
-        aapsLogger.debug(LTag.CORE, "Migrated temp target presets to JSON storage")
+        aapsLogger.debug(LTag.CORE, "Seeded default temp target presets")
     }
 
     private suspend fun dataMigrations() {
@@ -824,6 +737,12 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
         if (!localInsulinManager.insulinAlreadyExists(runningICfg))
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)
+
+        // The DIA these keys carry is now in the insulin list, so the old copies can go. This is the
+        // first point where losing them costs nothing - see legacyProfileKeysToRemove for why they
+        // were not dropped when they were read.
+        legacyProfileKeysToRemove.forEach { sp.remove(it) }
+        legacyProfileKeysToRemove = emptyList()
 
         val label = runningICfg.insulinLabel
         val end = runningICfg.insulinEndTime

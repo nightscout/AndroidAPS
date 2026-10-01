@@ -50,6 +50,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="pump_not_initialized">Pump not initialized!</string>
+    <string name="zero_basal_not_set">The pump did not accept the zero temp basal. It may still be giving basal insulin. Check the pump.</string>
     <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="no_aps_selected">NO APS SELECTED OR PROVIDED RESULT</string>

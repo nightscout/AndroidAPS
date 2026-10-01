@@ -23,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.NotificationCategory
@@ -39,6 +41,7 @@ import app.aaps.core.ui.compose.icons.IcPluginNsClient
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,6 +96,12 @@ private fun NotificationItem(
     val levelColor = notification.level.toColor()
     val categoryIcon = notification.id.category.toIcon()
 
+    // How urgent a notification is was carried only by the tint of the leading icon, whose
+    // description was null - so an alarm-tier message and a routine one were announced identically,
+    // on a sheet that opens by itself whenever something important arrives. Colour does not even
+    // separate the top two: URGENT and IMPORTANT share notificationUrgent.
+    val levelState = stringResourceOrNull(notification.level.toDescription())
+
     Column {
         ListItem(
             leadingContent = {
@@ -107,6 +116,11 @@ private fun NotificationItem(
             },
             supportingContent = {
                 Text(text = dateUtil.timeString(notification.date))
+            },
+            modifier = if (levelState != null) {
+                Modifier.semantics { stateDescription = levelState }
+            } else {
+                Modifier
             }
         )
         Row(
@@ -138,6 +152,23 @@ private fun RowScope.ActionButton(text: TextRef, onClick: () -> Unit) {
     ) {
         Text(text = stringResource(text))
     }
+}
+
+/**
+ * How urgent a notification is, in words, for a screen reader. Kept beside [toColor] because the
+ * colour was the only place this lived.
+ *
+ * Only the two tiers that ask for attention get a word. Saying "normal" on every routine entry would
+ * make the ordinary case the noisiest thing in the list, which is the opposite of the point - the
+ * same reason [app.aaps.core.ui.compose.statusLevelToDescription] stays quiet for NORMAL.
+ */
+fun NotificationLevel.toDescription(): TextRef? = when (this) {
+    NotificationLevel.URGENT       -> CoreUiStrings.critical
+    NotificationLevel.IMPORTANT    -> CoreUiStrings.warning
+    NotificationLevel.NORMAL,
+    NotificationLevel.LOW,
+    NotificationLevel.INFO,
+    NotificationLevel.ANNOUNCEMENT -> null
 }
 
 @Composable

@@ -231,6 +231,11 @@ class CommandQueueImplementation(
      * @return true when write succeeded (the caller then persists the EffectiveProfileSwitch).
      */
     internal fun postProfileWriteResult(result: PumpEnactResult?, silent: Boolean): Boolean {
+        // Dropped on purpose (an import, a cleared queue): the write did not happen, so return false
+        // and let the caller skip the EffectiveProfileSwitch - but say nothing about it. It is not a
+        // failed update. With the old success = true drain this was worse: it took the success branch
+        // and raised "Basal profile in pump updated" for a profile the pump never received.
+        if (result?.cancelled == true) return false
         if (result == null || !result.success) {
             notificationManager.post(
                 NotificationId.FAILED_UPDATE_PROFILE,
@@ -377,27 +382,23 @@ class CommandQueueImplementation(
             }
         }
 
-    override fun clear() = instanceLock.withLock {
-        performing = null
-        queueLock.withLock {
-            for (i in queue.indices) {
-                // Connection-timeout drop: the pump was never reached, so the command was not
-                // executed. Report failure (success = false) so a waiting bolus caller is not told
-                // a dose was delivered. (Supersession via removeAll keeps the default success = true.)
-                queue[i].cancel(CoreUiStrings.connectiontimedout, success = false)
-            }
-            queue.clear()
-        }
-    }
+    // Connection-timeout drop: the pump was never reached, so the command was not executed. Report
+    // failure (success = false) so a waiting bolus caller is not told a dose was delivered, and
+    // cancelled = false because this IS a delivery failure and must still raise its alarm.
+    // (Supersession via removeAll keeps the default success = true.)
+    override fun clear() = drain(CoreUiStrings.connectiontimedout, success = false, cancelled = false)
 
-    override fun completeAllAsNoOp(comment: TextRef) = instanceLock.withLock {
+    // Dropped on purpose, so cancelled = true: the caller is told it did not happen, and nothing
+    // alarms about it.
+    override fun cancelAll(comment: TextRef, success: Boolean) = drain(comment, success, cancelled = true)
+
+    private fun drain(comment: TextRef, success: Boolean, cancelled: Boolean) = instanceLock.withLock {
         performing = null
         queueLock.withLock {
-            for (i in queue.indices) {
-                queue[i].callback?.result(
-                    pumpEnactResultProvider().success(true).enacted(false).comment(comment)
-                )?.run()
-            }
+            // Through Command.cancel, never the callback directly. CommandBolus and CommandSMBBolus
+            // override cancel to clear BolusProgressData, and going behind them left a dropped bolus
+            // showing progress with nothing left to finish it.
+            for (i in queue.indices) queue[i].cancel(comment, success, cancelled)
             queue.clear()
         }
     }

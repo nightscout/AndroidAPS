@@ -19,9 +19,8 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        whenever(rh.gs(CoreUiStrings.stoptemptarget)).thenReturn("Stop temp target")
 
-        sut = ActionStopTempTarget(aapsLogger, rh, { pumpEnactResultProvider() }, persistenceLayer, dateUtil)
+        sut = ActionStopTempTarget(aapsLogger, text, { pumpEnactResultProvider() }, persistenceLayer, dateUtil)
     }
 
     @Test fun friendlyNameTest() {

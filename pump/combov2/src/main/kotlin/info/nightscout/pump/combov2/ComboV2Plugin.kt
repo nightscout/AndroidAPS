@@ -1,6 +1,7 @@
 package info.nightscout.pump.combov2
 
 import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -23,7 +24,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -134,7 +134,7 @@ class ComboV2Plugin(
     sp: SP,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     private val config: Config,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val bolusProgressData: BolusProgressData
@@ -153,7 +153,7 @@ class ComboV2Plugin(
             .shortName(TextRef.AndroidRes(R.string.combov2_plugin_shortname))
             .description(TextRef.AndroidRes(R.string.combov2_plugin_description)),
         ownPreferences = ComboIntKey.entries + ComboBooleanKey.entries + ComboStringNonKey.entries + ComboIntNonKey.entries + ComboLongNonKey.entries,
-        aapsLogger, rh, preferences, commandQueue
+        aapsLogger, rh, preferences, commandQueue, notificationManager
     ), Pump, PluginConstraints {
 
     // Coroutine scope and the associated job. All coroutines

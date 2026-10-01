@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.openhumans
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
@@ -21,7 +22,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -73,7 +73,7 @@ class OpenHumansUploaderPlugin internal constructor(
     internal val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val openHumansAPI: OpenHumansAPI,
-    private val notificationManager: NotificationManager,
+    notificationManager: NotificationManager,
     internal val stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
@@ -91,7 +91,7 @@ class OpenHumansUploaderPlugin internal constructor(
             )
         },
     ownPreferences = OhStringKey.entries + OhLongKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ) {
 
     private var openHumansState by stateDelegate

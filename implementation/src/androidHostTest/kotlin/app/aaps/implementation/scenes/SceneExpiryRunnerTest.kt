@@ -35,7 +35,7 @@ class SceneExpiryRunnerTest : TestBaseWithProfile() {
     private fun runner() =
         SceneExpiryRunner(
             aapsLogger, activeSceneManager, sceneExecutor, sceneRepository,
-            loop, activePlugin, profileFunction, rh, notificationManager, config
+            loop, activePlugin, profileFunction, baseText, notificationManager, config
         )
 
     private fun stateWithEndAction(action: SceneEndAction): ActiveSceneState {

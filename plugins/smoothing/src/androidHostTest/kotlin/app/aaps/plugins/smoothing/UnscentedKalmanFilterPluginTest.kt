@@ -24,7 +24,7 @@ internal class UnscentedKalmanFilterPluginTest {
     private val preferences = mock<Preferences>()
     private val persistenceLayer = mock<PersistenceLayer>()
 
-    private fun plugin() = UnscentedKalmanFilterPlugin(aapsLogger, rh, preferences, persistenceLayer)
+    private fun plugin() = UnscentedKalmanFilterPlugin(aapsLogger, rh, preferences, persistenceLayer, mock())
 
     /** Newest-first series (data[0] = most recent) at [stepMin]-minute spacing, timestamps descending. */
     private fun series(vararg values: Double, stepMin: Long = 5): MutableList<InMemoryGlucoseValue> {

@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import org.mockito.kotlin.mock
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -12,7 +13,7 @@ class XdripSourcePluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        xdripSourcePlugin = XdripSourcePlugin(rh, aapsLogger, preferences, config)
+        xdripSourcePlugin = XdripSourcePlugin(rh, aapsLogger, preferences, config, mock())
     }
 
     @Test

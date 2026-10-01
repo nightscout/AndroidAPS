@@ -24,12 +24,12 @@ class ComparatorTest : TriggerTestBase() {
 
     @Test
     fun labelsTest() {
-        assertThat(Comparator.Compare.labels(rh)).hasSize(6)
+        assertThat(Comparator.Compare.labels(text)).hasSize(6)
     }
 
     @Test
     fun setValueTest() {
-        val c: Comparator = Comparator(rh).setValue(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        val c: Comparator = Comparator(text).setValue(Comparator.Compare.IS_EQUAL_OR_GREATER)
         assertThat(c.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_GREATER)
     }
 }

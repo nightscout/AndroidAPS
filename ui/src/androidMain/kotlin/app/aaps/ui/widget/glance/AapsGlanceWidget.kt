@@ -38,10 +38,9 @@ import androidx.glance.text.TextAlign
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.navigation.DarkElementColors
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeoutOrNull
 
 class AapsGlanceWidget : GlanceAppWidget() {
 
@@ -58,9 +57,10 @@ class AapsGlanceWidget : GlanceAppWidget() {
         // (typical on device reboot or cold-start via broadcast), wait briefly
         // for the init flow to complete so the widget doesn't get stuck on
         // LoadingContent until the next refresh tick.
-        val ready = config.appInitialized || withTimeoutOrNull(AWAIT_INIT_TIMEOUT_MS) {
-            config.initProgressFlow.first { it.done }
-        } != null
+        // awaitInitialized, not a hand-rolled wait on `done`: during a settings import `done` is
+        // already true while plugin state is being rebuilt, so waiting on it alone returns at once and
+        // the loader below reads plugin state in exactly the window it means to avoid.
+        val ready = config.awaitInitialized(AWAIT_INIT_TIMEOUT_MS)
         if (!ready) {
             provideContent { LoadingContent() }
             return
@@ -138,7 +138,7 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                     Spacer(modifier = GlanceModifier.width(4.dp))
                     Image(
                         provider = ImageProvider(state.arrowResId),
-                        contentDescription = null,
+                        contentDescription = state.arrowDescription,
                         modifier = GlanceModifier.size(30.dp),
                         colorFilter = ColorFilter.tint(ColorProvider(bgColor))
                     )
@@ -209,7 +209,8 @@ private fun ChipsPanel(state: WidgetRenderState, modifier: GlanceModifier) {
             }
             TbrChip(
                 modifier = GlanceModifier.fillMaxHeight(),
-                iconResId = state.tbrIconResId
+                iconResId = state.tbrIconResId,
+                iconDescription = state.tbrDescription
             )
         }
         Spacer(modifier = GlanceModifier.height(ChipGap))
@@ -218,6 +219,7 @@ private fun ChipsPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                 modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
                 text = state.iobText,
                 iconResId = state.iobIconResId,
+                iconDescription = state.iobLabel,
                 accentColor = DarkElementColors.insulin,
                 isActive = state.iobActive
             )
@@ -226,6 +228,7 @@ private fun ChipsPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                 modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
                 text = state.cobText,
                 iconResId = state.cobIconResId,
+                iconDescription = state.cobLabel,
                 accentColor = DarkElementColors.cob,
                 isActive = state.cobActive,
                 maxLines = 2
@@ -243,7 +246,9 @@ private fun Chip(
     isActive: Boolean,
     colorText: Boolean = false,
     maxLines: Int = 1,
-    backgroundAlpha: Float = 0.2f
+    backgroundAlpha: Float = 0.2f,
+    /** Spoken name of the icon. The text beside it is a bare value, so the icon carries the noun. */
+    iconDescription: String? = null
 ) {
     val background = if (isActive) accentColor.copy(alpha = backgroundAlpha) else Color.Transparent
     val textColor = if (colorText) accentColor else TextMuted
@@ -257,7 +262,7 @@ private fun Chip(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 provider = ImageProvider(iconResId),
-                contentDescription = null,
+                contentDescription = iconDescription,
                 modifier = GlanceModifier.size(ChipIconSize),
                 colorFilter = ColorFilter.tint(ColorProvider(accentColor))
             )
@@ -279,7 +284,9 @@ private fun Chip(
 @Composable
 private fun TbrChip(
     modifier: GlanceModifier,
-    @DrawableRes iconResId: Int
+    @DrawableRes iconResId: Int,
+    /** Spoken state. This chip is icon only, so without it a screen reader gets nothing at all. */
+    iconDescription: String
 ) {
     val accentColor = DarkElementColors.tempBasal
     Box(
@@ -291,7 +298,7 @@ private fun TbrChip(
     ) {
         Image(
             provider = ImageProvider(iconResId),
-            contentDescription = null,
+            contentDescription = iconDescription,
             modifier = GlanceModifier.size(ChipIconSize),
             colorFilter = ColorFilter.tint(ColorProvider(accentColor))
         )

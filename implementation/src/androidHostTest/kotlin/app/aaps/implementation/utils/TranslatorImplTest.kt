@@ -6,63 +6,65 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.any
-import org.mockito.kotlin.whenever
 
 /**
  * Exercises every branch of [TranslatorImpl]'s `translate` overloads by iterating each enum's
- * `.entries`. `rh.gs(ref)` is stubbed to a fixed marker, so every mapped value returns it; this
- * catches a missing/duplicate `when` branch and a wrong string-resource reference.
+ * `.entries`.
+ *
+ * The resolver answers with the REAL English text, so a mapped value that points at a string nobody
+ * owns is visible: the resolver falls back to the name of the ref, which is snake_case, while every
+ * real English string here is not. That is what [assertTranslated] checks, on top of catching a
+ * missing or duplicate `when` branch the way the old marker-string version did.
  */
 internal class TranslatorImplTest {
 
-    @Mock private lateinit var rh: TextResolver
     private lateinit var sut: TranslatorImpl
 
     @BeforeEach
     fun setUp() {
-        MockitoAnnotations.openMocks(this)
-        whenever(rh.gs(any<TextRef>())).thenReturn("x")
-        sut = TranslatorImpl(rh)
+        sut = TranslatorImpl(generatedTextResolver())
+    }
+
+    /** Real text, not the snake_case name an unresolved [app.aaps.core.keys.interfaces.TextRef.Named] falls back to. */
+    private fun assertTranslated(text: String) {
+        assertThat(text).isNotEmpty()
+        assertThat(text).doesNotContain("_")
     }
 
     @Test
     fun `every Action translates to a resource`() {
-        Action.entries.forEach { assertThat(sut.translate(it)).isEqualTo("x") }
+        Action.entries.forEach { assertTranslated(sut.translate(it)) }
     }
 
     @Test
     fun `every TE type, meter type, location and arrow translates`() {
-        TE.Type.entries.forEach { assertThat(sut.translate(it)).isEqualTo("x") }
-        TE.MeterType.entries.forEach { assertThat(sut.translate(it)).isEqualTo("x") }
-        TE.Location.entries.forEach { assertThat(sut.translate(it)).isEqualTo("x") }
-        TE.Arrow.entries.forEach { assertThat(sut.translate(it)).isEqualTo("x") }
+        TE.Type.entries.forEach { assertTranslated(sut.translate(it)) }
+        TE.MeterType.entries.forEach { assertTranslated(sut.translate(it)) }
+        TE.Location.entries.forEach { assertTranslated(sut.translate(it)) }
+        TE.Arrow.entries.forEach { assertTranslated(sut.translate(it)) }
         // null falls through to the else -> unknown branch.
-        assertThat(sut.translate(null as TE.Type?)).isEqualTo("x")
-        assertThat(sut.translate(null as TE.MeterType?)).isEqualTo("x")
-        assertThat(sut.translate(null as TE.Location?)).isEqualTo("x")
-        assertThat(sut.translate(null as TE.Arrow?)).isEqualTo("x")
+        assertTranslated(sut.translate(null as TE.Type?))
+        assertTranslated(sut.translate(null as TE.MeterType?))
+        assertTranslated(sut.translate(null as TE.Location?))
+        assertTranslated(sut.translate(null as TE.Arrow?))
     }
 
     @Test
     fun `every TT reason and RM mode translates`() {
-        TT.Reason.entries.forEach { assertThat(sut.translate(it)).isEqualTo("x") }
-        RM.Mode.entries.forEach { assertThat(sut.translate(it)).isEqualTo("x") }
-        assertThat(sut.translate(null as TT.Reason?)).isEqualTo("x")
+        TT.Reason.entries.forEach { assertTranslated(sut.translate(it)) }
+        RM.Mode.entries.forEach { assertTranslated(sut.translate(it)) }
+        assertTranslated(sut.translate(null as TT.Reason?))
         // RM.Mode null maps to empty, not unknown.
         assertThat(sut.translate(null as RM.Mode?)).isEmpty()
     }
 
     @Test
     fun `every Source translates to a non-empty string`() {
-        // Mapped sources return the marker; unmapped ones fall through to source.name (also non-empty).
+        // Mapped sources return their text; unmapped ones fall through to source.name (also non-empty).
         Sources.entries.forEach { assertThat(sut.translate(it)).isNotEmpty() }
     }
 
@@ -72,7 +74,7 @@ internal class TranslatorImplTest {
             ValueWithUnit.Gram(1), ValueWithUnit.Hour(1), ValueWithUnit.Insulin(1.0), ValueWithUnit.Mgdl(1.0),
             ValueWithUnit.Minute(1), ValueWithUnit.Mmoll(1.0), ValueWithUnit.Percent(1), ValueWithUnit.UnitPerHour(1.0)
         )
-        mapped.forEach { assertThat(sut.translate(it)).isEqualTo("x") }
+        mapped.forEach { assertTranslated(sut.translate(it)) }
         // Non-unit subtypes and null fall through to the else -> "".
         assertThat(sut.translate(ValueWithUnit.SimpleInt(1))).isEmpty()
         assertThat(sut.translate(null as ValueWithUnit?)).isEmpty()

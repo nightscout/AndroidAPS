@@ -1,5 +1,6 @@
 package app.aaps.di.metro
 
+import app.aaps.implementation.androidNotification.AlarmMuteReceiver
 import app.aaps.implementation.receivers.BTReceiver
 import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.NetworkChangeReceiver
@@ -31,6 +32,16 @@ import dev.zacsweers.metro.Provides
 @ContributesTo(AppScope::class)
 @BindingContainer
 object AppReceiversBindings {
+
+    // Android builds this one from a notification action, so it must be in the map like the rest.
+    // It was converted to MetroBroadcastReceiver without an entry here, and tapping Mute or Dismiss
+    // on the background alarm notification then died with "No Metro binding for AlarmMuteReceiver"
+    // (issue #5124).
+    @Provides
+    @FeatureMemberInjectors
+    @IntoMap
+    @ClassKey(AlarmMuteReceiver::class)
+    fun bindAlarmMuteReceiver(injector: MembersInjector<AlarmMuteReceiver>): MembersInjector<*> = injector
 
     @Provides
     @FeatureMemberInjectors

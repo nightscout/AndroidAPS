@@ -1,14 +1,16 @@
 package app.aaps.plugins.constraints.versionChecker
 
-import app.aaps.plugins.constraints.ConstraintsStrings
+import app.aaps.plugins.constraints.ConstraintsStringsValues
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class VersionCheckerPluginTest : TestBaseWithProfile() {
@@ -19,8 +21,7 @@ class VersionCheckerPluginTest : TestBaseWithProfile() {
 
     @Test
     fun applyMaxIOBConstraintsTest() = runTest {
-        versionCheckerPlugin = VersionCheckerPlugin(aapsLogger, rh, preferences, versionCheckerUtils, config, dateUtil)
-        whenever(rh.gs(ConstraintsStrings.application_expired)).thenReturn("")
+        versionCheckerPlugin = VersionCheckerPlugin(aapsLogger, generatedTextResolver("constraints" to ConstraintsStringsValues::textOf), preferences, versionCheckerUtils, config, dateUtil, mock())
 
         // No expiration
         whenever(preferences.get(LongComposedKey.AppExpiration, config.VERSION_NAME)).thenReturn(0)

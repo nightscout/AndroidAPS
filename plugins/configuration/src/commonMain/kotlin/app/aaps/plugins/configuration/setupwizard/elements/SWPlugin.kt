@@ -78,7 +78,7 @@ class SWPlugin(
                     description = plugin.description,
                     composeIcon = plugin.pluginDescription.icon,
                     isEnabled = pluginEnabled,
-                    canToggle = !plugin.pluginDescription.alwaysEnabled && (!pluginEnabled || isMultiSelect(pType)),
+                    canToggle = plugin.enforcedState() == null && (!pluginEnabled || isMultiSelect(pType)),
                     showPreferences = plugin.hasPreferences() && pluginEnabled,
                     hasContent = plugin.hasComposeContent()
                 )

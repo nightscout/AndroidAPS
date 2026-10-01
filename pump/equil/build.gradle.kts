@@ -20,6 +20,8 @@ ksp {
 }
 
 dependencies {
+    api(project(":pump:equil:protocol"))
+    implementation(project(":pump:equil:emulator"))
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))

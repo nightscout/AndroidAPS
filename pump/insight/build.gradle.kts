@@ -5,6 +5,10 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("android-module-dependencies")
     id("test-module-dependencies")
+    // Robolectric plus the compose-ui-test artifacts, so the pairing wizard and the alert screen
+    // can be driven on the JVM. Paired with jacoco-module-dependencies below, which is what makes
+    // the Compose classes Robolectric loads show up in coverage.
+    id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
 }
 

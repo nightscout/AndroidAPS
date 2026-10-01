@@ -23,10 +23,8 @@ class TriggerStepsCountTest : TriggerTestBase() {
     @Test
     fun friendlyDescription() {
         val t = TriggerStepsCount(triggerDeps)
-        whenever(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
-        whenever(rh.gs(AutomationStrings.triggerStepsCountDesc, "5", ">", 100.0)).thenReturn("test")
 
-        assertThat(t.friendlyDescription()).isEqualTo("test")
+        assertThat(t.friendlyDescription()).isEqualTo("Steps count per 5 minutes is equal or greater than 100")
     }
 
     @Test

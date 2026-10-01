@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,8 +48,11 @@ internal class PumpSyncStorageTest {
 
     @BeforeEach fun setUp() {
         stored.clear()
-        preferences.stub {
-            on { getIfExists(any<StringNonKey>()) } doReturn null
+        // Reads come straight back out of the map, the way a real store behaves. It matters now that
+        // there is no in-memory list: a write followed by a read has to go through the store, so a
+        // mock that always answers null would make every add look like it did nothing.
+        whenever(preferences.getIfExists(any<StringNonKey>())).thenAnswer { inv ->
+            stored[(inv.arguments[0] as StringNonKey).key]
         }
         whenever(preferences.put(any<StringNonKey>(), any<String>())).thenAnswer { inv ->
             stored[(inv.arguments[0] as StringNonKey).key] = inv.arguments[1] as String
@@ -65,6 +69,51 @@ internal class PumpSyncStorageTest {
     private fun replayStoredPreferences() {
         whenever(preferences.getIfExists(any<StringNonKey>())).thenAnswer { inv ->
             stored[(inv.arguments[0] as StringNonKey).key]
+        }
+    }
+
+    /**
+     * Puts entries in the store, which is the only copy there is.
+     *
+     * The tests used to seed with `sut.getBoluses().add(...)`, which worked only because the getter
+     * handed back the live list. That aliasing is exactly what was removed - a caller mutating the
+     * returned list never reached the store - so seeding now goes where the data really lives.
+     */
+    private fun seedBoluses(vararg entries: PumpDbEntryBolus) {
+        replayStoredPreferences()
+        // The pumpSync members are suspend, so the stubbing needs a coroutine context of its own.
+        runBlocking { whenever(pumpSync.addBolusWithTempId(any(), any(), any(), any(), any(), any())) doReturn true }
+        entries.forEach { entry ->
+            sut.addBolusWithTempId(
+                DetailedBolusInfo().also {
+                    it.timestamp = entry.date
+                    it.insulin = entry.insulin
+                    it.carbs = entry.carbs
+                    it.bolusType = entry.bolusType
+                },
+                writeToInternalHistory = true,
+                creator = object : PumpSyncEntriesCreator {
+                    override fun generateTempId(objectA: Any): Long = entry.temporaryId
+                    override fun model(): PumpType = entry.pumpType
+                    override fun serialNumber(): String = entry.serialNumber
+                }
+            )
+        }
+    }
+
+    private fun seedTbrs(vararg entries: PumpDbEntryTBR) {
+        replayStoredPreferences()
+        runBlocking { whenever(pumpSync.addTemporaryBasalWithTempId(any(), any(), any(), any(), any(), any(), any(), any())) doReturn true }
+        entries.forEach { entry ->
+            sut.addTemporaryBasalRateWithTempId(
+                PumpDbEntryTBR(entry.rate, entry.isAbsolute, entry.durationInSeconds, entry.tbrType),
+                writeToInternalHistory = true,
+                creator = object : PumpSyncEntriesCreator {
+                    override fun generateTempId(objectA: Any): Long = entry.temporaryId
+                    override fun model(): PumpType = entry.pumpType
+                    override fun serialNumber(): String = entry.serialNumber
+                }
+            )
         }
     }
 
@@ -87,43 +136,57 @@ internal class PumpSyncStorageTest {
         assertThat(sut.getBoluses()).isEmpty()
     }
 
-    // The catch around fromXML exists for exactly this: a storage format that changed, or a truncated
-    // write. Starting empty loses the pending entries, but throwing here would take the driver with it.
+    // Unreadable data has to start empty rather than throw: this is the path that records delivered
+    // insulin, and taking the driver down with a parse error is the worse of the two. The old XStream
+    // XML lands here too, which is why the key was renamed - see StringNonKey.
     @Test fun `unparseable stored data gives an empty list instead of throwing`() {
-        preferences.stub { on { getIfExists(any<StringNonKey>()) } doReturn "<not-xml" }
+        preferences.stub { on { getIfExists(any<StringNonKey>()) } doReturn "<not-json" }
 
         assertThat(sut.getBoluses()).isEmpty()
         assertThat(sut.getTBRs()).isEmpty()
     }
 
     @Test fun `a saved bolus list is read back with its fields intact`() {
-        sut.getBoluses().add(
+        seedBoluses(
             PumpDbEntryBolus(
                 temporaryId = 7L, date = 2_000L, pumpType = PumpType.OMNIPOD_DASH,
                 serialNumber = "S", insulin = 2.5, carbs = 0.0, bolusType = BS.Type.SMB
             )
         )
-        sut.saveStorageBolus()
-        replayStoredPreferences()
 
+        // A different instance, reading the same store - there is no in-memory copy to carry it over.
         val reloaded = PumpSyncStorage(pumpSync, preferences, aapsLogger).getBoluses()
 
         assertThat(reloaded).hasSize(1)
         assertThat(reloaded[0].temporaryId).isEqualTo(7L)
         assertThat(reloaded[0].insulin).isEqualTo(2.5)
         assertThat(reloaded[0].bolusType).isEqualTo(BS.Type.SMB)
+        assertThat(reloaded[0].serialNumber).isEqualTo("S")
     }
 
-    // Saving an empty list REMOVES the key rather than writing an empty document. Writing one would
-    // leave a stale entry that the next initStorage() parses into an empty list anyway - same result,
-    // more storage - but the remove is what keeps a cleared queue actually cleared.
-    @Test fun `saving an empty list removes the stored key`() {
-        stored[StringNonKey.PumpCommonBolusStorage.key] = "<list/>"
+    // Emptying the list REMOVES the key rather than writing an empty document, which is what keeps a
+    // cleared queue actually cleared.
+    @Test fun `removing the last entry removes the stored key`() {
+        seedBoluses(PumpDbEntryBolus(1L, 100L, PumpType.OMNIPOD_DASH, "S", null, 1.0, 0.0, BS.Type.NORMAL))
+        assertThat(stored).containsKey(StringNonKey.PumpCommonBolusStorage.key)
 
-        sut.saveStorageBolus()
+        sut.removeBolusWithTemporaryId(1L)
 
         verify(preferences).remove(StringNonKey.PumpCommonBolusStorage)
         assertThat(stored).doesNotContainKey(StringNonKey.PumpCommonBolusStorage.key)
+    }
+
+    /**
+     * The reason the in-memory copy went. A caller that mutates what it got back must not change the
+     * store behind everyone's back - and, the other way round, must not be able to resurrect an entry
+     * that something else removed.
+     */
+    @Test fun `mutating the returned list does not touch the store`() {
+        seedBoluses(PumpDbEntryBolus(1L, 100L, PumpType.OMNIPOD_DASH, "S", null, 1.0, 0.0, BS.Type.NORMAL))
+
+        sut.getBoluses().clear()
+
+        assertThat(sut.getBoluses()).hasSize(1)
     }
 
     @Test fun `a bolus is stored only when the pump sync accepted it`() = runTest {
@@ -216,11 +279,9 @@ internal class PumpSyncStorageTest {
     }
 
     @Test fun `removing by temporary id drops only that bolus`() {
-        sut.getBoluses().addAll(
-            listOf(
-                PumpDbEntryBolus(1L, 100L, PumpType.OMNIPOD_DASH, "S", null, 1.0, 0.0, BS.Type.NORMAL),
-                PumpDbEntryBolus(2L, 200L, PumpType.OMNIPOD_DASH, "S", null, 2.0, 0.0, BS.Type.NORMAL)
-            )
+        seedBoluses(
+            PumpDbEntryBolus(1L, 100L, PumpType.OMNIPOD_DASH, "S", null, 1.0, 0.0, BS.Type.NORMAL),
+            PumpDbEntryBolus(2L, 200L, PumpType.OMNIPOD_DASH, "S", null, 2.0, 0.0, BS.Type.NORMAL)
         )
 
         sut.removeBolusWithTemporaryId(1L)
@@ -229,7 +290,7 @@ internal class PumpSyncStorageTest {
     }
 
     @Test fun `removing an unknown temporary id leaves the list alone`() {
-        sut.getBoluses().add(PumpDbEntryBolus(1L, 100L, PumpType.OMNIPOD_DASH, "S", null, 1.0, 0.0, BS.Type.NORMAL))
+        seedBoluses(PumpDbEntryBolus(1L, 100L, PumpType.OMNIPOD_DASH, "S", null, 1.0, 0.0, BS.Type.NORMAL))
 
         sut.removeBolusWithTemporaryId(999L)
 
@@ -237,11 +298,9 @@ internal class PumpSyncStorageTest {
     }
 
     @Test fun `removing by temporary id drops only that temporary basal`() {
-        sut.getTBRs().addAll(
-            listOf(
-                PumpDbEntryTBR(1L, 100L, PumpType.OMNIPOD_DASH, "S", null, 0.5, true, 60, PumpSync.TemporaryBasalType.NORMAL),
-                PumpDbEntryTBR(2L, 200L, PumpType.OMNIPOD_DASH, "S", null, 1.5, true, 60, PumpSync.TemporaryBasalType.NORMAL)
-            )
+        seedTbrs(
+            PumpDbEntryTBR(1L, 100L, PumpType.OMNIPOD_DASH, "S", null, 0.5, true, 60, PumpSync.TemporaryBasalType.NORMAL),
+            PumpDbEntryTBR(2L, 200L, PumpType.OMNIPOD_DASH, "S", null, 1.5, true, 60, PumpSync.TemporaryBasalType.NORMAL)
         )
 
         sut.removeTemporaryBasalWithTemporaryId(2L)

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.garmin
 
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import androidx.annotation.VisibleForTesting
@@ -65,7 +66,8 @@ class GarminPlugin(
     preferences: Preferences,
     private val context: Context,
     private val loopHub: LoopHub,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    notificationManager: NotificationManager
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -74,7 +76,7 @@ class GarminPlugin(
         .shortName(SyncStrings.garmin)
         .description(SyncStrings.garmin_description),
     ownPreferences = GarminStringKey.entries + GarminBooleanKey.entries + GarminIntKey.entries,
-    aapsLogger, resourceHelper, preferences
+    aapsLogger, resourceHelper, preferences, notificationManager
 ) {
 
     /** HTTP Server for local HTTP server communication (device app requests values) .*/

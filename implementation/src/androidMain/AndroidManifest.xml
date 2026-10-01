@@ -2,4 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- AlarmNotificationManager wakes the screen for background alarms with setAlarmClock(), which
+         needs this from targetSdk 31 on unless AAPS is excluded from battery optimization. Declared
+         here, in the module that makes the call: it used to reach the app only through :pump:eopatch,
+         so aapsclient builds never had it. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 </manifest>

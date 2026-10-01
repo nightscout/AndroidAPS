@@ -13,6 +13,8 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -46,6 +48,9 @@ class SocketNsConnectionTest : TestBaseWithProfile() {
 
     private lateinit var sut: SocketNsConnection
 
+    // A field rather than a local in the setup, so the teardown can stop it again.
+    private lateinit var plugin: NSClientV3Plugin
+
     @BeforeEach
     fun prepare() {
         // Everything `start` checks before it builds a socket, set so it gets that far.
@@ -64,17 +69,26 @@ class SocketNsConnectionTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         val nsLoadExecutor = mock<NsLoadExecutor>()
         whenever(nsLoadExecutor.idle).thenReturn(emptyFlow())
-        val plugin = NSClientV3Plugin(
+        plugin = NSClientV3Plugin(
             aapsLogger, rh, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             mock(), mock(), decimalFormatter, l, nsClientRepository, mock(),
-            mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), nsLoadExecutor
+            mock(), mock(), mock(), mock(), mock(), mock(), mock(), mock(), nsLoadExecutor, mock()
         )
 
         sut = SocketNsConnection(
             aapsLogger, preferences, config, { plugin },
             nsFrameHandler, nsConnectHandler, nsClientRepository, nsSocketFactory
         )
+    }
+
+    // The plugin starts a coroutine scope on the IO dispatcher the moment it is constructed, so a
+    // plugin built per test keeps background work alive after the test method ends. Mockito then
+    // disables the mocks, the leftover coroutine touches one, and the throw lands on whatever test
+    // runs next as UncaughtExceptionsBeforeTest. onStop cancels that scope and waits for it.
+    @AfterEach
+    fun stopPlugin() {
+        runBlocking { plugin.shutdownForTest() }
     }
 
     @Test

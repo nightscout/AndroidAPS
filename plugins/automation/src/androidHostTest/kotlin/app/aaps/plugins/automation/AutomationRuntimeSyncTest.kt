@@ -11,7 +11,9 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
+import app.aaps.plugins.automation.AutomationStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,6 +49,9 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 class AutomationRuntimeSyncTest : TestBaseWithProfile() {
 
+    /** Real English, so an unstubbed automation string fails instead of becoming its own name. */
+    private val text = generatedTextResolver("automation" to AutomationStringsValues::textOf)
+
 @Mock lateinit var actionFactory: app.aaps.plugins.automation.actions.ActionFactory
     private val triggerFactory: TriggerFactory by lazy {
         TriggerFactory(triggerDeps, mock(), sceneApi, receiverStatusStore)
@@ -55,7 +60,7 @@ class AutomationRuntimeSyncTest : TestBaseWithProfile() {
     // nulls to element constructors that require them.
     private val triggerDeps: TriggerDeps by lazy {
         TriggerDeps(
-            aapsLogger, rxBus, rh, profileFunction, profileUtil, preferences, mock(), mock(),
+            aapsLogger, rxBus, text, profileFunction, profileUtil, preferences, mock(), mock(),
             activePlugin, iobCobCalculator, smbGlucoseStatusProvider, dateUtil
         )
     }
@@ -94,7 +99,7 @@ class AutomationRuntimeSyncTest : TestBaseWithProfile() {
     }
 
     private fun newRuntime() = AutomationRuntime(
-        mock<LocationPermissions>(), eventFactory, aapsLogger, rh, preferences, loop, rxBus, constraintChecker,
+        mock<LocationPermissions>(), eventFactory, aapsLogger, text, preferences, loop, rxBus, constraintChecker,
         config, locationServiceController, dateUtil, activePlugin, reminderScheduler, actionFactory, triggerFactory, triggerDeps, receiverStatusStore,
         uel, profileRepository, sceneApi, mock()
     )

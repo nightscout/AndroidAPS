@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import org.mockito.kotlin.mock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
@@ -19,7 +20,7 @@ class SyaiPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        syaiPlugin = SyaiPlugin(rh, aapsLogger, preferences, config)
+        syaiPlugin = SyaiPlugin(rh, aapsLogger, preferences, config, mock())
     }
 
     @Test

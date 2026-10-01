@@ -52,6 +52,12 @@ internal class IosAppStartup(
         // `ConfigBuilderImpl` is shared, so this is the same `initialize()` Android's `MainApp` and
         // the desktop `Main` call, rather than a copy of part of what it does. Calling only the
         // category check - which is what this did before - left every enabled plugin unstarted.
+        // The jobs are deliberately not waited for here, and that is a gap rather than a decision made
+        // in comfort. Android waits for them (`MainApp`, bounded by 30 s) because everything it does
+        // next reads plugin state. `run()` is called on the iOS main thread, so the same wait would be
+        // a `runBlocking` that can freeze the UI for as long as the slowest driver's `onStart` - worse
+        // than the race it closes. Whoever wires up the splash screen described above should move this
+        // off the main thread and then wait, like Android does.
         registry.initializeConfig()
 
         // The periodic housekeeping Android gets from KeepAliveWorker: the missed-reading alarm,

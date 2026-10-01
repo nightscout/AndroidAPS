@@ -34,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.format.NumberFormat
@@ -139,6 +141,16 @@ internal fun TempBasalDialogContent(
         },
         bottomBar = {
             val hasAction = if (uiState.isPercentPump) uiState.basalPercent != 100.0 else uiState.basalAbsolute > 0.0
+            // One text for both the visible label and the screen reader, so they cannot drift apart.
+            val confirmValue = if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
+                "${NumberFormat.INTEGER.format(uiState.basalPercent)}%"
+            } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
+                "${NumberFormat.DECIMAL_2.format(uiState.basalAbsolute)} ${stringResource(InterfacesStrings.profile_ins_units_per_hour)}"
+            } else {
+                stringResource(CoreUiStrings.ok)
+            }
+            // A Button merges its children into one node, so the name has to carry the value too.
+            val confirmDescription = stringResource(CoreUiStrings.confirm)
             Button(
                 onClick = {
                     focusManager.clearFocus()
@@ -149,6 +161,7 @@ internal fun TempBasalDialogContent(
                     .fillMaxWidth()
                     .bottomBarSafeArea()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .semantics { contentDescription = confirmDescription }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Check,
@@ -156,13 +169,7 @@ internal fun TempBasalDialogContent(
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
-                    Text("${NumberFormat.INTEGER.format(uiState.basalPercent)}%")
-                } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
-                    Text("${NumberFormat.DECIMAL_2.format(uiState.basalAbsolute)} ${stringResource(InterfacesStrings.profile_ins_units_per_hour)}")
-                } else {
-                    Text(stringResource(CoreUiStrings.ok))
-                }
+                Text(confirmValue)
             }
         }
     ) { paddingValues ->

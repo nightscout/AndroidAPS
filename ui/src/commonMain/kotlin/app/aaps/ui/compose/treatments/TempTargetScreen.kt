@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.ui.CoreUiStrings
@@ -95,7 +94,7 @@ fun TempTargetScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.removerecord),
+            title = stringResource(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -141,7 +140,6 @@ fun TempTargetScreen(
                                     viewModel.enterSelectionMode(tt)
                                 }
                             },
-                            rh = viewModel.rh,
                             translator = translator,
                             decimalFormatter = decimalFormatter
                         )
@@ -162,7 +160,6 @@ private fun TempTargetItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
-    rh: TextResolver,
     translator: Translator,
     decimalFormatter: DecimalFormatter
 ) {
@@ -204,7 +201,7 @@ private fun TempTargetItem(
                     append(" ")
                     // Duration
                     append(T.msecs(tempTarget.duration).mins().toInt())
-                    append(rh.gs(CoreUiStrings.units_min))
+                    append(stringResource(CoreUiStrings.units_min))
                     append(" ")
                     // Reason (without "Reason:" label)
                     append(translator.translate(tempTarget.reason))

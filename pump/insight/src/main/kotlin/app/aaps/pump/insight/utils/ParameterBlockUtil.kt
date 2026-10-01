@@ -24,4 +24,19 @@ object ParameterBlockUtil {
         writeMessage.setParameterBlock(parameterBlock)
         connectionService.requestMessage(writeMessage).await()
     }
+
+    /**
+     * Writes several blocks inside ONE write session, in the order given.
+     *
+     * Use this whenever the blocks belong together. Calling [writeConfigurationBlock] once per
+     * block opens and closes a session each time, so the pump commits them one by one and a lost
+     * connection can leave only some of them applied.
+     */
+    @Throws(Exception::class)
+    fun writeConfigurationBlocks(connectionService: InsightConnectionService, vararg parameterBlocks: ParameterBlock) {
+        val messages = parameterBlocks.map { parameterBlock ->
+            WriteConfigurationBlockMessage().apply { setParameterBlock(parameterBlock) }
+        }
+        connectionService.requestConfigurationWrites(messages).await()
+    }
 }

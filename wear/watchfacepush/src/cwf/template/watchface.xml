@@ -1,0 +1,332 @@
+<WatchFace clipShape="CIRCLE" height="450" width="450">
+    <Metadata key="CLOCK_TYPE" value="ANALOG" />
+
+    <!-- What the wearer can change by long-pressing the face.
+
+         One setting: whether always-on shows the runtime's own plain clock, or the wearer's design
+         dimmed. On by default, which is what the face did before the setting existed - in always-on
+         our process is frozen, so a picture of ours sits there with a stale minute and a stopped
+         second hand. Turning it off trades that correctness for the wearer's own design, and that is
+         their choice to make, not ours.
+
+         There was briefly a second setting for the charging deck. It was built, and it worked - the
+         expression was verified three ways on an emulator - but on a Galaxy Watch 4 the wearer tried
+         every combination and the simplified display never appeared on the deck at all: Wear OS puts
+         its own charging screen there and our document is not drawn. A setting that does nothing is
+         worse than no setting, and it cost a second page in the Samsung editor, where each page also
+         carries a preview taking up the middle of the screen. Removed. If a watch is ever found that
+         does draw the face on its deck, the whole thing is a `BooleanConfiguration`, one expression
+         and two strings.
+
+         The value is the string TRUE or FALSE, established by measurement after assuming otherwise
+         blanked a watch - see `_docs/Complication_Libraries.md`.
+
+         The title is deliberately short: the editor draws it on one line at the top of a round
+         screen, where a long one loses both ends to the bezel. The full sentence is in
+         screenReaderText, which has no such limit. -->
+    <UserConfigurations>
+        <BooleanConfiguration id="simplifyAmbient" displayName="@string/simplify_ui_always_on"
+            screenReaderText="@string/simplify_ui_always_on_reader" defaultValue="TRUE" />
+    </UserConfigurations>
+
+    <Scene backgroundColor="#ff000000">
+
+        <!-- Everything the runtime draws for itself in ambient, shown only while "Simplify UI in
+             Always On Mode" is on - which it is by default. With the wearer's own design showing
+             instead, this would sit on top of it. -->
+        <Condition>
+            <Expressions>
+                <Expression name="runtimeAmbient">[CONFIGURATION.simplifyAmbient] == "TRUE"</Expression>
+            </Expressions>
+            <Compare expression="runtimeAmbient">
+
+        <!-- Ambient-only clock, drawn by the runtime rather than by AAPS.
+             It has to exist because in ambient the watch reports DOZE_SUSPEND: the display refreshes
+             itself while the CPU sleeps and our process is frozen, so nothing of ours runs to produce
+             a new picture. The image below would sit frozen for minutes, showing a stale time and a
+             stopped second hand. The runtime keeps drawing regardless, so in ambient the time comes
+             from here.
+             Invisible while active (alpha 0) and revealed only in ambient, so the user's own design
+             owns the clock whenever the watch is awake. -->
+        <DigitalClock alpha="0" height="150" width="450" x="0" y="150">
+            <Variant mode="AMBIENT" target="alpha" value="255" />
+            <TimeText align="CENTER" format="hh:mm" height="150" hourFormat="SYNC_TO_DEVICE"
+                width="450" x="0" y="0">
+                <Font color="#ffe6e6e6" family="SYNC_TO_DEVICE" size="110" slant="NORMAL"
+                    weight="NORMAL" />
+            </TimeText>
+        </DigitalClock>
+
+        <!-- The AM or PM marker, and only where it means something.
+             TimeText cannot draw it: the format attribute accepts hours, minutes and seconds and
+             nothing else (timeFormatType in clock/timeText.xsd), so with hourFormat SYNC_TO_DEVICE a
+             12-hour device showed "05:01" at 17:01 with no way to tell morning from evening. Next to
+             a reading marked "2m ago" that is worse than untidy, so the marker comes from the
+             AMPM_STRING data source instead, which the platform localises.
+
+             Shown only when the watch is not in 24-hour mode - IS_24_HOUR_MODE follows the device
+             setting, so a 24-hour user sees nothing added and nothing moved. Centred under the time
+             rather than beside it, because the time's width changes with the hour and would collide.
+
+             Same alpha treatment as the rest of the ambient layer: invisible until the watch dozes. -->
+        <Condition>
+            <Expressions>
+                <Expression name="twelveHourClock">[IS_24_HOUR_MODE] == 0</Expression>
+            </Expressions>
+            <Compare expression="twelveHourClock">
+                <PartText alpha="0" height="32" width="450" x="0" y="268">
+                    <Variant mode="AMBIENT" target="alpha" value="255" />
+                    <Text align="CENTER" ellipsis="TRUE">
+                        <Font color="#ffe6e6e6" family="SYNC_TO_DEVICE" size="26" slant="NORMAL"
+                            weight="NORMAL">
+                            <Template>%s<Parameter expression="[AMPM_STRING]" /></Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Compare>
+        </Condition>
+
+            </Compare>
+        </Condition>
+
+        <!-- The Custom watch face, as one picture.
+             It used to be two slots, a slow lower half and a clock-carrying upper half, so each
+             could refresh at its own rate. That is now done inside the provider, which keeps the
+             layers privately and blends them - a Galaxy Watch 4 measured about 1 ms per layer, so
+             splitting the work across two slots bought nothing and cost two data reads, two
+             compressions and the need to keep the halves agreeing with each other.
+             Hidden in ambient, so the stale picture disappears the instant the watch dozes - the
+             runtime applies this at the mode switch, without waiting for any render of ours.
+             A fresh slotId on purpose: DefaultProviderPolicy is applied when a slot is first bound
+             and ignored afterwards, so reusing slot 0 with a different provider would have left the
+             old, now deleted, provider bound and the face empty. -->
+        <ComplicationSlot
+            name="CwfFace"
+            slotId="6"
+            displayName="Custom Watchface"
+            isCustomizable="FALSE"
+            supportedTypes="SMALL_IMAGE EMPTY"
+            alpha="255"
+            x="0" y="0" width="450" height="450">
+            <!-- The slot itself no longer hides in ambient. It used to, and that alpha multiplied
+                 everything the slot drew - including the dimmed copy below, which stayed invisible
+                 however its own variant was set. The hiding now belongs to the image that wants it,
+                 which is what lets a second image want the opposite. -->
+            <DefaultProviderPolicy
+                defaultSystemProvider="EMPTY"
+                defaultSystemProviderType="EMPTY"
+                primaryProvider="AAPS_WEAR_APP_ID/app.aaps.wear.complications.cwf.CwfFaceComplication"
+                primaryProviderType="SMALL_IMAGE" />
+            <BoundingBox x="0" y="0" width="450" height="450" />
+            <Complication type="SMALL_IMAGE">
+                <!-- Unconditional, and carrying what the slot used to carry: hidden in ambient. So
+                     whatever any expression below does, the face still draws exactly as it did before
+                     this setting existed - fully awake, absent while dozing. -->
+                <PartImage x="0" y="0" width="450" height="450">
+                    <Variant mode="AMBIENT" target="alpha" value="0" />
+                    <Image resource="[COMPLICATION.SMALL_IMAGE]" />
+                </PartImage>
+            </Complication>
+            <Complication type="EMPTY" />
+        </ComplicationSlot>
+
+        <!-- The same face, drawn without seconds, shown only in ambient and only when the wearer
+             asked for their own design there.
+
+             A second slot rather than a second layer inside the first, and that is the whole point:
+             the runtime swaps between two complete pictures at the moment the mode changes, by
+             itself, with the same Variant mechanism that already hides the picture above. Measured on
+             a Galaxy Watch 4, the runtime repaints **once** as the screen dims and then not again
+             until the minute turns, and that one repaint takes the picture it already holds - ours
+             arrived 154 ms later, which is 154 ms too late however fast we are. Letting the runtime
+             choose between two pictures it already has is not a race at all.
+
+             Two whole faces, never two halves. Lifting the seconds into a layer of their own was
+             considered and rejected: the SECOND view sits in the middle of the paint order with cover
+             plates, the date and the hands drawn over it, and the digital seconds are characters
+             inside the TIME view's own text. So each slot carries a complete face - no z-order to
+             reconcile, nothing to keep in step.
+
+             It costs one compression a minute, not a second face: the provider shares the watch face,
+             the pipeline and the cached layers with the slot above, and a picture without seconds only
+             changes when the minute does. -->
+        <ComplicationSlot
+            name="CwfFaceAmbient"
+            slotId="7"
+            displayName="Custom Watchface always-on"
+            isCustomizable="FALSE"
+            supportedTypes="SMALL_IMAGE EMPTY"
+            alpha="255"
+            x="0" y="0" width="450" height="450">
+            <DefaultProviderPolicy
+                defaultSystemProvider="EMPTY"
+                defaultSystemProviderType="EMPTY"
+                primaryProvider="AAPS_WEAR_APP_ID/app.aaps.wear.complications.cwf.CwfAmbientFaceComplication"
+                primaryProviderType="SMALL_IMAGE" />
+            <BoundingBox x="0" y="0" width="450" height="450" />
+            <Complication type="SMALL_IMAGE">
+                <Condition>
+                    <Expressions>
+                        <Expression name="ownDesignInAmbient">[CONFIGURATION.simplifyAmbient] == "FALSE"</Expression>
+                    </Expressions>
+                    <Compare expression="ownDesignInAmbient">
+                        <!-- Invisible while awake, so it costs nothing there and cannot double the
+                             picture; dimmed in ambient, where the slot above has hidden its own copy.
+                             Its minute can be up to a minute stale, and after a long sleep much more -
+                             nothing of ours runs while the watch is frozen. That is the trade the
+                             setting offers.
+
+                             The ambient alpha is a ceiling on the whole picture: a white pixel is
+                             drawn at alpha/255 of its brightness. Three values have been tried on the
+                             watch, and each move was measured rather than judged by eye:
+
+                               130  max luminance 111, only 1.9% of the screen above 100 - the wearer
+                                    could barely read their design in a dark room
+                               240  max ~240 - legible, but so close to the awake brightness that the
+                                    always-on display no longer looked like one
+                               200  where it sits now: clearly readable, clearly dimmer
+
+                             A screenshot also understates all of these. screencap reads the frame
+                             buffer *before* the panel's own dimming, which the platform log puts at
+                             brightness 21 of 255 while dozing - what the eye receives is this picture
+                             multiplied by that. So the alpha is a share of an already very low light,
+                             which is why 130 was almost invisible.
+
+                             Restraint still matters for the panel and the battery, and it survives
+                             because the picture is mostly black: the mean luminance stays near 20 of
+                             255. What changes is that the parts meant to be read can be.
+
+                             One side effect worth knowing: the closer this is to 255, the harder it
+                             becomes to notice if the runtime ever fails to apply the ambient variant
+                             at all - at 240 a picture drawn at full strength looks the same as a
+                             dimmed one. At 200 that difference is visible again, which makes this
+                             value a usable test as well as a setting (see S52). -->
+                        <PartImage alpha="0" x="0" y="0" width="450" height="450">
+                            <Variant mode="AMBIENT" target="alpha" value="200" />
+                            <Image resource="[COMPLICATION.SMALL_IMAGE]" />
+                        </PartImage>
+                    </Compare>
+                </Condition>
+            </Complication>
+            <Complication type="EMPTY" />
+        </ComplicationSlot>
+
+        <!-- Ambient-only readouts, drawn by the runtime like the clock above.
+             Both slots are declared full screen and their contents placed where they should appear.
+             That is deliberate: it was not clear whether a Complication's children are positioned
+             relative to the slot or to the screen, and with the slot covering the screen the two
+             coincide - so the layout is right either way. The first attempt used a small slot and the
+             glucose value never appeared, consistent with its child being placed at the screen's top
+             edge and clipped by the bezel. Invisible while awake
+             (alpha 0) so the user's own design is never disturbed, revealed in ambient.
+             Grey rather than white: an always-on display wants few bright pixels.
+             Note the BG slot's title is the reading's age, which the runtime keeps counting on its
+             own - so even though the value itself goes stale while our process sleeps, the reader can
+             always see how old it is. That is the half that matters. -->
+        <!-- Deliberately slot 4, not slot 2 which this readout used until now.
+             DefaultProviderPolicy only applies to a slot the runtime has never bound: measured on
+             device, changing primaryProvider on an existing slotId did nothing at all - the slot
+             stayed wired to the previous provider and the new one was never asked for data even
+             once. A fresh slotId is what makes the runtime apply the policy again. -->
+        <ComplicationSlot
+            name="AmbientBg"
+            slotId="4"
+            displayName="Ambient glucose"
+            isCustomizable="FALSE"
+            supportedTypes="SHORT_TEXT EMPTY"
+            alpha="0"
+            x="0" y="0" width="450" height="450">
+            <Variant mode="AMBIENT" target="alpha" value="255" />
+            <DefaultProviderPolicy
+                defaultSystemProvider="EMPTY"
+                defaultSystemProviderType="EMPTY"
+                primaryProvider="AAPS_WEAR_APP_ID/app.aaps.wear.complications.CwfAmbientBgComplication"
+                primaryProviderType="SHORT_TEXT" />
+            <!-- Bounds the readout, and nothing more. A one-pixel box was tried here to make the
+                 slot untappable while it still drew full size; everything in the slot then vanished,
+                 so the runtime evidently clips content to the BoundingShape rather than only
+                 hit-testing against it. Kept tight around the text instead: the rest of the face
+                 stays owned by the image slots, and a tap on the glucose readout reaching the
+                 glucose screen is reasonable. -->
+            <BoundingBox x="0" y="40" width="450" height="112" />
+            <Complication type="SHORT_TEXT">
+                <!-- Hidden when the wearer chose their own design in ambient, which this would
+                     otherwise sit on top of. Conditional here rather than around the slot: the
+                     format allows a Condition among the things a complication draws, but not
+                     around a ComplicationSlot itself. -->
+                <Condition>
+                    <Expressions>
+                        <Expression name="runtimeReadout1">[CONFIGURATION.simplifyAmbient] == "TRUE"</Expression>
+                    </Expressions>
+                    <Compare expression="runtimeReadout1">
+                <PartText alpha="255" height="72" width="450" x="0" y="40">
+                    <Text align="CENTER" ellipsis="TRUE">
+                        <Font color="#ffdcdcdc" family="SYNC_TO_DEVICE" size="64" slant="NORMAL" weight="NORMAL">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+                        </Font>
+                    </Text>
+                </PartText>
+                <PartText alpha="255" height="40" width="450" x="0" y="112">
+                    <Text align="CENTER" ellipsis="TRUE">
+                        <Font color="#ffb4b4b4" family="SYNC_TO_DEVICE" size="30" slant="NORMAL" weight="NORMAL">
+                            <Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template>
+                        </Font>
+                    </Text>
+                </PartText>
+                    </Compare>
+                </Condition>
+            </Complication>
+            <Complication type="EMPTY" />
+        </ComplicationSlot>
+
+        <!-- Slot 5, not the 3 this row used before: a slot the runtime has already bound keeps
+             its provider whatever the policy says. Same reason as the glucose slot above. -->
+        <ComplicationSlot
+            name="AmbientStatus"
+            slotId="5"
+            displayName="Ambient status"
+            isCustomizable="FALSE"
+            supportedTypes="SHORT_TEXT EMPTY"
+            alpha="0"
+            x="0" y="0" width="450" height="450">
+            <Variant mode="AMBIENT" target="alpha" value="255" />
+            <DefaultProviderPolicy
+                defaultSystemProvider="EMPTY"
+                defaultSystemProviderType="EMPTY"
+                primaryProvider="AAPS_WEAR_APP_ID/app.aaps.wear.complications.CwfAmbientStatusComplication"
+                primaryProviderType="SHORT_TEXT" />
+            <BoundingBox x="0" y="300" width="450" height="84" />
+            <Complication type="SHORT_TEXT">
+                <!-- Hidden when the wearer chose their own design in ambient, which this would
+                     otherwise sit on top of. Conditional here rather than around the slot: the
+                     format allows a Condition among the things a complication draws, but not
+                     around a ComplicationSlot itself. -->
+                <Condition>
+                    <Expressions>
+                        <Expression name="runtimeReadout2">[CONFIGURATION.simplifyAmbient] == "TRUE"</Expression>
+                    </Expressions>
+                    <Compare expression="runtimeReadout2">
+                <PartText alpha="255" height="44" width="450" x="0" y="300">
+                    <Text align="CENTER" ellipsis="TRUE">
+                        <Font color="#ffb4b4b4" family="SYNC_TO_DEVICE" size="32" slant="NORMAL" weight="NORMAL">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+                        </Font>
+                    </Text>
+                </PartText>
+                <!-- BrCobIobComplication puts the basal rate in TEXT and "cob iob" in TITLE, so
+                     without this line the carbs and insulin on board are sent and then dropped. -->
+                <PartText alpha="255" height="40" width="450" x="0" y="344">
+                    <Text align="CENTER" ellipsis="TRUE">
+                        <Font color="#ffb4b4b4" family="SYNC_TO_DEVICE" size="30" slant="NORMAL" weight="NORMAL">
+                            <Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template>
+                        </Font>
+                    </Text>
+                </PartText>
+                    </Compare>
+                </Condition>
+            </Complication>
+            <Complication type="EMPTY" />
+        </ComplicationSlot>
+
+    </Scene>
+</WatchFace>

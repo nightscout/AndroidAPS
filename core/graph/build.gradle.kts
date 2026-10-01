@@ -44,14 +44,14 @@ kotlin {
                 api(project(":core:interfaces"))
                 api(project(":core:ui"))
 
-                api(libs.cmp.runtime)
-                api(libs.cmp.foundation)
-                api(libs.cmp.ui)
-                api(libs.cmp.material3)
+                api(libs.jetbrains.compose.runtime)
+                api(libs.jetbrains.compose.foundation)
+                api(libs.jetbrains.compose.ui)
+                api(libs.jetbrains.compose.material3)
                 // Vico publishes Apple targets of its own, so the charts are shared rather than
                 // reimplemented. This is the only third-party UI library in commonMain.
                 api(libs.com.patrykandpatrick.vico.compose)
-                implementation(libs.cmp.ui.tooling.preview)
+                implementation(libs.jetbrains.compose.ui.tooling.preview)
             }
         }
 

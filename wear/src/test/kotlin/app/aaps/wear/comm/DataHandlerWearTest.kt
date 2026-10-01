@@ -5,12 +5,14 @@ import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.PushedWatchfaceId
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.wear.AAPSLoggerTest
 import app.aaps.wear.R
 import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.watchfaces.WatchFacePushHelper
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +37,7 @@ internal class DataHandlerWearTest : WearTestBase() {
 
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var complicationDataRepository: ComplicationDataRepository
+    @Mock lateinit var watchFacePushHelper: WatchFacePushHelper
 
     private val logger = AAPSLoggerTest()
     private lateinit var rxBus: RxBus
@@ -43,7 +46,7 @@ internal class DataHandlerWearTest : WearTestBase() {
     @BeforeEach
     fun setupHandler() {
         rxBus = RxBusImpl(logger)
-        sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository)
+        sut = DataHandlerWear(context, rxBus, sp, preferences, logger, complicationDataRepository, watchFacePushHelper)
     }
 
     @Test
@@ -61,6 +64,14 @@ internal class DataHandlerWearTest : WearTestBase() {
         verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(DoubleKey.OverviewInsulinButtonIncrement2, 1.0)
         verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(IntKey.OverviewCarbsButtonIncrement1, 5)
         verify(preferences, timeout(HANDLER_TIMEOUT_MS)).put(IntKey.OverviewCarbsButtonIncrement2, 10)
+    }
+
+    @Test
+    fun `preferences event hands the chosen pushed watchface to the push helper`() {
+        // The mock helper reports no change, so no install is started - only the hand-over is checked here.
+        rxBus.send(EventData.Preferences(0L, false, true, 50, 80, 25.0, 0.5, 1.0, 5, 10, pushedWatchface = PushedWatchfaceId.WFS))
+
+        verify(watchFacePushHelper, timeout(HANDLER_TIMEOUT_MS)).selectFace(PushedWatchfaceId.WFS)
     }
 
     @Test

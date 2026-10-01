@@ -507,7 +507,7 @@ class BolusWizard(
      * Execute normal bolus wizard flow (bolus + carbs + superbolus + BCR save).
      * No UI dependency — errors reported via [onError] callback.
      */
-    suspend fun executeNormal(onError: (String) -> Unit, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
+    suspend fun executeNormal(onError: (WizardBolusExecutor.Failure) -> Unit, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
         if (accepted) {
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
@@ -626,7 +626,7 @@ class BolusWizard(
      * No UI dependency — errors reported via [onError] callback.
      */
 
-    private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (String) -> Unit, forcedRecordOnly: Boolean = false) {
+    private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (WizardBolusExecutor.Failure) -> Unit, forcedRecordOnly: Boolean = false) {
         // delayMinutes is already the total delay from now — the caller folds the meal carbTime into it.
         // Do NOT add carbTime again here or the eCarbs record lands carbTime minutes too late.
         val totalDelayMinutes = delayMinutes
@@ -665,7 +665,7 @@ class BolusWizard(
         }
     }
 
-    private fun scheduleECarbsFromQuickWizardCompose(quickWizardEntry: QuickWizardEntry, onError: (String) -> Unit, forcedRecordOnly: Boolean = false) {
+    private fun scheduleECarbsFromQuickWizardCompose(quickWizardEntry: QuickWizardEntry, onError: (WizardBolusExecutor.Failure) -> Unit, forcedRecordOnly: Boolean = false) {
         val eCarbsYesNo = quickWizardEntry.useEcarbs()
         if (eCarbsYesNo == QuickWizardEntry.ALWAYS) {
             val timeOffset = quickWizardEntry.time()

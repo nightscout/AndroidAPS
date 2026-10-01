@@ -84,20 +84,20 @@ kotlin {
                 // CMP rather than androidx. On Android CMP delegates to androidx, so the composeBom
                 // below still decides the Android versions and nothing about the Android build
                 // changes.
-                api(libs.cmp.runtime)
-                api(libs.cmp.foundation)
-                api(libs.cmp.ui)
+                api(libs.jetbrains.compose.runtime)
+                api(libs.jetbrains.compose.foundation)
+                api(libs.jetbrains.compose.ui)
                 // Replaces the deprecated androidx.compose.ui.backhandler.BackHandler.
-                api(libs.androidx.navigationevent.compose)
-                api(libs.cmp.material3)
-                api(libs.cmp.material.icons.extended)
+                api(libs.jetbrains.androidx.navigationevent.compose)
+                api(libs.jetbrains.compose.material3)
+                api(libs.jetbrains.compose.material.icons.extended)
                 // viewModel() for Compose. The JetBrains republish, not androidx: it is the one with Apple
                 // targets, and `metroViewModel()` below has to compile wherever the shared UI does.
                 api(libs.jetbrains.lifecycle.viewmodel.compose)
                 // Metro's view model extension. `api` so every module with a view model gets @ViewModelKey
                 // without repeating the dependency - there are eighty of them to convert.
                 api(libs.metrox.viewmodel)
-                implementation(libs.cmp.ui.tooling.preview)
+                implementation(libs.jetbrains.compose.ui.tooling.preview)
             }
         }
 

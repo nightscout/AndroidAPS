@@ -57,6 +57,7 @@ class ImportReviewContentTest {
                     onDecryptionPasswordChanged = {},
                     onDecrypt = {},
                     onImport = {},
+                    onReplacePumpSettingsChanged = {},
                     onBack = { back = true }
                 )
             }

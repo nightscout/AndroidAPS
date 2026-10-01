@@ -29,7 +29,6 @@ dependencies {
     implementation(project(":shared:impl"))
 
     api(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.rxjava3)
     ksp(libs.androidx.room.compiler)
 
     api(libs.com.squareup.okhttp3.okhttp)

@@ -3,6 +3,7 @@ package app.aaps.ios.shell
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.implementation.plugin.PluginStore
+import kotlinx.coroutines.Job
 
 /**
  * The two things start up has to do to the plugin list, named so they can be tested.
@@ -26,7 +27,12 @@ internal interface PluginRegistry {
      * never having run `onStart` - no ticks, no sync, no websocket - until the user happened to open
      * the Configuration screen, which ran the same load as a side effect and made it work.
      */
-    fun initializeConfig()
+    /**
+     * Returns the plugin start jobs. They are only scheduled, so nothing here has finished starting when
+     * this returns - see `ConfigBuilder.initialize`, which Android's `MainApp` waits on before touching
+     * plugin state.
+     */
+    fun initializeConfig(): List<Job>
 }
 
 /** The real one. */
@@ -43,5 +49,5 @@ internal class PluginStoreRegistry(
     // shared, so this is the real one, not a copy of what it does - and it calls
     // `verifySelectionInCategories` itself at the end of loading, so nothing is lost by not calling
     // that directly any more.
-    override fun initializeConfig() = configBuilder.initialize()
+    override fun initializeConfig(): List<Job> = configBuilder.initialize()
 }

@@ -75,14 +75,14 @@ kotlin {
                     .filter { it.path.startsWith(":plugins:") && it.buildFile.exists() }
                     .forEach { api(project(it.path)) }
 
-                api(libs.cmp.runtime)
-                api(libs.cmp.foundation)
-                api(libs.cmp.ui)
-                api(libs.cmp.material3)
-                api(libs.cmp.material.icons.extended)
+                api(libs.jetbrains.compose.runtime)
+                api(libs.jetbrains.compose.foundation)
+                api(libs.jetbrains.compose.ui)
+                api(libs.jetbrains.compose.material3)
+                api(libs.jetbrains.compose.material.icons.extended)
                 // The JetBrains republishes, not the plain androidx ones: same package names, with
                 // Apple targets. Same choice as :core:ui and :ui.
-                api(libs.androidx.compose.navigation)
+                api(libs.jetbrains.androidx.compose.navigation)
                 api(libs.jetbrains.lifecycle.runtime.compose)
             }
         }

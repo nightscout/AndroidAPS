@@ -11,6 +11,7 @@ import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -73,14 +74,16 @@ abstract class PumpPluginAbstract protected constructor(
     var decimalFormatter: DecimalFormatter,
     var dateUtil: DateUtil,
     protected val pumpEnactResultProvider: () -> PumpEnactResult,
-    var bolusProgressData: BolusProgressData
+    var bolusProgressData: BolusProgressData,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = pluginDescription,
     ownPreferences = ownPreferences,
     aapsLogger = aapsLogger,
     rh = rh,
     preferences = preferences,
-    commandQueue = commandQueue
+    commandQueue = commandQueue,
+    notificationManager = notificationManager
 ),
     Pump, PluginConstraints,
     /*Constraints,*/ PumpSyncEntriesCreator {

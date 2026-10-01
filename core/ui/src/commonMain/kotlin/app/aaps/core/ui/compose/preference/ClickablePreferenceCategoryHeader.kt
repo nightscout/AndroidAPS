@@ -40,6 +40,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aaps.core.keys.interfaces.TextRef
@@ -64,6 +67,8 @@ internal fun ClickablePreferenceCategoryHeader(
     collapsible: Boolean = true
 ) {
     val theme = LocalPreferenceTheme.current
+    val expandedState = stringResource(CoreUiStrings.state_expanded)
+    val collapsedState = stringResource(CoreUiStrings.state_collapsed)
     val rotationAngle = animateFloatAsState(
         targetValue = if (expanded) 180f else 0f,
         label = "expandIconRotation"
@@ -94,6 +99,20 @@ internal fun ClickablePreferenceCategoryHeader(
             .fillMaxWidth()
             .background(backgroundColor)
             .then(if (collapsible) Modifier.clickable(onClick = onToggle) else Modifier)
+            // Marked as a heading so a screen reader can jump between categories. Without this the
+            // only way through a settings screen is to swipe past every single row, because
+            // heading navigation - the usual way of skimming - has nothing to land on. This one
+            // component backs every preference screen and settings sheet in the app.
+            //
+            // The open/closed state rides here too, because it belongs to the header rather than to
+            // the little arrow: a screen reader announces a stateDescription as part of the item, so
+            // this reads "Pump settings, collapsed" wherever the user lands on the row.
+            .semantics {
+                heading()
+                if (collapsible) {
+                    stateDescription = if (expanded) expandedState else collapsedState
+                }
+            }
             .padding(headerPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -126,7 +145,9 @@ internal fun ClickablePreferenceCategoryHeader(
             if (collapsible) {
                 Icon(
                     imageVector = Icons.Default.ExpandMore,
-                    contentDescription = stringResource(if (expanded) CoreUiStrings.collapse else CoreUiStrings.expand),
+                    // Decorative now: the row carries the state, and tapping anywhere on the row
+                    // toggles it, so naming the arrow as well only repeated the same fact.
+                    contentDescription = null,
                     modifier = Modifier
                         .size(theme.expandIconSize)
                         .graphicsLayer { rotationZ = rotationAngle.value }

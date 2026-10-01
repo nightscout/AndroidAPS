@@ -7,11 +7,15 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadStep
+import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -29,6 +33,9 @@ import org.mockito.kotlin.whenever
  * With the scheduling behind [NsLoadExecutor] the decisions are visible.
  */
 class NSClientV3PluginSchedulingTest : TestBaseWithProfile() {
+
+    /** Real English; the sync owner is not one of the five :shared:tests can see. */
+    private val text = generatedTextResolver("sync" to SyncStringsValues::textOf)
 
     @Mock lateinit var nsLoadExecutor: NsLoadExecutor
     @Mock lateinit var nsConnection: NsConnection
@@ -50,14 +57,23 @@ class NSClientV3PluginSchedulingTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeChanges(any<kotlin.reflect.KClass<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         sut = NSClientV3Plugin(
-            aapsLogger, rh, preferences, rxBus,
+            aapsLogger, text, preferences, rxBus,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             mock(), mock(), decimalFormatter, l, nsClientRepository, mock(),
-            mock(), mock(), mock(), mock(), mock(), mock(), mock(), nsConnection, nsLoadExecutor
+            mock(), mock(), mock(), mock(), mock(), mock(), mock(), nsConnection, nsLoadExecutor, mock()
         )
     }
 
     /** The round is one chain under one name, and it ends with the upload step. */
+    // The plugin starts a coroutine scope on the IO dispatcher the moment it is constructed, so a
+    // plugin built per test keeps background work alive after the test method ends. Mockito then
+    // disables the mocks, the leftover coroutine touches one, and the throw lands on whatever test
+    // runs next as UncaughtExceptionsBeforeTest. onStop cancels that scope and waits for it.
+    @AfterEach
+    fun stopPlugin() {
+        runBlocking { sut.shutdownForTest() }
+    }
+
     @Test
     fun `a load round runs the whole chain, ending with the upload`() = runTest {
         whenever(nsLoadExecutor.isRunning).thenReturn(false)

@@ -66,11 +66,23 @@ class PreferencesImpl(
             StringNonKey.entries +
             IntentKey.entries).toCollection(LinkedHashSet())
 
-    private val booleanFlows = ConcurrentHashMap<String, MutableStateFlow<Boolean>>()
-    private val stringFlows = ConcurrentHashMap<String, MutableStateFlow<String>>()
-    private val doubleFlows = ConcurrentHashMap<String, MutableStateFlow<Double>>()
-    private val intFlows = ConcurrentHashMap<String, MutableStateFlow<Int>>()
-    private val longFlows = ConcurrentHashMap<String, MutableStateFlow<Long>>()
+    /**
+     * A cached flow and the read that produced its value.
+     *
+     * The reader is kept so [reloadFromStore] can re-read without looking the key up from the cached
+     * NAME - which cannot work for a `ComposedKey`, because the name is the composed form and the
+     * registry only holds the template.
+     */
+    private class Observed<T>(val flow: MutableStateFlow<T>, val read: () -> T)
+
+    private fun <T> ConcurrentHashMap<String, Observed<T>>.observed(name: String, read: () -> T): StateFlow<T> =
+        getOrPut(name) { Observed(MutableStateFlow(read()), read) }.flow
+
+    private val booleanFlows = ConcurrentHashMap<String, Observed<Boolean>>()
+    private val stringFlows = ConcurrentHashMap<String, Observed<String>>()
+    private val doubleFlows = ConcurrentHashMap<String, Observed<Double>>()
+    private val intFlows = ConcurrentHashMap<String, Observed<Int>>()
+    private val longFlows = ConcurrentHashMap<String, Observed<Long>>()
 
     override fun get(key: BooleanNonPreferenceKey): Boolean = sp.getBoolean(key.key, key.defaultValue)
 
@@ -79,11 +91,11 @@ class PreferencesImpl(
 
     override fun put(key: BooleanNonPreferenceKey, value: Boolean) {
         sp.putBoolean(key.key, value)
-        booleanFlows[key.key]?.value = value
+        booleanFlows[key.key]?.flow?.value = value
     }
 
     override fun observe(key: BooleanNonPreferenceKey): StateFlow<Boolean> =
-        booleanFlows.getOrPut(key.key) { MutableStateFlow(get(key)) }
+        booleanFlows.observed(key.key) { get(key) }
 
     override fun get(key: BooleanPreferenceKey): Boolean = sp.getBoolean(key.key, key.defaultValue)
 
@@ -96,11 +108,11 @@ class PreferencesImpl(
 
     override fun put(key: StringNonPreferenceKey, value: String) {
         sp.putString(key.key, value)
-        stringFlows[key.key]?.value = value
+        stringFlows[key.key]?.flow?.value = value
     }
 
     override fun observe(key: StringNonPreferenceKey): StateFlow<String> =
-        stringFlows.getOrPut(key.key) { MutableStateFlow(get(key)) }
+        stringFlows.observed(key.key) { get(key) }
 
     override fun get(key: DoublePreferenceKey): Double = sp.getDouble(key.key, key.defaultValue)
 
@@ -111,11 +123,11 @@ class PreferencesImpl(
 
     override fun put(key: DoubleNonPreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
-        doubleFlows[key.key]?.value = value
+        doubleFlows[key.key]?.flow?.value = value
     }
 
     override fun observe(key: DoubleNonPreferenceKey): StateFlow<Double> =
-        doubleFlows.getOrPut(key.key) { MutableStateFlow(get(key)) }
+        doubleFlows.observed(key.key) { get(key) }
 
     override fun get(key: UnitDoublePreferenceKey): Double =
         error("Not implemented")
@@ -143,7 +155,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Double> =
-        doubleFlows.getOrPut(key.composeKey(*arguments)) { MutableStateFlow(get(key, *arguments)) }
+        doubleFlows.observed(key.composeKey(*arguments)) { get(key, *arguments) }
 
     override fun get(key: IntNonPreferenceKey): Int = sp.getInt(key.key, key.defaultValue)
 
@@ -152,15 +164,15 @@ class PreferencesImpl(
 
     override fun put(key: IntNonPreferenceKey, value: Int) {
         sp.putInt(key.key, value)
-        intFlows[key.key]?.value = value
+        intFlows[key.key]?.flow?.value = value
     }
 
     override fun observe(key: IntNonPreferenceKey): StateFlow<Int> =
-        intFlows.getOrPut(key.key) { MutableStateFlow(get(key)) }
+        intFlows.observed(key.key) { get(key) }
 
     override fun inc(key: IntNonPreferenceKey) {
         sp.incInt(key.key)
-        intFlows[key.key]?.let { it.value = get(key) }
+        intFlows[key.key]?.let { it.flow.value = get(key) }
     }
 
     override fun get(key: IntComposedNonPreferenceKey, vararg arguments: Any): Int =
@@ -171,7 +183,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: IntComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Int> =
-        intFlows.getOrPut(key.composeKey(*arguments)) { MutableStateFlow(get(key, *arguments)) }
+        intFlows.observed(key.composeKey(*arguments)) { get(key, *arguments) }
 
     override fun get(key: IntPreferenceKey): Int = sp.getInt(key.key, key.defaultValue)
 
@@ -182,17 +194,17 @@ class PreferencesImpl(
 
     override fun put(key: LongNonPreferenceKey, value: Long) {
         sp.putLong(key.key, value)
-        longFlows[key.key]?.value = value
+        longFlows[key.key]?.flow?.value = value
     }
 
     override fun observe(key: LongNonPreferenceKey): StateFlow<Long> =
-        longFlows.getOrPut(key.key) { MutableStateFlow(get(key)) }
+        longFlows.observed(key.key) { get(key) }
 
     override fun get(key: LongPreferenceKey): Long = sp.getLong(key.key, key.defaultValue)
 
     override fun inc(key: LongNonPreferenceKey) {
         sp.incLong(key.key)
-        longFlows[key.key]?.let { it.value = get(key) }
+        longFlows[key.key]?.let { it.flow.value = get(key) }
     }
 
     override fun remove(key: NonPreferenceKey) {
@@ -210,7 +222,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: LongComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Long> =
-        longFlows.getOrPut(key.composeKey(*arguments)) { MutableStateFlow(get(key, *arguments)) }
+        longFlows.observed(key.composeKey(*arguments)) { get(key, *arguments) }
 
     override fun remove(key: ComposedKey, vararg arguments: Any) {
         sp.remove(key.composeKey(*arguments))
@@ -243,7 +255,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Boolean> =
-        booleanFlows.getOrPut(key.composeKey(*arguments)) { MutableStateFlow(get(key, *arguments)) }
+        booleanFlows.observed(key.composeKey(*arguments)) { get(key, *arguments) }
 
     override fun get(key: StringComposedNonPreferenceKey, vararg arguments: Any): String =
         sp.getString(key.composeKey(*arguments), key.defaultValue)
@@ -256,7 +268,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String> =
-        stringFlows.getOrPut(key.composeKey(*arguments)) { MutableStateFlow(get(key, *arguments)) }
+        stringFlows.observed(key.composeKey(*arguments)) { get(key, *arguments) }
 
     override fun registerPreferences(keys: List<NonPreferenceKey>) {
         prefsList.addAll(keys)
@@ -289,4 +301,21 @@ class PreferencesImpl(
 
     override fun getAllPreferenceKeys(): List<PreferenceKey> =
         prefsList.filterIsInstance<PreferenceKey>()
+
+    override fun getAllKeys(): List<NonPreferenceKey> = prefsList.toList()
+
+    /**
+     * Wear has no settings import, so nothing calls this today. It is implemented rather than left as
+     * a no-op because wear has the same staleness hole the phone had: its
+     * `OnSharedPreferenceChangeListener` sends a broadcast and an rxBus event, and never touches
+     * these flows - so anything that writes wear's store without going through `put` leaves every
+     * `observe(...)` stale for the life of the process. A silent no-op here would hide that.
+     */
+    override fun reloadFromStore() {
+        booleanFlows.values.forEach { it.flow.value = it.read() }
+        stringFlows.values.forEach { it.flow.value = it.read() }
+        doubleFlows.values.forEach { it.flow.value = it.read() }
+        intFlows.values.forEach { it.flow.value = it.read() }
+        longFlows.values.forEach { it.flow.value = it.read() }
+    }
 }

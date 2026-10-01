@@ -119,6 +119,7 @@
     <string name="user_action_not_available">Selected User Action %1$s is no longer available, please refresh your tile</string>
     <string name="scene_not_available">Scene %1$s is no longer available, please refresh your tile</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Remote insulin commands are disabled in client mode</string>
+    <string name="wear_phone_not_ready">The phone is still starting up or applying settings. Try again in a moment.</string>
     <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
@@ -127,6 +128,11 @@
     <string name="wear_general_settings">General Settings</string>
     <string name="wear_custom_watchface_settings">Custom Watchface Settings</string>
     <string name="wear_custom_watchface">Custom Watchface: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Installing…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">The watch shows the Complications watchface. Select Custom watchface to see %1$s on the watch.</string>
+    <string name="wear_pushed_watchface_confirm_title">Change the watchface on the watch?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s will replace the %2$s on the watch.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s will replace the %2$s on the watch. Complications you changed in the watch face editor go back to the defaults.</string>
     <string name="wear_load_watchface">Load Watchface</string>
     <string name="wear_infos_watchface">Infos Watchface</string>
     <string name="wear_export_watchface">Export template</string>

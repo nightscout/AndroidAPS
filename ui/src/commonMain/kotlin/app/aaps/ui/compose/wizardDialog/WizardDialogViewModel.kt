@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -484,7 +484,13 @@ class WizardDialogViewModel(
         val state = uiState.value
         appScope.launch {
             wizard?.executeNormal(
-                onError = { comment -> _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment)) },
+                // ShowDeliveryError is the full screen BOLUS_ERROR alarm, so a command dropped on purpose takes the
+                // plain dialog instead. The record-only path should never see one (it writes straight to the
+                // database and never queues a pump command), but the guard is one line and the alarm is not.
+                onError = { failure ->
+                    if (failure.cancelled) rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.command_cancelled_title), message = failure.comment))
+                    else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(failure.comment))
+                },
                 eCarbsGrams = state.eCarbs,
                 eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
                 eCarbsDurationHours = state.eCarbsDurationHours,
@@ -543,7 +549,7 @@ class WizardDialogViewModel(
                     }
                 // Master-local compute failure (no modal) or client offline; a client round-trip failure already showed on the app modal.
                 is ActionProgress.Rejected ->
-                    if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
+                    if (!config.AAPSCLIENT || prepared.reason.isNotDeliveryError())
                         rxBus.send(EventShowDialog.Ok(title = rh.gs(CoreUiStrings.boluswizard), message = prepared.detail ?: rh.gs(prepared.reason.failText())))
 
                 else                       -> Unit // Unconfirmed → app modal

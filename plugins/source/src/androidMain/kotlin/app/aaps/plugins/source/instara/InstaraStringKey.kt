@@ -18,6 +18,11 @@ enum class InstaraStringKey(
      * - sgvStart: the first sgvId for that device, defined as the sgvId of the first row that carries sgvMark != null.
      * - sgvMark : device-level total mark/count for that device (can differ across devices).
      * exportable=false because it’s internal state derived from device traffic.
+     *
+     * The flag was missing until 2026-09-22: this comment said `exportable=false`, the entry did not
+     * pass it, and it inherited `true` from `NonPreferenceKey` - so the value was in every export.
+     * Nothing could show that before `prefs-schema.txt` recorded the flag per key; it is the first
+     * thing the snapshot caught.
      */
-    DeviceMetaJson("instara_device_meta_json", "")
+    DeviceMetaJson("instara_device_meta_json", "", exportable = false)
 }

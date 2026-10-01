@@ -3,9 +3,8 @@ package app.aaps.implementation.utils
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,23 +13,15 @@ import org.mockito.kotlin.whenever
 
 class TrendCalculatorImplTest : TestBase() {
 
-    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var autosensDataStore: AutosensDataStore
 
     private lateinit var trendCalculator: TrendCalculatorImpl
 
     @BeforeEach
     fun setup() {
-        trendCalculator = TrendCalculatorImpl(rh)
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_double_down)).thenReturn("Double Down")
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_single_down)).thenReturn("Single Down")
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_forty_five_down)).thenReturn("Forty Five Down")
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_flat)).thenReturn("Flat")
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_forty_five_up)).thenReturn("Forty Five Up")
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_single_up)).thenReturn("Single Up")
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_double_up)).thenReturn("Double Up")
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_none)).thenReturn("None")
-        whenever(rh.gs(CoreUiStrings.a11y_arrow_unknown)).thenReturn("Unknown")
+        // Real English for the arrow descriptions, so the expected text below is what a user hears.
+        // The stubs this replaced said "Double Down"; the string says "falling rapidly".
+        trendCalculator = TrendCalculatorImpl(generatedTextResolver())
     }
 
     @Test
@@ -176,7 +167,7 @@ class TrendCalculatorImplTest : TestBase() {
             createGlucoseValue(100.0, 0L, recalculated = 100.0)
         )
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("Double Down")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("falling rapidly")
     }
 
     @Test
@@ -186,7 +177,7 @@ class TrendCalculatorImplTest : TestBase() {
             createGlucoseValue(100.0, 0L, recalculated = 100.0)
         )
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("Single Down")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("falling")
     }
 
     @Test
@@ -196,7 +187,7 @@ class TrendCalculatorImplTest : TestBase() {
             createGlucoseValue(100.0, 0L, recalculated = 100.0)
         )
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("Forty Five Down")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("falling slowly")
     }
 
     @Test
@@ -206,7 +197,7 @@ class TrendCalculatorImplTest : TestBase() {
             createGlucoseValue(100.0, 0L, recalculated = 100.0)
         )
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("Flat")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("stable")
     }
 
     @Test
@@ -216,7 +207,7 @@ class TrendCalculatorImplTest : TestBase() {
             createGlucoseValue(100.0, 0L, recalculated = 100.0)
         )
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("Forty Five Up")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("rising slowly")
     }
 
     @Test
@@ -226,7 +217,7 @@ class TrendCalculatorImplTest : TestBase() {
             createGlucoseValue(100.0, 0L, recalculated = 100.0)
         )
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("Single Up")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("rising")
     }
 
     @Test
@@ -236,7 +227,7 @@ class TrendCalculatorImplTest : TestBase() {
             createGlucoseValue(100.0, 0L, recalculated = 100.0)
         )
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("Double Up")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("rising rapidly")
     }
 
     @Test
@@ -245,13 +236,13 @@ class TrendCalculatorImplTest : TestBase() {
             createGlucoseValue(100.0, 1000L)
         )
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("None")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("none")
     }
 
     @Test
     fun `getTrendDescription handles null data`() {
         whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(null)
-        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("Unknown")
+        assertThat(trendCalculator.getTrendDescription(autosensDataStore)).isEqualTo("unknown")
     }
 
     @Test

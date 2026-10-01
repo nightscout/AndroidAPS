@@ -10,8 +10,8 @@ import org.mockito.kotlin.mock
  */
 class PluginListMergeTest {
 
-    private class PluginA : PluginBase(mock(), mock(), mock())
-    private class PluginB : PluginBase(mock(), mock(), mock())
+    private class PluginA : PluginBase(mock(), mock(), mock(), mock())
+    private class PluginB : PluginBase(mock(), mock(), mock(), mock())
 
     @Test
     fun `merges sources and sorts by order key`() {

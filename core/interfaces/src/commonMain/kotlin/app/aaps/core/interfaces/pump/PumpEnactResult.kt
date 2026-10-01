@@ -19,7 +19,17 @@ interface PumpEnactResult {
     var bolusDelivered: Double // real value of delivered insulin
     var queued: Boolean
 
+    /**
+     * The command was dropped on purpose - the queue was cleared, an import replaced the settings,
+     * a newer command of the same kind superseded it - instead of being tried and failing.
+     *
+     * The caller is still told it did not happen ([success] is false for that), but this is not an
+     * error to alarm about, in the same way a bolus the user stopped is not.
+     */
+    var cancelled: Boolean
+
     fun success(success: Boolean): PumpEnactResult
+    fun cancelled(cancelled: Boolean): PumpEnactResult
     fun enacted(enacted: Boolean): PumpEnactResult
     fun comment(comment: String): PumpEnactResult
     /**

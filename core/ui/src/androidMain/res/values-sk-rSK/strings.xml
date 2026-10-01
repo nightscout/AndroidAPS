@@ -58,6 +58,7 @@
     <string name="open_plugin">Otvoriť plugin</string>
     <string name="configbuilder_pick_one_hint">Vyberte jeden. Iba jeden môže byť aktívny.</string>
     <string name="configbuilder_pick_many_hint">Vyberte, čo sa použije.</string>
+    <string name="configbuilder_no_selection_warning">V tejto kategórii nie je vybraný žiadny plugin.</string>
     <string name="configbuilder_switch_confirmation_title">Prepnúť plugin?</string>
     <string name="configbuilder_switch_confirmation">Týmto vypnete %1$s a zapnete %2$s.</string>
     <string name="expand">Rozbaliť</string>
@@ -115,7 +116,6 @@
     <string name="profile_switch_no_insulin">Nie je možné prepnúť profil: nepoužíva se žiadny inzulín a žiadny nebol vybraný.</string>
     <string name="profile_switch_select_insulin_hint">Zatiaľ sa nepoužíva žiadny inzulín. Vyberte inzulín, ktorý používate, aby ho prepnutie profilu mohlo zaznamenať.</string>
     <string name="insulin_activation_failed">Inzulín nebol prepnutý. Váš predchádzajúci inzulín sa stále používá.</string>
-    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason. Example: The insulin was not switched: Master not reachable. Your previous insulin is still in use.">Inzulín nebol prepnutý: %1$s. Váš predchádzajúci inzulín sa stále používa.</string>
     <string name="insulin_activation_unconfirmed">Prepnutie inzulínu nemohlo byť potvrdené. Skontrolujte, ktorý inzulín je aktívny vo vašom profile pred dávkovaním.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInzulín tiež nebol prepnutý.</string>
     <string name="active"><![CDATA[<Aktívny>]]></string>
@@ -173,6 +173,7 @@
     <string name="notconfigured">Nenakonfigurované</string>
     <string name="loop_suspended_by_dst">Uzavretý okruh pozastavený kvôli zmene času</string>
     <string name="required">pož.</string>
+    <string name="a11y_arrow_triple_down">veľmi rýchlo klesajúca</string>
     <string name="a11y_arrow_double_down">rýchly pokles</string>
     <string name="a11y_arrow_single_down">klesajúca</string>
     <string name="a11y_arrow_forty_five_down">pomaly klesajúca</string>
@@ -180,8 +181,13 @@
     <string name="a11y_arrow_forty_five_up">pomaly stúpajúca</string>
     <string name="a11y_arrow_single_up">stúpajúca</string>
     <string name="a11y_arrow_double_up">rýchlo stúpajúca</string>
+    <string name="a11y_arrow_triple_up">veľmi rýchlo stúpajúca</string>
     <string name="a11y_arrow_none">žiadny</string>
     <string name="a11y_arrow_unknown">neznámy</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">zníženie %1$s o %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">zvýšenie %1$s o %2$s</string>
+    <string name="decrement">zníženie</string>
+    <string name="increment">prírastok</string>
     <string name="a11y_high">vysoká</string>
     <string name="a11y_inrange">v rozsahu</string>
     <string name="a11y_low">nízka</string>
@@ -204,6 +210,7 @@
     <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Prihlásenie</string>
+    <string name="logout">Odhlásiť sa</string>
     <string name="prime_fill">Plnenie/doplňovanie</string>
     <string name="site_rotation">Striedanie miest</string>
     <string name="edit_site">Upraviť</string>
@@ -243,6 +250,8 @@
     <string name="location_permission_not_granted">Povolenie na zisťovanie polohy nebolo udelené. Povoľte v nastaveniach systému Android.</string>
     <string name="configbuilder_nightscoutversion_label">Verzia Nightscoutu:</string>
     <string name="not_available_full">Nedostupný</string>
+    <string name="not_implemented_yet">Táto funkcia zatiaľ nie je na tejto platforme pripravená</string>
+    <string name="not_available_on_platform">Táto funkcia nie je na tejto platforme k dispozícii</string>
     <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
     <string name="back">Späť</string>
     <string name="next">Ďalej</string>
@@ -255,6 +264,7 @@
     <string name="pin_dont_match">PIN kódy sa nezhodujú</string>
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Spustiť profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Zrušiť dočasný bazál</string>
     <string name="let_temp_basal_run">Nechať bežať aktuálny dočasný bazál</string>
@@ -291,6 +301,7 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="careportal">Ošetrenia</string>
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ručné meranie, alebo kalibrácia</string>
     <string name="careportal_announcement">Oznámenie</string>
@@ -341,6 +352,7 @@
     <string name="scene_conflict_active_running_mode">Aktívny režim uzavretého okruhu bude nahradený</string>
     <string name="scene_conflict_active_scene">Aktivna scéna \"%1$s\" bude najskôr ukončená</string>
     <string name="scene_action_tt">Dočasný cieľ: %1$s</string>
+    <string name="scene_action_profile" comment="%1$s=profile name, %2$d=percentage. Example: Profile: Default 150%">Profil: %1$s %2$d%%</string>
     <string name="scene_action_profile_pct_only" comment="%1$d=percentage, used when no specific named profile. Example: Profile: 150%">Profil: %1$d%%</string>
     <string name="scene_action_smb_on">Povoliť SMB</string>
     <string name="scene_action_smb_off">Zakázať SMB</string>
@@ -399,6 +411,9 @@
     <string name="clientcontrol_fail_scene_disabled">Scéna je zakázaná.</string>
     <string name="clientcontrol_fail_partial">Niektoré akcie sa nepodarilo aplikovať.</string>
     <string name="clientcontrol_fail_execution">Hlavné zariadenie to nevedelo aplikovať.</string>
+    <string name="clientcontrol_fail_cancelled">Príkaz bol zrušený skôr, ako sa vykonal. Do pumpy nebolo nič odoslané.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus zrušený. Nebol podaný žiadny inzulín.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Zrušené</string>
     <string name="clientcontrol_fail_control_disabled">Diaľkové ovládanie je vypnuté na hlavnom zariadení.</string>
     <string name="clientcontrol_fail_no_pending_bolus">Pripravený bolus exspiroval alebo bol nahradený. ​​Znova kliknite na tlačidlo.</string>
     <string name="clientcontrol_fail_bolus_compute">Hlavné zariadenie nedokázalo vypočítať bolus (chýba glukóza/profil alebo pumpa nie je pripravená).</string>
@@ -429,7 +444,6 @@
     <string name="treatment_insulin_desc">Podaj bolus ručne</string>
     <string name="treatment_carbs_desc">Zaznamenaj sacharidy bez inzulínu</string>
     <string name="treatment_calculator_desc">Spočítaj bolus</string>
-    <string name="insulin_management">Inzulín</string>
     <string name="manage_insulin_desc">Správa a aktivácia konfigurácie inzulínu</string>
     <string name="concentration_disable_blocked">Nemôžem vypnúť podporu koncentrácie, pretože existuje i iný inzulín ako U100. Odstráň všetky inzulíny iné ako U100 a prepni najskôr na U100.</string>
     <string name="simple_mode_blocked_by_concentration">Nemôžem zapnúť jednoduchý mód, pretože je použitý iný inzulín ako U100. Prepni najskôr na U100.</string>
@@ -631,6 +645,7 @@
     <string name="uel_scene_deactivated">SCÉNA DEAKTIVOVANÁ</string>
     <string name="uel_remote_config_changed">VZDIALENÁ KONFIGURÁCIA ZMENENÁ</string>
     <!-- HardLimits -->
+    <string name="temp_target_low_target">Dolná hodnota dočasného cieľa</string>
     <string name="temp_target_high_target">Horní hodnota dočasného cíle</string>
     <string name="temp_target_value">Hodnota dočasného cieľa</string>
     <string name="insulin_dia">DIA hodnota inzulínu</string>
@@ -715,7 +730,6 @@
     <string name="wizard_include_iob">Zahŕňa IOB</string>
     <string name="wizard_include_cob">Zahŕňa COB</string>
     <string name="wizard_calculation">Výpočet</string>
-    <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maximálne odstránenie: %1$d g (sacharidy na palube)</string>
     <string name="wizard_no_insulin_required">Nie je požadovaný žiadny inzulín</string>
     <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
@@ -766,6 +780,7 @@
     <string name="initializing">Inicializácia…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Upozornenie</string>
+    <string name="alert" comment="Generic alert dialog title">Výstraha</string>
     <string name="retry" comment="Button label to retry a failed operation">Opakovať</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Dokončiť</string>
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
@@ -789,6 +804,7 @@
     <string name="close">Zavrieť</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
     <string name="export_warning">Varovanie</string>
     <string name="export_expired">Expirované</string>
     <string name="export_disabled">Vypnuté</string>
@@ -855,6 +871,7 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Požiadavka používateľa</string>
     <!--    Pump pair/unpair (shared) -->
+    <string name="pump_pair">Spárovať</string>
     <string name="pump_unpair">Zrušiť párovanie</string>
     <string name="pump_unpair_confirm_title">Odpárovať pumpu?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
@@ -893,7 +910,7 @@
     <string name="reorder">Usporiadať</string>
     <string name="carousel_move_earlier" comment="Content description of the button that moves the centred carousel card one position towards the start of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Presunúť dopredu</string>
     <string name="carousel_move_later" comment="Content description of the button that moves the centred carousel card one position towards the end of the list. Order-relative wording (not left/right) so it stays correct in right-to-left languages.">Presunúť neskôr</string>
-    <string name="carousel_show_card" comment="Screen-reader label for tapping a carousel card. The tap centres the card and shows its details below — it does not activate or apply anything.">Zobraziť podrobnosti</string>
+    <string name="carousel_show_card" comment="Screen-reader label for any control that only reveals more detail about the item next to it - a carousel card that shows its details below, or an info button that opens a tooltip. It never activates or applies anything.">Zobraziť podrobnosti</string>
     <string name="presets_changed_reorder_aborted">Predvoľby sa zmenily inde. Nové poradie nebolo uložené.</string>
     <string name="carousel_position" comment="Compact position readout shown between the reorder buttons. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: 3 / 7">%1$d / %2$d</string>
     <string name="carousel_position_description" comment="Spoken form of carousel_position, read out by screen readers after each move. %1$d=position of the centred card starting at 1, %2$d=total cards. Example: Position 3 of 7">Pozícia %1$d z %2$d</string>
@@ -941,6 +958,7 @@
     <string name="reset_aps_results_confirm">Naozaj chcete resetovať uložené výsledky AAPS?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">Ned</string>
+    <string name="weekday_saturday_short">So</string>
     <string name="weekday_friday_short">Pia</string>
     <string name="weekday_thursday_short">Štv</string>
     <string name="weekday_wednesday_short">Str</string>
@@ -1018,6 +1036,24 @@
     <string name="import_wrong_password">Nesprávne heslo</string>
     <string name="import_btn">Importovať</string>
     <string name="import_anyway_btn">Importovať aj tak</string>
+    <string name="import_apply_title">Použiť importované nastavenia?</string>
+    <!--
+      Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
+      and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
+      only exists on Android. A label and a number agree with any quantity in any language.
+    -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Menia sa nastavenia: %1$d. Upravované doplnky budú reštartované.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Nastavenia, ktoré sa menia: %1$d. Nastavenia pumpy, ktoré zostávajú zachované: %2$d, aby vaša pumpa naďalej fungovala.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Importované nastavenia vybrali pumpu, ktorú tento telefón nemá. Teraz je aktívna pumpa %1$s – skontrolujte nastavenia pumpy.</string>
+    <string name="import_applying">Používa sa nastavenie…</string>
+    <string name="import_replace_pump_settings">Zmeňte aj nastavenia pumpy</string>
+    <string name="import_replace_pump_settings_summary">Túto možnosť ponechajte vypnutú, aby sa zachovalo prepojenie s pumpou spárovanou s týmto telefónom. Zapnite ju pri obnove údajov do nového telefónu používajúceho rovnakú pumpu.</string>
+    <string name="import_apply_waiting">Čakanie na pumpu…</string>
+    <string name="import_apply_pump_busy">Pumpa je stále zaneprázdnená, takže nastavenia neboli použité.</string>
+    <string name="import_apply_retry_question">Opakovať teraz?</string>
+    <string name="import_applied_title">Nastavenia boli použité</string>
+    <string name="import_applied_message">Importované nastavenia sú odteraz používané.</string>
+    <string name="import_apply_pump_changed">Zrušené: pumpa bola zmenená importom nastavení</string>
     <string name="import_source_local">Lokálne</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Načítať viac</string>
@@ -1030,6 +1066,7 @@
     <string name="nav_resetdb">Reset databázy</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="step_ble_scan">Vyhľadať pumpu</string>
+    <string name="ble_scan_select_pump">Vyberte svoju pumpu z nižšie uvedeného zoznamu</string>
     <string name="ble_scan_scanning">Vyhľadávam zariadenia...</string>
     <!-- Graph configuration -->
     <string name="graph_add">Pridať graf</string>
@@ -1058,7 +1095,11 @@
     <string name="units_format_double_3">%1$.3f</string>
     <string name="units_format_double_3_range">%1$.3f (%2$.3f - %3$.3f)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
     <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.1f h</string>
+    <string name="units_format_hours_double_range">%1$.1f h (%2$.1f - %3$.1f)</string>
     <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
     <string name="units_format_insulin">%1$.1f U</string>
     <string name="units_format_insulin_int">%1$d U</string>

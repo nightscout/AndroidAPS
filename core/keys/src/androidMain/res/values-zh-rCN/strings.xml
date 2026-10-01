@@ -32,6 +32,7 @@
     <string name="pref_title_alert_urgent_as_android_notification">紧急警报以安卓通知形式提醒</string>
     <string name="pref_title_alert_increase_volume">逐步提高通知音量</string>
     <string name="pref_title_alert_override_dnd">覆盖勿扰模式</string>
+    <string name="pref_summary_alert_override_dnd">启用后，即使手机处于静音或勿扰模式，AAPS 警报仍会发声。禁用后，在这些模式下警报将保持静音。</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">上传血糖数据到 NS</string>
     <string name="pref_title_bg_source_create_sensor_change">记录传感器更换</string>
@@ -144,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">向导中包含COB</string>
     <string name="pref_title_wear_wizard_iob">向导中包含 IOB</string>
     <string name="pref_title_wear_custom_watchface_authorization">授权自定义看板</string>
+    <string name="pref_title_wear_pushed_watchface">表盘已安装到手表</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">小工具表盘</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">自定义表盘</string>
     <string name="pref_title_wear_notify_on_smb">在 SMB 上通知</string>
     <string name="pref_summary_wear_notify_on_smb">当执行微型大剂量（SMB）时，向手表发送通知。</string>
     <string name="pref_title_wear_broadcast_data">向手表广播数据</string>
@@ -177,6 +181,7 @@
     <!-- IntKey: Protection preferences -->
     <string name="pref_title_protection_timeout">保护超时</string>
     <string name="pref_title_protection_type_application">0 级：应用保护</string>
+    <string name="pref_summary_protection_type_application">应用启动时以及返回应用时，独立于其他级别</string>
     <string name="pref_title_protection_type_bolus">1 级：大剂量保护</string>
     <string name="pref_summary_protection_type_bolus">治疗操作、配置文件激活。需要 2 级权限</string>
     <string name="pref_title_protection_type_settings">2 级：设置保护</string>
@@ -235,6 +240,7 @@
     <string name="pref_title_units">单位</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">语言</string>
     <string name="lang_default">系统默认</string>
     <string name="lang_en">英语</string>
     <string name="lang_af">南非语</string>

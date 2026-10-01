@@ -30,5 +30,16 @@ data class WidgetRenderState(
     @DrawableRes val sensitivityIconResId: Int,
     val sensitivityText: String,
     @DrawableRes val tbrIconResId: Int,
-    @ColorInt val backgroundColor: Int
+    @ColorInt val backgroundColor: Int,
+    // Spoken names for the icons that a screen reader would otherwise get nothing from. Resolved
+    // here rather than in the widget, because everything else the widget shows is resolved here too
+    // and a Glance composable has no injected resources of its own.
+    //
+    // The trend arrow and the temp basal icon have NO text beside them at all, so without these they
+    // were silent. The insulin and carb icons have a value beside them but no noun, so a screen
+    // reader read out a bare "1.20 U" with nothing saying what it measured.
+    val arrowDescription: String?,
+    val tbrDescription: String,
+    val iobLabel: String,
+    val cobLabel: String
 )

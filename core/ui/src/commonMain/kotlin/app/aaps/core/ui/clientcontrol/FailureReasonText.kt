@@ -22,6 +22,7 @@ fun FailureReason.failText(): TextRef = when (this) {
     FailureReason.SceneDisabled      -> CoreUiStrings.clientcontrol_fail_scene_disabled
     FailureReason.PartialFailure     -> CoreUiStrings.clientcontrol_fail_partial
     FailureReason.ExecutionFailed    -> CoreUiStrings.clientcontrol_fail_execution
+    FailureReason.Cancelled          -> CoreUiStrings.clientcontrol_fail_cancelled
     FailureReason.ControlDisabled    -> CoreUiStrings.clientcontrol_fail_control_disabled
     FailureReason.NoAction           -> CoreUiStrings.no_action_selected
     FailureReason.NoPendingBolus     -> CoreUiStrings.clientcontrol_fail_no_pending_bolus

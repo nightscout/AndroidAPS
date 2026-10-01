@@ -66,7 +66,7 @@ fun SelectableListToolbar(
                 IconButton(onClick = onExitRemovingMode) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = rh.gs(CoreUiStrings.close)
+                        contentDescription = stringResource(CoreUiStrings.close)
                     )
                 }
             },
@@ -75,7 +75,7 @@ fun SelectableListToolbar(
                 IconButton(onClick = onDelete) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = rh.gs(CoreUiStrings.delete),
+                        contentDescription = stringResource(CoreUiStrings.delete),
                         tint = MaterialTheme.colorScheme.error
                     )
                 }
@@ -89,7 +89,7 @@ fun SelectableListToolbar(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = rh.gs(CoreUiStrings.back)
+                        contentDescription = stringResource(CoreUiStrings.back)
                     )
                 }
             },
@@ -100,9 +100,9 @@ fun SelectableListToolbar(
                         Icon(
                             imageVector = if (showInvalidated) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                             contentDescription = if (showInvalidated)
-                                rh.gs(CoreUiStrings.hide_invalidated)
+                                stringResource(CoreUiStrings.hide_invalidated)
                             else
-                                rh.gs(CoreUiStrings.show_invalidated)
+                                stringResource(CoreUiStrings.show_invalidated)
                         )
                     }
                 }
@@ -112,14 +112,14 @@ fun SelectableListToolbar(
                     IconButton(onClick = onToggleLoop) {
                         Icon(
                             imageVector = if (showLoop) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = rh.gs(CoreUiStrings.show_hide_records)
+                            contentDescription = stringResource(CoreUiStrings.show_hide_records)
                         )
                     }
                 }
 
                 // Dropdown menu (if menu items provided)
                 if (menuItems.isNotEmpty()) {
-                    MenuDropdown(menuItems = menuItems, rh = rh)
+                    MenuDropdown(menuItems = menuItems)
                 }
 
                 // Settings button (if provided)
@@ -127,7 +127,7 @@ fun SelectableListToolbar(
                     IconButton(onClick = onSettings) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = rh.gs(CoreUiStrings.nav_plugin_preferences)
+                            contentDescription = stringResource(CoreUiStrings.nav_plugin_preferences)
                         )
                     }
                 }
@@ -141,8 +141,7 @@ fun SelectableListToolbar(
  */
 @Composable
 private fun MenuDropdown(
-    menuItems: List<MenuItemData>,
-    rh: TextResolver
+    menuItems: List<MenuItemData>
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -150,7 +149,7 @@ private fun MenuDropdown(
         IconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = rh.gs(CoreUiStrings.more_options)
+                contentDescription = stringResource(CoreUiStrings.more_options)
             )
         }
         DropdownMenu(

@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
@@ -87,6 +88,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.compose.MetroAppCompatActivity
+import app.aaps.core.ui.compose.FallbackViewModelFactory
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
@@ -183,7 +185,14 @@ class ComposeMainActivity : MetroAppCompatActivity() {
      * The factory `by viewModels()` uses.
      */
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-        get() = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory
+        get() = FallbackViewModelFactory(
+            primary = (applicationContext as MetroViewModelFactoryOwner).metroViewModelFactory,
+            // Anything the graph does not contribute still has to be buildable. AndroidX creates its
+            // own view models through this activity - BiometricPrompt makes a BiometricViewModel -
+            // and handing out the Metro factory alone made that throw, taking the biometric prompt
+            // down and with it the Configuration screen and profile editing.
+            fallback = super.defaultViewModelProviderFactory
+        )
 
     // View models, built by Metro - each carries @ContributesIntoMap and @ViewModelKey.
     private val mainViewModel: MainViewModel by viewModels()
@@ -385,11 +394,23 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                                 )
 
                             effect.group.permissions.contains(Manifest.permission.SCHEDULE_EXACT_ALARM)                 ->
-                                startActivity(
-                                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                                        data = "package:$packageName".toUri()
+                                // Every user can get here now, not only EOPatch users. If a ROM has no screen
+                                // for this intent, open the app's own settings page instead of crashing.
+                                try {
+                                    startActivity(
+                                        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                                            data = "package:$packageName".toUri()
+                                        }
+                                    )
+                                } catch (_: ActivityNotFoundException) {
+                                    runCatching {
+                                        startActivity(
+                                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                                data = "package:$packageName".toUri()
+                                            }
+                                        )
                                     }
-                                )
+                                }
 
                             effect.group.permissions.contains(PluginPermissionsImpl.PERMISSION_NOTIFICATION_LISTENER)   ->
                                 startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
@@ -504,8 +525,8 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                         clientControlActionDispatcher = clientControlActionDispatcher,
                         commandQueue = commandQueue,
                         pumpCommunicationStatus = pumpCommunicationStatus,
-                        appName = getString(R.string.app_name),
-                        authorizationFailedMessage = getString(R.string.authorizationfailed),
+                        appName = stringResource(R.string.app_name),
+                        authorizationFailedMessage = stringResource(R.string.authorizationfailed),
                         onNavigate = { request -> handleNavigationRequest(request, navController) },
                         onSearchResultClick = { entry -> handleSearchResultClick(entry, navController) },
                         onNotificationActionClick = { notification -> handleNotificationAction(notification.id, navController) },

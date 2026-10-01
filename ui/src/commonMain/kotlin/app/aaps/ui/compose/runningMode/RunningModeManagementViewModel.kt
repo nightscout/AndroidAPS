@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
-import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.compensateForClockSkew
@@ -177,7 +177,7 @@ class RunningModeManagementViewModel(
 
                 // Master-local validation failure, or a client offline; a client round-trip failure already showed on the app modal.
                 is ActionProgress.Rejected -> {
-                    if (!config.AAPSCLIENT || prepared.reason == FailureReason.NotReachable || prepared.reason == FailureReason.ControlDisabled)
+                    if (!config.AAPSCLIENT || prepared.reason.isNotDeliveryError())
                         rxBus.send(EventShowSnackbar(prepared.detail ?: rh.gs(prepared.reason.failText()), EventShowSnackbar.Type.Error))
                 }
 

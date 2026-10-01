@@ -3,23 +3,23 @@ package app.aaps.implementation.insulin
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.iobCalc
-import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.TestScope
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
@@ -33,7 +33,7 @@ class InsulinImplTest : TestBase() {
     private val testScope = TestScope()
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver()
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var config: Config
@@ -45,10 +45,12 @@ class InsulinImplTest : TestBase() {
         // dia 5.0 h, Peak 30 min
         insulinConfiguration = "{\"insulin\":[{\"insulinLabel\":\"test\",\"insulinEndTime\":18000000,\"insulinPeakTime\":1800000,\"concentration\":1.0}]}"
         whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenReturn(insulinConfiguration)
+        // Observed on the master too now; a flow that never emits leaves these tests as they were.
+        whenever(preferences.observe(StringNonKey.InsulinConfiguration)).thenReturn(MutableStateFlow(insulinConfiguration))
         whenever(persistenceLayer.observeChanges(any<KClass<*>>())).thenReturn(emptyFlow())
-        // Mock rh.gs() for nickname resolution (OREF_FREE_PEAK template) and buildSuffix (U100 concentration)
-        whenever(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
-        whenever(rh.gs(eq(R.string.u100))).thenReturn("U100")
+        // Template and concentration labels are TextRefs, used for the nickname and the label suffix.
+        // gs(TextRef) is a DEFAULT interface method, so a mock returns null rather than running it - and
+        // then the stored entry fails to parse.
         sut = InsulinImpl(preferences, rh, profileFunction, aapsLogger, config, hardLimits, uel, testScope)
     }
 

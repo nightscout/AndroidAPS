@@ -135,6 +135,8 @@ private object PreviewPreferences : Preferences {
     override fun allMatchingInts(key: ComposedKey): List<Int> = emptyList()
     override fun isExportableKey(key: String): Boolean = false
     override fun getAllPreferenceKeys(): List<PreferenceKey> = emptyList()
+    override fun getAllKeys(): List<NonPreferenceKey> = emptyList()
+    override fun reloadFromStore() {}
 }
 
 /**
@@ -172,6 +174,8 @@ private object PreviewConfig : Config {
     override fun initCompleted() {}
     override fun initFailed(error: String) {}
     override fun showInitSnackbar(message: String) {}
+    override fun beginReconfiguring() {}
+    override fun endReconfiguring() {}
 
     override fun isDev(): Boolean = false
     override fun isEngineeringModeOrRelease(): Boolean = true

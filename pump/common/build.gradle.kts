@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.metro)
+    id("kotlinx-serialization")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -17,7 +18,10 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
 
-    implementation(libs.com.thoughtworks.xstream)
+    // XStream is gone: PumpSyncStorage was its only user in the whole repo, and it needed
+    // AnyTypePermission.ANY to work, which switches off the type allowlist entirely.
+    implementation(platform(libs.kotlinx.serialization.bom))
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.com.google.code.gson)
 
 }

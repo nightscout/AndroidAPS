@@ -18,7 +18,7 @@ class DexcomPluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        dexcomPlugin = DexcomPlugin(rh, aapsLogger, context, config, preferences)
+        dexcomPlugin = DexcomPlugin(rh, aapsLogger, context, config, preferences, mock())
     }
 
     @Test

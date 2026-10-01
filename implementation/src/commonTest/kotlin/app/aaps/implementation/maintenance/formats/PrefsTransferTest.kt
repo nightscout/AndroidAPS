@@ -58,12 +58,13 @@ class PrefsTransferTest {
         store.putString("age", "adult")
 
         val file = sut.exportContents(metadata, "password")
-        store.clear()
         val result = assertIs<ImportDecryptResult.Success>(sut.importResult(file, "password", engineeringMode = false))
-        sut.applyImported(result.prefs)
 
-        assertEquals("mmol", store.getString("units", ""))
-        assertEquals("adult", store.getString("age", ""))
+        // This class is about the FILE: what goes out comes back. Getting those values into the store
+        // is `PreferenceImportApplier`'s job and is tested there, because it is the part that has to
+        // know which key owns a name and what type it is.
+        assertEquals("mmol", result.prefs.values["units"])
+        assertEquals("adult", result.prefs.values["age"])
     }
 
     /** Device state must not travel, or a restored phone claims another phone's pump. */
@@ -85,31 +86,24 @@ class PrefsTransferTest {
      * silently turns a feature off after an import.
      */
     @Test
-    fun `a boolean is restored as a boolean and not as text`() {
+    fun `a boolean survives the file as the text true`() {
         store.putBoolean("use_smb", true)
 
         val file = sut.exportContents(metadata, "password")
-        store.clear()
-        sut.applyImported(assertIs<ImportDecryptResult.Success>(sut.importResult(file, "password", false)).prefs)
+        val result = assertIs<ImportDecryptResult.Success>(sut.importResult(file, "password", false))
 
-        assertEquals(true, store.getBoolean("use_smb", false))
-        assertTrue(store.getAll()["use_smb"] is Boolean, "stored as ${store.getAll()["use_smb"]}")
+        // The file is text. Turning "true" back into a Boolean used to happen here, by guessing from
+        // the text - which wrote a StringKey holding "true" as a Boolean. The type now comes from the
+        // key, in `PreferenceImportApplier`; all this class has to do is carry the value intact.
+        assertEquals("true", result.prefs.values["use_smb"])
     }
 
-    /**
-     * An import replaces, it does not merge. A setting the old configuration had and the imported
-     * one does not must be gone, or the result is neither configuration.
-     */
-    @Test
-    fun `an import removes what the file does not have`() {
-        store.putString("units", "mmol")
-        val file = sut.exportContents(metadata, "password")
-        store.putString("left_over", "from before")
-
-        sut.applyImported(assertIs<ImportDecryptResult.Success>(sut.importResult(file, "password", false)).prefs)
-
-        assertFalse(store.getAll().containsKey("left_over"))
-    }
+    // `an import removes what the file does not have` was here, asserting that an import REPLACES the
+    // store. It no longer does, and that is deliberate: clearing the store is what made every "keep
+    // the pump working" mechanism necessary, so an import now merges and a removal rule that can tell
+    // trash from live data brings the replace semantics back. That rule does not exist yet - see
+    // `_docs/IMPORT.md`. Until it does, a key the file does not carry is left alone rather than
+    // deleted on a guess.
 
     @Test
     fun `a wrong password is reported as a wrong password`() {

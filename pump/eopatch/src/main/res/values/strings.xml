@@ -99,7 +99,4 @@
     <string name="wizard_exit_deactivation_warning">Exit deactivation wizard? The patch may remain active and continue delivering insulin.</string>
     <string name="patch_force_reset">Force Reset</string>
     <string name="patch_force_reset_confirm">This will clear the patch state locally without sending commands to the patch. Use only if normal deactivation fails. The patch will continue delivering until its battery runs out or it is manually turned off.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Exact Alarms</string>
-    <string name="permission_exact_alarm_description">Application needs permission to schedule exact alarms for patch management</string>
 </resources>

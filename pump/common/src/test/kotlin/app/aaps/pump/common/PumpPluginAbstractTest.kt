@@ -67,7 +67,8 @@ internal class PumpPluginAbstractTest {
         decimalFormatter = decimalFormatter,
         dateUtil = dateUtil,
         pumpEnactResultProvider = { mock() },
-        bolusProgressData = bolusProgressData
+        bolusProgressData = bolusProgressData,
+        notificationManager = mock()
     ) {
 
         override fun initPumpStatusData() {}

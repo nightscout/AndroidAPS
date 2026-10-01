@@ -103,12 +103,8 @@ kotlin {
         getByName("androidHostTest") {
             dependencies {
                 implementation(project(":implementation"))
-                implementation(project(":pump:insight"))
                 implementation(project(":plugins:aps"))
                 implementation(project(":plugins:source"))
-                implementation(project(":pump:dana"))
-                implementation(project(":pump:danar"))
-                implementation(project(":pump:danars"))
                 implementation(project(":pump:virtual"))
                 implementation(project(":shared:impl"))
                 implementation(project(":shared:tests"))

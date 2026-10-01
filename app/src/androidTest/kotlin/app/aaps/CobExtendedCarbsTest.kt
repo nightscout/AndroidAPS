@@ -6,7 +6,6 @@ import app.aaps.di.newIntegrationWaits
 import app.aaps.di.newRxHelper
 import app.aaps.di.testGraphs
 import app.aaps.core.data.model.CA
-import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
@@ -122,25 +121,32 @@ class CobExtendedCarbsTest : AapsInstrumentedTest() {
         // the pump write failing - and a bare "timed out" cannot tell them apart. If the wait expires,
         // report what actually happened first, so the next occurrence names the path instead of
         // repeating the symptom.
-        val epsList = try {
-            waits.awaitDbChange(EPS::class, what = "EffectiveProfileSwitch after createProfileSwitch") {
-                val result = profileFunction.createProfileSwitch(
-                    profileStore = store,
-                    profileName = profileName,
-                    durationInMinutes = 0,
-                    percentage = 100,
-                    timeShiftInHours = 0,
-                    timestamp = dateUtil.now(),
-                    action = Action.PROFILE_SWITCH,
-                    source = Sources.ProfileSwitchDialog,
-                    note = "Test",
-                    listValues = listOf(
-                        ValueWithUnit.SimpleString(profileName),
-                        ValueWithUnit.Percent(100)
-                    ),
-                    iCfg = iCfg
-                )
-                assertThat(result).isNotNull()
+        val created = profileFunction.createProfileSwitch(
+            profileStore = store,
+            profileName = profileName,
+            durationInMinutes = 0,
+            percentage = 100,
+            timeShiftInHours = 0,
+            timestamp = dateUtil.now(),
+            action = Action.PROFILE_SWITCH,
+            source = Sources.ProfileSwitchDialog,
+            note = "Test",
+            listValues = listOf(
+                ValueWithUnit.SimpleString(profileName),
+                ValueWithUnit.Percent(100)
+            ),
+            iCfg = iCfg
+        )
+        assertThat(created).isNotNull()
+
+        // Wait for the STATE, not for a change. The command queue deliberately writes no new
+        // EffectiveProfileSwitch when the active one already represents this profile, so waiting for
+        // a change can wait for something that will never happen - which is how this timed out on CI
+        // with "ProfileSwitch rows=1, EffectiveProfileSwitch rows=1, commands still queued=0". Asking
+        // for the end state instead is right whether the EPS was just written or was already correct.
+        try {
+            waits.awaitCondition("an effective profile switch for $profileName") {
+                persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.originalProfileName == profileName
             }
         } catch (e: IllegalStateException) {
             val switches = persistenceLayer.getProfileSwitches().size
@@ -154,8 +160,9 @@ class CobExtendedCarbsTest : AapsInstrumentedTest() {
                 e
             )
         }
-        aapsLogger.info(LTag.CORE, "EPS flow emitted ${epsList.size} entries")
-        assertThat(epsList).isNotEmpty()
+        val active = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
+        aapsLogger.info(LTag.CORE, "Effective profile switch in force: ${active?.originalProfileName}")
+        assertThat(active).isNotNull()
 
         // Also wait until profile is available
         assertThat(rxHelper.waitUntil("profile available") { runBlocking { profileFunction.getProfile() } != null }).isTrue()

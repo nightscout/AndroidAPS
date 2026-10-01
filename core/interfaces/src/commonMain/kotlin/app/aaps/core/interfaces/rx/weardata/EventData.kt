@@ -44,6 +44,15 @@ sealed class EventData : Event() {
     @Serializable
     data class ActionPong(val timeStamp: Long, val apiLevel: Int) : EventData()
 
+    /**
+     * What the watch did with `StringKey.WearPushedWatchface`. Sent after the startup sync, after
+     * every install, and in reply to [Preferences], so the phone shows the face choice only on a
+     * watch that has Watch Face Push (Wear OS 6+) and can tell when the watch still holds the other
+     * face. [installedFace] is a `PushedWatchfaceId` value, or null when no face of ours is installed.
+     */
+    @Serializable
+    data class WatchFacePushStatus(val supported: Boolean, val installedFace: String? = null) : EventData()
+
     @Serializable
     data class WearException(
         val timeStamp: Long,
@@ -135,14 +144,37 @@ sealed class EventData : Event() {
     @Serializable
     class ActionSceneStop : EventData()
 
+    /**
+     * The watch asks for the confirmation before ending the active scene. With [triggerChain] the
+     * wearer chose "Skip to" the scene's follow-up rather than plain "End"; the phone builds the
+     * matching confirmation and echoes the flag in [ActionSceneStopConfirmed].
+     */
     @Serializable
-    class ActionSceneStopPreCheck : EventData()
+    data class ActionSceneStopPreCheck(val triggerChain: Boolean = false) : EventData()
 
+    /** The wearer confirmed. [triggerChain] as in [ActionSceneStopPreCheck]; the master re-derives the target itself. */
     @Serializable
-    class ActionSceneStopConfirmed : EventData()
+    data class ActionSceneStopConfirmed(val triggerChain: Boolean = false) : EventData()
 
+    /**
+     * What the phone knows about the active scene, for the scene tile and Loop Status.
+     *
+     * Everything after [active] is defaulted: a phone from before these fields sends only the
+     * boolean, and the watch then behaves as it did, with no name, no end and no Skip button. Keep
+     * new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
+     *
+     * @param sceneName the active scene's name, null when none is active or the phone is old
+     * @param endTime when the scene ends, epoch ms; null for an indefinite scene
+     * @param chainTargetName the follow-up scene that would start on "Skip to", resolved on the
+     *   phone with the master's runtime checks or the client's catalog; null when there is none
+     */
     @Serializable
-    data class ActiveSceneState(val active: Boolean) : EventData()
+    data class ActiveSceneState(
+        val active: Boolean,
+        val sceneName: String? = null,
+        val endTime: Long? = null,
+        val chainTargetName: String? = null
+    ) : EventData()
 
     @Serializable
     data class RunningModeRequest(val timeStamp: Long) : EventData()
@@ -385,7 +417,9 @@ sealed class EventData : Event() {
         // Keep new fields at the END of this class: the ProtoBuf wire format numbers fields by declaration order.
         val loopMode: LoopStatusData.LoopMode = LoopStatusData.LoopMode.UNKNOWN,
         // End time (epoch ms) of a temporary running mode (suspend/disconnect/superbolus); null when permanent or older sender
-        val modeEndTime: Long? = null
+        val modeEndTime: Long? = null,
+        // Whether the active scene set the running mode, so the picker can mark it; false from an older sender
+        val modeFromScene: Boolean = false
     ) : EventData(), EventDataSet
 
     @Serializable
@@ -399,7 +433,13 @@ sealed class EventData : Event() {
         val insulinButtonIncrement1: Double,
         val insulinButtonIncrement2: Double,
         val carbsButtonIncrement1: Int,
-        val carbsButtonIncrement2: Int
+        val carbsButtonIncrement2: Int,
+        /**
+         * Which embedded Watch Face Format face the wear app installs through Watch Face Push, as
+         * a value of `StringKey.WearPushedWatchface`. Defaulted, so a payload from a phone that
+         * predates the field still decodes and keeps the face that was pushed before.
+         */
+        val pushedWatchface: String = "cwf"
     ) : EventData()
 
     @Serializable

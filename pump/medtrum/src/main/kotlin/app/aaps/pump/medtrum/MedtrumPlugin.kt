@@ -1,6 +1,7 @@
 package app.aaps.pump.medtrum
 
 import app.aaps.core.interfaces.di.PumpDriver
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -88,7 +89,8 @@ class MedtrumPlugin(
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val protectionCheck: ProtectionCheck,
-    private val blePreCheck: BlePreCheck
+    private val blePreCheck: BlePreCheck,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -105,7 +107,7 @@ class MedtrumPlugin(
         },
     ownPreferences = MedtrumStringKey.entries + MedtrumIntKey.entries + MedtrumBooleanKey.entries + MedtrumIntNonKey.entries +
         MedtrumLongNonKey.entries + MedtrumStringNonKey.entries + MedtrumDoubleNonKey.entries + MedtrumBooleanNonKey.entries,
-    aapsLogger, rh, preferences, commandQueue
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, Medtrum {
 
     private var scope: CoroutineScope? = null

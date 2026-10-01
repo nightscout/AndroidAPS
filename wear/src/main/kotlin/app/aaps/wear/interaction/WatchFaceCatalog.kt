@@ -6,12 +6,12 @@ import app.aaps.wear.R
 import app.aaps.wear.watchfaces.CircleWatchface
 import app.aaps.wear.watchfaces.CustomWatchface
 import app.aaps.wear.watchfaces.DigitalStyleWatchface
+import app.aaps.wear.watchfaces.utils.ComplicationSlotInfo
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 
 /**
- * The single source of truth for what identifies each of the 3 built-in, code-based watch faces:
- * its [ComponentName] and its own preference screen. [SelectedWatchFace.NONE] maps to nothing -
- * there is no watch face to activate or configure for it.
+ * The single source of truth for what identifies each of the 3 built-in, code-based watch faces: its
+ * [ComponentName] and its own preference screen. [SelectedWatchFace.NONE] maps to nothing.
  */
 internal object WatchFaceCatalog {
 
@@ -28,4 +28,23 @@ internal object WatchFaceCatalog {
         SelectedWatchFace.CIRCLE  -> R.xml.watch_face_configuration_circle
         SelectedWatchFace.NONE    -> null
     }
+
+    /**
+     * The complication slots [watchFace] hosts - empty when it hosts none. Kept here rather than in
+     * [ComplicationPickerSupport], which must stay watch-face-agnostic; this object is already the one
+     * place allowed to name a watch face.
+     */
+    fun complicationSlotsFor(watchFace: SelectedWatchFace): List<ComplicationSlotInfo> = when (watchFace) {
+        SelectedWatchFace.CUSTOM  -> CustomWatchface.complicationSlots
+        SelectedWatchFace.DIGITAL -> emptyList()
+        SelectedWatchFace.CIRCLE  -> emptyList()
+        SelectedWatchFace.NONE    -> emptyList()
+    }
+
+    /**
+     * The watch face whose settings screen the complication rows belong to. A constant while exactly
+     * one watch face hosts complications; a second one would make this a per-screen lookup, which both
+     * settings activities can already resolve.
+     */
+    val complicationWatchFace: SelectedWatchFace = SelectedWatchFace.CUSTOM
 }

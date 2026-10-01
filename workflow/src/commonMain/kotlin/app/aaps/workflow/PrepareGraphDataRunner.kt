@@ -7,6 +7,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.TimeZone
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
@@ -140,6 +141,22 @@ class PrepareGraphDataRunner(
         return WorkOutcome.Success
     }
 
+    /**
+     * The carbs belonging to one 5 minute bucket, taken from the span read once per calculation pass.
+     *
+     * This used to be a database query of its own for every bucket, with `from = bgTime - 5min + 1` and
+     * `to = bgTime`. That query keeps rows where `(timestamp + duration) > from AND timestamp <= to`,
+     * expands any entry that has a duration into 15 minute ticks, and then drops the expanded entries
+     * outside `from..to`. Both bounds only widen when the whole span is read at once, and the expansion
+     * of an entry does not depend on the window, so the single read is a superset of every per-bucket
+     * read and the timestamp test below selects the same rows out of it.
+     *
+     * The `+1` is the #4596 guard: without it two neighbouring buckets both count a carb that falls on
+     * the boundary they share. `internal` so it can be unit-tested.
+     */
+    internal fun carbsForBucket(windowCarbs: List<CA>, bgTime: Long): List<CA> =
+        windowCarbs.filter { it.timestamp in (bgTime - T.mins(5).msecs() + 1)..bgTime }
+
     // ---------- Phase 1 helpers (LoadBgDataWorker logic) ----------
 
     private suspend fun AutosensDataStore.loadBgData(to: Long) {
@@ -270,6 +287,20 @@ class PrepareGraphDataRunner(
             val sensitivityProfile = profileFunction.getProfile()
             val siteChanges = persistenceLayer.getTherapyEventDataFromTime(oldestTimeWithData, TE.Type.CANNULA_CHANGE, true)
             val profileSwitches = persistenceLayer.getProfileSwitchesFromTime(oldestTimeWithData, true)
+            // Same idea for the carbs. This used to be one database call per bucketed data point, so a cold
+            // start over the full 24h + DIA window made about 400 round trips, each a suspend call hopping to
+            // the IO dispatcher. On the incremental path only the newest bucket or two is computed, which is
+            // why it was never felt there.
+            //
+            // One call over the whole span is a superset of every per-bucket call: the query keeps rows with
+            // (timestamp + duration) > from AND timestamp <= to, both bounds widen here, and the expansion of
+            // a carb entry depends only on the entry itself. So the filter in the loop picks exactly the same
+            // rows out of it.
+            val windowCarbs = persistenceLayer.getCarbsFromTimeToTimeExpanded(
+                ads.roundUpTime(bucketedData[bucketedData.size - 1].timestamp) - T.mins(5).msecs() + 1,
+                ads.roundUpTime(bucketedData[0].timestamp),
+                true
+            )
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -345,7 +376,7 @@ class PrepareGraphDataRunner(
                 }
                 // Use exclusive start (+1ms) to avoid double-counting carbs at window boundaries
                 // when consecutive 5-min windows share a boundary timestamp (issue #4596)
-                val recentCarbTreatments = persistenceLayer.getCarbsFromTimeToTimeExpanded(bgTime - T.mins(5).msecs() + 1, bgTime, true)
+                val recentCarbTreatments = carbsForBucket(windowCarbs, bgTime)
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
@@ -490,6 +521,13 @@ class PrepareGraphDataRunner(
             val sensitivityProfile = profileFunction.getProfile()
             val siteChanges = persistenceLayer.getTherapyEventDataFromTime(oldestTimeWithData, TE.Type.CANNULA_CHANGE, true)
             val profileSwitches = persistenceLayer.getProfileSwitchesFromTime(oldestTimeWithData, true)
+            // One call for the whole span instead of one per bucketed data point - see the same hoist in the
+            // first calculation block above for why it is equivalent.
+            val windowCarbs = persistenceLayer.getCarbsFromTimeToTimeExpanded(
+                ads.roundUpTime(bucketedData[bucketedData.size - 1].timestamp) - T.mins(5).msecs() + 1,
+                ads.roundUpTime(bucketedData[0].timestamp),
+                true
+            )
             // start from oldest to be able to sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 data.signals.emitProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt())
@@ -563,7 +601,7 @@ class PrepareGraphDataRunner(
                     }
                 }
                 // Use exclusive start (+1ms) to avoid double-counting carbs at window boundaries (issue #4596)
-                val recentCarbTreatments = persistenceLayer.getCarbsFromTimeToTimeExpanded(bgTime - T.mins(5).msecs() + 1, bgTime, true)
+                val recentCarbTreatments = carbsForBucket(windowCarbs, bgTime)
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic

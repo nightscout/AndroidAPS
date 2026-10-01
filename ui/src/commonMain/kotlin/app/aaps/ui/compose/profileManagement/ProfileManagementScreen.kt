@@ -137,8 +137,8 @@ fun ProfileManagementScreen(
     if (showDeleteDialog && profileToDelete != null) {
         val profileName = uiState.profileNames.getOrNull(profileToDelete!!) ?: ""
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.removerecord),
-            message = viewModel.rh.gs(UiStrings.confirm_remove_profile, profileName),
+            title = stringResource(CoreUiStrings.removerecord),
+            message = stringResource(UiStrings.confirm_remove_profile, profileName),
             onConfirm = {
                 profileToDelete?.let { viewModel.removeProfile(it) }
                 showDeleteDialog = false
@@ -155,8 +155,8 @@ fun ProfileManagementScreen(
     if (showCloneDialog && profileToClone != null) {
         val profileName = uiState.profileNames.getOrNull(profileToClone!!) ?: ""
         OkCancelDialog(
-            title = viewModel.rh.gs(UiStrings.clone_label),
-            message = viewModel.rh.gs(UiStrings.confirm_clone_profile, profileName),
+            title = stringResource(UiStrings.clone_label),
+            message = stringResource(UiStrings.confirm_clone_profile, profileName),
             onConfirm = {
                 profileToClone?.let { viewModel.cloneProfile(it) }
                 showCloneDialog = false

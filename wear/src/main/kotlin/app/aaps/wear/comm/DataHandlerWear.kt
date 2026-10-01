@@ -29,6 +29,8 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
+import app.aaps.wear.complications.CwfAmbientBgComplication
+import app.aaps.wear.complications.CwfAmbientStatusComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
@@ -54,6 +56,7 @@ import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.ContactingMasterActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
+import app.aaps.wear.interaction.menus.PreferenceMenuActivity
 import app.aaps.wear.tile.ActionsTileService
 import app.aaps.wear.tile.BgGraphTileService
 import app.aaps.wear.tile.QuickWizardTileService
@@ -61,6 +64,8 @@ import app.aaps.wear.tile.RunningModeTileService
 import app.aaps.wear.tile.SceneTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.UserActionTileService
+import app.aaps.wear.watchfaces.PushedFace
+import app.aaps.wear.watchfaces.WatchFacePushHelper
 import com.google.android.gms.wearable.WearableListenerService
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -80,7 +85,8 @@ class DataHandlerWear(
     private val sp: SP,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
-    private val complicationDataRepository: ComplicationDataRepository
+    private val complicationDataRepository: ComplicationDataRepository,
+    private val watchFacePushHelper: WatchFacePushHelper
 ) {
 
     // Coroutine scope for DataStore operations
@@ -162,7 +168,13 @@ class DataHandlerWear(
         }
         onEvent<EventData.OpenLoopRequest> { handleOpenLoopRequest(it) }
         onEvent<EventData.OpenSettings> {
-            context.startActivity(Intent(context, WatchfaceConfigurationActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            // The Display screen holds the settings of the code-based faces. With the complications
+            // face installed through Watch Face Push nothing there is the wearer's, so the phone's
+            // button opens the main settings menu instead, from which every screen is reachable
+            val target =
+                if (watchFacePushHelper.isSupported() && watchFacePushHelper.selectedFace == PushedFace.WFS) PreferenceMenuActivity::class.java
+                else WatchfaceConfigurationActivity::class.java
+            context.startActivity(Intent(context, target).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
         }
         onEvent<EventData.ActionProfileSwitchOpenActivity> { event ->
             context.startActivity(Intent(context, ProfileSwitchActivity::class.java).apply {
@@ -226,6 +238,15 @@ class DataHandlerWear(
             preferences.put(DoubleKey.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
             preferences.put(IntKey.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
             preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
+            // The Watch Face Push face the wearer chose on the phone. Stored whatever the watch
+            // can do with it, so a watch updated to Wear OS 6 later installs the chosen face on
+            // its next start; swapped now when the watch can. Either way the phone is told what
+            // the watch has, which is what lets its screen show the choice only where it applies
+            val faceChanged = watchFacePushHelper.selectFace(it.pushedWatchface)
+            dataStoreScope.launch {
+                if (faceChanged) watchFacePushHelper.installOrUpdate()
+                else watchFacePushHelper.reportStatus()
+            }
         }
         onEvent<EventData.QuickWizard> {
             val serialized = it.serialize()
@@ -414,6 +435,11 @@ class DataHandlerWear(
             SgvLargeComplication::class.java,
             // BG graph image complication (for WFF watchfaces on watches without CWF support)
             BgGraphComplication::class.java,
+            // Ambient readouts of the pushed Watch Face Format face. Without these they refresh
+            // only on their own 300 second period, and the ambient glucose was seen 4 minutes
+            // behind the value drawn in the face itself.
+            CwfAmbientBgComplication::class.java,
+            CwfAmbientStatusComplication::class.java,
             // Long status complications (show detailed glucose + status info)
             LongStatusComplication::class.java,
             LongStatusFlippedComplication::class.java,

@@ -1,6 +1,6 @@
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+
 plugins {
     kotlin("jvm")
     // Metro, because this module does not only link the shared code, it builds a graph from it.
@@ -169,7 +169,7 @@ java {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    implementation(libs.cmp.material3)
+    implementation(libs.jetbrains.compose.material3)
 
     // The shared app: :appshell exposes every client module as `api`, so this one line brings the
     // whole graph the desktop build needs.

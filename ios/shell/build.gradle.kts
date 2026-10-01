@@ -1,6 +1,6 @@
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+
 plugins {
     kotlin("multiplatform")
     // Metro, because this module does not only link the migrated code, it builds a graph from it.
@@ -192,10 +192,10 @@ kotlin {
                 migratedModules.forEach { api(project.dependencies.project(it)) }
 
                 // Named here rather than inherited, so the iOS parts of Compose are in the link.
-                implementation(libs.cmp.runtime)
-                implementation(libs.cmp.foundation)
-                implementation(libs.cmp.ui)
-                implementation(libs.cmp.material3)
+                implementation(libs.jetbrains.compose.runtime)
+                implementation(libs.jetbrains.compose.foundation)
+                implementation(libs.jetbrains.compose.ui)
+                implementation(libs.jetbrains.compose.material3)
             }
         }
 

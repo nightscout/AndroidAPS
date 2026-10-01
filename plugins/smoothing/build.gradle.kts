@@ -63,8 +63,8 @@ kotlin {
                 implementation(project(":core:keys"))
                 implementation(project(":core:ui"))
 
-                implementation(libs.cmp.runtime)
-                implementation(libs.cmp.material.icons.extended)
+                implementation(libs.jetbrains.compose.runtime)
+                implementation(libs.jetbrains.compose.material.icons.extended)
             }
         }
 

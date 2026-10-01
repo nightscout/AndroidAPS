@@ -2,14 +2,14 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.mockito.kotlin.doAnswer
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.plugins.sync.SyncStringsValues
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -36,7 +36,7 @@ internal class OrphanDetectorTest {
 
     @Mock private lateinit var preferences: Preferences
     @Mock private lateinit var notificationManager: NotificationManager
-    @Mock private lateinit var rh: ResourceHelper
+    private val rh = generatedTextResolver("sync" to SyncStringsValues::textOf)
     @Mock private lateinit var config: Config
     @Mock private lateinit var aapsLogger: AAPSLogger
     @Mock private lateinit var pairingRepository: ClientPairingRepository
@@ -57,7 +57,6 @@ internal class OrphanDetectorTest {
         whenever(preferences.get(LongNonKey.NsClientControlPairedAt)).thenAnswer { pairedAt }
         whenever(preferences.get(any<StringNonKey>())).thenAnswer { (it.arguments[0] as StringNonKey).defaultValue }
         whenever(preferences.observe(StringNonKey.NsClientControlClientId)).thenReturn(clientIdFlow)
-        doAnswer { "orphan" }.whenever(rh).gs(any<TextRef>())
         sut = OrphanDetector(pairingRepository, preferences, notificationManager, rh, config, aapsLogger, CoroutineScope(Dispatchers.Unconfined))
     }
 

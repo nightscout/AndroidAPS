@@ -113,4 +113,33 @@ class DesktopClientConfigOptionsTest {
 
         assertEquals(listOf("AAPSClient", "AAPSClient2", "AAPSClient3"), names)
     }
+
+    /**
+     * Init progress must not close a reconfiguration window it does not own.
+     *
+     * These three replace the whole [app.aaps.core.interfaces.configuration.InitProgress] rather than
+     * copying it, so the depth has to be carried across by hand. Getting it wrong reopens the app to
+     * readers while a settings import still believes plugin state is being rebuilt - and this shape is
+     * shared with `IosClientConfig`, where it is worse: iOS starts at `done = true` and has no start-up
+     * sequence that would put the state right afterwards.
+     */
+    @Test
+    fun `init progress does not clear an open reconfiguration window`() {
+        config.beginReconfiguring()
+        assertFalse(config.appInitialized)
+
+        config.updateInitProgress("Loading", 1, 3)
+        assertTrue(config.initProgressFlow.value.reconfiguring, "progress must not close the window")
+
+        config.initCompleted()
+        assertTrue(config.initProgressFlow.value.reconfiguring, "init completing must not close the window")
+
+        config.initFailed("boom")
+        assertTrue(config.initProgressFlow.value.reconfiguring, "init failing must not close the window")
+
+        // Only the owner closes it, and then the app is available again.
+        config.endReconfiguring()
+        assertFalse(config.initProgressFlow.value.reconfiguring)
+        assertTrue(config.appInitialized)
+    }
 }

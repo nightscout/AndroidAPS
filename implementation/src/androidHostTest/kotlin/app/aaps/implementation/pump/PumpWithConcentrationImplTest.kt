@@ -2,11 +2,16 @@ package app.aaps.implementation.pump
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -15,6 +20,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -329,5 +335,40 @@ class PumpWithConcentrationImplTest : TestBase() {
         } catch (e: IllegalStateException) {
             assertThat(e.message).isEqualTo("No profile running")
         }
+    }
+
+    // --- a driver that failed to start ---
+
+    /**
+     * A driver whose own `isInitialized()` is delegated to [pump], so it keeps answering what the hardware
+     * state says while [PluginBase.lastStartFailed] is set. That is the real shape: `DanaRSPlugin` reads
+     * `danaPump.lastConnection`, `OmnipodDashPumpPlugin` reads `podStateManager.isPodRunning`, and neither
+     * is reset by `onStop`.
+     */
+    private class FailingPumpPlugin(
+        aapsLogger: AAPSLogger,
+        rh: TextResolver,
+        notificationManager: NotificationManager,
+        delegate: Pump
+    ) : PluginBase(PluginDescription().mainType(PluginType.PUMP), aapsLogger, rh, notificationManager), Pump by delegate {
+
+        override suspend fun onStart() {
+            throw IllegalStateException("driver did not come up")
+        }
+    }
+
+    @Test
+    fun `a pump driver whose start failed is reported as not initialized`() = runBlocking {
+        val failing = FailingPumpPlugin(aapsLogger, mock<TextResolver>(), mock<NotificationManager>(), pump)
+        whenever(pump.isInitialized()).thenReturn(true)
+        whenever(activePlugin.activePumpInternal).thenReturn(failing)
+
+        // Same driver, same device state, before and after: only the failed start differs.
+        assertThat(sut.isInitialized()).isTrue()
+
+        failing.setPluginEnabledAwaiting(PluginType.PUMP, true)
+
+        assertThat(failing.isInitialized()).isTrue()   // the driver still says yes, as it would after a restart
+        assertThat(sut.isInitialized()).isFalse()      // ...and the dosing gates are told no
     }
 }

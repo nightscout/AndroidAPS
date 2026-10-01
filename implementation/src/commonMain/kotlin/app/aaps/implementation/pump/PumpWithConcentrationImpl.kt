@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -52,7 +53,17 @@ class PumpWithConcentrationImpl(
     private val concentration: Double get() = profileFunction.runningICfg.value?.concentration ?: 1.0
 
     override fun isConfigured(): Boolean = activePumpInternal.isConfigured()
-    override fun isInitialized(): Boolean = activePumpInternal.isInitialized()
+    /**
+     * A driver whose `onStart` threw is not initialized, whatever it says about itself.
+     *
+     * The drivers answer this from DEVICE state - DanaRS reads `lastConnection > 0`, Dash reads
+     * `podStateManager.isPodRunning` - and none of that is reset by `onStop`. So after a stop and a
+     * failed start the driver still reports true while its service is not even bound, and every dosing
+     * gate that asks here (the loop, the bolus wizard, the scenes) would be told it is ready.
+     * The plugin is deliberately left ENABLED, so this is where the half-built state has to show up.
+     */
+    override fun isInitialized(): Boolean =
+        (activePumpInternal as? PluginBase)?.lastStartFailed != true && activePumpInternal.isInitialized()
     override fun isSuspended(): Boolean = activePumpInternal.isSuspended()
     override fun isBusy(): Boolean = activePumpInternal.isBusy()
     override fun isConnected(): Boolean = activePumpInternal.isConnected()

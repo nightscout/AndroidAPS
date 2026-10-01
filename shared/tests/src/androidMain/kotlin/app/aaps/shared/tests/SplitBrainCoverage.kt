@@ -23,7 +23,15 @@ fun metroScopedProviderTypes(
     anchors: List<Class<*>>,
     metroAnnotations: List<String> = DEFAULT_METRO_ANNOTATIONS
 ): Set<Class<*>> {
-    val classes = anchors.flatMap { classesIn(it) }.distinct()
+    // The whole test runtime classpath, not just the outputs the anchors happen to live in. A binding
+    // container owns what it provides wherever it is declared, so a scan tied to one output reports
+    // "nobody owns this" the moment a container moves to the module that owns the type - which is where
+    // it belongs. That is not hypothetical: ten of them moved out of `:app` into their pump modules and
+    // this guard failed for fifteen types that had lost nothing but proximity.
+    //
+    // [anchors] now only say which class loader to resolve through, and keep the call sites honest about
+    // which graphs a caller means.
+    val classes = classesOnClasspath(anchors)
     // Guard the guard: an empty scan reports perfect coverage of nothing.
     check(classes.isNotEmpty()) { "Found no classes to scan - the class walk broke" }
 
@@ -56,17 +64,38 @@ private val DEFAULT_METRO_ANNOTATIONS = listOf(
     "dev.zacsweers.metro.ContributesIntoSet"
 )
 
-/** Every AAPS class in the same compiled output as [anchor]. */
-private fun classesIn(anchor: Class<*>): List<Class<*>> {
-    val root = File(anchor.protectionDomain.codeSource.location.toURI())
-    // The Android plugin hands unit tests a jar of a library's classes and a directory for others.
-    val names = if (root.isDirectory) classNamesInDirectory(root) else classNamesInJar(root)
+/**
+ * Every AAPS class on the test runtime classpath, loaded through the [anchors]' class loader.
+ *
+ * `java.class.path` is what the Gradle test worker was launched with, so it holds every module output
+ * and dependency jar - the pump modules included, which is the point.
+ *
+ * Public so a guard can ask what is actually on this build's classpath rather than restating a list.
+ * A test that names the modules it expects fails to compile the moment one is removed from
+ * `settings.gradle`, which makes the list of modules a dependency of the app's own tests.
+ */
+fun aapsClassesOnClasspath(anchors: List<Class<*>>): List<Class<*>> = classesOnClasspath(anchors)
 
-    return names
+private fun classesOnClasspath(anchors: List<Class<*>>): List<Class<*>> {
+    val loader = anchors.firstOrNull()?.classLoader ?: ClassLoader.getSystemClassLoader()
+    val roots = System.getProperty("java.class.path").orEmpty()
+        .split(File.pathSeparatorChar)
+        .map(::File)
+        .filter { it.exists() }
+    // The anchors' own outputs too: a class loaded from somewhere off java.class.path would otherwise
+    // be missed, and it costs nothing to add them.
+    val anchorRoots = anchors.mapNotNull { anchor ->
+        runCatching { File(anchor.protectionDomain.codeSource.location.toURI()) }.getOrNull()
+    }
+
+    return (roots + anchorRoots).distinct()
+        // The Android plugin hands unit tests a jar of a library's classes and a directory for others.
+        .flatMap { root -> runCatching { if (root.isDirectory) classNamesInDirectory(root) else classNamesInJar(root) }.getOrDefault(emptyList()) }
+        .distinct()
         .filter { it.startsWith("app.aaps.") || it.startsWith("info.nightscout.") }
         .filterNot { it.contains('$') } // synthetic, anonymous and Kotlin lambda classes
         // initialize = false: loading must not run static initialisers, several of which touch Android.
-        .mapNotNull { name -> runCatching { Class.forName(name, false, anchor.classLoader) }.getOrNull() }
+        .mapNotNull { name -> runCatching { Class.forName(name, false, loader) }.getOrNull() }
 }
 
 private fun classNamesInDirectory(root: File): List<String> =

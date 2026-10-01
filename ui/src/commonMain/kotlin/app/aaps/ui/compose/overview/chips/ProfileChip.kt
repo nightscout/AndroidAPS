@@ -23,6 +23,8 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.stringResourceOrNull
 
 /**
  * @see ProfileChipPreview
@@ -69,7 +71,7 @@ fun ProfileChip(
             ) {
                 Icon(
                     imageVector = ElementType.PROFILE_MANAGEMENT.icon(),
-                    contentDescription = null,
+                    contentDescription = stringResourceOrNull(ElementType.PROFILE_MANAGEMENT.label()),
                     tint = contentColor,
                     modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )

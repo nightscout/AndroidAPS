@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.compose
 
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
@@ -319,7 +320,11 @@ private fun InlineActionCard(
                 )
                 if (!readOnly) {
                     IconButton(onClick = onRemove, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = stringResource(CoreUiStrings.remove),
+                            modifier = Modifier.size(18.dp)
+                        )
                     }
                 }
             }

@@ -89,7 +89,7 @@
 | 9 | ProfileActivationScreen | ✅ Done | `ui/.../profileManagement/` |
 | 10 | ProfileHelperScreen | ✅ Done | `ui/.../profileHelper/` |
 | 11 | InsulinManagementScreen | ✅ Done | `ui/.../insulinManagement/` |
-| 12 | DanaUserOptionsScreen | ✅ Done | `pump/dana/.../compose/` |
+| 12 | DanaUserOptionsScreen | ✅ Done | `pump/dana/common/.../compose/` |
 | 13 | CalibrationDialogScreen | ✅ New | `ui/.../calibrationDialog/` |
 
 ## Review Findings (2026-03-28)

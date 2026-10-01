@@ -37,7 +37,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.search.SearchableItem
-import app.aaps.ui.UiStrings
 
 /**
  * Displays search results in a categorized list.
@@ -198,10 +197,10 @@ private fun SearchResultItem(
     // so on a client with the master offline they must not be changed from here — same gate as the Config Builder
     // (see PluginCategoryScreen). Non-synced categories (SYNC/GENERAL/pump/…) stay editable offline.
     val editableWhenSynced = masterEditingEnabled()
-    // Whether this plugin can be flipped from here: alwaysEnabled plugins are locked on, an already-active
+    // Whether this plugin can be flipped from here: enforced plugins are locked, an already-active
     // single-select plugin can't be turned off (only replaced by enabling another), and a synced selection is
     // gated while the master is offline.
-    val canToggle = plugin != null && !plugin.pluginDescription.alwaysEnabled &&
+    val canToggle = plugin != null && plugin.enforcedState() == null &&
         (!plugin.getType().singleSelect || !isEnabled) &&
         (!plugin.getType().selectionSyncs || editableWhenSynced)
     val dimmed = !isEnabled
@@ -281,7 +280,7 @@ private fun SearchResultItem(
         }
 
         // Trailing enable/disable switch. Single-select plugins can only be switched ON (the active one can't be
-        // turned off — it's replaced by enabling another); alwaysEnabled plugins are locked on.
+        // turned off - it is replaced by enabling another); enforced plugins are locked.
         if (plugin != null) {
             Spacer(modifier = Modifier.width(8.dp))
             Switch(

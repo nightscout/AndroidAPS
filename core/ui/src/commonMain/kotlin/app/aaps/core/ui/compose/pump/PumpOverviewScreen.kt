@@ -22,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.statusLevelToColor
+import app.aaps.core.ui.compose.statusLevelToDescription
+import app.aaps.core.ui.compose.stringResourceOrNull
 
 /**
  * Shared pump overview screen used by all pump plugins.
@@ -174,8 +178,18 @@ private fun InfoSection(rows: List<PumpInfoInterface>) {
 
 @Composable
 private fun InfoRowItem(row: PumpInfoRow) {
+    // A low reservoir, a low battery or a stale connection was red text and nothing else, on every
+    // pump driver's status screen. Merged so the label, the value and the severity read as one item
+    // instead of two stops; the description adds only the severity word, because on a merging node
+    // it is inserted before the children rather than replacing them.
+    val severity = stringResourceOrNull(statusLevelToDescription(row.level))
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(
+                if (severity != null) Modifier.semantics(mergeDescendants = true) { contentDescription = severity }
+                else Modifier.semantics(mergeDescendants = true) { }
+            ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

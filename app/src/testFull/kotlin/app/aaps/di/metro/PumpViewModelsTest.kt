@@ -1,36 +1,13 @@
 package app.aaps.di.metro
 
-import app.aaps.pump.dana.compose.DanaHistoryViewModel
-import app.aaps.pump.dana.compose.DanaOverviewViewModel
-import app.aaps.pump.dana.compose.DanaUserOptionsViewModel
-import app.aaps.pump.danar.compose.DanaRPairWizardViewModel
-import app.aaps.pump.danars.compose.DanaRSOverviewViewModel
-import app.aaps.pump.danars.compose.DanaRSPairWizardViewModel
-import app.aaps.pump.diaconn.compose.DiaconnHistoryViewModel
-import app.aaps.pump.diaconn.compose.DiaconnOverviewViewModel
-import app.aaps.pump.diaconn.compose.DiaconnPairWizardViewModel
-import app.aaps.pump.diaconn.compose.DiaconnUserOptionsViewModel
-import app.aaps.pump.equil.compose.EquilHistoryViewModel
-import app.aaps.pump.equil.compose.EquilOverviewViewModel
-import app.aaps.pump.equil.compose.EquilWizardViewModel
-import app.aaps.pump.medtrum.compose.MedtrumOverviewViewModel
-import app.aaps.pump.medtrum.compose.MedtrumPatchViewModel
-import app.aaps.pump.omnipod.dash.ui.compose.DashOverviewViewModel
-import app.aaps.pump.omnipod.dash.ui.compose.DashPodHistoryViewModel
-import app.aaps.pump.omnipod.dash.ui.wizard.compose.DashOmnipodWizardViewModel
-import app.aaps.pump.common.compose.RileyLinkPairWizardViewModel
-import app.aaps.pump.common.compose.RileyLinkStatusViewModel
-import app.aaps.pump.medtronic.compose.MedtronicOverviewViewModel
-import app.aaps.pump.medtronic.compose.MedtronicHistoryViewModel
-import app.aaps.pump.eopatch.compose.EopatchOverviewViewModel
-import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
+import androidx.lifecycle.ViewModel
+import app.aaps.shared.tests.aapsClassesOnClasspath
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.pump.combov2.compose.ComboV2OverviewViewModel
-import info.nightscout.pump.combov2.compose.ComboV2PairWizardViewModel
 import org.junit.jupiter.api.Test
+import java.lang.reflect.Modifier
 
 /**
- * Every pump view model the migration moved onto Metro really reaches the factory.
+ * Every pump view model really reaches the factory.
  *
  * A pump screen is the one place where a wrong annotation can hide for a long time. Only one pump is
  * ever set up on a phone, so a broken map entry is invisible until the one user who owns that pump
@@ -39,40 +16,35 @@ import org.junit.jupiter.api.Test
  *
  * This test only asks whether the binding exists. It cannot build the view models: they are `full`
  * flavour classes, which is why the file is in `src/testFull` and not beside the other graph tests.
+ *
+ * ## The expectation is found, not written down
+ *
+ * It used to list twenty-six view model classes by name, which had two costs. It made the contents of
+ * `settings.gradle` a compile-time dependency of this test - removing `:pump:equil` stopped
+ * `:app:testFullDebugUnitTest` compiling rather than failing an assertion. And it only ever checked the
+ * twenty-six: a *new* pump view model that forgot its annotation was exactly the case this file exists
+ * to catch, and exactly the case a hand-written list cannot catch.
+ *
+ * Both sides now come from the build - the map from the graph, the expectation from the view models
+ * actually compiled into it.
  */
 class PumpViewModelsTest {
 
+    /** Concrete `ViewModel`s belonging to a pump module, in whatever build this is. */
+    private fun pumpViewModels(): List<Class<*>> =
+        aapsClassesOnClasspath(listOf(AppRootGraph::class.java))
+            .filter { it.name.startsWith("app.aaps.pump.") || it.name.startsWith("info.nightscout.pump.") }
+            .filter { ViewModel::class.java.isAssignableFrom(it) }
+            // A base class is never contributed on its own; only the screens are.
+            .filterNot { it.isInterface || Modifier.isAbstract(it.modifiers) }
+
     @Test
     fun `every pump view model is contributed to the root graph`() {
-        val contributed = testRoot().viewModelProviders.keys
-        val expected = listOf(
-            ComboV2OverviewViewModel::class,
-            ComboV2PairWizardViewModel::class,
-            DanaHistoryViewModel::class,
-            DanaOverviewViewModel::class,
-            DanaRPairWizardViewModel::class,
-            DanaRSOverviewViewModel::class,
-            DanaRSPairWizardViewModel::class,
-            DanaUserOptionsViewModel::class,
-            DashOmnipodWizardViewModel::class,
-            DashOverviewViewModel::class,
-            DashPodHistoryViewModel::class,
-            DiaconnHistoryViewModel::class,
-            DiaconnOverviewViewModel::class,
-            DiaconnPairWizardViewModel::class,
-            DiaconnUserOptionsViewModel::class,
-            EquilHistoryViewModel::class,
-            EquilOverviewViewModel::class,
-            EquilWizardViewModel::class,
-            MedtrumOverviewViewModel::class,
-            MedtrumPatchViewModel::class,
-            EopatchOverviewViewModel::class,
-            EopatchPatchViewModel::class,
-            MedtronicHistoryViewModel::class,
-            MedtronicOverviewViewModel::class,
-            RileyLinkPairWizardViewModel::class,
-            RileyLinkStatusViewModel::class
-        )
+        val expected = pumpViewModels()
+        check(expected.isNotEmpty()) { "Found no pump view models on the classpath - the scan broke" }
+
+        val contributed = testRoot().viewModelProviders.keys.map { it.java }
+
         assertThat(contributed).containsAtLeastElementsIn(expected)
     }
 }

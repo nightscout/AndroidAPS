@@ -43,6 +43,11 @@ object ReconcilerDecision {
             return Action.IssueZeroTbr(cancelExtendedBolus = true)
         }
 
+        // The same stopped mode again (the user extends a suspend): the entry already cancelled the
+        // APS TBR and the loop has not run since, so a TBR active now was set by the user by hand.
+        // Leave it alone.
+        if (prev == next && nextBucket == Bucket.Stopped) return Action.NoOp
+
         // Entry to suspended-no-tbr or stopped: cancel any active TBR.
         if (nextBucket == Bucket.SuspendedNoTbr || nextBucket == Bucket.Stopped) return Action.CancelTbr
 

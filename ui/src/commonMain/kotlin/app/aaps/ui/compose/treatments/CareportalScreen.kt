@@ -104,7 +104,7 @@ fun CareportalScreen(
     // Delete confirmation dialog
     if (showDeleteDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.removerecord),
+            title = stringResource(CoreUiStrings.removerecord),
             message = deleteDialogMessage,
             onConfirm = {
                 viewModel.deleteSelected()
@@ -117,8 +117,8 @@ fun CareportalScreen(
     // Remove started events dialog
     if (showRemoveStartedDialog) {
         OkCancelDialog(
-            title = viewModel.rh.gs(CoreUiStrings.careportal),
-            message = viewModel.rh.gs(UiStrings.careportal_remove_started_events),
+            title = stringResource(CoreUiStrings.careportal),
+            message = stringResource(UiStrings.careportal_remove_started_events),
             onConfirm = {
                 scope.launch {
                     persistenceLayer.invalidateTherapyEventsWithNote(

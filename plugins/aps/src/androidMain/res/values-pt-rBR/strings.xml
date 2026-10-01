@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
+    <string name="dyn_isf_adjust_title" formatted="false">Fator de ajuste do DynamicISF %</string>
     <string name="openapssmb">SMB OpenAPS</string>
     <string name="openaps_smb_dynamic_isf">FSI Dinâmico</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
@@ -13,6 +14,7 @@
     <string name="description_ama">Estado do algoritmo em 2017</string>
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
     <string name="description_smb_dynamic_isf">Algoritmo mais recente para usuários avançados com FS dinâmico/automático</string>
+    <string name="description_auto_isf">Algoritmo experimental para usuários avançados com extensões do AutoISF</string>
     <string name="openapsma_last_run_label">Última execução</string>
     <string name="openapsma_input_parameters_label">Parâmetros de entrada</string>
     <string name="openapsma_glucose_status_label">Status da Glicose</string>
@@ -36,6 +38,7 @@
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">Pico</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Um bolus foi injectado nos últimos 3 minutos, saltando SMB</string>
     <string name="pump_not_initialized">Bomba não inicializada!</string>
@@ -58,7 +61,10 @@
     <string name="loop_smb_request_time_label">Hora de solicitação SMB</string>
     <string name="loop_smb_execution_time_label">Hora de execução do SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
+    <string name="fallback_smb_no_tdd">Fallback para SMB. Dados insuficientes de TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Fallback para a sensibilidade do perfil. Dados insuficientes. Motivo: %1$s</string>
     <!-- Autotune -->
+    <string name="autotune_description">Ajuda para possíveis ajustes do perfil (ISF, relação de carboidratos e taxas basais)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_default_tune_days_title">Número de dias de dados</string>
     <string name="autotune_tunedprofile_name">Ajustado</string>
@@ -86,5 +92,8 @@
     <string name="autotune_update_local_profile_message">Atualizar perfil %1$s com perfil do Autotune?</string>
     <string name="autotune_revert_local_profile_message">Reverter o perfil %1$s para o perfil inicial?</string>
     <string name="autotune_profile_invalid">Perfil inválido</string>
+    <string name="pump_disconnected">Bomba desconectada</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">Configurações do AutoISF</string>
+    <string name="smb_delivery_settings_title">Configurações de administração de SMB</string>
 </resources>

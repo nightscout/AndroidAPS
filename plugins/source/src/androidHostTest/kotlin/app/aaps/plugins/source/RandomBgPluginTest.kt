@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -28,7 +29,7 @@ class RandomBgPluginTest : TestBaseWithProfile() {
     private lateinit var randomBgPlugin: RandomBgPlugin
 
     @BeforeEach fun prepare() {
-        randomBgPlugin = RandomBgPlugin(context, rh, aapsLogger, persistenceLayer, virtualPump, preferences, config)
+        randomBgPlugin = RandomBgPlugin(context, rh, aapsLogger, persistenceLayer, virtualPump, preferences, config, mock())
     }
 
     /**
@@ -88,9 +89,9 @@ class RandomBgPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `specialEnableCondition is true in unfinished mode`() {
+    fun `unfinished mode leaves the choice to the user`() {
         whenever(config.isEnabled(ExternalOptions.UNFINISHED_MODE)).thenReturn(true)
-        assertThat(randomBgPlugin.specialEnableCondition()).isTrue()
+        assertThat(randomBgPlugin.enforcedState()).isNull()
     }
 
     @Test

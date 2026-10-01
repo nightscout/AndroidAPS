@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalAccessibilityManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -100,9 +101,20 @@ fun OverviewScreen(
     var showPumpActivityDialog by remember { mutableStateOf(false) }
     val showPumpFab = isPumpCommunicating || (bolusState != null && bolusState.isSMB)
 
+    // Three seconds is enough to glance at the card, but not to hear it read out. Ask the platform
+    // how long this content needs instead: with a screen reader on it stretches the timeout, and
+    // with one off calculateRecommendedTimeoutMillis hands back the original 3 seconds unchanged.
+    val accessibilityManager = LocalAccessibilityManager.current
     LaunchedEffect(showPumpFab) {
         if (!showPumpFab && showPumpActivityDialog) {
-            delay(3_000)
+            delay(
+                accessibilityManager?.calculateRecommendedTimeoutMillis(
+                    originalTimeoutMillis = 3_000,
+                    containsIcons = true,
+                    containsText = true,
+                    containsControls = true
+                ) ?: 3_000
+            )
             showPumpActivityDialog = false
         }
     }

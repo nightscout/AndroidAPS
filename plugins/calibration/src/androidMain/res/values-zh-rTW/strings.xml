@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="calibration_shortname">校正</string>
+    <string name="no_calibration_name">無校正</string>
+    <string name="description_no_calibration">"未套用校正覆寫。傳感器數值將原樣使用。當傳感器已具備出廠校正且準確時，請使用此選項。"</string>
+    <string name="linear_calibration_name">線性校正</string>
+    <string name="description_linear_calibration">"依每個傳感器計算的線性校正覆寫（斜率與位移），來自您的指尖血糖輸入。較新的輸入權重較高。覆寫會在本次傳感器工作階段開始之後套用；前 2 小時視為暖機而略過。"</string>
+    <string name="sensor_change_detected_text">於 %1$s 偵測到可能的傳感器更換。要標記為新傳感器嗎？</string>
+    <string name="sensor_change_detected_action">標記傳感器更換</string>
     <!-- Calibration management screen -->
+    <string name="cal_status_no_session">記錄一次傳感器更換以啟用校正。</string>
+    <string name="cal_status_warmup">傳感器暖機中 — 將於 %1$s 之後啟用校正。</string>
+    <string name="cal_status_need_more_entries">至少需要 2 筆指尖血糖輸入（目前為 %1$d）。</string>
+    <string name="cal_status_unsafe_fit">擬合超出安全範圍 — 未套用校正。</string>
+    <string name="cal_status_applied">已套用校正。</string>
+    <string name="cal_status_applied_offset_only">已套用僅位移校正 — 傳感器量測範圍過窄，無法計算斜率。</string>
+    <string name="cal_status_applied_slope_clamped">已套用校正 — 斜率已限制在安全範圍內。請新增更多輸入以放寬限制。</string>
+    <string name="cal_slope_offset">斜率 %1$.2f，中間範圍校正 %2$s</string>
+    <string name="cal_session_started">工作階段已開始：%1$s</string>
+    <string name="cal_mark_sensor_change_now">記錄傳感器更換</string>
+    <string name="cal_add_calibration">新增校正</string>
+    <string name="cal_entries_header">指尖血糖輸入（%1$d）</string>
+    <string name="cal_no_entries">尚無指尖血糖輸入。</string>
+    <string name="cal_entry_pair">指尖血糖 %1$s → 傳感器 %2$s（Δ %3$s）</string>
+    <string name="cal_remove_entry_title">要移除這筆輸入嗎？</string>
+    <string name="cal_remove_entry_message">這將使該筆輸入失效，並重新計算擬合。</string>
+    <string name="cal_chart_entry_readout">輸入 %1$d/%2$d · %3$s · 傳感器 %4$s → 血糖 %5$s</string>
 </resources>

@@ -1,7 +1,5 @@
 package app.aaps.plugins.configuration.configBuilder
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.configuration.ConfigurationStrings
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -9,16 +7,17 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.calibration.Calibration
+import app.aaps.core.interfaces.configuration.AppExit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.EnforcedState
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.configuration.AppExit
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -30,6 +29,8 @@ import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.configuration.ConfigurationStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -65,20 +66,24 @@ class ConfigBuilderImpl(
 
     private val scope = CoroutineScope(Dispatchers.Default + Job())
 
-    override fun initialize() {
-        loadSettings()
-        setAlwaysEnabledPluginsEnabled()
+    override fun initialize(): List<Job> {
+        // Collected and returned, not dropped: these are only scheduled, so without waiting for them the
+        // caller carries on against plugins that are enabled but not yet started. That is the difference
+        // that made the two start paths give different guarantees (plan bug 12) - applyConfiguration below
+        // waits, this one left it to the caller and nobody did it.
+        val started = loadSettings() + applyEnforcedPluginStates()
         // Seed the synthetic ActivePlugin mirror from the local selection — MASTER ONLY. On a client this is
         // intentionally skipped: now that these keys are Bidirectional, a startup put would publish the
         // client's (possibly stale) local selection and clobber the master. The client's mirror is instead
         // driven by the master's push and by the client's own gated switches (both already non-clobbering).
         if (!config.AAPSCLIENT) regenerateActivePluginKeys()
         startActivePluginObservers()   // adopt sync-driven selection changes (master↔client)
+        return started
     }
 
     override suspend fun applyConfiguration() {
         // Same three steps as initialize(), but the plugin jobs are collected and waited for.
-        val started = loadSettings() + setAlwaysEnabledPluginsEnabled()
+        val started = loadSettings() + applyEnforcedPluginStates()
         if (!config.AAPSCLIENT) regenerateActivePluginKeys()
         startActivePluginObservers()
         // Bounded, because a plugin's onStop/onStart may itself wait on something - a pump driver
@@ -162,18 +167,31 @@ class ConfigBuilderImpl(
         }
     }
 
-    /** Returns the start jobs, for a caller that has to wait for them (see [applyConfiguration]). */
-    private fun setAlwaysEnabledPluginsEnabled(): List<Job> =
+    /**
+     * Brings every plugin's state in line with what this build enforces.
+     *
+     * Returns the start jobs, for a caller that has to wait for them (see [applyConfiguration]). A forced-off
+     * plugin is stopped here for the same reason a forced-on one is started: `isEnabled` already answers
+     * correctly either way, but the state has to follow so `onStop` runs and its work is torn down.
+     */
+    private fun applyEnforcedPluginStates(): List<Job> =
         activePlugin.getPluginsList().mapNotNull { plugin ->
-            if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true) else null
+            when (plugin.enforcedState()) {
+                EnforcedState.Enabled  -> plugin.setPluginEnabled(plugin.getType(), true)
+                EnforcedState.Disabled -> plugin.setPluginEnabled(plugin.getType(), false)
+                null                   -> null
+            }
         }
 
     override fun storeSettings(from: String) {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing settings from: $from")
+        // Jobs ignored on purpose: storeSettings runs on a live app where the selection is already
+        // settled, so verify normally elects nothing and schedules nothing. The path that must wait is
+        // applyConfiguration, and it goes through loadSettings.
         activePlugin.verifySelectionInCategories()
         for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
-            if (p.pluginDescription.alwaysEnabled) continue
+            if (p.enforcedState() != null) continue   // enforced: nothing to persist, so lifting it returns the user to their own choice
             savePref(p, type)
         }
     }
@@ -188,8 +206,10 @@ class ConfigBuilderImpl(
     private fun loadSettings(): List<Job> {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loading stored settings")
         val jobs = activePlugin.getPluginsList().mapNotNull { p -> loadPref(p, p.getType()) }
-        activePlugin.verifySelectionInCategories()
-        return jobs
+        // verifySelectionInCategories elects the active plugin per category, and electing one enables it.
+        // Its jobs belong in the same list, or applyConfiguration would wait only for the plugins loadPref
+        // touched and carry on while a plugin elected here was still starting.
+        return jobs + activePlugin.verifySelectionInCategories()
     }
 
     private fun loadPref(p: PluginBase, type: PluginType): Job? {
@@ -197,7 +217,7 @@ class ConfigBuilderImpl(
         val existing = preferences.getIfExists(BooleanComposedKey.ConfigBuilderEnabled, composed)
         val job =
             if (existing != null) p.setPluginEnabled(type, existing)
-            else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) p.setPluginEnabled(type, true)
+            else if (p.getType() == type && p.enforcedState() == EnforcedState.Enabled) p.setPluginEnabled(type, true)
             else null
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + BooleanComposedKey.ConfigBuilderEnabled.composeKey(composed) + ":" + p.isEnabled(type))
         return job

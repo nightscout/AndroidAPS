@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.utils.lenientString
@@ -11,10 +10,6 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.kotlin.doAnswer
-import org.mockito.kotlin.any
-import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.whenever
 
 /** Covers [TriggerSceneActive]: the active×comparator shouldRun matrix, json round-trip, duplicate and labels. */
@@ -23,8 +18,6 @@ class TriggerSceneActiveTest : TriggerTestBase() {
 
     @BeforeEach
     fun prepare() {
-        doAnswer { "cmp" }.whenever(rh).gs(any<TextRef>())
-        whenever(rh.gs(any<TextRef>(), anyVararg())).thenReturn("desc")
     }
 
     private fun trigger(compare: ComparatorExists.Compare) =
@@ -59,7 +52,7 @@ class TriggerSceneActiveTest : TriggerTestBase() {
     @Test fun labelsAndTypes() {
         val t = trigger(ComparatorExists.Compare.EXISTS)
         assertThat(t.friendlyName()).isEqualTo(AutomationStrings.trigger_scene_active)
-        assertThat(t.friendlyDescription()).isEqualTo("desc")
+        assertThat(t.friendlyDescription()).isEqualTo("Scene exists")
         assertThat(t.composeIcon()).isNotNull()
         assertThat(t.elementType()).isEqualTo(ElementType.SCENE)
     }

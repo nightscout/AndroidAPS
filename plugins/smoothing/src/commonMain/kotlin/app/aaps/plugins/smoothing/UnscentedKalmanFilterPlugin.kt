@@ -11,6 +11,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -78,7 +79,8 @@ class UnscentedKalmanFilterPlugin(
     aapsLogger: AAPSLogger,
     rh: TextResolver,
     preferences: Preferences,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    notificationManager: NotificationManager
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SMOOTHING)
@@ -87,7 +89,7 @@ class UnscentedKalmanFilterPlugin(
         .shortName(SmoothingStrings.smoothing_shortname)
         .description(SmoothingStrings.description_UKF),
     ownPreferences = UkfLongNonKey.entries + UkfIntNonKey.entries + UkfDoubleNonKey.entries,
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, notificationManager
 ), Smoothing {
 
     // ============================================================

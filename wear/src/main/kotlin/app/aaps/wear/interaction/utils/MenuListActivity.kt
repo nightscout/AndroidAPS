@@ -1,5 +1,6 @@
 package app.aaps.wear.interaction.utils
 
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -72,6 +73,9 @@ abstract class MenuListActivity : WearMetroActivity() {
     /** Optional third line in secondary gray under [subtitle] (e.g. "1 h 20 min remaining"); null hides it */
     protected var subtitleSecondary by mutableStateOf<String?>(null)
 
+    /** Optional small icon after [subtitleSecondary] (e.g. the scene icon when a scene set the mode); null hides it */
+    protected var subtitleSecondaryIcon by mutableStateOf<Int?>(null)
+
     protected abstract fun provideElements(): List<MenuItem>
     protected abstract fun doAction(position: String)
     protected open fun provideTitleIcon(): Int? = null
@@ -98,6 +102,7 @@ abstract class MenuListActivity : WearMetroActivity() {
                     subtitle = subtitle,
                     subtitleColor = subtitleColor,
                     subtitleSecondary = subtitleSecondary,
+                    subtitleSecondaryIcon = subtitleSecondaryIcon,
                     elements = elements,
                     onAction = { doAction(it) }
                 )
@@ -109,8 +114,18 @@ abstract class MenuListActivity : WearMetroActivity() {
         super.onDestroy()
     }
 
-    /** [iconTint] (ARGB) overrides the drawable's own colors; null draws the icon as-is. */
-    class MenuItem(val actionIcon: Int, val actionItem: String, val iconTint: Int? = null)
+    /**
+     * One row of the menu.
+     *
+     * [actionImage] lets a row show a picture the app was given rather than one it ships - the Custom
+     * watch face entry uses it to show the design the wearer actually sent, instead of the built-in
+     * artwork that looks nothing like their watch. Null everywhere else, and [actionIcon] is still
+     * required as the fallback for when no zip is loaded.
+     *
+     * [iconTint] (ARGB) overrides the drawable's own colors; null draws the icon as-is. It applies to
+     * [actionIcon] only - a picture given through [actionImage] is drawn as it is.
+     */
+    class MenuItem(val actionIcon: Int, val actionItem: String, val actionImage: Bitmap? = null, val iconTint: Int? = null)
 }
 
 private val MenuItemBg = Color.White.copy(alpha = 0.15f)
@@ -122,6 +137,7 @@ private fun MenuListScreen(
     subtitle: String?,
     subtitleColor: Color?,
     subtitleSecondary: String?,
+    subtitleSecondaryIcon: Int?,
     elements: List<MenuListActivity.MenuItem>,
     onAction: (String) -> Unit
 ) {
@@ -157,13 +173,28 @@ private fun MenuListScreen(
                             modifier = Modifier.padding(top = 6.dp)
                         )
                         if (subtitleSecondary != null) {
-                            Text(
-                                text = subtitleSecondary,
-                                color = Color.White.copy(alpha = 0.6f),
-                                fontSize = 11.sp,
-                                textAlign = TextAlign.Center,
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(top = 2.dp)
-                            )
+                            ) {
+                                Text(
+                                    text = subtitleSecondary,
+                                    color = Color.White.copy(alpha = 0.6f),
+                                    fontSize = 11.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                                if (subtitleSecondaryIcon != null) {
+                                    // Its own colours: the icon says which feature set this, not a state
+                                    Icon(
+                                        painter = painterResource(subtitleSecondaryIcon),
+                                        contentDescription = null,
+                                        tint = Color.Unspecified,
+                                        modifier = Modifier
+                                            .padding(start = 4.dp)
+                                            .size(12.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -180,6 +211,7 @@ private fun MenuListScreen(
                     icon = {
                         MenuIcon(
                             iconRes = item.actionIcon,
+                            image = item.actionImage,
                             contentDescription = item.actionItem,
                             tintArgb = item.iconTint
                         )
@@ -220,17 +252,21 @@ private fun MenuTitle(title: String, titleIcon: Int?) {
 }
 
 @Composable
-private fun MenuIcon(iconRes: Int, contentDescription: String, tintArgb: Int? = null) {
+private fun MenuIcon(iconRes: Int, image: Bitmap?, contentDescription: String, tintArgb: Int? = null) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val sizePx = with(density) { 35.dp.toPx() }.toInt()
-    val painter = remember(iconRes, sizePx, tintArgb) {
-        val drawable = ContextCompat.getDrawable(context, iconRes)!!.mutate()
-        if (tintArgb != null) drawable.setTint(tintArgb)
-        val bitmap = createBitmap(sizePx, sizePx)
-        drawable.setBounds(0, 0, sizePx, sizePx)
-        drawable.draw(Canvas(bitmap))
-        BitmapPainter(bitmap.asImageBitmap())
+    val painter = remember(iconRes, image, sizePx, tintArgb) {
+        // A picture the app was given wins over the one it ships: on the Custom watch face row that
+        // is the wearer's own design rather than artwork that looks nothing like their watch.
+        image?.let { BitmapPainter(it.asImageBitmap()) } ?: run {
+            val drawable = ContextCompat.getDrawable(context, iconRes)!!.mutate()
+            if (tintArgb != null) drawable.setTint(tintArgb)
+            val bitmap = createBitmap(sizePx, sizePx)
+            drawable.setBounds(0, 0, sizePx, sizePx)
+            drawable.draw(Canvas(bitmap))
+            BitmapPainter(bitmap.asImageBitmap())
+        }
     }
     Icon(
         painter = painter,

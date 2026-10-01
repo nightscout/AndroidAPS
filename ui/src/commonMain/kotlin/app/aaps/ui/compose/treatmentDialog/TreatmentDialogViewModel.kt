@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.FailureReason
+import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -142,11 +143,11 @@ class TreatmentDialogViewModel(
             }
             when (val prepared = batchExecutor.prepare(actions, Sources.TreatmentDialog, rh.gs(InterfacesStrings.bolus))) {
                 is ActionProgress.Prepared -> _sideEffect.tryEmit(SideEffect.ShowConfirmation(prepared.id, prepared.lines))
-                is ActionProgress.Rejected -> when (prepared.reason) {
-                    FailureReason.NotReachable, FailureReason.ControlDisabled -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(prepared.reason.failText())))
+                is ActionProgress.Rejected -> when {
                     // No-op after caps (e.g. the bolus was constraint-capped to 0): neutral message, NOT the bolus-error alarm.
-                    FailureReason.NoAction                                    -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
-                    else                                                      -> prepared.detail?.let { detail ->
+                    prepared.reason == FailureReason.NoAction -> _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
+                    prepared.reason.isNotDeliveryError()      -> rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(prepared.reason.failText())))
+                    else                                      -> prepared.detail?.let { detail ->
                         if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = detail))
                         else _sideEffect.tryEmit(SideEffect.ShowDeliveryError(detail))
                     }
@@ -164,7 +165,7 @@ class TreatmentDialogViewModel(
             // Surface a failed commit. NotReachable → the offline message; any other Rejected (ExecutionFailed,
             // NoPendingBolus, …) → the master's detail. Unconfirmed (state unknown) rides the round-trip's app-level modal.
             if (result is ActionProgress.Rejected) {
-                if (result.reason == FailureReason.NotReachable || result.reason == FailureReason.ControlDisabled)
+                if (result.reason.isNotDeliveryError())
                     rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = rh.gs(result.reason.failText())))
                 else result.detail?.let { detail ->
                     if (config.AAPSCLIENT) rxBus.send(EventShowDialog.Ok(title = rh.gs(InterfacesStrings.bolus), message = detail))

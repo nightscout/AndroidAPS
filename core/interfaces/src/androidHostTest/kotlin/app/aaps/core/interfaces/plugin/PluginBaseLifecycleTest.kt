@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.plugin
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.TextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CompletableDeferred
@@ -26,8 +27,9 @@ class PluginBaseLifecycleTest {
 
     private class TestPlugin(
         aapsLogger: AAPSLogger,
-        rh: TextResolver
-    ) : PluginBase(PluginDescription().mainType(PluginType.GENERAL), aapsLogger, rh) {
+        rh: TextResolver,
+        notificationManager: NotificationManager
+    ) : PluginBase(PluginDescription().mainType(PluginType.GENERAL), aapsLogger, rh, notificationManager) {
 
         // Held open until a test lets the phase through, so "scheduled" and "finished" can be told apart.
         val startGate = CompletableDeferred<Unit>()
@@ -46,7 +48,7 @@ class PluginBaseLifecycleTest {
         }
     }
 
-    private fun plugin() = TestPlugin(mock<AAPSLogger>(), mock<TextResolver>())
+    private fun plugin() = TestPlugin(mock<AAPSLogger>(), mock<TextResolver>(), mock<NotificationManager>())
 
     /** Enables the plugin and waits for it, so a test can start from a genuinely started plugin. */
     private suspend fun TestPlugin.enableAndAwait() {

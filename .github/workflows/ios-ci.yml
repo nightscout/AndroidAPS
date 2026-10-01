@@ -19,7 +19,15 @@ name: iOS CI (Kotlin/Native)
 
 on:
   workflow_dispatch:
+  # Same branch list as unit-tests.yml. Without it a push to ANY branch started a macos-latest job,
+  # including inside a contributor's fork. Every other branch is covered by the pull_request trigger
+  # below - but note that means a long-lived branch with no open PR gets no iOS run at all, which is
+  # the hole that left `carelevo` untested for 83 commits (see the guard comment in unit-tests.yml).
+  # If such a branch appears again, add it here.
   push:
+    branches:
+      - dev
+      - master
     paths:
       - 'core/**'
       - 'database/**'
@@ -48,13 +56,20 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 60
 
-    # Run the pull_request event ONLY for forks; see the same guard in unit-tests.yml. A same-repo PR
-    # fires push for the identical commit, so this job was running twice per push to dev - on a
-    # macos-latest runner, which is the expensive kind. Fork PRs still run, and must: CircleCI refuses
-    # them outright, so this workflow is the only CI a fork gets.
+    # First line: do not run inside somebody's fork. A fork PR against nightscout/AndroidAPS runs in
+    # THIS repo, so github.repository is still nightscout/AndroidAPS and fork PRs keep their CI - the
+    # check only stops runs that happen in the fork itself, where a plain `git push` was starting a
+    # macos-latest job on the contributor's own account. A fork that wants its own CI can opt back in
+    # by setting the repository variable RUN_CI to true.
+    #
+    # Rest: run the pull_request event ONLY for forks; see the same guard in unit-tests.yml. A
+    # same-repo PR fires push for the identical commit, so this job was running twice per push to dev -
+    # on a macos-latest runner, which is the expensive kind. Fork PRs still run, and must: CircleCI
+    # refuses them outright, so this workflow is the only CI a fork gets.
     if: >-
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name != github.repository
+      (github.repository == 'nightscout/AndroidAPS' || vars.RUN_CI == 'true') &&
+      (github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository)
 
     steps:
       - uses: actions/checkout@v5

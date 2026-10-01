@@ -161,7 +161,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: BooleanNonPreferenceKey): StateFlow<Boolean> =
-        booleanFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
+        booleanFlows.getOrCreate(key.key) { get(key) }
 
     override fun get(key: BooleanPreferenceKey): Boolean =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
@@ -195,7 +195,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: StringNonPreferenceKey): StateFlow<String> =
-        stringFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
+        stringFlows.getOrCreate(key.key) { get(key) }
 
     override fun get(key: DoubleNonPreferenceKey): Double =
         sp.getDouble(key.key, key.defaultValue)
@@ -221,7 +221,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: DoubleNonPreferenceKey): StateFlow<Double> =
-        doubleFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
+        doubleFlows.getOrCreate(key.key) { get(key) }
 
     override fun get(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double =
         sp.getDouble(key.composeKey(*arguments), key.defaultValue)
@@ -238,7 +238,7 @@ class PreferencesImpl(
 
     override fun observe(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Double> {
         val composedKey = key.composeKey(*arguments)
-        return doubleFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return doubleFlows.getOrCreate(composedKey) { get(key, *arguments) }
     }
 
     override fun get(key: UnitDoublePreferenceKey): Double =
@@ -265,12 +265,18 @@ class PreferencesImpl(
         sp.getDouble(key.key, key.defaultValue)
 
     override fun observe(key: UnitDoublePreferenceKey): StateFlow<Double> =
-        unitDoubleFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
+        unitDoubleFlows.getOrCreate(key.key) { get(key) }
 
+    /**
+     * Changing the units changes what every unit-double READS AS, without any of them being written,
+     * so their flows have to be re-read.
+     *
+     * This used to look each key up from its cached name and skipped anything the lookup could not
+     * resolve. `FlowCache.reload` re-reads through the same expression that seeded each flow instead,
+     * so a composed key is refreshed too.
+     */
     private fun refreshUnitDoubleFlows() {
-        unitDoubleFlows.forEach { (keyString, flow) ->
-            (get(keyString) as? UnitDoublePreferenceKey)?.let { flow.value = get(it) }
-        }
+        unitDoubleFlows.reload()
     }
 
     override fun get(key: IntNonPreferenceKey): Int =
@@ -296,7 +302,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: IntNonPreferenceKey): StateFlow<Int> =
-        intFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
+        intFlows.getOrCreate(key.key) { get(key) }
 
     override fun inc(key: IntNonPreferenceKey) {
         sp.incInt(key.key)
@@ -323,7 +329,7 @@ class PreferencesImpl(
 
     override fun observe(key: IntComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Int> {
         val composedKey = key.composeKey(*arguments)
-        return intFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return intFlows.getOrCreate(composedKey) { get(key, *arguments) }
     }
 
     override fun get(key: LongNonPreferenceKey): Long =
@@ -345,7 +351,7 @@ class PreferencesImpl(
     }
 
     override fun observe(key: LongNonPreferenceKey): StateFlow<Long> =
-        longFlows.getOrCreate(key.key) { MutableStateFlow(get(key)) }
+        longFlows.getOrCreate(key.key) { get(key) }
 
     override fun get(key: LongPreferenceKey): Long =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
@@ -373,7 +379,7 @@ class PreferencesImpl(
 
     override fun observe(key: LongComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Long> {
         val composedKey = key.composeKey(*arguments)
-        return longFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return longFlows.getOrCreate(composedKey) { get(key, *arguments) }
     }
 
     override fun remove(key: ComposedKey, vararg arguments: Any) {
@@ -409,7 +415,7 @@ class PreferencesImpl(
 
     override fun observe(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Boolean> {
         val composedKey = key.composeKey(*arguments)
-        return booleanFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return booleanFlows.getOrCreate(composedKey) { get(key, *arguments) }
     }
 
     override fun get(key: StringComposedNonPreferenceKey, vararg arguments: Any): String =
@@ -427,7 +433,7 @@ class PreferencesImpl(
 
     override fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String> {
         val composedKey = key.composeKey(*arguments)
-        return stringFlows.getOrCreate(composedKey) { MutableStateFlow(get(key, *arguments)) }
+        return stringFlows.getOrCreate(composedKey) { get(key, *arguments) }
     }
 
     override fun registerPreferences(keys: List<NonPreferenceKey>) {
@@ -515,6 +521,17 @@ class PreferencesImpl(
     override fun getAllPreferenceKeys(): List<PreferenceKey> =
         prefsList.filterIsInstance<PreferenceKey>()
 
+    override fun getAllKeys(): List<NonPreferenceKey> = prefsList.toList()
+
+    override fun reloadFromStore() {
+        booleanFlows.reload()
+        stringFlows.reload()
+        doubleFlows.reload()
+        unitDoubleFlows.reload()
+        intFlows.reload()
+        longFlows.reload()
+    }
+
     /**
      * The per key [MutableStateFlow] cache, kept behind a lock.
      *
@@ -525,41 +542,54 @@ class PreferencesImpl(
      */
     private class FlowCache<T> {
 
+        /**
+         * The flow, and the read that produced its value.
+         *
+         * Keeping the reader is what makes [reload] correct. The alternative - look the key up again
+         * from the cached NAME - cannot work for a [ComposedKey]: the name is the composed form
+         * (`appwidget_12`), and the registry holds the template, so the lookup returns null and the
+         * flow is silently left stale. `refreshUnitDoubleFlows` had exactly that hole. The reader is
+         * the same expression `observe` used to seed the flow, so a reload cannot drift from it.
+         */
+        private class Entry<T>(val flow: MutableStateFlow<T>, val read: () -> T)
+
         private val lock = AapsLock()
-        private val values = mutableMapOf<String, MutableStateFlow<T>>()
+        private val values = mutableMapOf<String, Entry<T>>()
 
         operator fun get(key: String): MutableStateFlow<T>? {
             lock.lock()
             try {
-                return values[key]
+                return values[key]?.flow
             } finally {
                 lock.unlock()
             }
         }
 
-        fun getOrCreate(key: String, create: (String) -> MutableStateFlow<T>): MutableStateFlow<T> {
+        fun getOrCreate(key: String, read: () -> T): MutableStateFlow<T> {
             lock.lock()
             try {
-                return values.getOrPut(key) { create(key) }
+                return values.getOrPut(key) { Entry(MutableStateFlow(read()), read) }.flow
             } finally {
                 lock.unlock()
             }
         }
 
         /**
-         * Visits every cached flow.
+         * Re-reads every cached flow from the store.
          *
-         * The entries are copied before [action] runs, so a caller that writes to a flow - which is
-         * what the refresh passes do - cannot deadlock against the lock this cache holds.
+         * For a settings import: the values are written in one batch below `Preferences`, and then
+         * this publishes them all at once. A `MutableStateFlow` conflates, so a flow whose value did
+         * not actually change emits nothing and its observers stay quiet.
          */
-        fun forEach(action: (Map.Entry<String, MutableStateFlow<T>>) -> Unit) {
+        fun reload() {
             lock.lock()
             val snapshot = try {
-                values.entries.toList()
+                values.values.toList()
             } finally {
                 lock.unlock()
             }
-            snapshot.forEach(action)
+            snapshot.forEach { it.flow.value = it.read() }
         }
+
     }
 }

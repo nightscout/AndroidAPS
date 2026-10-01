@@ -9,6 +9,7 @@ import android.content.res.Configuration
 import androidx.compose.ui.graphics.toArgb
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -16,6 +17,7 @@ import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.Scene
+import app.aaps.core.data.model.SceneLifecycle
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
@@ -53,23 +55,28 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.chunkedOnQuietPeriod
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.overview.SensitivityOverview
+import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.RunningModeList.AvailableRunningMode
 import app.aaps.core.interfaces.rx.weardata.LoopStatusData
 import app.aaps.core.interfaces.rx.weardata.OapsResultInfo
+import app.aaps.core.interfaces.rx.weardata.ProfileInfo
 import app.aaps.core.interfaces.rx.weardata.TargetRange
 import app.aaps.core.interfaces.rx.weardata.TempTargetInfo
+import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
+import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
 import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -125,7 +132,7 @@ class DataHandlerMobile(
     private val context: Context,
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val preferences: Preferences,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,
@@ -162,6 +169,9 @@ class DataHandlerMobile(
     @Inject lateinit var automation: Automation
     @Inject lateinit var scenes: SceneAutomationApi
     @Inject lateinit var sceneActions: SceneActions
+    @Inject lateinit var activeSceneSync: ActiveSceneSync
+    @Inject lateinit var sceneChainResolver: SceneChainResolver
+    @Inject lateinit var sensitivityOverview: SensitivityOverview
 
     // App lifetime: this is a @Singleton that subscribes in init and
     // never tears down. Dispatchers.IO because that is what the io scheduler gave these handlers, and
@@ -210,15 +220,17 @@ class DataHandlerMobile(
         // From Wear
         onEventSync<EventData.ActionPong> { fabricPrivacy.logCustom("WearOS_${it.apiLevel}") }
         onEventSync<EventData.CancelBolus> {
-            if (!config.appInitialized) return@onEventSync
+            if (rejectIfNotReady()) return@onEventSync
             activePlugin.activePump.stopBolusDelivering()
         }
         onEvent<EventData.OpenLoopRequestConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             loop.acceptChangeRequest()
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.NOTIFICATION_ID)
         }
         onEvent<EventData.ActionResendData> { resendData(it.from) }
+        // The watch's word on Watch Face Push, kept by WearPlugin for the wear screen
+        onEvent<EventData.WatchFacePushStatus> { rxBus.send(EventWearUpdateGui(watchFacePushStatus = it)) }
         onEvent<EventData.ActionPumpStatus> {
             sendToWear(
                 EventData.ConfirmAction(
@@ -285,20 +297,41 @@ class DataHandlerMobile(
             contacting() // CLIENT: show the spinner during the commit round-trip too (no-op on master).
             onCommitResult(batchExecutor.commit(it.bolusId, Sources.Wear, rh.gs(CoreUiStrings.overview_treatment_label)))
         }
-        onEvent<EventData.ActionFillPresetPreCheck> { handleFillPresetPreCheck(it) }
-        onEvent<EventData.ActionFillPreCheck> { handleFillPreCheck(it) }
+        // Same pre-init gate as every other handler here. These reach the wizard/batch path, and before
+        // ConfigBuilder.initialize() has run verifySelectionInCategories() the active APS is still null, so a
+        // dose recompute would hit ProfileSealed's "APS not defined" guard.
+        onEvent<EventData.ActionFillPresetPreCheck> {
+            if (rejectIfNotReady()) return@onEvent
+            handleFillPresetPreCheck(it)
+        }
+        onEvent<EventData.ActionFillPreCheck> {
+            if (rejectIfNotReady()) return@onEvent
+            handleFillPreCheck(it)
+        }
         onEvent<EventData.ActionFillConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             // Defense-in-depth: Fill is off-relay and delivered locally only — a client must never reach here.
             if (rejectIfAapsClient()) return@onEvent
             if (constraintChecker.applyBolusConstraints(ConstraintObject(it.insulin, aapsLogger)).value() - it.insulin != 0.0) {
                 rxBus.send(EventShowSnackbar("aborting: previously applied constraint changed", EventShowSnackbar.Type.Warning))
                 sendError("aborting: previously applied constraint changed")
             } else
-                wizardBolusExecutor.deliverFillBolus(it.insulin, null, Sources.Wear, ::sendError)
+                // The executor already wrote the right sentence for both cases (a failure and a cancel), so the
+                // watch shows its comment as-is. The watch has no neutral terminal screen — a cancel still lands
+                // under the red "Error" heading — but the words are correct.
+                wizardBolusExecutor.deliverFillBolus(it.insulin, null, Sources.Wear, onError = { failure -> sendError(failure.comment) })
         }
-        onEvent<EventData.ActionQuickWizardPreCheck> { handleQuickWizardPreCheck(it) }
-        onEvent<EventData.ActionWizardPreCheck> { handleWizardPreCheck(it) }
+        // These two are the ones that actually recompute a dose. The executor they delegate to already
+        // refuses before init, so this is defence in depth - but it keeps the refusal in one place with the
+        // rest, so a later direct call here cannot bring back the "APS not defined" crash.
+        onEvent<EventData.ActionQuickWizardPreCheck> {
+            if (rejectIfNotReady()) return@onEvent
+            handleQuickWizardPreCheck(it)
+        }
+        onEvent<EventData.ActionWizardPreCheck> {
+            if (rejectIfNotReady()) return@onEvent
+            handleWizardPreCheck(it)
+        }
         onEvent<EventData.ActionWizardConfirmed> {
             // Commit the parked wizard/quick-wizard dose by id through the role-transparent relay (MASTER → local
             // deliver; CLIENT → signed BolusCommit; wear has no advisor fork → asAdvisor=false). Refresh the watch's
@@ -311,32 +344,33 @@ class DataHandlerMobile(
             }
         }
         onEvent<EventData.ActionUserActionPreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleUserActionPreCheck(it)
         }
         onEvent<EventData.ActionUserActionConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleUserActionConfirmed(it)
         }
         onEvent<EventData.ActionScenePreCheck> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleScenePreCheck(it)
         }
         onEvent<EventData.ActionSceneConfirmed> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             handleSceneConfirmed(it)
         }
         onEvent<EventData.ActionSceneStop> {
-            if (!config.appInitialized) return@onEvent
+            if (rejectIfNotReady()) return@onEvent
             scenes.stopActiveScene()
         }
         onEvent<EventData.ActionSceneStopPreCheck> {
-            if (!config.appInitialized) return@onEvent
-            handleSceneStopPreCheck()
+            if (rejectIfNotReady()) return@onEvent
+            handleSceneStopPreCheck(it)
         }
         onEvent<EventData.ActionSceneStopConfirmed> {
-            if (!config.appInitialized) return@onEvent
-            onCommitResult(sceneActions.stop(triggerChain = false))
+            if (rejectIfNotReady()) return@onEvent
+            // The master re-derives the follow-up itself and falls back to a plain stop if it is gone
+            onCommitResult(sceneActions.stop(triggerChain = it.triggerChain))
         }
         onEventSync<EventData.SnoozeAlert> { uiInteraction.stopAlarm("Muted from wear") }
         onEventSync<EventData.WearException> { fabricPrivacy.logWearException(it) }
@@ -362,6 +396,9 @@ class DataHandlerMobile(
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         val profile = profileFunction.getProfile()
         val usedAPS = activePlugin.activeAPS
+        // The records the active scene created, so the watch can mark a temp target or a profile
+        // switch as the scene's doing. Read once: the same answer serves both cards.
+        val sceneRecords = activeSceneSync.getActiveState()?.scopedRecords
 
         // Get data based on app type
         val (lastRunTimestamp, lastEnactTimestamp, apsResult) = if (config.APS) {
@@ -416,7 +453,8 @@ class DataHandlerMobile(
                 targetDisplay = targetString,
                 endTime = it.end,
                 durationMinutes = durationMin,
-                units = units
+                units = units,
+                fromScene = it.id == sceneRecords?.ttId
             )
         }
 
@@ -525,7 +563,11 @@ class DataHandlerMobile(
             autosensTarget = autosensTarget,
             defaultRange = defaultRange,
             oapsResult = oapsResultInfo,
-            modeEndTime = modeEndTime
+            modeEndTime = modeEndTime,
+            activeScene = activeSceneInfo(),
+            profile = profileInfo(dateUtil.now(), sceneRecords),
+            modeFromScene = runningModeRecord.id == sceneRecords?.rmId,
+            sensitivity = sensitivityOverview.build().lines
         )
     }
 
@@ -557,6 +599,35 @@ class DataHandlerMobile(
     private fun rejectIfAapsClient(): Boolean {
         if (config.AAPSCLIENT) {
             sendError(rh.gs(SyncStrings.wear_remote_insulin_not_allowed_in_client))
+            return true
+        }
+        return false
+    }
+
+    /**
+     * The phone cannot act on this yet, and the watch is told so instead of being left waiting.
+     *
+     * [app.aaps.core.interfaces.configuration.Config.appInitialized] is false in two situations, and the
+     * watch cannot tell them apart or do anything about either: start up has not finished, or a settings
+     * import is rebuilding plugin state. In both, reading the active plugin would hit `PluginStore`'s
+     * deliberate "No pump selected" assertion.
+     *
+     * Every handler guarded by this is something the user just did on the watch - cancel a bolus, accept
+     * a change request, fill. A bare `return` there leaves the watch showing a spinner that never
+     * resolves, so the action looks accepted when nothing happened. Saying "try again" is the whole
+     * difference.
+     *
+     * The three gates on the DATA path (`resendData` and the two display builders) deliberately do NOT
+     * use this: nothing asked for them, so there is nobody to answer, and they retry on the next state
+     * change by themselves.
+     */
+    // internal, not private, so the test can drive it directly - the same reason the handlers are.
+    // Driving it through rxBus instead would re-enter the bus while the incoming event is still being
+    // collected, and the reply is then not seen by a test collector.
+    internal fun rejectIfNotReady(): Boolean {
+        if (!config.appInitialized) {
+            aapsLogger.debug(LTag.WEAR, "Refusing a watch action: app not initialized or reconfiguring")
+            sendError(rh.gs(SyncStrings.wear_phone_not_ready))
             return true
         }
         return false
@@ -668,21 +739,52 @@ class DataHandlerMobile(
         }
     }
 
-    private fun handleSceneStopPreCheck() {
+    // internal (not private) so DataHandlerMobileSceneTest can drive it without RxBus scaffolding.
+    internal suspend fun handleSceneStopPreCheck(command: EventData.ActionSceneStopPreCheck) {
         // Build confirm locally — no master round-trip needed before showing "End active scene".
         // The watch waits for RemoteDelivered (deferConfirm) while the stop relays to master.
         // Wider than "a scene is running": ending an expired-but-undismissed scene from the watch is a
         // valid stop (stopActiveScene dismisses it), and it is the only remote way to clear that banner.
         if (!scenes.hasSceneToStop()) return sendError(rh.gs(CoreUiStrings.scene_ended))
+        val state = activeSceneSync.getActiveState()
+        val chainTarget = state?.let { chainTargetOf(it) }
+        // Skip was offered for a follow-up that can have been disabled or deleted since the tile
+        // was drawn; with nothing to skip to, this is a plain End and the confirm says so
+        val triggerChain = command.triggerChain && chainTarget != null
+        val lines = buildList {
+            // Both confirms open the same way, "End active scene" over the scene's name, then say what
+            // differs: Skip names the scene that starts, End says which follow-up will not start -
+            // the phone's own dialog offers the two side by side, the watch has one button per choice
+            add(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_end_active)))
+            state?.let { add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, it.scene.name)) }
+            if (triggerChain) {
+                add(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_skip_to_label)))
+                add(EventData.ConfirmActionLine(ConfirmationRole.SCENE.name, chainTarget!!.name))
+            } else {
+                chainTarget?.let { add(EventData.ConfirmActionLine(ConfirmationRole.INFO.name, rh.gs(CoreUiStrings.scene_end_follow_up_not_started, it.name))) }
+            }
+        }
         sendToWear(
             EventData.ConfirmAction(
                 title = rh.gs(CoreUiStrings.scenes),
                 message = "",
-                returnCommand = EventData.ActionSceneStopConfirmed(),
-                lines = listOf(EventData.ConfirmActionLine(ConfirmationRole.NORMAL.name, rh.gs(CoreUiStrings.scene_end_active))),
+                returnCommand = EventData.ActionSceneStopConfirmed(triggerChain = triggerChain),
+                lines = lines,
                 deferConfirm = config.AAPSCLIENT
             )
         )
+    }
+
+    /**
+     * The follow-up the active scene would start, resolved the way the phone's own End dialog does
+     * it: the master checks that the target can run right now, a client only that it exists and
+     * is enabled, since the master re-validates on commit. Null once the scene has expired: the
+     * master's expiry already dealt with the follow-up, so there is nothing left to skip to.
+     */
+    private suspend fun chainTargetOf(state: ActiveSceneState): Scene? = when {
+        state.lifecycle != SceneLifecycle.ACTIVE -> null
+        config.AAPSCLIENT                       -> sceneChainResolver.resolveCatalogChainTarget(state.scene)
+        else                                    -> sceneChainResolver.resolveRunnableChainTarget(state.scene)
     }
 
     // internal (not private) so DataHandlerMobileWearBolusTest can drive it without RxBus scaffolding.
@@ -1090,7 +1192,8 @@ class DataHandlerMobile(
                 insulinButtonIncrement1 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
                 insulinButtonIncrement2 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
                 carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
-                carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2)
+                carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
+                pushedWatchface = preferences.get(StringKey.WearPushedWatchface)
             )
         )
         // QuickWizard
@@ -1144,9 +1247,57 @@ class DataHandlerMobile(
         sendToWear(EventData.SceneList(ArrayList(enabled.map { it.toWear(now) })))
     }
 
-    fun sendActiveSceneState(active: Boolean) {
-        sendToWear(EventData.ActiveSceneState(active))
+    /**
+     * What the watch shows for the active scene: the tile's End button, its Skip button when a
+     * follow-up can start, and the Loop Status card. [active] comes from the caller so this agrees
+     * with `scenes.activeFlow`, which is wider than "running": an expired scene whose banner is
+     * still up can be ended too, and then carries its name but no follow-up.
+     */
+    suspend fun sendActiveSceneState(active: Boolean) {
+        val state = if (active) activeSceneSync.getActiveState() else null
+        sendToWear(
+            EventData.ActiveSceneState(
+                active = active,
+                sceneName = state?.scene?.name,
+                endTime = state?.endsAt,
+                chainTargetName = state?.let { chainTargetOf(it) }?.name
+            )
+        )
     }
+
+    /**
+     * The profile in force for Loop Status, or null when none is set.
+     *
+     * A temporary switch ends at its start plus its duration - not at the stored end, which the
+     * sync paths leave at zero - and the profile that returns is whichever switch is in force one
+     * millisecond after that, the same rule the phone's profile management uses. A switch the
+     * active scene made is marked, so the watch can show the scene's icon beside it.
+     *
+     * internal so DataHandlerMobileProfileInfoTest can drive it without the whole status builder.
+     */
+    internal suspend fun profileInfo(now: Long, sceneRecords: ActiveSceneState.ScopedRecords?): ProfileInfo? {
+        val switch = persistenceLayer.getEffectiveProfileSwitchActiveAt(now) ?: return null
+        val end = if (switch.originalDuration > 0) switch.timestamp + switch.originalDuration else null
+        // The scene's profile switch id is a local id on both sides: the client resolves it by
+        // Nightscout id. The link stored on the effective switch is not: a client gets the master's
+        // id from Nightscout. So the mark compares against the profile switch in force now instead.
+        val scenePsId = sceneRecords?.psId
+        val fromScene = scenePsId != null && persistenceLayer.getProfileSwitchActiveAt(now)?.id == scenePsId
+        return ProfileInfo(
+            name = switch.originalProfileName,
+            percentage = switch.originalPercentage,
+            timeshiftHours = T.msecs(switch.originalTimeshift).hours().toInt(),
+            endTime = end,
+            returnsTo = end?.let { persistenceLayer.getProfileSwitchActiveAt(it + 1)?.profileName },
+            fromScene = fromScene
+        )
+    }
+
+    /** The active scene for Loop Status, or null; same source and same follow-up rule as [sendActiveSceneState] */
+    private suspend fun activeSceneInfo(): ActiveSceneInfo? =
+        activeSceneSync.getActiveState()?.takeIf { scenes.hasSceneToStop() }?.let { state ->
+            ActiveSceneInfo(name = state.scene.name, endTime = state.endsAt, chainTargetName = chainTargetOf(state)?.name)
+        }
 
     private suspend fun sendTreatments() {
         val now = System.currentTimeMillis()
@@ -1399,7 +1550,8 @@ class DataHandlerMobile(
                 reservoir = reservoir,
                 reservoirLevel = reservoirLevel,
                 loopMode = runningModeRecord.mode.toLoopMode(),
-                modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null
+                modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null,
+                modeFromScene = runningModeRecord.id == activeSceneSync.getActiveState()?.scopedRecords?.rmId
             )
         )
     }

@@ -6,7 +6,7 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.sync.smsCommunicator.SmsAction
@@ -16,7 +16,7 @@ class PumpConnectAction(
     private val receivedSms: Sms,
     private val profileFunction: ProfileFunction,
     private val loop: Loop,
-    private val rh: ResourceHelper,
+    private val rh: TextResolver,
     private val smsCommunicator: SmsCommunicator
 ) : SmsAction(pumpCommand = true) {
 

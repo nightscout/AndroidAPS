@@ -1,6 +1,5 @@
 package app.aaps.di.metro
 
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Provides
@@ -33,6 +32,20 @@ class MetroScopingTest {
     /** Scope marker for the history window. */
     abstract class HistoryWindowScope private constructor()
 
+    /**
+     * Scope marker for the root of THIS test's graph.
+     *
+     * Deliberately not `AppScope`. A second `@DependencyGraph(AppScope::class)` on the app's classpath
+     * aggregates everything contributed to `AppScope` - every plugin, every binding container, and any
+     * contributed interface whose accessors become roots this graph would then have to satisfy. That
+     * would make a test about object identity fail for reasons that have nothing to do with object
+     * identity, and it is the same hazard `AppRootGraph` warns about: two graphs both declaring
+     * `AppScope` get a separate copy of anything scoped there, and nothing reports it.
+     *
+     * What this test needs is a root scope and an extension scope, not the app's own.
+     */
+    abstract class TestRootScope private constructor()
+
     @GraphExtension(HistoryWindowScope::class)
     interface WindowGraph {
 
@@ -50,13 +63,13 @@ class MetroScopingTest {
         }
     }
 
-    @DependencyGraph(AppScope::class)
+    @DependencyGraph(TestRootScope::class)
     interface RootGraph {
 
         val sharedLeaf: SharedLeaf
         val windowFactory: WindowGraph.Factory
 
-        @SingleIn(AppScope::class)
+        @SingleIn(TestRootScope::class)
         @Provides
         fun provideSharedLeaf(): SharedLeaf = SharedLeaf()
 

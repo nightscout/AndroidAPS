@@ -70,15 +70,15 @@ kotlin {
                 implementation(project(":core:nssdk"))
                 implementation(project(":core:ui"))
 
-                api(libs.cmp.runtime)
-                api(libs.cmp.foundation)
-                api(libs.cmp.ui)
-                api(libs.cmp.material3)
-                api(libs.cmp.material.icons.extended)
+                api(libs.jetbrains.compose.runtime)
+                api(libs.jetbrains.compose.foundation)
+                api(libs.jetbrains.compose.ui)
+                api(libs.jetbrains.compose.material3)
+                api(libs.jetbrains.compose.material.icons.extended)
                 // The JetBrains republish, not androidx.lifecycle: same package names, with Apple targets.
                 api(libs.jetbrains.lifecycle.viewmodel.compose)
                 api(libs.jetbrains.lifecycle.runtime.compose)
-                implementation(libs.cmp.ui.tooling.preview)
+                implementation(libs.jetbrains.compose.ui.tooling.preview)
             }
         }
 

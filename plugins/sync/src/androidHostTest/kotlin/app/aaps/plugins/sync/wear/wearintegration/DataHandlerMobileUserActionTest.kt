@@ -18,7 +18,13 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.weardata.EventData
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.objects.runningMode.RunningModeGuard
@@ -194,5 +200,49 @@ class DataHandlerMobileUserActionTest : TestBaseWithProfile() {
 
         verify(automation, never()).findEventById(any())
         verifyBlocking(automation, never()) { processEvent(any()) }
+    }
+
+    /**
+     * A watch action that arrives while the phone is starting up or applying imported settings must be
+     * ANSWERED, not dropped.
+     *
+     * These handlers used to `return` bare on `config.appInitialized`, which leaves the watch showing a
+     * spinner that never resolves - the action looks accepted when nothing happened. The gate itself has
+     * to stay: reading the active pump here would hit `PluginStore`'s deliberate "No pump selected"
+     * assertion, which is not to be softened.
+     */
+    @Test fun `a watch action while the phone is not ready is refused with a message`() {
+        whenever(config.appInitialized).thenReturn(false)
+
+        val sentToWatch = mutableListOf<EventData>()
+        // UNDISPATCHED: RxBus has no replay, so a scheduled collector would miss the reply entirely.
+        val job = CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
+            rxBus.toFlow(EventMobileToWear::class).collect { sentToWatch += it.payload }
+        }
+        val refused = sut.rejectIfNotReady()
+        job.cancel()
+
+        assertThat(refused).isTrue()
+        // The watch is TOLD, rather than left on a spinner that never resolves. This half is what the
+        // bare `return` was missing, and it is what fails if the guard ever goes back to one.
+        assertThat(sentToWatch).hasSize(1)
+        assertThat(sentToWatch.first()).isInstanceOf(EventData.ConfirmAction::class.java)
+        assertThat((sentToWatch.first() as EventData.ConfirmAction).returnCommand)
+            .isInstanceOf(EventData.Error::class.java)
+    }
+
+    /** Ready phone: the action passes through and nothing is sent to the watch, so this is timing only. */
+    @Test fun `a watch action on a ready phone is not refused`() {
+        whenever(config.appInitialized).thenReturn(true)
+
+        val sentToWatch = mutableListOf<EventData>()
+        val job = CoroutineScope(Dispatchers.Unconfined).launch(start = CoroutineStart.UNDISPATCHED) {
+            rxBus.toFlow(EventMobileToWear::class).collect { sentToWatch += it.payload }
+        }
+        val refused = sut.rejectIfNotReady()
+        job.cancel()
+
+        assertThat(refused).isFalse()
+        assertThat(sentToWatch).isEmpty()
     }
 }

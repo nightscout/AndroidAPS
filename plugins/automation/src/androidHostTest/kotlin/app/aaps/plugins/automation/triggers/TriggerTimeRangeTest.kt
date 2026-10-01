@@ -20,7 +20,6 @@ class TriggerTimeRangeTest : TriggerTestBase() {
         now = 754 // in minutes from midnight
         val nowMills = MidnightTime.calcMidnightPlusMinutes(now.toInt())
         whenever(dateUtil.now()).thenReturn(nowMills)
-        whenever(rh.gs(AutomationStrings.timerange_value)).thenReturn("Time is between %1\$s and %2\$s")
     }
 
     @Test

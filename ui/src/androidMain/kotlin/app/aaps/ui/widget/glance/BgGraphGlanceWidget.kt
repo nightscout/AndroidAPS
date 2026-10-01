@@ -32,8 +32,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeoutOrNull
+import app.aaps.core.interfaces.configuration.awaitInitialized
 
 class BgGraphGlanceWidget : GlanceAppWidget() {
 
@@ -44,9 +43,8 @@ class BgGraphGlanceWidget : GlanceAppWidget() {
         val stateLoader = deps.bgGraphStateLoader
         val config = deps.config
 
-        val ready = config.appInitialized || withTimeoutOrNull(AWAIT_INIT_TIMEOUT_MS) {
-            config.initProgressFlow.first { it.done }
-        } != null
+        // See AapsGlanceWidget: `done` alone is true during a settings import, awaitInitialized is not.
+        val ready = config.awaitInitialized(AWAIT_INIT_TIMEOUT_MS)
         if (!ready) {
             provideContent { LoadingContent() }
             return

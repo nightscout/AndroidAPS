@@ -3,6 +3,21 @@ package app.aaps.core.keys.interfaces
 interface IntentPreferenceKey : PreferenceKey {
 
     /**
+     * An intent key is an ACTION, not a value, so there is nothing for an export file to carry.
+     *
+     * Stated here rather than left to each enum. All six implementations already write
+     * `override val exportable: Boolean = false` in their constructor and agree with this, but that is
+     * a convention repeated six times, not a property of the type: a seventh enum that simply leaves
+     * the line out inherits `true` from [NonPreferenceKey] and quietly becomes exportable. Putting it
+     * on the interface makes the safe answer the one you get for free.
+     *
+     * The existing constructor declarations still win over this getter - a constructor parameter
+     * shadows an interface default - but they set the same value, so they are now redundant rather
+     * than load bearing.
+     */
+    override val exportable: Boolean get() = false
+
+    /**
      * String resource ID for URL (for PreferenceType.URL).
      * If set, the URL will be resolved at runtime using stringResource().
      */

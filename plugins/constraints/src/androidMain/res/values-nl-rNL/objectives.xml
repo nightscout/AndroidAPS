@@ -50,7 +50,6 @@
     <string name="objectives_exam_learned_isf">Je hebt de betekenis van ISF geleerd en welke invloed deze heeft op de hoeveelheid insuline die voor BG correctie wordt gebruikt.</string>
     <string name="objectives_exam_learned_ic">Je hebt de betekenis van de KH-ratio geleerd en welke invloed deze heeft op de hoeveelheid insuline die nodig is om koolhydraten te dekken.</string>
     <string name="objectives_exam_learned_hypott">Hypo tijdelijk doel wordt alleen gebruikt om overcorrectie na een hypo te voorkomen, wanneer er meestal een negatieve IOB aanwezig is. Aanvullende maatregelen zijn nodig om deze situatie in de toekomst te voorkomen.</string>
-    <string name="objectives_exam_learned_profileswitch">Het gebruik van een percentage heeft geen invloed op de BG streefdoelen, maar basaalstanden, ISF en IC worden aangepast om meer of minder (dan 100%%) insuline te geven.</string>
     <string name="objectives_exam_learned_profileswitchtime">Door gebruik te maken van Tijd verschuiving in je profiel switch kunt u het circadian profiel aanpassen aan onregelmatigheden zoals laat opstaan.</string>
     <string name="objectives_exam_learned_profileswitch4">Het profiel zelf bewerken is niet voldoende om de verandering door te voeren. Je moet nog een profiel wissel uitvoeren om de wijzigingen te activeren.</string>
     <string name="objectives_exam_learned_exercise">Om de hoeveelheid insuline in je lichaam voordat je begint met sporten te verlagen zul je minimaal een uur van tevoren een profiel wissel naar minder dan 100% moeten instellen.</string>
