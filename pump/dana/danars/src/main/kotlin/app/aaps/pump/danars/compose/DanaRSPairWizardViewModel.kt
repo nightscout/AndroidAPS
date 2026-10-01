@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.ble.BondState
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.PairingStep
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
@@ -88,7 +89,10 @@ class DanaRSPairWizardViewModel(
     companion object {
 
         private const val PAIRING_TIMEOUT_MS = 20_000L
-        private const val BOND_WAIT_MS = 10_000L
+
+        // The user must read the PIN on the pump and type it into the Android dialog
+        private const val BOND_TIMEOUT_MS = 60_000L
+        private const val BOND_POLL_MS = 500L
     }
 
     private val snPattern = Pattern.compile("^([a-zA-Z]{3})([0-9]{5})([a-zA-Z]{2})$")
@@ -145,23 +149,60 @@ class DanaRSPairWizardViewModel(
         commandQueue.clear()
 
         // Connect directly via BLEComm, bypassing the command queue.
-        // connect() is non-blocking; if bonding is needed it returns false
-        // and we retry after a delay to allow Android bonding to complete.
-        connectWithBondRetry(device.address, "PairWizard")
+        bondAndConnect(device.address, "PairWizard")
     }
 
-    private fun connectWithBondRetry(address: String, from: String) {
+    /**
+     * Connects only when the Android bond is complete. Dana-i BLE5 and Dana-i2 accept only an
+     * encrypted link (LE Secure). They silently ignore the pump check if it is sent while bonding
+     * is still running, and the wizard then ends in a pairing timeout.
+     */
+    private fun bondAndConnect(address: String, from: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (!bleComm.connect(from, address)) {
-                // Bond was requested but not yet complete — wait and retry once
-                aapsLogger.debug(LTag.PUMP, "PairWizard: connect returned false, waiting for bond...")
-                delay(BOND_WAIT_MS)
-                if (_uiState.value.step == WizardStep.PAIRING_PROGRESS) {
-                    aapsLogger.debug(LTag.PUMP, "PairWizard: retrying connect after bond wait")
-                    bleComm.connect("${from}BondRetry", address)
+            if (!awaitBond(address)) {
+                if (_uiState.value.step == WizardStep.PAIRING_PROGRESS)
+                    _uiState.update { it.copy(step = WizardStep.ERROR, errorMessage = rh.gs(app.aaps.pump.dana.R.string.danars_bonding_failed)) }
+                return@launch
+            }
+            if (_uiState.value.step == WizardStep.PAIRING_PROGRESS)
+                bleComm.connect(from, address)
+        }
+    }
+
+    /**
+     * Starts bonding if needed and waits until it is done.
+     * @return true when bonded, false when bonding failed, was cancelled, timed out or the wizard left pairing
+     */
+    internal suspend fun awaitBond(address: String): Boolean {
+        val adapter = bleTransport.adapter
+        var state = adapter.bondState(address)
+        if (state == BondState.BONDED) return true
+        if (state == BondState.NONE) adapter.createBond(address)
+        aapsLogger.debug(LTag.PUMP, "PairWizard: waiting for bond, state=$state")
+        var bondingSeen = state == BondState.BONDING
+        var waited = 0L
+        while (waited < BOND_TIMEOUT_MS) {
+            delay(BOND_POLL_MS)
+            waited += BOND_POLL_MS
+            if (_uiState.value.step != WizardStep.PAIRING_PROGRESS) return false
+            state = adapter.bondState(address)
+            when (state) {
+                BondState.BONDED  -> {
+                    aapsLogger.debug(LTag.PUMP, "PairWizard: bonded after ${waited}ms")
+                    return true
+                }
+
+                BondState.BONDING -> bondingSeen = true
+
+                // NONE after BONDING means the user cancelled or the PIN was wrong
+                BondState.NONE    -> if (bondingSeen) {
+                    aapsLogger.warn(LTag.PUMP, "PairWizard: bonding failed after ${waited}ms")
+                    return false
                 }
             }
         }
+        aapsLogger.warn(LTag.PUMP, "PairWizard: bonding timeout after ${BOND_TIMEOUT_MS}ms")
+        return false
     }
 
     fun updatePassword(value: String) {
@@ -248,7 +289,7 @@ class DanaRSPairWizardViewModel(
         val device = _uiState.value.selectedDevice
         if (device != null) {
             _uiState.update { it.copy(step = WizardStep.PAIRING_PROGRESS, errorMessage = null) }
-            connectWithBondRetry(device.address, "PairWizardRetry")
+            bondAndConnect(device.address, "PairWizardRetry")
         } else {
             _uiState.update { it.copy(step = WizardStep.BLE_SCAN, errorMessage = null) }
             startScan()

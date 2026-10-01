@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.BleAdapter
 import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransport
+import app.aaps.core.interfaces.pump.ble.BondState
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.PairingStep
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
@@ -18,10 +19,13 @@ import app.aaps.pump.danars.services.BLEComm
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -66,7 +70,8 @@ internal class DanaRSPairWizardViewModelTest {
         whenever(bleTransport.adapter).thenReturn(adapter)
         whenever(scanner.scannedDevices).thenReturn(scannedDevicesFlow)
         whenever(rh.gs(anyInt())).thenReturn("error")
-        sut = DanaRSPairWizardViewModel(
+        whenever(adapter.bondState(any())).thenReturn(BondState.BONDED)
+        sut =DanaRSPairWizardViewModel(
             aapsLogger, rh, bleTransport, bleComm, danaRSPlugin, preferences, config, pumpSync, commandQueue
         )
     }
@@ -228,6 +233,59 @@ internal class DanaRSPairWizardViewModelTest {
 
         assertThat(sut.uiState.value.step).isEqualTo(WizardStep.BLE_SCAN)
         verify(scanner, org.mockito.kotlin.atLeastOnce()).startScan()
+    }
+
+    // ---- bonding (awaitBond) --------------------------------------------------------------------
+
+    /** Puts the wizard in PAIRING_PROGRESS without starting a connection. */
+    private fun enterPairingProgress() {
+        sut.updatePassword("1a2b")
+        sut.submitPassword()
+    }
+
+    @Test
+    fun `awaitBond returns at once when the device is already bonded`() = runTest(testDispatcher) {
+        enterPairingProgress()
+
+        assertThat(sut.awaitBond(device.address)).isTrue()
+        verify(adapter, never()).createBond(any())
+    }
+
+    @Test
+    fun `awaitBond starts bonding and waits until it is done`() = runTest(testDispatcher) {
+        enterPairingProgress()
+        whenever(adapter.bondState(any())).thenReturn(BondState.NONE, BondState.BONDING, BondState.BONDING, BondState.BONDED)
+
+        assertThat(sut.awaitBond(device.address)).isTrue()
+        verify(adapter).createBond(device.address)
+    }
+
+    @Test
+    fun `awaitBond fails when bonding goes back to none`() = runTest(testDispatcher) {
+        enterPairingProgress()
+        whenever(adapter.bondState(any())).thenReturn(BondState.NONE, BondState.BONDING, BondState.NONE)
+
+        assertThat(sut.awaitBond(device.address)).isFalse()
+    }
+
+    @Test
+    fun `awaitBond gives up after the timeout`() = runTest(testDispatcher) {
+        enterPairingProgress()
+        whenever(adapter.bondState(any())).thenReturn(BondState.BONDING)
+
+        assertThat(sut.awaitBond(device.address)).isFalse()
+    }
+
+    @Test
+    fun `awaitBond stops when the wizard leaves pairing`() = runTest(testDispatcher) {
+        enterPairingProgress()
+        whenever(adapter.bondState(any())).thenReturn(BondState.BONDING)
+
+        val result = async { sut.awaitBond(device.address) }
+        advanceTimeBy(1_000)
+        sut.reset()
+
+        assertThat(result.await()).isFalse()
     }
 
     // ---- pairing state machine (onPairingStateChanged) ------------------------------------------
