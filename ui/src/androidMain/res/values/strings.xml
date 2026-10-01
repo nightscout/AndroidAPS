@@ -12,6 +12,7 @@
     <string name="configure">Configure opacity</string>
     <string name="widget_description">AAPS widget</string>
     <string name="widget_bg_graph_description">AAPS BG graph</string>
+    <string name="widget_glucose_circle_description">AAPS glucose circle</string>
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (compact)</string>
     <string name="widget_small_description">AAPS Small</string>
 
