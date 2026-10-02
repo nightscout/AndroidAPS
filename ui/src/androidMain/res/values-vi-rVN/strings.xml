@@ -10,6 +10,7 @@
     <string name="configure">Cấu hình độ trong suốt</string>
     <string name="widget_description">AAPS widget</string>
     <string name="widget_bg_graph_description">Biểu đồ đường huyết AAPS</string>
+    <string name="widget_glucose_circle_description">Vòng tròn đường huyết AAPS</string>
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (thu gọn)</string>
     <string name="widget_small_description">AAPS thu gọn</string>
     <!--     Activities-->
