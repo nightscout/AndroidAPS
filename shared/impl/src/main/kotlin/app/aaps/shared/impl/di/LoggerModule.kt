@@ -7,12 +7,8 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(
-    includes = [
-    ]
-)
+@Module
 open class LoggerModule {
-
     @Provides
     @Singleton
     fun provideAAPSLogger(l: L): AAPSLogger = AAPSLoggerProduction(l)
