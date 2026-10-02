@@ -1,7 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
@@ -29,15 +28,13 @@ import org.mockito.Mockito.`when`
 class NeedsBasalCorrectionTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var config: Config
 
     private lateinit var sut: OmnipodDashPodStateManagerImpl
 
     // ---- setup --------------------------------------------------------------------------------
 
     @BeforeEach fun setUp() {
-        `when`(config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)).thenReturn(true)
-        sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences, config)
+        sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences)
         sut.activationProgress = ActivationProgress.COMPLETED
     }
 
@@ -54,12 +51,6 @@ class NeedsBasalCorrectionTest : TestBase() {
     }
 
     // ---- prerequisite checks ------------------------------------------------------------------
-
-    @Test fun `drift compensation disabled — returns false`() {
-        `when`(config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)).thenReturn(false)
-        setDrift(10, 0, 0.0)    // drift = +0.5, would reset if enabled
-        assertThat(sut.needsBasalCorrection()).isFalse()
-    }
 
     @Test fun `activation not completed — returns false`() {
         sut.activationProgress = ActivationProgress.NOT_STARTED
