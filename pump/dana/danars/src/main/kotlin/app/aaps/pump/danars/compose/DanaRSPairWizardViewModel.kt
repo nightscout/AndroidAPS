@@ -98,6 +98,14 @@ class DanaRSPairWizardViewModel(
     private val snPattern = Pattern.compile("^([a-zA-Z]{3})([0-9]{5})([a-zA-Z]{2})$")
     private var pairingTimeoutJob: Job? = null
 
+    /**
+     * The Finish button can be pressed again while the screen is closing. Every run calls
+     * `changePump()`, which resets the pump state. A second run resets it in the middle of the
+     * status read that the first run started: hwModel becomes 0, and a Dana-i gets RS commands
+     * that it does not answer.
+     */
+    private var finished = false
+
     init {
         // Observe pairing state from BLEComm → update wizard step
         viewModelScope.launch {
@@ -123,6 +131,7 @@ class DanaRSPairWizardViewModel(
 
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "PairWizard: reset()")
+        finished = false
         _uiState.value = PairWizardUiState()
         bleTransport.updatePairingState(PairingState(step = PairingStep.IDLE))
     }
@@ -257,7 +266,9 @@ class DanaRSPairWizardViewModel(
     }
 
     fun finishWizard() {
+        if (finished) return
         val device = _uiState.value.selectedDevice ?: return
+        finished = true
 
         // NOW store MAC + name to preferences (pairing succeeded)
         preferences.put(DanaStringNonKey.MacAddress, device.address)

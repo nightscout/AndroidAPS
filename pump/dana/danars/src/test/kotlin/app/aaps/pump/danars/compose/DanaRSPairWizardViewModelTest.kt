@@ -35,6 +35,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -208,6 +209,30 @@ internal class DanaRSPairWizardViewModelTest {
         verify(adapter).createBond(device.address)
         verify(pumpSync).connectNewPump(true)
         verify(danaRSPlugin).changePump()
+    }
+
+    @Test
+    fun `finishWizard pressed again does not change the pump again`() {
+        sut.selectDevice(device)
+
+        sut.finishWizard()
+        sut.finishWizard()
+        sut.finishWizard()
+
+        verify(danaRSPlugin, times(1)).changePump()
+        verify(pumpSync, times(1)).connectNewPump(true)
+    }
+
+    @Test
+    fun `finishWizard works again after the wizard is reset`() {
+        sut.selectDevice(device)
+        sut.finishWizard()
+
+        sut.reset()
+        sut.selectDevice(device)
+        sut.finishWizard()
+
+        verify(danaRSPlugin, times(2)).changePump()
     }
 
     @Test
