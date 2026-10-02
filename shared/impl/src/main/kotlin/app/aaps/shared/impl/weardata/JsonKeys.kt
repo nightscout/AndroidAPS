@@ -1,6 +1,8 @@
 package app.aaps.shared.impl.weardata
 
-enum class JsonKeys(val key: String) {
+enum class JsonKeys(
+    val key: String,
+) {
     METADATA("metadata"),
     ENABLESECOND("enableSecond"),
     HIGHCOLOR("highColor"),
@@ -34,17 +36,17 @@ enum class JsonKeys(val key: String) {
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),
     MONTHFORMAT("monthFormat"),
-    BACKGROUND("background"),       // Background image for textView
-    LEFTOFFSET("leftOffset"),       // Boolean allow left offset according to dynData value or key for LeftOffset Range definition
-    TOPOFFSET("topOffset"),         // Boolean allow top offset according to dynData value or key for TopOffset Range definition
-    ROTATIONOFFSET("rotationOffset"),// Boolean allow rotation offset according to dynData value or key for rotation Offset Range definition
-    DYNVALUE("dynValue"),           // Boolean allow replacement of text value by dynData value or key for dynValue Range definition
-    DYNDATA("dynData"),             //Bloc of DynDatas definition, and DynData keyValue within view
-    VALUEKEY("valueKey"),           // Indentify which value (default is View Value)
-    MINDATA("minData"),             // Min data Value (default defined for each value, note unit mg/dl for all bg, deltas)
-    MAXDATA("maxData"),             // Max data idem min data (note all value below min or above max will be considered as equal min or mas)
-    MINVALUE("minValue"),           // min returned value (when data value equals minData
-    MAXVALUE("maxValue"),           //
+    BACKGROUND("background"), // Background image for textView
+    LEFTOFFSET("leftOffset"),
+    TOPOFFSET("topOffset"),
+    ROTATIONOFFSET("rotationOffset"),
+    DYNVALUE("dynValue"),
+    DYNDATA("dynData"),
+    VALUEKEY("valueKey"),
+    MINDATA("minData"),
+    MAXDATA("maxData"),
+    MINVALUE("minValue"),
+    MAXVALUE("maxValue"), //
     INVALIDVALUE("invalidValue"),
     IMAGE("image"),
     INVALIDIMAGE("invalidImage"),
@@ -61,5 +63,5 @@ enum class JsonKeys(val key: String) {
     INVALIDLEFTOFFSET("invalidLeftOffset"),
     INVALIDROTATIONOFFSET("invalidRotationOffset"),
     INVALIDTEXTVALUE("invalidTextvalue"),
-    DEFAULT("default")
+    DEFAULT("default"),
 }
