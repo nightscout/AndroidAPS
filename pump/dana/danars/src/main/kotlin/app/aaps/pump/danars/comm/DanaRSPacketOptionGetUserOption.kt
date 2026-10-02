@@ -54,7 +54,7 @@ class DanaRSPacketOptionGetUserOption(
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage3: $selectableLanguage3")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage4: $selectableLanguage4")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage5: $selectableLanguage5")
-        aapsLogger.debug(LTag.PUMPCOMM, "target: ${if (danaPump.units == DanaPump.UNITS_MGDL) danaPump.target else danaPump.target / 100}")
+        aapsLogger.debug(LTag.PUMPCOMM, "target: ${if (danaPump.units == DanaPump.UNITS_MGDL) danaPump.target else danaPump.target / 100.0}")
     }
 
     override val friendlyName: String = "OPTION__GET_USER_OPTION"

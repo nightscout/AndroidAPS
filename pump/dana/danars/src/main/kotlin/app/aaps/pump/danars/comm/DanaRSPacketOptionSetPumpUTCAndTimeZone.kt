@@ -11,7 +11,7 @@ import dev.zacsweers.metro.Inject
 @Inject
 class DanaRSPacketOptionSetPumpUTCAndTimeZone(
     private val aapsLogger: AAPSLogger,
-    dateUtil: DateUtil
+    private val dateUtil: DateUtil
 ) : DanaRSPacket() {
 
     private var time: Long = 0
@@ -20,12 +20,13 @@ class DanaRSPacketOptionSetPumpUTCAndTimeZone(
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_UTC_AND_TIME_ZONE
-        aapsLogger.debug(LTag.PUMPCOMM, "Setting UTC pump time ${dateUtil.dateAndTimeAndSecondsString(time)} ZoneOffset: $zoneOffset")
     }
 
+    // Logged here, not in init: there the time and the zone offset are not set yet
     fun with(time: Long, zoneOffset: Int) = this.also {
         this.time = time
         this.zoneOffset = zoneOffset
+        aapsLogger.debug(LTag.PUMPCOMM, "Setting UTC pump time ${dateUtil.dateAndTimeAndSecondsString(time)} ZoneOffset: $zoneOffset")
     }
 
     override fun getRequestParams(): ByteArray {
