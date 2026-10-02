@@ -19,12 +19,8 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(
-    includes = [
-    ]
-)
+@Module
 open class SharedImplModule {
-
     @Provides
     @Singleton
     fun provideSP(context: Context): SP = SPImpl(PreferenceManager.getDefaultSharedPreferences(context), context)
@@ -39,7 +35,10 @@ open class SharedImplModule {
 
     @Provides
     @Singleton
-    fun provideRxBus(aapsSchedulers: AapsSchedulers, aapsLogger: AAPSLogger): RxBus = RxBusImpl(aapsSchedulers, aapsLogger)
+    fun provideRxBus(
+        aapsSchedulers: AapsSchedulers,
+        aapsLogger: AAPSLogger,
+    ): RxBus = RxBusImpl(aapsSchedulers, aapsLogger)
 
     @Provides
     @Singleton
