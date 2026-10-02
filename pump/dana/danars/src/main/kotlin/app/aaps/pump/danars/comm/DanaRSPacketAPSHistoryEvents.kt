@@ -343,7 +343,7 @@ open class DanaRSPacketAPSHistoryEvents(
             DanaPump.HistoryEntry.PROFILE_CHANGE      -> {
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "[$pumpId] EVENT PROFILE_CHANGE ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) No: $param1 CurrentRate: ${param2 / 100.0}U/h"
+                    "[$pumpId] EVENT PROFILE_CHANGE ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) No: $param1 TotalBasal: ${param2 / 100.0}U"
                 )
                 status = "PROFILE_CHANGE " + dateUtil.timeString(datetime)
             }
