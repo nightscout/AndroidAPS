@@ -96,6 +96,7 @@
     <string name="action_user_action_confirmation">Acción de usuario solicitada</string>
     <string name="action_scene_confirmation">Escena solicitada</string>
     <string name="scene_end">Fin</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Omitir</string>
     <string name="action_treatment_confirmation">Tratamiento Solicitado</string>
     <string name="action_bolus_confirmation">Bolo Solicitado</string>
     <string name="action_wizard_confirmation">Calculadora Solicitada</string>
@@ -293,6 +294,12 @@
     <string name="loop_status_target_range">Rango</string>
     <string name="loop_status_target">Objetivo</string>
     <string name="loop_status_adjusted_target">Objetivo ajustado</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Hasta que finalice</string>
+    <string name="loop_status_scene_ended">Finalizado</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Seguimiento</string>
+    <string name="loop_status_profile">Perfil</string>
+    <string name="loop_status_no_profile">Sin perfil configurado</string>
+    <string name="loop_status_profile_percentage">Porcentaje</string>
     <string name="loop_status">Estado del lazo</string>
     <string name="loop_status_refresh">Actualizar</string>
     <string name="confirm">Confirmar</string>
