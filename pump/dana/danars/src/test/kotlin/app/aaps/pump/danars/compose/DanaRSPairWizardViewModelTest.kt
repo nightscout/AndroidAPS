@@ -17,6 +17,7 @@ import app.aaps.pump.dana.keys.DanaStringNonKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.services.BLEComm
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -72,10 +73,11 @@ internal class DanaRSPairWizardViewModelTest {
         whenever(scanner.scannedDevices).thenReturn(scannedDevicesFlow)
         whenever(rh.gs(anyInt())).thenReturn("error")
         whenever(adapter.bondState(any())).thenReturn(BondState.BONDED)
-        sut =DanaRSPairWizardViewModel(
-            aapsLogger, rh, bleTransport, bleComm, danaRSPlugin, preferences, config, pumpSync, commandQueue
-        )
+        sut = createSut(CoroutineScope(Dispatchers.Unconfined)) // runs the finish work right away
     }
+
+    private fun createSut(appScope: CoroutineScope) =
+        DanaRSPairWizardViewModel(aapsLogger, rh, bleTransport, bleComm, danaRSPlugin, preferences, config, pumpSync, commandQueue, appScope)
 
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
@@ -221,6 +223,22 @@ internal class DanaRSPairWizardViewModelTest {
 
         verify(danaRSPlugin, times(1)).changePump()
         verify(pumpSync, times(1)).connectNewPump(true)
+    }
+
+    @Test
+    fun `finishWizard does not do the pump work on the calling thread`() {
+        // connectNewPump() waits for the database. On the main thread it blocked the Finish button up to an ANR.
+        val appDispatcher = StandardTestDispatcher()
+        val sut = createSut(CoroutineScope(appDispatcher))
+        sut.selectDevice(device)
+
+        sut.finishWizard()
+        verify(pumpSync, never()).connectNewPump(true)
+        verify(danaRSPlugin, never()).changePump()
+
+        appDispatcher.scheduler.runCurrent()
+        verify(pumpSync).connectNewPump(true)
+        verify(danaRSPlugin).changePump()
     }
 
     @Test

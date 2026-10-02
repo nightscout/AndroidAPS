@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
@@ -26,6 +27,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -77,7 +79,8 @@ class DanaRSPairWizardViewModel(
     private val preferences: Preferences,
     private val config: Config,
     private val pumpSync: PumpSync,
-    private val commandQueue: CommandQueue
+    private val commandQueue: CommandQueue,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PairWizardUiState())
@@ -269,21 +272,25 @@ class DanaRSPairWizardViewModel(
         if (finished) return
         val device = _uiState.value.selectedDevice ?: return
         finished = true
-
-        // NOW store MAC + name to preferences (pairing succeeded)
-        preferences.put(DanaStringNonKey.MacAddress, device.address)
-        preferences.put(DanaStringNonKey.RsName, device.name)
-
-        // Bond if not already
-        bleTransport.adapter.createBond(device.address)
-
-        // Register new pump for PumpSync data storage
-        pumpSync.connectNewPump()
-
-        // Trigger normal pump connection flow
-        danaRSPlugin.changePump()
-
         _events.tryEmit(PairWizardEvent.Finish)
+
+        // Not on the main thread: connectNewPump() waits for the database (runBlocking) and blocked the
+        // Finish button for seconds, up to an ANR. Application scope, not viewModelScope: the work must
+        // finish even when the wizard screen is closed.
+        appScope.launch {
+            // NOW store MAC + name to preferences (pairing succeeded)
+            preferences.put(DanaStringNonKey.MacAddress, device.address)
+            preferences.put(DanaStringNonKey.RsName, device.name)
+
+            // Bond if not already
+            bleTransport.adapter.createBond(device.address)
+
+            // Register new pump for PumpSync data storage
+            pumpSync.connectNewPump()
+
+            // Trigger normal pump connection flow
+            danaRSPlugin.changePump()
+        }
     }
 
     fun cancel() {
