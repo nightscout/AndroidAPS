@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_temp_basal_running">ВБС не установлена</string>
+    <string name="start_activity_tt">Включить ВЦ Нагрузка</string>
+    <string name="start_eating_soon_tt">Включить ВЦ Ожидаемый прием пищи</string>
+    <string name="start_hypo_tt">Включить ВЦ Гипо</string>
     <string name="time_offset">Смещение по времени</string>
     <!--    Widget-->
     <string name="configure">Настроить прозрачность</string>
     <string name="widget_description">Виджет AAPS</string>
+    <string name="widget_bg_graph_description">График ГК AAPS</string>
+    <string name="widget_glucose_circle_description">Круг глюкозы AAPS</string>
+    <string name="widget_compact_bg_description">AAPS ГК + IOB + COB (компактный)</string>
+    <string name="widget_small_description">AAPS Маленький</string>
     <!--     Activities-->
     <string name="activity_monitor">Монитор активности</string>
     <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
