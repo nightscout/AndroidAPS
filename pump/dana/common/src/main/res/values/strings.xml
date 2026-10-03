@@ -10,6 +10,12 @@
     <string name="speederror">Speed error</string>
     <string name="insulinlimitviolation">Insulin limit violation</string>
     <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Pump is not primed</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Not enough insulin in the reservoir</string>
+    <string name="danai2_bolus_error_easy_sleep">Easy sleep mode is on in the pump</string>
+    <string name="danai2_pump_check_error">Pump check error</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Easy mode</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Auto lock</string>
     <string name="danar_valuenotsetproperly">Value not set properly</string>
     <string name="danar_setbasalstep001">Set basal step to 0.01 U/h</string>
     <string name="resetpairing">Reset pairing information?</string>
@@ -19,6 +25,7 @@
     <string name="danar_disablebolusblock">Bolus block is enabled on the pump. AAPS cannot deliver insulin while it is active. Disable Bolus block in the pump settings.</string>
     <string name="overview_bolusprogress_stoped">Stopped</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
+    <string name="danars_unsupported_model">Unsupported pump model (code %1$s)</string>
     <string name="pumperror">Pump Error</string>
     <string name="lowbattery">Low Battery</string>
     <string name="basalcompare">Delivering less than preset basal rate</string>

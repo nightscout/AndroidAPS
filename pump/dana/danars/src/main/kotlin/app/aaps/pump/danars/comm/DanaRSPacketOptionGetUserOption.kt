@@ -36,6 +36,8 @@ class DanaRSPacketOptionGetUserOption(
         val selectableLanguage5 = intFromBuff(data, 17, 1)
         if (data.size >= 22) // hw 7+
             danaPump.target = intFromBuff(data, 18, 2)
+        if (data.size >= 23) // Dana-i2
+            danaPump.autoLock = intFromBuff(data, 20, 1) == 1
         // Pump's screen on time can't be less than 5
         failed = danaPump.lcdOnTimeSec < 5
         aapsLogger.debug(LTag.PUMPCOMM, "timeDisplayType24: " + danaPump.timeDisplayType24)
@@ -55,6 +57,7 @@ class DanaRSPacketOptionGetUserOption(
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage4: $selectableLanguage4")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage5: $selectableLanguage5")
         aapsLogger.debug(LTag.PUMPCOMM, "target: ${if (danaPump.units == DanaPump.UNITS_MGDL) danaPump.target else danaPump.target / 100.0}")
+        aapsLogger.debug(LTag.PUMPCOMM, "autoLock: " + danaPump.autoLock)
     }
 
     override val friendlyName: String = "OPTION__GET_USER_OPTION"

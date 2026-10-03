@@ -6,6 +6,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -347,7 +348,7 @@ class DanaRSService : MetroService() {
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false
         danaPump.bolusProgressLastTimeStamp = dateUtil.now()
-        val start = danaRSPacketBolusSetStepBolusStart().with(detailedBolusInfo.insulin, preferencesSpeed)
+        val start = danaRSPacketBolusSetStepBolusStart().with(detailedBolusInfo.insulin, preferencesSpeed, algorithm = detailedBolusInfo.bolusType == BS.Type.SMB)
         val bolusStart = dateUtil.now()
         var connectionBroken = false
         if (detailedBolusInfo.insulin > 0) {

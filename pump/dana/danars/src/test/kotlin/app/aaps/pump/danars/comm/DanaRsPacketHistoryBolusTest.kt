@@ -9,6 +9,9 @@ import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 
 class DanaRsPacketHistoryBolusTest : DanaRSTestBase() {
 
@@ -28,8 +31,25 @@ class DanaRsPacketHistoryBolusTest : DanaRSTestBase() {
 
     private val header = byteArrayOf(0xB2.toByte(), 0x11)
 
+    @Test fun olderPumpSendsOneRecordPerPacket() {
+        packet().handleMessage(header + bolusRecord(8, 0, 50))
+
+        verify(danaHistoryRecordDao, times(1)).createOrUpdate(any())
+    }
+
+    @Test fun danaI2BulkPacketStoresEveryRecord() {
+        // Bulk transfer: number of records = length / 10
+        val records = (0 until 20).map { bolusRecord(8, it, 10 + it) }.reduce { a, b -> a + b }
+        val packet = packet()
+
+        packet.handleMessage(header + records)
+
+        verify(danaHistoryRecordDao, times(20)).createOrUpdate(any())
+        assertThat(packet.done).isFalse()
+    }
+
     @Test fun pumpWithUtcStoresTheTimeInUtc() {
-        danaPump.hwModel = 0x09 // Dana-i
+        danaPump.hwModel = 0x0B // Dana-i2, the same for Dana-i
         val packet = packet()
 
         packet.handleMessage(header + bolusRecord(20, 8, 50))
@@ -45,5 +65,15 @@ class DanaRsPacketHistoryBolusTest : DanaRSTestBase() {
         packet.handleMessage(header + bolusRecord(20, 8, 50))
 
         assertThat(packet.danaRHistoryRecord.timestamp).isEqualTo(DateTime(2026, 10, 1, 20, 8, DateTimeZone.getDefault()).millis)
+    }
+
+    @Test fun endPacketStillEndsTheHistory() {
+        val packet = packet()
+
+        // CMD + 0x00 + total send count (2, LSB first)
+        packet.handleMessage(header + byteArrayOf(0x00, 0x14, 0x00))
+
+        assertThat(packet.done).isTrue()
+        assertThat(packet.totalCount).isEqualTo(20)
     }
 }

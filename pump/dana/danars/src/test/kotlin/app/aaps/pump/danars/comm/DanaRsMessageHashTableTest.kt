@@ -2,6 +2,7 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.danars.DanaRSTestBase
+import app.aaps.pump.danars.services.DanaRSAlarmReporter
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -17,7 +18,7 @@ class DanaRsMessageHashTableTest : DanaRSTestBase() {
     @BeforeEach
     fun setupMock() {
         packetList = setOf(
-            DanaRSPacketNotifyAlarm(aapsLogger, rh, pumpSync, danaPump, notificationManager),
+            DanaRSPacketNotifyAlarm(aapsLogger, rh, DanaRSAlarmReporter(rh, notificationManager, pumpSync, danaPump)),
             DanaRSPacketNotifyDeliveryComplete(aapsLogger, ch, bolusProgressData, danaPump),
             DanaRSPacketNotifyDeliveryRateDisplay(aapsLogger, ch, bolusProgressData, danaPump),
             DanaRSPacketNotifyMissedBolusAlarm(aapsLogger)

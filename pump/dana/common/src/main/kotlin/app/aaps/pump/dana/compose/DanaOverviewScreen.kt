@@ -23,8 +23,8 @@ fun DanaOverviewScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val iconRes = when (danaPump.pumpType()) {
-        PumpType.DANA_I -> R.drawable.ic_dana_i
-        else            -> R.drawable.ic_dana_rs
+        PumpType.DANA_I, PumpType.DANA_I2 -> R.drawable.ic_dana_i
+        else                              -> R.drawable.ic_dana_rs
     }
 
     PumpOverviewScreen(
