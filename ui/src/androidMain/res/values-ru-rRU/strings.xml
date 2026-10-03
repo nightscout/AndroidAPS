@@ -15,7 +15,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Монитор активности</string>
     <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
-    <string name="do_you_want_recalculate_tdd_stats">Хотите пересчитать статистику суточной дозировки TDD?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Хотите пересчитать статистику TDD?</string>
     <string name="calculation_in_progress">Идет подсчет</string>
     <string name="age">Возраст</string>
     <string name="weight_label">Вес</string>
@@ -26,20 +26,20 @@
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
     <string name="record_site_location">Место установки: %1$s</string>
-    <string name="record_site_arrow">Стрелка места установки: %1$s</string>
     <string name="record_site_note">Примечание: %1$s</string>
     <string name="delete_site_note">Примечание удалено</string>
     <!-- FillDialog -->
     <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
-    <string name="record_pump_site_change">Внести запись о смене места катетера помпы</string>
-    <string name="record_insulin_cartridge_change">Внести запись о замене картриджа инсулина</string>
+    <string name="record_pump_site_change">Внести запись о смене места установки канюли</string>
+    <string name="record_insulin_cartridge_change">Внести запись о замене резервуара</string>
     <!-- Scene -->
+    <string name="scene_cat_dailylife">Повседневная жизнь</string>
     <!-- Insulin Management -->
     <!-- Client→master round-trip pending dialog -->
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <!-- %1$s = action label -->
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
-    <string name="reuse_profile_pct_hours">Повторно использовать %1$d%%%2$dч</string>
+    <string name="reuse_profile_pct_hours">Переиспользовать %1$d%%%2$dч</string>
     <string name="percentage_label">В процентах</string>
     <!-- LoopDialog -->
     <string name="resume">Возобновить</string>
