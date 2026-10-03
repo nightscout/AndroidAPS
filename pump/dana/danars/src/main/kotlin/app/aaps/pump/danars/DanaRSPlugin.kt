@@ -152,6 +152,10 @@ class DanaRSPlugin(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
+        // onServiceDisconnected is only called when the service process dies, never after
+        // unbindService, so the reference must be dropped here. It kept the destroyed service alive
+        // after every pump switch, settings import or config change (LeakCanary).
+        danaRSService = null
         super.onStop()
     }
 
