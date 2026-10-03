@@ -76,7 +76,7 @@
     <string name="description_pump_dana_r">Pump integration for DANA Diabecare R pumps</string>
     <string name="description_pump_dana_r_korean">Pump integration for domestic DANA Diabecare R pumps</string>
     <string name="description_pump_dana_r_v2">Pump integration for DANA Diabecare R pumps with upgraded firmware</string>
-    <string name="danarpump_shortname">DANA</string>
+    <string name="danarpump_shortname">DanaR</string>
     <string name="devicenotfound">Selected device not found</string>
     <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
     <string name="danarkoreanpump">DanaR Korean</string>

@@ -142,7 +142,10 @@ fun MainNavigationBar(
 
         // Pump setup (visible only when pump not initialized and has compose content)
         if (pumpSetupPlugin != null) {
-            val label = pumpSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) } ?: pumpSetupPlugin.name
+            // Short name: a bar label has room for "Omnipod Dash" but the icon would sit off-center under it.
+            val label = pumpSetupPlugin.pluginDescription.shortName?.let { stringResource(it) }
+                ?: pumpSetupPlugin.pluginDescription.pluginName?.let { stringResource(it) }
+                ?: pumpSetupPlugin.name
             NavigationBarItem(
                 selected = false,
                 onClick = { onNavigate(NavigationRequest.Plugin(pumpSetupPlugin::class.simpleName.orEmpty())) },
