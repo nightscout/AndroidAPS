@@ -3,6 +3,7 @@ package app.aaps.implementation.stats
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.aps.BasalData
+import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -422,6 +423,70 @@ class TddCalculatorImplTest : TestBase() {
         assertThat(result).isNotNull()
         assertThat(result?.size()).isEqualTo(7)
         verify(persistenceLayer, times(7)).insertOrUpdateCachedTotalDailyDose(any())
+    }
+
+    /**
+     * The extended boluses are now read once for the whole interval instead of once per 5-minute step.
+     * The result must stay the same as the old per-step `getExtendedBolusActiveAt`: one bolus already
+     * running at the start counts only until it ends, one starting later counts from its start.
+     */
+    @Test
+    fun `extended boluses of the interval are counted per step from one query`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = false)
+        // 1.2 U/h, started 30 min before the interval, ends 15 min into it: steps +0, +5, +10
+        val runningAtStart = EB(id = 1, timestamp = intervalStart - T.mins(30).msecs(), duration = T.mins(45).msecs(), amount = 0.9)
+        // 2.4 U/h, starts 30 min into the interval: steps +30 ... +55
+        val startingLater = EB(id = 2, timestamp = intervalStart + T.mins(30).msecs(), duration = T.mins(60).msecs(), amount = 2.4)
+        whenever(persistenceLayer.getExtendedBolusActiveAt(intervalStart)).thenReturn(runningAtStart)
+        whenever(persistenceLayer.getExtendedBolusesStartingFromTimeToTime(intervalStart, intervalEnd, true)).thenReturn(listOf(startingLater))
+
+        val tdd = tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        // 3 steps * 1.2 / 12 + 6 steps * 2.4 / 12
+        assertThat(tdd?.bolusAmount).isWithin(0.0001).of(0.3 + 1.2)
+        verify(persistenceLayer, times(1)).getExtendedBolusActiveAt(any())
+        verify(persistenceLayer, times(1)).getExtendedBolusesStartingFromTimeToTime(any(), any(), any())
+    }
+
+    /** A bolus that starts exactly at the start is returned by both queries and must count once. */
+    @Test
+    fun `an extended bolus returned by both queries is counted once`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = false)
+        // 1.2 U/h for 10 min: steps +0 and +5
+        val atStart = EB(id = 3, timestamp = intervalStart, duration = T.mins(10).msecs(), amount = 0.2)
+        whenever(persistenceLayer.getExtendedBolusActiveAt(intervalStart)).thenReturn(atStart)
+        whenever(persistenceLayer.getExtendedBolusesStartingFromTimeToTime(intervalStart, intervalEnd, true)).thenReturn(listOf(atStart))
+
+        val tdd = tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        assertThat(tdd?.bolusAmount).isWithin(0.0001).of(0.2)
+    }
+
+    /** A pump that fakes temporary basals with extended boluses already counts them as basal. */
+    @Test
+    fun `extended boluses are not read when the pump fakes temps with them`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = true)
+
+        tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        verify(persistenceLayer, never()).getExtendedBolusActiveAt(any())
+        verify(persistenceLayer, never()).getExtendedBolusesStartingFromTimeToTime(any(), any(), any())
+    }
+
+    // A 5-minute aligned hour, so every step is easy to count
+    private val intervalStart = T.mins(5).msecs() * 4000
+    private val intervalEnd = intervalStart + T.mins(60).msecs()
+
+    /** A profile for every step, no boluses, no carbs and no basal, so only extended boluses add up. */
+    private suspend fun givenIntervalWithoutBasal(fakingTemps: Boolean) {
+        val profile = mock<EffectiveProfile>()
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(fakingTemps)
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        whenever(iobCobCalculator.getBasalData(any(), any())).thenReturn(BasalData().apply { tempBasalAbsolute = 0.0 })
+        whenever(profileFunction.getProfile(any())).thenReturn(profile)
     }
 
     /**

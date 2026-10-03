@@ -174,6 +174,19 @@ class TddCalculatorImpl(
                 if (ic > 0) tdd.carbInsulin += t.amount / ic
             }
         }
+        // Load the extended boluses of the whole interval once. This used to be one database query per
+        // 5-minute step, and the status lights ask for the insulin used since the last cannula change:
+        // 22 days of steps were about 6400 queries, run again on every pump status event.
+        //
+        // The two queries together give every extended bolus that can be active in the interval: the one
+        // already running at the start, and every one that starts later. The lookup below then picks the
+        // latest started one that is still running, as `getExtendedBolusActiveAt` does. The only case
+        // that differs is two valid extended boluses that overlap, which the database should not hold.
+        val extendedBoluses =
+            if (activePlugin.activePump.isFakingTempsByExtendedBoluses) emptyList()
+            else (listOfNotNull(persistenceLayer.getExtendedBolusActiveAt(startTimeAligned)) +
+                persistenceLayer.getExtendedBolusesStartingFromTimeToTime(startTimeAligned, endTimeAligned, true))
+                .distinctBy { it.id }
         val calculationStep = T.mins(5).msecs()
         for (t in startTimeAligned until endTimeAligned step calculationStep) {
 
@@ -183,11 +196,9 @@ class TddCalculatorImpl(
             val absoluteRate = tbr.tempBasalAbsolute
             tdd.basalAmount += absoluteRate / 60.0 * 5.0
 
-            if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                val eb = persistenceLayer.getExtendedBolusActiveAt(t)
-                val absoluteEbRate = eb?.rate ?: 0.0
-                tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
-            }
+            val eb = extendedBoluses.lastOrNull { it.timestamp <= t && it.timestamp + it.duration > t }
+            val absoluteEbRate = eb?.rate ?: 0.0
+            tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
         }
         tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
         //aapsLogger.debug(LTag.CORE, tdd.toString())
