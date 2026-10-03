@@ -91,8 +91,9 @@ class G7Session(
     private var rearmJob: Job? = null
     private var idleJob: Job? = null
 
-    /** The "came back right after its reading" line was logged for the current reading cycle. */
-    private var quietLogged = false
+    /** Links the sensor opened right after the current reading. Logged as one line, see [logCameBack]. */
+    private var cameBack = 0
+    private var cameBackJob: Job? = null
     private var followUps: Job? = null
 
     /** Phone time of the sensor's second zero for this connection. See [G7Lifecycle.clockAnchor]. */
@@ -224,6 +225,7 @@ class G7Session(
         rearmJob?.cancel()
         idleJob?.cancel()
         followUps?.cancel()
+        logCameBack()
         client?.let {
             it.events = null
             it.close()
@@ -278,10 +280,14 @@ class G7Session(
             // reading. Keep the link open and idle rather than hanging up: hanging up re-armed the request
             // at once, the sensor was still advertising, and phone and sensor went round that loop about
             // a hundred times a second. The sensor ends an idle link itself; the job below is only a
-            // fallback in case it does not.
-            if (!quietLogged) {
-                log("The sensor came back right after its reading; leaving the link idle until the next one")
-                quietLogged = true
+            // fallback in case it does not. It happens after almost every reading, so it is counted and
+            // logged once when the quiet minute is over, not line by line.
+            if (cameBack++ == 0) {
+                cameBackJob?.cancel()
+                cameBackJob = scope.launch {
+                    delay(maxOf(0L, lastReadingReceivedAt + QUIET_AFTER_READING_MS - System.currentTimeMillis()))
+                    logCameBack()
+                }
             }
             _status.value = G7ConnectionStatus.WAITING
             idleJob?.cancel()
@@ -294,6 +300,7 @@ class G7Session(
             }
             return
         }
+        logCameBack()
         _status.value = G7ConnectionStatus.CONNECTED
         store.update { it.copy(latestConnectAt = System.currentTimeMillis()) }
         if (System.currentTimeMillis() < retryNotBefore) {
@@ -378,6 +385,8 @@ class G7Session(
         backfillPending = false
         val hadReading = gotReadingThisConnection
         gotReadingThisConnection = false
+        // The sensor comes back a few times in the next seconds. The client leaves those links out of the log.
+        if (hadReading) c.quietUntil = lastReadingReceivedAt + QUIET_AFTER_READING_MS
         if (!running || paused) return
         _status.value = G7ConnectionStatus.WAITING
         // After a normal reading cycle, re-arm at once: a delayed re-arm can be held back for minutes
@@ -399,6 +408,15 @@ class G7Session(
 
     /** True once the current connection brought a reading. */
     private var gotReadingThisConnection = false
+
+    /** Writes how often the sensor came back right after its reading, if it did. */
+    private fun logCameBack() {
+        cameBackJob?.cancel()
+        cameBackJob = null
+        if (cameBack == 0) return
+        log("The sensor came back $cameBack ${if (cameBack == 1) "time" else "times"} right after its reading; the links were left idle")
+        cameBack = 0
+    }
 
     private fun isRightAfterReading(): Boolean = System.currentTimeMillis() - lastReadingReceivedAt < QUIET_AFTER_READING_MS
 
@@ -501,8 +519,8 @@ class G7Session(
         val readingAt = activation + message.glucoseTimestamp * 1000
         restartsSinceReading = 0
         gotReadingThisConnection = true
+        logCameBack()
         lastReadingReceivedAt = now
-        quietLogged = false
 
         store.update { state ->
             state.copy(

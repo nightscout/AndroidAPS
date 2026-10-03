@@ -59,6 +59,12 @@ class G7GattClient(
     /** How the current client was opened. A plain re-arm keeps that mode, so [reconnect] checks it. */
     @Volatile private var autoConnect = true
 
+    /**
+     * Until then, normal connects and disconnects are not logged. The sensor opens a few short links
+     * right after each reading; the session counts those and logs them as one line.
+     */
+    @Volatile var quietUntil = 0L
+
     private val listeners = ConcurrentHashMap<G7Characteristic, (ByteArray) -> Unit>()
     private val operationLock = Mutex()
     @Volatile private var pending: CompletableDeferred<Int>? = null
@@ -129,7 +135,7 @@ class G7GattClient(
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             when (newState) {
                 BluetoothProfile.STATE_CONNECTED    -> {
-                    log("Connected to $address, finding services")
+                    if (!isQuiet()) log("Connected to $address, finding services")
                     if (!gatt.discoverServices()) log("Could not start service discovery")
                 }
 
@@ -137,7 +143,8 @@ class G7GattClient(
                     val wasConnected = connected
                     connected = false
                     failPending(STATUS_DISCONNECTED)
-                    if (wasConnected || status != BluetoothGatt.GATT_SUCCESS) log("Disconnected from $address (status $status)")
+                    val normal = status == BluetoothGatt.GATT_SUCCESS || status == STATUS_REMOTE_ENDED
+                    if ((wasConnected || status != BluetoothGatt.GATT_SUCCESS) && !(normal && isQuiet())) log("Disconnected from $address (status $status)")
                     events?.onDisconnected(this@G7GattClient, status)
                 }
             }
@@ -171,6 +178,8 @@ class G7GattClient(
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) deliver(characteristic.uuid, characteristic.value ?: return)
         }
     }
+
+    private fun isQuiet(): Boolean = System.currentTimeMillis() < quietUntil
 
     private fun deliver(uuid: UUID, value: ByteArray) {
         val characteristic = G7Characteristic.fromUuid(uuid.toString()) ?: return
@@ -276,6 +285,9 @@ class G7GattClient(
 
         /** Longer than any operation takes, short enough that a lost callback does not stall a reading. */
         const val OPERATION_TIMEOUT_MS = 5_000L
+
+        /** The sensor ended the link (HCI "remote user terminated"), the normal end of a reading. */
+        private const val STATUS_REMOTE_ENDED = 19
 
         private const val STATUS_DISCONNECTED = -1
         private const val STATUS_CLOSED = -2
