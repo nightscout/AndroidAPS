@@ -40,11 +40,12 @@
     <!-- SiteRotationDialog -->
     <string name="edit_site">Изменить</string>
     <string name="record_site_location">Место установки: %1$s</string>
+    <string name="record_site_arrow">Зона в месте установки: %1$s</string>
     <string name="record_site_note">Примечание: %1$s</string>
     <string name="delete_site_note">Примечание удалено</string>
     <!-- FillDialog -->
     <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
-    <string name="record_pump_site_change">Внести запись о смене места установки канюли</string>
+    <string name="record_pump_site_change">Внести запись о смене места установки помпы</string>
     <string name="record_insulin_cartridge_change">Внести запись о замене резервуара</string>
     <string name="fill_prime_amount">Объем заправки</string>
     <string name="fill_pump_units_note">Объем заправки в единицах помпы</string>
@@ -281,7 +282,7 @@
     <string name="quick_launch_no_profiles">Создайте Локальные профили для их использования здесь</string>
     <string name="quick_launch_edit_profile_preset">Редактировать предустановки профиля</string>
     <string name="quick_launch_profile_permanent">Постоянно</string>
-    <string name="select_arrow">Укажите направление</string>
+    <string name="select_arrow">Укажите зону в месте</string>
     <string name="loop_accept_nav_label">Цикл</string>
     <string name="loop_accept_set_basal_question">Принять новый временный базал:</string>
     <string name="loop_accept_perform">Выполнить</string>
