@@ -44,6 +44,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">在過去3分鐘內已經進行了一次注射，跳過SMB</string>
     <string name="pump_not_initialized">幫浦未初始化！</string>
+    <string name="zero_basal_not_set">幫浦未接受零臨時基礎率。它可能仍在輸注基礎胰島素。請檢查幫浦。</string>
     <string name="loop_shortname">∞</string>
     <string name="description_loop">啟用或停用觸發循環。</string>
     <string name="no_aps_selected">未選擇或提供結果的APS</string>

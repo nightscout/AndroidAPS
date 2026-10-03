@@ -15,6 +15,7 @@
     <string name="carelevo_insulin_remain_key">Gjenværende insulin</string>
     <string name="carelevo_running_remain_time">Gjenstående tid på patchen</string>
     <string name="carelevo_total_insulin_key">Totalt levert insulin</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%1$d timer %2$d min</string>
     <string name="common_label_unit_value_minute">%d min</string>
     <string name="common_label_unit_value_duration_hour">%d timer</string>
     <string name="common_label_unit_value_dose_with_space">%s E</string>
@@ -33,6 +34,7 @@
     <string name="carelevo_pump_stop_duration_label_4_hour">4 timer</string>
     <string name="common_unit_value_day_hour_min">%1$d dager %2$02d:%3$02d</string>
     <string name="common_unit_value_hour_min" comment="%1$d=hours, %2$d=minutes, both zero padded to 2 digits. Example: 03:07">%1$02d:%2$02d</string>
+    <string name="common_unit_remain_min_sec">%1$d min %2$02d sek gjenstår</string>
     <string name="carelevo_progress_of_100" comment="%1$d=progress percentage 0-100. Example: 42/100">%1$d/100</string>
     <string name="carelevo_btn_insulin_guide">Insulinveiledning</string>
     <string name="carelevo_insulin_refill_step_position" comment="Position within the insulin-refill guide. %1$d=step being shown, %2$d=total steps. Example: 7 / 12">%1$d / %2$d</string>
@@ -196,6 +198,8 @@
     <string name="alarm_notification_desc_alert_resume_infusion">Insulinpausen er avsluttet. Trykk på [Start insulin] for å starte.</string>
     <string name="alarm_notification_desc_alert_off_bluetooth">Bluetooth kreves for å bruke patch. Trykk på [OK] og slå på Bluetooth.</string>
     <string name="alarm_notification_desc_notice_low_insulin">Mindre enn %s E insulin gjenstår. Gjør deg klar til å bytte patch.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Brukstiden for patch er %1$s dager og %2$s timer. Husk på dette under bruk.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Tidssonen er endret fra %1$s (UTC %2$s) til %3$s (UTC %4$s).</string>
     <string name="alarm_notification_desc_notice_check_bg">Det har gått %s siden bolusen din. Vennligst sjekk blodsukkeret ditt.</string>
     <string name="alarm_notification_desc_notice_lgs_started">LGS startet.</string>
     <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS avsluttet på grunn av frakobling av patch/CGM.</string>

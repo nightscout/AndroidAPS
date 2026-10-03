@@ -24,6 +24,10 @@ Hãy chắc chắn bơm hết toàn bộ lượng insulin trong ống tiêm, nga
     <string name="omnipod_dash_unknown">Trạng thái không xác định cho lệnh này</string>
     <string name="omnipod_common_history_tbr_value">%1$.2f U/giờ, %2$d phút</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Điều chỉnh liều nền</string>
+    <string name="omnipod_common_bolus_type_priming">Đang mồi</string>
     <string name="omnipod_common_alert_delivery_suspended">Việc tiêm insulin đã bị tạm dừng</string>
     <string name="omnipod_common_history_total_delivered">Tổng lượng đã tiêm: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Một liều bolus khác đang tiêm</string>

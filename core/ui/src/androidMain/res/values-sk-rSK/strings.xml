@@ -1036,7 +1036,6 @@
     <string name="import_wrong_password">Nesprávne heslo</string>
     <string name="import_btn">Importovať</string>
     <string name="import_anyway_btn">Importovať aj tak</string>
-    <string name="import_apply_title">Použiť importované nastavenia?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
