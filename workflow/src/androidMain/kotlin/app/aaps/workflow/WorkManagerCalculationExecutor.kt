@@ -102,7 +102,7 @@ class WorkManagerCalculationExecutor(
         // counts as busy too. Finished works stay listed until WorkManager prunes them.
         fun busy() = workManager.getWorkInfosForUniqueWork(job).get().any { !it.state.isFinished }
         if (!busy()) return true
-        aapsLogger.debug(LTag.AUTOSENS, "Waiting for $job to finish")
+        aapsLogger.debug(LTag.WORKER, "Waiting for $job to finish")
         val deadline = Clock.System.now() + timeout
         while (Clock.System.now() < deadline) {
             delay(IDLE_POLL_MS)

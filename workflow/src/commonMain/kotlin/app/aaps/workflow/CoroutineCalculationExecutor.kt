@@ -132,7 +132,7 @@ class CoroutineCalculationExecutor(
                 val run = mutex.withLock { runs[job] }
                 if (run == null || run.isCompleted) break
                 if (!logged) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Waiting for $job to finish")
+                    aapsLogger.debug(LTag.WORKER, "Waiting for $job to finish")
                     logged = true
                 }
                 run.join()
