@@ -39,6 +39,10 @@ data class G7AlarmTrack(
     /** The alarm is going off and nobody has acknowledged it yet. */
     val raisedAt: Long? = null,
     val lastAlertAt: Long? = null,
+    /** The newest reading when the alarm last went off. The reminder waits for a newer one. */
+    val alertReadingAt: Long? = null,
+    /** Went off once at night and is not repeated (the sensor end). */
+    val noReminder: Boolean = false,
     /** Acknowledged: quiet until then, even if the condition lasts. */
     val snoozedUntil: Long? = null,
     /** Acknowledged with repeat set to never: quiet until the condition has gone away. */
@@ -66,8 +70,11 @@ sealed class G7AlarmAction {
 
     abstract val type: G7AlarmType
 
-    /** Go off: notification and vibration, and the sound unless [withSound] is false. */
-    data class Raise(override val type: G7AlarmType, val withSound: Boolean, val reminder: Boolean) : G7AlarmAction()
+    /**
+     * Go off: notification and vibration, and the sound unless [withSound] is false. [once] is true when
+     * no reminder follows.
+     */
+    data class Raise(override val type: G7AlarmType, val withSound: Boolean, val reminder: Boolean, val once: Boolean = false) : G7AlarmAction()
 
     /** Stop: the condition has gone, or the alarm was acknowledged. */
     data class Clear(override val type: G7AlarmType) : G7AlarmAction()
@@ -86,7 +93,9 @@ data class G7AlarmStep(
  * - An alarm goes off when its condition holds (for its delay, if it has one).
  * - With "vibrate first" on, the first alert only vibrates.
  * - Not acknowledged: it goes off again every 5 minutes, with sound, until acknowledged or the
- *   condition goes away.
+ *   condition goes away. The reminder waits up to [REMINDER_WAIT_MS] for the next reading, which
+ *   comes at about the same moment, so it does not sound for a value that has just gone back to normal.
+ * - A sensor end alert that goes off at night goes off once, with no reminders: it is only information.
  * - Acknowledged: quiet for the alarm's repeat time. If the condition still holds after that, it
  *   goes off again as a new alert. Repeat "never" keeps it quiet until the condition has gone away.
  * - Only the most important alarm of a group goes off at a time.
@@ -101,10 +110,17 @@ object G7AlarmEngine {
     /** Unacknowledged alarms go off again this often. */
     const val REMINDER_MS = 5 * 60_000L
 
+    /**
+     * How long a due reminder waits for the next reading. Readings are 5 minutes apart too, so without
+     * this the reminder often went off one second before a reading that ended the condition.
+     */
+    const val REMINDER_WAIT_MS = 30_000L
+
     /** How long a condition must be gone before a "repeat never" alarm may go off again. */
     const val CLEAR_MS = 15 * 60_000L
 
-    fun step(state: G7State, config: G7AlarmConfig, runtime: G7AlarmRuntime, now: Long): G7AlarmStep {
+    /** [night] is true during the night hours set by the user. */
+    fun step(state: G7State, config: G7AlarmConfig, runtime: G7AlarmRuntime, now: Long, night: Boolean = false): G7AlarmStep {
         if (!config.enabled) return clearAll(runtime)
 
         val actions = mutableListOf<G7AlarmAction>()
@@ -152,18 +168,22 @@ object G7AlarmEngine {
                 track.quietUntilCleared                   -> Unit
 
                 !track.isRaised                           -> {
-                    actions += G7AlarmAction.Raise(type, withSound = !cfg.vibrateFirst, reminder = false)
-                    track = track.copy(raisedAt = now, lastAlertAt = now)
-                    next += now + REMINDER_MS
+                    val once = night && type == G7AlarmType.SENSOR_END
+                    actions += G7AlarmAction.Raise(type, withSound = !cfg.vibrateFirst, reminder = false, once = once)
+                    track = track.copy(raisedAt = now, lastAlertAt = now, alertReadingAt = state.latestReadingAt, noReminder = once)
+                    if (!once) next += now + REMINDER_MS
                 }
 
-                now - track.lastAlertAt!! >= REMINDER_MS -> {
-                    actions += G7AlarmAction.Raise(type, withSound = true, reminder = true)
-                    track = track.copy(lastAlertAt = now)
-                    next += now + REMINDER_MS
-                }
+                track.noReminder                          -> Unit
 
-                else                                      -> next += track.lastAlertAt + REMINDER_MS
+                else                                      -> {
+                    val reminderAt = reminderAt(track, state)
+                    if (now >= reminderAt) {
+                        actions += G7AlarmAction.Raise(type, withSound = true, reminder = true)
+                        track = track.copy(lastAlertAt = now, alertReadingAt = state.latestReadingAt)
+                        next += now + REMINDER_MS
+                    } else next += reminderAt
+                }
             }
             if (track != G7AlarmTrack()) tracks[type] = track
         }
@@ -181,6 +201,17 @@ object G7AlarmEngine {
             else track.copy(raisedAt = null, quietUntilCleared = true)
         }
         return G7AlarmStep(G7AlarmRuntime(tracks), actions, tracks.values.mapNotNull { it.snoozedUntil }.minOrNull())
+    }
+
+    /**
+     * When the reminder of a raised alarm goes off: 5 minutes after the last alert once a newer reading
+     * is in, or up to [REMINDER_WAIT_MS] later while it is not, so a late or lost reading does not hold
+     * the reminder back for long.
+     */
+    private fun reminderAt(track: G7AlarmTrack, state: G7State): Long {
+        val due = track.lastAlertAt!! + REMINDER_MS
+        val newerReading = state.latestReadingAt != null && state.latestReadingAt > (track.alertReadingAt ?: Long.MIN_VALUE)
+        return if (newerReading) due else due + REMINDER_WAIT_MS
     }
 
     fun clearAll(runtime: G7AlarmRuntime): G7AlarmStep =
@@ -257,7 +288,7 @@ object G7AlarmEngine {
     private const val ON = "on"
 }
 
-/** The night hours for the watch vibration. */
+/** The night hours: a longer watch vibration, and a sensor end alert without reminders. */
 object G7AlarmNight {
 
     /**

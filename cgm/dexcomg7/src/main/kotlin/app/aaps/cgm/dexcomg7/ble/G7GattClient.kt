@@ -56,6 +56,9 @@ class G7GattClient(
     @Volatile private var connected = false
     @Volatile private var closed = false
 
+    /** How the current client was opened. A plain re-arm keeps that mode, so [reconnect] checks it. */
+    @Volatile private var autoConnect = true
+
     private val listeners = ConcurrentHashMap<G7Characteristic, (ByteArray) -> Unit>()
     private val operationLock = Mutex()
     @Volatile private var pending: CompletableDeferred<Int>? = null
@@ -73,6 +76,7 @@ class G7GattClient(
      */
     fun connect(autoConnect: Boolean) {
         closed = false
+        this.autoConnect = autoConnect
         gatt = device.connectGattCompat(context, autoConnect, callback, BluetoothDevice.TRANSPORT_LE)
         if (gatt == null) log("Bluetooth refused to open a connection to $address")
     }
@@ -80,10 +84,23 @@ class G7GattClient(
     /**
      * Re-arms a client after a disconnect, so the stack connects when the sensor next advertises. The
      * client is not closed: closing drops that registration and leaves a scan as the only way back.
+     *
+     * A client opened with a direct connect (pairing, or after a scan) is replaced by a background one.
+     * Re-arming it would repeat the direct connect, which gives up after about 10 seconds (status 147)
+     * unless the sensor happens to advertise in that time. After a sensor change this cost many
+     * readings and once 20 minutes of silence, until the watchdog opened a new client.
      */
     fun reconnect() {
         if (closed) return
-        val g = gatt ?: return connect(autoConnect = true)
+        val g = gatt
+        if (g == null || !autoConnect) {
+            if (g != null) {
+                log("Switching to a background connection request")
+                runCatching { g.close() }
+                gatt = null
+            }
+            return connect(autoConnect = true)
+        }
         runCatching { g.connect() }.onFailure { log("Re-arming the connection failed: ${it.message}") }
     }
 

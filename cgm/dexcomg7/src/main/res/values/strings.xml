@@ -150,8 +150,9 @@
     <string name="dexcom_g7_alarm_fall_rate_summary">Glucose is falling fast.</string>
     <string name="dexcom_g7_alarm_rise_rate">Rise rate</string>
     <string name="dexcom_g7_alarm_rise_rate_summary">Glucose is rising fast.</string>
+    <string name="dexcom_g7_date_time" comment="%1$s=short date, %2$s=time. Example: 30/09 10:22">%1$s %2$s</string>
     <string name="dexcom_g7_alarm_sensor_end">Sensor end</string>
-    <string name="dexcom_g7_alarm_sensor_end_summary">24, 6 and 2 hours before the sensor session ends, when the 12-hour grace period starts, 6 and 2 hours before the grace period ends, and when readings stop.</string>
+    <string name="dexcom_g7_alarm_sensor_end_summary">24, 6 and 2 hours before the sensor session ends, when the 12-hour grace period starts, 6 and 2 hours before the grace period ends, and when readings stop. During the night hours it goes off only once, with no reminders.</string>
     <string name="dexcom_g7_alarm_signal_loss">Signal loss</string>
     <string name="dexcom_g7_alarm_signal_loss_summary">No readings from the sensor for the time you set.</string>
     <string name="dexcom_g7_alarm_sensor_issue">Brief sensor issue</string>
@@ -179,8 +180,8 @@
     <string name="dexcom_g7_alarm_watch_vibration_summary">How long the AAPS watch app vibrates for this alarm. It needs the Wear plugin and the AAPS watch app.</string>
     <string name="dexcom_g7_alarm_watch_vibration_night">Watch vibration at night</string>
     <string name="dexcom_g7_alarm_watch_vibration_off">No vibration</string>
-    <string name="dexcom_g7_alarm_watch_night">Night settings for the watch</string>
-    <string name="dexcom_g7_alarm_watch_night_summary">Between these hours, alarms use the night watch vibration, for example a longer one to wake you up.</string>
+    <string name="dexcom_g7_alarm_watch_night">Night hours</string>
+    <string name="dexcom_g7_alarm_watch_night_summary">Between these hours, alarms use the night watch vibration, for example a longer one to wake you up. A sensor end alert goes off only once, with no reminders.</string>
     <string name="dexcom_g7_alarm_watch_night_start">Night starts</string>
     <string name="dexcom_g7_alarm_watch_night_end">Night ends</string>
     <string name="dexcom_g7_seconds" comment="%1$d=number of seconds. Example: 5 s">%1$d s</string>

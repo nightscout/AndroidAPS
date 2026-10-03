@@ -67,8 +67,14 @@ class G7LogViewModel(
 
     fun format(entry: G7CommLog.Entry): String = "${dateUtil.timeStringWithSeconds(entry.time)}  ${entry.text}"
 
-    /** With the date on each line, since the log covers 24 hours. */
-    fun asText(): String = commLog.asText { dateUtil.dateAndTimeAndSecondsString(it) }
+    /**
+     * With the date on each line, since the log covers 24 hours. A fixed form, so saved logs look the
+     * same whatever language the app had when they were saved.
+     */
+    fun asText(): String {
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+        return commLog.asText { format.format(Date(it)) }
+    }
 
     fun clear() {
         commLog.clear()

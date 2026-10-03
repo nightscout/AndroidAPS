@@ -90,6 +90,39 @@ class G7AlarmEngineTest {
     }
 
     @Test
+    fun reminderWaitsForTheNextReading() {
+        val first = G7AlarmEngine.step(state(65), config(), G7AlarmRuntime(), now)
+
+        // Five minutes on, the next reading is not in yet: wait for it.
+        val due = G7AlarmEngine.step(state(65), config(), first.runtime, now + 5 * minute)
+        assertThat(due.actions).isEmpty()
+        assertThat(due.nextCheckAt).isEqualTo(now + 5 * minute + G7AlarmEngine.REMINDER_WAIT_MS)
+
+        // It comes a second later and is back in range: no reminder, the alarm stops.
+        val back = G7AlarmEngine.step(state(75, at = now + 5 * minute + 1_000), config(), due.runtime, now + 5 * minute + 1_000)
+        assertThat(raises(back)).isEmpty()
+        assertThat(clears(back)).containsExactly(G7AlarmType.LOW)
+    }
+
+    @Test
+    fun reminderWaitsAtMostThirtySeconds() {
+        val first = G7AlarmEngine.step(state(65), config(), G7AlarmRuntime(), now)
+        val late = now + 5 * minute + G7AlarmEngine.REMINDER_WAIT_MS
+        val reminder = G7AlarmEngine.step(state(65), config(), first.runtime, late)
+        assertThat(raises(reminder)).containsExactly(G7AlarmAction.Raise(G7AlarmType.LOW, withSound = true, reminder = true))
+    }
+
+    @Test
+    fun reminderComesOnTimeWhenTheReadingCameEarly() {
+        val first = G7AlarmEngine.step(state(65), config(), G7AlarmRuntime(), now)
+        val reading = G7AlarmEngine.step(state(64, at = now + 5 * minute - 2_000), config(), first.runtime, now + 5 * minute - 2_000)
+        assertThat(reading.actions).isEmpty()
+        assertThat(reading.nextCheckAt).isEqualTo(now + 5 * minute)
+        val reminder = G7AlarmEngine.step(state(64, at = now + 5 * minute - 2_000), config(), reading.runtime, now + 5 * minute)
+        assertThat(raises(reminder).map { it.reminder }).containsExactly(true)
+    }
+
+    @Test
     fun acknowledgeSnoozesForTheRepeatTime() {
         val raised = G7AlarmEngine.step(state(65), config(), G7AlarmRuntime(), now)
         val ack = G7AlarmEngine.acknowledge(raised.runtime, config(), G7AlarmType.LOW, now + minute)
@@ -266,6 +299,38 @@ class G7AlarmEngineTest {
         val grace = G7AlarmEngine.step(at(expires), config(), six.runtime, expires)
         assertThat(raises(grace)).containsExactly(G7AlarmAction.Raise(G7AlarmType.SENSOR_END, withSound = true, reminder = false))
         assertThat(G7AlarmEngine.milestone(at(expires), expires)?.name).isEqualTo("GRACE_STARTED")
+    }
+
+    @Test
+    fun sensorEndAtNightGoesOffOnceWithoutReminders() {
+        val expires = start + 10 * 24 * 60 * minute
+        val hour = 60 * minute
+        val cfg = config { t, c -> if (t == G7AlarmType.SENSOR_END) c.copy(vibrateFirst = true) else c }
+        fun at(time: Long) = state(120, at = time)
+
+        val night = G7AlarmEngine.step(at(expires - 6 * hour), cfg, G7AlarmRuntime(), expires - 6 * hour, night = true)
+        assertThat(raises(night)).containsExactly(G7AlarmAction.Raise(G7AlarmType.SENSOR_END, withSound = false, reminder = false, once = true))
+        assertThat(night.runtime[G7AlarmType.SENSOR_END].noReminder).isTrue()
+        assertThat(night.nextCheckAt).isNotEqualTo(expires - 6 * hour + G7AlarmEngine.REMINDER_MS)
+
+        // Not acknowledged, and still no reminder, also after the night has ended.
+        val later = G7AlarmEngine.step(at(expires - 5 * hour), cfg, night.runtime, expires - 5 * hour)
+        assertThat(later.actions).isEmpty()
+        assertThat(later.runtime.raised).containsExactly(G7AlarmType.SENSOR_END)
+
+        // The next moment in the day is a normal alert again, with its reminder.
+        val day = G7AlarmEngine.step(at(expires - 2 * hour), cfg, later.runtime, expires - 2 * hour)
+        assertThat(raises(day)).containsExactly(G7AlarmAction.Raise(G7AlarmType.SENSOR_END, withSound = false, reminder = false))
+        val reminder = G7AlarmEngine.step(at(expires - 2 * hour + 5 * minute), cfg, day.runtime, expires - 2 * hour + 5 * minute)
+        assertThat(raises(reminder).map { it.reminder }).containsExactly(true)
+    }
+
+    @Test
+    fun nightDoesNotStopGlucoseReminders() {
+        val first = G7AlarmEngine.step(state(65), config(), G7AlarmRuntime(), now, night = true)
+        assertThat(raises(first).map { it.once }).containsExactly(false)
+        val reminder = G7AlarmEngine.step(state(65, at = now + 5 * minute), config(), first.runtime, now + 5 * minute, night = true)
+        assertThat(raises(reminder).map { it.reminder }).containsExactly(true)
     }
 
     @Test

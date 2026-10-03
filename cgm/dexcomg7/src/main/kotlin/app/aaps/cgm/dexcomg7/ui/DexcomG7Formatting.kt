@@ -35,17 +35,25 @@ object DexcomG7Formatting {
         }
     )
 
+    /**
+     * Date and time in a fixed form, such as "30/09 10:22". The usual long date follows the locale, and
+     * the locale changes when an AAPS screen applies the app language, so texts made in the background
+     * and texts made later did not match.
+     */
+    fun dateTime(rh: ResourceHelper, dateUtil: DateUtil, mills: Long): String =
+        rh.gs(R.string.dexcom_g7_date_time, dateUtil.dateStringShort(mills), dateUtil.timeString(mills))
+
     fun previous(rh: ResourceHelper, dateUtil: DateUtil, record: G7SensorRecord): String {
         val name = record.sensorName ?: "?"
         val days = record.sessionLengthSeconds?.let { " " + rh.gs(R.string.dexcom_g7_days, G7Lifecycle.lifetimeMs(it) / (24 * 60 * 60 * 1000L)) } ?: ""
-        val started = record.activatedAt?.let { dateUtil.dateAndTimeString(it) } ?: "?"
-        return rh.gs(R.string.dexcom_g7_previous_sensor_text, name + days, started, dateUtil.dateAndTimeString(record.endedAt))
+        val started = record.activatedAt?.let { dateTime(rh, dateUtil, it) } ?: "?"
+        return rh.gs(R.string.dexcom_g7_previous_sensor_text, name + days, started, dateTime(rh, dateUtil, record.endedAt))
     }
 
     /** What to tell the user at a [G7SessionMilestone]: when the session or its grace period ends. */
     fun milestone(rh: ResourceHelper, dateUtil: DateUtil, milestone: G7SessionMilestone, state: G7State): String {
-        val expires = state.expiresAt?.let { dateUtil.dateAndTimeString(it) } ?: "?"
-        val ends = state.endsAt?.let { dateUtil.dateAndTimeString(it) } ?: "?"
+        val expires = state.expiresAt?.let { dateTime(rh, dateUtil, it) } ?: "?"
+        val ends = state.endsAt?.let { dateTime(rh, dateUtil, it) } ?: "?"
         return when (milestone) {
             G7SessionMilestone.ENDS_IN_24H      -> rh.gs(R.string.dexcom_g7_end_in_hours, 24, expires)
             G7SessionMilestone.ENDS_IN_6H       -> rh.gs(R.string.dexcom_g7_end_in_hours, 6, expires)

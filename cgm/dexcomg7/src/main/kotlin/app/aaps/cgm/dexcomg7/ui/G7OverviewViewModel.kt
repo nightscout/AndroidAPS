@@ -184,17 +184,17 @@ class G7OverviewViewModel(
         state.latestAlgorithmState?.let { row(R.string.dexcom_g7_row_sensor_state, AlgorithmState(it).toString().lowercase().replace('_', ' ')) }
         row(R.string.dexcom_g7_row_connection, connection(status), if (status == G7ConnectionStatus.BLOCKED) StatusLevel.CRITICAL else StatusLevel.UNSPECIFIED)
         state.latestConnectAt?.let { row(R.string.dexcom_g7_row_last_connect, dateUtil.minOrSecAgo(rh, it)) }
-        state.activatedAt?.let { row(R.string.dexcom_g7_row_started, dateUtil.dateAndTimeString(it)) }
-        if (lifecycle == G7LifecycleState.WARMUP) state.warmupEndsAt?.let { row(R.string.dexcom_g7_row_warmup_ends, dateUtil.dateAndTimeString(it)) }
+        state.activatedAt?.let { row(R.string.dexcom_g7_row_started, DexcomG7Formatting.dateTime(rh, dateUtil, it)) }
+        if (lifecycle == G7LifecycleState.WARMUP) state.warmupEndsAt?.let { row(R.string.dexcom_g7_row_warmup_ends, DexcomG7Formatting.dateTime(rh, dateUtil, it)) }
         state.expiresAt?.let {
-            row(R.string.dexcom_g7_row_expires, dateUtil.dateAndTimeString(it), if (it - now < G7Lifecycle.EXPIRING_SOON_LEAD_MS) StatusLevel.WARNING else StatusLevel.UNSPECIFIED)
+            row(R.string.dexcom_g7_row_expires, DexcomG7Formatting.dateTime(rh, dateUtil, it), if (it - now < G7Lifecycle.EXPIRING_SOON_LEAD_MS) StatusLevel.WARNING else StatusLevel.UNSPECIFIED)
         }
-        state.endsAt?.let { row(R.string.dexcom_g7_row_grace_ends, dateUtil.dateAndTimeString(it)) }
+        state.endsAt?.let { row(R.string.dexcom_g7_row_grace_ends, DexcomG7Formatting.dateTime(rh, dateUtil, it)) }
         state.sessionLengthSeconds?.let { row(R.string.dexcom_g7_row_session_length, rh.gs(R.string.dexcom_g7_days, G7Lifecycle.lifetimeMs(it) / DAY_MS)) }
         row(R.string.dexcom_g7_row_serial, state.serial)
         row(R.string.dexcom_g7_row_pairing_code, state.pairingCode)
         row(R.string.dexcom_g7_row_firmware, state.firmware)
-        state.pairedAt?.let { row(R.string.dexcom_g7_row_paired, dateUtil.dateAndTimeString(it)) }
+        state.pairedAt?.let { row(R.string.dexcom_g7_row_paired, DexcomG7Formatting.dateTime(rh, dateUtil, it)) }
         state.calibration?.let { row(R.string.dexcom_g7_row_calibration, calibration(it)) }
         state.previousSensor?.let { row(R.string.dexcom_g7_row_previous_sensor, DexcomG7Formatting.previous(rh, dateUtil, it)) }
         return rows

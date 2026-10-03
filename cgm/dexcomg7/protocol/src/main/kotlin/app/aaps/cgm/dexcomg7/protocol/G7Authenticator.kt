@@ -137,7 +137,7 @@ class G7Authenticator(
         // something differently. Noted, not acted on.
         val proofsVerified = jpake.validateRound1Or2(sensorRound1) && jpake.validateRound1Or2(sensorRound2) &&
             jpake.validateRound3(sensorRound1, sensorRound3)
-        if (!proofsVerified) log("Key exchange: the sensor's proofs did not verify under our format (advisory)")
+        if (!proofsVerified) log("Key exchange: the sensor's proofs do not match our format; this is normal, the key challenge is the real check")
 
         // Derive before sending our round 3: the sensor may drop the link as soon as it has what it needs.
         val secret = jpake.deriveSharedSecret(sensorRound2, sensorRound3)

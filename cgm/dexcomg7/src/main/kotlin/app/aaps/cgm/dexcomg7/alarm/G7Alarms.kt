@@ -164,7 +164,7 @@ class G7Alarms(
 
     private fun check(state: G7State) {
         val config = config()
-        execute(G7AlarmEngine.step(state, config, _runtime.value, System.currentTimeMillis()), config)
+        execute(G7AlarmEngine.step(state, config, _runtime.value, System.currentTimeMillis(), isNight()), config)
     }
 
     /** [logClears] is false when the caller has logged why the alarms stop. */
@@ -188,7 +188,7 @@ class G7Alarms(
                 it.reminder   -> "not acknowledged, goes off again with sound"
                 it.withSound  -> "goes off with sound (${rh.gs(config[it.type].sound.label)})"
                 else          -> "goes off, vibrate only (first alarm)"
-            }
+            } + if (it.once) ", once (night, no reminders)" else ""
             log("Alarm ${name(it.type)}: $what: ${body(it.type, store.value)}")
             notify(it)
             sendToWatch(it.type)
@@ -269,6 +269,7 @@ class G7Alarms(
         rxBus.send(EventMobileToWear(EventData.CgmAlarm(type.name, rh.gs(type.title), body(type, store.value), seconds, type.urgent)))
     }
 
+    /** The night hours, for the watch vibration and the sensor end alert. */
     private fun isNight(): Boolean {
         if (!preferences.get(G7AlarmKeys.WatchNight)) return false
         val now = Calendar.getInstance()
