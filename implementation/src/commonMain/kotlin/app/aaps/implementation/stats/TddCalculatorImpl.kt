@@ -22,6 +22,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
+import kotlin.math.min
 import kotlin.time.Instant
 
 /**
@@ -156,7 +157,45 @@ class TddCalculatorImpl(
         return calculateInterval(startTime, endTime, allowMissingData = false)
     }
 
-    override suspend fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? {
+    override suspend fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? =
+        sumInterval(startTime, endTime, allowMissingData)?.takeIf { it.hasData }?.tdd
+
+    override suspend fun calculateIntervalWithCachedDays(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? {
+        if (startTime >= endTime) return calculateInterval(startTime, endTime, allowMissingData)
+        val result = TDD(timestamp = startTime - startTime % (5 * 60 * 1000))
+        var hasData = false
+        // Walk the interval day by day. A whole day that is stored is read with one query, everything else
+        // (the part days at both ends, a day that is not stored) is summed in 5-minute steps as before.
+        var segmentStart = startTime
+        while (segmentStart < endTime) {
+            val midnight = MidnightTime.calc(segmentStart)
+            val nextMidnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight during DST change
+            val segmentEnd = min(nextMidnight, endTime)
+            // A stored day always covers 24 hours from its midnight (see `calculate`). On a DST change day,
+            // which is 23 or 25 hours long, that is not the same as this day, so it is summed instead.
+            val isWholeDay = segmentStart == midnight && segmentEnd == nextMidnight && nextMidnight - midnight == T.hours(24).msecs()
+            val cached = if (isWholeDay) persistenceLayer.getCalculatedTotalDailyDose(midnight) else null
+            val segment =
+                if (cached != null) cached.also { hasData = true }
+                else sumInterval(segmentStart, segmentEnd, allowMissingData)?.also { if (it.hasData) hasData = true }?.tdd ?: return null
+            result.basalAmount += segment.basalAmount
+            result.bolusAmount += segment.bolusAmount
+            result.totalAmount += segment.totalAmount
+            result.carbs += segment.carbs
+            result.carbInsulin += segment.carbInsulin
+            segmentStart = segmentEnd
+        }
+        return if (hasData) result else null
+    }
+
+    private class IntervalSum(val tdd: TDD, val hasData: Boolean)
+
+    /**
+     * Sums [startTime] to [endTime] in 5-minute steps.
+     *
+     * @return null if a step has no profile and [allowMissingData] is false
+     */
+    private suspend fun sumInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): IntervalSum? {
         val startTimeAligned = startTime - startTime % (5 * 60 * 1000)
         val endTimeAligned = endTime - endTime % (5 * 60 * 1000)
         val tdd = TDD(timestamp = startTimeAligned)
@@ -201,9 +240,7 @@ class TddCalculatorImpl(
             tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
         }
         tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
-        //aapsLogger.debug(LTag.CORE, tdd.toString())
-        if (tdd.bolusAmount > 0 || tdd.basalAmount > 0 || tbrFound) return tdd
-        return null
+        return IntervalSum(tdd, hasData = tdd.bolusAmount > 0 || tdd.basalAmount > 0 || tbrFound)
     }
 
     override fun averageTDD(tdds: LongSparseArray<TDD>?): AverageTDD? {

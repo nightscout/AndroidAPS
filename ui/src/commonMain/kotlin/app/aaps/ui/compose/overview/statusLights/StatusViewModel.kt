@@ -202,7 +202,7 @@ class StatusViewModel(
         // Calculate usage since last cannula change (expensive - can be deferred)
         val usage = if (includeTddCalculation && event != null) {
             withContext(aapsIoDispatcher) {
-                tddCalculator.calculateInterval(event.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+                tddCalculator.calculateIntervalWithCachedDays(event.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
             }
         } else 0.0
 
