@@ -14,6 +14,19 @@
     <string name="widget_small_description">AAPS Маленький</string>
     <!--     Activities-->
     <string name="activity_monitor">Монитор активности</string>
+    <string name="time_range">Диапазон времени</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Пятиугольник глюкозы (CGP) — 14 дней</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Гипо</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Гипер</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Среднее</string>
+    <string name="cgp_reference">Здоровый человек</string>
+    <string name="cgp_patient">Пациент</string>
+    <string name="cgp_pgr_very_low">Очень низкий риск</string>
+    <string name="cgp_pgr_low">Низкий риск</string>
+    <string name="cgp_pgr_moderate">Средний риск</string>
+    <string name="cgp_pgr_high">Высокий риск</string>
+    <string name="cgp_pgr_extremely_high">Крайне высокий риск</string>
     <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
     <string name="do_you_want_recalculate_tdd_stats">Хотите пересчитать статистику TDD?</string>
     <string name="calculation_in_progress">Идет подсчет</string>
@@ -25,6 +38,7 @@
     <string name="bg_sensor">Сенсор</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">Изменить</string>
     <string name="record_site_location">Место установки: %1$s</string>
     <string name="record_site_note">Примечание: %1$s</string>
     <string name="delete_site_note">Примечание удалено</string>
@@ -32,16 +46,110 @@
     <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
     <string name="record_pump_site_change">Внести запись о смене места установки канюли</string>
     <string name="record_insulin_cartridge_change">Внести запись о замене резервуара</string>
+    <string name="fill_prime_amount">Объем заправки</string>
+    <string name="fill_pump_units_note">Объем заправки в единицах помпы</string>
+    <string name="fill_insulin_change">Изменить инсулин на: %1$s (будет применено изменение профиля)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Нагрузка</string>
+    <string name="scene_cat_health">Здоровье</string>
+    <string name="scene_cat_food">Еда</string>
+    <string name="scene_cat_sleep">Сон</string>
     <string name="scene_cat_dailylife">Повседневная жизнь</string>
+    <string name="scene_cat_wellness">Самочувствие</string>
+    <string name="scene_cat_general">Общее</string>
+    <string name="aaps_tt_high_icon_label">Временная цель</string>
+    <string name="aaps_tt_activity_icon_label">ВЦ Нагрузка</string>
+    <string name="aaps_tt_eating_icon_label">ВЦ Прием пищи</string>
+    <string name="aaps_tt_hypo_icon_label">ВЦ Гипо</string>
+    <string name="aaps_tt_manual_icon_label">ВЦ Вручную</string>
+    <string name="aaps_profile_icon_label">Профиль</string>
+    <string name="aaps_loop_icon_label">Цикл</string>
+    <string name="aaps_smb_icon_label">СМБ</string>
+    <string name="aaps_bolus_icon_label">Болюс</string>
+    <string name="aaps_carbs_icon_label">Углеводы</string>
+    <string name="aaps_tbr_icon_label">Временная базальная скорость</string>
+    <string name="aaps_activity_icon_label">Упражнения</string>
+    <string name="aaps_note_icon_label">Примечание</string>
+    <string name="aaps_automation_icon_label">Автоматизация</string>
+    <string name="aaps_calibration_icon_label">Калибровка</string>
+    <string name="exercise_icon_label">Бег</string>
+    <string name="fitness_icon_label">Фитнес</string>
+    <string name="swim_icon_label">Плавание</string>
+    <string name="hiking_icon_label">Ходьба</string>
+    <string name="bike_icon_label">Велосипед</string>
+    <string name="skateboard_icon_label">Скейт-борд</string>
+    <string name="tennis_icon_label">Теннис</string>
+    <string name="soccer_icon_label">Футбол</string>
+    <string name="baseball_icon_label">Рэгби</string>
+    <string name="basketball_icon_label">Гандбол</string>
+    <string name="volleyball_icon_label">Гимнастика</string>
+    <string name="golf_icon_label">Гольф</string>
+    <string name="scubadiving_icon_label">Дайвинг</string>
+    <string name="rowing_icon_label">Гребля</string>
+    <string name="surfing_icon_label">Сёрфинг</string>
+    <string name="hospital_icon_label">Больница</string>
+    <string name="medication_icon_label">Лекарства</string>
+    <string name="monitor_heart_icon_label">Холтер</string>
+    <string name="thermostat_icon_label">Термостат</string>
+    <string name="blood_type_icon_label">Кровь</string>
+    <string name="health_safety_icon_label">Здоровье</string>
+    <string name="healing_icon_label">Лечение</string>
+    <string name="meal_icon_label">Ресторан</string>
+    <string name="cafe_icon_label">Кофе</string>
+    <string name="lunch_icon_label">Обед</string>
+    <string name="bakery_icon_label">Пекарня</string>
+    <string name="sleep_icon_label">Сон</string>
+    <string name="night_icon_label">Ночь</string>
+    <string name="nights_stay_icon_label">Ночевка</string>
+    <string name="hotel_icon_label">Отель</string>
+    <string name="seat_flat_icon_label">Отдых</string>
+    <string name="work_icon_label">Работа</string>
+    <string name="school_icon_label">Школа</string>
+    <string name="home_icon_label">Дом</string>
+    <string name="car_icon_label">Поездка</string>
+    <string name="flight_icon_label">Перелёт</string>
+    <string name="shopping_icon_label">Покупки</string>
+    <string name="relax_icon_label">Медитация</string>
+    <string name="spa_icon_label">Спа</string>
+    <string name="heart_icon_label">Сердце</string>
+    <string name="psychology_icon_label">Разум</string>
+    <string name="star_icon_label">Звезда</string>
+    <string name="speed_icon_label">Скорость</string>
+    <string name="alarm_icon_label">Будильник</string>
+    <string name="event_icon_label">Событие</string>
+    <string name="flag_icon_label">Флаг</string>
+    <string name="bookmark_icon_label">Закладка</string>
+    <string name="label_icon_label">Метка</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Не указано название инсулина</string>
+    <string name="insulin_name_exists">Инсулин %1$s уже существует, выберите другое название</string>
+    <string name="insulin_external_update_title">Настройки инсулина изменены</string>
+    <string name="insulin_external_update_message">Клиент изменил настройки инсулина. Нажмите ОК, чтобы загрузить его изменения и отменить ваши, или Отмена, чтобы продолжить редактирование (ваше следующее сохранение перезапишет их).</string>
+    <string name="insulin_edit_target_gone">Этот инсулин кто-то уже удалил, поэтому ваше изменение не может быть сохранено. Список был обновлен.</string>
+    <string name="insulin_activation_applied">Активация инсулина применена</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">Применение...</string>
+    <string name="clientcontrol_pending_working_text">Ожидаю подтверждение от мастера...</string>
+    <string name="clientcontrol_pending_rejected_title">Не применено</string>
+    <string name="clientcontrol_pending_failed_format">%1$s не может быть завершено.\n%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">Частично применено</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s было применено, но некоторые действия не были.\nПроверьте активное состояние.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">Не удалось подтвердить</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s было отправлено, но подтверждение не было получено.\n%2$s\nОно появится здесь, если/когда мастер применит его.</string>
+    <string name="clientcontrol_pending_stop_waiting">Прекратить ожидание</string>
+    <string name="a11y_add_new_insulin">Добавить новый инсулин</string>
+    <string name="a11y_delete_current_insulin">Удалить текущий инсулин</string>
+    <string name="load_peak_from">Загрузить пик из</string>
+    <string name="cannot_delete_last_insulin">Нельзя удалить последний инсулин</string>
+    <string name="cannot_delete_active_insulin">Нельзя удалить активный инсулин</string>
     <string name="reuse_profile_pct_hours">Переиспользовать %1$d%%%2$dч</string>
     <string name="percentage_label">В процентах</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">Отключить помпу</string>
     <string name="resume">Возобновить</string>
     <string name="reconnect">Возобновить соединение с помпой</string>
     <string name="duration15m">15 мин</string>
@@ -52,17 +160,41 @@
     <string name="duration10h">10 часов</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Не хватает %1$d г</string>
+    <string name="wizard_carbs_type_bread_desc">100% быстрых углеводов, без медленных углеводов</string>
+    <string name="wizard_carbs_type_desc">Углеводы уменьшены на %1$d%%, добавленные eCarbs %2$d%% отложены на %3$d мин из %4$d ч</string>
+    <string name="wizard_include_info">Нажмите для включения/исключения из расчета:\n• ГК — гликемия (ВКЛ при запуске)\n• ВЦ — временная цель (ВКЛ при запуске)\n• Тренд — тренд гликемии (запомнено последнее состояние)\n• IOB — активный инсулин (ВКЛ при запуске)\n• COB — активные углеводы (запомнено последнее состояние)</string>
     <!-- Treatments -->
     <string name="no_records_available">Нет доступных записей</string>
     <string name="treatments_iob_label_string">IOB акт инс:</string>
     <string name="carbs_and_bolus">Углеводы и болюс</string>
+    <string name="show_invalidated">Показать недействительные</string>
+    <string name="hide_invalidated">Скрыть недействительные</string>
     <string name="careportal_remove_started_events">Удалить записи о начале работы AAPS</string>
     <string name="user_entry">Запись пользователя</string>
     <string name="clone_label">Клонировать</string>
+    <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">График глюкозы. Последние значения %1$s. %2$s. %3$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">График глюкозы. Последние значения %1$s</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Выполнить</string>
+    <string name="add_new_profile">Добавить новый профиль</string>
+    <string name="edit_label">Редактировать</string>
+    <string name="activate_label">Активировать</string>
+    <string name="activate_profile">Активировать профиль</string>
+    <string name="remove_label">Удалить</string>
+    <string name="active_profile_indicator">АКТИВНЫЙ</string>
+    <string name="confirm_remove_profile">Удалить профиль \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Клонировать профиль \"%1$s\"?</string>
+    <string name="profile_no_longer_exists">Тем временем список профилей изменился — попробуйте еще раз</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Тип профиля</string>
+    <string name="profile_parameters">Параметры профиля</string>
+    <string name="active_profile">Активный профиль</string>
+    <string name="available_profiles">Доступные профили</string>
+    <string name="profile_switches">Переключения профиля</string>
     <string name="basal_pct_from_tdd_label">% базального</string>
     <string name="selected_profile">Выбрано:</string>
+    <string name="comparation">Сравнение</string>
+    <string name="profile_tab_1">Профиль 1</string>
+    <string name="profile_tab_2">Профиль 2</string>
     <string name="motol_default_profile">Профиль по умолчанию</string>
     <string name="current_profile">Текущий профиль</string>
     <string name="available_profile">Доступный профиль</string>
@@ -73,10 +205,36 @@
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Текст на кнопке</string>
+    <string name="quick_wizard_mode_wizard">Помощник</string>
+    <string name="quick_wizard_mode_insulin">Инсулин</string>
+    <string name="quick_wizard_mode_carbs">Углеводы</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Только положительный активный инсулин IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Суперболюс</string>
     <!--    History browser-->
+    <string name="history_now">Сейчас</string>
+    <string name="a11y_history_previous_window">Предыдущий интервал</string>
+    <string name="a11y_history_next_window">Следующий интервал</string>
     <string name="additional_ecarbs">Добавить eCarbs</string>
+    <string name="calculator_options">Настройки калькулятора</string>
+    <string name="use_bg">Использовать ГК</string>
+    <string name="use_cob">Использовать COB</string>
+    <string name="use_iob">Использовать IOB</string>
+    <string name="use_trend">Использовать тренд</string>
+    <string name="trend_all">Все</string>
+    <string name="trend_positive_only">Только положительный</string>
+    <string name="trend_negative_only">Только отрицательный</string>
+    <string name="use_temp_target">Использовать временную цель</string>
+    <string name="use_alarm">Использовать будильник</string>
+    <string name="device_selection">Выбор устройства</string>
+    <string name="show_on_phone">Показать на телефоне</string>
+    <string name="show_on_watch">Показать на часах</string>
+    <string name="ecarbs_additional">Дополнительные углеводы</string>
+    <string name="valid_from_to">Действующий временной диапазон</string>
+    <string name="carb_time">Время приема углеводов</string>
+    <string name="save_changes_question">Сохранить изменения этой записи?</string>
+    <string name="wizard_no_insulin_required">Инсулин не требуется</string>
+    <string name="carbs_constraint_violation">Угли урезаны ограничениями</string>
+    <string name="insulin_constraint_violation">Инсулин урезан ограничениями</string>
     <string name="confirm_treatment">Подтвердите терапию</string>
     <string name="recalculate">Пересчитать</string>
     <!--    Widget-->
@@ -84,14 +242,63 @@
     <string name="widget_configuration">Настройки виджета</string>
     <string name="until_changed">До изменения</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Требуются разрешения</string>
+    <string name="permission_sheet_subtitle">Для корректной работы приложения необходимы некоторые разрешения</string>
+    <string name="permission_grant">Предоставить</string>
+    <string name="permission_change">Изменить</string>
+    <string name="permission_denied_go_to_settings">Разрешение отозвано. Предоставьте его в настройках приложения.</string>
+    <string name="permission_open_settings">Настройки</string>
+    <string name="permission_directory_picker_error">Не удается запустить выбор папки. Обычно это проблема Android или Family Link.</string>
+    <string name="permission_nav_label">Разрешения</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Смещение цикла</string>
+    <string name="raw_tdd">Необработанная TDD</string>
+    <string name="cleaned_tdd">Обработанная TDD</string>
+    <string name="cleaned_tdd_explanation">TDD без инсулина на еду.</string>
+    <string name="cycle_lines_legend">Индивидуальный цикл</string>
+    <string name="cycles_found">%1$d циклов (%2$d дней)</string>
+    <string name="cycle_day1_date">1 день = %1$s</string>
+    <string name="calculation_in_progress_percent">Рассчитываю… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Недостаточно данных (требуется не менее 56 дней для 2 циклов)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Оба варианта</item>
         <item>Только положительный</item>
         <item>Только отрицательный</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Выбранные действия</string>
+    <string name="quick_launch_no_dynamic_items">Нет доступных элементов</string>
+    <string name="quick_launch_category_treatment">Терапия</string>
+    <string name="quick_launch_category_care">Портал терапии</string>
+    <string name="quick_launch_category_profile">Профиль</string>
+    <string name="quick_launch_category_temp_target">Предустановки временных целей</string>
+    <string name="quick_launch_category_quick_wizard">Мастер быстрых настроек</string>
+    <string name="quick_launch_category_automation">Автоматизация</string>
+    <string name="quick_launch_all_selected">Выбраны все элементы</string>
+    <string name="quick_launch_no_quick_wizard">Добавьте записи Мастера быстрой настройки для их использования здесь</string>
+    <string name="quick_launch_no_automation">Создайте пользовательские автоматизации для их использования здесь</string>
+    <string name="quick_launch_no_tt_presets">Добавьте предустановки временной цели для их использования здесь</string>
+    <string name="quick_launch_no_profiles">Создайте Локальные профили для их использования здесь</string>
+    <string name="quick_launch_edit_profile_preset">Редактировать предустановки профиля</string>
+    <string name="quick_launch_profile_permanent">Постоянно</string>
+    <string name="select_arrow">Укажите направление</string>
+    <string name="loop_accept_nav_label">Цикл</string>
+    <string name="loop_accept_set_basal_question">Принять новый временный базал:</string>
+    <string name="loop_accept_perform">Выполнить</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">Приостановка на Низких</string>
+    <string name="widget_rm_disabled">Отключено</string>
+    <string name="widget_rm_suspended">Помпа остановлена</string>
+    <string name="widget_rm_resume">Возобновить</string>
     <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">Калибровка не сохранена: ГК меняется слишком быстро (Δ %1$s %3$s за 5 минут, предел %2$s). Повторите попытку, когда глюкоза стабилизируется.</string>
+    <string name="cal_reject_no_pair">Калибровка не сохранена: последние 10 минут не было показаний.</string>
+    <string name="cal_reject_warmup">Калибровка не сохранена: датчик все еще находится в 2-х часовом прогреве.</string>
+    <string name="cal_reject_no_session">Калибровка не сохранена: нет активных сессий датчика. Сперва сделайте отметку о его замене.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">Датчик все еще прогревается. Калибровка доступна в %1$s.</string>
+    <string name="cal_precheck_no_session">Нет активных сессий датчика.</string>
+    <string name="cal_precheck_no_pair">Показаний от датчика нет уже 10 минут. Проверьте соединение с ним.</string>
+    <string name="cal_precheck_delta_too_high">Глюкоза меняется слишком быстро (Δ %1$s %3$s за 5 минут, предел %2$s). Дождитесь ее стабилизации.</string>
+    <string name="cal_precheck_mark_sensor_change">Сделайте отметку о замене датчика</string>
 </resources>
