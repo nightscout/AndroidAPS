@@ -83,4 +83,18 @@ class ActiveSceneBannerContentTest {
         compose.onNodeWithText(closeLabel).performClick()
         assertThat(dismissed).isTrue()
     }
+
+    // The follow-up is what the scene sets in motion when the countdown ends, so the banner names it.
+    @Test
+    fun activeScene_showsFollowUpScene() {
+        val ctx: Context = RuntimeEnvironment.getApplication()
+        compose.setContent {
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
+                MaterialTheme {
+                    ActiveSceneBannerContent(state = state(), expired = false, onEndClick = {}, chainTargetName = "Cooldown")
+                }
+            }
+        }
+        compose.onNodeWithText(ctx.getString(CoreUiR.string.scene_chain_indicator, "Cooldown")).assertIsDisplayed()
+    }
 }

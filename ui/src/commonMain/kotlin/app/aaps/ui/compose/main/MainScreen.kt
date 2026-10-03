@@ -235,6 +235,7 @@ fun MainScreen(
 
                 val activeSceneState by mainViewModel.activeSceneState.collectAsStateWithLifecycle()
                 val sceneExpired by mainViewModel.sceneExpired.collectAsStateWithLifecycle()
+                val activeSceneChainTargetName by mainViewModel.activeSceneChainTargetName.collectAsStateWithLifecycle()
                 val masterReachable by mainViewModel.masterReachable.collectAsStateWithLifecycle()
                 // Stable pairing signal — hides the mutating nav buttons on an unpaired client.
                 val masterOrPairedClient by mainViewModel.masterOrPairedClient.collectAsStateWithLifecycle()
@@ -276,6 +277,7 @@ fun MainScreen(
                         onAutoShowConsumed = onAutoShowConsumed,
                         activeSceneState = activeSceneState,
                         sceneExpired = sceneExpired,
+                        activeSceneChainTargetName = activeSceneChainTargetName,
                         onEndScene = { mainViewModel.requestSceneDeactivation() },
                         onDismissScene = { mainViewModel.dismissExpiredScene() },
                         endSceneEnabled = masterReachable,

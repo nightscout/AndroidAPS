@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.utils.DateUtil
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,6 +44,7 @@ internal class ScenesViewModelTest {
     @Mock private lateinit var sceneActions: SceneActions
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var nsClient: NsClient
+    @Mock private lateinit var dateUtil: DateUtil
 
     private lateinit var sut: ScenesViewModel
 
@@ -62,7 +64,7 @@ internal class ScenesViewModelTest {
         whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         sut = ScenesViewModel(
             automation, activePlugin, loop, profileFunction, config, rxBus,
-            sceneRepository, sceneActions, rh, nsClient
+            sceneRepository, sceneActions, rh, nsClient, dateUtil
         )
     }
 

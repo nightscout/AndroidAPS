@@ -168,10 +168,11 @@ class SceneListViewModel(
         return invalid
     }
 
+    /** "3 actions, 2 hours" - see [sceneSummary]. */
+    fun summary(scene: Scene): String = sceneSummary(scene, rh, dateUtil)
+
     /** Format minutes as human-readable duration using DateUtil */
-    fun formatMinutes(minutes: Int): String =
-        if (minutes == 0) rh.gs(CoreUiStrings.scene_duration_indefinite)
-        else dateUtil.niceTimeScalar(minutes * 60_000L, rh)
+    fun formatMinutes(minutes: Int): String = formatSceneMinutes(minutes, rh, dateUtil)
 
     // --- Dialog state ---
 

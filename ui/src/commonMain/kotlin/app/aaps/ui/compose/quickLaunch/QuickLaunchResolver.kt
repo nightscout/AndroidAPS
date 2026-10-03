@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.tempTargets.toTTPresets
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
@@ -28,6 +29,7 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
+import app.aaps.ui.compose.scenes.sceneSummaryWithChain
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithDisplayName
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -48,7 +50,8 @@ class QuickLaunchResolver(
     private val profileRepository: ProfileRepository,
     private val sceneRepository: SceneStore,
     private val rh: TextResolver,
-    private val elementAvailability: ElementAvailability
+    private val elementAvailability: ElementAvailability,
+    private val dateUtil: DateUtil
 ) {
 
     fun resolveItem(action: QuickLaunchAction): ResolvedQuickLaunchItem {
@@ -175,10 +178,9 @@ class QuickLaunchResolver(
         }
 
         is QuickLaunchAction.ProfileAction     -> null // label already shows profile name + params
-        is QuickLaunchAction.SceneAction       -> {
-            val scene = sceneRepository.getScene(action.sceneId)
-            scene?.let { "${it.actions.size} actions" }
-        }
+        // Same line as Manage -> Scenes and the Scenes sheet, follow-up included
+        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)
+            ?.let { sceneSummaryWithChain(it, rh, dateUtil, sceneRepository::getScene) }
 
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)
             ?.pluginDescription?.description?.let { rh.gs(it) }

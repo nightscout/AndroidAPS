@@ -788,6 +788,14 @@ class MainViewModel(
     /** Expose active scene state for UI (banner, etc.) */
     val activeSceneState: StateFlow<ActiveSceneState?> = activeSceneManager.activeSceneState
 
+    /**
+     * Name of the scene that starts when the active one ends, for the banner. A catalog lookup only:
+     * whether the follow-up can run is decided when this scene ends, not now.
+     */
+    val activeSceneChainTargetName: StateFlow<String?> = activeSceneManager.activeSceneState
+        .map { state -> state?.let { sceneChainTargetResolver.resolveCatalogChainTarget(it.scene)?.name } }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
     /** Whether the active scene has expired (duration ran out, non-duration actions reverted).
      *  Derived from the lifecycle field that lives inside [ActiveSceneState] and rides NS sync. */
     val sceneExpired: StateFlow<Boolean> = activeSceneManager.activeSceneState
