@@ -14,6 +14,7 @@
     <string name="min_plus">(+%1$d мин)</string>
     <string name="sec_plus">(+%1$d сек)</string>
     <string name="minago_long">%1$d минут назад</string>
+    <string name="hoursago">%1$.1fч назад</string>
     <string name="days_ago">%1$s дн назад</string>
     <string name="days_ago_round">%1$s дн назад</string>
     <plurals name="plurals_day_hour_ago">
@@ -127,6 +128,7 @@
     <string name="pumpsuspended">Работа помпы остановлена</string>
     <string name="loopsuspended">ЗЦ остановлен</string>
     <string name="pump_disconnected">Помпа отключена</string>
+    <string name="basalprofilenotaligned">Базальные значения не выровнены по часам: %1$s</string>
     <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %1$s</string>
     <string name="maximumbasalvaluereplaced">Значение базала заменено максимальной поддерживаемой величиной: %1$s</string>
     <string name="profile_ins_units_per_hour">ед/ч</string>
@@ -145,4 +147,5 @@
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
     <string name="advisoralarm">Напомнить о еде</string>
     <string name="format_insulin_units">%1$.2f ед</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Плагин %1$s не смог запуститься и может не работать. Пожалуйста, перезапустите AndroidAPS.</string>
 </resources>
