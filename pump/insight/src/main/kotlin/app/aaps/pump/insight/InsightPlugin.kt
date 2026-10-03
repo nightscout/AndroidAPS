@@ -299,6 +299,9 @@ class InsightPlugin(
         lastDataTimeJob?.cancel()
         lastDataTimeJob = null
         context.unbindService(serviceConnection)
+        // For the same reason the services have to be dropped here, or the destroyed ones stay alive.
+        connectionService = null
+        alertService = null
     }
 
     override fun isConfigured(): Boolean =

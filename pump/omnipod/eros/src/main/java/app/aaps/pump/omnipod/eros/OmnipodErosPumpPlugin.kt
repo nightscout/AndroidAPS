@@ -408,6 +408,9 @@ class OmnipodErosPumpPlugin(
         loopHandler.removeCallbacksAndMessages(null)
         serviceConnection?.let { context.unbindService(it) }
         serviceConnection = null
+        // onServiceDisconnected is not called after unbindService, so drop the reference here.
+        // Otherwise the destroyed service stays alive after a pump switch or config change.
+        rileyLinkOmnipodService = null
     }
 
     private fun queueAcknowledgeAlertsCommand() {

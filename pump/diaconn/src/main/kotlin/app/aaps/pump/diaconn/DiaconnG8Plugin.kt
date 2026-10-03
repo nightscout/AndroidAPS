@@ -145,6 +145,9 @@ class DiaconnG8Plugin(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
+        // onServiceDisconnected is not called after unbindService, so drop the reference here.
+        // Otherwise the destroyed service stays alive after a pump switch or config change.
+        diaconnG8Service = null
         super.onStop()
     }
 
