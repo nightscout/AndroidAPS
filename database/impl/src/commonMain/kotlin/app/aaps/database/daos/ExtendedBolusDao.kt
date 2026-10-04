@@ -36,10 +36,10 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (endId = :endPumpId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (referenceId IS NULL)")
     suspend fun findByPumpEndIds(endPumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): ExtendedBolus?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getExtendedBolusActiveAtLegacy(timestamp: Long): ExtendedBolus?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getExtendedBolusActiveAt(timestamp: Long): ExtendedBolus?
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")

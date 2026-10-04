@@ -30,7 +30,7 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     @Query("SELECT * FROM $TABLE_CARBS WHERE (timestamp = :timestamp) AND (referenceId IS NULL)")
     suspend fun findByTimestamp(timestamp: Long): Carbs?
 
-    @Query("SELECT * FROM $TABLE_CARBS WHERE (pumpId = :pumpId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_CARBS WHERE (pumpId = :pumpId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (+referenceId IS NULL)")
     suspend fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Carbs?
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id DESC LIMIT 1")
@@ -39,16 +39,16 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
     suspend fun getOldestCarbsRecord(): Carbs?
 
-    @Query("SELECT * FROM $TABLE_CARBS WHERE (isValid = 1) AND (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_CARBS WHERE (isValid = 1) AND (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getCarbsFromTime(timestamp: Long): List<Carbs>
 
-    @Query("SELECT * FROM $TABLE_CARBS WHERE (isValid = 1) AND ((timestamp + duration) >= :timestamp) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_CARBS WHERE (isValid = 1) AND ((timestamp + duration) >= :timestamp) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getCarbsFromTimeExpandable(timestamp: Long): List<Carbs>
 
-    @Query("SELECT * FROM $TABLE_CARBS WHERE (isValid = 1) AND ((timestamp + duration) > :from) AND (timestamp <= :to) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_CARBS WHERE (isValid = 1) AND ((timestamp + duration) > :from) AND (timestamp <= :to) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getCarbsFromTimeToTimeExpandable(from: Long, to: Long): List<Carbs>
 
-    @Query("SELECT * FROM $TABLE_CARBS WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_CARBS WHERE (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getCarbsIncludingInvalidFromTime(timestamp: Long): List<Carbs>
 
     // for WS we need 1 record only

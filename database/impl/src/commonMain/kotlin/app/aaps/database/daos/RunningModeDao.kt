@@ -29,7 +29,7 @@ internal interface RunningModeDao : TraceableDao<RunningMode> {
     @Query("SELECT * FROM $TABLE_RUNNING_MODE WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
     suspend fun findByNSId(nsId: String): RunningMode?
 
-    @Query("SELECT * FROM $TABLE_RUNNING_MODE WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_RUNNING_MODE WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryRunningModeActiveAt(timestamp: Long): RunningMode?
 
     @Query("SELECT * FROM $TABLE_RUNNING_MODE WHERE (timestamp <= :timestamp) AND (duration = 0) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
