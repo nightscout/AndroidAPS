@@ -145,6 +145,9 @@
     <string name="pref_title_wear_wizard_cob">Zahrnout COB v kalkulátoru</string>
     <string name="pref_title_wear_wizard_iob">Zahrnout IOB v kalkulátoru</string>
     <string name="pref_title_wear_custom_watchface_authorization">Autorizovat vlastní ciferníky</string>
+    <string name="pref_title_wear_pushed_watchface">Ciferník nainstalován na hodinkách</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">Ciferník komplikací</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">Vlastní ciferník</string>
     <string name="pref_title_wear_notify_on_smb">Upozornit na SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Odesílat oznámení na hodinky, když je podán SMB.</string>
     <string name="pref_title_wear_broadcast_data">Odesílat data na hodinky</string>
