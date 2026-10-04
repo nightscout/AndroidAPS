@@ -167,7 +167,7 @@
     <!-- Treatments -->
     <string name="no_records_available">Нет доступных записей</string>
     <string name="treatments_iob_label_string">IOB акт инс:</string>
-    <string name="carbs_and_bolus">Углеводы и болюс</string>
+    <string name="carbs_and_bolus">Углеводы и болюсы</string>
     <string name="show_invalidated">Показать недействительные</string>
     <string name="hide_invalidated">Скрыть недействительные</string>
     <string name="careportal_remove_started_events">Удалить записи о начале работы AAPS</string>
