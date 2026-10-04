@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Time out associazione</string>
+    <string name="danars_bonding_failed">L\'accoppiamento Bluetooth con il microinfusore è fallito o è stato annullato. Riprova e inserisci il PIN mostrato sulla pompa.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Integrazione del microinfusore DANA Diabecare RS / Dana-i</string>
