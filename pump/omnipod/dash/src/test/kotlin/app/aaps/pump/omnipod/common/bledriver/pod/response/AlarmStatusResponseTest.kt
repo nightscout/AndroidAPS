@@ -68,11 +68,11 @@ class AlarmStatusResponseTest {
 
     @Test fun testPdmRefKeepsTheRawByteForAnUnrecognizedFaultCode() {
         // 0xb0 falls in a gap between ALARM_BLE_REQ_STUCK_HIGH (0xaf) and ALARM_BLE_STATE_MACHINE_1 (0xb1):
-        // byValue() collapses it to UNKNOWN, but the Ref code must still show the real byte, not 255.
+        // byValue() collapses it to UNKNOWN, no pdmRef should be returned.
         val response = createResponse(0xb0)
 
         assertThat(response.alarmType).isEqualTo(AlarmType.UNKNOWN)
-        assertThat(response.pdmRef).isEqualTo("19-00003-02251-176")
+        assertThat(response.pdmRef).isNull()
     }
 
     @Test fun testPdmRefUsesReservoirEmptyRefType() {

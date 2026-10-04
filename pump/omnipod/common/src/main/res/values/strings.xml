@@ -117,8 +117,24 @@
     <string name="omnipod_common_pod_status_pod_fault">Pod Fault</string>
     <string name="omnipod_common_pod_status_inactive">Inactive</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Fault: %1$03d %2$s</string>
-    <string name="omnipod_common_pod_status_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
-    <string name="omnipod_common_pod_status_pdm_ref_label">Ref</string>
+
+    <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">PDM Notification</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
+
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Empty Reservoir</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulin delivery stopped. Change Pod now.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Auto-Off</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Insulin delivery stopped. Your PDM and Pod have not communicated in the last 4 hours. To resume insulin delivery, change Pod now.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod Expired</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulin delivery stopped. Change Pod now.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Occlusion Detected</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulin delivery stopped. Change Pod now. Check your BG</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod error</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulin delivery stopped. Change Pod now.</string>
 
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod will expire soon</string>
