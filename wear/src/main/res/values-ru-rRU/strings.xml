@@ -12,6 +12,7 @@
     <string name="pref_display_settings">Экран</string>
     <string name="pref_graph_settings">График</string>
     <string name="pref_interface_settings">Интерфейс</string>
+    <string name="pref_tile_settings">Карточки</string>
     <string name="pref_others_settings">Другое</string>
     <string name="pref_complication_settings">Дополнения</string>
     <string name="pref_show_date">Отображать дату</string>
@@ -222,7 +223,7 @@
     <string name="complication_iob_icon">Иконка актИнс</string>
     <string name="complication_iob_detailed">АктИнс подробно</string>
     <string name="complication_uploader_phone_battery">Батарея загрузчика/телефона</string>
-    <string name="label_running_mode_title">Текущий режим</string>
+    <string name="label_running_mode_title">Режим работы</string>
     <string name="label_bg_graph_tile">График ГК</string>
     <string name="insulin_unit_short">ед</string>
     <string name="wizard_confirmation_sent">Отправлено</string>
