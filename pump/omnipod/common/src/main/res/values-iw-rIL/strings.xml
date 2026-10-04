@@ -49,6 +49,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">התראות פוד פעילות</string>
     <string name="omnipod_common_overview_firmware_version">גרסת קושחה</string>
     <string name="omnipod_common_overview_time_on_pod">השעה בפוד</string>
+    <string name="omnipod_common_uncertain">לא וודאי</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">כבה פוד</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">עוד לא סיימתם את כל הצעדים. אתם בטוחים שברצונכם לצאת?</string>
@@ -95,6 +96,7 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">צפצופי אימות</string>
     <string name="omnipod_common_preferences_category_notifications">התראות</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">התראת צליל של בזאלי זמני לא ודאי מאופשרת</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">מאופשרת התראת צליל עבור SMB לא ודאי</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">התראת צליל של בולוס לא ודאי מאופשרת</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">אין פוד פעיל</string>
@@ -118,6 +120,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">הגדרת לו\"ז בזאלי</string>
     <string name="omnipod_common_cmd_set_bolus">הגדרת בולוס</string>
     <string name="omnipod_common_cmd_cancel_bolus">ביטול בולוס</string>
+    <string name="omnipod_common_cmd_set_tbr">הגדר מינון בזאלי זמני</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">ביטול בזאלי זמני</string>
     <string name="omnipod_common_cmd_discard_pod">היפטר מהפוד</string>
     <string name="omnipod_common_cmd_get_pod_status">קבל את סטטוס הפוד</string>
     <string name="omnipod_common_cmd_set_time">הגדרת שעה</string>
@@ -126,10 +130,15 @@
     <string name="omnipod_common_cmd_read_pulse_log">קרא יומן פעימות</string>
     <string name="omnipod_common_cmd_suspend_delivery">השהיית הזרקה</string>
     <string name="omnipod_common_cmd_resume_delivery">חידוש הזרקה</string>
+    <string name="omnipod_common_cmd_cancel_tbr">ביטול בזאלי זמני( ע\"י המשתמש)</string>
     <string name="omnipod_common_cmd_get_pod_info">קבל מידע על הפוד</string>
+    <string name="omnipod_common_cmd_split_tbr">פצל בזאלי זמני</string>
     <string name="omnipod_common_cmd_play_test_beep">השמע צפצוף ניסיון</string>
     <string name="omnipod_common_cmd_unknown_entry">רשומה לא ידועה</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">בטל התראות השעיה</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">תזכורת לסיום הצימוד</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">תזכורת לסיום התקנה</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">לפני כמה רגעים</string>
