@@ -129,6 +129,7 @@
     <string name="omnipod_common_cmd_read_pulse_log">Читать журнал импульсов</string>
     <string name="omnipod_common_cmd_suspend_delivery">Приостановить подачу</string>
     <string name="omnipod_common_cmd_resume_delivery">Возобновить подачу</string>
+    <string name="omnipod_common_cmd_cancel_tbr">ВБС отменена (пользователем)</string>
     <string name="omnipod_common_cmd_get_pod_info">Получить информацию о Pod</string>
     <string name="omnipod_common_cmd_play_test_beep">Воспроизвести тестовый звуковой сигнал</string>
     <string name="omnipod_common_cmd_unknown_entry">Неизвестная запись</string>
