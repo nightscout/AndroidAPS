@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">配對逾時</string>
+    <string name="danars_bonding_failed">與幫浦的藍牙配對失敗，或配對已被取消。請再試一次，並輸入幫浦上顯示的 PIN 碼。</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS 和 Dana-i 幫浦的幫浦整合</string>
