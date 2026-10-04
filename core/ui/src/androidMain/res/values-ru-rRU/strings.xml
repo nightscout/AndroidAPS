@@ -136,7 +136,7 @@
     <string name="login">Логин</string>
     <string name="logout">Выход из системы</string>
     <string name="prime_fill">Прайм/заполнение</string>
-    <string name="site_rotation">Вращение места установки</string>
+    <string name="site_rotation">Места установки</string>
     <string name="edit_site">Редактировать</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="stoptemptarget">Остановить врем цель</string>
