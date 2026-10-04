@@ -110,6 +110,7 @@
     <string name="user_action_not_available">Vybraná akce uživatele %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
     <string name="scene_not_available">Vybraná scéna %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Vzdálené příkazy na podání inzulínu jsou v klientském režimu vypnuty</string>
+    <string name="wear_phone_not_ready">Telefon se stále spouští nebo používá nastavení. Zkuste to znovu za chvíli.</string>
     <string name="wear_action_tempt_unit_error">Různé jednotky používané na hodinkách a telefonu!</string>
     <string name="wear_action_tempt_min_bg_error">Minimální glykémie mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximální glykémie mimo rozsah!</string>
@@ -118,6 +119,11 @@
     <string name="wear_general_settings">Základní nastavení</string>
     <string name="wear_custom_watchface_settings">Nastavení vlastního ciferníku</string>
     <string name="wear_custom_watchface">Vlastní ciferník: %1$s</string>
+    <string name="wear_pushed_watchface_installing" comment="Short note after the selected watchface while the watch is still replacing its face">Instalace…</string>
+    <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">Hodinky zobrazují ciferník s komplikacemi. Vyberte vlastní ciferník pro zobrazení %1$s ve hodinkách.</string>
+    <string name="wear_pushed_watchface_confirm_title">Změnit ciferník na hodinkách?</string>
+    <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s nahradí %2$s na hodinkách.</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s nahradí %2$s na hodinkách. Komplikace, které jste změnili v editoru hodinek, se vrátí do výchozích hodnot.</string>
     <string name="wear_load_watchface">Nahrát ciferník</string>
     <string name="wear_infos_watchface">Informace o ciferníku</string>
     <string name="wear_export_watchface">Exportovat šablonu</string>
