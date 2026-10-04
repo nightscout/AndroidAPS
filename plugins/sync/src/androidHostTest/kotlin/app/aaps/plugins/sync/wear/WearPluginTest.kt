@@ -53,12 +53,31 @@ class WearPluginTest : TestBaseWithProfile() {
     /** Collects [WearPlugin.resendRequests] in virtual time; the database flows send their first value as on a phone. */
     private suspend fun TestScope.collectResends(): MutableList<String> {
         val reasons = mutableListOf<String>()
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { wearPlugin.resendRequests().collect { reasons.add(it) } }
+        val flow = wearPlugin.resendRequests(backgroundScope)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { flow.collect { reasons.add(it) } }
         runCurrent()
         // observeChanges sends the current state when it is collected; that is not a change
         temporaryTargets.emit(emptyList())
         runningModes.emit(emptyList())
+        runCurrent()
         return reasons
+    }
+
+    /**
+     * An event sent right after the start, before anything reads the flow, is not lost: the sources are
+     * subscribed when `resendRequests` is called. With `merge` they were subscribed only when read.
+     */
+    @Test
+    fun `an event right after the start is not lost`() = runTest {
+        val reasons = mutableListOf<String>()
+        val flow = wearPlugin.resendRequests(backgroundScope)
+        loopGui()
+
+        backgroundScope.launch { flow.collect { reasons.add(it) } }
+        advanceTimeBy(5.seconds)
+        runCurrent()
+
+        assertThat(reasons).containsExactly("EventLoopUpdateGui")
     }
 
     /** Sends [send] at [atSecond] seconds after the previous call's time. */

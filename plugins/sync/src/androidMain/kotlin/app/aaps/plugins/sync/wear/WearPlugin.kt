@@ -59,6 +59,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,6 +68,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.seconds
 
@@ -171,8 +173,8 @@ class WearPlugin(
             dataHandlerMobile.resendData("PreferenceChange")
             checkCustomWatchfacePreferences()
         }
-        resendRequests()
-            .collectResilient(newScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { reason -> dataHandlerMobile.resendData(reason) }
+        resendRequests(newScope)
+            .collectResilient(newScope, aapsLogger, LTag.WEAR) { reason -> dataHandlerMobile.resendData(reason) }
         // Refresh wear scene tile whenever the scene list changes (add / update / delete). The
         // active state goes too: an edited follow-up changes which button the tile offers.
         scenes.scenesFlow
@@ -218,27 +220,32 @@ class WearPlugin(
      * and NS each send their event within seconds, often twice, and each one used to start its own
      * resend: 9 full resends in 45 s were measured on a phone. Gives the reason of the last event of a
      * burst, for the log.
+     *
+     * The sources are subscribed here, undispatched, into a channel. `merge` would subscribe a moment
+     * later in its own coroutines, and an event sent before that would be lost (see `collectResilient`).
+     * The channel keeps the request until the debounce reads it.
      */
     @OptIn(FlowPreview::class)
-    internal fun resendRequests(): Flow<String> = merge(
-        rxBus.toFlow(EventAutosensCalculationFinished::class).map { "EventAutosensCalculationFinished" },
-        rxBus.toFlow(EventLoopUpdateGui::class).map { "EventLoopUpdateGui" },
+    internal fun resendRequests(scope: CoroutineScope): Flow<String> {
+        val requests = Channel<String>(Channel.CONFLATED)
+        fun forward(source: Flow<*>, reason: String) {
+            source.collectResilient(scope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { requests.trySend(reason) }
+        }
+        forward(rxBus.toFlow(EventAutosensCalculationFinished::class), "EventAutosensCalculationFinished")
+        forward(rxBus.toFlow(EventLoopUpdateGui::class), "EventLoopUpdateGui")
         // AAPSCLIENT: fresh predictions arrive via NS devicestatus, not a local loop run — without this the
         // watch graph trails the phone by one loop cycle (the BG-triggered autosens resend fires BEFORE the
         // master's new devicestatus lands). Event is only sent on AAPSCLIENT; processedDeviceStatusData is
         // updated synchronously before it fires, so the resend reads the new predictions.
-        rxBus.toFlow(EventNsClientStatusUpdated::class).map { "EventNsClientStatusUpdated" },
+        forward(rxBus.toFlow(EventNsClientStatusUpdated::class), "EventNsClientStatusUpdated")
         // Push status to watch quickly when a TT changes, without waiting for the loop's 10s debounce
-        persistenceLayer.observeChanges<TT>()
-            .drop(1) // Skip initial emission on collection start
-            .map { "TempTargetChange" },
+        forward(persistenceLayer.observeChanges<TT>().drop(1), "TempTargetChange") // drop: the initial emission on collection start
         // Push status to watch quickly when the running mode changes on the phone, so the
         // running-mode complication and tile do not wait for the next loop run. A wear-side
         // change already refreshes through handleRunningModeConfirmed.
-        persistenceLayer.observeChanges<RM>()
-            .drop(1) // Skip initial emission on collection start
-            .map { "RunningModeChange" }
-    ).debounce(RESEND_DEBOUNCE)
+        forward(persistenceLayer.observeChanges<RM>().drop(1), "RunningModeChange")
+        return requests.receiveAsFlow().debounce(RESEND_DEBOUNCE)
+    }
 
     fun checkCustomWatchfacePreferences() {
         _savedCustomWatchface.value?.let { cwf ->
