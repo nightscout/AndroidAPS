@@ -128,7 +128,7 @@
     <string name="carbs">Carbohidratos [g]</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
     <string name="pumpsuspended">Bomba suspendida</string>
-    <string name="loopsuspended">Bucle suspendido</string>
+    <string name="loopsuspended">Lazo suspendido</string>
     <string name="pump_disconnected">Bomba desconectada</string>
     <string name="basalprofilenotaligned">Valores de basal no alineados con las horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor basal cambiado al valor mínimo soportado: %1$s</string>
