@@ -8,7 +8,7 @@ import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.objects.extensions.convertedToAbsolute
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -61,7 +62,7 @@ import kotlin.time.Instant
  * @property activePlugin Access to active pump for extended bolus handling
  * @property profileFunction Access to insulin profiles for basal rate calculation
  * @property dateUtil Date/time utilities
- * @property iobCobCalculator Calculator for basal data including TBR
+ * @property processedTbrEbData Temporary basals, including extended boluses of pumps that fake them
  * @property persistenceLayer Database access for boluses, carbs, and cached TDD
  *
  * @see TddCalculator
@@ -76,7 +77,7 @@ class TddCalculatorImpl(
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val persistenceLayer: PersistenceLayer
 ) : TddCalculator {
 
@@ -227,13 +228,19 @@ class TddCalculatorImpl(
             else (listOfNotNull(persistenceLayer.getExtendedBolusActiveAt(startTimeAligned)) +
                 persistenceLayer.getExtendedBolusesStartingFromTimeToTime(startTimeAligned, endTimeAligned, true))
                 .distinctBy { it.id }
+        // The temporary basals of the whole interval, also from one read. This was `getBasalData` per step:
+        // its cache is cleared on every BG reload, so nearly every step was a database query, and dynamic
+        // ISF alone sums 32 hours on every loop run. The same problem was fixed in 2021 (#882) and came
+        // back when the steps moved to `getBasalData` to use its cache. The rate below uses the profile of
+        // the step, where `getBasalData` could return a value cached with another caller's profile.
+        val temporaryBasals = processedTbrEbData.getTempBasalsIncludingConvertedExtended(startTimeAligned, endTimeAligned)
         val calculationStep = T.mins(5).msecs()
         for (t in startTimeAligned until endTimeAligned step calculationStep) {
 
             val profile = profileFunction.getProfile(t) ?: if (allowMissingData) continue else return null
-            val tbr = iobCobCalculator.getBasalData(profile, t)
-            if (tbr.isTempBasalRunning) tbrFound = true
-            val absoluteRate = tbr.tempBasalAbsolute
+            val tbr = temporaryBasals.at(t)
+            if (tbr != null) tbrFound = true
+            val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
             tdd.basalAmount += absoluteRate / 60.0 * 5.0
 
             val eb = extendedBoluses.latestRunningAt(t) { it.duration }
