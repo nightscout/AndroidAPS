@@ -1544,10 +1544,6 @@ class PersistenceLayerImpl(
         repository.findTemporaryBasalByNSId(nsId)?.fromDb()
     }
 
-    override suspend fun getTemporaryBasalsActiveBetweenTimeAndTime(startTime: Long, endTime: Long): List<TB> = withContext(aapsIoDispatcher) {
-        repository.getTemporaryBasalsActiveBetweenTimeAndTime(startTime, endTime).map { it.fromDb() }
-    }
-
     override suspend fun getTemporaryBasalsStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<TB> = withContext(aapsIoDispatcher) {
         repository.getTemporaryBasalsStartingFromTimeToTime(startTime, endTime, ascending).map { it.fromDb() }
     }

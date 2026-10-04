@@ -918,15 +918,6 @@ interface PersistenceLayer {
     suspend fun getTemporaryBasalByNSId(nsId: String): TB?
 
     /**
-     * Get running temporary basal in time interval
-     *
-     * @param startTime from
-     * @param endTime to
-     * @return List of temporary basals
-     */
-    suspend fun getTemporaryBasalsActiveBetweenTimeAndTime(startTime: Long, endTime: Long): List<TB>
-
-    /**
      * Get running temporary basal starting in time interval
      *
      * @param startTime from

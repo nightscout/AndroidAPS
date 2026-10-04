@@ -48,9 +48,6 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryBasalActiveAt(timestamp: Long): TemporaryBasal?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp <= :to) AND ((timestamp + duration) > :from) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC")
-    suspend fun getTemporaryBasalActiveBetweenTimeAndTime(from: Long, to: Long): List<TemporaryBasal>
-
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTemporaryBasalDataFromTime(timestamp: Long): List<TemporaryBasal>
 

@@ -783,9 +783,6 @@ class AppRepository internal constructor(
     suspend fun getTemporaryBasalActiveAt(timestamp: Long): TemporaryBasal? =
         database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp)
 
-    suspend fun getTemporaryBasalsActiveBetweenTimeAndTime(from: Long, to: Long): List<TemporaryBasal> =
-        database.temporaryBasalDao.getTemporaryBasalActiveBetweenTimeAndTime(from, to)
-
     suspend fun getTemporaryBasalsStartingFromTime(timestamp: Long, ascending: Boolean): List<TemporaryBasal> =
         database.temporaryBasalDao.getTemporaryBasalDataFromTime(timestamp).reversedIf(!ascending)
 
