@@ -42,13 +42,13 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getExtendedBolusActiveAt(timestamp: Long): ExtendedBolus?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getExtendedBolusesStartingFromTime(timestamp: Long): List<ExtendedBolus>
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (timestamp BETWEEN :from AND :to) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getExtendedBolusDataFromTimeToTime(from: Long, to: Long): List<ExtendedBolus>
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getExtendedBolusDataIncludingInvalidFromTime(timestamp: Long): List<ExtendedBolus>
 
     // for WS we need 1 record only

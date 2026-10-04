@@ -85,6 +85,31 @@ class QueryPlanTest {
         assertPlan("index_bolusCalculatorResults_timestamp") { database.bolusCalculatorResultDao.getBolusCalculatorResultsIncludingInvalidFromTime(NOW - DAY) }
     }
 
+    /**
+     * Queries that took the timestamp index on a phone's database, but the referenceId index on a new one:
+     * the choice depended on the statistics `PRAGMA optimize` writes at the first database cleanup. The
+     * temporary basal range is what the overview graph and every TDD sum read.
+     */
+    @Test
+    fun `range and active at queries use the timestamp index also without statistics`() = runTest {
+        assertPlan("index_temporaryBasals_timestamp") { database.temporaryBasalDao.getTemporaryBasalStartingFromTimeToTime(NOW - DAY, NOW) }
+        assertPlan("index_temporaryTargets_timestamp") { database.temporaryTargetDao.getTemporaryTargetDataFromTime(NOW - DAY) }
+        assertPlan("index_temporaryTargets_timestamp") { database.temporaryTargetDao.getTemporaryTargetDataIncludingInvalidFromTime(NOW - DAY) }
+        assertPlan("index_extendedBoluses_timestamp") { database.extendedBolusDao.getExtendedBolusesStartingFromTime(NOW - DAY) }
+        assertPlan("index_extendedBoluses_timestamp") { database.extendedBolusDao.getExtendedBolusDataIncludingInvalidFromTime(NOW - DAY) }
+        assertPlan("index_runningModes_timestamp") { database.runningModeDao.getPermanentRunningModeActiveAt(NOW) }
+        assertPlan("index_runningModes_timestamp") { database.runningModeDao.getRunningModeDataFromTime(NOW - DAY) }
+        assertPlan("index_therapyEvents_timestamp") { database.therapyEventDao.getTherapyEventDataFromTime(NOW - DAY) }
+        assertPlan("index_effectiveProfileSwitches_timestamp") { database.effectiveProfileSwitchDao.getEffectiveProfileSwitchActiveAt(NOW) }
+        assertPlan("index_effectiveProfileSwitches_timestamp") { database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(NOW - DAY) }
+        assertPlan("index_profileSwitches_timestamp") { database.profileSwitchDao.getPermanentProfileSwitchActiveAt(NOW) }
+        assertPlan("index_profileSwitches_timestamp") { database.profileSwitchDao.getTemporaryProfileSwitchActiveAt(NOW) }
+        assertPlan("index_profileSwitches_timestamp") { database.profileSwitchDao.getProfileSwitchDataFromTime(NOW - DAY) }
+        // In id order, newest or oldest first: the table itself, read from one end
+        assertPlan(null) { database.carbsDao.getLastCarbsRecord() }
+        assertPlan(null) { database.carbsDao.getOldestCarbsRecord() }
+    }
+
     /** Searched by pump ids: the index of the id where one exists, never the referenceId one. */
     @Test
     fun `pump id queries do not use the referenceId index`() = runTest {

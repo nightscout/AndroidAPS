@@ -32,13 +32,13 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
     suspend fun findByNSId(nsId: String): TherapyEvent?
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTherapyEventDataFromTime(timestamp: Long): List<TherapyEvent>
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND (timestamp >= :timestamp) AND (isValid = 1) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTherapyEventDataFromTime(timestamp: Long, type: TherapyEvent.Type): List<TherapyEvent>
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long): List<TherapyEvent>
 
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND (isValid = 1) AND (timestamp <= :now) AND (referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
