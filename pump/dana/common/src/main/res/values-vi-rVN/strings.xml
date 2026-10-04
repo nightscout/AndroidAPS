@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Hết thời gian ghép đôi</string>
+    <string name="danars_bonding_failed">Ghép đôi Bluetooth với bơm không thành công hoặc đã bị hủy. Hãy thử lại và nhập mã PIN hiển thị trên bơm.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Tích hợp bơm cho DANA Diabecare RS và Dana-i</string>
