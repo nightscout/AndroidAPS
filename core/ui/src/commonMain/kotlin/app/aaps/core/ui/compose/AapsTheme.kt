@@ -133,8 +133,8 @@ val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
 }
 
 /**
- * AndroidAPS theme object providing access to custom theme colors and extensions.
- * Supplements Material 3 theme with AndroidAPS-specific color schemes.
+ * AAPS theme object providing access to custom theme colors and extensions.
+ * Supplements Material 3 theme with AAPS-specific color schemes.
  *
  * **Available Color Schemes:**
  * - profileHelperColors: Colors for profile viewer and comparison screens
@@ -235,14 +235,14 @@ object AapsTheme {
 }
 
 /**
- * Main AndroidAPS theme wrapper that applies Material 3 theming with custom extensions.
- * Wraps content with Material 3 ColorScheme and provides AndroidAPS-specific theme values.
+ * Main AAPS theme wrapper that applies Material 3 theming with custom extensions.
+ * Wraps content with Material 3 ColorScheme and provides AAPS-specific theme values.
  *
  * **Features:**
  * - Material 3 color scheme (light/dark mode)
  * - User preference-based theme selection (Light, Dark, System)
  * - Reactive theme switching (listens to preference changes via Flow)
- * - Custom AndroidAPS color schemes (ProfileHelperColors)
+ * - Custom AAPS color schemes (ProfileHelperColors)
  *
  * **Theme Modes:**
  * - LIGHT: Always use light theme

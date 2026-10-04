@@ -20,7 +20,7 @@ import kotlinx.coroutines.cancel
 import dev.zacsweers.metro.Inject
 
 /**
- * Keeps AndroidAPS in foreground state, so it won't be terminated by Android nor get restricted by the background execution limits
+ * Keeps AAPS in foreground state, so it won't be terminated by Android nor get restricted by the background execution limits
  */
 class DummyService : MetroService() {
 

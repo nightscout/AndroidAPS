@@ -64,7 +64,7 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
      * Build complication data using modern DataStore-backed data models
      *
      * Supports multiple datasets for AAPSClient mode:
-     * - Dataset 0 (data.bgData, data.statusData): Primary AndroidAPS instance
+     * - Dataset 0 (data.bgData, data.statusData): Primary AAPS instance
      * - Dataset 1 (data.bgData1, data.statusData1): AAPSClient1 (follower mode)
      * - Dataset 2 (data.bgData2, data.statusData2): AAPSClient2 (follower mode)
      *

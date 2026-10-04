@@ -9,7 +9,7 @@ import app.aaps.core.ui.compose.AapsSpacing.small
 import app.aaps.core.ui.compose.AapsSpacing.xxLarge
 
 /**
- * Centralized spacing and dimension constants for AndroidAPS Compose UI.
+ * Centralized spacing and dimension constants for AAPS Compose UI.
  *
  * **Generic spacing scale** — use for padding, margins, arrangement spacing:
  * - [extraSmall] (2.dp), [small] (4.dp), [medium] (8.dp),
