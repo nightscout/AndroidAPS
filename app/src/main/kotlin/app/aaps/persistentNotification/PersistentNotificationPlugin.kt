@@ -57,10 +57,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlin.time.Duration.Companion.seconds
 import android.app.NotificationManager as AndroidNotificationManager
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
@@ -123,12 +126,11 @@ class PersistentNotificationPlugin(
         notificationHolder.createNotificationChannel()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        rxBus.toFlow(EventRefreshOverview::class)
-            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
+        // Rare, and the first state matters: updated at once, without the debounce of the frequent events
         rxBus.toFlow(EventInitializationChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
-        rxBus.toFlow(EventAutosensCalculationFinished::class)
-            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
+        frequentUpdates(newScope)
+            .collectResilient(newScope, aapsLogger, LTag.CORE) { triggerNotificationUpdate() }
         /// Android Auto - debounced to prevent rapid pop-ups
         // Flow's debounce means the same thing as Rx's: emit once the source has been quiet for the
         // period. UNDISPATCHED is not claimed here - merge subscribes to its sources in child
@@ -159,8 +161,29 @@ class PersistentNotificationPlugin(
         super.onStop()
     }
 
-    private fun triggerNotificationUpdate(includeAuto: Boolean = false) {
-        runBlocking { updateNotification(includeAuto) }
+    /**
+     * The frequent events, one update for a burst of them. After a BG the calculation finishes, often
+     * twice, and the overview is refreshed several times within seconds. Every update reads the running
+     * temporary basal from the database and calculates IOB, so it was done several times for one BG.
+     *
+     * The sources are subscribed here, undispatched, into a channel. `merge` would subscribe a moment
+     * later in its own coroutines, and an event sent before that would be lost (see `collectResilient`).
+     * The channel keeps the request until the debounce reads it.
+     */
+    @OptIn(FlowPreview::class)
+    internal fun frequentUpdates(scope: CoroutineScope): Flow<Unit> {
+        val requests = Channel<Unit>(Channel.CONFLATED)
+        rxBus.toFlow(EventRefreshOverview::class)
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { requests.trySend(Unit) }
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { requests.trySend(Unit) }
+        return requests.receiveAsFlow().debounce(UPDATE_DEBOUNCE)
+    }
+
+    // Called from the collectors, which already run in a coroutine: no runBlocking, which held an IO
+    // thread for the whole update.
+    private suspend fun triggerNotificationUpdate(includeAuto: Boolean = false) {
+        updateNotification(includeAuto)
         deferredStart.start { dummyServiceHelper.startService(context) }
     }
 
@@ -287,5 +310,11 @@ class PersistentNotificationPlugin(
         val notification = builder.build()
         mNotificationManager.notify(notificationHolder.notificationID, notification)
         notificationHolder.notification = notification
+    }
+
+    internal companion object {
+
+        /** Short, so the notification shows a new BG at once, but long enough for one BG's burst. */
+        val UPDATE_DEBOUNCE = 1.seconds
     }
 }
