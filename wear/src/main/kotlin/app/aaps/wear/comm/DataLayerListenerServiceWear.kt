@@ -311,7 +311,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         const val FOREGROUND_NOTIF_ID = 3
         const val CHANGE_NOTIF_ID = 556677
 
-        const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AndroidAPS-OpenLoop"
+        const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AAPS-OpenLoop"
         const val AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS = "bolus progress vibration"
         const val AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS_SILENT = "bolus progress silent"
     }

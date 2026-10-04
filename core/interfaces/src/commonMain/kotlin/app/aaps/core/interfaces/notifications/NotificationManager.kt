@@ -69,7 +69,7 @@ interface NotificationManager {
 
     companion object {
 
-        const val CHANNEL_ID = "AndroidAPS-Overview"
+        const val CHANNEL_ID = "AAPS-Overview"
         const val DISMISS_ACTION = "app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver"
     }
 }
