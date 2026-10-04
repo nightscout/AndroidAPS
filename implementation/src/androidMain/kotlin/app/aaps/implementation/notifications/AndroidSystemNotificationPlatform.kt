@@ -146,7 +146,7 @@ class AndroidSystemNotificationPlatform(
         started = true
 
         notificationManager.createNotificationChannel(
-            NotificationChannel(NotificationManager.CHANNEL_ID, NotificationManager.CHANNEL_ID, AndroidNotificationManager.IMPORTANCE_HIGH)
+            NotificationChannel(NotificationManager.CHANNEL_ID, NotificationManager.CHANNEL_NAME, AndroidNotificationManager.IMPORTANCE_HIGH)
         )
 
         val filter = IntentFilter(NotificationManager.DISMISS_ACTION)

@@ -11,7 +11,7 @@ internal fun AboutAlertDialogPreview() {
     MaterialTheme {
         AboutAlertDialog(
             data = AboutDialogData(
-                title = "APS 3.3.0",
+                title = "AAPS 3.3.0",
                 message = "Build: 3.3.0-dev\nFlavor: full\n\nhttps://androidaps.org",
                 enabledOptions = listOf(ExternalOptions.ENGINEERING_MODE, ExternalOptions.UNFINISHED_MODE)
             ),
