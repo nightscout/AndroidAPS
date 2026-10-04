@@ -4,6 +4,7 @@ import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TDD
+import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -235,7 +236,7 @@ class TddCalculatorImpl(
             val absoluteRate = tbr.tempBasalAbsolute
             tdd.basalAmount += absoluteRate / 60.0 * 5.0
 
-            val eb = extendedBoluses.lastOrNull { it.timestamp <= t && it.timestamp + it.duration > t }
+            val eb = extendedBoluses.latestRunningAt(t) { it.duration }
             val absoluteEbRate = eb?.rate ?: 0.0
             tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
         }
