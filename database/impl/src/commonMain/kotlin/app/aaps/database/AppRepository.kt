@@ -375,6 +375,9 @@ class AppRepository internal constructor(
     suspend fun getTemporaryTargetActiveAt(timestamp: Long): TemporaryTarget? =
         database.temporaryTargetDao.getTemporaryTargetActiveAt(timestamp)
 
+    suspend fun getTemporaryTargetsActiveAt(timestamp: Long): List<TemporaryTarget> =
+        database.temporaryTargetDao.getTemporaryTargetsActiveAt(timestamp)
+
     suspend fun getLastTempTargetId(): Long? =
         database.temporaryTargetDao.getLastId()
 
@@ -783,6 +786,9 @@ class AppRepository internal constructor(
     suspend fun getTemporaryBasalActiveAt(timestamp: Long): TemporaryBasal? =
         database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp)
 
+    suspend fun getTemporaryBasalsActiveAt(timestamp: Long): List<TemporaryBasal> =
+        database.temporaryBasalDao.getTemporaryBasalsActiveAt(timestamp)
+
     suspend fun getTemporaryBasalsStartingFromTime(timestamp: Long, ascending: Boolean): List<TemporaryBasal> =
         database.temporaryBasalDao.getTemporaryBasalDataFromTime(timestamp).reversedIf(!ascending)
 
@@ -823,6 +829,9 @@ class AppRepository internal constructor(
 
     suspend fun getExtendedBolusActiveAt(timestamp: Long): ExtendedBolus? =
         database.extendedBolusDao.getExtendedBolusActiveAt(timestamp)
+
+    suspend fun getExtendedBolusesActiveAt(timestamp: Long): List<ExtendedBolus> =
+        database.extendedBolusDao.getExtendedBolusesActiveAt(timestamp)
 
     suspend fun getExtendedBolusesStartingFromTime(timestamp: Long, ascending: Boolean): List<ExtendedBolus> =
         database.extendedBolusDao.getExtendedBolusesStartingFromTime(timestamp).reversedIf(!ascending)

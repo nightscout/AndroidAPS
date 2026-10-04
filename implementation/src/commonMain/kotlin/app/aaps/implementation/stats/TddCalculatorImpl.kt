@@ -219,13 +219,13 @@ class TddCalculatorImpl(
         // 5-minute step, and the status lights ask for the insulin used since the last cannula change:
         // 22 days of steps were about 6400 queries, run again on every pump status event.
         //
-        // The two queries together give every extended bolus that can be active in the interval: the one
+        // The two queries together give every extended bolus that can be active in the interval: all those
         // already running at the start, and every one that starts later. The lookup below then picks the
-        // latest started one that is still running, as `getExtendedBolusActiveAt` does. The only case
-        // that differs is two valid extended boluses that overlap, which the database should not hold.
+        // latest started one that is still running, as `getExtendedBolusActiveAt` does, also when two
+        // valid extended boluses overlap.
         val extendedBoluses =
             if (activePlugin.activePump.isFakingTempsByExtendedBoluses) emptyList()
-            else (listOfNotNull(persistenceLayer.getExtendedBolusActiveAt(startTimeAligned)) +
+            else (persistenceLayer.getExtendedBolusesActiveAt(startTimeAligned) +
                 persistenceLayer.getExtendedBolusesStartingFromTimeToTime(startTimeAligned, endTimeAligned, true))
                 .distinctBy { it.id }
         // The temporary basals of the whole interval, also from one read. This was `getBasalData` per step:

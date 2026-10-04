@@ -50,6 +50,10 @@ class QueryPlanTest {
         assertPlan("index_extendedBoluses_end") { database.extendedBolusDao.getExtendedBolusActiveAt(NOW) }
         assertPlan("index_temporaryTargets_end") { database.temporaryTargetDao.getTemporaryTargetActiveAt(NOW) }
         assertPlan("index_runningModes_end") { database.runningModeDao.getTemporaryRunningModeActiveAt(NOW) }
+        // Every entry running at a time, read once for a range lookup
+        assertPlan("index_temporaryBasals_end") { database.temporaryBasalDao.getTemporaryBasalsActiveAt(NOW) }
+        assertPlan("index_extendedBoluses_end") { database.extendedBolusDao.getExtendedBolusesActiveAt(NOW) }
+        assertPlan("index_temporaryTargets_end") { database.temporaryTargetDao.getTemporaryTargetsActiveAt(NOW) }
         assertPlan("index_carbs_end") { database.carbsDao.getCarbsFromTimeExpandable(NOW) }
         assertPlan("index_carbs_end") { database.carbsDao.getCarbsFromTimeToTimeExpandable(NOW - DAY, NOW) }
     }

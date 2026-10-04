@@ -49,12 +49,20 @@ class ProcessedTbrEbDataImplTest {
             val t = invocation.getArgument<Long>(0)
             temporaryBasals.filter { it.timestamp <= t && it.timestamp + it.duration > t }.maxByOrNull { it.timestamp }
         }
+        whenever(persistenceLayer.getTemporaryBasalsActiveAt(any())).thenAnswer { invocation ->
+            val t = invocation.getArgument<Long>(0)
+            temporaryBasals.filter { it.timestamp <= t && it.timestamp + it.duration > t }.sortedBy { it.timestamp }
+        }
         whenever(persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
             temporaryBasals.filter { it.timestamp in invocation.getArgument<Long>(0)..invocation.getArgument<Long>(1) }.sortedBy { it.timestamp }
         }
         whenever(persistenceLayer.getExtendedBolusActiveAt(any())).thenAnswer { invocation ->
             val t = invocation.getArgument<Long>(0)
             extendedBoluses.filter { it.timestamp <= t && it.timestamp + it.duration > t }.maxByOrNull { it.timestamp }
+        }
+        whenever(persistenceLayer.getExtendedBolusesActiveAt(any())).thenAnswer { invocation ->
+            val t = invocation.getArgument<Long>(0)
+            extendedBoluses.filter { it.timestamp <= t && it.timestamp + it.duration > t }.sortedBy { it.timestamp }
         }
         whenever(persistenceLayer.getExtendedBolusesStartingFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
             extendedBoluses.filter { it.timestamp in invocation.getArgument<Long>(0)..invocation.getArgument<Long>(1) }.sortedBy { it.timestamp }
@@ -106,6 +114,35 @@ class ProcessedTbrEbDataImplTest {
         )
 
         assertSameEveryMinute(10, 130)
+    }
+
+    /**
+     * Overlapping valid entries, which pump sync normally does not leave but NS sync can: an older long
+     * one, and later ones inside it that end first. The per-time query returns the last started running
+     * one, so the older one again after the later ones end. The range starts while both run.
+     */
+    @Test
+    fun `overlapping temporary basals give the same answer as the per-time query`() = runTest {
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(false)
+        temporaryBasals = listOf(
+            tb(1, startMinute = 0, minutes = 120, rate = 0.5),  // older and long
+            tb(2, startMinute = 20, minutes = 10, rate = 2.0),  // inside it, running when the range starts at 25
+            tb(3, startMinute = 22, minutes = 30, rate = 0.0),  // also inside, ends later than 2
+            tb(4, startMinute = 60, minutes = 5, rate = 1.5)    // starts inside the range, inside 1
+        )
+
+        assertSameEveryMinute(25, 130)
+    }
+
+    @Test
+    fun `overlapping extended boluses give the same answer as the per-time query`() = runTest {
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(true)
+        extendedBoluses = listOf(
+            eb(5, startMinute = 0, minutes = 120, amount = 2.0),
+            eb(6, startMinute = 20, minutes = 10, amount = 0.5)
+        )
+
+        assertSameEveryMinute(25, 130)
     }
 
     private companion object {

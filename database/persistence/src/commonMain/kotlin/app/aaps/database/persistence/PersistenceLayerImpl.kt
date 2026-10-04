@@ -1532,6 +1532,10 @@ class PersistenceLayerImpl(
         repository.getTemporaryBasalActiveAt(timestamp)?.fromDb()
     }
 
+    override suspend fun getTemporaryBasalsActiveAt(timestamp: Long): List<TB> = withContext(aapsIoDispatcher) {
+        repository.getTemporaryBasalsActiveAt(timestamp).map { it.fromDb() }
+    }
+
     override suspend fun getOldestTemporaryBasalRecord(): TB? = withContext(aapsIoDispatcher) {
         repository.getOldestTemporaryBasalRecord()?.fromDb()
     }
@@ -1766,6 +1770,10 @@ class PersistenceLayerImpl(
         repository.getExtendedBolusActiveAt(timestamp)?.fromDb()
     }
 
+    override suspend fun getExtendedBolusesActiveAt(timestamp: Long): List<EB> = withContext(aapsIoDispatcher) {
+        repository.getExtendedBolusesActiveAt(timestamp).map { it.fromDb() }
+    }
+
     override suspend fun getOldestExtendedBolusRecord(): EB? = withContext(aapsIoDispatcher) {
         repository.getOldestExtendedBolusRecord()?.fromDb()
     }
@@ -1892,6 +1900,9 @@ class PersistenceLayerImpl(
     // TT
     override suspend fun getTemporaryTargetActiveAt(timestamp: Long): TT? =
         repository.getTemporaryTargetActiveAt(timestamp)?.fromDb()
+
+    override suspend fun getTemporaryTargetsActiveAt(timestamp: Long): List<TT> =
+        repository.getTemporaryTargetsActiveAt(timestamp).map { it.fromDb() }
 
     override suspend fun getLastTemporaryTargetId(): Long? = withContext(aapsIoDispatcher) {
         repository.getLastTempTargetId()

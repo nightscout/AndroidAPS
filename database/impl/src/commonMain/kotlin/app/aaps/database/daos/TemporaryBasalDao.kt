@@ -48,6 +48,10 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryBasalActiveAt(timestamp: Long): TemporaryBasal?
 
+    /** Every entry running at [timestamp], also those that overlap; [getTemporaryBasalActiveAt] gives the last started of them. */
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY +timestamp ASC")
+    suspend fun getTemporaryBasalsActiveAt(timestamp: Long): List<TemporaryBasal>
+
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTemporaryBasalDataFromTime(timestamp: Long): List<TemporaryBasal>
 

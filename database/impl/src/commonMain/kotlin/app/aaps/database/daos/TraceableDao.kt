@@ -22,6 +22,8 @@ import kotlin.time.Clock
  *   time, which are a few for a recent time, also when nothing runs then.
  * - `ORDER BY +id` lets a query with a time range read the range and sort it, instead of walking the
  *   whole table in id order.
+ * - `ORDER BY +timestamp` does the same for a list of "active at" entries: without it SQLite walks the
+ *   whole timestamp index to save the sort, and does not use the `(timestamp + duration)` index.
  *
  * Do not remove them. A new query on these tables should use them too. `QueryPlanTest` checks the
  * plans of the queries that run all the time.

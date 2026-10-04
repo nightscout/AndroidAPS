@@ -973,8 +973,9 @@ class OverviewDataCacheImpl(
 
         // One read of the temporary targets for the whole range instead of one database query every
         // 5 minutes. The rebuild runs on every new range and every loop run, so it showed up as steady
-        // database load.
-        val temporaryTargets = (listOfNotNull(persistenceLayer.getTemporaryTargetActiveAt(fromTime)) +
+        // database load. All running at the start, not only the last started one, so overlapping targets
+        // give the same line as the per-time query.
+        val temporaryTargets = (persistenceLayer.getTemporaryTargetsActiveAt(fromTime) +
             persistenceLayer.getTemporaryTargetDataFromTime(fromTime, true)).distinctBy { it.id }
 
         val targets = mutableListOf<GraphDataPoint>()
