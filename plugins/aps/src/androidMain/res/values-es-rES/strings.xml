@@ -45,7 +45,7 @@
     <string name="smb_frequency_exceeded">Un bolo ha sido entregado en los últimos 3 minutos, omitiendo SMB</string>
     <string name="pump_not_initialized">Bomba no inicializada</string>
     <string name="zero_basal_not_set">La bomba no aceptó la basal temporal de cero. Es posible que aún esté administrando insulina basal. Comprueba la bomba</string>
-    <string name="loop_shortname">BUCLE</string>
+    <string name="loop_shortname">LAZO</string>
     <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo</string>
     <string name="no_aps_selected">NO APS Seleccionado o resultado entregado</string>
     <string name="ignore5m">Ignorar 5m</string>
