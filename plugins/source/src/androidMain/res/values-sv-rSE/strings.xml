@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
     <string name="dexcom_app_patched">Patchad Dexcom-app</string>
-    <string name="dexcom_short">Dex</string>
     <string name="description_source_dexcom">Ta emot BG-värden från \"Bygg din egen Dexcom-app\".</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
@@ -18,11 +16,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Ta emot värden från Intelligo-appen</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Ta emot BG-data från tomato app (MiaoMiao-enhet)</string>
     <string name="random_bg">Slumpmässig BG</string>
     <string name="description_source_random_bg">Generera slumpmässiga BG-data (endast demo-läge)</string>
-    <string name="random_bg_short">BG</string>
     <!-- Patched Syai Tag App -->
     <!-- Patched SI App -->
     <!-- Patched Sino App -->
