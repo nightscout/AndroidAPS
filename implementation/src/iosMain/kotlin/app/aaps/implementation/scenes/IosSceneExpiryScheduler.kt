@@ -8,21 +8,31 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 /**
- * Scene expiry is **not scheduled on iOS**. This exists so the rest of scenes compiles and the
- * editor works; it is not an implementation of the contract.
+ * Scene expiry is **not scheduled on iOS**, and on a client build it never needs to be. This exists
+ * so the rest of scenes compiles and the editor works; it is not an implementation of the contract.
  *
- * ## What would happen if a timed scene were activated
+ * ## Why nothing calls this
+ *
+ * The only caller of [SceneExpiryScheduler.schedule] is `SceneExecutor.activate`, which runs on the
+ * **master**. `config.AAPSCLIENT` is hardcoded `true` in `IosClientConfig`, and on a client
+ * `RoleBranch.prepare`/`commit` send the command to the master rather than calling the local lambda,
+ * while `SceneActions.stop` goes through `ClientControlActionDispatcher`. A client runs only
+ * `validateActivation`, which is a pure query. So the master activates the scene and schedules its
+ * expiry with its own working scheduler, and the client is told the result.
+ *
+ * It still logs at error rather than doing nothing quietly, because the day iOS ships as something
+ * other than a client this becomes reachable, and then it matters - see below.
+ *
+ * ## What it would cost if iOS were ever a master
  *
  * [SceneExpiryRunner] does more than refresh a screen. At expiry it reverts the two actions whose
  * effect does not end on its own - the SMB toggle, which is a preference with no duration, and the
  * profile switch, whose `EffectiveProfileSwitch` outlives the timed record it came from. Without
- * this callback both stay applied **indefinitely**, and a chained follow-up scene never starts.
+ * this callback both would stay applied **indefinitely**, and a chained follow-up scene would never
+ * start.
  *
  * Temp target, loop mode and care portal entries are safe either way: those self-expire from their
  * own timestamps.
- *
- * So this logs at error rather than debug. A silent no-op here would be the exact failure the
- * migration rules warn about, on therapy settings.
  *
  * ## Why not a timer
  *
@@ -31,9 +41,9 @@ import dev.zacsweers.metro.SingleIn
  * late or never; an in-process timer works only while the app is alive, which for a follower it
  * usually is not. A real implementation is a combination - timer when alive, notification at the
  * deadline, and an overdue sweep on foreground so the runner executes late rather than never - and
- * that is a product decision about scenes on iOS, not a port. See `_docs/ios_blockers.md`.
+ * that is a product decision about scenes on iOS, not a port. See `_docs/ios_todo.md`.
  *
- * **Before scenes ship on iOS, activation of a *timed* scene has to be gated in the UI.**
+ * This was twice written up as "a timed scene never ends on iOS". It is not, for the reason above.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
