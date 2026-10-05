@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">更新基礎速率</string>
     <string name="description_pump_diaconn_g8">Diaconn G8 幫浦整合</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">違度最大劑量原則</string>
     <string name="commanderror">指令錯誤</string>
     <string name="speederror">速度錯誤</string>
