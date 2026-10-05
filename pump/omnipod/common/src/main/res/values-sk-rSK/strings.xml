@@ -116,11 +116,11 @@
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
-    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Prázdny Zásobník</string>
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Prázdny zásobník</string>
     <string name="omnipod_common_pdm_notification_text_reservoir_empty">Podávanie inzulínu bolo zastavené. Vymeňte Pod.</string>
     <string name="omnipod_common_pdm_notification_header_auto_off">Auto-Off</string>
     <string name="omnipod_common_pdm_notification_text_auto_off">Podávanie inzulínu sa zastavilo. PDM a Pod spolu za posledné 4 hodiny nekomunikovali. Ak chcete obnoviť podávanie inzulínu, vymeňte Pod.</string>
-    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod Expiroval</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod expiroval</string>
     <string name="omnipod_common_pdm_notification_text_pod_expired">Podávanie inzulínu bolo zastavené. Vymeňte Pod.</string>
     <string name="omnipod_common_pdm_notification_header_occluded">Zistená oklúzia</string>
     <string name="omnipod_common_pdm_notification_text_occluded">Podávanie inzulínu bolo zastavené. Vymeňte Pod. Skontrolujte si glykémiu</string>
