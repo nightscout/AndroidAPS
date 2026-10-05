@@ -73,7 +73,6 @@
     <string name="summary_tidepool_dev_servers">Dacă este activată, încărcările vor merge către serverele de testare în loc de cele obișnuite</string>
     <string name="title_tidepool_dev_servers">Folosiți serverele Integration (test)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Înregistrați datele la Tidepool</string>
     <string name="upload_now">Încărcați acum</string>
     <string name="tidepool_purge_data">Ștergeți toate datele</string>
@@ -83,7 +82,6 @@
     <string name="working">În lucru</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Trimiteți date către xDrip+</string>
     <string name="xdrip_status_settings">Linie avansată de stare xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ nu este instalat.</string>
@@ -92,7 +90,6 @@
     <string name="xdrip_local_broadcasts_title">Activați transmisiuni spre xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="tizen">Aplicații tip companion externe</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">Permiteți difuzarea de date către diferite aplicații externe de tip companion</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -100,7 +97,6 @@
     <string name="garmin_local_http_server_port">Port server HTTP local</string>
     <string name="garmin_local_http_server">Server HTTP local</string>
     <!--    Wear-->
-    <string name="wear_shortname">CEAS</string>
     <string name="description_wear">Monitorizați și controlați AAPS folosind ceasul WearOS.</string>
     <string name="no_watch_connected">(Niciun ceas conectat)</string>
     <string name="pump_status">Stare pompă</string>
@@ -161,7 +157,6 @@
     <string name="garmin_request_key">Solicitare cheie</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicator SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Control la distanță al AAPS prin comenzi SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">din aplicația de autentificare pentru: %1$s urmată de PIN</string>
     <string name="smscommunicator_tab_otp_label">Setare Authenticator</string>
