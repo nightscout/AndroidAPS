@@ -14,12 +14,14 @@ import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
+import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.db.compensateForClockSkew
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -86,6 +88,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
+import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
@@ -146,6 +149,7 @@ private const val URGENT_BATTERY_VOLTAGE = 1.3
 class OverviewDataCacheImpl(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val profileUtil: ProfileUtil,
     private val profileFunction: ProfileFunction,
     private val preferences: Preferences,
@@ -967,11 +971,18 @@ class OverviewDataCacheImpl(
         val profile = profileFunction.getProfile() ?: return
         val endTime = graphEndTime(toTime)
 
+        // One read of the temporary targets for the whole range instead of one database query every
+        // 5 minutes. The rebuild runs on every new range and every loop run, so it showed up as steady
+        // database load. All running at the start, not only the last started one, so overlapping targets
+        // give the same line as the per-time query.
+        val temporaryTargets = (persistenceLayer.getTemporaryTargetsActiveAt(fromTime) +
+            persistenceLayer.getTemporaryTargetDataFromTime(fromTime, true)).distinctBy { it.id }
+
         val targets = mutableListOf<GraphDataPoint>()
         var lastTarget = -1.0
         var time = fromTime
         while (time < endTime) {
-            val tt = persistenceLayer.getTemporaryTargetActiveAt(time)
+            val tt = temporaryTargets.latestRunningAt(time) { it.duration }
             val value = if (tt != null) {
                 profileUtil.fromMgdlToUnits(tt.target())
             } else {
@@ -1027,6 +1038,10 @@ class OverviewDataCacheImpl(
         )
         var nextBoundary = 0
         var profile = profileFunction.getProfile(fromTime)
+        // The same for the temporary basals: one read for the whole range instead of one query per
+        // minute, about 1,500 for a 24 hour graph. The IOB calculator's basal cache is cleared on every
+        // BG reload, so the per-minute calls almost always went to the database, several times per BG.
+        val temporaryBasals = processedTbrEbData.getTempBasalsIncludingConvertedExtended(fromTime, roundUpToMinute(endTime))
 
         var time = fromTime
         while (time < endTime) {
@@ -1038,9 +1053,10 @@ class OverviewDataCacheImpl(
                 time += 60 * 1000L
                 continue
             }
-            val basalData = iobCobCalculator.getBasalData(profile, time)
-            val profileBasalValue = basalData.basal
-            val actualBasalValue = if (basalData.isTempBasalRunning) basalData.tempBasalAbsolute else profileBasalValue
+            // The full minute getBasalData used to look the values up at
+            val minute = roundUpToMinute(time)
+            val profileBasalValue = profile.getBasal(minute)
+            val actualBasalValue = temporaryBasals.at(minute)?.convertedToAbsolute(minute, profile) ?: profileBasalValue
 
             if (profileBasalValue != lastProfileBasal) {
                 profileBasal.add(GraphDataPoint(time, profileBasalValue))
@@ -1229,6 +1245,10 @@ class OverviewDataCacheImpl(
         _calcProgressFlow.value = 100
     }
 }
+
+/** Rounds [time] up to the next full minute, as `AutosensDataStore.roundUpTime` does for the IOB caches. */
+internal fun roundUpToMinute(time: Long): Long = if (time % 60_000L == 0L) time else (time / 60_000L + 1) * 60_000L
+
 /**
  * The times inside a graph window where the effective profile can change.
  *

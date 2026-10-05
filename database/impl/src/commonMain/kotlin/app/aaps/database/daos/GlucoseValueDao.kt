@@ -20,7 +20,7 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     @Query("DELETE FROM $TABLE_GLUCOSE_VALUES WHERE referenceId IS NOT NULL")
     override suspend fun deleteTrackedChanges(): Int
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp DESC limit 1")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE isValid = 1 AND +referenceId IS NULL ORDER BY timestamp DESC limit 1")
     suspend fun getLast(): GlucoseValue?
 
     @Query("SELECT id FROM $TABLE_GLUCOSE_VALUES ORDER BY id DESC limit 1")
@@ -32,10 +32,10 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (timestamp = :timestamp) AND (sourceSensor = :sourceSensor) AND (referenceId IS NULL)")
     suspend fun findByTimestampAndSensor(timestamp: Long, sourceSensor: GlucoseValue.SourceSensor): GlucoseValue?
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) AND (value >= 39) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (+referenceId IS NULL) AND (value >= 39) ORDER BY timestamp ASC")
     suspend fun compatGetBgReadingsDataFromTime(timestamp: Long): List<GlucoseValue>
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (timestamp BETWEEN :start AND :end) AND (isValid = 1) AND (referenceId IS NULL) AND (value >= 39) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE (timestamp BETWEEN :start AND :end) AND (isValid = 1) AND (+referenceId IS NULL) AND (value >= 39) ORDER BY timestamp ASC")
     suspend fun compatGetBgReadingsDataFromTime(start: Long, end: Long): List<GlucoseValue>
 
     // for WS we need 1 record only

@@ -39,25 +39,26 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
     suspend fun findByNSId(nsId: String): TemporaryBasal?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (temporaryId = :temporaryId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (temporaryId = :temporaryId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (+referenceId IS NULL)")
     suspend fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TemporaryBasal?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryBasalActiveAtLegacy(timestamp: Long): TemporaryBasal?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryBasalActiveAt(timestamp: Long): TemporaryBasal?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp <= :to) AND ((timestamp + duration) > :from) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC")
-    suspend fun getTemporaryBasalActiveBetweenTimeAndTime(from: Long, to: Long): List<TemporaryBasal>
+    /** Every entry running at [timestamp], also those that overlap; [getTemporaryBasalActiveAt] gives the last started of them. */
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (+timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (+referenceId IS NULL) AND (isValid = 1) ORDER BY +timestamp ASC")
+    suspend fun getTemporaryBasalsActiveAt(timestamp: Long): List<TemporaryBasal>
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTemporaryBasalDataFromTime(timestamp: Long): List<TemporaryBasal>
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp BETWEEN :from and :to) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp BETWEEN :from and :to) AND (isValid = 1) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTemporaryBasalStartingFromTimeToTime(from: Long, to: Long): List<TemporaryBasal>
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTemporaryBasalDataIncludingInvalidFromTime(timestamp: Long): List<TemporaryBasal>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE (id > :id) AND (pumpId IS NOT NULL) ORDER BY id ASC limit 1")

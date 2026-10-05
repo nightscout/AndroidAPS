@@ -30,10 +30,10 @@ internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult
     @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
     suspend fun findByNSId(nsId: String): BolusCalculatorResult?
 
-    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE (isValid = 1) AND (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE (isValid = 1) AND (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getBolusCalculatorResultsFromTime(timestamp: Long): List<BolusCalculatorResult>
 
-    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getBolusCalculatorResultsIncludingInvalidFromTime(timestamp: Long): List<BolusCalculatorResult>
 
     // for WS we need 1 record only
