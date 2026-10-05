@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans giver dig mulighed for at uploade dine diabetes data og donere det til videnskabelige projekter.</string>
     <string name="logout">Log af</string>
     <string name="setup">Opsætning</string>
