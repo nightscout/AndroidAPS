@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Aggiornamento velocità basali</string>
     <string name="description_pump_diaconn_g8">Integrazione del microinfusore Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Violazione bolo massimo</string>
     <string name="commanderror">Errore comando</string>
     <string name="speederror">Errore velocità</string>
