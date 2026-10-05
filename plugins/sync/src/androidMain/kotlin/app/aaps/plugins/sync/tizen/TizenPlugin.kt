@@ -34,7 +34,6 @@ import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.core.ui.extensions.toStringFull
@@ -80,7 +79,6 @@ class TizenPlugin(
         .mainType(PluginType.SYNC)
         .icon(IcPluginTizen)
         .pluginName(SyncStrings.tizen)
-        .shortName(SyncStrings.tizen_short)
         .description(SyncStrings.tizen_description),
     aapsLogger, rh, notificationManager
 ) {

@@ -168,7 +168,6 @@ class OmnipodErosPumpPlugin(
         }
         .icon(IcPluginOmnipod)
         .pluginName(TextRef.AndroidRes(R.string.omnipod_eros_name))
-        .shortName(TextRef.AndroidRes(R.string.omnipod_eros_name_short))
         .description(TextRef.AndroidRes(R.string.omnipod_eros_pump_description)),
     ownPreferences = ErosBooleanPreferenceKey.entries + ErosLongNonPreferenceKey.entries + ErosStringNonPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager

@@ -47,7 +47,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcXDrip
@@ -123,7 +122,6 @@ class XdripPlugin(
         }
         .icon(IcXDrip)
         .pluginName(SyncStrings.xdrip)
-        .shortName(SyncStrings.xdrip_shortname)
         .description(SyncStrings.description_xdrip),
     ownPreferences = XdripLongKey.entries + XdripIntentKey.entries,
     aapsLogger, rh, preferences, notificationManager

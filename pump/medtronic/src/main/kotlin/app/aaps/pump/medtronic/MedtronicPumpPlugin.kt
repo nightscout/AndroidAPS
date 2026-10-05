@@ -161,7 +161,6 @@ class MedtronicPumpPlugin(
         }
         .icon(IcPluginMedtronic)
         .pluginName(TextRef.AndroidRes(R.string.medtronic_name))
-        .shortName(TextRef.AndroidRes(R.string.medtronic_name_short))
         .description(TextRef.AndroidRes(R.string.description_pump_medtronic)),
     ownPreferences = RileylinkBooleanPreferenceKey.entries + RileyLinkDoubleKey.entries + RileyLinkLongKey.entries + RileyLinkStringKey.entries +
         RileyLinkStringPreferenceKey.entries + MedtronicBooleanPreferenceKey.entries + MedtronicIntPreferenceKey.entries +

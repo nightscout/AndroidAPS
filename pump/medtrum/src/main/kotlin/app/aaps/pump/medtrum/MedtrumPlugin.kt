@@ -96,7 +96,6 @@ class MedtrumPlugin(
         .mainType(PluginType.PUMP)
         .icon(IcPluginMedtrum)
         .pluginName(TextRef.AndroidRes(R.string.medtrum))
-        .shortName(TextRef.AndroidRes(R.string.medtrum_pump_shortname))
         .description(TextRef.AndroidRes(R.string.medtrum_pump_description))
         .composeContent { _ ->
             MedtrumComposeContent(

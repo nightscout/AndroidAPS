@@ -171,7 +171,6 @@ class InsightPlugin(
     pluginDescription = PluginDescription()
         .icon(IcPluginInsight)
         .pluginName(TextRef.AndroidRes(R.string.insight_local))
-        .shortName(TextRef.AndroidRes(R.string.insightpump_shortname))
         .mainType(PluginType.PUMP)
         .description(TextRef.AndroidRes(R.string.description_pump_insight_local))
         .composeContent { plugin ->

@@ -64,7 +64,6 @@ class GlunovoPlugin(
         }
         .icon(IcPluginGlunovo)
         .pluginName(TextRef.AndroidRes(R.string.glunovo))
-        .shortName(TextRef.AndroidRes(R.string.glunovo))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_glunovo)),
     ownPreferences = GlunovoLongKey.entries,

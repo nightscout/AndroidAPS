@@ -48,9 +48,4 @@ class PluginDescriptionTest {
         val ref = TextRef.AndroidRes(10)
         assertThat(PluginDescription().pluginName(ref).pluginName).isEqualTo(ref)
     }
-
-    @Test fun shortNameTest() {
-        val ref = TextRef.AndroidRes(10)
-        assertThat(PluginDescription().shortName(ref).shortName).isEqualTo(ref)
-    }
 }

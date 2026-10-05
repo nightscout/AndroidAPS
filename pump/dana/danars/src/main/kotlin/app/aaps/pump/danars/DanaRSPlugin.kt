@@ -109,7 +109,6 @@ class DanaRSPlugin(
         }
         .icon(IcPluginDanaI)
         .pluginName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarspump))
-        .shortName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarspump_shortname))
         .description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_rs)),
     ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries + DanaStringComposedKey.entries +
         DanaLongKey.entries,

@@ -56,7 +56,6 @@ class ObjectivesPlugin(
         .composeContent { ObjectivesComposeContent() }
         .icon(IcPluginObjectives)
         .pluginName(CoreUiStrings.objectives)
-        .shortName(ConstraintsStrings.objectives_shortname)
         // Objectives must be present on a master and must not be switchable off. Declared even though a
         // CONSTRAINTS plugin is enabled by registration anyway (see PluginBase.enforcedState): stating the
         // rule keeps it true if the plugin's mainType ever changes, and it is what makes canToggle false so

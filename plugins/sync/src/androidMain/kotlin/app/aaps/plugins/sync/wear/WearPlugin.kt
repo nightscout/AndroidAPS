@@ -94,7 +94,6 @@ class WearPlugin(
         .mainType(PluginType.SYNC)
         .icon(Icons.Default.Watch)
         .pluginName(CoreUiStrings.wear)
-        .shortName(SyncStrings.wear_shortname)
         .description(SyncStrings.description_wear)
         .composeContent { WearComposeContent() },
     aapsLogger = aapsLogger, rh = rh, preferences = preferences, notificationManager = notificationManager

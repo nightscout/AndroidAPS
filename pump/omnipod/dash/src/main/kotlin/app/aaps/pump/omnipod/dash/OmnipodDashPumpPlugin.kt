@@ -144,7 +144,6 @@ class OmnipodDashPumpPlugin(
         }
         .icon(IcPluginOmnipod)
         .pluginName(TextRef.AndroidRes(R.string.omnipod_dash_name))
-        .shortName(TextRef.AndroidRes(R.string.omnipod_dash_name_short))
         .description(TextRef.AndroidRes(R.string.omnipod_dash_pump_description)),
     ownPreferences = OmnipodBooleanPreferenceKey.entries + OmnipodIntPreferenceKey.entries + DashBooleanPreferenceKey.entries +
         DashStringNonPreferenceKey.entries,

@@ -115,7 +115,6 @@ class EopatchPumpPlugin(
         }
         .icon(IcPluginEopatch)
         .pluginName(TextRef.AndroidRes(R.string.eopatch))
-        .shortName(TextRef.AndroidRes(R.string.eopatch_shortname))
         .description(TextRef.AndroidRes(R.string.eopatch_pump_description)),
     ownPreferences = EopatchIntKey.entries + EopatchBooleanKey.entries + EopatchStringNonKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager

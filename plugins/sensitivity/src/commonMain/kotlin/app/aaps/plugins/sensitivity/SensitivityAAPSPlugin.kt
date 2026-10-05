@@ -52,7 +52,6 @@ class SensitivityAAPSPlugin(
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
         .pluginName(SensitivityStrings.sensitivity_aaps)
-        .shortName(SensitivityStrings.sensitivity_plugin_shortname)
         // Only meaningful with the AMA algorithm, so it is hidden while another APS is active. Still shown
         // when no APS is elected yet, so the plugin does not vanish during start-up.
         .showInList {

@@ -22,7 +22,6 @@ open class PluginDescription {
     var enforcements: List<Enforcement> = emptyList()
     var showInList = { true }
     var pluginName: TextRef? = null
-    var shortName: TextRef? = null
     var description: TextRef? = null
     var defaultPlugin = false
 
@@ -48,7 +47,6 @@ open class PluginDescription {
 
     fun icon(icon: ImageVector): PluginDescription = this.also { it.icon = icon }
     fun pluginName(pluginName: TextRef): PluginDescription = this.also { it.pluginName = pluginName }
-    fun shortName(shortName: TextRef): PluginDescription = this.also { it.shortName = shortName }
     fun description(description: TextRef): PluginDescription = this.also { it.description = description }
     fun setDefault(value: Boolean = true): PluginDescription = this.also { it.defaultPlugin = value }
     fun preferencesVisibleInSimpleMode(value: Boolean): PluginDescription = this.also { it.preferencesVisibleInSimpleMode = value }

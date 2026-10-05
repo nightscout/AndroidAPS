@@ -150,7 +150,6 @@ class ComboV2Plugin(
             }
             .icon(IcPluginCombo)
             .pluginName(TextRef.AndroidRes(R.string.combov2_plugin_name))
-            .shortName(TextRef.AndroidRes(R.string.combov2_plugin_shortname))
             .description(TextRef.AndroidRes(R.string.combov2_plugin_description)),
         ownPreferences = ComboIntKey.entries + ComboBooleanKey.entries + ComboStringNonKey.entries + ComboIntNonKey.entries + ComboLongNonKey.entries,
         aapsLogger, rh, preferences, commandQueue, notificationManager

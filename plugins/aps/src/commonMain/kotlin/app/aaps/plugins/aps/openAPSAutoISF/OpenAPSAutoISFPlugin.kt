@@ -115,7 +115,6 @@ open class OpenAPSAutoISFPlugin(
         }
         .icon(IcPluginOpenAPS)
         .pluginName(ApsStrings.openaps_auto_isf)
-        .shortName(ApsStrings.autoisf_shortname)
         .preferencesVisibleInSimpleMode(false)
         // AAPSCLIENT: visible so a client can select the master's APS. The engineering/dev half is NOT
         // repeated here - the enforcement below carries it, and a plugin forced off is hidden by

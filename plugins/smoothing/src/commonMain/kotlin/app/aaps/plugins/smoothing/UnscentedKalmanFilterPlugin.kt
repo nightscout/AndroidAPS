@@ -86,7 +86,6 @@ class UnscentedKalmanFilterPlugin(
         .mainType(PluginType.SMOOTHING)
         .icon(Icons.Default.Timeline)
         .pluginName(SmoothingStrings.UKF_name)
-        .shortName(SmoothingStrings.smoothing_shortname)
         .description(SmoothingStrings.description_UKF),
     ownPreferences = UkfLongNonKey.entries + UkfIntNonKey.entries + UkfDoubleNonKey.entries,
     aapsLogger, rh, preferences, notificationManager

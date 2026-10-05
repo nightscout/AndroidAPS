@@ -107,7 +107,6 @@ class DiaconnG8Plugin(
         }
         .icon(IcPluginDiaconn)
         .pluginName(TextRef.AndroidRes(R.string.diaconn_g8_pump))
-        .shortName(TextRef.AndroidRes(R.string.diaconn_g8_pump_shortname))
         .description(TextRef.AndroidRes(R.string.description_pump_diaconn_g8)),
     ownPreferences = DiaconnIntentKey.entries + DiaconnIntKey.entries + DiaconnBooleanKey.entries + DiaconnStringNonKey.entries +
         DiaconnIntNonKey.entries,

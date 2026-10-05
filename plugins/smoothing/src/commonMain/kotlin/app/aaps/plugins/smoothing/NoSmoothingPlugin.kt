@@ -33,7 +33,6 @@ class NoSmoothingPlugin(
         .icon(Icons.Default.Timeline)
         .setDefault(true)
         .pluginName(SmoothingStrings.no_smoothing_name)
-        .shortName(SmoothingStrings.smoothing_shortname)
         .description(SmoothingStrings.description_no_smoothing),
     aapsLogger, rh, notificationManager
 ), Smoothing {

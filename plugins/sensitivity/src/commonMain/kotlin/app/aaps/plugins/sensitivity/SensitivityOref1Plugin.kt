@@ -50,7 +50,6 @@ class SensitivityOref1Plugin(
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
         .pluginName(SensitivityStrings.sensitivity_oref1)
-        .shortName(SensitivityStrings.sensitivity_plugin_shortname)
         .description(SensitivityStrings.description_sensitivity_oref1)
         // No enableByDefault: .setDefault() already covers a fresh install. loadPref enables nothing,
         // then verifySelectionInCategories finds no enabled SENSITIVITY plugin and elects this one.
