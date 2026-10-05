@@ -214,6 +214,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
         danaRSService.bolusProgressData = bolusProgressData
+        danaRSService.detailedBolusInfoStorage = detailedBolusInfoStorage
         danaRSService.pumpEnactResultProvider = { pumpEnactResult }
         danaRSService.notificationManager = notificationManager
         danaRSService.appScope = CoroutineScope(Dispatchers.Unconfined)

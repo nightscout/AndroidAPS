@@ -34,16 +34,16 @@ class DanaRSPacketNotifyAlarm(
                 errorString = rh.gs(app.aaps.pump.dana.R.string.batterydischarged)
 
             0x02       ->  // Pump Error
-                errorString = rh.gs(app.aaps.pump.dana.R.string.pumperror) + " " + alarmCode
+                errorString = rh.gs(app.aaps.pump.dana.R.string.pumperror)
 
             0x03       ->  // Occlusion
                 errorString = rh.gs(app.aaps.pump.dana.R.string.occlusion)
 
             0x04       ->  // LOW BATTERY
-                errorString = rh.gs(app.aaps.pump.dana.R.string.pumpshutdown)
+                errorString = rh.gs(app.aaps.pump.dana.R.string.lowbattery)
 
             0x05       ->  // Shutdown
-                errorString = rh.gs(app.aaps.pump.dana.R.string.lowbattery)
+                errorString = rh.gs(app.aaps.pump.dana.R.string.pumpshutdown)
 
             0x06       ->  // Basal Compare
                 errorString = rh.gs(app.aaps.pump.dana.R.string.basalcompare)

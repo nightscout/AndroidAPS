@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import dev.zacsweers.metro.Inject
+import kotlin.math.roundToInt
 
 @Inject
 class DanaRSPacketBolusSetStepBolusStart(
@@ -27,7 +28,8 @@ class DanaRSPacketBolusSetStepBolusStart(
     }
 
     override fun getRequestParams(): ByteArray {
-        val stepBolusRate = (amount * 100).toInt()
+        // Round, not truncate: 2.55 * 100 is 254.99999 and toInt() would send 2.54 U
+        val stepBolusRate = (amount * 100).roundToInt()
         val request = ByteArray(3)
         request[0] = (stepBolusRate and 0xff).toByte()
         request[1] = (stepBolusRate ushr 8 and 0xff).toByte()

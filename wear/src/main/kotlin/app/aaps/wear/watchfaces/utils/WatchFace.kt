@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2015 ustwo studio inc (www.ustwo.com)
  *
- * Adapted for AndroidAPS
+ * Adapted for AAPS
  * Migrated to AndroidX WatchFaceService
  */
 

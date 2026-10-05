@@ -3,6 +3,9 @@ package app.aaps.implementation.stats
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.aps.BasalData
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -21,6 +24,7 @@ import kotlinx.datetime.TimeZone
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.util.TimeZone as JavaTimeZone
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -422,6 +426,187 @@ class TddCalculatorImplTest : TestBase() {
         assertThat(result).isNotNull()
         assertThat(result?.size()).isEqualTo(7)
         verify(persistenceLayer, times(7)).insertOrUpdateCachedTotalDailyDose(any())
+    }
+
+    /**
+     * The extended boluses are now read once for the whole interval instead of once per 5-minute step.
+     * The result must stay the same as the old per-step `getExtendedBolusActiveAt`: one bolus already
+     * running at the start counts only until it ends, one starting later counts from its start.
+     */
+    @Test
+    fun `extended boluses of the interval are counted per step from one query`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = false)
+        // 1.2 U/h, started 30 min before the interval, ends 15 min into it: steps +0, +5, +10
+        val runningAtStart = EB(id = 1, timestamp = intervalStart - T.mins(30).msecs(), duration = T.mins(45).msecs(), amount = 0.9)
+        // 2.4 U/h, starts 30 min into the interval: steps +30 ... +55
+        val startingLater = EB(id = 2, timestamp = intervalStart + T.mins(30).msecs(), duration = T.mins(60).msecs(), amount = 2.4)
+        whenever(persistenceLayer.getExtendedBolusActiveAt(intervalStart)).thenReturn(runningAtStart)
+        whenever(persistenceLayer.getExtendedBolusesStartingFromTimeToTime(intervalStart, intervalEnd, true)).thenReturn(listOf(startingLater))
+
+        val tdd = tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        // 3 steps * 1.2 / 12 + 6 steps * 2.4 / 12
+        assertThat(tdd?.bolusAmount).isWithin(0.0001).of(0.3 + 1.2)
+        verify(persistenceLayer, times(1)).getExtendedBolusActiveAt(any())
+        verify(persistenceLayer, times(1)).getExtendedBolusesStartingFromTimeToTime(any(), any(), any())
+    }
+
+    /** A bolus that starts exactly at the start is returned by both queries and must count once. */
+    @Test
+    fun `an extended bolus returned by both queries is counted once`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = false)
+        // 1.2 U/h for 10 min: steps +0 and +5
+        val atStart = EB(id = 3, timestamp = intervalStart, duration = T.mins(10).msecs(), amount = 0.2)
+        whenever(persistenceLayer.getExtendedBolusActiveAt(intervalStart)).thenReturn(atStart)
+        whenever(persistenceLayer.getExtendedBolusesStartingFromTimeToTime(intervalStart, intervalEnd, true)).thenReturn(listOf(atStart))
+
+        val tdd = tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        assertThat(tdd?.bolusAmount).isWithin(0.0001).of(0.2)
+    }
+
+    /** A pump that fakes temporary basals with extended boluses already counts them as basal. */
+    @Test
+    fun `extended boluses are not read when the pump fakes temps with them`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = true)
+
+        tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        verify(persistenceLayer, never()).getExtendedBolusActiveAt(any())
+        verify(persistenceLayer, never()).getExtendedBolusesStartingFromTimeToTime(any(), any(), any())
+    }
+
+    /**
+     * The insulin used since the last cannula change is weeks of 5-minute steps. Whole days that are
+     * stored must be read instead, and only the rest summed in steps.
+     */
+    @Test
+    fun `whole stored days are read and the rest is summed in steps`() = runTest {
+        inZone("Europe/Prague") {
+            givenBasal { 1.2 } // 0.1 U per step
+            val dayB = pragueMidnight("2026-01-13")
+            val dayC = pragueMidnight("2026-01-14")
+            val dayD = pragueMidnight("2026-01-15")
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(null)
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(dayB)).thenReturn(TDD(timestamp = dayB, basalAmount = 10.0, bolusAmount = 5.0, totalAmount = 15.0))
+
+            // From 22:00 the day before dayB to 03:00 on dayD
+            val tdd = tddCalculator.calculateIntervalWithCachedDays(dayB - T.hours(2).msecs(), dayD + T.hours(3).msecs(), allowMissingData = false)
+
+            // 2 h in steps, dayB stored, dayC not stored so 24 h in steps, 3 h in steps
+            assertThat(tdd?.totalAmount).isWithin(0.0001).of(2.4 + 15.0 + 28.8 + 3.6)
+            assertThat(tdd?.bolusAmount).isWithin(0.0001).of(5.0)
+            verify(iobCobCalculator, times(24 + 288 + 36)).getBasalData(any(), any())
+            verify(persistenceLayer, times(1)).getCalculatedTotalDailyDose(dayC)
+        }
+    }
+
+    /** With nothing stored, the day by day sum must give exactly what one long interval gives. */
+    @Test
+    fun `with nothing stored the result is the same as calculateInterval`() = runTest {
+        inZone("Europe/Prague") {
+            // A rate that changes every step, so a step counted twice or lost would show
+            givenBasal { t -> 1.0 + (t / T.mins(5).msecs() % 3) * 0.1 }
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(null)
+            val dayB = pragueMidnight("2026-01-13")
+            val boluses = listOf(
+                BS(timestamp = dayB + T.hours(8).msecs(), amount = 3.0, type = BS.Type.NORMAL, iCfg = mock<ICfg>()),
+                BS(timestamp = dayB + T.hours(30).msecs(), amount = 2.0, type = BS.Type.NORMAL, iCfg = mock<ICfg>())
+            )
+            whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
+                boluses.filter { it.timestamp in invocation.getArgument<Long>(0)..invocation.getArgument<Long>(1) }
+            }
+            val start = dayB - T.hours(5).msecs() + T.mins(17).msecs()
+            val end = dayB + T.hours(52).msecs() + T.mins(3).msecs()
+
+            val byDays = tddCalculator.calculateIntervalWithCachedDays(start, end, allowMissingData = false)
+            val inOne = tddCalculator.calculateInterval(start, end, allowMissingData = false)
+
+            assertThat(byDays?.basalAmount).isWithin(0.0001).of(inOne!!.basalAmount)
+            assertThat(byDays?.bolusAmount).isWithin(0.0001).of(5.0)
+            assertThat(byDays?.totalAmount).isWithin(0.0001).of(inOne.totalAmount)
+        }
+    }
+
+    /** A missing profile in a day that has to be summed makes the whole answer unavailable, as before. */
+    @Test
+    fun `a summed day without profile makes the result null`() = runTest {
+        inZone("Europe/Prague") {
+            givenBasal { 1.2 }
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(null)
+            val dayB = pragueMidnight("2026-01-13")
+            val dayC = pragueMidnight("2026-01-14")
+            val profile = mock<EffectiveProfile>()
+            whenever(profileFunction.getProfile(any())).thenAnswer { invocation -> if (invocation.getArgument<Long>(0) >= dayC) null else profile }
+
+            val tdd = tddCalculator.calculateIntervalWithCachedDays(dayB - T.hours(2).msecs(), dayC + T.hours(3).msecs(), allowMissingData = false)
+
+            assertThat(tdd).isNull()
+        }
+    }
+
+    /**
+     * A stored day covers 24 hours from its midnight. 2026-03-29 in Prague is 23 hours long, so a stored
+     * value for it does not match the day and must not be used.
+     */
+    @Test
+    fun `a DST change day is summed even when it is stored`() = runTest {
+        inZone("Europe/Prague") {
+            givenBasal { 1.2 }
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(TDD(timestamp = 0, totalAmount = 100.0))
+            val dstDay = pragueMidnight("2026-03-29")
+            val nextDay = pragueMidnight("2026-03-30")
+
+            val tdd = tddCalculator.calculateIntervalWithCachedDays(dstDay - T.hours(1).msecs(), nextDay + T.hours(1).msecs(), allowMissingData = false)
+
+            // 1 h + 23 h + 1 h in steps
+            assertThat(tdd?.totalAmount).isWithin(0.0001).of(25 * 1.2)
+            verify(persistenceLayer, never()).getCalculatedTotalDailyDose(any())
+        }
+    }
+
+    private fun pragueMidnight(date: String): Long =
+        LocalDateTime.parse("${date}T00:00:00").atZone(ZoneId.of("Europe/Prague")).toInstant().toEpochMilli()
+
+    /** `MidnightTime` uses the system zone, so the tests that cross midnight fix it. */
+    private inline fun <R> inZone(zoneId: String, block: () -> R): R {
+        val previous = JavaTimeZone.getDefault()
+        JavaTimeZone.setDefault(JavaTimeZone.getTimeZone(zoneId))
+        try {
+            return block()
+        } finally {
+            JavaTimeZone.setDefault(previous)
+        }
+    }
+
+    /** A profile for every step, no boluses, no carbs, no extended boluses, and the basal from [rate]. */
+    private suspend fun givenBasal(rate: (Long) -> Double) {
+        val profile = mock<EffectiveProfile>()
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(true)
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        whenever(iobCobCalculator.getBasalData(any(), any())).thenAnswer { invocation ->
+            BasalData().apply { tempBasalAbsolute = rate(invocation.getArgument(1)) }
+        }
+        whenever(profileFunction.getProfile(any())).thenReturn(profile)
+    }
+
+    // A 5-minute aligned hour, so every step is easy to count
+    private val intervalStart = T.mins(5).msecs() * 4000
+    private val intervalEnd = intervalStart + T.mins(60).msecs()
+
+    /** A profile for every step, no boluses, no carbs and no basal, so only extended boluses add up. */
+    private suspend fun givenIntervalWithoutBasal(fakingTemps: Boolean) {
+        val profile = mock<EffectiveProfile>()
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(fakingTemps)
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        whenever(iobCobCalculator.getBasalData(any(), any())).thenReturn(BasalData().apply { tempBasalAbsolute = 0.0 })
+        whenever(profileFunction.getProfile(any())).thenReturn(profile)
     }
 
     /**

@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 /**
- * AndroidAPS card component with proper elevation visibility in dark mode.
+ * AAPS card component with proper elevation visibility in dark mode.
  *
  * Uses [ElevatedCard] which provides shadow-based elevation that is visible
  * in both light and dark themes.

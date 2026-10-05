@@ -98,7 +98,7 @@ class CircleWatchface : WatchFace() {
         sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CIRCLE.ordinal)
         rxBus.send(EventUpdateSelectedWatchface())
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-        val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface")
+        val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:CircleWatchface")
         wakeLock.acquire(30000)
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         val bounds = windowManager.currentWindowMetrics.bounds
@@ -295,7 +295,7 @@ class CircleWatchface : WatchFace() {
     override fun onTimeChanged(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
         if (oldTime.hasMinuteChanged(newTime) && myLayout != null) {
             val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface_onTimeChanged")
+            val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:CircleWatchface_onTimeChanged")
             wakeLock.acquire(30000)
             /*Preparing the layout just on every minute tick:
              *  - hopefully better battery life

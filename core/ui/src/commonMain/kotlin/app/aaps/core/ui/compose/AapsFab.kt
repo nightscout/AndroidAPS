@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 /**
- * AndroidAPS FAB component with proper elevation visibility in dark mode.
+ * AAPS FAB component with proper elevation visibility in dark mode.
  *
  * Uses explicit shadow elevation that is visible in both light and dark themes.
  *
@@ -41,7 +41,7 @@ fun AapsFab(
 }
 
 /**
- * AndroidAPS small FAB component with proper elevation visibility in dark mode.
+ * AAPS small FAB component with proper elevation visibility in dark mode.
  *
  * Uses explicit shadow elevation that is visible in both light and dark themes.
  *

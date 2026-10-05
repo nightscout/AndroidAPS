@@ -182,7 +182,7 @@ class TizenPlugin(
         bundle.putInt("phoneBattery", receiverStatusStore.batteryLevel)
         bundle.putInt("rigBattery", processedDeviceStatusData.uploaderStatus.replace("%", "").trim { it <= ' ' }.toInt())
 
-        if (config.APS && loop.lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
+        if (config.APS && loop.lastRun?.lastTBREnact != 0L) { //we are AAPS
             bundle.putLong("suggestedTimeStamp", loop.lastRun?.lastAPSRun ?: -1L)
             bundle.putString("suggested", loop.lastRun?.request?.json().toString())
             if (loop.lastRun?.tbrSetByPump != null && loop.lastRun?.tbrSetByPump?.enacted == true) {

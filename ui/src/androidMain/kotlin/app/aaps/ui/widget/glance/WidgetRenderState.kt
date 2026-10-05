@@ -2,12 +2,15 @@ package app.aaps.ui.widget.glance
 
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.model.TrendArrow
 
 data class WidgetRenderState(
     val bgText: String,
     @ColorInt val bgColor: Int,
     val strikeThrough: Boolean,
     @DrawableRes val arrowResId: Int?,
+    /** Null without a reading. */
+    val trendArrow: TrendArrow?,
     val deltaText: String,
     val timeAgoText: String,
     val iobText: String,
