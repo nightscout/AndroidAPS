@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carelevo">Carelevo</string>
-    <string name="carelevo_shortname">CL</string>
     <string name="carelevo_description">Pumpeintegrasjon for Carelevo</string>
     <string name="carelevo_alarm_channel_name">Carelevo-alarmer</string>
     <string name="carelevo_alarm_channel_description">Varsler for Carelevo-patchalarmer</string>
