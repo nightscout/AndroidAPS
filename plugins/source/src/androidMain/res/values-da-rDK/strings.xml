@@ -2,11 +2,9 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BS</string>
-    <string name="ns_client_bg_short">NS BS</string>
     <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
     <string name="source_xdrip">xDrip+ BS</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Modtag BS-værdier fra \'Byg din egen Dexcom App\'.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Modtag BG-værdier fra Glimp.</string>
@@ -19,11 +17,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Modtag værdier fra Intelligo-appen</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Modtag BS-værdier fra Tomato-appen (MiaoMiao enhed)</string>
     <string name="random_bg">Tilfældigt BS</string>
     <string name="description_source_random_bg">Generér tilfældig BS-data (kun demotilstand)</string>
-    <string name="random_bg_short">BS</string>
     <!-- Patched Syai Tag App -->
     <!-- Patched SI App -->
     <!-- Patched Sino App -->
