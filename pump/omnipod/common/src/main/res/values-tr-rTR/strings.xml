@@ -107,6 +107,10 @@
     <string name="omnipod_common_pod_status_pod_fault">Pod Hatası</string>
     <string name="omnipod_common_pod_status_inactive">İnaktif</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Hatası: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod yakında sona erecek</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod yakında sona erecek</string>
