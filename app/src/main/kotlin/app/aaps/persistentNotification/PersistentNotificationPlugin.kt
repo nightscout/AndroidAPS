@@ -214,6 +214,7 @@ class PersistentNotificationPlugin(
         if (!config.appInitialized) return
         val pump = activePlugins.activePump
         var line1: String?
+        var line1WithDelta: String?
         var line2: String? = null
         var line3: String? = null
         var bgStatusChipText: String? = null
@@ -230,12 +231,12 @@ class PersistentNotificationPlugin(
                 metricValue = if (units == GlucoseUnit.MMOL) {
                     FixedFloat(
                         fromMgdlToUnits.round(1).toFloat(),
-                        units.displayLabel
+                        null // unit
                     )
                 } else {
                     FixedInt(
                         fromMgdlToUnits.toInt(),
-                        units.displayLabel
+                        null // unit
                     )
                 }
                 // Show an arrow only when there really is one. This used to fall back to FLAT,
@@ -246,14 +247,17 @@ class PersistentNotificationPlugin(
                 val trendSymbol = trendCalculator.getTrendArrow(iobCobCalculator.ads)
                     ?.takeIf { it != TrendArrow.NONE && it != TrendArrow.TRIPLE_UP && it != TrendArrow.TRIPLE_DOWN }
                     ?.symbol
-                line1 = "$bgStatusChipText" + (trendSymbol?.let { " $it" } ?: "")
+                line1 = bgStatusChipText + (trendSymbol?.let { " $it" } ?: "")
+                line1WithDelta = bgStatusChipText + (trendSymbol?.let { " $it" } ?: "")
                 if (glucoseStatus != null) {
                     line1 += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
+                    line1WithDelta += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
                 } else {
                     line1 += " " + rh.gs(R.string.old_data)
                 }
             } else {
                 line1 = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
+                line1WithDelta = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
             }
             val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             line1 += if (activeTemp != null) {
@@ -328,6 +332,7 @@ class PersistentNotificationPlugin(
             /// End Android Auto
         } else {
             line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
+            line1WithDelta = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
         }
         val content = "$line1|$line2|$line3"
         if (includeAuto && content == lastAutoNotificationContent) return
@@ -337,6 +342,7 @@ class PersistentNotificationPlugin(
         applyLiveUpdate(
             builder = builder,
             bgStatusChipText = bgStatusChipText,
+            line1WithDelta = line1WithDelta,
             bgMetric = bgMetric,
             line2 = line2
         )
@@ -365,6 +371,7 @@ class PersistentNotificationPlugin(
     private fun applyLiveUpdate(
         builder: NotificationCompat.Builder,
         bgStatusChipText: String?,
+        line1WithDelta: String?,
         bgMetric: Metric?,
         line2: String?
     ) {
@@ -372,7 +379,7 @@ class PersistentNotificationPlugin(
         // notification below - it shows the lock-screen "Now Bar" and drawer "Live Notifications"
         // through its own proprietary extras, so that needs to be applied separately and does not
         // depend on the Android version gating below.
-        applySamsungLiveUpdate(builder, bgStatusChipText, line2)
+        applySamsungLiveUpdate(builder, line1WithDelta, line2)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) return
         builder.setRequestPromotedOngoing(true)
         if (!bgStatusChipText.isNullOrBlank()) {
@@ -393,15 +400,15 @@ class PersistentNotificationPlugin(
     // restricted to Samsung so no unused extras are attached elsewhere.
     private fun applySamsungLiveUpdate(
         builder: NotificationCompat.Builder,
-        bgStatusChipText: String?,
+        line1WithDelta: String?,
         line2: String?
     ) {
         if (!Build.MANUFACTURER.equals(SAMSUNG_MANUFACTURER, ignoreCase = true)) return
-        if (bgStatusChipText.isNullOrBlank()) return
+        if (line1WithDelta.isNullOrBlank()) return
         val extras = bundleOf(
             SAMSUNG_EXTRA_STYLE to SAMSUNG_LIVE_UPDATE_STANDARD_STYLE,
-            SAMSUNG_EXTRA_PRIMARY_INFO to bgStatusChipText,
-            SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO to bgStatusChipText,
+            SAMSUNG_EXTRA_PRIMARY_INFO to line1WithDelta,
+            SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO to line1WithDelta,
             SAMSUNG_EXTRA_CHIP_ICON to Icon.createWithResource(context, iconsProvider.getNotificationIcon())
         )
         line2?.let {
