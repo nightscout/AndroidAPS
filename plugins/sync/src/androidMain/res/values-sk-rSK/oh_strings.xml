@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans vám umožňuje nahrávať dáta vášho diabetu a darovať ich vedeckým projektom.</string>
     <string name="logout">Odhlásiť sa</string>
     <string name="setup">Nastaviť</string>
