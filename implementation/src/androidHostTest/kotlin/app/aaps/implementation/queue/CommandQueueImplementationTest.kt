@@ -1181,6 +1181,49 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     /**
+     * #5193: cancelAllBoluses went through removeAll, which reports success because it is meant for a
+     * newer command replacing an older one. bolus() then saved the carbs of a bolus the pump never got.
+     */
+    @Test
+    fun `carbs are not persisted when a queued bolus is cancelled by cancelAllBoluses`() = runTest {
+        var result: PumpEnactResult? = null
+        backgroundScope.launch {
+            result = commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0; carbs = 20.0 })
+        }
+        yield()
+        assertThat(commandQueue.size()).isEqualTo(1)
+
+        commandQueue.cancelAllBoluses(null)
+        yield()
+
+        assertThat(commandQueue.size()).isEqualTo(0)
+        assertThat(result).isNotNull()
+        assertThat(result!!.success).isFalse()
+        // A stop by the user is not a delivery failure, so it must not ring the bolus error alarm.
+        assertThat(result!!.cancelled).isTrue()
+        verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+    }
+
+    /** #5193, the replace path: a queued bolus replaced by a newer one was not delivered either. */
+    @Test
+    fun `carbs are not persisted when a queued bolus is replaced by a newer one`() = runTest {
+        var replaced: PumpEnactResult? = null
+        backgroundScope.launch {
+            replaced = commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0; carbs = 20.0 })
+        }
+        yield()
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo().apply { insulin = 2.0 }) }
+        yield() // the second bolus replaces the first
+        yield() // the first caller resumes with its result
+
+        assertThat(commandQueue.size()).isEqualTo(1)
+        assertThat(replaced).isNotNull()
+        assertThat(replaced!!.success).isFalse()
+        assertThat(replaced!!.cancelled).isTrue()
+        verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+    }
+
+    /**
      * The drain used to call the callback directly, so `CommandBolus.cancel` never ran and the
      * bolus progress it owns was left running with nothing to finish it.
      */
