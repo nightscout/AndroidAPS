@@ -110,9 +110,14 @@ Today the clear on every BG reload limits the damage to one minute. If the cache
 `getBasalData` must look the profile up itself (`profileFunction.getProfile(time)`), or the key must
 include the profile.
 
+**Solved by removing the cache.** The overview basal graph and `TddCalculatorImpl` now read the
+temporary basals of their whole range at once (`ProcessedTbrEbData.getTempBasalsIncludingConvertedExtended`)
+and use the profile of each step. The callers of `getBasalData` left ask for "now", which was never
+stored, so `basalDataTable` was removed.
+
 ## Related
 
-- The IOB cache question: whether `iobTable` and `basalDataTable` can be kept between glucose values
+- The IOB cache question: whether `iobTable` (and `basalDataTable`, now removed) can be kept between glucose values
   instead of being cleared on every BG reload (cleared since the "IobCobCalculator refactor" in
   April 2021, commit `36040b7ed2`). This bug is the one thing the shadow test found that the clear
   protects against.
