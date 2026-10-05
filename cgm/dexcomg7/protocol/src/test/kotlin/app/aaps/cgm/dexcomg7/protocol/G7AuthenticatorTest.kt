@@ -64,6 +64,15 @@ class G7AuthenticatorTest {
     }
 
     @Test
+    fun reconnectWithoutTheBondIsNotARefusal() = runTest {
+        val key = ByteArray(16) { 4 }
+        val sensor = SimulatedG7Sensor("1155", storedKey = key, bondStatusOnReconnect = 2)
+        val error = runCatching { authenticator(null, key).authenticate(sensor) }.exceptionOrNull()
+        assertThat(error).isInstanceOf(G7AuthException.NotBonded::class.java)
+        assertThat((error as G7AuthException.NotBonded).bondStatus).isEqualTo(2)
+    }
+
+    @Test
     fun noCredentialsFailsAtOnce() {
         assertThrows(G7AuthException.NoCredentials::class.java) {
             runBlocking { authenticator(null, null).authenticate(SimulatedG7Sensor("1155")) }

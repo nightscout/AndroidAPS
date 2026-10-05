@@ -65,6 +65,8 @@ class SimulatedG7Sensor(
     var storedKey: ByteArray? = null,
     /** Refuse every session with this reason, after the challenge. */
     private val refuseWith: G7AuthFailureCode? = null,
+    /** The bond status this sensor reports on a reconnect with a stored key. */
+    private val bondStatusOnReconnect: Int = 1,
     override val address: String = "AA:BB:CC:DD:EE:FF",
     override val name: String? = "Dexcom12"
 ) : G7Link {
@@ -170,7 +172,7 @@ class SimulatedG7Sensor(
                     refuseWith != null                                  -> byteArrayOf(0x05, 0x02, refuseWith.code.toByte())
                     !expected.contentEquals(value.copyOfRange(1, 9))    -> byteArrayOf(0x05, 0x02, G7AuthFailureCode.CHALLENGE_MISMATCH.code.toByte())
                     clientRounds.size == 3                              -> byteArrayOf(0x05, 0x01, 0x02)
-                    else                                                -> byteArrayOf(0x05, 0x01, 0x01)
+                    else                                                -> byteArrayOf(0x05, 0x01, bondStatusOnReconnect.toByte())
                 }
                 notify(G7Characteristic.AUTHENTICATION, status)
             }

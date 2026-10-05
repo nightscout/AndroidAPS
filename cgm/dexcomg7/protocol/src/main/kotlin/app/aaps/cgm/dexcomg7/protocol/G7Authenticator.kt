@@ -33,6 +33,12 @@ sealed class G7AuthException(message: String) : Exception(message) {
      */
     class ChallengeMismatch : G7AuthException("The sensor's answer does not match our key")
 
+    /**
+     * A reconnect where the sensor accepted our key but did not report the bond (`bond=2`). Seen once
+     * on hardware, with the next connection back to normal: not a refusal, so not worth a pause.
+     */
+    class NotBonded(val bondStatus: Int) : G7AuthException("The sensor accepted the key but reported bond status $bondStatus")
+
     class NoCredentials : G7AuthException("No pairing code and no stored key")
 }
 
@@ -110,6 +116,7 @@ class G7Authenticator(
             log("Already authenticated and bonded")
             return Result(sharedKey, didExchangeKeys)
         }
+        if (!didExchangeKeys && status.isAuthenticated) throw G7AuthException.NotBonded(status.bondStatus)
         if (!didExchangeKeys) {
             // A reconnect that is not authenticated here has a key the sensor no longer accepts.
             throw G7AuthException.UnexpectedResponse("reconnect", byteArrayOf(0x05, status.authStatus.toByte(), status.bondStatus.toByte()))

@@ -353,6 +353,9 @@ class G7Session(
                 store.update { it.copy(sharedKeyHex = null) }
             }
 
+            // The key is fine, so no pause: a pause would also skip the sensor's next readings.
+            e is G7AuthException.NotBonded -> log("The sensor accepted the key but not the bond (bond=${e.bondStatus}); trying again at the next reading")
+
             e is G7AuthException.Rejected || e is G7AuthException.ChallengeMismatch || e is G7AuthException.UnexpectedResponse -> {
                 log("The sensor refused the connection: ${e.message}")
                 retryNotBefore = System.currentTimeMillis() + REFUSAL_PAUSE_MS
