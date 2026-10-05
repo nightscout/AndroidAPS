@@ -10,7 +10,6 @@
     <string name="no_connectivity">Không có kết nối</string>
     <string name="unsupported_ns_version">Phiên bản Nightscout này không được hỗ trợ</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Thiết bị được ủy quyền</string>
     <string name="authorized_clients_add">Thêm máy phụ</string>
@@ -75,7 +74,6 @@
     <string name="summary_tidepool_dev_servers">Bật tính năng này để tải dữ liệu lên máy chủ thử nghiệm thay vì máy chủ chính</string>
     <string name="title_tidepool_dev_servers">Dùng máy chủ thử nghiệm (Integration)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Tải dữ liệu lên Tidepool</string>
     <string name="upload_now">Tải bây giờ</string>
     <string name="tidepool_purge_data">Xóa toàn bộ dữ liệu</string>
@@ -85,7 +83,6 @@
     <string name="working">Đang làm việc</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Gửi dữ liệu tới xDrip+</string>
     <string name="xdrip_status_settings">Dòng trạng thái xDrip+ (nâng cao)</string>
     <string name="xdrip_not_installed">xDrip+ chưa được cài đặt</string>
@@ -94,7 +91,6 @@
     <string name="xdrip_local_broadcasts_title">Cho phép gửi dữ liệu tới xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="tizen">Ứng dụng cùng chạy bên ngoài</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">Cho phép phát dữ liệu tới nhiều ứng dụng cùng chạy bên ngoài</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -102,7 +98,6 @@
     <string name="garmin_local_http_server_port">Local HTTP server port</string>
     <string name="garmin_local_http_server">Local HTTP server</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Theo dõi và điều khiển AAPS từ đồng hồ WearOS.</string>
     <string name="no_watch_connected">(Không có đồng hồ kết nối)</string>
     <string name="pump_status">Trạng thái Bơm</string>
@@ -169,7 +164,6 @@
     <string name="garmin_request_key">Request Key</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Giao tiếp SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Điều khiển AAPS từ xa bằng lệnh SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">từ ứng dụng Xác thực cho: %1$s, sau đó nhập PIN</string>
     <string name="smscommunicator_tab_otp_label">Cài đặt xác thực</string>
