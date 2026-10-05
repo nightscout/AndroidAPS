@@ -37,7 +37,6 @@
     <string name="loopenabled">Lazo activado</string>
     <string name="apsselected">APS seleccionado</string>
     <string name="closedmodeenabled">Lazo cerrado activado</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Programa de aprendizaje</string>
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
     <string name="objectives_button_unfinish">Restablecer estado finalizado</string>
