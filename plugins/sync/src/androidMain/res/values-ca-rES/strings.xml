@@ -21,7 +21,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Utilitzar servidors d\'integració (test)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Envia dades a Tidepool</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip_not_installed">xDrip+ no instal·lat</string>
@@ -35,7 +34,6 @@
     <string name="open_settings_on_wear">Obrir Configuració a Wear</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicador SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de l\'app d\'autenticació per: %1$s seguit per PIN</string>
     <string name="smscommunicator_tab_otp_label">Configuració de l\'Autenticador</string>
     <string name="smscommunicator_code_verify_label">Codi per comprovar:</string>

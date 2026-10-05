@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Đang cập nhật tốc độ liều nền</string>
     <string name="description_pump_diaconn_g8">Tích hợp cho bơm Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Vi phạm liều bolus tối đa</string>
     <string name="commanderror">Lỗi lệnh</string>
     <string name="speederror">Lỗi tốc độ</string>

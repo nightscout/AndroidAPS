@@ -10,6 +10,7 @@
     <string name="configure">Configurar la opacidad</string>
     <string name="widget_description">Widget de AAPS</string>
     <string name="widget_bg_graph_description">Gráfico de glucemia AAPS</string>
+    <string name="widget_glucose_circle_description">Círculo de glucosa de AAPS</string>
     <string name="widget_compact_bg_description">AAPS Glucosa + IOB + COB (compacta)</string>
     <string name="widget_small_description">AAPS pequeño</string>
     <!--     Activities-->

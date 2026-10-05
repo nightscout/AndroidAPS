@@ -19,7 +19,6 @@
     <string name="updatingbasalrates">Обновление значений базала</string>
     <string name="description_pump_diaconn_g8">Интеграция с помпами Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Нарушение макс болюса</string>
     <string name="commanderror">Ошибка в команде</string>
     <string name="speederror">Ошибка в скорости</string>

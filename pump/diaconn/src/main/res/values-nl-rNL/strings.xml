@@ -19,7 +19,6 @@
     <string name="updatingbasalrates">Bijwerken basaal profiel</string>
     <string name="description_pump_diaconn_g8">Pomp integratie voor Diaconn G8 Pompen</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Maximale bolus overschrijding</string>
     <string name="commanderror">Opdracht fout</string>
     <string name="speederror">Snelheid fout</string>

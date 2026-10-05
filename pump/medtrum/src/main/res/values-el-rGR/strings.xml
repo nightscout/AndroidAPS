@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">ΜT</string>
     <string name="medtrum_pump_description">Ενσωμάτωση της αντλίας για Medtrum Nano και Medtrum 300U</string>
     <string name="medtrum_pump_setting">Ρυθμίσεις αντλίας Medtrum</string>
     <string name="pump_error">Σφάλμα αντλίας: %1$s !! </string>

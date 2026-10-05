@@ -14,7 +14,6 @@
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
     <!--    Wear-->
-    <string name="wear_shortname">SAT</string>
     <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
     <string name="no_watch_connected">(Nema povezanog sata)</string>
     <string name="pump_status">Status pumpe</string>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">평활화</string>
     <string name="exponential_smoothing_name">지수 평활화</string>
     <string name="description_exponential_smoothing">"2차 지수 평활화 알고리즘"</string>
     <string name="avg_smoothing_name">평균 평활화</string>

@@ -37,7 +37,6 @@
     <string name="loopenabled">Smyčka povolena</string>
     <string name="apsselected">APS vybráno</string>
     <string name="closedmodeenabled">Uzavřená smyčka povolena</string>
-    <string name="objectives_shortname">CÍLE</string>
     <string name="description_objectives">Výukový program</string>
     <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
     <string name="objectives_button_unfinish">Resetovat dokončený stav</string>

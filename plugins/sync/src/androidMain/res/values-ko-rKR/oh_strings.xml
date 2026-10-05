@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans (데이터를 공개함)</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans는 당신의 당뇨 관련 데이터를 업로드하고 이를 과학적 연구 프로젝트에 기증하도록 허용합니다.</string>
     <string name="logout">로그아웃</string>
     <string name="setup">설정</string>

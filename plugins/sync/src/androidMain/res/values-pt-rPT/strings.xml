@@ -21,7 +21,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Utilizar servidores de integração (teste)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
     <string name="upload_now">Fazer o upload agora</string>
     <!-- Xdrip StatusLine -->
@@ -57,7 +56,6 @@
     <string name="today">Hoje</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicador SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Controle remotamente a AndroidAPS usando comandos SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app Authenticator para: %1$s seguido pelo PIN</string>
     <string name="smscommunicator_tab_otp_label">Configuração do Autenticador</string>

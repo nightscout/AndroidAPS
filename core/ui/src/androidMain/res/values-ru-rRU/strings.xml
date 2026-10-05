@@ -15,6 +15,8 @@
     <string name="no_valid_basal_rate">На помпе не найдены валидные записи о базалe</string>
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="event_type">тип события</string>
+    <string name="mgdl">мг/дл</string>
+    <string name="mmol">ммоль/л</string>
     <string name="save">Сохранить</string>
     <string name="snooze">Убрать оповещение</string>
     <string name="virtual_pump">Виртуальная помпа</string>
@@ -134,7 +136,7 @@
     <string name="login">Логин</string>
     <string name="logout">Выход из системы</string>
     <string name="prime_fill">Прайм/заполнение</string>
-    <string name="site_rotation">Вращение места установки</string>
+    <string name="site_rotation">Места установки</string>
     <string name="edit_site">Редактировать</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="stoptemptarget">Остановить врем цель</string>

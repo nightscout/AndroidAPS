@@ -36,7 +36,6 @@
     <string name="loopenabled">Цикл активирован</string>
     <string name="apsselected">Выбран APS</string>
     <string name="closedmodeenabled">Режим замкнутого цикла включен</string>
-    <string name="objectives_shortname">ЦЕЛИ</string>
     <string name="description_objectives">Обучающая программа</string>
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Вы можете потерять весь прогресс по ней.</string>
     <string name="objectives_button_unfinish">Сбросить пройденные</string>

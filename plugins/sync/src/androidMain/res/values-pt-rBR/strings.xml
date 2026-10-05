@@ -72,7 +72,6 @@
     <string name="summary_tidepool_dev_servers">Se ativado, os uploads irão para servidores de teste em vez do servidor normal</string>
     <string name="title_tidepool_dev_servers">Usar servidores de integração (teste)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
     <string name="upload_now">Enviar agora</string>
     <string name="tidepool_purge_data">Apagar todos os dados</string>
@@ -82,7 +81,6 @@
     <string name="working">Trabalhando</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Enviar dados de glicemia para xDrip+</string>
     <string name="xdrip_status_settings">linha do estado do Xdrip+ (relógio)</string>
     <string name="xdrip_not_installed">xDrip+ não está instalado</string>
@@ -159,7 +157,6 @@
     <string name="garmin_request_key">Chave de solicitação</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicador SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Controle remotamente o AndroidAPS usando comandos SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">do aplicativo Autenticador para: %1$s seguido por PIN</string>
     <string name="smscommunicator_tab_otp_label">Configuração do Autenticador</string>

@@ -37,7 +37,6 @@
     <string name="loopenabled">Loop er aktivert</string>
     <string name="apsselected">APS valgt</string>
     <string name="closedmodeenabled">Lukket loop aktivert</string>
-    <string name="objectives_shortname">MÅL</string>
     <string name="description_objectives">Opplæringsprogram</string>
     <string name="doyouwantresetstart">Ønsker du å starte læringsmålet på nytt? Du vil miste fullførte trinn.</string>
     <string name="objectives_button_unfinish">Nullstille ferdig-status</string>

@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">КЗ от NS</string>
-    <string name="ns_client_bg_short">NS КЗ</string>
     <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
     <string name="source_xdrip">КЗ от xDrip+</string>
     <string name="description_source_xdrip">Получава захари от xDrip+ или съвместими апове (Juggluco и др.).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom BYODA.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Получавай данните от Intelligo апликацията</string>
     <string name="tomato">Tomato(MяоМяо)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
     <string name="random_bg">Произволна КЗ</string>
     <string name="description_source_random_bg">Генерира произволни захари(демо режим)</string>
-    <string name="random_bg_short">КЗ</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Получаване на захари от Syai/Ottai.</string>
@@ -48,7 +44,6 @@
     <string name="permission_notification_listener_title">Достъп до Нотификации</string>
     <string name="permission_notification_listener_description">Нужно за прочитане на данни за КЗ от други апове</string>
     <string name="aidex">MicroTech CGM App</string>
-    <string name="aidex_short">CGM ап</string>
     <string name="description_source_aidex">Получаване на данни за захари от  LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 и др.</string>
     <string name="aidex_sensor_expired">Сензърът е изтекъл, сменете го с нов</string>
     <string name="aidex_sensor_error">Грешка в сензора, проверете неговият статус</string>

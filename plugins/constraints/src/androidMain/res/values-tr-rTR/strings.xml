@@ -36,7 +36,6 @@
     <string name="loopenabled">Döngü etkin</string>
     <string name="apsselected">APS Seçildi</string>
     <string name="closedmodeenabled">Kapalı mod etkin</string>
-    <string name="objectives_shortname">GRV</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="objectives_button_unfinish">Bitmiş durumu sıfırla</string>

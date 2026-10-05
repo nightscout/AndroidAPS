@@ -9,10 +9,8 @@
     <string name="openapsma_no_glucose_data">Glikoz verisi yok</string>
     <string name="openaps_no_as_data">Otoduyarlılık verileri mevcut değil</string>
     <string name="dynisf_shortname">DİNİDF</string>
-    <string name="autoisf_shortname">OTOİDF</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
-    <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">2017\'da algoritmanın durumu</string>
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
@@ -42,7 +40,6 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Son 3 dakika içerisinde bir bolus gönderildi, SMB (Super Micro Bolus) atlandı</string>
     <string name="pump_not_initialized">Pompa başlatılamadı!</string>
-    <string name="loop_shortname">DÖNGÜ</string>
     <string name="description_loop">Döngüyü tetikleyen uygulamayı etkinleştirin veya devre dışı bırakın.</string>
     <string name="no_aps_selected">SEÇİLEN VEYA SAĞLANAN SONUCU APS YOK</string>
     <string name="ignore5m">5dk yoksay</string>
@@ -65,7 +62,6 @@
     <string name="fallback_to_isf_no_tdd">Profil duyarlılığına geri dönüş. Yeterli veri yok. Sebep: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Potansiyel profil ayarlamaları için yardım (İDF, karbonhidrat ve bazal oranları)</string>
-    <string name="autotune_shortname">AT</string>
     <string name="autotune_default_tune_days_title">Veri gün sayısı</string>
     <string name="autotune_tunedprofile_name">Ayarlandı</string>
     <string name="autotune_profile">Profil :</string>

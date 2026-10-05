@@ -33,4 +33,5 @@
     <string name="current_master_password">Aktuální hlavní heslo</string>
     <string name="master_password_not_set">Hlavní heslo není nastaveno</string>
     <string name="aaps_directory_not_selected">Nebyl vybrán adresář AAPS</string>
+    <string name="aaps_directory_access_lost">Přístup do adresáře AAPS byl ztracen, takže nastavení již nejsou v telefonu uložena. Vyberte adresář znovu.</string>
 </resources>

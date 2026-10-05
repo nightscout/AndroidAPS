@@ -13,7 +13,6 @@
     <string name="clear_log">Napló törlése</string>
     <!-- Tidepool -->
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="upload_now">Feltöltés most</string>
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->

@@ -150,6 +150,4 @@
     <string name="advisoralarm">Chạy báo thức khi đến giờ ăn</string>
     <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
-    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Không thể khởi động plugin %1$s và plugin có thể không hoạt động. Vui lòng khởi động lại AndroidAPS.</string>
-    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Plugin %1$s gặp lỗi và một phần của plugin đã dừng hoạt động. Vui lòng khởi động lại AndroidAPS.</string>
 </resources>

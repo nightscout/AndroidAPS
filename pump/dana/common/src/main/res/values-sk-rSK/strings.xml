@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Vypršal časový limit pre párovanie</string>
+    <string name="danars_bonding_failed">Bluetooth párovanie s pumpou zlyhalo alebo bolo zrušené. Skúste to znova a zadajte PIN kód zobrazený na pumpe.</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Integrácia pumpy pre pumpy DANA Diabecare RS a Dana-i</string>
     <string name="maxbolusviolation">Prekročený maximálny bolus</string>
     <string name="commanderror">Chyba príkazu</string>
@@ -76,7 +76,6 @@
     <string name="description_pump_dana_r">Ovládač pumpy pre Dana Diabecare R</string>
     <string name="description_pump_dana_r_korean">Ovládač pumpy pre kórejskú verziu Dana Diabecare R</string>
     <string name="description_pump_dana_r_v2">Ovládač pumpy pre Dana Diabecare R s aktualizovaným firmvérom</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Vybrané zariadenie nenájdené</string>
     <string name="danar_switchtouhmode">Zmeniť v pumpe režim z U/d na U/h</string>
     <string name="danarkoreanpump">Kórejská DanaR</string>

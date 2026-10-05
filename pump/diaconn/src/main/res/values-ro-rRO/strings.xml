@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Se actualizează ratele bazale</string>
     <string name="description_pump_diaconn_g8">Integrare cu pompa Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Încălcare a valorii maxime a bolusului</string>
     <string name="commanderror">Eroare de comandă</string>
     <string name="speederror">Eroare de viteză</string>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">החלקה</string>
     <string name="exponential_smoothing_name">החלקה מעריכית</string>
     <string name="description_exponential_smoothing">"אלגוריתם החלקה מעריכית מסדר שני"</string>
     <string name="avg_smoothing_name">החלקת ממוצע</string>

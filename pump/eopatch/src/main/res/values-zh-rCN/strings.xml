@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day 泵集成</string>
     <string name="low_reservoir">储药器药量低！警告！</string>
     <string name="patch_expiration_reminders">敷贴更换提醒</string>
