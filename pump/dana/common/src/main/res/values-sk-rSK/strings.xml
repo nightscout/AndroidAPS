@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Vypršal časový limit pre párovanie</string>
+    <string name="danars_bonding_failed">Bluetooth párovanie s pumpou zlyhalo alebo bolo zrušené. Skúste to znova a zadajte PIN kód zobrazený na pumpe.</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Integrácia pumpy pre pumpy DANA Diabecare RS a Dana-i</string>
