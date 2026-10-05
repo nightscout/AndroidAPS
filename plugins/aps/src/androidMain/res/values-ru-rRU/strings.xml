@@ -9,10 +9,8 @@
     <string name="openapsma_no_glucose_data">Данные гликемии недоступны</string>
     <string name="openaps_no_as_data">Данные autosens недоступны</string>
     <string name="dynisf_shortname">ДинISF</string>
-    <string name="autoisf_shortname">AUTOISF</string>
     <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
-    <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">Состояние алгоритма в 2017 году</string>
     <string name="description_smb">Самый новый алгоритм для опытных пользователей</string>
     <string name="description_smb_dynamic_isf">Последний алгоритм для опытных пользователей с динамическим/автоматическим ISF</string>
@@ -42,7 +40,6 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Болюс был подан в течение последних трех минут, минуя супер микро болюс SMB</string>
     <string name="pump_not_initialized">Помпа не инициализирована!</string>
-    <string name="loop_shortname">ЗЦ</string>
     <string name="description_loop">Активировать или деактивировать запуск цикла.</string>
     <string name="no_aps_selected">APS не выбрана или не выдала результат</string>
     <string name="ignore5m">Игнорировать 5 м</string>
@@ -65,7 +62,6 @@
     <string name="fallback_to_isf_no_tdd">Откат к чувствительности из профиля. Недостаточно данных. Причина: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
-    <string name="autotune_shortname">АвтТюн</string>
     <string name="autotune_default_tune_days_title">Количество дней с данными</string>
     <string name="autotune_tunedprofile_name">Настроено</string>
     <string name="autotune_profile">Профиль:</string>
