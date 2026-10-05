@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="calibration_shortname">כיול</string>
     <string name="no_calibration_name">ללא כיול</string>
     <string name="description_no_calibration">"לא מוחל תיקון כיול. ערכי החיישן משמשים כפי שהם. השתמשו באפשרות זו כאשר החיישן כבר מכויל מהמפעל ומדויק."</string>
     <string name="linear_calibration_name">כיול ליניארי</string>
