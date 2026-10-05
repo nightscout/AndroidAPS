@@ -36,7 +36,6 @@
     <string name="loopenabled">Boucle activée</string>
     <string name="apsselected">APS Sélectionné</string>
     <string name="closedmodeenabled">Mode boucle fermée activé</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Programme d’apprentissage</string>
     <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
     <string name="objectives_button_unfinish">Réinitialiser l\'état terminé</string>
