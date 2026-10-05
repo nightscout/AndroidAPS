@@ -53,7 +53,7 @@ abstract class Trigger(val deps: TriggerDeps) {
 
     abstract fun duplicate(): Trigger
 
-    fun toJSON(): String =
+    open fun toJSON(): String =
         buildJsonObject {
             put("type", this@Trigger::class.simpleName)
             put("data", dataJSON())

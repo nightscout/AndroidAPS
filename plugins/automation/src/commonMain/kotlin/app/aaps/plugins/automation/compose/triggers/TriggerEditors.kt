@@ -57,6 +57,7 @@ import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
+import app.aaps.plugins.automation.triggers.TriggerUnknown
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
 
 @Composable
@@ -102,6 +103,7 @@ fun TriggerEditor(
             is TriggerBTDevice           -> TriggerBTDeviceEditor(trigger, bondedDevices, onChange)
             is TriggerLocation           -> TriggerLocationEditor(trigger, onChange, tick, onUseCurrentLocation, onPickLocationFromMap)
             is TriggerConnector          -> Text("Connector")
+            is TriggerUnknown            -> Text(trigger.friendlyDescription())
             else                         -> Text(trigger::class.simpleName.orEmpty())
         }
     }
