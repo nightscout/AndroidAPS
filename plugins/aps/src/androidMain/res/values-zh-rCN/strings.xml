@@ -9,10 +9,8 @@
     <string name="openapsma_no_glucose_data">没有可用的血糖数据</string>
     <string name="openaps_no_as_data">Autosens 数据不可用</string>
     <string name="dynisf_shortname">动态ISF</string>
-    <string name="autoisf_shortname">自动胰岛素敏感系数</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
-    <string name="oaps_shortname">OpenAPS</string>
     <string name="description_ama">算法的状态在2017年</string>
     <string name="description_smb">最新的适合高级用户的算法</string>
     <string name="description_smb_dynamic_isf">面向高级用户的最新算法，可以动态/自动调整ISF胰岛素敏感系数</string>
@@ -44,7 +42,6 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
     <string name="pump_not_initialized">泵未初始化!</string>
-    <string name="loop_shortname">闭环</string>
     <string name="description_loop">激活或停用这个工具触发闭环。</string>
     <string name="no_aps_selected">未选择 APS 或未提供结果</string>
     <string name="ignore5m">忽略5分钟</string>
@@ -67,7 +64,6 @@
     <string name="fallback_to_isf_no_tdd">回退到配置文件敏感度。数据不足。原因：%1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">帮助对配置文件进行潜在调整（胰岛素敏感系数、碳水化合物系数和基础率）</string>
-    <string name="autotune_shortname">自动调整</string>
     <string name="autotune_default_tune_days_title">数据天数</string>
     <string name="autotune_tunedprofile_name">已调整</string>
     <string name="autotune_profile">配置文件：</string>
