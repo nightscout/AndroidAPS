@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">VYHLAD</string>
     <string name="exponential_smoothing_name">Exponenciálne vyhladzovanie</string>
     <string name="description_exponential_smoothing">"Vyhladzovací algoritmus druhého rádu"</string>
     <string name="avg_smoothing_name">Priemerovacie vyhladzovanie</string>
