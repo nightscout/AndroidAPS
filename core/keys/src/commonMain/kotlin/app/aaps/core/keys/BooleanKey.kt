@@ -36,12 +36,14 @@ enum class BooleanKey(
         enabledCondition = PreferenceEnabledCondition { it.isConcentrationEnabled },
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
-    // Android only: the wake lock is held by ComposeMainActivity, and neither other shell has a
-    // counterpart - an iOS app cannot keep the screen lit from the background, and a desktop screen
-    // is the machine's business, not the app's.
+    // Not on desktop: a desktop screen is the machine's business, not the app's. Android holds the
+    // `FLAG_KEEP_SCREEN_ON` window flag in ComposeMainActivity and iOS sets `idleTimerDisabled` in
+    // `KeepScreenOnEffect`. Both only reach as far as the app being on screen - the window flag is no
+    // more able to light the screen from the background than iOS is, which is what this comment used
+    // to claim set them apart.
     OverviewKeepScreenOn(
         key = "keep_screen_on", defaultValue = false, title = KeysStrings.pref_title_keep_screen_on, summary = KeysStrings.pref_summary_keep_screen_on,
-        calculatedDefaultValue = true, platforms = AppPlatform.ANDROID_ONLY
+        calculatedDefaultValue = true, platforms = setOf(AppPlatform.Android, AppPlatform.Ios)
     ),
     OverviewShowTreatmentButton(key = "show_treatment_button", defaultValue = false, title = KeysStrings.pref_title_show_treatment_button, defaultedBySM = true),
     OverviewShowWizardButton(key = "show_wizard_button", defaultValue = true, title = KeysStrings.pref_title_show_wizard_button, defaultedBySM = true),

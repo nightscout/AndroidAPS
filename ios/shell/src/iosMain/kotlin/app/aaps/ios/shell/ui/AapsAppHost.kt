@@ -166,6 +166,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 graph.uiRestart.request()
             }
         }
+        // The user's "keep screen on" choice, which iOS honours through the idle timer. Placed
+        // beside the language effect because both are app wide settings applied while it runs.
+        KeepScreenOnEffect(graph.preferences)
+
         val restart by graph.uiRestart.signal.collectAsState()
         key(restart) {
         // iOS has no ambient application object, so the factory is provided here rather than found.
