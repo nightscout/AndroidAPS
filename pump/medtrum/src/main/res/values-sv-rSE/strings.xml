@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_setting">Inställningar för Medtrum-pump</string>
     <string name="pump_error">Pumpfel: %1$s !! </string>
     <string name="pump_is_suspended">Pumpen är pausad</string>
