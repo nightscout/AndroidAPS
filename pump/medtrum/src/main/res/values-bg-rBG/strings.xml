@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Интеграция за помпи Medtrum Nano и Medtrum 300U</string>
     <string name="medtrum_pump_setting">Настройки за помпа Medtrum</string>
     <string name="pump_error">Грешка в помпа: %1$s !! </string>
