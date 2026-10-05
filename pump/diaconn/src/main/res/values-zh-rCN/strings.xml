@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">正在更新基础率</string>
     <string name="description_pump_diaconn_g8">集成Diaconn G8泵</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">超出最大大剂量的限制</string>
     <string name="commanderror">命令错误</string>
     <string name="speederror">速度错误</string>
