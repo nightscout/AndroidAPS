@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">GLOD</string>
     <string name="exponential_smoothing_name">Eksponentinis glodinimas</string>
     <string name="description_exponential_smoothing">"Antros eilės eksponentinio glodinimo algoritmas"</string>
     <string name="avg_smoothing_name">Vidutinis glodinimas</string>
