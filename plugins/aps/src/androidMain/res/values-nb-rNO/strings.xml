@@ -9,10 +9,8 @@
     <string name="openapsma_no_glucose_data">Ingen BS data tilgjengelig</string>
     <string name="openaps_no_as_data">Ingen data tilgjengelig for Autosens</string>
     <string name="dynisf_shortname">DISF</string>
-    <string name="autoisf_shortname">AUTOISF</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
-    <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">Slik algoritmen var definert i 2017</string>
     <string name="description_smb">Siste utgave av algoritmen for avanserte brukere</string>
     <string name="description_smb_dynamic_isf">Nyeste algoritme for avanserte brukere med dynamisk/automatisk ISF</string>
@@ -45,7 +43,6 @@
     <string name="smb_frequency_exceeded">En bolus er gitt i løpet av de siste 3 minuttene, dropper SMB</string>
     <string name="pump_not_initialized">Pumpen er ikke initialisert!</string>
     <string name="zero_basal_not_set">Pumpen godtok ikke nullbasal. Den kan fortsatt levere basalinsulin. Kontroller pumpen.</string>
-    <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Aktiver eller deaktiver hendelsen som starter kjøring av loop.</string>
     <string name="no_aps_selected">INGEN APS ER VALGT ELLER HAR LEVERT RESULTAT</string>
     <string name="ignore5m">Ignorer i 5m</string>
@@ -68,7 +65,6 @@
     <string name="fallback_to_isf_no_tdd">Faller tilbake til profilsensitivitet. Ikke nok TDD-data. Årsak: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Hjelp til potensiell justering av profilen (ISF, IK og basaldoser)</string>
-    <string name="autotune_shortname">AT</string>
     <string name="autotune_default_tune_days_title">Antall dager med data</string>
     <string name="autotune_tunedprofile_name">Justert</string>
     <string name="autotune_profile">Profil :</string>
