@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient 血糖</string>
-    <string name="ns_client_bg_short">NS 血糖</string>
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
     <string name="source_xdrip">xDrip+ 血糖</string>
     <string name="description_source_xdrip">从 xDrip+ 和兼容的应用程序（Juggluco 等）接收血糖值。</string>
     <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">从 Intelligo 应用接收值</string>
     <string name="tomato">番茄（喵喵）</string>
-    <string name="tomato_short">番茄</string>
     <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
     <string name="random_bg">随机血糖</string>
     <string name="description_source_random_bg">生成随机血糖数据（仅限demo演示模式）</string>
-    <string name="random_bg_short">血糖</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">从 Syai/欧态 App 接收血糖数据。</string>
@@ -49,7 +45,6 @@
     <string name="permission_notification_listener_title">通知权限</string>
     <string name="permission_notification_listener_description">需要从 CGM 应用通知读取血糖值</string>
     <string name="aidex">微泰 CGM 应用</string>
-    <string name="aidex_short">CGM 应用</string>
     <string name="description_source_aidex">从 LinX、LinX vista、Equil G. Smart 2、Diaexpert 2 等设备接收动态血糖值。</string>
     <string name="aidex_sensor_expired">传感器已过期，请替换为新传感器</string>
     <string name="aidex_sensor_error">传感器错误，请检查传感器状态</string>
