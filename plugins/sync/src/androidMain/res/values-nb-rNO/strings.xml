@@ -10,7 +10,6 @@
     <string name="no_connectivity">Ingen internettforbindelse</string>
     <string name="unsupported_ns_version">Versjonen av Nightscout støttes ikke</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Autoriserte klienter</string>
     <string name="authorized_clients_add">Legg til klient</string>
@@ -75,7 +74,6 @@
     <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til testservere i stedet for den vanlige</string>
     <string name="title_tidepool_dev_servers">Bruk integrasjon (test) servere</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Laster opp data til Tidepool</string>
     <string name="upload_now">Last opp nå</string>
     <string name="tidepool_purge_data">Slett alle data</string>
@@ -85,7 +83,6 @@
     <string name="working">Prosesserer</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Send data til xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ avansert statuslinje</string>
     <string name="xdrip_not_installed">xDrip+ ikke installert</string>
@@ -94,7 +91,6 @@
     <string name="xdrip_local_broadcasts_title">Aktiver sending til xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="tizen">Eksterne hjelpeapper</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">Aktiverer deling av data til ulike eksterne hjelpeapper</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -102,7 +98,6 @@
     <string name="garmin_local_http_server_port">Lokal HTTP-serverport</string>
     <string name="garmin_local_http_server">Lokal HTTP-server</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Overvåke og kontrollere AAPS ved hjelp av WearOS-klokken.</string>
     <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
     <string name="pump_status">Pumpestatus</string>
@@ -169,7 +164,6 @@
     <string name="garmin_request_key">Be om nøkkel</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS-kommunikasjon</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Fjernstyre AAPS ved å bruke SMS-kommandoer.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">fra Authenticator-appen for: %1$s etterfulgt av PIN-kode</string>
     <string name="smscommunicator_tab_otp_label">Oppsett av autentisering</string>
