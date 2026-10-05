@@ -50,6 +50,7 @@
     <string name="ignore30m">Ignorer i 30m</string>
     <string name="carbs_suggestion">Karboforslag</string>
     <string name="open_loop_new_suggestion">Ny anbefaling tilgjengelig</string>
+    <string name="open_loop_suggestion_too_old">Dette forslaget er for gammelt. Ingenting ble sendt til pumpen. Vent på neste forslag.</string>
     <string name="basal_set_correctly">Basal er satt riktig</string>
     <string name="last_run_label">Siste beregning</string>
     <string name="loop_aps_label">APS</string>
