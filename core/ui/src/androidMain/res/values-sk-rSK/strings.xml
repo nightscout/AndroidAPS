@@ -63,6 +63,9 @@
     <string name="configbuilder_switch_confirmation">Týmto vypnete %1$s a zapnete %2$s.</string>
     <string name="expand">Rozbaliť</string>
     <string name="collapse">Zbaliť</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Dokončené</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Rozbalené</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Zbalené</string>
     <string name="no_compose_preferences">Pre tento plugin nie sú k dispozícii žiadne nastavenia písania</string>
     <string name="confirm_password_hint">Potvrďte heslo</string>
     <string name="confirm_pin_hint">Potvrďte PIN</string>
@@ -116,6 +119,7 @@
     <string name="profile_switch_no_insulin">Nie je možné prepnúť profil: nepoužíva se žiadny inzulín a žiadny nebol vybraný.</string>
     <string name="profile_switch_select_insulin_hint">Zatiaľ sa nepoužíva žiadny inzulín. Vyberte inzulín, ktorý používate, aby ho prepnutie profilu mohlo zaznamenať.</string>
     <string name="insulin_activation_failed">Inzulín nebol prepnutý. Váš predchádzajúci inzulín sa stále používá.</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">Inzulín nebol prepnutý: %1$s. Váš predchádzajúci inzulín sa stále používa.</string>
     <string name="insulin_activation_unconfirmed">Prepnutie inzulínu nemohlo byť potvrdené. Skontrolujte, ktorý inzulín je aktívny vo vašom profile pred dávkovaním.</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\nInzulín tiež nebol prepnutý.</string>
     <string name="active"><![CDATA[<Aktívny>]]></string>
@@ -345,6 +349,8 @@
     <string name="scene_active">Aktívna</string>
     <string name="scene_ended">Scéna ukončená</string>
     <string name="scene_end_active">Aktívna scéna ukončená</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Prejsť na</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Nadväzujúci scenár %1$s sa nespustí</string>
     <string name="scene_confirm_activate">Aktivovať scénu \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Ukončiť scénu \"%1$s\" a vrátiť zmeny?</string>
     <string name="scene_conflict_active_tt">Aktívny dočasný cieľ bude nahradený</string>
@@ -444,6 +450,7 @@
     <string name="treatment_insulin_desc">Podaj bolus ručne</string>
     <string name="treatment_carbs_desc">Zaznamenaj sacharidy bez inzulínu</string>
     <string name="treatment_calculator_desc">Spočítaj bolus</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Nastavenia inzulínu</string>
     <string name="manage_insulin_desc">Správa a aktivácia konfigurácie inzulínu</string>
     <string name="concentration_disable_blocked">Nemôžem vypnúť podporu koncentrácie, pretože existuje i iný inzulín ako U100. Odstráň všetky inzulíny iné ako U100 a prepni najskôr na U100.</string>
     <string name="simple_mode_blocked_by_concentration">Nemôžem zapnúť jednoduchý mód, pretože je použitý iný inzulín ako U100. Prepni najskôr na U100.</string>
@@ -465,6 +472,9 @@
     <string name="treatment_cannula_change_desc">Zaznamenaj výmenu setu</string>
     <string name="treatment_fill_desc">Doplniť inzulín a naplniť kanylu</string>
     <string name="temp_basal">Dočasný bazál</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Nad úrovňou profilu</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">Pod úrovňou profilu</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">Žiadne</string>
     <string name="user_entry">Záznam užívateľa</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Prst</string>
@@ -693,6 +703,7 @@
     <string name="basal">Bazál</string>
     <string name="basalpct">Bazál %</string>
     <string name="sensitivity">Citlivosť</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Funkcia Autosens je vypnutá</string>
     <string name="isf_for_carbs">ISF pre kalkulačku a vstrebávanie sacharidov: %1$.1f</string>
     <string name="isf_profile">ISF v profile: %1$.1f</string>
     <string name="isf_variable">Variabilné ISF: %1$.1f</string>
@@ -730,6 +741,7 @@
     <string name="wizard_include_iob">Zahŕňa IOB</string>
     <string name="wizard_include_cob">Zahŕňa COB</string>
     <string name="wizard_calculation">Výpočet</string>
+    <string name="no_action_selected">Nebola vybraná žiadna akcia, nič sa nestane.</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">Maximálne odstránenie: %1$d g (sacharidy na palube)</string>
     <string name="wizard_no_insulin_required">Nie je požadovaný žiadny inzulín</string>
     <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
@@ -780,6 +792,7 @@
     <string name="initializing">Inicializácia…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Upozornenie</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">Kritické</string>
     <string name="alert" comment="Generic alert dialog title">Výstraha</string>
     <string name="retry" comment="Button label to retry a failed operation">Opakovať</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">Dokončiť</string>
@@ -1036,6 +1049,7 @@
     <string name="import_wrong_password">Nesprávne heslo</string>
     <string name="import_btn">Importovať</string>
     <string name="import_anyway_btn">Importovať aj tak</string>
+    <string name="import_apply_title">Použiť importované nastavenia?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
