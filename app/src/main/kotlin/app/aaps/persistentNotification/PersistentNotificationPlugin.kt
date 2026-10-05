@@ -135,6 +135,9 @@ class PersistentNotificationPlugin(
     private val SAMSUNG_EXTRA_PRIMARY_INFO = "android.ongoingActivityNoti.primaryInfo"
     private val SAMSUNG_EXTRA_SECONDARY_INFO = "android.ongoingActivityNoti.secondaryInfo"
     private val SAMSUNG_EXTRA_CHIP_ICON = "android.ongoingActivityNoti.chipIcon"
+
+    // Text of the status bar chip. Without it the chip shows the primary info, which is the long drawer line.
+    private val SAMSUNG_EXTRA_CHIP_EXPANDED_TEXT = "android.ongoingActivityNoti.chipExpandedText"
     private val SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO = "android.ongoingActivityNoti.nowbarPrimaryInfo"
     private val SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO = "android.ongoingActivityNoti.nowbarSecondaryInfo"
     // End Samsung Live Notifications / Now Bar
@@ -342,9 +345,11 @@ class PersistentNotificationPlugin(
         applyLiveUpdate(
             builder = builder,
             bgStatusChipText = bgStatusChipText,
+            line1 = line1,
             line1WithDelta = line1WithDelta,
             bgMetric = bgMetric,
-            line2 = line2
+            line2 = line2,
+            line3 = line3
         )
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
@@ -371,15 +376,17 @@ class PersistentNotificationPlugin(
     private fun applyLiveUpdate(
         builder: NotificationCompat.Builder,
         bgStatusChipText: String?,
+        line1: String?,
         line1WithDelta: String?,
         bgMetric: Metric?,
-        line2: String?
+        line2: String?,
+        line3: String?
     ) {
         // Samsung's own system UI (One UI 7+) does not render the standard Android promoted
         // notification below - it shows the lock-screen "Now Bar" and drawer "Live Notifications"
         // through its own proprietary extras, so that needs to be applied separately and does not
         // depend on the Android version gating below.
-        applySamsungLiveUpdate(builder, line1WithDelta, line2)
+        applySamsungLiveUpdate(builder, line1, line1WithDelta, line2, line3)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) return
         builder.setRequestPromotedOngoing(true)
         if (!bgStatusChipText.isNullOrBlank()) {
@@ -398,23 +405,28 @@ class PersistentNotificationPlugin(
     // bundle plus the "com.samsung.android.support.ongoing_activity" manifest meta-data, not by
     // NotificationCompat#setRequestPromotedOngoing(). Harmless on non-Samsung devices, but
     // restricted to Samsung so no unused extras are attached elsewhere.
+    //
+    // Once these extras are present One UI draws the notification from them and no longer shows
+    // the title, text and sub text set on the builder. So the drawer fields must carry everything
+    // those three lines carry - see samsungLiveTexts.
     private fun applySamsungLiveUpdate(
         builder: NotificationCompat.Builder,
+        line1: String?,
         line1WithDelta: String?,
-        line2: String?
+        line2: String?,
+        line3: String?
     ) {
         if (!Build.MANUFACTURER.equals(SAMSUNG_MANUFACTURER, ignoreCase = true)) return
-        if (line1WithDelta.isNullOrBlank()) return
+        val texts = samsungLiveTexts(line1, line1WithDelta, line2, line3) ?: return
         val extras = bundleOf(
             SAMSUNG_EXTRA_STYLE to SAMSUNG_LIVE_UPDATE_STANDARD_STYLE,
-            SAMSUNG_EXTRA_PRIMARY_INFO to line1WithDelta,
-            SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO to line1WithDelta,
+            SAMSUNG_EXTRA_PRIMARY_INFO to texts.primary,
+            SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO to texts.nowBarPrimary,
+            SAMSUNG_EXTRA_CHIP_EXPANDED_TEXT to texts.nowBarPrimary,
             SAMSUNG_EXTRA_CHIP_ICON to Icon.createWithResource(context, iconsProvider.getNotificationIcon())
         )
-        line2?.let {
-            extras.putString(SAMSUNG_EXTRA_SECONDARY_INFO, it)
-            extras.putString(SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO, it)
-        }
+        texts.secondary?.let { extras.putString(SAMSUNG_EXTRA_SECONDARY_INFO, it) }
+        texts.nowBarSecondary?.let { extras.putString(SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO, it) }
         builder.addExtras(extras)
     }
 
@@ -424,9 +436,37 @@ class PersistentNotificationPlugin(
         return round(this * multiplier) / multiplier
     }
 
+    /** The four texts One UI shows: two in the notification drawer, two in the Now Bar. */
+    internal data class SamsungLiveTexts(
+        val primary: String,
+        val secondary: String?,
+        val nowBarPrimary: String,
+        val nowBarSecondary: String?
+    )
+
     internal companion object {
 
         /** Short, so the notification shows a new BG at once, but long enough for one BG's burst. */
         val UPDATE_DEBOUNCE = 1.seconds
+
+        /**
+         * Splits the notification content between the drawer and the Now Bar on a Samsung phone.
+         *
+         * The drawer has room and replaces the normal notification, so it gets all of it: [line1]
+         * (BG, delta and the basal rate or temp basal) with [line3] (the profile name) on the first
+         * row, and [line2] (IOB and COB) on the second. One UI has no header or sub text field,
+         * which is where the profile name was shown before, so the first row is the closest place.
+         * The Now Bar and the status bar chip are small, so they get [line1WithDelta] (no basal, no
+         * profile). The parts are joined with the same bullet the lines themselves use.
+         *
+         * @return null when there is nothing to show
+         */
+        fun samsungLiveTexts(line1: String?, line1WithDelta: String?, line2: String?, line3: String?): SamsungLiveTexts? {
+            val nowBarPrimary = line1WithDelta?.trim().takeUnless { it.isNullOrEmpty() } ?: return null
+            val fullLine1 = line1?.trim().takeUnless { it.isNullOrEmpty() } ?: nowBarPrimary
+            val profile = line3?.trim().takeUnless { it.isNullOrEmpty() }
+            val primary = if (profile != null) "$fullLine1 • $profile" else fullLine1
+            return SamsungLiveTexts(primary = primary, secondary = line2, nowBarPrimary = nowBarPrimary, nowBarSecondary = line2)
+        }
     }
 }
