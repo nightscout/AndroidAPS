@@ -99,7 +99,6 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sonido de notificaciones de SMB inciertos habilitado</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sonido para notificaciones de bolo incierto activadas</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sonido cuando la notificación de entrega suspendida está activada</string>
-    <string name="omnipod_dash_use_bonding">Dispositivo bluetooth vinculado en Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ningún Pod activo</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuración en curso (esperando para activar el Pod)</string>
@@ -109,6 +108,10 @@
     <string name="omnipod_common_pod_status_pod_fault">Error del Pod</string>
     <string name="omnipod_common_pod_status_inactive">Inactivo</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Error del Pod: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod a punto de caducar</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod a punto de caducar</string>
