@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Eşleştirme zaman aşımı</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS ve Dana-i pompaları için pompa entegrasyonu</string>
     <string name="maxbolusviolation">Maks bolus ihlali</string>
     <string name="commanderror">Komut hatası</string>
@@ -74,7 +73,6 @@
     <string name="description_pump_dana_r">DANA Diabecare R pompaları için pompa entegrasyonu</string>
     <string name="description_pump_dana_r_korean">DANA Diabecare R yerli Kore pompaları için pompa entegrasyonu</string>
     <string name="description_pump_dana_r_v2">Güncellenmiş ürün yazılımlı DANA Diabecare R pompaları için pompa entegrasyonu</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Seçili aygıt bulunamadı</string>
     <string name="danar_switchtouhmode">Pompayı Ü/d\'den Ü/s\'te değiştirin</string>
     <string name="danarkoreanpump">DanaR Kore</string>
