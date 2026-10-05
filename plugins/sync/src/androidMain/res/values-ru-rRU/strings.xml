@@ -26,7 +26,6 @@
     <string name="summary_tidepool_dev_servers">Если включено, выгрузка будет направлена на тестовые серверы вместо обычных</string>
     <string name="title_tidepool_dev_servers">Использовать серверы интеграции (тест)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Загружает данные в Tidepool</string>
     <string name="upload_now">Выгрузить (передать данные) сейчас</string>
     <string name="not_connected">Нет подключения</string>
@@ -34,7 +33,6 @@
     <string name="working">Обработка</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip +</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Отправить данные ГК на xDrip+</string>
     <string name="xdrip_status_settings">Строка состояния xDrip+ подробно</string>
     <string name="xdrip_not_installed">xDrip+ не установлен</string>
@@ -48,7 +46,6 @@
     <string name="garmin_local_http_server_port">Порт локального HTTP сервера</string>
     <string name="garmin_local_http_server">Локальный HTTP сервер</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>
     <string name="no_watch_connected">(Часы не подключены)</string>
     <string name="pump_status">Статус помпы</string>
@@ -103,7 +100,6 @@
     <string name="garmin_request_key">Ключ запроса</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS коммуникатор</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Выполнить дистанционное управление AAPS при помощи команд SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">из приложения Authenticator для %1$s и дополните пином в конце</string>
     <string name="smscommunicator_tab_otp_label">Настройка аутентификации</string>
