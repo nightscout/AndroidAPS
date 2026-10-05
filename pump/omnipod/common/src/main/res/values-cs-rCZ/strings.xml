@@ -99,7 +99,6 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Zvuk oznámení pro nejistý SMB povolen</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Zvuk oznámení pro nejistý bolus povolen</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Zvuk oznámení o pozastavení výdeje povolen</string>
-    <string name="omnipod_dash_use_bonding">Bond BT zařízení na Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Žádný aktivní Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Probíhá nastavování (čeká se na aktivaci Podu)</string>
@@ -109,6 +108,10 @@
     <string name="omnipod_common_pod_status_pod_fault">Chyba Podu</string>
     <string name="omnipod_common_pod_status_inactive">Neaktivní</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Chyba Podu: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Životnost Podu brzy skončí</string>
     <string name="omnipod_common_alert_expiration_advisory">Životnost Podu brzy skončí</string>
