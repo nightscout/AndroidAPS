@@ -36,7 +36,6 @@
     <string name="loopenabled">Pętla włączona</string>
     <string name="apsselected">Wybrano APS</string>
     <string name="closedmodeenabled">Tryb zamknięty włączony</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Program do nauki</string>
     <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
     <string name="objectives_button_unfinish">Resetuj stan zakończenia</string>
