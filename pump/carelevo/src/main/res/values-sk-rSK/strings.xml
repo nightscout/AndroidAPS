@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carelevo">CareLevo</string>
-    <string name="carelevo_shortname">CL</string>
     <string name="carelevo_description">Integrácia pumpy pre CareLevo</string>
     <string name="carelevo_alarm_channel_name">Alarmy CareLevo</string>
     <string name="carelevo_alarm_channel_description">Upozornenia na alarmy náplasťovej pumpy CareLevo</string>
