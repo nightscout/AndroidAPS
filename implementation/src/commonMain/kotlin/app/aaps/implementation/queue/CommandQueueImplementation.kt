@@ -169,13 +169,18 @@ class CommandQueueImplementation(
         aapsLogger.debug(LTag.PROFILE, "onProfileChanged (silent=$silent)")
         // Exceptions are handled by collectResilient at the call site; here we only guard the hang vector.
         profileFunction.getRequestedProfile()?.let {
-            // Skip if the active EPS was already triggered by this PS (e.g. NSClient updating PS with nsId
-            // retriggers observeChanges(PS)). The previous onProfileChanged already pushed the profile to the pump.
+            // The active EPS was already made from this PS, e.g. NSClient updating the PS with its nsId
+            // retriggers observeChanges(PS). Then there is nothing to do - unless the pump has another basal.
+            // KeepAliveWorker sends EventProfileChangeRequested exactly for that: a new or replaced pump, or a
+            // basal changed on the pump itself. Skipping it then left the pump on its own basal for good.
             val active = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
-            if (active != null && active.originalPsId != null && active.originalPsId == it.id) {
-                aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active.id} already represents PS id=${it.id}")
+            val alreadyEffective = active != null && active.originalPsId != null && active.originalPsId == it.id
+            if (alreadyEffective && activePlugin.activePump.isThisProfileSet(ProfileSealed.PS(it, activePlugin))) {
+                aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active?.id} already represents PS id=${it.id} and the pump has it")
                 return@let
             }
+            if (alreadyEffective)
+                aapsLogger.debug(LTag.PROFILE, "onProfileChanged: active EPS id=${active?.id} represents PS id=${it.id}, but the pump has another basal. Setting it again")
             // Bound the pump round-trip. setProfile() awaits a CommandSetProfile callback; if that
             // callback is ever lost the deferred never completes, and because the collector processes
             // emissions sequentially that single hang would block every future ProfileSwitch. On
@@ -186,8 +191,9 @@ class CommandQueueImplementation(
             if (result == null)
                 aapsLogger.error(LTag.PROFILE, "setProfile timed out after $PROFILE_SET_TIMEOUT_MS ms for PS id=${it.id}")
             // Central profile-set notification lifecycle (unified across all pump drivers). Returns true on a
-            // successful write, in which case we persist the EffectiveProfileSwitch below.
-            if (postProfileWriteResult(result, silent)) {
+            // successful write, in which case we persist the EffectiveProfileSwitch below - but not a second
+            // one for a PS that is already effective, which only had to be set in the pump again.
+            if (postProfileWriteResult(result, silent) && !alreadyEffective) {
                 // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
                 val nonCustomized = ProfileSealed.PS(it, activePlugin).convertToNonCustomizedProfile(dateUtil)
                 val eps = EPS(
