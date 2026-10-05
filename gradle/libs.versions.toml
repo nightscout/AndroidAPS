@@ -161,7 +161,7 @@ io-ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializa
 io-ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
 io-ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
 
-org-apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version = "3.20.0" }
+org-apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version = "3.21.0" }
 org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.9.1" }
 
 org-mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
