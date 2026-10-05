@@ -22,7 +22,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Använd Integration (test) servrar</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Laddar upp data till Tidepool</string>
     <string name="upload_now">Ladda upp nu</string>
     <string name="not_connected">Inte ansluten</string>
@@ -30,7 +29,6 @@
     <string name="working">Arbetar</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Skicka data till xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Avancerad Statusrad</string>
     <string name="xdrip_not_installed">xDrip+ inte installerat</string>
@@ -40,7 +38,6 @@
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
     <!--    Wear-->
-    <string name="wear_shortname">Wear</string>
     <string name="description_wear">Följ och kontrollera AAPS med din Wear OS-klocka.</string>
     <string name="no_watch_connected">(Ingen klocka ansluten)</string>
     <string name="pump_status">Pumpstatus</string>
