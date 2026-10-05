@@ -99,6 +99,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Suono notifiche TBR incerto abilitato</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Suono notifiche bolo incerto abilitato</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Suono notifica sospensione erogazione abilitato</string>
+    <string name="omnipod_dash_use_bonding">Bonding Bluetooth</string>
+    <string name="omnipod_dash_use_bonding_summary">Prova questo solo se il pod non mantiene una connessione stabile. Il telefono mostrerà le richieste di accoppiamento che devi accettare. Lasciare spento se il pod si collega bene. Non ha effetto sotto Android 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nessun pod attivo</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Configurazione in corso (attesa attivazione pod)</string>
@@ -109,9 +111,21 @@
     <string name="omnipod_common_pod_status_inactive">Inattivo</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Guasto pod: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">Notifica PDM</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Rif: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Serbatoio vuoto</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">⚠️ Erogazione d\'insulina interrotta. Cambia Pod ora.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Auto off</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">L\'erogazione di insulina è interrotta. Il PDM e il Pod non hanno comunicato nelle ultime 4 ore. Per riprendere la somministrazione di insulina, cambiare ora il Pod.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod Scaduto</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">⚠️ Erogazione d\'insulina interrotta. Cambia Pod ora.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Occlusione rilevata</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">⚠️ Erogazione d\'insulina interrotta. Cambia Pod ora e controlla la glicemia</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Errore pod</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">⚠️ Erogazione d\'insulina interrotta. Cambia Pod ora.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Il pod scadrà presto</string>
     <string name="omnipod_common_alert_expiration_advisory">Il pod scadrà a breve</string>
