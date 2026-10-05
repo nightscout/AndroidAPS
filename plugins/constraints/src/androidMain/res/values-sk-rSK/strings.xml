@@ -37,7 +37,6 @@
     <string name="loopenabled">Uzavretý okruh povolený</string>
     <string name="apsselected">APS vybrané</string>
     <string name="closedmodeenabled">Uzavretý okruh povolený</string>
-    <string name="objectives_shortname">CIEĽ</string>
     <string name="description_objectives">Výukový program</string>
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
     <string name="objectives_button_unfinish">Vymazanie dokončené</string>
