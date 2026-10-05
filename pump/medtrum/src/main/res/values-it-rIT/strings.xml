@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Integrazione micro per Medtrum Nano e Medtrum 300U</string>
     <string name="medtrum_pump_setting">Impostazioni micro Medtrum</string>
     <string name="pump_error">Errore micro: %1$s!! </string>
