@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">Receive BG values from xDrip+ and compatible apps (Juggluco etc.).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Receive BG values from the \'Build Your Own Dexcom App\'.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Receive values from Intelligo app</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
-    <string name="random_bg_short">BG</string>
 
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
@@ -53,7 +49,6 @@
     <string name="permission_notification_listener_description">Required to read glucose values from CGM app notifications</string>
 
     <string name="aidex">MicroTech CGM App</string>
-    <string name="aidex_short">CGM App</string>
     <string name="description_source_aidex">Receive CGM values from LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 etc.</string>
 
     <string name="aidex_sensor_expired">Sensor expired, please replace with a new sensor</string>
