@@ -259,6 +259,20 @@ class IobCobCalculatorPlugin(
         }
     }
 
+    override fun bgDataReloaded() {
+        // The calculation reaches 24 h + DIA back (calculateDetectionStart); older entries are never asked for
+        val oldest = dateUtil.now() - T.hours(CACHED_IOB_HOURS).msecs()
+        dataLock.withLock {
+            // Oldest at index 0. A few per BG: one value every 5 minutes moves past the limit.
+            var count = 0
+            while (iobTable.size() > 0 && iobTable.keyAt(0) < oldest) {
+                iobTable.removeAt(0)
+                count++
+            }
+            aapsLogger.debug(LTag.AUTOSENS, "BG data reloaded: kept ${iobTable.size()} cached IOB values, dropped $count older than $CACHED_IOB_HOURS h")
+        }
+    }
+
     private suspend fun oldestDataAvailable(): Long {
         var oldestTime = dateUtil.now()
         val oldestTempBasal = persistenceLayer.getOldestTemporaryBasalRecord()
@@ -693,5 +707,11 @@ class IobCobCalculatorPlugin(
             total.plus(totalExt)
         }
         return total
+    }
+
+    internal companion object {
+
+        /** How long cached IOB values are kept: more than the 24 h + DIA the calculation looks back. */
+        const val CACHED_IOB_HOURS = 48L
     }
 }
