@@ -44,6 +44,7 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.rx.events.EventTimeZoneChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.MidnightTime
@@ -64,12 +65,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlin.concurrent.Volatile
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class IobCobCalculatorPlugin(
     aapsLogger: AAPSLogger,
@@ -99,6 +104,9 @@ class IobCobCalculatorPlugin(
 
     private var scope: CoroutineScope? = null
 
+    /** How long a burst of time zone changes is collected before one full reset. A var only for tests. */
+    internal var timeZoneResetDebounce: Duration = 10.seconds
+
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
 
@@ -111,6 +119,7 @@ class IobCobCalculatorPlugin(
 
     private val dataLock = AapsLock()
 
+    @OptIn(FlowPreview::class)
     override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
@@ -118,6 +127,14 @@ class IobCobCalculatorPlugin(
         // EventConfigBuilderChange
         rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventConfigBuilderChange") }
+        // EventTimeZoneChanged: the basal profile is read in the current time zone, so every cached IOB,
+        // basal and autosens value of the past would now be calculated differently. Until the past is
+        // calculated with the offset of its own time (_docs/IOB_TIME_ZONE.md), start again from scratch.
+        // Debounced: automatic zone detection near a border can send several changes in a row, and each
+        // full recalculation stopped by the next one would be thrown away.
+        rxBus.toFlow(EventTimeZoneChanged::class)
+            .debounce(timeZoneResetDebounce)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventTimeZoneChanged") }
         // EventCalibrationChanged → the fit changed, so bucketed data needs to be re-smoothed
         // with the new calibration applied. scheduleHistoryDataChange has its own 5s debounce
         // so bursts (delete-many, bulk-add) collapse into one workflow run.

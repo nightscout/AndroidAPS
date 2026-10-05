@@ -36,6 +36,32 @@ class MidnightUtilsTest {
         assertEquals(3600, MidnightUtils.secondsFromMidnight(oneHourAfter))
     }
 
+    /**
+     * The zone rules give every moment its own offset, so a moment before and one after a DST switch
+     * both keep their local time. The basal profile of the past therefore does not move at a DST
+     * switch, and the IOB cache needs no reset for it.
+     */
+    @Test
+    fun aMomentKeepsItsTimeOfDayAcrossDstSwitch() {
+        val beforeSwitch = ZonedDateTime.of(2026, 3, 28, 19, 0, 0, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli() // UTC+1
+        val afterSwitch = ZonedDateTime.of(2026, 3, 30, 19, 0, 0, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli() // UTC+2
+        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(beforeSwitch))
+        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(afterSwitch))
+    }
+
+    /**
+     * Pins the behaviour described in _docs/IOB_TIME_ZONE.md: the same past moment falls on another time
+     * of day after the phone changes its time zone, because the current zone is used, not the zone of
+     * that moment. When that bug is fixed, this test has to change with it.
+     */
+    @Test
+    fun aMomentMovesToAnotherTimeOfDayAfterTimeZoneChange() {
+        val moment = ZonedDateTime.of(2026, 1, 15, 19, 0, 0, 0, ZoneId.of("Europe/Amsterdam")).toInstant().toEpochMilli()
+        assertEquals(19 * 3600, MidnightUtils.secondsFromMidnight(moment))
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/London"))
+        assertEquals(18 * 3600, MidnightUtils.secondsFromMidnight(moment))
+    }
+
     @Test
     fun milliSecFromMidnight() {
         val midnight = LocalDate.now().atTime(LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
