@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carelevo">Carelevo</string>
-    <string name="carelevo_shortname">CL</string>
     <string name="carelevo_description">Carelevo 幫浦整合</string>
     <string name="carelevo_alarm_channel_name">Carelevo 警報</string>
     <string name="carelevo_alarm_channel_description">Carelevo 貼片警報通知</string>
