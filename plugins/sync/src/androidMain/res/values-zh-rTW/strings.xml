@@ -10,7 +10,6 @@
     <string name="no_connectivity">無連線</string>
     <string name="unsupported_ns_version">不支援的 Nightscout 版本</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">已授權的用戶端</string>
     <string name="authorized_clients_add">新增用戶端</string>
@@ -75,7 +74,6 @@
     <string name="summary_tidepool_dev_servers">若啟用，資料上傳將會發送至測試伺服器，而非一般的伺服器。</string>
     <string name="title_tidepool_dev_servers">使用集成（測試）伺服器</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">將資料上傳到 Tidepool</string>
     <string name="upload_now">立即上傳</string>
     <string name="tidepool_purge_data">清除所有資料</string>
@@ -86,7 +84,6 @@
     <string name="working">工作中</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD+</string>
     <string name="description_xdrip">將資料傳送到 xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ 狀態行進階</string>
     <string name="xdrip_not_installed">未安裝 xDrip+</string>
@@ -95,7 +92,6 @@
     <string name="xdrip_local_broadcasts_title">啟用傳送到 xDrip+。</string>
     <!--    DataBroadcast-->
     <string name="tizen">外部輔助 App</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">啟用向各種外部輔助 App 廣播資料</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -103,7 +99,6 @@
     <string name="garmin_local_http_server_port">本地 HTTP 伺服器端口</string>
     <string name="garmin_local_http_server">本地 HTTP 伺服器</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">使用您的 WearOS 手錶監控和控制 AAPS。</string>
     <string name="no_watch_connected">（無手錶連線）</string>
     <string name="pump_status">幫浦狀態</string>
@@ -170,7 +165,6 @@
     <string name="garmin_request_key">請求金鑰</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS 通訊器</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">使用 SMS 指令遠端控制 AAPS。</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">來自驗證器應用程式，針對：%1$s，後接 PIN 碼</string>
     <string name="smscommunicator_tab_otp_label">驗證器設定</string>
