@@ -26,7 +26,6 @@
     <string name="summary_tidepool_dev_servers">Indien ingeschakeld zullen uploads naar de test servers gaan in plaats van de standaard servers</string>
     <string name="title_tidepool_dev_servers">Gebruik integratie (test) servers</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Upload gegevens naar Tidepool</string>
     <string name="upload_now">Nu Uploaden</string>
     <string name="not_connected">Niet verbonden</string>
@@ -34,7 +33,6 @@
     <string name="working">Bezig</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Stuur data naar xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Geavanceerde Statusregel</string>
     <string name="xdrip_not_installed">xDrip+ niet geïnstalleerd</string>
@@ -48,7 +46,6 @@
     <string name="garmin_local_http_server_port">Lokale HTTP server poort</string>
     <string name="garmin_local_http_server">Lokale HTTP server</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitor en bedien AAPS met uw WearOS horloge.</string>
     <string name="no_watch_connected">(Geen horloge verbonden)</string>
     <string name="pump_status">Pomp status</string>
@@ -103,7 +100,6 @@
     <string name="garmin_request_key">Sleutel aanvragen</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS Commando\'s</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Bedien AAPS op afstand met SMS commando\'s.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">van de Authenticator-app voor: %1$s gevolgd door PIN</string>
     <string name="smscommunicator_tab_otp_label">Authentificatie instellingen</string>
