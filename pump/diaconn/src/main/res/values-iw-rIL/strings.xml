@@ -19,7 +19,6 @@
     <string name="updatingbasalrates">מעדכן את המינון הבזאלי</string>
     <string name="description_pump_diaconn_g8">חיבור משאבת Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">בולוס גבוה מדי</string>
     <string name="commanderror">שגיאה בפקודה</string>
     <string name="speederror">שגיאת מהירות</string>
