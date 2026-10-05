@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">SMOOTH</string>
     <string name="exponential_smoothing_name">Smoothing esponenziale</string>
     <string name="description_exponential_smoothing">"Algoritmo di smoothing esponenziale di secondo ordine"</string>
     <string name="avg_smoothing_name">Smoothing medio</string>
