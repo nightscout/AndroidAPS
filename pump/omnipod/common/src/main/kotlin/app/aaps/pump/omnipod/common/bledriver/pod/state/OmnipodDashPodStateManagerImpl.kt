@@ -213,6 +213,9 @@ class OmnipodDashPodStateManagerImpl(
     override val alarmType: AlarmType?
         get() = podState.alarmType
 
+    override val pdmRef: String?
+        get() = podState.pdmRef
+
     override var tempBasal: OmnipodDashPodStateManager.TempBasal?
         get() = podState.tempBasal
         set(tempBasal) {
@@ -955,7 +958,12 @@ class OmnipodDashPodStateManagerImpl(
                 response.activeAlerts,
                 response.bolusPulsesRemaining
             )
-            podState.alarmType = response.alarmType
+            // A faulted pod answers every later command with this same fault response, so only latch the
+            // first one: its VV byte snapshot is the one a real PDM captures, later ones drift.
+            if (podState.alarmType == null) {
+                podState.alarmType = response.alarmType
+                podState.pdmRef = response.pdmRef
+            }
         }
         
         store()
@@ -1050,6 +1058,7 @@ class OmnipodDashPodStateManagerImpl(
         var minutesSinceActivation: Short? = null,
         var activeAlerts: EnumSet<AlertType>? = null,
         var alarmType: AlarmType? = null,
+        var pdmRef: String? = null,
 
         var basalProgram: BasalProgram? = null,
         var tempBasal: OmnipodDashPodStateManager.TempBasal? = null,

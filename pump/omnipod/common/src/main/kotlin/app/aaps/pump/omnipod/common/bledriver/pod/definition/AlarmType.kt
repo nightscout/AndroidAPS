@@ -103,7 +103,7 @@ enum class AlarmType(override val value: Byte) : HasValue {
     ALARM_OCCL_STARTUP1(0x60.toByte()),
     ALARM_OCCL_STARTUP2(0x61.toByte()),
     ALARM_OCCL_EXCESS_TIMEOUTS1(0x62.toByte()),
-    ALARM_SPARE99(0x63.toByte()),
+    ALARM_OCCL_PARAM_INVALID(0x63.toByte()),
     ALARM_SPARE100(0x64.toByte()),
     ALARM_SPARE101(0x65.toByte()),
     ALARM_OCCL_EXCESS_TIMEOUTS2(0x66.toByte()),
@@ -135,12 +135,15 @@ enum class AlarmType(override val value: Byte) : HasValue {
     ALARM_ILLEGAL_INTERLOCK_CHAN(0x95.toByte()),
     ALARM_TERMINATE_BOLUS(0x96.toByte()),
     ALARM_OPEN_TRANSITIONS_COUNT(0x97.toByte()),
+    ALARM_SYNC_WITHOUT_CLOSED_LOOP(0x98.toByte()), // O5 only
+    ALARM_QN_STATUS_MISMATCH(0x99.toByte()), // O5 only
+    ALARM_AP_LOOP_MISMATCH(0x9a.toByte()), // O5 only
     ALARM_BLE_TO(0xa0.toByte()),
     ALARM_BLE_INITIATED(0xa1.toByte()),
     ALARM_BLE_UNK_ALARM(0xa2.toByte()),
-    ALARM_UNUSED_163(0xa3.toByte()),
-    ALARM_UNUSED_164(0xa4.toByte()),
-    ALARM_UNUSED_165(0xa5.toByte()),
+    ALARM_ADC_LIB_NOT_INITIALIZED(0xa3.toByte()), // O5 only
+    ALARM_ADC_LIB_MEMORY_SIZE(0xa4.toByte()), // O5 only
+    ALARM_ADC_LIB_NV_MEMORY_CRC(0xa5.toByte()), // O5 only
     ALARM_BLE_IAAS(0xa6.toByte()),
     ALARM_UNUSED_167(0xa7.toByte()),
     ALARM_CRC_FAILURE(0xa8.toByte()),
@@ -155,8 +158,73 @@ enum class AlarmType(override val value: Byte) : HasValue {
     ALARM_BLE_STATE_MACHINE_2(0xb2.toByte()),
     ALARM_BLE_UNUSED_179(0xb3.toByte()),
     ALARM_BLE_ARB_LOST(0xb4.toByte()),
+    ALARM_BOLUS_EXTENDED_NOT_ALLOWED(0xb5.toByte()), // O5 only
+    ALARM_AGC_IN_OPEN_LOOP(0xb6.toByte()), // O5 only
+    ALARM_AGC_BOLUS_EXTENDED_NOT_ALLOWED(0xb7.toByte()), // O5 only
+    ALARM_AGC_PULSES_EXCEEDED(0xb8.toByte()), // O5 only
+    ALARM_AGC_BOLUS_ALREADY_ACTIVE(0xb9.toByte()), // O5 only
+    ALARM_AGC_BOLUS_TOO_EARLY(0xba.toByte()), // O5 only
+    ALARM_IMMED_BOLUS_MISMATCH(0xbb.toByte()), // O5 only
+    ALARM_AGC_MEAL_CORR_BOLUS_NOT_ZERO(0xbc.toByte()), // O5 only
+    ALARM_TEMP_BASAL_NOT_ALLOWED(0xbd.toByte()), // O5 only
+    ALARM_BASAL_NOT_ALLOWED(0xbe.toByte()), // O5 only
+    ALARM_AGC_BOLUS_TOO_LATE(0xbf.toByte()), // O5 only
     ALARM_BLE_ER48_DUAL_NACK(0xc0.toByte()),
     ALARM_BLE_QN_EXCEED_MAX_RETRY(0xc1.toByte()),
     ALARM_BLE_QN_CRIT_VAR_FAIL(0xc2.toByte()),
+    ALARM_BLE_QN_OPT_INTVL_INVALID(0xc3.toByte()),
+    ALARM_BLE_QN_CGM_UTC_MISMATCH(0xc4.toByte()), // O5 only
+    ALARM_BLE_QN_CGM_TXID_NOT_ALLOWED(0xc5.toByte()), // O5 only
+    ALARM_BLE_QN_ALG_NOT_RUN(0xc7.toByte()), // O5 only
+    ALARM_BLE_QN_HYPO_IN_OPEN_LOOP(0xc8.toByte()), // O5 only
+    ALARM_BLE_QN_ALG_SETUP_FAIL(0xc9.toByte()), // O5 only
+    ALARM_BLE_QN_AGC_RUN_TOO_LATE(0xca.toByte()), // O5 only
+    ALARM_UNKNOWN_CB(0xcb.toByte()),
+    ALARM_UNKNOWN_D4(0xd4.toByte()),
+    ALARM_UNKNOWN_D5(0xd5.toByte()),
+    ALARM_RESET_FAULT_D6(0xd6.toByte()),
+    ALARM_RESET_FAULT_D7(0xd7.toByte()),
+    ALARM_UNKNOWN_D8(0xd8.toByte()),
+    ALARM_UNKNOWN_D9(0xd9.toByte()),
+    ALARM_BLE_AGC_POTENTIAL_DIV_ZERO(0xe1.toByte()), // O5 only
+    ALARM_BLE_AGC_INVALID_INPUT_PARAM(0xe2.toByte()), // O5 only
+    ALARM_BLE_AGC_INVALID_PARAM(0xe3.toByte()), // O5 only
+    ALARM_BLE_AGC_STATE_VECTOR_PARAM(0xe4.toByte()), // O5 only
+    ALARM_BLE_AGC_INVALID_ALGO_STATE_PARAM(0xe5.toByte()), // O5 only
+    ALARM_BLE_AGC_INVALID_HYPO_SETTING(0xe6.toByte()), // O5 only
+    ALARM_BLE_AGC_OUTPUT_OUT_OF_BOUNDS(0xe7.toByte()), // O5 only
+    ALARM_BLE_AGC_INVALID_FIRST_RUN_IN_INIT_STATE(0xe8.toByte()), // O5 only
+    ALARM_BLE_AGC_INVALID_OFFSET(0xe9.toByte()), // O5 only
     UNKNOWN(0xff.toByte());
+
+    // value is a signed byte, so codes >= 0x80 would print as negative; use this for display instead.
+    val code: Int
+        get() = value.toInt() and 0xff
+
+    // PDM-style fault category, matching the "TT" prefix of a PDM Ref code and the hazard-alarm screen
+    // the Dash PDM itself would have shown for this fault. Ported from OmnipodKit's DetailedStatus.dashPdmRef
+    // (OmnipodKit/OmnipodCommon/MessageBlocks/DetailedStatus.swift, loopandlearn/OmnipodKit). Null for NONE/UNKNOWN,
+    // meaning there is no PDM-style fault to report.
+    val pdmFaultCategory: PdmFaultCategory?
+        get() = when (this) {
+            NONE, UNKNOWN          -> null
+            ALARM_EMPTY_RESERVOIR  -> PdmFaultCategory.RESERVOIR_EMPTY
+            ALARM_ALERT0, ALARM_ALERT1, ALARM_ALERT2, ALARM_ALERT3,
+            ALARM_ALERT4, ALARM_ALERT5, ALARM_ALERT6, ALARM_ALERT7 -> PdmFaultCategory.AUTO_OFF
+            ALARM_PUMP_EXPIRED     -> PdmFaultCategory.POD_EXPIRED
+            ALARM_OCCLUDED         -> PdmFaultCategory.OCCLUDED
+            else                   -> PdmFaultCategory.POD_ERROR
+        }
+}
+
+/**
+ * PDM-style fault categories. Each corresponds to the "TT" prefix of a PDM Ref code, i.e. the kind of
+ * hazard-alarm screen the Dash PDM itself would have shown for this fault.
+ */
+enum class PdmFaultCategory(val tt: Int) {
+    RESERVOIR_EMPTY(14),
+    AUTO_OFF(15),
+    POD_EXPIRED(16),
+    OCCLUDED(17),
+    POD_ERROR(19)
 }
