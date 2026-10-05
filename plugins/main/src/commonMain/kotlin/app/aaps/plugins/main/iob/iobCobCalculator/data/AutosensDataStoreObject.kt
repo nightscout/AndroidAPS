@@ -2,6 +2,7 @@ package app.aaps.plugins.main.iob.iobCobCalculator.data
 
 import androidx.collection.LongSparseArray
 import androidx.collection.size
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.time.T
@@ -165,7 +166,7 @@ class AutosensDataStoreObject : AutosensDataStore {
      */
     override fun actualBg(): InMemoryGlucoseValue? {
         val lastBg = lastBg() ?: return null
-        return if (lastBg.timestamp > Clock.System.now().toEpochMilliseconds() - T.mins(9).msecs()) lastBg else null
+        return if (lastBg.timestamp > Clock.System.now().toEpochMilliseconds() - T.mins(Constants.OLD_BG_MINUTES).msecs()) lastBg else null
     }
 
     override fun lastDataTime(dateUtil: DateUtil): String =

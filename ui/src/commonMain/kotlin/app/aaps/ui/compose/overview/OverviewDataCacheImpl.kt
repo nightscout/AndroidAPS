@@ -574,7 +574,7 @@ class OverviewDataCacheImpl(
             else                    -> BgRange.IN_RANGE
         }
 
-        val isOutdated = lastGv.timestamp < dateUtil.now() - 9 * 60 * 1000L
+        val isOutdated = lastGv.timestamp < dateUtil.now() - T.mins(Constants.OLD_BG_MINUTES).msecs()
         val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
         val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
@@ -599,7 +599,7 @@ class OverviewDataCacheImpl(
         // No new DB event fires when time merely passes, so without this the strikethrough would
         // never appear for an actually-stale value.
         if (!isOutdated) {
-            val delayMs = lastGv.timestamp + T.mins(9).msecs() - dateUtil.now()
+            val delayMs = lastGv.timestamp + T.mins(Constants.OLD_BG_MINUTES).msecs() - dateUtil.now()
             if (delayMs > 0) {
                 staleBgTransitionJob = scope.launch {
                     delay(delayMs)

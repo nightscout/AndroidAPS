@@ -225,7 +225,8 @@ class DataHandlerMobile(
         }
         onEvent<EventData.OpenLoopRequestConfirmed> {
             if (rejectIfNotReady()) return@onEvent
-            loop.acceptChangeRequest()
+            // A refused accept (loop paused, suggestion too old) must say so, or the watch shows it as done.
+            loop.acceptChangeRequest()?.let { sendError(it) }
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.NOTIFICATION_ID)
         }
         onEvent<EventData.ActionResendData> { resendData(it.from) }

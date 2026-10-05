@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.loop
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
@@ -7,6 +8,7 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
@@ -49,6 +51,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -866,6 +869,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         val releaseCommand = CompletableDeferred<Unit>()
         val enacted = pumpEnactResultProvider().enacted(true).success(true)
 
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(RM(mode = RM.Mode.OPEN_LOOP, timestamp = 0L, duration = 0L))
         whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
         whenever(virtualPumpPlugin.isInitialized()).thenReturn(true)
         whenever(virtualPumpPlugin.isSuspended()).thenReturn(false)
@@ -941,6 +945,77 @@ class LoopPluginTest : TestBaseWithProfile() {
         verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
         verify(commandQueue, never()).tempBasalPercent(any(), any(), any(), any(), any())
         assertThat(loopPlugin.lastRun?.lastOpenModeAccept).isEqualTo(0L)
+    }
+
+    /**
+     * Sets up everything so that accepting WOULD enact a 2 U/h temp basal: an initialized pump that is
+     * not suspended, a base rate, no running temp basal, and an open loop. Each test then breaks one
+     * thing. Without this the early returns in applyTBRRequest pass the tests on their own.
+     */
+    private suspend fun prepareAcceptableRequest(mode: RM.Mode = RM.Mode.OPEN_LOOP, suggestionAge: Long = 0L) {
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(virtualPumpPlugin.isInitialized()).thenReturn(true)
+        whenever(virtualPumpPlugin.isSuspended()).thenReturn(false) // a software pause does not suspend the pump
+        whenever(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription().apply { basalStep = 0.05 })
+        whenever(virtualPumpPlugin.baseBasalRate).thenReturn(PumpRate(1.0))
+        whenever(ch.fromPump(any<PumpRate>())).thenReturn(1.0)
+        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(RM(mode = mode, timestamp = 0L, duration = 0L))
+        // doReturn, not whenever(rh.gs(..)): the latter calls the default answer, which throws for an unknown ref.
+        // This module's own strings (ApsStrings) resolve to the real English text without a stub.
+        doReturn("Loop suspended").whenever(rh).gs(InterfacesStrings.loopsuspended)
+
+        val request = mock<APSResult>()
+        whenever(request.isTempBasalRequested).thenReturn(true)
+        whenever(request.rate).thenReturn(2.0)
+        whenever(request.duration).thenReturn(30)
+        whenever(request.usePercent).thenReturn(false)
+        loopPlugin.lastRun = Loop.LastRun().apply {
+            this.constraintsProcessed = request
+            this.lastAPSRun = dateUtil.now() - suggestionAge
+        }
+    }
+
+    /** Issue #5192: the suggestion can wait on the watch after the user paused the loop. */
+    @Test
+    fun `acceptChangeRequest does not enact while the loop is suspended by the user`() = runTest {
+        prepareAcceptableRequest(mode = RM.Mode.SUSPENDED_BY_USER)
+
+        val refused = loopPlugin.acceptChangeRequest()
+
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+        assertThat(refused).isEqualTo("Loop suspended")
+        // The stale prompt is taken back, so it is not offered again.
+        verify(loopNotifier).dismiss()
+    }
+
+    /** In SUPER_BOLUS the accepted temp basal would replace the zero temp basal of the super bolus. */
+    @Test
+    fun `acceptChangeRequest does not enact during a super bolus`() = runTest {
+        prepareAcceptableRequest(mode = RM.Mode.SUPER_BOLUS)
+
+        assertThat(loopPlugin.acceptChangeRequest()).isEqualTo("Loop suspended")
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+    }
+
+    /** A suggestion older than an old BG was calculated from data that is not actual any more. */
+    @Test
+    fun `acceptChangeRequest does not enact a suggestion older than an old BG`() = runTest {
+        prepareAcceptableRequest(suggestionAge = T.mins(Constants.OLD_BG_MINUTES).msecs() + 1)
+
+        assertThat(loopPlugin.acceptChangeRequest()).isEqualTo("This suggestion is too old. Nothing was sent to the pump. Wait for the next one.")
+        verify(commandQueue, never()).tempBasalAbsolute(any(), any(), any(), any(), any())
+        verify(loopNotifier).dismiss()
+    }
+
+    /** The control case: the same setup, in open loop and fresh, does enact. */
+    @Test
+    fun `acceptChangeRequest enacts a fresh suggestion in open loop`() = runTest {
+        prepareAcceptableRequest(suggestionAge = T.mins(Constants.OLD_BG_MINUTES).msecs() - 1000)
+        whenever(commandQueue.tempBasalAbsolute(any(), any(), any(), any(), any())).thenReturn(pumpEnactResultProvider().enacted(true).success(true))
+
+        assertThat(loopPlugin.acceptChangeRequest()).isNull()
+        verify(commandQueue).tempBasalAbsolute(any(), any(), any(), any(), any())
     }
 
     /**
