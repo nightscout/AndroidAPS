@@ -339,7 +339,7 @@ class MainViewModel(
             } else {
                 modeName
             }
-        } else ""
+        } else rh.gs(CoreUiStrings.unknown)
 
         return ChipState(
             isProfileLoaded = profileData?.isLoaded ?: false,
@@ -353,7 +353,7 @@ class MainViewModel(
             tempTargetProgress = ttProgress,
             tempTargetReason = if (ttExpired) null else ttData?.reason,
             tempTargetRecordId = if (ttExpired) 0 else ttData?.recordId ?: 0,
-            runningMode = rmData?.mode ?: RM.Mode.DISABLED_LOOP,
+            runningMode = rmData?.mode,
             runningModeText = rmText,
             runningModeRemaining = rmRemaining,
             runningModeProgress = rmProgress,
@@ -919,7 +919,7 @@ private data class ChipState(
     val tempTargetProgress: Float = 0f,
     val tempTargetReason: TT.Reason? = null,
     val tempTargetRecordId: Long = 0,
-    val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
+    val runningMode: RM.Mode? = null,
     val runningModeText: String = "",
     val runningModeRemaining: String = "",
     val runningModeProgress: Float = 0f,

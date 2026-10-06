@@ -32,7 +32,7 @@ import app.aaps.ui.compose.overview.chips.TempTargetChip
 
 @Composable
 fun OverviewChipsColumn(
-    runningMode: RM.Mode,
+    runningMode: RM.Mode?,
     runningModeText: String,
     runningModeRemaining: String,
     runningModeProgress: Float,
@@ -140,7 +140,7 @@ fun OverviewChipsColumn(
 
 @Composable
 private fun NarrowChips(
-    runningMode: RM.Mode,
+    runningMode: RM.Mode?,
     runningModeText: String,
     runningModeRemaining: String,
     runningModeProgress: Float,

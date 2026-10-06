@@ -58,7 +58,7 @@ fun OverviewScreen(
     tempTargetProgress: Float,
     tempTargetReason: TT.Reason?,
     tempTargetRecordId: Long = 0,
-    runningMode: RM.Mode,
+    runningMode: RM.Mode?,
     runningModeText: String,
     runningModeRemaining: String,
     runningModeProgress: Float,

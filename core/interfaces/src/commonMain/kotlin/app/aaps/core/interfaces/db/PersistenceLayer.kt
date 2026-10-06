@@ -763,6 +763,19 @@ interface PersistenceLayer {
     suspend fun getRunningModeActiveAt(timestamp: Long): RM
 
     /**
+     * Get the running mode at a time, or null when none is known.
+     *
+     * [getRunningModeActiveAt] answers with [RM.DEFAULT_MODE] when nothing is stored, which reads as
+     * "the loop is disabled" rather than "nothing is known". A follower that has never synced a
+     * permanent record - a fresh install, or one whose Nightscout pruned it - would then be told the
+     * loop is off. Display code uses this instead and shows the difference.
+     *
+     * @param timestamp time
+     * @return running mode, or null when none applies at that time
+     */
+    suspend fun getRunningModeActiveAtOrNull(timestamp: Long): RM?
+
+    /**
      *  Get running mode by NS id
      *  @return running mode
      */

@@ -134,7 +134,9 @@ internal class MainViewModelTest {
         val state = sut.uiState.value
         assertThat(state.isSimpleMode).isTrue()
         assertThat(state.isDrawerOpen).isFalse()
-        assertThat(state.runningMode).isEqualTo(RM.Mode.DISABLED_LOOP)
+        // Null, not DISABLED_LOOP: until something is read from the database the running mode is
+        // unknown, and the chip draws that as a question mark rather than claiming the loop is off.
+        assertThat(state.runningMode).isNull()
         assertThat(state.tempTargetState).isEqualTo(TempTargetChipState.None)
         assertThat(state.quickWizardItems).isEmpty()
     }

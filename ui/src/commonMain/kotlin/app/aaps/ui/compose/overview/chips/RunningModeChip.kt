@@ -39,6 +39,7 @@ import app.aaps.core.ui.compose.icons.IcLoopOpen
 import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.icons.IcLoopPausedDst
 import app.aaps.core.ui.compose.icons.IcLoopPausedPump
+import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.ui.compose.icons.IcLoopSuperbolus
 import app.aaps.core.ui.compose.loopColor
 import app.aaps.ui.compose.overview.graphs.TriangleShape
@@ -49,9 +50,15 @@ import app.aaps.ui.compose.overview.graphs.TriangleShape
  * @see RunningModeChipClosedLoopSmbPreview
  * @see RunningModeChipOpenLoopSmbPreview
  */
+/**
+ * [mode] is null when no running mode is known for now - a client that has never synced a permanent
+ * record, or a database that has just been reset. That is drawn as a question mark rather than as
+ * [RM.Mode.DISABLED_LOOP], which would tell the user the loop is off when nothing of the sort is
+ * known.
+ */
 @Composable
 fun RunningModeChip(
-    mode: RM.Mode,
+    mode: RM.Mode?,
     text: String,
     progress: Float,
     modifier: Modifier = Modifier,
@@ -61,8 +68,8 @@ fun RunningModeChip(
     enabled: Boolean = true,
     onClick: () -> Unit = {}
 ) {
-    val isTemporary = mode.mustBeTemporary()
-    val iconColor = mode.toColor()
+    val isTemporary = mode?.mustBeTemporary() == true
+    val iconColor = mode?.toColor() ?: MaterialTheme.colorScheme.onSurfaceVariant
     val containerColor = if (isTemporary) iconColor.copy(alpha = 0.2f) else Color.Transparent
     val haptic = LocalHapticFeedback.current
 
@@ -91,7 +98,7 @@ fun RunningModeChip(
                 ) {
                     Box(modifier = Modifier.size(AapsSpacing.chipIconSize)) {
                         Icon(
-                            imageVector = mode.toIcon(),
+                            imageVector = mode?.toIcon() ?: IcQuestion,
                             contentDescription = text,
                             tint = iconColor,
                             modifier = Modifier.fillMaxSize()

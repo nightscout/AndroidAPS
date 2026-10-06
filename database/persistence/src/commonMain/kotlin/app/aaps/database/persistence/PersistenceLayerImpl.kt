@@ -1367,9 +1367,11 @@ class PersistenceLayerImpl(
         }
     }
 
-    override suspend fun getRunningModeActiveAt(timestamp: Long): RM = withContext(aapsIoDispatcher) {
+    override suspend fun getRunningModeActiveAt(timestamp: Long): RM =
+        getRunningModeActiveAtOrNull(timestamp) ?: RM(timestamp = 0, mode = RM.DEFAULT_MODE, duration = 0)
+
+    override suspend fun getRunningModeActiveAtOrNull(timestamp: Long): RM? = withContext(aapsIoDispatcher) {
         repository.getRunningModeActiveAt(timestamp)?.fromDb()
-            ?: RM(timestamp = 0, mode = RM.DEFAULT_MODE, duration = 0)
     }
 
     override suspend fun getRunningModeByNSId(nsId: String): RM? = withContext(aapsIoDispatcher) {

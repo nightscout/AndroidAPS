@@ -693,15 +693,20 @@ class OverviewDataCacheImpl(
         // which touches activePump and crashes at startup before the pump plugin is selected.
         // Loop will correct mode itself when it next runs; the RM observer will pick it up.
         val now = dateUtil.now()
-        val rmRecord = persistenceLayer.getRunningModeActiveAt(now)
+        // Null when nothing is stored for this moment. Left null rather than filled in with
+        // RM.DEFAULT_MODE, which the UI would draw as a definite "loop disabled" - see
+        // PersistenceLayer.getRunningModeActiveAtOrNull.
+        val rmRecord = persistenceLayer.getRunningModeActiveAtOrNull(now)
 
         // Store raw data only - ViewModel computes display text
-        _runningModeFlow.value = RunningModeDisplayData(
-            mode = rmRecord.mode,
-            timestamp = rmRecord.timestamp,
-            duration = rmRecord.duration,
-            recordId = rmRecord.id
-        )
+        _runningModeFlow.value = rmRecord?.let {
+            RunningModeDisplayData(
+                mode = it.mode,
+                timestamp = it.timestamp,
+                duration = it.duration,
+                recordId = it.id
+            )
+        }
     }
 
     // =========================================================================
