@@ -307,6 +307,10 @@ class DanaRSPlugin(
         val result = pumpEnactResultProvider()
         val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         result.success = connectionOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped)
+        // Enacted = the pump really gave insulin. Was never set, so a delivered bolus reported
+        // enacted = false and the Loop screen showed no SMB amount, unlike other pumps. A stopped
+        // bolus can be a success with nothing given, so it needs delivered > 0 too.
+        result.enacted = result.success && delivered.cU > 0
         result.bolusDelivered = delivered.cU
         if (!result.success) {
             val error = bolusStartErrorText(danaPump.bolusStartErrorCode)

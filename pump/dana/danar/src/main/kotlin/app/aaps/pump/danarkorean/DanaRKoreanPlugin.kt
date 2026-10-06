@@ -171,6 +171,8 @@ class DanaRKoreanPlugin(
         val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         result.success(connectionOK && abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep)
             .bolusDelivered(delivered.cU)
+        // Enacted = the pump really gave insulin.
+        result.enacted(result.success && delivered.cU > 0)
         if (!result.success) result.comment(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
