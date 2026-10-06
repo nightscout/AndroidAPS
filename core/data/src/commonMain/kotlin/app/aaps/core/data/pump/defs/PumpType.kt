@@ -211,6 +211,7 @@ enum class PumpType(
     ),
     DANA_RS_KOREAN(description = "DanaRSKorean", model = "DanaRSKorean", parent = DANA_RS),
     DANA_I(description = "DanaI", model = "DanaI", parent = DANA_RS, source = Source.DanaI),
+    DANA_I2(description = "DanaI2", model = "DanaI2", parent = DANA_RS, source = Source.DanaI2),
     DANA_RV2(description = "DanaRv2", model = "DanaRv2", parent = DANA_RS, source = Source.DanaRv2),
     OMNIPOD_EROS(
         description = "Omnipod Eros",
@@ -524,6 +525,7 @@ enum class PumpType(
         DanaRv2,
         DanaRS,
         DanaI,
+        DanaI2,
         DiaconnG8,
         Insight,
         Combo,

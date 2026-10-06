@@ -31,8 +31,13 @@ class DanaRSPacketOptionSetUserOption(
                 + "\ncannulaVolume:" + danaPump.cannulaVolume
                 + "\nrefillAmount:" + danaPump.refillAmount
                 + "\ntarget:" + danaPump.target
+                + "\nautoLock:" + danaPump.autoLock
         )
-        val size = if (danaPump.hwModel >= 7) 15 else 13
+        val size = when {
+            danaPump.isDanaI2     -> 16 // + AutoLock
+            danaPump.hwModel >= 7 -> 15 // + Target BG
+            else                  -> 13
+        }
         val request = ByteArray(size)
         request[0] = if (danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
         request[1] = if (danaPump.buttonScrollOnOff) 1.toByte() else 0.toByte()
@@ -51,6 +56,8 @@ class DanaRSPacketOptionSetUserOption(
             request[13] = (danaPump.target and 0xff).toByte()
             request[14] = (danaPump.target ushr 8 and 0xff).toByte()
         }
+        if (danaPump.isDanaI2)
+            request[15] = if (danaPump.autoLock) 1.toByte() else 0.toByte()
         return request
     }
 

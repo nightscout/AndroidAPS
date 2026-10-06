@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
@@ -37,7 +36,6 @@ import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.comm.DanaRSPacketEtcKeepConnection
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ScheduledFuture
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
@@ -54,12 +52,12 @@ class BLEComm(
     private val danaPump: DanaPump,
     private val danaRSPlugin: DanaRSPlugin,
     private val bleEncryption: BleEncryption,
-    private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     private val preferences: Preferences,
     private val configBuilder: ConfigBuilder,
     private val notificationManager: NotificationManager,
-    private val bleTransport: BleTransport
+    private val bleTransport: BleTransport,
+    private val alarmReporter: DanaRSAlarmReporter
 ) : BleTransportListener {
 
     companion object {
@@ -84,8 +82,6 @@ class BLEComm(
             bleEncryption.setEnhancedEncryption(newValue)
             field = newValue
         }
-    private var isEasyMode: Boolean = false
-    private var isUnitUD: Boolean = false
 
     @Volatile var isConnected = false
     var isConnecting = false
@@ -362,7 +358,8 @@ class BLEComm(
                             // AA AA LEN TYPE CODE PARAMS CHECKSUM1 CHECKSUM2 EE EE
                             //           ^---- LEN -----^
                             // total packet length 2 + 1 + readBuffer[2] + 2 + 2
-                            length = readBuffer[2].toInt()
+                            // Unsigned: a Dana-i2 bulk history packet is up to 202 bytes long (20 records)
+                            length = readBuffer[2].toInt() and 0xFF
                             // test if there is enough data loaded
                             if (length + 7 > bufferLength)
                                 return
@@ -487,6 +484,9 @@ class BLEComm(
 
     // 1st packet response
     private fun processConnectResponse(decryptedBuffer: ByteArray) {
+        // Read again on every connection by the easy menu check (0xF4), pumps without easy mode keep false
+        danaPump.isEasyModeEnabled = false
+        danaPump.isConfigUD = false
         // response OK v1
         if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.code.toByte() && decryptedBuffer[3] == 'K'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -538,20 +538,42 @@ class BLEComm(
                 return
             }
 
-            if (danaPump.hwModel == 0x09 || danaPump.hwModel == 0x0A) {
-                bleEncryption.setBle5Key(storedPairingKey.encodeToByteArray())
-                aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK BLE5 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
-                // Dana-i BLE5 Pump
-                sendBLE5PairingInformation()
+            aapsLogger.debug(
+                LTag.PUMPBTCOMM,
+                "<<<<< ENCRYPTION__PUMP_CHECK BLE5 (OK) model=0x%02X protocol=0x%02X %s".format(danaPump.hwModel, danaPump.protocol, DanaRSPacket.toHexString(decryptedBuffer))
+            )
+            when (danaPump.hwModel) {
+                // Dana-i BLE5 and Dana-i2 use the same key setup
+                0x09, 0x0B -> {
+                    bleEncryption.setBle5Key(storedPairingKey.encodeToByteArray())
+                    sendBLE5PairingInformation()
+                }
+
+                // Pumps with easy mode: first check if easy mode is on, processEasyMenuCheck continues
+                0x0A, 0x0C -> {
+                    bleEncryption.setBle5Key(storedPairingKey.encodeToByteArray())
+                    sendEasyMenuCheck()
+                }
+
+                else       -> {
+                    // Without this branch an unknown model made the handshake stop without any message
+                    val message = rh.gs(R.string.danars_unsupported_model, "0x%02X".format(danaPump.hwModel))
+                    aapsLogger.error(LTag.PUMPBTCOMM, message)
+                    bleTransport.updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = message))
+                    mSendQueue.clear()
+                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, message))
+                }
             }
-            // response PUMP : error status
-        } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'M'.code.toByte() && decryptedBuffer[5] == 'P'.code.toByte()) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
-            bleTransport.updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = rh.gs(R.string.pumperror)))
+            // response PUMP : error status. Dana-i2 adds 1 byte of error flags.
+            // It must not fall into the wrong serial branch below, that would clear the pairing.
+        } else if ((decryptedBuffer.size == 6 || decryptedBuffer.size == 7) && decryptedBuffer[2] == 'P'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'M'.code.toByte() && decryptedBuffer[5] == 'P'.code.toByte()) {
+            val errorFlags = if (decryptedBuffer.size == 7) decryptedBuffer[6].toInt() and 0xFF else null
+            val errorText = alarmReporter.pumpCheckErrorText(errorFlags)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< ENCRYPTION__PUMP_CHECK (PUMP) $errorText ${DanaRSPacket.toHexString(decryptedBuffer)}")
+            bleTransport.updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = errorText))
             mSendQueue.clear()
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumperror)))
-            runBlocking { pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber) }
-            notificationManager.post(NotificationId.PUMP_ERROR, TextRef.AndroidRes(R.string.pumperror))
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, errorText))
+            alarmReporter.report(errorText)
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -722,17 +744,26 @@ class BLEComm(
     // 3rd packet Easy menu pump
     private fun sendEasyMenuCheck() {
         val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASY_MENU_CHECK, null, null)
+        aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> ENCRYPTION__GET_EASY_MENU_CHECK ${DanaRSPacket.toHexString(bytes)}")
         bleTransport.gatt.writeCharacteristic(bytes)
     }
 
     // 3rd packet Easy menu response
     private fun processEasyMenuCheck(decryptedBuffer: ByteArray) {
-        isEasyMode = decryptedBuffer[2] == 0x01.toByte()
-        isUnitUD = decryptedBuffer[3] == 0x01.toByte()
+        // Easy menu: 0x00 normal mode, 0x01 easy menu, 0x02 no easy menu. Basal unit: 0x00 U/h, 0x01 U/d
+        danaPump.isEasyModeEnabled = decryptedBuffer[2] == 0x01.toByte()
+        danaPump.isConfigUD = decryptedBuffer[3] == 0x01.toByte()
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "<<<<< ENCRYPTION__GET_EASY_MENU_CHECK easyMode=${danaPump.isEasyModeEnabled} basalUnitUD=${danaPump.isConfigUD} ${DanaRSPacket.toHexString(decryptedBuffer)}"
+        )
 
         // request time information
-        if (encryption == EncryptionType.ENCRYPTION_RSv3) sendV3PairingInformation()
-        else sendTimeInfo()
+        when (encryption) {
+            EncryptionType.ENCRYPTION_RSv3 -> sendV3PairingInformation()
+            EncryptionType.ENCRYPTION_BLE5 -> sendBLE5PairingInformation()
+            else                           -> sendTimeInfo()
+        }
     }
 
     // the rest of packets

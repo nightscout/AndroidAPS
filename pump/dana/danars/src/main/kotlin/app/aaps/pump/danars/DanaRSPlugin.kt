@@ -309,18 +309,42 @@ class DanaRSPlugin(
         result.success = connectionOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped)
         result.bolusDelivered = delivered.cU
         if (!result.success) {
-            var error = "" + danaPump.bolusStartErrorCode
-            when (danaPump.bolusStartErrorCode) {
-                0x10 -> error = rh.gs(app.aaps.pump.dana.R.string.maxbolusviolation)
-                0x20 -> error = rh.gs(app.aaps.pump.dana.R.string.commanderror)
-                0x40 -> error = rh.gs(app.aaps.pump.dana.R.string.speederror)
-                0x80 -> error = rh.gs(app.aaps.pump.dana.R.string.insulinlimitviolation)
-            }
+            val error = bolusStartErrorText(danaPump.bolusStartErrorCode)
             result.comment = rh.gs(app.aaps.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, delivered.cU, error)
         } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         return result
     }
+
+    /**
+     * Text for the error of step bolus start (0x4A).
+     * Older pumps send one error value. Dana-i2 sends 2 bytes of flags. More than one flag can be set,
+     * then the first one in this list is shown.
+     */
+    private fun bolusStartErrorText(code: Int): String =
+        if (danaPump.isDanaI2)
+            when {
+                code and 0x0001 != 0 -> rh.gs(app.aaps.core.ui.R.string.pump_suspended)
+                code and 0x0002 != 0 -> rh.gs(app.aaps.pump.dana.R.string.dailymax)
+                code and 0x0004 != 0 -> rh.gs(app.aaps.pump.dana.R.string.danar_disablebolusblock)
+                code and 0x0008 != 0 -> rh.gs(app.aaps.core.ui.R.string.pump_busy)
+                code and 0x0010 != 0 -> rh.gs(app.aaps.pump.dana.R.string.danai2_bolus_error_no_prime)
+                code and 0x0020 != 0 -> rh.gs(app.aaps.pump.dana.R.string.commanderror)
+                code and 0x0040 != 0 -> rh.gs(app.aaps.pump.dana.R.string.speederror)
+                code and 0x0080 != 0 -> rh.gs(app.aaps.pump.dana.R.string.insulinlimitviolation)
+                code and 0x0100 != 0 -> rh.gs(app.aaps.pump.dana.R.string.maxbolusviolation)
+                code and 0x0200 != 0 -> rh.gs(app.aaps.pump.dana.R.string.danai2_bolus_error_not_enough_insulin)
+                code and 0x0400 != 0 -> rh.gs(app.aaps.pump.dana.R.string.danai2_bolus_error_easy_sleep)
+                else                 -> "0x%04X".format(code)
+            }
+        else
+            when (code) {
+                0x10 -> rh.gs(app.aaps.pump.dana.R.string.maxbolusviolation)
+                0x20 -> rh.gs(app.aaps.pump.dana.R.string.commanderror)
+                0x40 -> rh.gs(app.aaps.pump.dana.R.string.speederror)
+                0x80 -> rh.gs(app.aaps.pump.dana.R.string.insulinlimitviolation)
+                else -> code.toString()
+            }
 
     override fun stopBolusDelivering() {
         danaRSService?.bolusStop()

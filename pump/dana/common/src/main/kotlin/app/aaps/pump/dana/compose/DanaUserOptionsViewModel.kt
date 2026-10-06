@@ -34,7 +34,9 @@ data class UserOptionsUiState(
     val glucoseUnitMmol: Boolean = false,
     val shutdownHour: Int = 0,
     val lowReservoir: Int = 10,
-    val minBacklight: Int = 1
+    val minBacklight: Int = 1,
+    val autoLock: Boolean = false,
+    val showAutoLock: Boolean = false // Dana-i2 only
 )
 
 sealed class UserOptionsEvent {
@@ -78,7 +80,9 @@ class DanaUserOptionsViewModel(
             glucoseUnitMmol = danaPump.unitsString == GlucoseUnit.MMOL.asText,
             shutdownHour = danaPump.shutdownHour,
             lowReservoir = danaPump.lowReservoirRate,
-            minBacklight = minBl
+            minBacklight = minBl,
+            autoLock = danaPump.autoLock,
+            showAutoLock = danaPump.isDanaI2
         )
 
         aapsLogger.debug(
@@ -97,6 +101,7 @@ class DanaUserOptionsViewModel(
     fun updateGlucoseUnit(value: Boolean) = _uiState.update { it.copy(glucoseUnitMmol = value) }
     fun updateShutdownHour(value: Double) = _uiState.update { it.copy(shutdownHour = value.toInt()) }
     fun updateLowReservoir(value: Double) = _uiState.update { it.copy(lowReservoir = value.toInt()) }
+    fun updateAutoLock(value: Boolean) = _uiState.update { it.copy(autoLock = value) }
 
     fun save() {
         val state = _uiState.value
@@ -113,6 +118,7 @@ class DanaUserOptionsViewModel(
         danaPump.units = if (state.glucoseUnitMmol) 1 else 0
         danaPump.shutdownHour = min(state.shutdownHour, 24)
         danaPump.lowReservoirRate = min(max(state.lowReservoir / 10 * 10, 10), 50)
+        danaPump.autoLock = state.autoLock
 
         viewModelScope.launch {
             val result = commandQueue.setUserOptions()

@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.dana.R
 import app.aaps.pump.danars.DanaRSTestBase
+import app.aaps.pump.danars.services.DanaRSAlarmReporter
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -21,7 +22,7 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
 
     @Test
     fun runTest() {
-        val packet = DanaRSPacketNotifyAlarm(aapsLogger, rh, pumpSync, danaPump, notificationManager)
+        val packet = DanaRSPacketNotifyAlarm(aapsLogger, rh, DanaRSAlarmReporter(rh, notificationManager, pumpSync, danaPump))
         // test params
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
@@ -41,7 +42,7 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
         whenever(rh.gs(R.string.occlusion)).thenReturn("Occlusion")
         whenever(rh.gs(R.string.lowbattery)).thenReturn("Low Battery")
         whenever(rh.gs(R.string.pumpshutdown)).thenReturn("Pump Shutdown")
-        val packet = DanaRSPacketNotifyAlarm(aapsLogger, rh, pumpSync, danaPump, notificationManager)
+        val packet = DanaRSPacketNotifyAlarm(aapsLogger, rh, DanaRSAlarmReporter(rh, notificationManager, pumpSync, danaPump))
 
         packet.handleMessage(byteArrayOf(0xC3.toByte(), 0x03, code.toByte()))
 

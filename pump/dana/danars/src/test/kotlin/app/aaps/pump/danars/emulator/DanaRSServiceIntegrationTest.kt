@@ -74,6 +74,7 @@ import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.services.BLEComm
+import app.aaps.pump.danars.services.DanaRSAlarmReporter
 import app.aaps.pump.danars.services.DanaRSService
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -192,8 +193,9 @@ class DanaRSServiceIntegrationTest : TestBase() {
 
         bleComm = BLEComm(
             aapsLogger, rh, context, rxBus, danaRSMessageHashTable, danaPump,
-            danaRSPlugin, bleEncryption, pumpSync, dateUtil, preferences,
-            configBuilder, notificationManager, emulatorTransport
+            danaRSPlugin, bleEncryption, dateUtil, preferences,
+            configBuilder, notificationManager, emulatorTransport,
+            DanaRSAlarmReporter(rh, notificationManager, pumpSync, danaPump)
         ).apply {
             messageTimeoutMs = 5000 // Prod default; a tighter budget times out spuriously under CI CPU starvation
         }
