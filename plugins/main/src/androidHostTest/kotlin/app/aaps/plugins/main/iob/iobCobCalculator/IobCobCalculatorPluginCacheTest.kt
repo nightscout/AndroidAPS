@@ -1,5 +1,6 @@
 package app.aaps.plugins.main.iob.iobCobCalculator
 
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -18,6 +19,10 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.AAPSLoggerTest
+import com.google.common.truth.Truth.assertThat
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -110,6 +115,34 @@ class IobCobCalculatorPluginCacheTest {
         calculateAt(now - hour)
 
         verifyCalculations(2)
+    }
+
+    /**
+     * A cached read must wait for a writer that holds the lock (#5211). The read used to skip the lock,
+     * so on a cache hit it went straight through while another thread was changing the table.
+     */
+    @Test
+    fun `a cached read waits for a writer holding the lock`() {
+        calculateAt(now - hour) // now cached
+        val readerStarted = CountDownLatch(1)
+        val readerDone = AtomicBoolean(false)
+        val reader = Thread {
+            readerStarted.countDown()
+            calculateAt(now - hour)
+            readerDone.set(true)
+        }
+
+        sut.dataLock.withLock {
+            reader.start()
+            assertThat(readerStarted.await(5, TimeUnit.SECONDS)).isTrue()
+            // Give it every chance to get through; it cannot while the lock is held here.
+            Thread.sleep(200)
+            assertThat(readerDone.get()).isFalse()
+        }
+
+        reader.join(5_000)
+        assertThat(readerDone.get()).isTrue()
+        verifyCalculations(1) // and it was still a cache hit
     }
 
     /** "Now" and the future are never stored: the running insulin is not complete yet. */

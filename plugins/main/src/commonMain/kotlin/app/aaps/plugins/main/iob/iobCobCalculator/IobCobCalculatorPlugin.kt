@@ -116,7 +116,8 @@ class IobCobCalculatorPlugin(
     // should. kotlin.concurrent.Volatile, which works in common code.
     @Volatile override var ads: AutosensDataStore = AutosensDataStoreObject()
 
-    private val dataLock = AapsLock()
+    // Guards iobTable, every read and every write. Internal only so a test can hold it.
+    internal val dataLock = AapsLock()
 
     @OptIn(FlowPreview::class)
     override suspend fun onStart() {
@@ -304,7 +305,10 @@ class IobCobCalculatorPlugin(
     override suspend fun calculateFromTreatmentsAndTemps(toTime: Long, profile: EffectiveProfile): IobTotal {
         val now = dateUtil.now()
         val time = ads.roundUpTime(toTime)
-        val cacheHit = iobTable[time]
+        // Under the same lock as every write. iobTable is a plain LongSparseArray, and the writers
+        // (new BG, history change, clearCache) run on other threads: a read without the lock could
+        // see the arrays half compacted and return the IOB of another time, or throw (#5211).
+        val cacheHit = dataLock.withLock { iobTable[time] }
         if (time < now && cacheHit != null) {
             //og.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
             return cacheHit
