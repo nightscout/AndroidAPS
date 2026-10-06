@@ -27,6 +27,7 @@
     <string name="constraint_applied">Constraint applied!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pump unreachable</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">The pump driver is not responding. \"%1$s\" has been running for %2$d min and no other command can reach the pump. Check the pump, then restart AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
