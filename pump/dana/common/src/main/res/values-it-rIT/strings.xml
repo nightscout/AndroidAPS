@@ -9,6 +9,12 @@
     <string name="speederror">Errore velocità</string>
     <string name="insulinlimitviolation">Violazione limite insulina</string>
     <string name="boluserrorcode">Chiesto: %1$.2fU Erogato: %2$.2fU Codice errore: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Il micro non è stato caricato</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Non abbastanza insulina nel serbatoio</string>
+    <string name="danai2_bolus_error_easy_sleep">La modalità Easy sleep è accesa nel micro</string>
+    <string name="danai2_pump_check_error">Errore di controllo micro</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Modalità semplice</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Blocco automatico</string>
     <string name="danar_valuenotsetproperly">Valore non impostato correttamente</string>
     <string name="danar_setbasalstep001">Imposta incremento basale a 0.01 U/h</string>
     <string name="resetpairing">Resettare le informazioni di associazione?</string>
@@ -18,6 +24,7 @@
     <string name="danar_disablebolusblock">Il blocco bolo è abilitato sul micro. AAPS non può erogare insulina mentre è attivo. Disabilita il blocco bolo nelle impostazioni del microinfusore.</string>
     <string name="overview_bolusprogress_stoped">Stoppato</string>
     <string name="unsupportedfirmware">Firmware del micro non supportato</string>
+    <string name="danars_unsupported_model">Modello micro non supportato (codice %1$s)</string>
     <string name="pumperror">Errore micro</string>
     <string name="lowbattery">Batteria quasi scarica</string>
     <string name="basalcompare">Erogazione inferiore rispetto alla velocità basale preimpostata</string>
