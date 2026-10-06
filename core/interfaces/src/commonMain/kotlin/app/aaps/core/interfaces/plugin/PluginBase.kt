@@ -43,7 +43,7 @@ abstract class PluginBase(
      * down one by one - see `PluginLifetimeWorkScanTest.pluginScopeLaunches`, which fails the build on a
      * new one. The reason it was rejected: cancelling this scope does NOT withdraw a queued command.
      * `CommandQueueImplementation.readStatus` is `add` then `notifyAboutNewCommand` then
-     * `deferred.await()`, so cancelling the caller at the await leaves the command in the queue and still
+     * `completion.await()`, so cancelling the caller at the await leaves the command in the queue and still
      * running - it only throws away the answer. Twelve of the fourteen sites are status reads whose result
      * can be abandoned safely; `PumpPluginBase.onStart` already cancels its own job explicitly, which is
      * the only place cancelling really prevents anything; and `OmnipodDashPumpPlugin.handleCommandConfirmation`

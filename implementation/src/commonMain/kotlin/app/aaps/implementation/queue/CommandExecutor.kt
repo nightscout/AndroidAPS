@@ -260,7 +260,7 @@ class CommandExecutor(
                             rxBus.send(EventQueueChanged())
                             rxBus.send(EventPumpStatusChanged(cmd.status()))
                             try {
-                                cmd.executeWithCallback()
+                                cmd.executeAndComplete()
                             } catch (e: CancellationException) {
                                 throw e // honor coroutine cancellation (app shutdown)
                             } catch (e: Exception) {

@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.pump.Dana
 import app.aaps.core.interfaces.pump.Diaconn
 import app.aaps.core.interfaces.pump.Medtrum
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.CoreUiStrings
@@ -17,8 +16,7 @@ class CommandSetUserSettings(
     private val rh: TextResolver,
     private val activePlugin: ActivePlugin,
     override val pumpEnactResultProvider: () -> PumpEnactResult,
-    override val callback: Callback?,
-) : Command {
+) : Command() {
 
     override val commandType: Command.CommandType = Command.CommandType.SET_USER_SETTINGS
 

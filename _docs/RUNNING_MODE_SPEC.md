@@ -35,7 +35,7 @@ fix it.
 ─── ENFORCEMENT ─────────────────────────────────────────────────
   RunningModeGuard           UI/SMS/Wear pre-check (snackbar reject)
                              core/objects/.../runningMode/RunningModeGuard.kt
-  CommandQueueImpl gate      last-resort queue-level reject (callback)
+  CommandQueueImpl gate      last-resort queue-level reject (failed result)
                              implementation/.../queue/CommandQueueImplementation.kt
   RunningModeReconciler      observes RM DB changes, drives pump commands
                              plugins/aps/.../runningMode/RunningModeReconciler.kt

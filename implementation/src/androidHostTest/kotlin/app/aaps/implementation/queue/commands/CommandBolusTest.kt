@@ -2,9 +2,7 @@ package app.aaps.implementation.queue.commands
 
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.cancel
 import app.aaps.implementation.pump.PumpEnactResultObject
@@ -24,10 +22,10 @@ class CommandBolusTest : TestBaseWithProfile() {
 
     private val info = DetailedBolusInfo().apply { insulin = 1.0 }
 
-    private fun newCommand(type: Command.CommandType = Command.CommandType.BOLUS, callback: Callback? = null) =
+    private fun newCommand(type: Command.CommandType = Command.CommandType.BOLUS) =
         CommandBolus(
             aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke, bolusProgressData,
-            info, callback, type, BOLUS_GENERATION
+            info, type, BOLUS_GENERATION
         )
 
     @Test
@@ -59,55 +57,58 @@ class CommandBolusTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `executeWithCallback forwards execute result to callback`() = runTest {
+    fun `executeAndComplete completes with execute result`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
             on { deliverTreatment(info) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() {
-                received = result
-            }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).executeWithCallback()
+        command.executeAndComplete()
 
+        val received = command.completion.await()
         assertThat(received).isSameInstanceAs(pumpResult)
     }
 
     @Test
-    fun `cancel clears progress data and invokes callback with success by default`() {
+    fun `cancel after execute keeps the execute result`() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() {
-                received = result
-            }
+        val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
+        val pump = mock<PumpWithConcentration> {
+            on { deliverTreatment(info) } doReturn pumpResult
         }
+        whenever(activePlugin.activePump).thenReturn(pump)
+        val command = newCommand()
 
-        newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced)
+        command.executeAndComplete()
+        command.cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isTrue()
+        val received = command.completion.await()
+        assertThat(received).isSameInstanceAs(pumpResult)
+    }
+
+    @Test
+    fun `cancel clears progress data and completes with success by default`() = runTest {
+        whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
+        val command = newCommand()
+
+        command.cancel(app.aaps.core.ui.R.string.command_replaced)
+
+        val received = command.completion.await()
+        assertThat(received.success).isTrue()
         verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 
     @Test
-    fun `cancel clears progress data and invokes callback with failure when success=false`() {
+    fun `cancel clears progress data and completes with failure when success=false`() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() {
-                received = result
-            }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
+        command.cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isFalse()
+        val received = command.completion.await()
+        assertThat(received.success).isFalse()
         verify(bolusProgressData).clear(BOLUS_GENERATION)
     }
 

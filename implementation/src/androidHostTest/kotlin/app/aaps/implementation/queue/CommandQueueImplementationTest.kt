@@ -286,7 +286,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue.pickup()
         val command = commandQueue.performing()
         assertThat(command?.commandType).isEqualTo(Command.CommandType.BASAL_PROFILE)
-        command?.callback?.result(enactResult(isSuccess = true, isEnacted = true))?.run()
+        command?.completion?.complete(enactResult(isSuccess = true, isEnacted = true))
     }
 
     /** NSClient updating the PS with its nsId, or KeepAlive with the pump in order: nothing to do. */
@@ -406,7 +406,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     @Test
     fun postProfileWriteResult_timeout_ringsFailureAlarmWithFallbackText() {
-        // timeout: result == null (deferred pump callback never arrived) → treated as failure, generic fallback text.
+        // timeout: result == null (the command was never completed) → treated as failure, generic fallback text.
         whenever(rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)).thenReturn("Failed to update basal profile")
 
         val persisted = commandQueue.postProfileWriteResult(null, silent = false)
@@ -856,7 +856,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     //
     // These verify the queue rejects commands when the active running mode forbids them.
     // The gate itself is exhaustively tested in PumpCommandGateTest; here we only verify the queue
-    // calls the gate and propagates its decision to the callback.
+    // calls the gate and returns its decision to the caller.
 
     @Test
     fun `tempBasalAbsolute non-zero is rejected during DISCONNECTED_PUMP`() = runTest {
@@ -1224,7 +1224,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     /**
-     * The drain used to call the callback directly, so `CommandBolus.cancel` never ran and the
+     * The drain used to complete the caller directly, so `CommandBolus.cancel` never ran and the
      * bolus progress it owns was left running with nothing to finish it.
      */
     @Test
