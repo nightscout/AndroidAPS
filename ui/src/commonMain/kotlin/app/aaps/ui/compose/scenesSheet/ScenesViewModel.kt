@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.ui.compose.scenes.sceneSummaryWithChain
 import dev.zacsweers.metro.AppScope
@@ -54,7 +53,7 @@ data class AutomationActionItem(
 data class SceneSheetItem(
     val id: String,
     val name: String,
-    /** "3 actions, 2 hours → Cooldown", the same line as Manage → Scenes. */
+    /** "3 actions, 2 h → Cooldown", the same line as Manage → Scenes. */
     val summary: String,
     val iconKey: String,
     /** Localized reason why this scene is currently not activatable, or null if it is. */
@@ -83,8 +82,7 @@ class ScenesViewModel(
     private val sceneRepository: SceneStore,
     private val sceneActions: SceneActions,
     private val rh: TextResolver,
-    private val nsClient: NsClient,
-    private val dateUtil: DateUtil
+    private val nsClient: NsClient
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ScenesUiState())
@@ -142,7 +140,7 @@ class ScenesViewModel(
                 SceneSheetItem(
                     id = scene.id,
                     name = scene.name,
-                    summary = sceneSummaryWithChain(scene, rh, dateUtil, sceneRepository::getScene),
+                    summary = sceneSummaryWithChain(scene, rh, sceneRepository::getScene),
                     iconKey = scene.icon,
                     activationReason = masterOfflineReason ?: sceneActions.validateActivation(scene)
                 )

@@ -2,6 +2,8 @@ package app.aaps.ui.compose.main
 
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
+import app.aaps.core.data.model.Scene
+import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -26,6 +28,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneChainResolver
+import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DateUtil
@@ -44,7 +47,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -80,6 +85,7 @@ internal class MainViewModelTest {
     @Mock private lateinit var protectionCheck: ProtectionCheck
     @Mock private lateinit var sceneActions: SceneActions
     @Mock private lateinit var sceneChainTargetResolver: SceneChainResolver
+    @Mock private lateinit var sceneStore: SceneStore
     @Mock private lateinit var activeSceneManager: ActiveSceneSync
     @Mock private lateinit var rxBus: RxBus
     @Mock private lateinit var nsClient: NsClient
@@ -107,23 +113,28 @@ internal class MainViewModelTest {
         whenever(overviewDataCache.tbrFlow).thenReturn(MutableStateFlow<TbrDisplayData?>(null))
         whenever(quickWizard.changes).thenReturn(MutableStateFlow(0))
 
-        // Active scene state read as fields (activeSceneState + sceneExpired.map).
+        // Active scene state and the scene catalog, read as fields (activeSceneState, sceneExpired.map,
+        // activeSceneChainTargetName's combine).
         whenever(activeSceneManager.activeSceneState).thenReturn(MutableStateFlow<ActiveSceneState?>(null))
+        whenever(sceneStore.scenesFlow).thenReturn(MutableStateFlow(""))
 
         // Preference observers created (launchIn deferred) in init.
         whenever(preferences.observe(BooleanKey.GeneralSimpleMode)).thenReturn(MutableStateFlow(true))
         whenever(preferences.observe(BooleanKey.ApsUseSmb)).thenReturn(MutableStateFlow(false))
         whenever(preferences.observe(StringNonKey.QuickLaunchActions)).thenReturn(MutableStateFlow(""))
 
-        sut = MainViewModel(
-            activePlugin, config, urlOpener, preferences, fabricPrivacy, rh, dateUtil,
-            overviewDataCache, iobCobCalculator, profileFunction, constraintChecker, quickWizard,
-            automation, persistenceLayer, aapsLogger, quickLaunchResolver, wizardExecutor,
-            batchExecutor, uel, loop, protectionCheck, sceneActions, sceneChainTargetResolver,
-            activeSceneManager, rxBus, nsClient, visibilityContext,
-            CoroutineScope(UnconfinedTestDispatcher())
-        )
+        sut = buildSut()
     }
+
+    /** The one place the constructor is called, so a test can re-stub a flow and build its own instance. */
+    private fun buildSut() = MainViewModel(
+        activePlugin, config, urlOpener, preferences, fabricPrivacy, rh, dateUtil,
+        overviewDataCache, iobCobCalculator, profileFunction, constraintChecker, quickWizard,
+        automation, persistenceLayer, aapsLogger, quickLaunchResolver, wizardExecutor,
+        batchExecutor, uel, loop, protectionCheck, sceneActions, sceneChainTargetResolver,
+        sceneStore, activeSceneManager, rxBus, nsClient, visibilityContext,
+        CoroutineScope(UnconfinedTestDispatcher())
+    )
 
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
@@ -156,6 +167,31 @@ internal class MainViewModelTest {
     fun `formatDuration delegates to dateUtil`() {
         whenever(dateUtil.timeRemainingString(any(), any())).thenReturn("1h 30m")
         assertThat(sut.formatDuration(5_400_000L)).isEqualTo("1h 30m")
+    }
+
+    /**
+     * The banner names the follow-up scene. The edit lock covers the running scene but not its
+     * follow-up, so that one can be renamed, disabled or deleted while the banner is on screen. The
+     * name must follow the catalog, or the banner promises a scene that will not start.
+     */
+    @Test
+    fun `the banner follow-up follows the scene catalog`() = runTest {
+        val scene = Scene(id = "s1", name = "Night", endAction = SceneEndAction.ChainScene("s2"))
+        val catalog = MutableStateFlow("v1")
+        whenever(activeSceneManager.activeSceneState).thenReturn(
+            MutableStateFlow<ActiveSceneState?>(ActiveSceneState(scene = scene, activatedAt = 1000L, durationMs = 0L))
+        )
+        whenever(sceneStore.scenesFlow).thenReturn(catalog)
+        whenever(sceneChainTargetResolver.resolveCatalogChainTarget(scene)).thenReturn(Scene(id = "s2", name = "Cooldown"))
+        sut = buildSut()
+        advanceUntilIdle()
+        assertThat(sut.activeSceneChainTargetName.value).isEqualTo("Cooldown")
+
+        // The follow-up is disabled while the scene runs: the resolver no longer finds it.
+        whenever(sceneChainTargetResolver.resolveCatalogChainTarget(scene)).thenReturn(null)
+        catalog.value = "v2"
+        advanceUntilIdle()
+        assertThat(sut.activeSceneChainTargetName.value).isNull()
     }
 
     /**

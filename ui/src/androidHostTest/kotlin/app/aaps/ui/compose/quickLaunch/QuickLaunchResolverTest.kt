@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileRepository
 import app.aaps.core.interfaces.scenes.SceneStore
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.shared.tests.generatedTextResolver
@@ -18,8 +17,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 
 /** The scene text the QuickLaunch tooltip, overflow menu and configure rows show. */
@@ -32,7 +29,6 @@ internal class QuickLaunchResolverTest {
     @Mock private lateinit var profileRepository: ProfileRepository
     @Mock private lateinit var sceneRepository: SceneStore
     @Mock private lateinit var elementAvailability: ElementAvailability
-    @Mock private lateinit var dateUtil: DateUtil
 
     private lateinit var sut: QuickLaunchResolver
 
@@ -41,10 +37,9 @@ internal class QuickLaunchResolverTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        whenever(dateUtil.niceTimeScalar(eq(120 * 60_000L), any())).thenReturn("2 hours")
         sut = QuickLaunchResolver(
             preferences, quickWizard, automation, activePlugin, profileRepository,
-            sceneRepository, generatedTextResolver(), elementAvailability, dateUtil
+            sceneRepository, generatedTextResolver(), elementAvailability
         )
     }
 
@@ -55,7 +50,7 @@ internal class QuickLaunchResolverTest {
             Scene(id = "s1", name = "Night", defaultDurationMinutes = 120, actions = twoActions)
         )
 
-        assertThat(sut.resolveDescription(QuickLaunchAction.SceneAction("s1"))).isEqualTo("2 actions, 2 hours")
+        assertThat(sut.resolveDescription(QuickLaunchAction.SceneAction("s1"))).isEqualTo("2 actions, 2 h")
     }
 
     @Test
@@ -65,7 +60,7 @@ internal class QuickLaunchResolverTest {
         )
         whenever(sceneRepository.getScene("s2")).thenReturn(Scene(id = "s2", name = "Cooldown"))
 
-        assertThat(sut.resolveDescription(QuickLaunchAction.SceneAction("s1"))).isEqualTo("2 actions, 2 hours → Cooldown")
+        assertThat(sut.resolveDescription(QuickLaunchAction.SceneAction("s1"))).isEqualTo("2 actions, 2 h → Cooldown")
     }
 
     // A glance surface says nothing about a deleted follow-up; the scene list is where that is reported.
@@ -76,7 +71,7 @@ internal class QuickLaunchResolverTest {
         )
         whenever(sceneRepository.getScene("gone")).thenReturn(null)
 
-        assertThat(sut.resolveDescription(QuickLaunchAction.SceneAction("s1"))).isEqualTo("2 actions, 2 hours")
+        assertThat(sut.resolveDescription(QuickLaunchAction.SceneAction("s1"))).isEqualTo("2 actions, 2 h")
     }
 
     @Test

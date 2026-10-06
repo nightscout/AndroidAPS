@@ -47,6 +47,7 @@ import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneChainResolver
+import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.ui.IconsProvider
@@ -134,6 +135,7 @@ class MainViewModel(
     private val protectionCheck: ProtectionCheck,
     private val sceneActions: SceneActions,
     private val sceneChainTargetResolver: SceneChainResolver,
+    private val sceneStore: SceneStore,
     private val activeSceneManager: ActiveSceneSync,
     private val rxBus: RxBus,
     private val nsClient: NsClient,
@@ -791,10 +793,16 @@ class MainViewModel(
     /**
      * Name of the scene that starts when the active one ends, for the banner. A catalog lookup only:
      * whether the follow-up can run is decided when this scene ends, not now.
+     *
+     * Recomputed on every catalog change as well, not only when the active scene changes: the edit
+     * lock covers the running scene but not its follow-up, so that one can be renamed, disabled or
+     * deleted while the banner is on screen (and on a client the catalog arrives by sync). A banner
+     * naming a follow-up that no longer exists would promise something that will not start.
      */
-    val activeSceneChainTargetName: StateFlow<String?> = activeSceneManager.activeSceneState
-        .map { state -> state?.let { sceneChainTargetResolver.resolveCatalogChainTarget(it.scene)?.name } }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val activeSceneChainTargetName: StateFlow<String?> =
+        combine(activeSceneManager.activeSceneState, sceneStore.scenesFlow) { state, _ ->
+            state?.let { sceneChainTargetResolver.resolveCatalogChainTarget(it.scene)?.name }
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     /** Whether the active scene has expired (duration ran out, non-duration actions reverted).
      *  Derived from the lifecycle field that lives inside [ActiveSceneState] and rides NS sync. */
