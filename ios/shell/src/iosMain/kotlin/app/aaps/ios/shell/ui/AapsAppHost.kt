@@ -7,6 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.key
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
@@ -318,6 +319,18 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 // The overview is the start destination, the same as Android and desktop. Settings
                 // used to be, which left its back arrow inert - there was nothing behind it - and
                 // left every other screen unreachable, since they are all reached from the overview.
+                // First run opens the setup wizard, as `ComposeMainActivity` does on Android. The
+                // route and the screen are already shared through `appNavGraph`; only the trigger
+                // was Android's, so a new iOS user landed on an empty overview with nothing to
+                // follow and no hint that a wizard existed. Reported from TestFlight.
+                LaunchedEffect(Unit) {
+                    if (!graph.preferences.get(BooleanNonKey.GeneralSetupWizardProcessed)) {
+                        graph.protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                            if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.SetupWizard.route)
+                        }
+                    }
+                }
+
                 NavHost(navController = navController, startDestination = AppRoute.Main.route) {
                     appNavGraph(
                         navController = navController,
