@@ -90,4 +90,43 @@ class PersistentNotificationPluginTest : TestBase() {
         runCurrent()
         assertThat(updates()).isEqualTo(2)
     }
+
+    /**
+     * On a Samsung phone One UI draws the notification from the live-update texts and drops the normal
+     * title, text and sub text. The basal rate or temp basal is only in the title and the profile name
+     * only in the sub text, so both vanished from the drawer when the short Now Bar text was used there.
+     */
+    @Test
+    fun `the samsung drawer keeps the basal and the profile, the now bar stays short`() {
+        val texts = PersistentNotificationPlugin.samsungLiveTexts(
+            line1 = "5.4 → +0.1 • 0.80 U/h ",
+            line1WithDelta = "5.4 → +0.1",
+            line2 = "IOB: 1.2U • COB: 20g",
+            line3 = "Default"
+        )!!
+
+        // The profile goes on the first row: One UI has no sub text field, where it was shown before.
+        assertThat(texts.primary).isEqualTo("5.4 → +0.1 • 0.80 U/h • Default")
+        assertThat(texts.secondary).isEqualTo("IOB: 1.2U • COB: 20g")
+        assertThat(texts.nowBarPrimary).isEqualTo("5.4 → +0.1")
+        assertThat(texts.nowBarSecondary).isEqualTo("IOB: 1.2U • COB: 20g")
+    }
+
+    // "No profile set": one line only, and nothing invented for the second one.
+    @Test
+    fun `with one line only the samsung texts have no secondary`() {
+        val texts = PersistentNotificationPlugin.samsungLiveTexts(
+            line1 = "No profile set", line1WithDelta = "No profile set", line2 = null, line3 = null
+        )!!
+
+        assertThat(texts.primary).isEqualTo("No profile set")
+        assertThat(texts.secondary).isNull()
+        assertThat(texts.nowBarSecondary).isNull()
+    }
+
+    @Test
+    fun `nothing to show gives no samsung texts`() {
+        assertThat(PersistentNotificationPlugin.samsungLiveTexts(null, null, null, null)).isNull()
+        assertThat(PersistentNotificationPlugin.samsungLiveTexts("x", " ", "y", "z")).isNull()
+    }
 }
