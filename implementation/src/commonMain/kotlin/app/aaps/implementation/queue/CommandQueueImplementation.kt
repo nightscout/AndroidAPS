@@ -91,6 +91,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
 @OpenForTesting
 @ContributesBinding(AppScope::class)
@@ -146,6 +147,11 @@ class CommandQueueImplementation(
     // need longer.
     @Suppress("PrivatePropertyName")
     private val PROFILE_SET_TIMEOUT_MS = 10 * 60 * 1000
+
+    // How long one command may run before the user is alarmed. Longer than the slowest legitimate
+    // command: a 25 U bolus at the slowest pump speed (60 s/U) takes about 25 minutes.
+    @Suppress("PrivatePropertyName")
+    private val STUCK_COMMAND_ALARM = 30.minutes
 
     init {
         // collectResilient guarantees a single failed onProfileChanged() can never permanently wedge
@@ -311,7 +317,8 @@ class CommandQueueImplementation(
 
     /**
      * READSTATUS dedup + stall telemetry. If a READSTATUS sits at the tail of the queue for more than
-     * 15 min the executor is stalled (a driver's execute() is blocking). Surface it for telemetry only.
+     * 15 min the executor is stalled (a driver's execute() is blocking). Telemetry only here; the user is
+     * alarmed by [watchForStuck].
      */
     private var readScheduledDetected: Long? = null
 
@@ -346,8 +353,38 @@ class CommandQueueImplementation(
     }
 
     override fun pickup() {
-        instanceLock.withLock {
-            queueLock.withLock { performing = queue.removeFirstOrNull() }
+        val picked = instanceLock.withLock {
+            queueLock.withLock { queue.removeFirstOrNull().also { performing = it } }
+        }
+        picked?.let { watchForStuck(it) }
+    }
+
+    /**
+     * Raises an alarm if [command] is still running after [STUCK_COMMAND_ALARM].
+     *
+     * The queue runs one command at a time, so a driver that never returns from `execute()` blocks
+     * every later bolus, temp basal and status read until the app is restarted (#5209). The executor
+     * cannot safely give up on it: the driver may still be talking to the pump, maybe in the middle of
+     * a bolus, and starting the next command on top of it, or telling the caller "failed", could lead
+     * to a double dose. So this only makes the problem visible.
+     *
+     * Keyed on [Command.completion], not on [performing]: a drain clears [performing] while the command
+     * is still running, but only the end of `execute()` completes it. Runs on [appScope], never on the
+     * executor's own one-thread dispatcher, which the blocked driver is holding.
+     */
+    private fun watchForStuck(command: Command) {
+        appScope.launch {
+            if (withTimeoutOrNull(STUCK_COMMAND_ALARM) { command.completion.await() } != null) return@launch
+            aapsLogger.error(LTag.PUMPQUEUE, "Command still running after $STUCK_COMMAND_ALARM: ${command.log()}")
+            fabricPrivacy.logCustom("CommandStuckAlarm")
+            notificationManager.post(
+                NotificationId.PUMP_DRIVER_NOT_RESPONDING,
+                rh.gs(CoreUiStrings.pump_driver_not_responding, command.status(), STUCK_COMMAND_ALARM.inWholeMinutes.toInt()),
+                sound = AlarmSound.ALARM
+            )
+            command.completion.await()
+            aapsLogger.debug(LTag.PUMPQUEUE, "Stuck command finished: ${command.log()}")
+            notificationManager.dismiss(NotificationId.PUMP_DRIVER_NOT_RESPONDING)
         }
     }
 

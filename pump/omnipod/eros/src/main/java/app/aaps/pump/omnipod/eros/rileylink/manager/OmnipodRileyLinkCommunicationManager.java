@@ -62,6 +62,8 @@ import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 
 public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunicationManager<OmnipodPacket> {
 
+    /** Upper bound for {@code ackUntilQuiet}. A pod normally goes quiet after one or two ACKs. */
+    private static final long ACK_UNTIL_QUIET_MAX_MILLIS = 30_000L;
 
     public OmnipodRileyLinkCommunicationManager(
             AAPSLogger aapsLogger,
@@ -329,16 +331,25 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
     private void ackUntilQuiet(ErosPodStateManager podStateManager, Integer packetAddress, Integer messageAddress) {
         OmnipodPacket ack = createAckPacket(podStateManager, packetAddress, messageAddress);
         boolean quiet = false;
-        while (!quiet) try {
-            sendAndListen(ack, 300, 1, 0, 40);
-        } catch (RileyLinkCommunicationException ex) {
-            if (RileyLinkBLEError.Timeout.equals(ex.getErrorCode())) {
-                quiet = true;
-            } else {
+        // Only a Timeout means "quiet". Any other RileyLink error (Interrupted, NoResponse, ...) used to
+        // be logged and retried forever, which stalled the whole command queue (#5209). Bound it.
+        long giveUpAt = System.currentTimeMillis() + ACK_UNTIL_QUIET_MAX_MILLIS;
+        while (!quiet) {
+            if (System.currentTimeMillis() > giveUpAt) {
+                getAapsLogger().error(LTag.PUMPBTCOMM, "ackUntilQuiet: pod not quiet after " + ACK_UNTIL_QUIET_MAX_MILLIS + " ms, giving up");
+                break;
+            }
+            try {
+                sendAndListen(ack, 300, 1, 0, 40);
+            } catch (RileyLinkCommunicationException ex) {
+                if (RileyLinkBLEError.Timeout.equals(ex.getErrorCode())) {
+                    quiet = true;
+                } else {
+                    getAapsLogger().debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
+                }
+            } catch (OmnipodException ex) {
                 getAapsLogger().debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
             }
-        } catch (OmnipodException ex) {
-            getAapsLogger().debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
         }
 
         podStateManager.increasePacketNumber();

@@ -519,8 +519,22 @@ class DiaconnG8Service : MetroService() {
         diaconnG8Pump.bolusingSetAmount = 0.0
         diaconnG8Pump.bolusingInjAmount = 0.0
 
+        // The end of the bolus is only known from the pump's final report. If that report is lost, or
+        // the link drops after the start was confirmed, this loop used to wait forever and stall the
+        // whole command queue (#5209). Give up when the link is gone, or a minute after the bolus would
+        // have ended at the slowest pump speed (60 s/U), and report it as broken communication - like
+        // DanaR does. Not from expectedEnd: that uses the speed the pump reported, and if that inquiry
+        // got no answer, a slow bolus could still be running normally. The real amount is then read from
+        // the pump history by the loadEvents() below.
+        val giveUpAt = bolusStart + (insulin * 60 * 1000).toLong() + 60 * 1000L
+        var connectionBroken = false
         if (diaconnG8Pump.isReadyToBolus) {
             while (!diaconnG8Pump.bolusDone) {
+                if (!isConnected || System.currentTimeMillis() > giveUpAt) {
+                    aapsLogger.error(LTag.PUMPCOMM, "Bolus end not received (connected=$isConnected), giving up")
+                    connectionBroken = true
+                    break
+                }
                 if (diaconnG8Pump.isPumpVersionGe3_53) {
                     val delivered = PumpInsulin(diaconnG8Pump.bolusingInjAmount)
                     bolusProgressData.updateProgress(delivered = delivered)
@@ -547,7 +561,7 @@ class DiaconnG8Service : MetroService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
         }
         diaconnG8Pump.bolusingDetailedBolusInfo = null
-        return !start.failed
+        return !start.failed && !connectionBroken
     }
 
     fun bolusStop() {
@@ -557,8 +571,15 @@ class DiaconnG8Service : MetroService() {
             sendMessage(stop, 100)
             // otp process
             if (!processConfirm(stop.msgType)) return
-            while (!diaconnG8Pump.bolusStopped) {
+            // Bounded like DanaR's bolusStop: a lost stop report or a link drop must not keep this
+            // thread waiting forever (#5209).
+            val giveUpAt = System.currentTimeMillis() + 10 * 1000L
+            while (!diaconnG8Pump.bolusStopped && isConnected && System.currentTimeMillis() < giveUpAt) {
                 SystemClock.sleep(200)
+            }
+            if (!diaconnG8Pump.bolusStopped) {
+                aapsLogger.warn(LTag.PUMPCOMM, "bolusStop: no stop report (connected=$isConnected), treating as stopped after timeout")
+                diaconnG8Pump.bolusStopped = true
             }
         } else {
             diaconnG8Pump.bolusStopped = true

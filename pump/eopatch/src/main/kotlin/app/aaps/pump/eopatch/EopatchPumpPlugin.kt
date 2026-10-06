@@ -62,6 +62,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
@@ -336,22 +337,41 @@ class EopatchPumpPlugin(
                 .subscribe({ result.onNext(it.isSuccess) }, { result.onNext(false) })
         )
 
+        // The end is only known from a patch state notification. If it never comes, this loop used to
+        // wait forever and stall the whole command queue (#5209) - and if the user then restarted AAPS,
+        // the bolus was never recorded at all. Give up 10 minutes after the expected end (or after the
+        // call, if the start was never confirmed: endTimestamp is set only then). That is long enough
+        // for the patch to reconnect after a normal BLE drop, so a short drop does not decide the dose.
+        val callStart = System.currentTimeMillis()
+        var endNotConfirmed = false
         do {
-            SystemClock.sleep(100)
+            delay(100)
             if (patchManagerExecutor.patchConnectionState.isConnected) {
                 val delivered = PumpInsulin(preferenceManager.bolusCurrent.nowBolus.injected.toDouble())
                 bolusProgressData.updateProgress(delivered = delivered)
+            }
+            val expectedEnd = preferenceManager.bolusCurrent.nowBolus.endTimestamp.coerceAtLeast(callStart)
+            if (System.currentTimeMillis() > expectedEnd + T.mins(10).msecs()) {
+                aapsLogger.error(LTag.PUMP, "Bolus end not reported by the patch, giving up. ${preferenceManager.bolusCurrent.nowBolus}")
+                endNotConfirmed = true
+                break
             }
         } while (!preferenceManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
 
         bolusProgressData.updateProgress(100)
 
+        // Without a confirmed end this is the last amount the patch reported, which can be lower than
+        // what it gave. It is still recorded - nothing would record it later - but the result fails
+        // with a text that tells the user to check the patch before giving more insulin.
         detailedBolusInfo.insulin = preferenceManager.bolusCurrent.nowBolus.injected.toDouble()
         patchManager.addBolusToHistory(detailedBolusInfo)
 
         disposable.dispose()
 
-        return if (isSuccess && abs(askedInsulin - detailedBolusInfo.insulin) < pumpDescription.bolusStep)
+        return if (endNotConfirmed)
+            pumpEnactResultProvider().success(false).bolusDelivered(Round.roundTo(detailedBolusInfo.insulin, 0.01))
+                .comment(rh.gs(R.string.eopatch_bolus_end_not_confirmed, rh.gs(InterfacesStrings.format_insulin_units, detailedBolusInfo.insulin)))
+        else if (isSuccess && abs(askedInsulin - detailedBolusInfo.insulin) < pumpDescription.bolusStep)
             pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(askedInsulin)
         else
             pumpEnactResultProvider().success(false)/*.enacted(false)*/.bolusDelivered(Round.roundTo(detailedBolusInfo.insulin, 0.01))

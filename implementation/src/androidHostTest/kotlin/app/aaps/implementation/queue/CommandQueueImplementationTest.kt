@@ -40,12 +40,15 @@ import com.google.common.truth.Truth.assertThat
 import java.util.Calendar
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import org.junit.jupiter.api.BeforeEach
@@ -60,6 +63,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.mockito.verification.VerificationMode
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
@@ -115,33 +119,37 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     private lateinit var commandQueue: CommandQueueImplementation
 
+    /** [appScope] is where the queue launches its own work - pass a test scope to control its time. */
+    private fun newQueue(appScope: CoroutineScope): CommandQueueImplementation =
+        CommandQueueMocked(
+            aapsLogger,
+            rxBus,
+            text,
+            constraintChecker,
+            profileFunction,
+            activePlugin,
+            config,
+            dateUtil,
+            fabricPrivacy,
+            notificationManager,
+            persistenceLayer,
+            decimalFormatter,
+            { pumpEnactResultProvider() },
+            pumpSync,
+            preferences,
+            profileSwitchSilentGate,
+            localAlertUtilsProvider,
+            smsCommunicatorProvider,
+            commandExecutorProvider,
+            appScope,
+            bolusProgressData
+        )
+
     @BeforeEach
     fun prepare() {
         runTest {
             whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
-            commandQueue = CommandQueueMocked(
-                aapsLogger,
-                rxBus,
-                text,
-                constraintChecker,
-                profileFunction,
-                activePlugin,
-                config,
-                dateUtil,
-                fabricPrivacy,
-                notificationManager,
-                persistenceLayer,
-                decimalFormatter,
-                { pumpEnactResultProvider() },
-                pumpSync,
-                preferences,
-                profileSwitchSilentGate,
-                localAlertUtilsProvider,
-                smsCommunicatorProvider,
-                commandExecutorProvider,
-                testScope,
-                bolusProgressData
-            )
+            commandQueue = newQueue(testScope)
             testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
             testPumpPlugin.connected = true
 
@@ -1179,6 +1187,68 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(result!!.success).isFalse()
         assertThat(result!!.cancelled).isFalse()
     }
+
+    // region stuck command alarm (#5209)
+
+    private fun verifyDriverAlarm(mode: VerificationMode) =
+        verify(notificationManager, mode).post(eq(NotificationId.PUMP_DRIVER_NOT_RESPONDING), any<String>(), any(), any<Int>(), anyOrNull(), any(), anyOrNull())
+
+    @Test
+    fun `a command still running after 30 minutes raises the driver alarm and finishing it dismisses the alarm`() = runTest {
+        val queue = newQueue(backgroundScope)
+        backgroundScope.launch { queue.readStatus("test") }
+        runCurrent()
+        queue.pickup()
+        val command = checkNotNull(queue.performing())
+
+        advanceTimeBy(29.minutes)
+        runCurrent()
+        verifyDriverAlarm(never())
+
+        advanceTimeBy(2.minutes)
+        runCurrent()
+        verifyDriverAlarm(times(1))
+        verify(notificationManager, never()).dismiss(NotificationId.PUMP_DRIVER_NOT_RESPONDING)
+
+        command.completion.complete(enactResult(isSuccess = true, isEnacted = false))
+        runCurrent()
+        verify(notificationManager).dismiss(NotificationId.PUMP_DRIVER_NOT_RESPONDING)
+    }
+
+    @Test
+    fun `a command that finishes in time raises no driver alarm`() = runTest {
+        val queue = newQueue(backgroundScope)
+        backgroundScope.launch { queue.readStatus("test") }
+        runCurrent()
+        queue.pickup()
+        val command = checkNotNull(queue.performing())
+
+        advanceTimeBy(10.minutes)
+        command.completion.complete(enactResult(isSuccess = true, isEnacted = false))
+        advanceTimeBy(60.minutes)
+        runCurrent()
+
+        verifyDriverAlarm(never())
+        verify(notificationManager, never()).dismiss(NotificationId.PUMP_DRIVER_NOT_RESPONDING)
+    }
+
+    /** A drain clears `performing` while the command is still running. The alarm must still come. */
+    @Test
+    fun `a drain while a command is stuck does not hide the driver alarm`() = runTest {
+        val queue = newQueue(backgroundScope)
+        backgroundScope.launch { queue.readStatus("test") }
+        runCurrent()
+        queue.pickup()
+
+        queue.cancelAll(CoreUiStrings.connectiontimedout, success = false)
+        assertThat(queue.performing()).isNull()
+        advanceTimeBy(31.minutes)
+        runCurrent()
+
+        verifyDriverAlarm(times(1))
+    }
+
+    // endregion
 
     /**
      * #5193: cancelAllBoluses went through removeAll, which reports success because it is meant for a

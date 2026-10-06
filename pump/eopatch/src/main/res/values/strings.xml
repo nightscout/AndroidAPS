@@ -1,6 +1,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Pump integration for EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">The patch did not confirm the end of the bolus. %1$s is recorded, but the patch may have given more. Check the patch before you give more insulin.</string>
 
     <string name="low_reservoir">Low reservoir Alerts</string>
     <string name="patch_expiration_reminders">Patch expiration Reminder</string>
