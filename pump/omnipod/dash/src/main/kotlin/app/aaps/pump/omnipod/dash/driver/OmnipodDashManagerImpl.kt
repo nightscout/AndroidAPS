@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManager
+import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodBleManager
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
 import app.aaps.pump.omnipod.common.bledriver.pod.command.DeactivateCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.GetStatusCommand
@@ -62,7 +62,7 @@ import kotlin.time.Duration.Companion.hours
 class OmnipodDashManagerImpl(
     private val logger: AAPSLogger,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val bleManager: OmnipodDashBleManager,
+    private val bleManager: OmnipodBleManager,
     private val aapsSchedulers: AapsSchedulers
 ) : OmnipodDashManager {
 
