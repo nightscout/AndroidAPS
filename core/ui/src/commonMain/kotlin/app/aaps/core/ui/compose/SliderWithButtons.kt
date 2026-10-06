@@ -56,7 +56,7 @@ import kotlin.math.roundToLong
  * @param formatAsInt If true, value is formatted as Int for stringResource (use with %d format strings)
  * @param valueFormat Format for the value (used for dialog and fallback)
  * @param unitLabel Unit label, shown after the value and as the dialog input suffix
- * @param asDuration Render the value as "Xh Ym" instead of a plain number
+ * @param asDuration Render the value as "X h Y min" instead of a plain number. On by default for a minutes [unitLabel].
  * @param dialogLabel Label for the input dialog
  * @param dialogSummary Summary/description for the input dialog
  * @param commitOnRelease If true, a slider drag only shows the new value and calls [onValueChange]
@@ -81,7 +81,7 @@ fun SliderWithButtons(
     formatAsInt: Boolean = false,
     valueFormat: NumberFormat = NumberFormat.DECIMAL_1,
     unitLabel: TextRef? = null,
-    asDuration: Boolean = false,
+    asDuration: Boolean = unitLabel.isMinutesUnit(),
     dialogLabel: String? = null,
     dialogSummary: String? = null,
     enabled: Boolean = true,
