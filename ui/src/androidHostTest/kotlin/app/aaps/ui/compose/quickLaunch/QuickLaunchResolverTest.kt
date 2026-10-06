@@ -4,10 +4,16 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.model.TTPreset
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.scenes.SceneStore
+import app.aaps.core.interfaces.tempTargets.toJson
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.shared.tests.generatedTextResolver
@@ -27,6 +33,7 @@ internal class QuickLaunchResolverTest {
     @Mock private lateinit var automation: Automation
     @Mock private lateinit var activePlugin: ActivePlugin
     @Mock private lateinit var profileRepository: ProfileRepository
+    @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var sceneRepository: SceneStore
     @Mock private lateinit var elementAvailability: ElementAvailability
 
@@ -38,9 +45,27 @@ internal class QuickLaunchResolverTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         sut = QuickLaunchResolver(
-            preferences, quickWizard, automation, activePlugin, profileRepository,
+            preferences, quickWizard, automation, activePlugin, profileRepository, profileUtil,
             sceneRepository, generatedTextResolver(), elementAvailability
         )
+    }
+
+    // The name alone ("Eating soon") does not say what the button sets; the target was only visible
+    // in the confirmation after pressing it.
+    @Test
+    fun `temp target preset description has the target and the duration`() {
+        val preset = TTPreset(id = "p1", name = "Eating soon", reason = TT.Reason.EATING_SOON, targetValue = 90.0, duration = T.mins(45).msecs())
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(listOf(preset).toJson())
+        whenever(profileUtil.fromMgdlToStringWithUnits(90.0)).thenReturn("5.0 mmol/L")
+
+        assertThat(sut.resolveDescription(QuickLaunchAction.TempTargetPreset("p1"))).isEqualTo("5.0 mmol/L, 45 min")
+    }
+
+    @Test
+    fun `unknown temp target preset has no description`() {
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("[]")
+
+        assertThat(sut.resolveDescription(QuickLaunchAction.TempTargetPreset("missing"))).isNull()
     }
 
     // Same line as Manage -> Scenes, so a scene reads the same on every surface.
