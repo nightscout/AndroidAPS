@@ -50,6 +50,7 @@
     <string name="ignore30m">Bỏ qua 30 phút</string>
     <string name="carbs_suggestion">Đề xuất lượng carb</string>
     <string name="open_loop_new_suggestion">Có đề xuất mới</string>
+    <string name="open_loop_suggestion_too_old">Đề xuất này đã hết hiệu lực. Không có gì được gửi đến bơm. Hãy chờ đề xuất tiếp theo.</string>
     <string name="basal_set_correctly">Liều nền được cài đặt đúng</string>
     <string name="last_run_label">Lần chạy gần nhất</string>
     <string name="loop_aps_label">APS</string>
