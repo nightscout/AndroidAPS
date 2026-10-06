@@ -37,7 +37,6 @@
     <string name="loopenabled">闭环启用了</string>
     <string name="apsselected">APS已选择</string>
     <string name="closedmodeenabled">闭环模式启用了</string>
-    <string name="objectives_shortname">目标</string>
     <string name="description_objectives">学习计划</string>
     <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
     <string name="objectives_button_unfinish">重置完成状态</string>

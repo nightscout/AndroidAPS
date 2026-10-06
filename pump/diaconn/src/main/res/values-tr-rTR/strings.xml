@@ -19,7 +19,6 @@
     <string name="updatingbasalrates">Bazal oranların güncellenmesi</string>
     <string name="description_pump_diaconn_g8">Diaconn G8 Pompaları için Pompa Entegrasyonu</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Maksimum bolus ihlali</string>
     <string name="commanderror">Komut hatası</string>
     <string name="speederror">Hız hatası</string>

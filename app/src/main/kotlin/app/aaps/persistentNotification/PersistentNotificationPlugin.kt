@@ -4,8 +4,15 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Icon
+import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.Metric
+import androidx.core.app.NotificationCompat.Metric.FixedFloat
+import androidx.core.app.NotificationCompat.Metric.FixedInt
+import androidx.core.app.NotificationCompat.MetricStyle
 import androidx.core.app.RemoteInput
+import androidx.core.os.bundleOf
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
@@ -57,10 +64,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.runBlocking
+import kotlin.math.round
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlin.time.Duration.Companion.seconds
 import android.app.NotificationManager as AndroidNotificationManager
 
 @Suppress("PrivatePropertyName", "DEPRECATION")
@@ -113,6 +124,21 @@ class PersistentNotificationPlugin(
     private val EXTRA_VOICE_REPLY = "extra_voice_reply"
     // End Android auto
 
+    // For Samsung Live Notifications / Now Bar
+    private val SAMSUNG_MANUFACTURER = "samsung"
+
+    // "android.ongoingActivityNoti.style" value for Samsung's "Standard" style (primary/secondary
+    // text, no progress bar). This is the only style this plugin needs; Samsung also defines a
+    // "Progress" style (2) and a "Custom" RemoteViews style, not used here.
+    private val SAMSUNG_LIVE_UPDATE_STANDARD_STYLE = 1
+    private val SAMSUNG_EXTRA_STYLE = "android.ongoingActivityNoti.style"
+    private val SAMSUNG_EXTRA_PRIMARY_INFO = "android.ongoingActivityNoti.primaryInfo"
+    private val SAMSUNG_EXTRA_SECONDARY_INFO = "android.ongoingActivityNoti.secondaryInfo"
+    private val SAMSUNG_EXTRA_CHIP_ICON = "android.ongoingActivityNoti.chipIcon"
+    private val SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO = "android.ongoingActivityNoti.nowbarPrimaryInfo"
+    private val SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO = "android.ongoingActivityNoti.nowbarSecondaryInfo"
+    // End Samsung Live Notifications / Now Bar
+
     private var scope: CoroutineScope? = null
     private val deferredStart = DeferredForegroundStart()
     private var lastAutoNotificationContent: String = ""
@@ -123,12 +149,11 @@ class PersistentNotificationPlugin(
         notificationHolder.createNotificationChannel()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        rxBus.toFlow(EventRefreshOverview::class)
-            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
+        // Rare, and the first state matters: updated at once, without the debounce of the frequent events
         rxBus.toFlow(EventInitializationChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
-        rxBus.toFlow(EventAutosensCalculationFinished::class)
-            .collectResilient(newScope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { triggerNotificationUpdate() }
+        frequentUpdates(newScope)
+            .collectResilient(newScope, aapsLogger, LTag.CORE) { triggerNotificationUpdate() }
         /// Android Auto - debounced to prevent rapid pop-ups
         // Flow's debounce means the same thing as Rx's: emit once the source has been quiet for the
         // period. UNDISPATCHED is not claimed here - merge subscribes to its sources in child
@@ -159,8 +184,29 @@ class PersistentNotificationPlugin(
         super.onStop()
     }
 
-    private fun triggerNotificationUpdate(includeAuto: Boolean = false) {
-        runBlocking { updateNotification(includeAuto) }
+    /**
+     * The frequent events, one update for a burst of them. After a BG the calculation finishes, often
+     * twice, and the overview is refreshed several times within seconds. Every update reads the running
+     * temporary basal from the database and calculates IOB, so it was done several times for one BG.
+     *
+     * The sources are subscribed here, undispatched, into a channel. `merge` would subscribe a moment
+     * later in its own coroutines, and an event sent before that would be lost (see `collectResilient`).
+     * The channel keeps the request until the debounce reads it.
+     */
+    @OptIn(FlowPreview::class)
+    internal fun frequentUpdates(scope: CoroutineScope): Flow<Unit> {
+        val requests = Channel<Unit>(Channel.CONFLATED)
+        rxBus.toFlow(EventRefreshOverview::class)
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { requests.trySend(Unit) }
+        rxBus.toFlow(EventAutosensCalculationFinished::class)
+            .collectResilient(scope, aapsLogger, LTag.CORE, start = CoroutineStart.UNDISPATCHED) { requests.trySend(Unit) }
+        return requests.receiveAsFlow().debounce(UPDATE_DEBOUNCE)
+    }
+
+    // Called from the collectors, which already run in a coroutine: no runBlocking, which held an IO
+    // thread for the whole update.
+    private suspend fun triggerNotificationUpdate(includeAuto: Boolean = false) {
+        updateNotification(includeAuto)
         deferredStart.start { dummyServiceHelper.startService(context) }
     }
 
@@ -168,13 +214,31 @@ class PersistentNotificationPlugin(
         if (!config.appInitialized) return
         val pump = activePlugins.activePump
         var line1: String?
+        var line1WithDelta: String?
         var line2: String? = null
         var line3: String? = null
+        var bgStatusChipText: String? = null
+        var bgMetric: Metric? = null
+        var metricValue: Metric.MetricValue? = null
         var unreadConversationBuilder: NotificationCompat.CarExtender.UnreadConversation.Builder? = null
         if (profileFunction.isProfileValid("Notification")) {
             val lastBG = iobCobCalculator.ads.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
+            val units = profileFunction.getUnits()
             if (lastBG != null) {
+                bgStatusChipText = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated)
+                val fromMgdlToUnits = profileUtil.fromMgdlToUnits(lastBG.recalculated)
+                metricValue = if (units == GlucoseUnit.MMOL) {
+                    FixedFloat(
+                        fromMgdlToUnits.round(1).toFloat(),
+                        null // unit
+                    )
+                } else {
+                    FixedInt(
+                        fromMgdlToUnits.toInt(),
+                        null // unit
+                    )
+                }
                 // Show an arrow only when there really is one. This used to fall back to FLAT,
                 // which told the user the glucose was stable whenever the trend was simply not
                 // known yet - for example right after a start, with fewer than two readings.
@@ -183,15 +247,17 @@ class PersistentNotificationPlugin(
                 val trendSymbol = trendCalculator.getTrendArrow(iobCobCalculator.ads)
                     ?.takeIf { it != TrendArrow.NONE && it != TrendArrow.TRIPLE_UP && it != TrendArrow.TRIPLE_DOWN }
                     ?.symbol
-                line1 = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated) +
-                    (trendSymbol?.let { " $it" } ?: "")
+                line1 = bgStatusChipText + (trendSymbol?.let { " $it" } ?: "")
+                line1WithDelta = bgStatusChipText + (trendSymbol?.let { " $it" } ?: "")
                 if (glucoseStatus != null) {
                     line1 += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
+                    line1WithDelta += " " + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
                 } else {
                     line1 += " " + rh.gs(R.string.old_data)
                 }
             } else {
                 line1 = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
+                line1WithDelta = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
             }
             val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             line1 += if (activeTemp != null) {
@@ -206,6 +272,12 @@ class PersistentNotificationPlugin(
             val cobInfo = iobCobCalculator.getCobInfo("PersistentNotificationPlugin")
             line2 =
                 rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(R.string.notification_iob_short, bolusIob.iob + basalIob.basaliob) + " • " + rh.gs(app.aaps.core.ui.R.string.cob) + ": " + cobInfo.generateCOBString(decimalFormatter)
+            metricValue?.let {
+                bgMetric = Metric(
+                    it,
+                    line2,
+                )
+            }
             line3 = profileName
             /// For Android Auto
             val msgReadIntent = Intent()
@@ -233,7 +305,6 @@ class PersistentNotificationPlugin(
             // Build a RemoteInput for receiving voice input from devices
             val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
             // Build Android Auto message: IOB • COB • Target • Profile
-            val units = profileFunction.getUnits()
             var aaTarget = ""
             val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
             if (tempTarget != null) {
@@ -261,12 +332,20 @@ class PersistentNotificationPlugin(
             /// End Android Auto
         } else {
             line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
+            line1WithDelta = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
         }
         val content = "$line1|$line2|$line3"
         if (includeAuto && content == lastAutoNotificationContent) return
         if (includeAuto) lastAutoNotificationContent = content
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)
+        applyLiveUpdate(
+            builder = builder,
+            bgStatusChipText = bgStatusChipText,
+            line1WithDelta = line1WithDelta,
+            bgMetric = bgMetric,
+            line2 = line2
+        )
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
         builder.setSmallIcon(iconsProvider.getNotificationIcon())
@@ -287,5 +366,67 @@ class PersistentNotificationPlugin(
         val notification = builder.build()
         mNotificationManager.notify(notificationHolder.notificationID, notification)
         notificationHolder.notification = notification
+    }
+
+    private fun applyLiveUpdate(
+        builder: NotificationCompat.Builder,
+        bgStatusChipText: String?,
+        line1WithDelta: String?,
+        bgMetric: Metric?,
+        line2: String?
+    ) {
+        // Samsung's own system UI (One UI 7+) does not render the standard Android promoted
+        // notification below - it shows the lock-screen "Now Bar" and drawer "Live Notifications"
+        // through its own proprietary extras, so that needs to be applied separately and does not
+        // depend on the Android version gating below.
+        applySamsungLiveUpdate(builder, line1WithDelta, line2)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) return
+        builder.setRequestPromotedOngoing(true)
+        if (!bgStatusChipText.isNullOrBlank()) {
+            builder.setShortCriticalText(bgStatusChipText)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN && bgMetric != null) {
+            builder.setStyle(
+                MetricStyle()
+                    .addMetric(bgMetric)
+                    .setCriticalMetric(0)
+            )
+        }
+    }
+
+    // Samsung Live Notifications / Now Bar (One UI 7+) are driven by this notification extras
+    // bundle plus the "com.samsung.android.support.ongoing_activity" manifest meta-data, not by
+    // NotificationCompat#setRequestPromotedOngoing(). Harmless on non-Samsung devices, but
+    // restricted to Samsung so no unused extras are attached elsewhere.
+    private fun applySamsungLiveUpdate(
+        builder: NotificationCompat.Builder,
+        line1WithDelta: String?,
+        line2: String?
+    ) {
+        if (!Build.MANUFACTURER.equals(SAMSUNG_MANUFACTURER, ignoreCase = true)) return
+        if (line1WithDelta.isNullOrBlank()) return
+        val extras = bundleOf(
+            SAMSUNG_EXTRA_STYLE to SAMSUNG_LIVE_UPDATE_STANDARD_STYLE,
+            SAMSUNG_EXTRA_PRIMARY_INFO to line1WithDelta,
+            SAMSUNG_EXTRA_NOWBAR_PRIMARY_INFO to line1WithDelta,
+            SAMSUNG_EXTRA_CHIP_ICON to Icon.createWithResource(context, iconsProvider.getNotificationIcon())
+        )
+        line2?.let {
+            extras.putString(SAMSUNG_EXTRA_SECONDARY_INFO, it)
+            extras.putString(SAMSUNG_EXTRA_NOWBAR_SECONDARY_INFO, it)
+        }
+        builder.addExtras(extras)
+    }
+
+    private fun Double.round(decimals: Int): Double {
+        var multiplier = 1.0
+        repeat(decimals) { multiplier *= 10 }
+        return round(this * multiplier) / multiplier
+    }
+
+    internal companion object {
+
+        /** Short, so the notification shows a new BG at once, but long enough for one BG's burst. */
+        val UPDATE_DEBOUNCE = 1.seconds
     }
 }

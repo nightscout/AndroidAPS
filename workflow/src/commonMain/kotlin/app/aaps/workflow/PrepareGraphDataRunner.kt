@@ -109,7 +109,12 @@ class PrepareGraphDataRunner(
             data.iobCobCalculator.ads.loadBgData(data.end)
             data.iobCobCalculator.ads.smoothData()
             rxBus.send(EventBucketedDataCreated())
-            data.iobCobCalculator.clearCache()
+            // Not clearCache(): a new BG changes nothing in the IOB of the past, and without the cache the
+            // whole history was calculated again for every BG. Cleared here since 2021 (36040b7ed2); the two
+            // problems the clear hid are fixed: the time zone (full reset on a change) and the basal cache
+            // that held another caller's profile (removed). A diagnostic shadow of the cache found no other
+            // difference in 85,082 values over 12 hours. History changes still invalidate from their time.
+            data.iobCobCalculator.bgDataReloaded()
         }
         if (isStopped()) return WorkOutcome.Stopped
 

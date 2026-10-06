@@ -161,7 +161,6 @@ class MedtronicPumpPlugin(
         }
         .icon(IcPluginMedtronic)
         .pluginName(TextRef.AndroidRes(R.string.medtronic_name))
-        .shortName(TextRef.AndroidRes(R.string.medtronic_name_short))
         .description(TextRef.AndroidRes(R.string.description_pump_medtronic)),
     ownPreferences = RileylinkBooleanPreferenceKey.entries + RileyLinkDoubleKey.entries + RileyLinkLongKey.entries + RileyLinkStringKey.entries +
         RileyLinkStringPreferenceKey.entries + MedtronicBooleanPreferenceKey.entries + MedtronicIntPreferenceKey.entries +
@@ -240,7 +239,10 @@ class MedtronicPumpPlugin(
     override suspend fun onStop() {
         scope?.cancel()
         scope = null
-        super.onStop()
+        super.onStop() // unbinds the service
+        // onServiceDisconnected is not called after unbindService, so drop the reference here.
+        // Otherwise the destroyed service stays alive after a pump switch or config change.
+        rileyLinkMedtronicService = null
     }
 
     override fun initPumpStatusData() {

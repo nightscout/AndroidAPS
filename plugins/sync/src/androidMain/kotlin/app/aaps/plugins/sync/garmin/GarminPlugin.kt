@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginGarmin
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
@@ -73,7 +72,6 @@ class GarminPlugin(
         .mainType(PluginType.SYNC)
         .icon(IcPluginGarmin)
         .pluginName(SyncStrings.garmin)
-        .shortName(SyncStrings.garmin)
         .description(SyncStrings.garmin_description),
     ownPreferences = GarminStringKey.entries + GarminBooleanKey.entries + GarminIntKey.entries,
     aapsLogger, resourceHelper, preferences, notificationManager

@@ -28,7 +28,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.di.OpenHumansScope
@@ -82,7 +81,6 @@ class OpenHumansUploaderPlugin internal constructor(
         .mainType(PluginType.SYNC)
         .icon(IcPluginOpenHumans)
         .pluginName(SyncStrings.open_humans)
-        .shortName(SyncStrings.open_humans_short)
         .description(SyncStrings.open_humans_description)
         .composeContent { plugin ->
             OHComposeContent(

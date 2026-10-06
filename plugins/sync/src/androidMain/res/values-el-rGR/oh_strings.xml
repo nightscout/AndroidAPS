@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Το Open Humans σας επιτρέπει να ανεβάσετε τα δεδομένα σας για το διαβήτη και να τα δωρίσετε σε επιστημονικά προγράμματα.</string>
     <string name="logout">Αποσύνδεση</string>
     <string name="setup">Ρύθμιση</string>

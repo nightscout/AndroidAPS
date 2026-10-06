@@ -169,13 +169,18 @@ class CommandQueueImplementation(
         aapsLogger.debug(LTag.PROFILE, "onProfileChanged (silent=$silent)")
         // Exceptions are handled by collectResilient at the call site; here we only guard the hang vector.
         profileFunction.getRequestedProfile()?.let {
-            // Skip if the active EPS was already triggered by this PS (e.g. NSClient updating PS with nsId
-            // retriggers observeChanges(PS)). The previous onProfileChanged already pushed the profile to the pump.
+            // The active EPS was already made from this PS, e.g. NSClient updating the PS with its nsId
+            // retriggers observeChanges(PS). Then there is nothing to do - unless the pump has another basal.
+            // KeepAliveWorker sends EventProfileChangeRequested exactly for that: a new or replaced pump, or a
+            // basal changed on the pump itself. Skipping it then left the pump on its own basal for good.
             val active = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
-            if (active != null && active.originalPsId != null && active.originalPsId == it.id) {
-                aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active.id} already represents PS id=${it.id}")
+            val alreadyEffective = active != null && active.originalPsId != null && active.originalPsId == it.id
+            if (alreadyEffective && activePlugin.activePump.isThisProfileSet(ProfileSealed.PS(it, activePlugin))) {
+                aapsLogger.debug(LTag.PROFILE, "Skipping onProfileChanged: active EPS id=${active?.id} already represents PS id=${it.id} and the pump has it")
                 return@let
             }
+            if (alreadyEffective)
+                aapsLogger.debug(LTag.PROFILE, "onProfileChanged: active EPS id=${active?.id} represents PS id=${it.id}, but the pump has another basal. Setting it again")
             // Bound the pump round-trip. setProfile() awaits a CommandSetProfile callback; if that
             // callback is ever lost the deferred never completes, and because the collector processes
             // emissions sequentially that single hang would block every future ProfileSwitch. On
@@ -186,8 +191,9 @@ class CommandQueueImplementation(
             if (result == null)
                 aapsLogger.error(LTag.PROFILE, "setProfile timed out after $PROFILE_SET_TIMEOUT_MS ms for PS id=${it.id}")
             // Central profile-set notification lifecycle (unified across all pump drivers). Returns true on a
-            // successful write, in which case we persist the EffectiveProfileSwitch below.
-            if (postProfileWriteResult(result, silent)) {
+            // successful write, in which case we persist the EffectiveProfileSwitch below - but not a second
+            // one for a PS that is already effective, which only had to be set in the pump again.
+            if (postProfileWriteResult(result, silent) && !alreadyEffective) {
                 // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
                 val nonCustomized = ProfileSealed.PS(it, activePlugin).convertToNonCustomizedProfile(dateUtil)
                 val eps = EPS(
@@ -286,12 +292,18 @@ class CommandQueueImplementation(
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
-    private fun removeAll(type: CommandType) {
+    /**
+     * Drops every queued command of [type]. The default reports success, because a newer command of
+     * the same type replaces it. A bolus must pass success = false, whether it is stopped or replaced:
+     * the caller of a dropped bolus saves its carbs on success, and the insulin never reached the
+     * pump (#5193).
+     */
+    private fun removeAll(type: CommandType, comment: TextRef = CoreUiStrings.command_replaced, success: Boolean = true, cancelled: Boolean = false) {
         instanceLock.withLock {
             queueLock.withLock {
                 for (i in queue.indices.reversed()) {
                     if (queue[i].commandType == type) {
-                        queue[i].cancel(CoreUiStrings.command_replaced)
+                        queue[i].cancel(comment, success, cancelled)
                         queue.removeAt(i)
                     }
                 }
@@ -385,7 +397,7 @@ class CommandQueueImplementation(
     // Connection-timeout drop: the pump was never reached, so the command was not executed. Report
     // failure (success = false) so a waiting bolus caller is not told a dose was delivered, and
     // cancelled = false because this IS a delivery failure and must still raise its alarm.
-    // (Supersession via removeAll keeps the default success = true.)
+    // (Supersession via removeAll keeps the default success = true, except for a bolus.)
     override fun clear() = drain(CoreUiStrings.connectiontimedout, success = false, cancelled = false)
 
     // Dropped on purpose, so cancelled = true: the caller is told it did not happen, and nothing
@@ -476,10 +488,12 @@ class CommandQueueImplementation(
                     aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
                     return pumpEnactResultProvider().enacted(false).success(false)
                 }
-                removeAll(CommandType.SMB_BOLUS)
+                removeAll(CommandType.SMB_BOLUS, success = false, cancelled = true)
             }
             if (isRunning(type)) return executingNowError()
-            removeAll(type)
+            // A replaced bolus was not delivered either. Its caller must hear that, or it saves its
+            // carbs next to the carbs of the bolus that replaces it.
+            removeAll(type, success = false, cancelled = true)
             // apply constraints
             detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
             val bolusGeneration = bolusProgressData.start(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, isPriming = detailedBolusInfo.bolusType == BS.Type.PRIMING)
@@ -554,8 +568,10 @@ class CommandQueueImplementation(
             } else {
                 bolusProgressData.clear()
             }
-            removeAll(CommandType.BOLUS)
-            removeAll(CommandType.SMB_BOLUS)
+            // The user stopped it, nothing replaces it: the waiting caller must hear "not delivered"
+            // (no carbs saved), and cancelled = true, because a stop is not a delivery failure.
+            removeAll(CommandType.BOLUS, CoreUiStrings.stop_pressed, success = false, cancelled = true)
+            removeAll(CommandType.SMB_BOLUS, CoreUiStrings.stop_pressed, success = false, cancelled = true)
         }
         // Was `Thread { ... }.start()`: a fire and forget hop off the caller so a blocking driver call
         // cannot stall the queue. Same intent, on the shared IO dispatcher instead of a raw thread.

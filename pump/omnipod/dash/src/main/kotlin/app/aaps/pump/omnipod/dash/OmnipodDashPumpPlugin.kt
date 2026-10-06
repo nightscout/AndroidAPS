@@ -72,6 +72,7 @@ import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
+import app.aaps.pump.omnipod.common.R as CommonR
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
@@ -144,7 +145,6 @@ class OmnipodDashPumpPlugin(
         }
         .icon(IcPluginOmnipod)
         .pluginName(TextRef.AndroidRes(R.string.omnipod_dash_name))
-        .shortName(TextRef.AndroidRes(R.string.omnipod_dash_name_short))
         .description(TextRef.AndroidRes(R.string.omnipod_dash_pump_description)),
     ownPreferences = OmnipodBooleanPreferenceKey.entries + OmnipodIntPreferenceKey.entries + DashBooleanPreferenceKey.entries +
         DashStringNonPreferenceKey.entries,
@@ -397,15 +397,17 @@ class OmnipodDashPumpPlugin(
             }
             if (!podStateManager.alarmSynced) {
                 podStateManager.alarmType?.let {
+                    val faultText = rh.gs(CommonR.string.omnipod_common_pod_status_pod_fault_description, it.code, it.toString()) +
+                        (podStateManager.pdmRef?.let { ref -> "\n" + rh.gs(CommonR.string.omnipod_common_pdm_ref, ref) } ?: "")
                     if (!commandQueue.isCustomCommandInQueue(CommandDeactivatePod::class)) {
                         showNotification(
                             NotificationId.OMNIPOD_POD_FAULT,
-                            it.toString(),
+                            faultText,
                             AlarmSound.BOLUS_ERROR
                         )
                     }
                     pumpSync.insertAnnouncement(
-                        error = it.toString(),
+                        error = faultText,
                         pumpId = System.currentTimeMillis(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber()
@@ -1596,8 +1598,7 @@ class OmnipodDashPumpPlugin(
                     OmnipodBooleanPreferenceKey.BolusBeepsEnabled,
                     OmnipodBooleanPreferenceKey.BasalBeepsEnabled,
                     OmnipodBooleanPreferenceKey.SmbBeepsEnabled,
-                    OmnipodBooleanPreferenceKey.TbrBeepsEnabled,
-                    DashBooleanPreferenceKey.UseBonding
+                    OmnipodBooleanPreferenceKey.TbrBeepsEnabled
                 )
             ),
             // Alerts subscreen
@@ -1622,6 +1623,14 @@ class OmnipodDashPumpPlugin(
                     OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
                     OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification,
                     DashBooleanPreferenceKey.SoundDeliverySuspendedNotification
+                )
+            ),
+            // Advanced subscreen
+            PreferenceSubScreenDef(
+                key = "omnipod_dash_advanced",
+                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
+                items = listOf(
+                    DashBooleanPreferenceKey.UseBonding
                 )
             )
         ),

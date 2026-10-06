@@ -11,7 +11,6 @@
     <string name="unsupported_ns_version">Unsupported version of Nightscout</string>
 
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
 
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Authorized clients</string>
@@ -80,7 +79,6 @@
     <string name="summary_tidepool_dev_servers">If enabled, uploads will go to test servers instead of the regular</string>
     <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Uploads data to Tidepool</string>
     <string name="upload_now">Upload now</string>
     <string name="tidepool_purge_data">Purge all data</string>
@@ -91,7 +89,6 @@
 
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Send data to xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Status Line Advanced</string>
     <string name="xdrip_not_installed">xDrip+ not installed</string>
@@ -101,7 +98,6 @@
 
     <!--    DataBroadcast-->
     <string name="tizen">External Companion Apps</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">Enables data broadcasting to various external companion apps</string>
 
     <!-- GarminPlugin -->
@@ -111,7 +107,6 @@
     <string name="garmin_local_http_server">Local HTTP server</string>
 
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
     <string name="no_watch_connected">(No Watch Connected)</string>
     <string name="pump_status">Pump status</string>
@@ -183,7 +178,6 @@
     <!-- SMS Communicator & OTP Authenticator -->
 
     <string name="smscommunicator">SMS Communicator</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Remote control AAPS using SMS commands.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">from Authenticator app for: %1$s followed by PIN</string>
     <string name="smscommunicator_tab_otp_label">Authenticator setup</string>

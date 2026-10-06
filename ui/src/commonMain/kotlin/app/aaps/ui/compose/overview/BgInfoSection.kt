@@ -206,12 +206,12 @@ private fun BgRange.toColor(): Color = when (this) {
 }
 
 /**
- * Arc indicator describing position and triangle count.
+ * Arc indicator describing position and triangle count. Internal: also used by the glucose circle widget.
  * @param centerAngle center of the arc in degrees (0° = right/3 o'clock, -90° = top, 90° = bottom)
  * @param sweepAngle arc length in degrees
  * @param triangleCount number of outward-pointing triangles (1-3)
  */
-private data class ArcIndicator(
+internal data class ArcIndicator(
     val centerAngle: Float,
     val sweepAngle: Float,
     val triangleCount: Int
@@ -224,7 +224,7 @@ private data class ArcIndicator(
  * Positions: Up (-90°), 45°-up (-45°), Flat (0°), 45°-down (45°), Down (90°)
  * Double/Triple use same position but show 2 or 3 triangles.
  */
-private fun TrendArrow.toArcIndicator(): ArcIndicator? {
+internal fun TrendArrow.toArcIndicator(): ArcIndicator? {
     val sweepAngle = 40f
     return when (this) {
         TrendArrow.NONE            -> null

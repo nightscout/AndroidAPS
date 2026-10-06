@@ -761,7 +761,7 @@
     <string name="pump_busy">Помпата е заета</string>
     <string name="connection_error">Грешка при връзка с помпата</string>
     <string name="reading_pump_history">Чете историята на помпата</string>
-    <string name="password_cleared">Паролата е изчистена!</string>
+    <string name="password_cleared">Ключовете за сдвояване с помпата са изчистени. Проверете серийния номер и сдвоете отново.</string>
     <string name="pairing">Сдвояване</string>
     <string name="initializing">Стартиране…</string>
     <string name="secs" comment="second short">%1$d с</string>

@@ -3,6 +3,7 @@ package app.aaps.pump.danars.services
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
@@ -22,6 +23,7 @@ import app.aaps.core.interfaces.pump.ble.BleGatt
 import app.aaps.core.interfaces.pump.ble.BleScanner
 import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
+import app.aaps.core.interfaces.pump.ble.BondState
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
 import app.aaps.core.utils.extensions.connectGattCompat
@@ -134,7 +136,18 @@ class BleTransportImpl(
         override fun isDeviceBonded(address: String): Boolean {
             if (!hasPermission()) return false
             val device = bluetoothAdapter?.getRemoteDevice(address) ?: return false
-            return device.bondState != android.bluetooth.BluetoothDevice.BOND_NONE
+            return device.bondState != BluetoothDevice.BOND_NONE
+        }
+
+        @SuppressLint("MissingPermission")
+        override fun bondState(address: String): BondState {
+            if (!hasPermission()) return BondState.NONE
+            val device = bluetoothAdapter?.getRemoteDevice(address) ?: return BondState.NONE
+            return when (device.bondState) {
+                BluetoothDevice.BOND_BONDED  -> BondState.BONDED
+                BluetoothDevice.BOND_BONDING -> BondState.BONDING
+                else                         -> BondState.NONE
+            }
         }
 
         @SuppressLint("MissingPermission")

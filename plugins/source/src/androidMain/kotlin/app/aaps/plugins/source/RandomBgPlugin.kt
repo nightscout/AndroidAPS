@@ -73,7 +73,6 @@ class RandomBgPlugin(
         }
         .icon(IcPluginRandomBg)
         .pluginName(TextRef.AndroidRes(R.string.random_bg))
-        .shortName(TextRef.AndroidRes(R.string.random_bg_short))
         .preferencesVisibleInSimpleMode(false)
         // A debug BG source: only in a test, or on the virtual pump in an engineering build, or with the
         // unfinished-features option file. Forced off otherwise. This is the one enforcement that reads

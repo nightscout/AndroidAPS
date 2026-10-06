@@ -64,7 +64,6 @@ class IntelligoPlugin(
         }
         .icon(IcPluginIntelligo)
         .pluginName(TextRef.AndroidRes(R.string.intelligo))
-        .shortName(TextRef.AndroidRes(R.string.intelligo))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_intelligo)),
     ownPreferences = IntelligoLongKey.entries,

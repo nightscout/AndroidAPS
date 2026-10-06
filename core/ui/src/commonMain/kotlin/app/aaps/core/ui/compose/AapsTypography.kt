@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 
 /**
- * Custom typography scale for AndroidAPS Compose UI.
+ * Custom typography scale for AAPS Compose UI.
  *
  * Supplements Material 3 typography with domain-specific text styles
  * used across the app (BG display, treatments, chips, section headers).

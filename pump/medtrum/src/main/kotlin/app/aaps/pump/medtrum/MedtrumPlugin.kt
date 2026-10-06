@@ -96,7 +96,6 @@ class MedtrumPlugin(
         .mainType(PluginType.PUMP)
         .icon(IcPluginMedtrum)
         .pluginName(TextRef.AndroidRes(R.string.medtrum))
-        .shortName(TextRef.AndroidRes(R.string.medtrum_pump_shortname))
         .description(TextRef.AndroidRes(R.string.medtrum_pump_description))
         .composeContent { _ ->
             MedtrumComposeContent(
@@ -139,6 +138,9 @@ class MedtrumPlugin(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
+        // onServiceDisconnected is not called after unbindService, so drop the reference here.
+        // Otherwise the destroyed service stays alive after a pump switch or config change.
+        medtrumService = null
         super.onStop()
     }
 

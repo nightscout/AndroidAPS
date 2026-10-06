@@ -2,7 +2,7 @@
 <resources>
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
-    <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Bucle cerrado deshabilitado</string>
+    <string name="dst_loop_disabled_warning">Cambio de hora de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>
     <!-- Storage constraint -->
     <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡El lazo se encuentra desactivado!</string>
     <!-- Version Checker -->
@@ -22,10 +22,10 @@
     <string name="limitingcarbs">Limitando carbohidratos a %1$d g debido a %2$s</string>
     <string name="safety">Seguridad</string>
     <string name="pumpisnottempbasalcapable">La bomba no es capaz de realizar una basal temporal</string>
-    <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Bucle cerrado no disponible.</string>
+    <string name="closed_loop_disabled_on_dev_branch">Ejecutando versión de desarrollo. Lazo cerrado deshabilitado</string>
     <string name="closed_loop_disabled_with_eb">Lazo cerrado deshabilitado debido a la ejecución de un bolo extendido</string>
     <string name="smbalwaysdisabled">SMB siempre y después de carbohidratos desactivados porque la fuente activa de BG no soporta filtrado avanzado</string>
-    <string name="smbnotallowedinopenloopmode">SMB no permitido en modo de Bucle abierto</string>
+    <string name="smbnotallowedinopenloopmode">SMB no permitido en modo de lazo abierto</string>
     <string name="maxvalueinpreferences">valor máximo en preferencias</string>
     <string name="hardlimit">límite estricto</string>
     <!-- Objectives -->
@@ -34,10 +34,9 @@
     <string name="time_elapsed">Tiempo agotado</string>
     <string name="hasbgdata">Glucosa disponible desde la fuente seleccionada</string>
     <string name="synchaswritepermission">El servicio de sincronización tiene permiso de escritura</string>
-    <string name="loopenabled">Bucle activado</string>
+    <string name="loopenabled">Lazo activado</string>
     <string name="apsselected">APS seleccionado</string>
     <string name="closedmodeenabled">Lazo cerrado activado</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Programa de aprendizaje</string>
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
     <string name="objectives_button_unfinish">Restablecer estado finalizado</string>

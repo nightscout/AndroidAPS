@@ -40,7 +40,8 @@ import kotlinx.coroutines.launch
  * until the modal resolves), so edits made meanwhile accumulate in [pending] and ship in the next
  * round-trip. That sidesteps the single-in-flight contention and the shared `preferences_update`
  * identifier — there is never more than one pref round-trip outstanding. The settle window also lets a
- * slider drag finish before the modal appears.
+ * few taps on the +/- buttons ship as one round-trip. A slider drag is saved only when the finger is
+ * lifted (`PreferenceSliderWithButtons`), so a pause in the middle of a drag does not start one.
  *
  * No echo: applied-from-sync writes go through `Preferences.putRemote`, never emitted on
  * [Preferences.syncedLocalChanges]. Only genuine user edits reach here (programmatic synced-key writes
@@ -131,8 +132,8 @@ class PreferencesClientPublisher(
 
     private companion object {
 
-        // Settle window before a round-trip fires: collapses a slider drag / a burst of edits into one
-        // batched, confirmed round-trip (one modal), short enough to still feel responsive.
-        private const val SETTLE_MS = 500L
+        // Settle window before a round-trip fires: collapses a burst of edits (e.g. slow taps on +/-)
+        // into one batched, confirmed round-trip (one modal), short enough to still feel responsive.
+        private const val SETTLE_MS = 1500L
     }
 }

@@ -273,6 +273,66 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         verify(profileFunction, times(2)).getRequestedProfile()
     }
 
+    // region onProfileChanged - a PS that is already effective, and the basal in the pump
+
+    /** The requested PS has id 140; [effectiveFromPs] is the PS id the active EPS was made from. */
+    private suspend fun givenActiveEpsFrom(effectiveFromPs: Long?) {
+        whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch.copy(id = 140))
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch.copy(id = 311, originalPsId = effectiveFromPs))
+    }
+
+    /** Lets the queued profile command finish as a pump that wrote it. */
+    private fun completeQueuedProfileSet() {
+        commandQueue.pickup()
+        val command = commandQueue.performing()
+        assertThat(command?.commandType).isEqualTo(Command.CommandType.BASAL_PROFILE)
+        command?.callback?.result(enactResult(isSuccess = true, isEnacted = true))?.run()
+    }
+
+    /** NSClient updating the PS with its nsId, or KeepAlive with the pump in order: nothing to do. */
+    @Test
+    fun `a PS that is already effective and in the pump is not set again`() = runTest {
+        givenActiveEpsFrom(140)
+        testPumpPlugin.isProfileSet = true
+
+        rxBus.send(EventProfileChangeRequested())
+
+        assertThat(commandQueue.size()).isEqualTo(0)
+        verify(persistenceLayer, never()).insertOrUpdateEffectiveProfileSwitch(any())
+    }
+
+    /**
+     * KeepAliveWorker found another basal in the pump (a new or replaced pump, or the basal changed on the
+     * pump). The PS is already effective, which used to stop it here, so the pump kept its own basal. It must
+     * be set in the pump again - without a second EPS for the same PS, which was the reason for the skip.
+     */
+    @Test
+    fun `a PS that is already effective is set again when the pump has another basal, without a new EPS`() = runTest {
+        givenActiveEpsFrom(140)
+        testPumpPlugin.isProfileSet = false
+
+        rxBus.send(EventProfileChangeRequested())
+        assertThat(commandQueue.size()).isEqualTo(1)
+        completeQueuedProfileSet()
+
+        verify(persistenceLayer, never()).insertOrUpdateEffectiveProfileSwitch(any())
+    }
+
+    /** A new PS is set in the pump and gets its EPS. */
+    @Test
+    fun `a new PS is set in the pump and gets an EPS`() = runTest {
+        givenActiveEpsFrom(139)
+        testPumpPlugin.isProfileSet = false
+
+        rxBus.send(EventProfileChangeRequested())
+        assertThat(commandQueue.size()).isEqualTo(1)
+        completeQueuedProfileSet()
+
+        verify(persistenceLayer, times(1)).insertOrUpdateEffectiveProfileSwitch(any())
+    }
+
+    // endregion
+
     // region postProfileWriteResult — the central, driver-agnostic profile-set notification contract.
     // Drivers now only return (success, enacted, comment); every notification decision lives here.
 
@@ -1118,6 +1178,49 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         assertThat(result!!.success).isFalse()
         assertThat(result!!.cancelled).isFalse()
+    }
+
+    /**
+     * #5193: cancelAllBoluses went through removeAll, which reports success because it is meant for a
+     * newer command replacing an older one. bolus() then saved the carbs of a bolus the pump never got.
+     */
+    @Test
+    fun `carbs are not persisted when a queued bolus is cancelled by cancelAllBoluses`() = runTest {
+        var result: PumpEnactResult? = null
+        backgroundScope.launch {
+            result = commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0; carbs = 20.0 })
+        }
+        yield()
+        assertThat(commandQueue.size()).isEqualTo(1)
+
+        commandQueue.cancelAllBoluses(null)
+        yield()
+
+        assertThat(commandQueue.size()).isEqualTo(0)
+        assertThat(result).isNotNull()
+        assertThat(result!!.success).isFalse()
+        // A stop by the user is not a delivery failure, so it must not ring the bolus error alarm.
+        assertThat(result!!.cancelled).isTrue()
+        verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
+    }
+
+    /** #5193, the replace path: a queued bolus replaced by a newer one was not delivered either. */
+    @Test
+    fun `carbs are not persisted when a queued bolus is replaced by a newer one`() = runTest {
+        var replaced: PumpEnactResult? = null
+        backgroundScope.launch {
+            replaced = commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0; carbs = 20.0 })
+        }
+        yield()
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo().apply { insulin = 2.0 }) }
+        yield() // the second bolus replaces the first
+        yield() // the first caller resumes with its result
+
+        assertThat(commandQueue.size()).isEqualTo(1)
+        assertThat(replaced).isNotNull()
+        assertThat(replaced!!.success).isFalse()
+        assertThat(replaced!!.cancelled).isTrue()
+        verify(persistenceLayer, never()).insertOrUpdateCarbs(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
     }
 
     /**

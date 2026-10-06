@@ -24,7 +24,6 @@
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s : %2$s</string>
     <string name="tube_changed">Tubulure changée</string>
-    <string name="insightpump_shortname">AC-I</string>
     <string name="insight_alert_notification_channel">Alertes Pompe Insight</string>
     <string name="disable_vibration">Désactiver les vibrations des bolus manuels</string>
     <string name="disable_vibration_summary">Concerne les bolus et bolus étendus (disponible uniquement pour les firmwares 3.x)</string>

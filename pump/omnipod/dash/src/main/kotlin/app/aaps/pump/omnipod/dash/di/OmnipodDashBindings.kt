@@ -32,9 +32,8 @@ object OmnipodDashBindings {
     fun provideOmnipodDashPodStateManager(
         logger: AAPSLogger,
         rxBus: RxBus,
-        preferences: Preferences,
-        config: Config
-    ): OmnipodDashPodStateManager = OmnipodDashPodStateManagerImpl(logger, rxBus, preferences, config)
+        preferences: Preferences
+    ): OmnipodDashPodStateManager = OmnipodDashPodStateManagerImpl(logger, rxBus, preferences)
 
     @Provides
     @SingleIn(AppScope::class)

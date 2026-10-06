@@ -40,7 +40,7 @@ import java.security.NoSuchAlgorithmException
 import kotlin.time.Duration.Companion.days
 
 /**
- * AndroidAPS is meant to be build by the user.
+ * AAPS is meant to be build by the user.
  * In case someone decides to leak a ready-to-use APK nonetheless, we can still disable it.
  * Self-compiled APKs with privately held certificates cannot and will not be disabled.
  */

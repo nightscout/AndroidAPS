@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginTidepool
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
@@ -75,7 +74,6 @@ class TidepoolPlugin(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginName(SyncStrings.tidepool)
-        .shortName(SyncStrings.tidepool_shortname)
         .icon(IcPluginTidepool)
         .composeContent {
             TidepoolComposeContent(

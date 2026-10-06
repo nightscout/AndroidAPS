@@ -150,7 +150,6 @@ class ComboV2Plugin(
             }
             .icon(IcPluginCombo)
             .pluginName(TextRef.AndroidRes(R.string.combov2_plugin_name))
-            .shortName(TextRef.AndroidRes(R.string.combov2_plugin_shortname))
             .description(TextRef.AndroidRes(R.string.combov2_plugin_description)),
         ownPreferences = ComboIntKey.entries + ComboBooleanKey.entries + ComboStringNonKey.entries + ComboIntNonKey.entries + ComboLongNonKey.entries,
         aapsLogger, rh, preferences, commandQueue, notificationManager
@@ -197,7 +196,7 @@ class ComboV2Plugin(
 
     // Set to true in when unpair() starts and back to false in the
     // pumpManager onPumpUnpaired callback. This fixes a race condition
-    // that can happen if the user unpairs the pump while AndroidAPS
+    // that can happen if the user unpairs the pump while AAPS
     // is calling connect().
     private var unpairing = false
 
@@ -1043,7 +1042,7 @@ class ComboV2Plugin(
 
         bolusJob = newBolusJob
 
-        // AndroidAPS expects deliverTreatment() calls to block and to be cancellable
+        // AAPS expects deliverTreatment() calls to block and to be cancellable
         // (via stopBolusDelivering()), so we run a separate bolus coroutine and
         // wait here until it is done.
         try {
@@ -1451,7 +1450,7 @@ class ComboV2Plugin(
 
                 _pairedStateUIFlow.value = true
 
-                // Notify AndroidAPS that this is a new pump and that
+                // Notify AAPS that this is a new pump and that
                 // the history that is associated with any previously
                 // paired pump is to be discarded.
                 pumpSync.connectNewPump()
@@ -1459,7 +1458,7 @@ class ComboV2Plugin(
                 // Schedule a status update, since pairing can take
                 // a while. By the time  we reach this point, the queue
                 // connection attempt may have reached the timeout,
-                // and reading the status is part of what AndroidAPS
+                // and reading the status is part of what AAPS
                 // was trying to do, so do that now.
                 // If we reach this point before the timeout, then the
                 // queue will contain a pump_driver_changed readstatus

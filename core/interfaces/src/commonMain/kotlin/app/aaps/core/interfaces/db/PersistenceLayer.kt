@@ -899,6 +899,17 @@ interface PersistenceLayer {
     suspend fun getTemporaryBasalActiveAt(timestamp: Long): TB?
 
     /**
+     * Get every temporary basal running at time, also those that overlap
+     *
+     * For code that looks up many times of a range from one read: these together with the ones starting
+     * inside the range are every entry [getTemporaryBasalActiveAt] can return for a time of the range.
+     *
+     * @param timestamp time
+     * @return running temporary basals, oldest first
+     */
+    suspend fun getTemporaryBasalsActiveAt(timestamp: Long): List<TB>
+
+    /**
      * Get latest temporary basal
      *
      * @return temporary basal or null if none in db
@@ -916,15 +927,6 @@ interface PersistenceLayer {
      *  @return temporary basal
      */
     suspend fun getTemporaryBasalByNSId(nsId: String): TB?
-
-    /**
-     * Get running temporary basal in time interval
-     *
-     * @param startTime from
-     * @param endTime to
-     * @return List of temporary basals
-     */
-    suspend fun getTemporaryBasalsActiveBetweenTimeAndTime(startTime: Long, endTime: Long): List<TB>
 
     /**
      * Get running temporary basal starting in time interval
@@ -1056,6 +1058,17 @@ interface PersistenceLayer {
     suspend fun getExtendedBolusActiveAt(timestamp: Long): EB?
 
     /**
+     * Get every extended bolus running at time, also those that overlap
+     *
+     * For code that looks up many times of a range from one read: these together with the ones starting
+     * inside the range are every entry [getExtendedBolusActiveAt] can return for a time of the range.
+     *
+     * @param timestamp time
+     * @return running extended boluses, oldest first
+     */
+    suspend fun getExtendedBolusesActiveAt(timestamp: Long): List<EB>
+
+    /**
      * Get latest extended bolus
      *
      * @return extended bolus or null if none in db
@@ -1166,6 +1179,17 @@ interface PersistenceLayer {
      * @return running temporary target or null if none is running
      */
     suspend fun getTemporaryTargetActiveAt(timestamp: Long): TT?
+
+    /**
+     * Get every temporary target running at time, also those that overlap
+     *
+     * For code that looks up many times of a range from one read: these together with the ones starting
+     * inside the range are every entry [getTemporaryTargetActiveAt] can return for a time of the range.
+     *
+     * @param timestamp time
+     * @return running temporary targets, oldest first
+     */
+    suspend fun getTemporaryTargetsActiveAt(timestamp: Long): List<TT>
 
     /**
      *  Get highest id in database

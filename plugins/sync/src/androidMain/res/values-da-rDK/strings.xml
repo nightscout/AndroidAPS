@@ -23,7 +23,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Brug Integration (test) servere</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Uploader data til Tidepool</string>
     <string name="upload_now">Upload nu</string>
     <string name="not_connected">Ikke tilsluttet</string>
@@ -31,7 +30,6 @@
     <string name="working">Arbejder</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Send data til xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Statuslinje Avanceret</string>
     <string name="xdrip_not_installed">xDrip+ ikke installeret</string>
@@ -41,7 +39,6 @@
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
     <!--    Wear-->
-    <string name="wear_shortname">UR</string>
     <string name="description_wear">Overvåg og kontrollér AndroidAPS ved hjælp af dit WearOS-ur.</string>
     <string name="no_watch_connected">(Intet ur forbundet)</string>
     <string name="pump_status">Pumpestatus</string>
@@ -88,7 +85,6 @@
     <string name="weighted">vægtet</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS Kommunikator</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Fjernstyr AndroidAPS ved hjælp af SMS-kommandoer.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">fra Authenticator app til: %1$s efterfulgt af PIN</string>
     <string name="smscommunicator_tab_otp_label">Authenticator opsætning</string>

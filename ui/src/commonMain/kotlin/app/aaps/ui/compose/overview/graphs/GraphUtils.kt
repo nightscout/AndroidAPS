@@ -30,7 +30,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 /**
- * Shared utilities for Vico graphs in AndroidAPS.
+ * Shared utilities for Vico graphs in AAPS.
  *
  * CRITICAL: All graphs MUST use the same x-coordinate system to ensure proper alignment.
  * This uses whole minutes from minTimestamp to avoid label repetition and precision errors.

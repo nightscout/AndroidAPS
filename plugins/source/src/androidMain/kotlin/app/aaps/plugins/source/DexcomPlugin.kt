@@ -75,7 +75,6 @@ class DexcomPlugin(
         }
         .icon(IcPluginByoda)
         .pluginName(TextRef.AndroidRes(R.string.dexcom_app_patched))
-        .shortName(TextRef.AndroidRes(R.string.dexcom_short))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_dexcom)),
     aapsLogger = aapsLogger,

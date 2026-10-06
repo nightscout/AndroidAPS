@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Bazė naujinama</string>
     <string name="description_pump_diaconn_g8">Diaconn G8 pompos integracija</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Pažeistas maks boluso limitas</string>
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>

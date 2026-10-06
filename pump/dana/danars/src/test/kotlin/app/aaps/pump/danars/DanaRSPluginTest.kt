@@ -1,5 +1,8 @@
 package app.aaps.pump.danars
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -13,6 +16,7 @@ import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danars.services.DanaRSService
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
@@ -20,7 +24,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -117,6 +123,27 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaRSPlugin.disconnect("test")       // service null → no-op
         danaRSPlugin.stopConnecting()         // service null → no-op
         danaRSPlugin.stopBolusDelivering()    // service null → no-op
+    }
+
+    /**
+     * onServiceDisconnected is not called after unbindService, so a stopped plugin kept the destroyed
+     * service (a leak LeakCanary found after switching to Virtual Pump) and still talked to it.
+     */
+    @Test
+    fun stoppingThePluginForgetsTheBoundService() {
+        runBlocking { danaRSPlugin.onStart() }
+        val connection = argumentCaptor<ServiceConnection>()
+        verify(context).bindService(any<Intent>(), connection.capture(), any<Int>())
+        val service = mock<DanaRSService>()
+        whenever(service.isConnected).thenReturn(true)
+        val binder = mock<DanaRSService.LocalBinder>()
+        whenever(binder.serviceInstance).thenReturn(service)
+        connection.firstValue.onServiceConnected(mock<ComponentName>(), binder)
+        assertThat(danaRSPlugin.isConnected()).isTrue()
+
+        runBlocking { danaRSPlugin.onStop() }
+
+        assertThat(danaRSPlugin.isConnected()).isFalse()
     }
 
     @Test

@@ -49,7 +49,6 @@
     <string name="loopenabled">Loop enabled</string>
     <string name="apsselected">APS selected</string>
     <string name="closedmodeenabled">Closed mode enabled</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Learning program</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
     <string name="objectives_button_unfinish">Reset finished state</string>

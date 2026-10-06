@@ -115,13 +115,11 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Test
     fun testPluginInterface() {
         whenever(rh.gs(TextRef.AndroidRes(app.aaps.core.ui.R.string.loop))).thenReturn("Loop")
-        whenever(rh.gs(TextRef.AndroidRes(app.aaps.plugins.aps.R.string.loop_shortname))).thenReturn("LOOP")
 //        whenever(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         whenever(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         assertThat(loopPlugin.getType()).isEqualTo(PluginType.LOOP)
         assertThat(loopPlugin.name).isEqualTo("Loop")
-        assertThat(loopPlugin.nameShort).isEqualTo("LOOP")
         assertThat(loopPlugin.showInList()).isTrue()
 
         // Plugin is enabled by default

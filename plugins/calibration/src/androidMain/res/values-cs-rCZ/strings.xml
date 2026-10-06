@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="calibration_shortname">CAL</string>
     <string name="no_calibration_name">Žádná kalibrace</string>
     <string name="description_no_calibration">"Není použito žádné přepsání kalibrace. Hodnoty senzoru jsou použity tak, jak jsou. Použijte to, pokud je senzor již továrně kalibrován a přesný."</string>
     <string name="linear_calibration_name">Lineární kalibrace</string>

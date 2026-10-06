@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">LISSAGE</string>
     <string name="exponential_smoothing_name">Lissage Exponentiel</string>
     <string name="description_exponential_smoothing">"Algorithme de lissage exponentiel d'ordre deux"</string>
     <string name="avg_smoothing_name">Lissage moyen</string>

@@ -109,7 +109,6 @@ class DanaRSPlugin(
         }
         .icon(IcPluginDanaI)
         .pluginName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarspump))
-        .shortName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarspump_shortname))
         .description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_rs)),
     ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries + DanaStringComposedKey.entries +
         DanaLongKey.entries,
@@ -152,6 +151,10 @@ class DanaRSPlugin(
         scope?.cancel()
         scope = null
         context.unbindService(mConnection)
+        // onServiceDisconnected is only called when the service process dies, never after
+        // unbindService, so the reference must be dropped here. It kept the destroyed service alive
+        // after every pump switch, settings import or config change (LeakCanary).
+        danaRSService = null
         super.onStop()
     }
 

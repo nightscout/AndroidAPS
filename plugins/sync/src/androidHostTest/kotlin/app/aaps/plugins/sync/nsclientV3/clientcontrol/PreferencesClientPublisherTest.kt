@@ -59,7 +59,7 @@ class PreferencesClientPublisherTest {
         runCurrent()
 
         changes.emit(key)
-        advanceTimeBy(600); runCurrent() // settle window
+        advanceTimeBy(1600); runCurrent() // settle window
 
         verify(clientControlRoundTrip).run(eq(ClientControlActionDispatcher.Command.PreferenceEdit(mapOf(key.key to ("true" to 100L)))), any())
     }
@@ -75,7 +75,26 @@ class PreferencesClientPublisherTest {
         changes.emit(key)
         changes.emit(pct)
         runCurrent()                     // both accumulate in pending
-        advanceTimeBy(600); runCurrent() // single settle → single round-trip
+        advanceTimeBy(1600); runCurrent() // single settle → single round-trip
+
+        verify(clientControlRoundTrip).run(
+            eq(ClientControlActionDispatcher.Command.PreferenceEdit(mapOf(key.key to ("true" to 100L), pct.key to ("80" to 200L)))), any()
+        )
+    }
+
+    @Test
+    fun slowTapsOneSecondApartShipAsOneRoundTrip() = runTest {
+        val pct = IntKey.OverviewBolusPercentage
+        whenever(preferences.get(pct as IntNonPreferenceKey)).thenReturn(80)
+        whenever(preferences.get(LongComposedKey.SyncedPrefModified, pct.key)).thenReturn(200L)
+        sut.start(backgroundScope)
+        runCurrent()
+
+        changes.emit(key)
+        advanceTimeBy(1000); runCurrent() // still inside the settle window, nothing sent yet
+        verify(clientControlRoundTrip, never()).run(any(), any())
+        changes.emit(pct)
+        advanceTimeBy(1600); runCurrent()
 
         verify(clientControlRoundTrip).run(
             eq(ClientControlActionDispatcher.Command.PreferenceEdit(mapOf(key.key to ("true" to 100L), pct.key to ("80" to 200L)))), any()
@@ -92,7 +111,7 @@ class PreferencesClientPublisherTest {
         runCurrent()
 
         changes.emit(qw)
-        advanceTimeBy(600); runCurrent()
+        advanceTimeBy(1600); runCurrent()
 
         verify(clientControlRoundTrip).run(eq(ClientControlActionDispatcher.Command.PreferenceEdit(mapOf(qw.key to (blob to 300L)))), any())
     }
@@ -103,7 +122,7 @@ class PreferencesClientPublisherTest {
         sut.start(backgroundScope)
 
         changes.emit(key)
-        advanceTimeBy(600); runCurrent()
+        advanceTimeBy(1600); runCurrent()
 
         verify(clientControlRoundTrip, never()).run(any(), any())
     }

@@ -168,7 +168,6 @@ class OmnipodErosPumpPlugin(
         }
         .icon(IcPluginOmnipod)
         .pluginName(TextRef.AndroidRes(R.string.omnipod_eros_name))
-        .shortName(TextRef.AndroidRes(R.string.omnipod_eros_name_short))
         .description(TextRef.AndroidRes(R.string.omnipod_eros_pump_description)),
     ownPreferences = ErosBooleanPreferenceKey.entries + ErosLongNonPreferenceKey.entries + ErosStringNonPreferenceKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
@@ -408,6 +407,9 @@ class OmnipodErosPumpPlugin(
         loopHandler.removeCallbacksAndMessages(null)
         serviceConnection?.let { context.unbindService(it) }
         serviceConnection = null
+        // onServiceDisconnected is not called after unbindService, so drop the reference here.
+        // Otherwise the destroyed service stays alive after a pump switch or config change.
+        rileyLinkOmnipodService = null
     }
 
     private fun queueAcknowledgeAlertsCommand() {

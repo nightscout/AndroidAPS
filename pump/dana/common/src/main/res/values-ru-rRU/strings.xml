@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Истекло время ожидания соединения</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Интеграция с помпами DANA Diabecare RS и Dana-i</string>
     <string name="maxbolusviolation">Нарушение макс болюса</string>
     <string name="commanderror">Ошибка в команде</string>
@@ -74,7 +73,6 @@
     <string name="description_pump_dana_r">Интеграция с помпой DANA Diabetcare R</string>
     <string name="description_pump_dana_r_korean">Интеграция с локальной помпой DANA Diabetcare R</string>
     <string name="description_pump_dana_r_v2">Интеграция с помпой Dana Diabetcare R с обновленной прошивкой</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">выбранное устройство не найдено</string>
     <string name="danar_switchtouhmode">замена режима с ед/дн на ед/ч на помпе</string>
     <string name="danarkoreanpump">DanaR Корея</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Pairing timed out</string>
+    <string name="danars_bonding_failed">Bluetooth pairing with the pump failed or was cancelled. Try again and enter the PIN shown on the pump.</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pump integration for DANA Diabecare RS and Dana-i pumps</string>
     <string name="maxbolusviolation">Max bolus violation</string>
     <string name="commanderror">Command error</string>
@@ -76,7 +76,6 @@
     <string name="description_pump_dana_r">Pump integration for DANA Diabecare R pumps</string>
     <string name="description_pump_dana_r_korean">Pump integration for domestic DANA Diabecare R pumps</string>
     <string name="description_pump_dana_r_v2">Pump integration for DANA Diabecare R pumps with upgraded firmware</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Selected device not found</string>
     <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
     <string name="danarkoreanpump">DanaR Korean</string>

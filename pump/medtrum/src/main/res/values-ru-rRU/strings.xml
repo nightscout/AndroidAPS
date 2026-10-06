@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Медтрум</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Интеграция с помпами Medtrum Nano и Medtrum 300U</string>
     <string name="medtrum_pump_setting">Настройки Medtrum</string>
     <string name="pump_error">Ошибка помпы: %1$s !! </string>
@@ -64,7 +63,9 @@
     <string name="step_deactivate_complete">Патч деактивирован</string>
     <string name="step_retry_activation">Выполняется активация</string>
     <string name="unexpected_state">Непредвиденное состояние: %1$s</string>
+    <string name="ble_scan_connect_pump_base_first">Подсоедините базу к новому патчу, чтобы включить его, после этого выберите его из списка ниже.</string>
     <string name="patch_begin_activation">Активный патч отсутствует. Нажмите <b>Далее</b> для начала процесса активации.</string>
+    <string name="connect_pump_base">Убедитесь, что база соединена с патчем, удалите оставшийся воздух и заправьте инсулин, после этого нажмите <b>Далее</b>.</string>
     <string name="note_min_70_units">Примечание: для активации требуется заполнить минимум 70 единиц.</string>
     <string name="reservoir_text_and_level">Резервуар: %.2fед</string>
     <string name="do_not_attach_to_body">Пока не устанавливайте патч на тело.</string>

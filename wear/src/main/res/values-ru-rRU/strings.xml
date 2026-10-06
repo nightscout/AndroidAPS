@@ -3,6 +3,8 @@
     <string name="label_watchface_circle">AAPS (круглый)</string>
     <string name="label_watchface_digital_style">AAPS (ЦифровойСтиль)</string>
     <string name="label_watchface_custom">AAPS (настраиваемый)</string>
+    <string name="label_actions_tile">Действия</string>
+    <string name="label_temp_target_tile">Временная цель</string>
     <string name="msg_warning_sync">Нет данных начиная с %1$s! Убедитесь, что AAPS на телефоне отправляет данные на часы</string>
     <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
@@ -10,6 +12,7 @@
     <string name="pref_display_settings">Экран</string>
     <string name="pref_graph_settings">График</string>
     <string name="pref_interface_settings">Интерфейс</string>
+    <string name="pref_tile_settings">Карточки</string>
     <string name="pref_others_settings">Другое</string>
     <string name="pref_complication_settings">Дополнения</string>
     <string name="pref_show_date">Отображать дату</string>
@@ -55,11 +58,15 @@
     <string name="pref_single_target">Единичная цель</string>
     <string name="pref_wizard_percentage">Процент калькулятора</string>
     <string name="pref_complication_tap_action">Действия при нажатии кнопки расширений</string>
+    <string name="duration_1_hour">1 час</string>
+    <string name="duration_3_hours">3 часа</string>
+    <string name="duration_6_hours">6 часов</string>
     <string name="pref_unicode_in_complications">Юникод в дополнениях</string>
     <string name="pref_version">Версия:</string>
     <string name="pref_moreWatchfaceSettings">Еще настройки циферблатов</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Смотрите конфигурацию циферблата.</string>
     <string name="menu_tempt">ВЦ</string>
+    <string name="menu_tempt_long">Временная цель</string>
     <string name="menu_wizard">Калькулятор</string>
     <string name="menu_wizard_short">Кальк</string>
     <string name="menu_treatment">Терапия</string>
@@ -69,8 +76,11 @@
     <string name="menu_ecarb">растянутые углеводы eCarbs </string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_status">Состояние</string>
+    <string name="menu_bg_graph">График ГК</string>
     <string name="menu_resync">Синхронизировать повторно</string>
     <string name="menu_prime_fill">Прайм/заполнение</string>
+    <string name="menu_install_watchface">Установить циферблат</string>
+    <string name="menu_installing_watchface">Установка циферблата…</string>
     <string name="menu_none">Не показывать</string>
     <string name="menu_default">По умолчанию</string>
     <string name="menu_menu">Меню</string>
@@ -83,12 +93,19 @@
     <string name="action_fill_confirmation">Заполнение запрошено</string>
     <string name="action_ecarb_confirmation">Углеводы запрошены</string>
     <string name="action_profile_switch_confirmation">Запрос на смену профиля</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Цель [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Низкие [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Высокие [%s]</string>
     <string name="action_carbs">Углеводы</string>
     <string name="action_carbs_gram">Углеводы [g]</string>
     <string name="action_ecarbs">Растянутые углеводы eCarbs </string>
     <string name="action_percentage">Процент\n[%]</string>
     <string name="action_start_minutes">Начало\n[minutes]</string>
     <string name="action_duration_hours">Продолжительность\n[час]</string>
+    <string name="action_duration_hours_format">%1$d ч</string>
+    <string name="action_duration_hours_minutes_format">%1$d ч %2$d мин</string>
+    <string name="action_minutes_format">%1$d мин</string>
+    <string name="ecarbs_start_format">%1$d мин</string>
     <string name="action_insulin">Инсулин</string>
     <string name="action_insulin_units">Инсулин [ед]</string>
     <string name="action_preset_1">Предустановка 1</string>
@@ -173,6 +190,7 @@
     <string name="hour_short">ч</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s%2$s%3$s</string>
+    <string name="error">Ошибка</string>
     <string name="pref_heartRateSampling">Частота сердечных сокращений</string>
     <string name="pref_heartRateSmoothing">Сглаживание частоты сердечных сокращений</string>
     <string name="pref_stepsSampling">Включить счетчик шагов</string>
@@ -198,12 +216,15 @@
     <string name="complication_br_cob_iob_ext2">СкБаз, АктгУ&amp; АктИнсУсл2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">Базальная скорость</string>
+    <string name="complication_target">Цель</string>
     <string name="complication_cob_iob">АктУг &amp; актИнс</string>
     <string name="complication_cob_icon">Иконка актУг</string>
     <string name="complication_cob_detailed">АктУг подробно</string>
     <string name="complication_iob_icon">Иконка актИнс</string>
     <string name="complication_iob_detailed">АктИнс подробно</string>
     <string name="complication_uploader_phone_battery">Батарея загрузчика/телефона</string>
+    <string name="label_running_mode_title">Режим работы</string>
+    <string name="label_bg_graph_tile">График ГК</string>
     <string name="insulin_unit_short">ед</string>
     <string name="wizard_confirmation_sent">Отправлено</string>
     <string name="tile_settings">Настройки плиток</string>
@@ -234,4 +255,6 @@
     <string name="loop_status_target_range">Диапазон</string>
     <string name="loop_status_target">Целевое значение ГК:</string>
     <string name="loop_status">Статус цикла</string>
+    <string name="request">Запросить</string>
+    <string name="constraint_applied">Применено ограничение!</string>
 </resources>

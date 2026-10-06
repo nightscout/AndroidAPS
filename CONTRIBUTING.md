@@ -1,6 +1,6 @@
 This document specify hints and good practices for source code contributions.
 
-AndroidAPS is community effort and all contributions are welcome! If you wish help us improving AAPS - please read and try to adhere to 
+AAPS is community effort and all contributions are welcome! If you wish help us improving AAPS - please read and try to adhere to 
 this guidelines, to make the development and process of change approval as smooth as possible :) 
 
 General rules
@@ -14,7 +14,7 @@ General rules
 AI-generated contributions
 ===========================
 
-AndroidAPS is safety-critical software. AI-generated pull requests are **not welcome**.
+AAPS is safety-critical software. AI-generated pull requests are **not welcome**.
 
 Verifying and reviewing AI-generated code reliably takes maintainers more time than the AI took to
 produce it, and unverified code is a risk we cannot accept in this project.

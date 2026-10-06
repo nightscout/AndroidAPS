@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Tempo emparelhamento excedido</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Integração da bomba para o DANA Diabecare RS e para bombas Dana-i</string>
     <string name="maxbolusviolation">Transgressão Bólus máx</string>
     <string name="commanderror">Erro no comando</string>
@@ -76,7 +75,6 @@
     <string name="description_pump_dana_r">Integração para bombas DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">Integração para bombas DANA Diabecare R Coreanas</string>
     <string name="description_pump_dana_r_v2">Integração para as bombas DANA Diabecare R com firmware atualizado</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Dispositivo selecionado não foi encontrado</string>
     <string name="danar_switchtouhmode">Mudar de modo U/d para U/h na bomba</string>
     <string name="danarkoreanpump">DanaR Coreana</string>

@@ -36,7 +36,6 @@ class AvgSmoothingPlugin(
         .mainType(PluginType.SMOOTHING)
         .icon(Icons.Default.Timeline)
         .pluginName(SmoothingStrings.avg_smoothing_name)
-        .shortName(SmoothingStrings.smoothing_shortname)
         .description(SmoothingStrings.description_avg_smoothing),
     aapsLogger, rh, notificationManager
 ), Smoothing {

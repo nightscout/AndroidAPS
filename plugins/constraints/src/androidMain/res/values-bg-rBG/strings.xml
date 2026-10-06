@@ -36,7 +36,6 @@
     <string name="loopenabled">APS разрешен</string>
     <string name="apsselected">Избран APS</string>
     <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
-    <string name="objectives_shortname">Цел</string>
     <string name="description_objectives">Разучаване на програмата</string>
     <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
     <string name="objectives_button_unfinish">Изчисти завършените</string>

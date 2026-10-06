@@ -349,6 +349,8 @@
     <string name="scene_active">作用中</string>
     <string name="scene_ended">場景已結束</string>
     <string name="scene_end_active">結束目前場景</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">跳至</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">後續 %1$s 不會啟動</string>
     <string name="scene_confirm_activate">要啟用場景 \"%1$s\" 嗎？</string>
     <string name="scene_confirm_deactivate">結束場景 \"%1$s\" 並還原變更？</string>
     <string name="scene_conflict_active_tt">目前的臨時目標將被取代</string>

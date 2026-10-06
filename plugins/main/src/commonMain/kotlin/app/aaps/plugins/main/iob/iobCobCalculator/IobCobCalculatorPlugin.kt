@@ -44,6 +44,7 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventCalibrationChanged
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.rx.events.EventTimeZoneChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.MidnightTime
@@ -60,24 +61,20 @@ import app.aaps.core.objects.extensions.plus
 import app.aaps.core.objects.extensions.round
 import app.aaps.plugins.main.MainStrings
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import kotlin.concurrent.Volatile
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class IobCobCalculatorPlugin(
     aapsLogger: AAPSLogger,
@@ -107,8 +104,10 @@ class IobCobCalculatorPlugin(
 
     private var scope: CoroutineScope? = null
 
+    /** How long a burst of time zone changes is collected before one full reset. A var only for tests. */
+    internal var timeZoneResetDebounce: Duration = 10.seconds
+
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
-    private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
 
     // Written by the calculation when it publishes its result (PrepareGraphDataRunner.publishAds) and
     // read by the UI, the loop and the watch on other threads. Every store guards its own state, so a
@@ -119,6 +118,7 @@ class IobCobCalculatorPlugin(
 
     private val dataLock = AapsLock()
 
+    @OptIn(FlowPreview::class)
     override suspend fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(aapsIoDispatcher + SupervisorJob())
@@ -126,6 +126,14 @@ class IobCobCalculatorPlugin(
         // EventConfigBuilderChange
         rxBus.toFlow(EventConfigBuilderChange::class)
             .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventConfigBuilderChange") }
+        // EventTimeZoneChanged: the basal profile is read in the current time zone, so every cached IOB,
+        // basal and autosens value of the past would now be calculated differently. Until the past is
+        // calculated with the offset of its own time (_docs/IOB_TIME_ZONE.md), start again from scratch.
+        // Debounced: automatic zone detection near a border can send several changes in a row, and each
+        // full recalculation stopped by the next one would be thrown away.
+        rxBus.toFlow(EventTimeZoneChanged::class)
+            .debounce(timeZoneResetDebounce)
+            .collectResilient(newScope, aapsLogger, LTag.AUTOSENS, start = CoroutineStart.UNDISPATCHED) { resetDataAndRunCalculation("onEventTimeZoneChanged") }
         // EventCalibrationChanged → the fit changed, so bucketed data needs to be re-smoothed
         // with the new calibration applied. scheduleHistoryDataChange has its own 5s debounce
         // so bursts (delete-many, bulk-add) collapse into one workflow run.
@@ -218,17 +226,16 @@ class IobCobCalculatorPlugin(
         // single thread executor and its shutdown are gone.
         scope?.cancel()
         scope = null
-        // scheduledData has to go too. A cancel during the debounce delay leaves it set, and the guard
-        // in scheduleHistoryDataChange would then take the "newer timestamp" branch for every later
-        // change and never schedule anything again.
-        historyLock.withLock {
-            scheduledHistoryPost = null
-            scheduledData = null
-        }
+        // The waiting change has to go too. A cancel during the debounce leaves it set, and the scheduler
+        // would then merge every later change into it and never schedule anything again.
+        historyScheduler.drop()
         super.onStop()
     }
 
     private suspend fun resetDataAndRunCalculation(reason: String) {
+        // The full recalculation below covers every change that is still waiting, so it is dropped.
+        // Otherwise it would wait for this run and then recalculate part of it again.
+        historyScheduler.drop()
         calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION, reason)
         clearCache()
         ads.reset()
@@ -249,7 +256,20 @@ class IobCobCalculatorPlugin(
         dataLock.withLock {
             aapsLogger.debug(LTag.AUTOSENS, "Clearing cached data.")
             iobTable = LongSparseArray()
-            basalDataTable = LongSparseArray()
+        }
+    }
+
+    override fun bgDataReloaded() {
+        // The calculation reaches 24 h + DIA back (calculateDetectionStart); older entries are never asked for
+        val oldest = dateUtil.now() - T.hours(CACHED_IOB_HOURS).msecs()
+        dataLock.withLock {
+            // Oldest at index 0. A few per BG: one value every 5 minutes moves past the limit.
+            var count = 0
+            while (iobTable.size() > 0 && iobTable.keyAt(0) < oldest) {
+                iobTable.removeAt(0)
+                count++
+            }
+            aapsLogger.debug(LTag.AUTOSENS, "BG data reloaded: kept ${iobTable.size()} cached IOB values, dropped $count older than $CACHED_IOB_HOURS h")
         }
     }
 
@@ -340,28 +360,21 @@ class IobCobCalculatorPlugin(
         return IobTotal.combine(bolusIob, basalIob).round()
     }
 
+    // Not cached. A cache keyed by time held a value made with the profile of whichever caller came
+    // first, and the callers that asked for the past (overview basal graph, TDD) read their range at
+    // once now. The callers left ask for now, which was never stored anyway.
     override suspend fun getBasalData(profile: Profile, fromTime: Long): BasalData {
-        val now = dateUtil.now()
         val time = ads.roundUpTime(fromTime)
-        var retVal = basalDataTable[time]
-        if (retVal == null) {
-            //log.debug(">>> getBasalData Cache miss " + new Date(time).toLocaleString());
-            retVal = BasalData()
-            val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(time)
-            retVal.basal = profile.getBasal(time)
-            if (tb != null) {
-                retVal.isTempBasalRunning = true
-                retVal.tempBasalAbsolute = tb.convertedToAbsolute(time, profile)
-            } else {
-                retVal.isTempBasalRunning = false
-                retVal.tempBasalAbsolute = retVal.basal
-            }
-            if (time < now) {
-                dataLock.withLock {
-                    basalDataTable.append(time, retVal)
-                }
-            }
-        } //else log.debug(">>> getBasalData Cache hit " +  new Date(time).toLocaleString());
+        val retVal = BasalData()
+        val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(time)
+        retVal.basal = profile.getBasal(time)
+        if (tb != null) {
+            retVal.isTempBasalRunning = true
+            retVal.tempBasalAbsolute = tb.convertedToAbsolute(time, profile)
+        } else {
+            retVal.isTempBasalRunning = false
+            retVal.tempBasalAbsolute = retVal.basal
+        }
         return retVal
     }
 
@@ -454,100 +467,27 @@ class IobCobCalculatorPlugin(
         return sb.toString()
     }
 
-    // Debounce history data changes
-    private var scheduledHistoryPost: Job? = null
-
-    private companion object {
-
-        /** How long a burst of history changes is collected before one recalculation runs. */
-        const val HISTORY_DEBOUNCE_MS = 5_000L
-    }
-
-    private class ScheduledHistoryData(
-        val oldDataTimestamp: Long,
-        var reloadBgData: Boolean,
-        var triggeredByNewBG: Boolean
-    )
-
-    private var scheduledData: ScheduledHistoryData? = null
-
     /**
-     * Guards [scheduledData] and [scheduledHistoryPost]. Held by both the scheduling call and the
-     * debounced body, so a new request cannot land while a run is in progress.
-     *
-     * A coroutine [Mutex], not an `AapsLock`: the debounced body holds this across [newHistoryData],
-     * which suspends (`stopCalculation` polls WorkManager with `delay`). A thread owned lock such as
-     * `ReentrantLock`, which is what `AapsLock` is on the JVM, would then be unlocked from whatever
-     * thread the coroutine resumed on. That throws `IllegalMonitorStateException`, leaves the lock held
-     * for good, and every later call here would block for the rest of the process lifetime. A `Mutex`
-     * belongs to the coroutine rather than to a thread, so resuming elsewhere is fine.
-     *
-     * A `Mutex` is not reentrant. Nothing inside the guarded region calls back into it.
+     * Debounces history changes and lets a running calculation finish before the next one starts.
+     * See [HistoryChangeScheduler] for why.
      */
-    private val historyLock = Mutex()
-
-    suspend fun scheduleHistoryDataChange(oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean = false): Unit = historyLock.withLock {
-        // if there is nothing scheduled or asking reload deeper to the past
-        if (scheduledData == null || oldDataTimestamp < (scheduledData?.oldDataTimestamp ?: 0L)) {
-            // cancel waiting task to prevent sending multiple posts
-            scheduledHistoryPost?.cancel()
-            // merge flags from previously scheduled event
-            val mergedReload = reloadBgData || (scheduledData?.reloadBgData ?: false)
-            val mergedTriggeredByNewBG = triggeredByNewBG || (scheduledData?.triggeredByNewBG ?: false)
-            val data = ScheduledHistoryData(oldDataTimestamp, mergedReload, mergedTriggeredByNewBG)
-            val post = scope?.launch {
-                delay(HISTORY_DEBOUNCE_MS)
-                // Only the wait is cancellable. Without NonCancellable a late cancel could stop this
-                // half done, between clearing the TDD cache and rebuilding from it.
-                withContext(NonCancellable) {
-                    historyLock.withLock {
-                        try {
-                            aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
-                            // The TDD cache clear moved inside newHistoryData, so it still happens here,
-                            // still before the recalculation and still inside this lock - and the
-                            // EffectiveProfileSwitch path, which calls newHistoryData directly, now gets
-                            // it too.
-                            newHistoryData(data.oldDataTimestamp, data.reloadBgData, data.triggeredByNewBG)
-                        } catch (e: CancellationException) {
-                            throw e
-                        } catch (e: Exception) {
-                            // The invalidation did not finish, so the caches can still hold values built
-                            // from the old data. Throw them away instead of letting the loop dose from a
-                            // half invalidated cache. Nothing is started here: the next glucose value
-                            // rebuilds everything through the normal path.
-                            aapsLogger.error(LTag.AUTOSENS, "newHistoryData failed, dropping all cached data", e)
-                            clearCache()
-                            ads.reset()
-                        } finally {
-                            // Clear only what this run owns. A newer request can take the lock between
-                            // our delay running out and us getting the lock, and it has published its own
-                            // scheduledData and job by then. Every launched body reaches this line, so the
-                            // owner always clears its own state and the guard above can never stay stuck
-                            // on an entry with no job behind it (issue #5066).
-                            if (scheduledData === data) {
-                                scheduledData = null
-                                scheduledHistoryPost = null
-                            }
-                        }
-                    }
-                }
-            }
-            // Publish only when something is really scheduled. With a stopped plugin scope is null, and
-            // a scheduledData with no runner behind it would wedge the guard above in the same way.
-            if (post == null) {
-                aapsLogger.error(LTag.AUTOSENS, "Plugin is stopped, history data change dropped")
-            } else {
-                scheduledData = data
-                scheduledHistoryPost = post
-            }
-        } else {
-            // asked reload is newer -> adjust params only
-            scheduledData?.let {
-                if (!it.reloadBgData) it.reloadBgData = reloadBgData
-                if (!it.triggeredByNewBG) it.triggeredByNewBG = triggeredByNewBG
-            }
+    private val historyScheduler = HistoryChangeScheduler(
+        aapsLogger = aapsLogger,
+        scope = { scope },
+        awaitCalculationIdle = { timeout -> calculationWorkflow.awaitCalculationIdle(CalculationWorkflow.MAIN_CALCULATION, timeout) },
+        onRunFailed = {
+            clearCache()
+            ads.reset()
         }
+    ) { oldDataTimestamp, reloadBgData, triggeredByNewBG ->
+        // The TDD cache clear is inside newHistoryData, so it still happens here, before the
+        // recalculation and inside the scheduler's lock - and the EffectiveProfileSwitch path, which
+        // calls newHistoryData directly, gets it too.
+        newHistoryData(oldDataTimestamp, reloadBgData, triggeredByNewBG)
     }
+
+    suspend fun scheduleHistoryDataChange(oldDataTimestamp: Long, reloadBgData: Boolean, triggeredByNewBG: Boolean = false) =
+        historyScheduler.schedule(oldDataTimestamp, reloadBgData, triggeredByNewBG)
 
     // When historical data is changed (coming from NS etc.) finished calculations after this date must be invalidated
     private suspend fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, triggeredByNewBG: Boolean) {
@@ -576,14 +516,6 @@ class IobCobCalculatorPlugin(
                 if (iobTable.keyAt(index) > time) {
                     aapsLogger.debug(LTag.AUTOSENS, "Removing from iobTable: " + dateUtil.dateAndTimeAndSecondsString(iobTable.keyAt(index)))
                     iobTable.removeAt(index)
-                } else {
-                    break
-                }
-            }
-            for (index in basalDataTable.size() - 1 downTo 0) {
-                if (basalDataTable.keyAt(index) > time) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Removing from basalDataTable: " + dateUtil.dateAndTimeAndSecondsString(basalDataTable.keyAt(index)))
-                    basalDataTable.removeAt(index)
                 } else {
                     break
                 }
@@ -775,5 +707,11 @@ class IobCobCalculatorPlugin(
             total.plus(totalExt)
         }
         return total
+    }
+
+    internal companion object {
+
+        /** How long cached IOB values are kept: more than the 24 h + DIA the calculation looks back. */
+        const val CACHED_IOB_HOURS = 48L
     }
 }

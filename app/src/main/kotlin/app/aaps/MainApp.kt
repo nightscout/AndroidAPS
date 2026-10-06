@@ -887,7 +887,7 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
      * `:core:ui` are resolved directly because `:core:ui` sits above them, but a plugin or pump
      * module sits ABOVE `:core:ui`, so it can only be reached from here - `:app` is the one place
      * that depends on all of them.
-     * Without this the lookup answers null and the raw name is drawn: `virtual_pump_shortname`
-     * instead of "Virtual Pump".
+     * Without this the lookup answers null and the raw name is drawn: `virtualpump_settings`
+     * instead of "Virtual pump settings".
      */
 }

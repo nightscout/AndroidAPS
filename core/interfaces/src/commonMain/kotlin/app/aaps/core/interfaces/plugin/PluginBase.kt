@@ -162,16 +162,6 @@ abstract class PluginBase(
     // one, which would be a bug worth failing on rather than syncing an empty id.
     open val pluginId: String get() = this::class.simpleName!!
 
-    //only if translation exists
-    // use long name as fallback
-    val nameShort: String
-        get() {
-            val shortNameRef = pluginDescription.shortName ?: return name
-            val translatedName = rh.gs(shortNameRef)
-            return if (translatedName.trim { it <= ' ' }.isNotEmpty()) translatedName else name
-            // use long name as fallback
-        }
-
     val description: String?
         get() = pluginDescription.description?.let { rh.gs(it) }
 

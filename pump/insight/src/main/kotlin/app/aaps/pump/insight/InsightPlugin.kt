@@ -171,7 +171,6 @@ class InsightPlugin(
     pluginDescription = PluginDescription()
         .icon(IcPluginInsight)
         .pluginName(TextRef.AndroidRes(R.string.insight_local))
-        .shortName(TextRef.AndroidRes(R.string.insightpump_shortname))
         .mainType(PluginType.PUMP)
         .description(TextRef.AndroidRes(R.string.description_pump_insight_local))
         .composeContent { plugin ->
@@ -299,6 +298,9 @@ class InsightPlugin(
         lastDataTimeJob?.cancel()
         lastDataTimeJob = null
         context.unbindService(serviceConnection)
+        // For the same reason the services have to be dropped here, or the destroyed ones stay alive.
+        connectionService = null
+        alertService = null
     }
 
     override fun isConfigured(): Boolean =

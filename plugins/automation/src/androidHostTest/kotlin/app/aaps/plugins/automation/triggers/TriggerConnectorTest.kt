@@ -97,4 +97,49 @@ class TriggerConnectorTest : TriggerTestBase() {
         assertIs<TriggerConnector>(t2.list[0])
     }
 
+    // Issue #5194: an unknown type used to read as an empty connector, which is always true, so the
+    // rule fired on every cycle.
+    private val unknown = "{\"type\":\"TriggerFromTheFuture\",\"data\":{\"value\":42}}"
+
+    @Test fun unknownTriggerTypeNeverRuns() = runTest {
+        val t = triggerFactory.instantiate(unknown.asJsonObject())
+        assertIs<TriggerUnknown>(t)
+        assertThat(t.shouldRun()).isFalse()
+    }
+
+    @Test fun unknownChildDoesNotArmTheConnector() = runTest {
+        val and = TriggerConnector(triggerDeps, TriggerConnector.Type.AND)
+        and.list.add(TriggerDummy(triggerDeps, true))
+        and.list.add(triggerFactory.instantiate(unknown.asJsonObject()))
+        assertThat(and.shouldRun()).isFalse()
+
+        // OR still works on the children this version knows.
+        val or = TriggerConnector(triggerDeps, TriggerConnector.Type.OR)
+        or.list.add(triggerFactory.instantiate(unknown.asJsonObject()))
+        assertThat(or.shouldRun()).isFalse()
+        or.list.add(TriggerDummy(triggerDeps, true))
+        assertThat(or.shouldRun()).isTrue()
+    }
+
+    @Test fun unknownConnectorTypeNeverRuns() = runTest {
+        // A connector type from a newer version makes the connector fail to parse.
+        val t = triggerFactory.instantiate("{\"type\":\"TriggerConnector\",\"data\":{\"connectorType\":\"NAND\",\"triggerList\":[]}}".asJsonObject())
+        assertIs<TriggerUnknown>(t)
+        assertThat(t.shouldRun()).isFalse()
+    }
+
+    @Test fun unknownTriggerIsWrittenBackUnchanged() = runTest {
+        // Saving the list must not destroy a trigger that a newer version can read.
+        val t = TriggerConnector(triggerDeps)
+        t.list.add(triggerFactory.instantiate(unknown.asJsonObject()))
+        val t2 = triggerFactory.instantiate(t.toJSON().asJsonObject()) as TriggerConnector
+        assertThat(t2.list).hasSize(1)
+        assertThat(t2.list[0].toJSON()).isEqualTo(unknown)
+        assertThat(t2.list[0].duplicate().toJSON()).isEqualTo(unknown)
+    }
+
+    @Test fun unknownTriggerDescribesItsType() {
+        val t = triggerFactory.instantiate(unknown.asJsonObject())
+        assertThat(t.friendlyDescription()).contains("TriggerFromTheFuture")
+    }
 }

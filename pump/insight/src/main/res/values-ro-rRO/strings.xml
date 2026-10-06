@@ -24,7 +24,6 @@
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Canulă schimbată</string>
-    <string name="insightpump_shortname">Obiectiv</string>
     <string name="insight_alert_notification_channel">Alerte pompă Insight</string>
     <string name="disable_vibration">Dezactivați vibrațiile la administrarea manuală de bolus  </string>
     <string name="disable_vibration_summary">Pentru bolus și bolus extins (valabil doar cu modelul Insight firmware 3.x)</string>

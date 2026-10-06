@@ -121,7 +121,6 @@ open class VirtualPumpPlugin(
         }
         .icon(IcPluginVirtualPump)
         .pluginName(CoreUiStrings.virtual_pump)
-        .shortName(VirtualStrings.virtual_pump_shortname)
         .description(VirtualStrings.description_pump_virtual)
         .setDefault()
         .showInList { !config.AAPSCLIENT },

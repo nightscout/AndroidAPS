@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Asocierea a expirat</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Integrare pentru pompele DANA Diabecare RS și Dana-i</string>
     <string name="maxbolusviolation">Încălcare a valorii maxime a bolusului</string>
     <string name="commanderror">Eroare comandă</string>
@@ -76,7 +75,6 @@
     <string name="description_pump_dana_r">Integrare cu pompele DANA Diabcare R</string>
     <string name="description_pump_dana_r_korean">Integrare cu pompele DANA Diabcare R coreene</string>
     <string name="description_pump_dana_r_v2">Integrare cu pompele DANA Diabcare R cu firmware actualizat</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Dispozitivul selectat nu a fost găsit</string>
     <string name="danar_switchtouhmode">Schimbați din modul U/z în U/h în pompă</string>
     <string name="danarkoreanpump">DanaR din Coreea</string>

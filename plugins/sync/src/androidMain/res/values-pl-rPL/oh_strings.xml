@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Projekt Open Humans umożliwia Ci przesłanie danych dotyczących Twojej cukrzycy w celu wsparcia badań naukowych.</string>
     <string name="logout">Wyloguj się</string>
     <string name="setup">Konfiguracja</string>

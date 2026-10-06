@@ -146,7 +146,6 @@ class LoopPlugin(
         }
         .icon(IcLoopClosed)
         .pluginName(CoreUiStrings.loop)
-        .shortName(ApsStrings.loop_shortname)
         // Only a build with an APS of its own may run the loop, and it is not the user's to switch off
         // where there is one. Both directions matter: without the forced-off half, a client that imports a
         // master's settings gets ConfigBuilder_Enabled_LOOP_* = true and runs the algorithm on synced data.

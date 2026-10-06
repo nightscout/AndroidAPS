@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Hết thời gian ghép đôi</string>
+    <string name="danars_bonding_failed">Ghép đôi Bluetooth với bơm không thành công hoặc đã bị hủy. Hãy thử lại và nhập mã PIN hiển thị trên bơm.</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Tích hợp bơm cho DANA Diabecare RS và Dana-i</string>
     <string name="maxbolusviolation">Vượt giới hạn bolus tối đa</string>
     <string name="commanderror">Lỗi lệnh</string>
@@ -76,7 +76,6 @@
     <string name="description_pump_dana_r">Tích hợp bơm insulin DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">Tích hợp bơm DANA Diabecare R (bản nội địa)</string>
     <string name="description_pump_dana_r_v2">Tích hợp bơm DANA Diabecare R với firmware đã nâng cấp</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Không tìm thấy thiết bị đã chọn</string>
     <string name="danar_switchtouhmode">Thay đổi chế độ từ U/d sang U/h trên bơm</string>
     <string name="danarkoreanpump">DanaR Korean</string>

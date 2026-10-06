@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Sammenkobling ble tidsavbrutt</string>
+    <string name="danars_bonding_failed">Bluetooth-paring med pumpen mislyktes eller ble avbrutt. Prøv på nytt og skriv inn PIN-koden som vises på pumpen.</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pumpeintegrasjon for DANA Diabecare RS og Dana-i-pumper</string>
     <string name="maxbolusviolation">Max bolus nådd</string>
     <string name="commanderror">Kommando feil</string>
@@ -76,7 +76,6 @@
     <string name="description_pump_dana_r">Pumpeintegrasjon for DANA Diabecare R pumper</string>
     <string name="description_pump_dana_r_korean">Pumpeintegrasjon for DANA Diabecare R pumper, koreansk versjon</string>
     <string name="description_pump_dana_r_v2">Pumpeintegrasjon for DANA Diabecare R pumper med oppgradert firmware</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Fant ikke valgte enhet</string>
     <string name="danar_switchtouhmode">Bytt modus fra E/d til E/t på pumpe</string>
     <string name="danarkoreanpump">DanaR Koreansk</string>

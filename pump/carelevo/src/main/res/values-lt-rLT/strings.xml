@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carelevo">Carelevo</string>
-    <string name="carelevo_shortname">CL</string>
     <string name="carelevo_description">Carelevo pompos integracija</string>
     <string name="carelevo_alarm_channel_name">Carelevo įspėjimai</string>
     <string name="carelevo_alarm_channel_description">Pranešimai apie Carelevo pompos įspėjimus</string>

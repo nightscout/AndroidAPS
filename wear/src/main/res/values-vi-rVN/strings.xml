@@ -97,6 +97,7 @@
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
     <string name="action_scene_confirmation">Đã yêu cầu ngữ cảnh</string>
     <string name="scene_end">Kết thúc</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Bỏ qua</string>
     <string name="action_treatment_confirmation">Yêu cầu xử lý</string>
     <string name="action_bolus_confirmation">Bolus được yêu cầu</string>
     <string name="action_wizard_confirmation">Yêu cầu tính toán</string>
@@ -317,6 +318,18 @@
     <string name="loop_status_target_range">Phạm vi</string>
     <string name="loop_status_target">Mục tiêu</string>
     <string name="loop_status_adjusted_target">Mục tiêu đã điều chỉnh</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Đến khi kết thúc</string>
+    <string name="loop_status_scene_ended">Đã kết thúc</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Tác vụ tiếp theo</string>
+    <string name="loop_status_profile">Cấu hình</string>
+    <string name="loop_status_no_profile">Chưa có cấu hình</string>
+    <string name="loop_status_profile_percentage">Phần trăm</string>
+    <string name="loop_status_profile_timeshift">Điều chỉnh thời gian</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Quay lại</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Độ nhạy</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Được thiết lập bởi ngữ cảnh đang hoạt động</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
     <string name="loop_status_refresh">Làm mới</string>
     <string name="confirm">Xác nhận</string>

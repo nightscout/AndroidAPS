@@ -65,6 +65,9 @@ fun PreferenceSliderWithButtons(
             dialogLabel = dialogLabel,
             dialogSummary = dialogSummary,
             enabled = enabled,
+            // Save once when the finger is lifted. On a client every save is sent to the master,
+            // and a pause in the middle of a drag must not start that.
+            commitOnRelease = true,
             modifier = modifier
         )
         return

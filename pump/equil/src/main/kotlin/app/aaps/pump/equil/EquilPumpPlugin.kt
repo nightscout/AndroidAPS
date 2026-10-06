@@ -116,7 +116,6 @@ class EquilPumpPlugin(
         }
         .icon(IcPluginEquil)
         .pluginName(TextRef.AndroidRes(R.string.equil_name))
-        .shortName(TextRef.AndroidRes(R.string.equil_name_short))
         .description(TextRef.AndroidRes(R.string.equil_pump_description)),
     ownPreferences = EquilBooleanKey.entries + EquilBooleanPreferenceKey.entries + EquilIntPreferenceKey.entries + EquilStringKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager
