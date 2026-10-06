@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 
 /**
@@ -86,14 +87,49 @@ class PeriodicMaintenance(
         }
     }
 
-    /** Keep six months of history, trimmed once a day. */
+    /**
+     * Keep six months of history, trimmed once a day.
+     *
+     * Also runs when the last run is in the future: the clock went back, and without this the
+     * cleanup would stop until real time caught up with it.
+     */
     private suspend fun cleanupDatabase() {
+        val now = dateUtil.now()
         val lastRun = preferences.get(LongNonKey.LastCleanupRun)
-        if (lastRun < dateUtil.now() - T.days(1).msecs()) {
-            val result = persistenceLayer.cleanupDatabase(KEEP_DAYS, deleteTrackedChanges = false)
+        if (lastRun < now - T.days(1).msecs() || lastRun > now) {
+            val cutoff = nextCutoff(now, lastRun)
+            val result = persistenceLayer.cleanupDatabase(cutoff, deleteTrackedChanges = false)
             aapsLogger.debug(LTag.CORE, "Cleanup result: $result")
-            preferences.put(LongNonKey.LastCleanupRun, dateUtil.now())
+            preferences.put(LongNonKey.LastCleanupRun, now)
+            preferences.put(LongNonKey.LastCleanupCutoff, cutoff)
         }
+    }
+
+    /**
+     * The time before which records are deleted in this pass.
+     *
+     * Normally `now - KEEP_DAYS`. But the cutoff may move forward by at most [MAX_CUTOFF_STEP] per
+     * pass. The pass runs about once a day, so in normal use the cutoff moves about one day and the
+     * limit is never hit. If the phone clock jumps forward by months, `now - KEEP_DAYS` would be after
+     * all the real data and delete it all, including the boluses that still count for IOB. With the
+     * limit only the oldest days go, and the recent data is safe until the clock is fixed (#5210).
+     *
+     * After a long pause the old data is removed over the next days instead of at once. That only
+     * keeps a little more data for a while.
+     */
+    private fun nextCutoff(now: Long, lastRun: Long): Long {
+        val wanted = now - T.days(KEEP_DAYS).msecs()
+        // Before LastCleanupCutoff existed, the last cutoff was lastRun - KEEP_DAYS.
+        // With neither (first run on a new install) there is no history to protect.
+        val lastCutoff = preferences.get(LongNonKey.LastCleanupCutoff).takeIf { it != 0L }
+            ?: lastRun.takeIf { it != 0L }?.let { it - T.days(KEEP_DAYS).msecs() }
+            ?: return wanted
+        val limit = lastCutoff + MAX_CUTOFF_STEP.inWholeMilliseconds
+        if (wanted > limit) {
+            aapsLogger.warn(LTag.CORE, "Cleanup cutoff limited to ${dateUtil.dateAndTimeString(limit)}, clock may have jumped forward. Wanted ${dateUtil.dateAndTimeString(wanted)}")
+            return limit
+        }
+        return wanted
     }
 
     companion object {
@@ -101,6 +137,9 @@ class PeriodicMaintenance(
         /** Matches the interval `KeepAliveWorker` is scheduled at on Android. */
         val INTERVAL = 5.minutes
         const val KEEP_DAYS = 6L * 31
+
+        /** One day per daily pass, plus room for a pass that runs late. */
+        val MAX_CUTOFF_STEP = 2.days
         const val KEEP_LOG_FILES = 30
     }
 }

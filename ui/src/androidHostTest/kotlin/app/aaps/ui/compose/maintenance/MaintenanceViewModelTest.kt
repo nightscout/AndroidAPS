@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
@@ -62,6 +63,7 @@ internal class MaintenanceViewModelTest {
     @Mock private lateinit var overviewData: OverviewData
     @Mock private lateinit var overviewDataCache: OverviewDataCache
     @Mock private lateinit var nsClient: NsClient
+    @Mock private lateinit var dateUtil: DateUtil
 
     private lateinit var sut: MaintenanceViewModel
     private lateinit var testDispatcher: TestDispatcher
@@ -77,7 +79,7 @@ internal class MaintenanceViewModelTest {
         sut = MaintenanceViewModel(
             aapsLogger, generatedTextResolver(), l, maintenance, importExportPrefs, fileListProvider, cloudDirectoryManager,
             activePlugin, persistenceLayer, fabricPrivacy, uel, dataSyncSelectorXdrip, pumpSync,
-            iobCobCalculator, overviewData, overviewDataCache, nsClient
+            iobCobCalculator, overviewData, overviewDataCache, nsClient, dateUtil
         )
     }
 

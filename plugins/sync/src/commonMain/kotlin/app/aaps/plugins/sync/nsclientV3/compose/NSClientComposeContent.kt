@@ -17,6 +17,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -90,7 +91,7 @@ class NSClientComposeContent(
                     scope.launch {
                         try {
                             val result = withContext(aapsIoDispatcher) {
-                                persistenceLayer.cleanupDatabase(CLEANUP_RETENTION_DAYS, deleteTrackedChanges = true)
+                                persistenceLayer.cleanupDatabase(dateUtil.now() - T.days(CLEANUP_RETENTION_DAYS).msecs(), deleteTrackedChanges = true)
                             }
                             if (result.isNotEmpty()) {
                                 resultMessage = buildAnnotatedString {

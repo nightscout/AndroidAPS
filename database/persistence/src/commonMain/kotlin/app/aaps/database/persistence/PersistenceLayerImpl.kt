@@ -166,8 +166,8 @@ class PersistenceLayerImpl(
     override suspend fun clearDatabases() = repository.clearDatabases()
     override val databaseClearedFlow: Flow<Unit> get() = repository.databaseClearedFlow()
     override suspend fun clearApsResults() = repository.clearApsResults()
-    override suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = withContext(aapsIoDispatcher) {
-        repository.cleanupDatabase(keepDays, deleteTrackedChanges)
+    override suspend fun cleanupDatabase(olderThan: Long, deleteTrackedChanges: Boolean): String = withContext(aapsIoDispatcher) {
+        repository.cleanupDatabase(olderThan, deleteTrackedChanges)
     }
 
     override suspend fun vacuumDatabase() = withContext(aapsIoDispatcher) {

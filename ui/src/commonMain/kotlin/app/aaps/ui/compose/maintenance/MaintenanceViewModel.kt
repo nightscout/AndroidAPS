@@ -3,6 +3,7 @@ package app.aaps.ui.compose.maintenance
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
@@ -29,6 +30,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
@@ -78,7 +80,8 @@ class MaintenanceViewModel(
     private val iobCobCalculator: IobCobCalculator,
     private val overviewData: OverviewData,
     private val overviewDataCache: OverviewDataCache,
-    private val nsClient: NsClient
+    private val nsClient: NsClient,
+    private val dateUtil: DateUtil
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<MaintenanceEvent>()
@@ -226,7 +229,7 @@ class MaintenanceViewModel(
     fun cleanupDatabases() {
         maintenanceAction("cleaning up databases") {
             val result = withContext(aapsIoDispatcher) {
-                persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true)
+                persistenceLayer.cleanupDatabase(dateUtil.now() - T.days(93).msecs(), deleteTrackedChanges = true)
             }
             if (result.isNotEmpty()) {
                 _events.emit(MaintenanceEvent.CleanupResult(result))

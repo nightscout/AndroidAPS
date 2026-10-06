@@ -159,9 +159,9 @@ class AppRepository internal constructor(
 
     suspend fun clearApsResults() = database.apsResultDao.deleteAllEntries()
 
-    suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
+    /** Delete records with a timestamp before [than] (epoch ms). */
+    suspend fun cleanupDatabase(than: Long, deleteTrackedChanges: Boolean): String {
         database.useWriterConnection { connection -> connection.usePrepared("PRAGMA optimize") { it.step() } }
-        val than = Clock.System.now().toEpochMilliseconds() - keepDays.days.inWholeMilliseconds
         val removed = mutableListOf<Pair<String, Int>>()
         removed.add(Pair("APSResult", database.apsResultDao.deleteOlderThan(than)))
         removed.add(Pair("GlucoseValue", database.glucoseValueDao.deleteOlderThan(than)))

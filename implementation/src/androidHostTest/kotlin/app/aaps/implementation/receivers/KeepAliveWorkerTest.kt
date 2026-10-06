@@ -386,7 +386,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         worker.doWorkAndLog()
 
         // Assert – keeps ~6 months and stamps the run time
-        verify(persistenceLayer).cleanupDatabase(6 * 31, false)
+        verify(persistenceLayer).cleanupDatabase(now - T.days(6 * 31).msecs(), false)
         verify(preferences).put(LongNonKey.LastCleanupRun, now)
     }
 

@@ -63,10 +63,11 @@ interface PersistenceLayer {
 
     /**
      * Perform database maintenance
-     * @param keepDays remove all records older than
+     * @param olderThan remove all records with a timestamp before this time (epoch ms). The caller
+     *   decides the time, so it can check the clock before anything is deleted.
      * @param deleteTrackedChanges delete tracked changes from all tables
      */
-    suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String
+    suspend fun cleanupDatabase(olderThan: Long, deleteTrackedChanges: Boolean): String
 
     /**
      * Full VACUUM of the database: defragments the file and returns free pages to the OS.
