@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Pumpe-integrasjon for EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Patch bekreftet ikke at bolusen er ferdig. %1$s er registrert, men patch kan ha levert mer. Kontroller patch før du gir mer insulin.</string>
     <string name="low_reservoir">Lavt reservoar varsler</string>
     <string name="patch_expiration_reminders">Patch utløpspåminnelse</string>
     <string name="patch_buzzer_reminders">Patch Buzzer påminnelser</string>
