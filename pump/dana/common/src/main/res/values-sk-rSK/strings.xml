@@ -9,6 +9,12 @@
     <string name="speederror">Chyba rýchlosti</string>
     <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
     <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Pumpa nieje naplnená</string>
+    <string name="danai2_bolus_error_not_enough_insulin">V zásobníku inzulínu nieje dostatočné množstvo inzulínu</string>
+    <string name="danai2_bolus_error_easy_sleep">V pumpe je zapnutý režim spánku</string>
+    <string name="danai2_pump_check_error">Kontrola pumpy zlyhala</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Jednoduchý režim</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Automatické uzamknutie</string>
     <string name="danar_valuenotsetproperly">Hodnota nenastavená správne</string>
     <string name="danar_setbasalstep001">Nastavte bazálny krok 0.01U/h</string>
     <string name="resetpairing">Reset informácií o párovaní?</string>
@@ -18,6 +24,7 @@
     <string name="danar_disablebolusblock">Je zapnuté blokovanie bolusu na pumpe. AAPS nemôže podávať inzulín keď je to aktívne. Zrušte blokovanie bolusu v nastaveniach pumpy.</string>
     <string name="overview_bolusprogress_stoped">Zastavené</string>
     <string name="unsupportedfirmware">Nepodporovaný firmware v pumpe</string>
+    <string name="danars_unsupported_model">Nepodporovaný model pumpy (kód %1$s)</string>
     <string name="pumperror">Chyba pumpy</string>
     <string name="lowbattery">Nízky stav batérie</string>
     <string name="basalcompare">Dodávám menej, ako je prednastavený bazál</string>
