@@ -23,12 +23,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import app.aaps.ui.activities.ErrorActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 @ContributesBinding(AppScope::class)

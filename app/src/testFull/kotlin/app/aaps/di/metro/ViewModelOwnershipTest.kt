@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.shared.tests.metroScopedProviderTypes
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Test
 import dev.zacsweers.metro.SingleIn
+import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 

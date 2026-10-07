@@ -5,12 +5,12 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.pump.eopatch.core.api.BolusStart
 import app.aaps.pump.eopatch.core.response.BaseResponse
 import app.aaps.pump.eopatch.core.response.BolusResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
 @Inject

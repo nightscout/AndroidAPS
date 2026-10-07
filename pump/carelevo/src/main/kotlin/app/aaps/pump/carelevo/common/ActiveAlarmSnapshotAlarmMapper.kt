@@ -8,9 +8,8 @@ import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
-import java.util.LinkedHashMap
-import java.util.UUID
 import dev.zacsweers.metro.Inject
+import java.util.UUID
 
 class ActiveAlarmSnapshotAlarmMapper @Inject constructor() {
 

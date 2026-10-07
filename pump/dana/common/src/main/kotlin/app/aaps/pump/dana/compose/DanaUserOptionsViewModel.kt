@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.dana.DanaPump
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +21,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.math.min
 

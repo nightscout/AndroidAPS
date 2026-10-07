@@ -1,6 +1,5 @@
 package app.aaps.pump.insight.keys
 
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.insight.R

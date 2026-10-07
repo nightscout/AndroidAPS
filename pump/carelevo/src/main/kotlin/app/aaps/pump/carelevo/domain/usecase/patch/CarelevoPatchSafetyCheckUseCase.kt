@@ -1,8 +1,8 @@
 package app.aaps.pump.carelevo.domain.usecase.patch
 
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
+import kotlin.time.Clock
 
 class CarelevoPatchSafetyCheckUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository

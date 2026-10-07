@@ -3,8 +3,8 @@ package app.aaps.ui.compose.tempTarget
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.tempTargets.toTTPresets as coreTTPresets
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.interfaces.tempTargets.toTTPresets as coreTTPresets
 
 /**
  * The name of a fixed (non-deletable) preset, from its reason. Custom presets carry their own

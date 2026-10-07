@@ -1,9 +1,5 @@
 package app.aaps.plugins.automation.compose
 
-import app.aaps.plugins.automation.AutomationStrings
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +41,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.compose.triggers.TriggerEditor
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector

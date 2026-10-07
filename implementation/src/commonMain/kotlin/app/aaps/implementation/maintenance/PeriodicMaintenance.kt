@@ -1,5 +1,6 @@
 package app.aaps.implementation.maintenance
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -8,7 +9,8 @@ import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.data.time.T
+import app.aaps.implementation.maintenance.PeriodicMaintenance.Companion.INTERVAL
+import app.aaps.implementation.maintenance.PeriodicMaintenance.Companion.MAX_CUTOFF_STEP
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn

@@ -29,13 +29,13 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.pump.BolusProgressState
-import app.aaps.core.ui.compose.isLandscape
-import app.aaps.core.ui.compose.smallestScreenWidthDp
 import app.aaps.core.ui.compose.TABLET_MIN_SW_DP
+import app.aaps.core.ui.compose.isLandscape
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
 import app.aaps.core.ui.compose.pump.PumpActivityFab
+import app.aaps.core.ui.compose.smallestScreenWidthDp
 import app.aaps.ui.compose.main.TempTargetChipState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.notificationsSheet.NotificationBottomSheet

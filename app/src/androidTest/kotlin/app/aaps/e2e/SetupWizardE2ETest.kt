@@ -12,11 +12,11 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
-import app.aaps.di.ResetGraphRule
-import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

@@ -10,7 +10,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.aaps.database.AppDatabase
-import app.aaps.database.di.AppDatabaseBuilder
 import app.aaps.database.di.databaseMigrations
 import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TABLE_STEPS_COUNT

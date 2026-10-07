@@ -26,11 +26,11 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.objects.constraints.ConstraintObject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.JsonObject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.ContributesBinding
 
 // Deliberately NOT @SingleIn: the @Binds this replaces had no scope, so every injection site got its
 // own. Scoping it now would be a silent behaviour change in a class that talks to the pump.

@@ -19,8 +19,6 @@ import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.plugins.aps.autotune.AutotuneFS
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 
 class AutotuneComposeContent(
     private val autotunePlugin: AutotunePlugin,

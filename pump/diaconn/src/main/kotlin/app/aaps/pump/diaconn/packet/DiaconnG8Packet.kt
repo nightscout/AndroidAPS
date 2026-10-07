@@ -1,13 +1,13 @@
 package app.aaps.pump.diaconn.packet
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import dev.zacsweers.metro.Inject
 
 @Suppress("SpellCheckingInspection")
 // Metro reads this class now that interop is on for the module. It is subclassable, so it has to

@@ -2,7 +2,6 @@ package app.aaps.di.metro
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.work.WorkManager
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -14,6 +13,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -47,20 +47,19 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.objects.di.CoreObjectsGraph
+import app.aaps.core.objects.workflow.MetroWorkerCreator
+import app.aaps.database.AppRepository
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
 import app.aaps.di.PluginSource
 import app.aaps.di.mergePlugins
-import app.aaps.core.objects.di.CoreObjectsGraph
-import app.aaps.core.objects.workflow.MetroWorkerCreator
-import app.aaps.database.AppRepository
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.notifications.SnackbarNotificationFallback
-import app.aaps.implementation.resources.ResourceHelperImpl
-import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
+import app.aaps.implementation.resources.ResourceHelperImpl
+import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
 import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA

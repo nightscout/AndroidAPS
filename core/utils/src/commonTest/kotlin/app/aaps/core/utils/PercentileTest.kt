@@ -1,12 +1,7 @@
 package app.aaps.core.utils
 
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 /**
  * [Percentile.percentile] does NOT sort its input - callers pass an already-sorted array. All test

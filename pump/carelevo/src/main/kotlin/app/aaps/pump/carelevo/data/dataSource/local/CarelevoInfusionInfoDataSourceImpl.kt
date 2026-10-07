@@ -6,11 +6,11 @@ import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInf
 import app.aaps.pump.carelevo.data.model.entities.CarelevoImmeBolusInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoTempBasalInfusionInfoEntity
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import io.reactivex.rxjava3.core.Observable
+import java.util.Optional
 
 @ContributesBinding(AppScope::class)
 class CarelevoInfusionInfoDataSourceImpl @Inject constructor(

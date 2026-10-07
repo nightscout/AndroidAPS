@@ -4,11 +4,10 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TE
 import app.aaps.database.entities.TherapyEvent
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
-import kotlin.test.Test
 
 internal class TherapyEventExtensionTest {
 

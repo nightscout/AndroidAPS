@@ -2,11 +2,11 @@ package app.aaps.implementation.ui
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import platform.Foundation.NSURL
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import platform.Foundation.NSURL
 
 /**
  * What reaches the platform, and what is stopped before it.

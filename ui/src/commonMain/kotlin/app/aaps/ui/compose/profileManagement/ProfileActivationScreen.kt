@@ -1,9 +1,5 @@
 package app.aaps.ui.compose.profileManagement
 
-import kotlin.time.Instant
-import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.TimeZone
-import app.aaps.core.ui.compose.is24HourClock
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -54,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
@@ -66,9 +61,13 @@ import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.DatePickerModal
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
+import app.aaps.core.ui.compose.is24HourClock
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 /**
  * Full screen for activating a profile with optional percentage, timeshift, and duration.

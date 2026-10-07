@@ -8,8 +8,6 @@ import org.joda.time.DateTime;
 import java.util.Collections;
 import java.util.List;
 
-import dev.zacsweers.metro.Provider;
-
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.plugin.ActivePlugin;
@@ -55,6 +53,7 @@ import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkTimeoutException;
 import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkUnexpectedException;
 import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkUnreachableException;
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager;
+import dev.zacsweers.metro.Provider;
 
 /**
  * Created by andy on 6/29/18.

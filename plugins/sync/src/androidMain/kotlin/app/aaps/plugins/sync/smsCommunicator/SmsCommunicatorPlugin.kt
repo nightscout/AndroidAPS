@@ -1,9 +1,5 @@
 package app.aaps.plugins.sync.smsCommunicator
 
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
@@ -19,6 +15,7 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.Config
@@ -30,6 +27,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -60,12 +58,14 @@ import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.objects.workflow.WorkerInstanceFactory
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.icons.IcPluginSms
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.core.utils.receivers.Inbox
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.smsCommunicator.actions.BasalCancelAction
 import app.aaps.plugins.sync.smsCommunicator.actions.BolusAction
 import app.aaps.plugins.sync.smsCommunicator.actions.CalibrationAction
@@ -92,11 +92,6 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
-import java.text.Normalizer
-import java.util.Locale
-import java.util.regex.Pattern
-import kotlin.math.max
-import kotlin.math.min
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -108,6 +103,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.Strings
 import org.joda.time.DateTime
+import java.text.Normalizer
+import java.util.Locale
+import java.util.regex.Pattern
+import kotlin.math.max
+import kotlin.math.min
 
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<SmsCommunicator>())

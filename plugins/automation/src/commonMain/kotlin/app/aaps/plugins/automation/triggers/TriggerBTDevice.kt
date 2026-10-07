@@ -1,13 +1,13 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.rx.events.EventBTChange
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.lenientStringOrNull
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.elements.ComparatorConnect
 import app.aaps.plugins.automation.elements.InputDropdownMenu

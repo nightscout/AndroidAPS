@@ -11,7 +11,6 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Build
-import android.support.wearable.complications.ComplicationData as WireComplicationData
 import androidx.annotation.StringRes
 import androidx.core.graphics.withClip
 import androidx.wear.watchface.CanvasComplication
@@ -41,6 +40,7 @@ import androidx.wear.watchface.style.WatchFaceLayer
 import java.time.ZonedDateTime
 import kotlin.math.max
 import kotlin.math.min
+import android.support.wearable.complications.ComplicationData as WireComplicationData
 
 /*
  * Everything a watch face needs in order to host androidx complication slots, with no knowledge of

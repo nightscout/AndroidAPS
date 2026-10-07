@@ -3,8 +3,8 @@ package app.aaps.plugins.aps.logger
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.plugins.aps.utils.StaticInjector
-import org.mozilla.javascript.ScriptableObject
 import dev.zacsweers.metro.Inject
+import org.mozilla.javascript.ScriptableObject
 
 @Suppress("unused")
 class LoggerCallback : ScriptableObject() {

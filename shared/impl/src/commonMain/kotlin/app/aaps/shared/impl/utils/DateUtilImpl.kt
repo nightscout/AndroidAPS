@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.TimeDiff
-import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime

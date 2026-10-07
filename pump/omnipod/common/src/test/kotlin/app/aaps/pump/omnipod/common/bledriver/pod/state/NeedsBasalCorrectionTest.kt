@@ -1,6 +1,5 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
@@ -11,7 +10,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 
 /**
  * Tests for [OmnipodDashPodStateManagerImpl.needsBasalCorrection].

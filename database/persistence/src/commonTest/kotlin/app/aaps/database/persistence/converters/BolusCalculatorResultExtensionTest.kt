@@ -2,11 +2,10 @@ package app.aaps.database.persistence.converters
 
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.IDs
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.Test
 
 internal class BolusCalculatorResultExtensionTest {
 

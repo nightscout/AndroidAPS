@@ -6,9 +6,9 @@ import app.aaps.pump.carelevo.ble.commands.ActiveAlarmSnapshotTier
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import com.google.common.truth.Truth.assertThat
+import org.junit.Test
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
-import org.junit.Test
 
 internal class ActiveAlarmSnapshotAlarmMapperTest {
 

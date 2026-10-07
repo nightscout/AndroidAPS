@@ -1,8 +1,6 @@
 package app.aaps.ui.compose.main
 
 import app.aaps.core.data.model.ActiveSceneState
-import app.aaps.core.data.model.RM
-import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -27,7 +25,7 @@ import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.sync.NsClient
-import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey

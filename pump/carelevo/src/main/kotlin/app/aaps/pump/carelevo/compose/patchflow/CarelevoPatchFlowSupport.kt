@@ -2,9 +2,9 @@ package app.aaps.pump.carelevo.compose.patchflow
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 internal fun patchStepTitle(step: CarelevoPatchStep): String =

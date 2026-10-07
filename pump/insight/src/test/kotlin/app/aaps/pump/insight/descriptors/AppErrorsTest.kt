@@ -2,8 +2,8 @@ package app.aaps.pump.insight.descriptors
 
 import app.aaps.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import com.google.common.truth.Truth.assertThat
-import java.lang.reflect.Modifier
 import org.junit.jupiter.api.Test
+import java.lang.reflect.Modifier
 
 /**
  * Covers [AppErrors.Companion]: the table that turns an error code from the pump into the exception

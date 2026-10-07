@@ -13,8 +13,8 @@ import app.aaps.pump.omnipod.common.bledriver.comm.pair.LTKExchanger
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
-import io.reactivex.rxjava3.core.Observable
 import dev.zacsweers.metro.Inject
+import io.reactivex.rxjava3.core.Observable
 
 @Inject
 class OmnipodDashBleManagerImpl(

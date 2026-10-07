@@ -1,15 +1,14 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import kotlinx.coroutines.Runnable
-import kotlin.math.floor
 import kotlin.time.Clock
 
 abstract class Objective(

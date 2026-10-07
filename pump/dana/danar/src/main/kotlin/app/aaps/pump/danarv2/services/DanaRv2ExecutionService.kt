@@ -55,8 +55,8 @@ import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
-import kotlinx.coroutines.launch
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 class DanaRv2ExecutionService : AbstractDanaRExecutionService() {

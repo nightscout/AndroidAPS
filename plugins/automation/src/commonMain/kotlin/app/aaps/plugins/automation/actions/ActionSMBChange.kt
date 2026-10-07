@@ -1,8 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -10,8 +7,11 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcSmb
 import app.aaps.core.utils.lenientBoolean
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.InputDropdownOnOffMenu
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put

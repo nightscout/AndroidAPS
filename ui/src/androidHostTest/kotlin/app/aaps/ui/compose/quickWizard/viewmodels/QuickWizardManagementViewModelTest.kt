@@ -2,7 +2,6 @@ package app.aaps.ui.compose.quickWizard.viewmodels
 
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -10,6 +9,7 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.ScreenMode
+import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.ui.events.EventQuickWizardChange
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers

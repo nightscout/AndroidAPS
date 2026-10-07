@@ -44,7 +44,6 @@ import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.extensions.highValueToUnitsToString
 import app.aaps.core.ui.extensions.lowValueToUnitsToString
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.TempTargetViewModel
 

@@ -8,9 +8,9 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDom
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalSegmentInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import kotlin.time.Clock
-import java.util.concurrent.TimeUnit
 import dev.zacsweers.metro.Inject
+import java.util.concurrent.TimeUnit
+import kotlin.time.Clock
 
 class CarelevoSetBasalProgramUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,

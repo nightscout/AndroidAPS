@@ -36,10 +36,10 @@ import app.aaps.pump.danars.comm.DanaRSPacket
 import app.aaps.pump.danars.comm.DanaRSPacketEtcKeepConnection
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
-import java.util.concurrent.ScheduledFuture
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import java.util.concurrent.ScheduledFuture
 
 @SingleIn(AppScope::class)
 @Inject

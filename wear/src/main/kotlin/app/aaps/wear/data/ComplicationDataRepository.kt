@@ -16,13 +16,13 @@ import app.aaps.wear.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.io.InputStream
-import java.io.OutputStream
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.protobuf.ProtoBuf
+import java.io.InputStream
+import java.io.OutputStream
 
 /**
  * Repository for complication data using DataStore with Protocol Buffers

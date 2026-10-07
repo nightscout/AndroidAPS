@@ -9,14 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -31,7 +29,6 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalAppIcon
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 
 data class AboutDialogData(
     val title: String,

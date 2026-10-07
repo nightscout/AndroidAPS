@@ -95,7 +95,6 @@ class RawPreferenceStoreScanTest {
         "app/src/main/kotlin/app/aaps/di/metro/SharedImplBindings.kt" to "DI wiring",
         "desktop/shell/src/main/kotlin/app/aaps/desktop/shell/di/DesktopPlatformBindings.kt" to "DI wiring, desktop",
         "ios/shell/src/iosMain/kotlin/app/aaps/ios/shell/di/IosPlatformBindings.kt" to "DI wiring, iOS",
-        "ios/shell/src/iosMain/kotlin/app/aaps/ios/shell/di/IosProbeGraph.kt" to "DI wiring, iOS probe graph",
         "shared/clientbindings/src/commonMain/kotlin/app/aaps/shared/clientbindings/ClientGraphBindings.kt" to "DI wiring, shared client bindings",
     )
 

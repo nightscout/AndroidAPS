@@ -7,9 +7,7 @@ import app.aaps.pump.virtual.extensions.toText
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.skyscreamer.jsonassert.JSONAssert
 
 /**
  * Pilot for resolving real text in tests instead of stubbing it.

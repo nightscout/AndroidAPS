@@ -1,9 +1,5 @@
 package app.aaps.plugins.automation.compose.triggers
 
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.compose.elements.AutomationDropdown
 import app.aaps.plugins.automation.compose.elements.ComparatorConnectEditor
 import app.aaps.plugins.automation.compose.elements.ComparatorExistsEditor
@@ -23,11 +22,11 @@ import app.aaps.plugins.automation.compose.elements.CompareRow
 import app.aaps.plugins.automation.compose.elements.InputDateTimeEditor
 import app.aaps.plugins.automation.compose.elements.InputLocationModeEditor
 import app.aaps.plugins.automation.compose.elements.InputStringEditor
-import app.aaps.plugins.automation.compose.isMapPickerAvailable
 import app.aaps.plugins.automation.compose.elements.InputTimeEditor
 import app.aaps.plugins.automation.compose.elements.InputTimeRangeEditor
 import app.aaps.plugins.automation.compose.elements.InputWeekDayEditor
 import app.aaps.plugins.automation.compose.elements.LabelWithElementRow
+import app.aaps.plugins.automation.compose.isMapPickerAvailable
 import app.aaps.plugins.automation.elements.InputBg
 import app.aaps.plugins.automation.elements.InputDelta.DeltaType
 import app.aaps.plugins.automation.elements.InputPercent

@@ -2,16 +2,15 @@ package app.aaps.di.metro
 
 import android.content.Context
 import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
-import app.aaps.core.objects.di.CoreObjectsGraph
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.mockito.Answers
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 /**
  * There is nothing to stub: the graph builds everything.

@@ -1,20 +1,19 @@
 package app.aaps.pump.omnipod.eros.manager
 
-import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.pump.omnipod.common.R as CommonR
 import app.aaps.pump.omnipod.eros.R
 import app.aaps.pump.omnipod.eros.definition.PodHistoryEntryType
-import app.aaps.pump.omnipod.eros.driver.definition.MessageBlockType
 import app.aaps.pump.omnipod.eros.driver.definition.FaultEventCode
+import app.aaps.pump.omnipod.eros.driver.definition.MessageBlockType
 import app.aaps.pump.omnipod.eros.driver.exception.CrcMismatchException
 import app.aaps.pump.omnipod.eros.driver.exception.IllegalMessageAddressException
 import app.aaps.pump.omnipod.eros.driver.exception.IllegalMessageSequenceNumberException
@@ -36,10 +35,10 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
@@ -48,6 +47,7 @@ import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
+import app.aaps.pump.omnipod.common.R as CommonR
 
 /**
  * Behaviour pins for [AapsOmnipodErosManager], written against the **Java** implementation.

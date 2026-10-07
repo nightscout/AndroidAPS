@@ -20,14 +20,14 @@ import app.aaps.pump.eopatch.core.code.PatchAeCode
 import app.aaps.pump.eopatch.event.EventEoPatchAlarm
 import app.aaps.pump.eopatch.vo.Alarms
 import app.aaps.pump.eopatch.vo.PatchConfig
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.hours
 
 /**

@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.overview.chips.SensitivityChip
 import app.aaps.ui.compose.overview.chips.SensitivityUiState
 

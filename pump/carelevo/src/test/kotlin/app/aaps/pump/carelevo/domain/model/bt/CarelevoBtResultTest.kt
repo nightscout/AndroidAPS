@@ -1,31 +1,31 @@
 package app.aaps.pump.carelevo.domain.model.bt
 
 import app.aaps.pump.carelevo.domain.model.bt.AlertMessageResult.Companion.codeToAlertMessageCommand
-import app.aaps.pump.carelevo.domain.model.bt.AlertMessageResult.Companion.commandToCode as alertToCode
 import app.aaps.pump.carelevo.domain.model.bt.InfusionInfoResult.Companion.codeToInfusionInfoCommand
-import app.aaps.pump.carelevo.domain.model.bt.InfusionInfoResult.Companion.commandToCode as infusionInfoToCode
 import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult.Companion.codeToInfusionModeCommand
-import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult.Companion.commandToCode as infusionModeToCode
 import app.aaps.pump.carelevo.domain.model.bt.NoticeMessageResult.Companion.codeToNoticeMessageCommand
-import app.aaps.pump.carelevo.domain.model.bt.NoticeMessageResult.Companion.commandToCode as noticeToCode
 import app.aaps.pump.carelevo.domain.model.bt.PumpStateResult.Companion.codeToPumpStateCommand
-import app.aaps.pump.carelevo.domain.model.bt.PumpStateResult.Companion.commandToCode as pumpStateToCode
 import app.aaps.pump.carelevo.domain.model.bt.Result.Companion.codeToResultCommand
-import app.aaps.pump.carelevo.domain.model.bt.Result.Companion.commandToCode as resultToCode
 import app.aaps.pump.carelevo.domain.model.bt.SafetyCheckResult.Companion.codeToSafetyCheckCommand
-import app.aaps.pump.carelevo.domain.model.bt.SafetyCheckResult.Companion.commandToCode as safetyToCode
 import app.aaps.pump.carelevo.domain.model.bt.SetBasalProgramResult.Companion.codeToSetBasalProgramCommand
-import app.aaps.pump.carelevo.domain.model.bt.SetBasalProgramResult.Companion.commandToCode as setBasalToCode
 import app.aaps.pump.carelevo.domain.model.bt.SetBolusProgramResult.Companion.codeToSetBolusProgramCommand
-import app.aaps.pump.carelevo.domain.model.bt.SetBolusProgramResult.Companion.commandToCode as setBolusToCode
 import app.aaps.pump.carelevo.domain.model.bt.StopPumpResult.Companion.codeToStopPumpCommand
-import app.aaps.pump.carelevo.domain.model.bt.StopPumpResult.Companion.commandToCode as stopPumpToCode
 import app.aaps.pump.carelevo.domain.model.bt.WarningMessageResult.Companion.codeToWarningMessageCommand
-import app.aaps.pump.carelevo.domain.model.bt.WarningMessageResult.Companion.commandToCode as warningToCode
 import app.aaps.pump.carelevo.domain.type.AlarmCause
 import app.aaps.pump.carelevo.domain.type.AlarmType
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import app.aaps.pump.carelevo.domain.model.bt.AlertMessageResult.Companion.commandToCode as alertToCode
+import app.aaps.pump.carelevo.domain.model.bt.InfusionInfoResult.Companion.commandToCode as infusionInfoToCode
+import app.aaps.pump.carelevo.domain.model.bt.InfusionModeResult.Companion.commandToCode as infusionModeToCode
+import app.aaps.pump.carelevo.domain.model.bt.NoticeMessageResult.Companion.commandToCode as noticeToCode
+import app.aaps.pump.carelevo.domain.model.bt.PumpStateResult.Companion.commandToCode as pumpStateToCode
+import app.aaps.pump.carelevo.domain.model.bt.Result.Companion.commandToCode as resultToCode
+import app.aaps.pump.carelevo.domain.model.bt.SafetyCheckResult.Companion.commandToCode as safetyToCode
+import app.aaps.pump.carelevo.domain.model.bt.SetBasalProgramResult.Companion.commandToCode as setBasalToCode
+import app.aaps.pump.carelevo.domain.model.bt.SetBolusProgramResult.Companion.commandToCode as setBolusToCode
+import app.aaps.pump.carelevo.domain.model.bt.StopPumpResult.Companion.commandToCode as stopPumpToCode
+import app.aaps.pump.carelevo.domain.model.bt.WarningMessageResult.Companion.commandToCode as warningToCode
 
 /**
  * Pure-logic coverage for the Carelevo BT result layer:

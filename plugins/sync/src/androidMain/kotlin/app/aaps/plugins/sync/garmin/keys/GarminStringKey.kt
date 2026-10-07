@@ -1,10 +1,9 @@
 package app.aaps.plugins.sync.garmin.keys
 
-import app.aaps.plugins.sync.SyncStrings
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.StringValidator
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.sync.SyncStrings
 
 enum class GarminStringKey(
     override val key: String,

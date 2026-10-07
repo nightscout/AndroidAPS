@@ -6,14 +6,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.pump.common.defs.PumpHistoryEntryGroup
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import app.aaps.pump.medtronic.data.MedtronicHistoryData
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import dev.zacsweers.metro.Inject
 
 data class MedtronicHistoryUiState(
     val selectedGroup: PumpHistoryEntryGroup = PumpHistoryEntryGroup.All,

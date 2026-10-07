@@ -39,8 +39,8 @@ import app.aaps.core.ui.compose.icons.IcLoopOpen
 import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.icons.IcLoopPausedDst
 import app.aaps.core.ui.compose.icons.IcLoopPausedPump
-import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.ui.compose.icons.IcLoopSuperbolus
+import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.ui.compose.loopColor
 import app.aaps.ui.compose.overview.graphs.TriangleShape
 

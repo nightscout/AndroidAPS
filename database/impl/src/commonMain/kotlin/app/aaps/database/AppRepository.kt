@@ -26,7 +26,6 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntry
 import app.aaps.database.transactions.Transaction
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -39,8 +38,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
-import kotlin.time.Duration.Companion.days
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
 
 /** Module-local carrier for [AppRepository.databaseMaintenanceInfo]; mapped to `DatabaseMaintenanceInfo`. */
 data class DatabaseMaintenanceRaw(

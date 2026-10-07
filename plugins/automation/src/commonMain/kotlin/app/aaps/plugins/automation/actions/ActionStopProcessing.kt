@@ -1,14 +1,14 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Stop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.automation.AutomationStrings
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 

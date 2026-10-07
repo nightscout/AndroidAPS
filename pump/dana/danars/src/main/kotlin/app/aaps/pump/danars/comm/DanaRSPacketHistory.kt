@@ -11,6 +11,7 @@ import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryRecord
 import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import app.aaps.pump.dana.events.EventDanaRSyncStatus
+import app.aaps.pump.danars.comm.DanaRSPacketHistory.Companion.RECORD_SIZE
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone

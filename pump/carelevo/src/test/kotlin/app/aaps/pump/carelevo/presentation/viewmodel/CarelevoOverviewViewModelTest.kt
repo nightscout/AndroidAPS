@@ -15,8 +15,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.R as InterfacesR
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpInfoRow
@@ -62,10 +60,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import kotlin.time.Clock
-import kotlin.time.Instant
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -84,7 +78,6 @@ import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import java.time.Instant as JavaInstant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -92,6 +85,12 @@ import java.time.temporal.ChronoUnit
 import java.util.Locale
 import java.util.Optional
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Instant
+import app.aaps.core.interfaces.R as InterfacesR
+import app.aaps.core.ui.R as CoreUiR
+import java.time.Instant as JavaInstant
 
 /**
  * Unit tests for [CarelevoOverviewViewModel] — the Carelevo overview screen's state assembly, the

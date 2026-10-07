@@ -4,11 +4,10 @@ import app.aaps.core.data.model.CAL
 import app.aaps.core.data.model.IDs
 import app.aaps.database.entities.CalibrationEntry
 import app.aaps.database.entities.embedments.InterfaceIDs
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.Test
 
 internal class CalibrationEntryExtensionTest {
 

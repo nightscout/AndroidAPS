@@ -4,13 +4,13 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.eopatch.core.api.BolusFinishTimeGet
 import app.aaps.pump.eopatch.core.code.BolusType
 import app.aaps.pump.eopatch.core.response.BolusFinishTimeResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
 @Inject

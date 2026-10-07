@@ -44,7 +44,6 @@ import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 
 @Immutable
 data class ResolvedQuickLaunchItem(

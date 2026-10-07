@@ -4,11 +4,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.BolusCancelCommand
 import app.aaps.pump.carelevo.ble.commands.BolusCancelResponse
@@ -23,6 +23,7 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusi
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
@@ -42,7 +43,6 @@ import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.concurrent.atomic.AtomicInteger
-import dev.zacsweers.metro.Provider
 
 /**
  * Direct unit tests for [CarelevoBolusCoordinator] targeting the branches NOT exercised through

@@ -6,8 +6,6 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
@@ -15,6 +13,8 @@ import app.aaps.core.nssdk.utils.ClientControlCrypto
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * Client-side store of the single master pairing.

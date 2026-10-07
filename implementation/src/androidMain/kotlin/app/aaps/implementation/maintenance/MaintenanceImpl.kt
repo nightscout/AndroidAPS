@@ -18,6 +18,10 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.implementation.maintenance.cloud.CloudConstants
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -27,10 +31,6 @@ import java.io.IOException
 import java.util.Arrays
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

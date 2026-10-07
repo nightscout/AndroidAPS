@@ -32,7 +32,6 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.PlusMinusEdit
 import app.aaps.core.ui.compose.pickers.HourWheelPicker
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.profileManagement.viewmodels.TimeValue
 
 @Composable

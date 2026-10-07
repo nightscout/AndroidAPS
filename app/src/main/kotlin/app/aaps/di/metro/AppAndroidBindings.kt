@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.utils.receivers.DataInbox
 import app.aaps.history.HistoryBrowserData
-import app.aaps.ui.compose.history.HistoryScope
 import app.aaps.shared.impl.sharedPreferences.defaultPreferences
+import app.aaps.ui.compose.history.HistoryScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo

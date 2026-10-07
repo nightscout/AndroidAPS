@@ -16,7 +16,6 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
-import platform.Foundation.NSError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,6 +28,7 @@ import platform.AVFAudio.AVAudioSessionCategoryPlayback
 import platform.AVFAudio.AVAudioSessionCategorySoloAmbient
 import platform.AVFAudio.setActive
 import platform.Foundation.NSBundle
+import platform.Foundation.NSError
 import platform.Foundation.NSURL
 
 /**

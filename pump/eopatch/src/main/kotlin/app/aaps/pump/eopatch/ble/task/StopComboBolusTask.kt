@@ -6,14 +6,14 @@ import app.aaps.pump.eopatch.core.code.PatchBleResultCode
 import app.aaps.pump.eopatch.core.define.IPatchConstant
 import app.aaps.pump.eopatch.core.response.BolusStopResponse
 import app.aaps.pump.eopatch.core.response.ComboBolusStopResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
 @Inject

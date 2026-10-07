@@ -11,6 +11,8 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import platform.Foundation.NSNotificationCenter
+import platform.Foundation.NSOperationQueue
 import platform.Network.nw_interface_type_cellular
 import platform.Network.nw_interface_type_wifi
 import platform.Network.nw_interface_type_wired
@@ -22,8 +24,6 @@ import platform.Network.nw_path_monitor_set_update_handler
 import platform.Network.nw_path_monitor_start
 import platform.Network.nw_path_status_satisfied
 import platform.Network.nw_path_uses_interface_type
-import platform.Foundation.NSNotificationCenter
-import platform.Foundation.NSOperationQueue
 import platform.UIKit.UIDevice
 import platform.UIKit.UIDeviceBatteryLevelDidChangeNotification
 import platform.UIKit.UIDeviceBatteryState

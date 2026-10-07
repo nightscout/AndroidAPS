@@ -2,11 +2,11 @@ package app.aaps.implementation.stats
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.stats.DexcomTIR
-import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.time.Instant
 
 /**
  * Implementation of Dexcom Time In Range (TIR) statistics accumulator.

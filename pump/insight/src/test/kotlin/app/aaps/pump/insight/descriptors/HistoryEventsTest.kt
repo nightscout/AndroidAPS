@@ -2,8 +2,8 @@ package app.aaps.pump.insight.descriptors
 
 import app.aaps.pump.insight.app_layer.history.history_events.HistoryEvent
 import com.google.common.truth.Truth.assertThat
-import java.lang.reflect.Modifier
 import org.junit.jupiter.api.Test
+import java.lang.reflect.Modifier
 
 /**
  * Covers [HistoryEvents.Companion]: the table that turns a history event id from the pump into the

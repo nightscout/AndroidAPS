@@ -31,6 +31,10 @@ import app.aaps.pump.eopatch.code.AlarmCategory
 import app.aaps.pump.eopatch.event.EventEoPatchAlarm
 import app.aaps.pump.eopatch.vo.Alarms
 import app.aaps.pump.eopatch.vo.PatchConfig
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -39,10 +43,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.time.Duration.Companion.hours
 

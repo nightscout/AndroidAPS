@@ -1,5 +1,7 @@
 package app.aaps
 
+import app.aaps.LegacyPreferenceValue.asString
+
 /**
  * Reads a value out of the raw preference store as the type a migration expects, or reports that it
  * cannot.

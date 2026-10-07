@@ -9,13 +9,13 @@ import app.aaps.pump.omnipod.dash.history.DashHistory
 import app.aaps.pump.omnipod.dash.history.data.HistoryRecord
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.Calendar
 import java.util.GregorianCalendar
-import dev.zacsweers.metro.Inject
 
 @Stable
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately

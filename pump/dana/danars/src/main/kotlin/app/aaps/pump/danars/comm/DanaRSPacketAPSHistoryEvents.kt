@@ -19,10 +19,10 @@ import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.danars.encryption.BleEncryption
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 
 @Inject

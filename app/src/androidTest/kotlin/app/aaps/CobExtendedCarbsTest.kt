@@ -2,9 +2,6 @@ package app.aaps
 
 import android.annotation.SuppressLint
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import app.aaps.di.newIntegrationWaits
-import app.aaps.di.newRxHelper
-import app.aaps.di.testGraphs
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.ICfg
@@ -17,6 +14,9 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
+import app.aaps.di.newIntegrationWaits
+import app.aaps.di.newRxHelper
+import app.aaps.di.testGraphs
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat

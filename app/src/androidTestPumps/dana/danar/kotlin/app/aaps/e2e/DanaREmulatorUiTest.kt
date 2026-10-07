@@ -2,18 +2,18 @@ package app.aaps.e2e
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import app.aaps.di.ResetGraphRule
-import app.aaps.di.testGraphs
-import app.aaps.pump.danar.di.DanaRAccessors
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.keys.BooleanComposedKey
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danar.di.DanaRAccessors
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.testcategories.ShardB

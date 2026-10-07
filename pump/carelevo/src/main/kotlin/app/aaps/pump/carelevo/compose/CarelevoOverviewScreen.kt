@@ -31,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
@@ -47,6 +46,7 @@ import app.aaps.pump.carelevo.compose.dialog.CarelevoPumpStopDurationDialog
 import app.aaps.pump.carelevo.presentation.model.CarelevoOverviewEvent
 import app.aaps.pump.carelevo.presentation.type.CarelevoScreenType
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoOverviewViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 internal fun CarelevoOverviewScreen(

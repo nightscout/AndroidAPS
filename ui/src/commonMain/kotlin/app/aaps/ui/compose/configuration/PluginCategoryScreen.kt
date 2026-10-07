@@ -29,7 +29,6 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.masterEditingEnabled
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import app.aaps.ui.plugin.HardwarePumpConfirmation
 import app.aaps.ui.plugin.PluginSwitchConfirmation
 

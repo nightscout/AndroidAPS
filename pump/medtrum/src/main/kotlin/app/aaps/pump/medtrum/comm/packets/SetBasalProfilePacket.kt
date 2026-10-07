@@ -1,12 +1,12 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.CommandType.SET_BASAL_PROFILE
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.Inject
 
 class SetBasalProfilePacket(injector: MetroMemberInjector, private val basalProfile: ByteArray) : MedtrumPacket(injector) {

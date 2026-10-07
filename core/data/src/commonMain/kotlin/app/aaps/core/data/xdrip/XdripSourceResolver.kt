@@ -1,6 +1,7 @@
 package app.aaps.core.data.xdrip
 
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.xdrip.XdripSourceResolver.COLLECTION_METHODS
 
 /**
  * Everything AAPS knows about how xDrip names a glucose source.

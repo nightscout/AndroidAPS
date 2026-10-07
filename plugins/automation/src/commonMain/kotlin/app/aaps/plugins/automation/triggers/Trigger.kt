@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.navigation.icon
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject

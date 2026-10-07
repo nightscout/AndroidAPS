@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation
 
-import app.aaps.core.data.model.GlucoseUnit
 import android.Manifest
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.AutomationEvent
@@ -10,13 +10,11 @@ import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
-import app.aaps.plugins.automation.BtConnectionSource
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
 import app.aaps.plugins.automation.triggers.TriggerLocation
-import app.aaps.plugins.automation.AutomationStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat

@@ -2,15 +2,18 @@ package app.aaps.implementation.maintenance.cloud
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.allocArray
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
+import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.sizeOf
-import kotlinx.cinterop.readBytes
+import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.value
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -21,7 +24,6 @@ import platform.posix.SOCK_STREAM
 import platform.posix.SOL_SOCKET
 import platform.posix.SO_RCVTIMEO
 import platform.posix.SO_REUSEADDR
-import platform.posix.timeval
 import platform.posix.accept
 import platform.posix.bind
 import platform.posix.close
@@ -35,10 +37,8 @@ import platform.posix.sockaddr
 import platform.posix.sockaddr_in
 import platform.posix.socket
 import platform.posix.socklen_tVar
+import platform.posix.timeval
 import platform.posix.uint32_tVar
-import kotlinx.cinterop.ByteVar
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.usePinned
 
 /**
  * The local listener that catches the end of a Google sign in.

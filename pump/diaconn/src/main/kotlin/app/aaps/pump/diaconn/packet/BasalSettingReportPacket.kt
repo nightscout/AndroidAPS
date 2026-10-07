@@ -1,8 +1,8 @@
 package app.aaps.pump.diaconn.packet
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.diaconn.DiaconnG8Pump
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.Inject
 
 /**

@@ -1,11 +1,5 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
-import app.aaps.plugins.constraints.ConstraintsStringsValues
-import app.aaps.shared.tests.generatedTextResolver
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.anyVararg
-import org.mockito.kotlin.doAnswer
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
@@ -14,17 +8,16 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
+import app.aaps.plugins.constraints.ConstraintsStringsValues
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 

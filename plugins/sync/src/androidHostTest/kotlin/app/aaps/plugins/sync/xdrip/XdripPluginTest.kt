@@ -8,8 +8,8 @@ import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
-import org.mockito.kotlin.mock
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 
 class XdripPluginTest : TestBaseWithProfile() {
 

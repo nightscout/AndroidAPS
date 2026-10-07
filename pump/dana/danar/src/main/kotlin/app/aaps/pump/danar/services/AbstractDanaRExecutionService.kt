@@ -6,6 +6,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -29,6 +30,7 @@ import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
@@ -48,16 +50,14 @@ import app.aaps.pump.danar.comm.MsgHistoryRefill
 import app.aaps.pump.danar.comm.MsgHistorySuspend
 import app.aaps.pump.danar.comm.MsgPCCommStart
 import app.aaps.pump.danar.comm.MsgPCCommStop
-import app.aaps.core.objects.workflow.MetroService
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import java.io.IOException
-import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 import kotlin.math.min
 
