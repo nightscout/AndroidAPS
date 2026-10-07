@@ -255,6 +255,8 @@
     <string name="sms_read_status_failed">Lesing av status mislyktes</string>
     <string name="sms_profile_switch_created">Profilbytte opprettet</string>
     <string name="sms_wrong_tbr_duration">Varigheten av midlertidig basal må være et multiplum av %1$d minutter og større enn 0.</string>
+    <string name="sms_tbr_percent_only">Denne pumpen støtter midlertidig basaldose kun i prosent, ikke i E/t.</string>
+    <string name="sms_tbr_absolute_only">Denne pumpen støtter midlertidig basaldose kun i E/t, ikke i prosent.</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Appen trenger SMS-tillatelse for fjernkontroll via tekstmeldinger</string>
