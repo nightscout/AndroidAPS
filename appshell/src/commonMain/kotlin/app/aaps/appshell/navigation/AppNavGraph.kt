@@ -760,7 +760,17 @@ fun NavGraphBuilder.appNavGraph(
                 preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
                 navController.safePopBackStack()
             },
-            onBack = { navController.safePopBackStack() },
+            // Closing counts as processed, the same as finishing. The flag is "processed", not
+            // "completed": its only job is to decide whether the app opens the wizard by itself on
+            // start. Leaving it unset meant anyone who closed the wizard met it again on every
+            // launch, and on a client there was no way out - the last page is the patient name,
+            // which is not skippable, so with no name typed the Finish button is never drawn at
+            // all. This is only reached from the exit dialog's confirm, so it is a deliberate
+            // close, and the wizard stays reachable from the menu.
+            onBack = {
+                preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
+                navController.safePopBackStack()
+            },
             onImportSettings = { navController.navigate(AppRoute.ImportSettings.createRoute("LOCAL")) },
             onPluginPreferences = { pluginId -> navController.navigate(AppRoute.PluginPreferences.createRoute(pluginId)) },
             onPluginOpen = { pluginId -> onNavigationRequest(NavigationRequest.Plugin(pluginId), navController) },
