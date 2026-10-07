@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Flere sammenkoblinger samsvarte med denne PIN-koden. Be hovedenheten generere en ny og prøv igjen.</string>
     <string name="pair_with_master_error_expired">Denne sammenkoblingen har utløpt. Generer en ny PIN-kode på hovedenheten.</string>
     <string name="pair_with_master_error_network">Kan ikke koble til Nightscout. Kontroller forbindelsen og prøv igjen.</string>
+    <string name="pair_with_master_error_secret_store">Paringshemmeligheten kunne ikke lagres, så paringen ble avbrutt. Ingenting ble endret. Prøv igjen, og hvis det fortsatt ikke fungerer, start appen på nytt.</string>
     <string name="pair_with_master_retry">Prøv igjen</string>
     <string name="pair_with_master_already_paired_title">Allerede sammenkoblet</string>
     <string name="pair_with_master_already_paired_master">Er allerede koblet til hovedenhet %1$s. Koble fra først for å angi en ny PIN-kode.</string>
