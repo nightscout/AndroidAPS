@@ -269,6 +269,8 @@
     <string name="sms_read_status_failed">Read status failed</string>
     <string name="sms_profile_switch_created">Profile switch created</string>
     <string name="sms_wrong_tbr_duration">TBR duration must be a multiple of %1$d minutes and greater than 0.</string>
+    <string name="sms_tbr_percent_only">This pump takes a temp basal only in percent, not in U/h.</string>
+    <string name="sms_tbr_absolute_only">This pump takes a temp basal only in U/h, not in percent.</string>
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Application needs SMS permission for remote control via text messages</string>

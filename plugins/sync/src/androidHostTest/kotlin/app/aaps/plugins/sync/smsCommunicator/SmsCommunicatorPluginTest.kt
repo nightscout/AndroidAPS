@@ -11,7 +11,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.data.ue.Action
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
@@ -19,10 +19,8 @@ import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
@@ -53,14 +51,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyDouble
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -77,7 +73,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var otp: OneTimePassword
     @Mock lateinit var xDripBroadcast: XDripBroadcast
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtilMocked: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var smsManager: SmsManager
@@ -101,6 +96,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     private val modeLgs = "Low Glucose Suspend"
     private val modeUnknown = "unknown"
 
+    /** Every batch the SMS layer handed to the executor, in order. */
+    private val batches = mutableListOf<List<BatchAction>>()
+
+    /** The only action of the last batch. */
+    private fun lastAction(): BatchAction = batches.last().single()
+
     @BeforeEach fun prepareTests() {
         // A command reply quotes the enact result, which resolves its own comment. The base builds that
         // with the mocked `rh`, whose real default method answers a Named ref with its own NAME.
@@ -115,10 +116,22 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         whenever(preferences.get(StringKey.SmsAllowedNumbers)).thenReturn("1234;5678")
 
+        // Every confirmed command goes through the executor. The fake records the batch, previews it unchanged, and
+        // reports a delivered dose at once. What the executor does with a batch is covered by its own tests; here the
+        // point is the batch the SMS layer builds, and the reply it sends.
+        // Null-safe on purpose: a test that stubs these again calls the mock once with null matchers, which runs
+        // these answers.
         runBlocking {
-            whenever(
-                persistenceLayer.insertAndCancelCurrentTemporaryTarget(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
-            ).thenReturn(PersistenceLayer.TransactionResult())
+            whenever(wizardBolusExecutor.prepareBatch(anyOrNull())).thenAnswer { invocation ->
+                val actions = invocation.getArgument<List<BatchAction>?>(0).orEmpty()
+                if (actions.isNotEmpty()) batches += actions
+                val bolus = actions.filterIsInstance<BatchAction.Bolus>().firstOrNull()
+                WizardBolusExecutor.PrepareResult.Preview(insulin = bolus?.insulin ?: 0.0, carbs = bolus?.carbs ?: 0, bolusId = 42L)
+            }
+            whenever(wizardBolusExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
+                invocation.getArgument<(() -> Unit)?>(5)?.invoke()
+                WizardBolusExecutor.ConfirmResult.Delivered
+            }
         }
         // Use a real RunningModeGuard so the gate decisions actually fire from the mocked loop
         // (a mock guard returns null for everything → all gate-protected paths silently allow).
@@ -129,25 +142,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
             aapsLogger, text, smsManager, preferences, constraintChecker, profileFunction, profileUtil, activePlugin, profileRepository,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
-            smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
+            smbGlucoseStatusProvider, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
             runningModeGuard, bolusProgressData, { wizardBolusExecutor }, repository
         )
         smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
-        runBlocking {
-            whenever(commandQueue.cancelTempBasal(anyBoolean(), anyBoolean())).thenReturn(pumpEnactResultProvider().success(true))
-            whenever(commandQueue.cancelExtended()).thenReturn(pumpEnactResultProvider().success(true))
-            whenever(commandQueue.readStatus(anyString())).thenReturn(pumpEnactResultProvider().success(true))
-            whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true).bolusDelivered(1.0))
-            whenever(commandQueue.tempBasalPercent(anyInt(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenAnswer { invocation ->
-                pumpEnactResultProvider().success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
-            }
-            whenever(commandQueue.tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())).thenAnswer { invocation ->
-                pumpEnactResultProvider().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
-            }
-            whenever(commandQueue.extendedBolus(anyDouble(), anyInt())).thenAnswer { invocation ->
-                pumpEnactResultProvider().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
-            }
-        }
+        // Pump commands go through the executor now; the plugin itself only reads the pump status.
+        runBlocking { whenever(commandQueue.readStatus(anyString())).thenReturn(pumpEnactResultProvider().success(true)) }
 
         runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0)) }
         runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0)) }
@@ -288,7 +288,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(sms.ignored).isFalse()
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        whenever(persistenceLayer.cancelCurrentRunningMode(anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP RESUME")
         smsCommunicatorPlugin.processSms(sms)
@@ -308,9 +307,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop resumed")
-        // The reply above only proves an SMS went out. Pin down what actually reached the loop, so a
-        // refactor of the execution path cannot change the mode, the audit action or the source silently.
-        verify(loop).handleRunningModeChange(eq(RM.Mode.RESUME), eq(Action.RESUME), eq(Sources.SMS), anyOrNull(), eq(0), anyOrNull())
+        // The reply above only proves an SMS went out. Pin down what reached the executor, so a refactor
+        // cannot change the mode or the duration silently. The executor picks the audit action itself.
+        assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.RESUME, 0))
+        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())
 
         //LOOP SUSPEND 1 2: wrong format
         smsCommunicatorPlugin.messages = ArrayList()
@@ -339,9 +339,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
-        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop suspended Temp basal canceled")
+        // No "temp basal canceled": the running mode reconciler cancels it, and the action does not see that.
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop suspended")
         // The requested 100 minutes must arrive as 100 minutes.
-        verify(loop).handleRunningModeChange(eq(RM.Mode.SUSPENDED_BY_USER), eq(Action.SUSPEND), eq(Sources.SMS), anyOrNull(), eq(100), anyOrNull())
+        assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.SUSPENDED_BY_USER, 100))
 
         //LOOP SUSPEND 200 : limit to 180 min + wrong answer
         smsCommunicatorPlugin.messages = ArrayList()
@@ -393,7 +394,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Current running mode: $modeClosed")
-        verify(loop).handleRunningModeChange(eq(RM.Mode.CLOSED_LOOP), eq(Action.CLOSED_LOOP_MODE), eq(Sources.SMS), anyOrNull(), eq(0), anyOrNull())
+        assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.CLOSED_LOOP, 0))
         // not allowed state
         whenever(loop.allowedNextModes()).thenReturn(emptyList())
         smsCommunicatorPlugin.messages = ArrayList()
@@ -416,7 +417,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Current running mode: $modeLgs")
-        verify(loop).handleRunningModeChange(eq(RM.Mode.CLOSED_LOOP_LGS), eq(Action.LGS_LOOP_MODE), eq(Sources.SMS), anyOrNull(), eq(0), anyOrNull())
+        assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.CLOSED_LOOP_LGS, 0))
         // not allowed state
         whenever(loop.allowedNextModes()).thenReturn(emptyList())
         smsCommunicatorPlugin.messages = ArrayList()
@@ -460,8 +461,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump reconnected")
-        // A reconnect is a RESUME carrying the RECONNECT audit action — not the same as LOOP RESUME above.
-        verify(loop).handleRunningModeChange(eq(RM.Mode.RESUME), eq(Action.RECONNECT), eq(Sources.SMS), anyOrNull(), eq(0), anyOrNull())
+        // A reconnect is a RESUME. The executor logs it as RECONNECT when the pump was disconnected.
+        assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.RESUME, 0))
 
         //PUMP DISCONNECT 1 2: wrong format
         smsCommunicatorPlugin.messages = ArrayList()
@@ -490,7 +491,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump disconnected")
-        verify(loop).handleRunningModeChange(eq(RM.Mode.DISCONNECTED_PUMP), eq(Action.DISCONNECT), eq(Sources.SMS), anyOrNull(), eq(30), anyOrNull())
+        assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.DISCONNECTED_PUMP, 30))
 
         //PUMP DISCONNECT 200 : clamped to the 120 minute maximum
         smsCommunicatorPlugin.messages = ArrayList()
@@ -505,7 +506,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump disconnected")
         // The clamp is the point: 200 minutes requested, 120 reaches the loop. Only the reply prefix was
         // checked before, so the clamp could be lost without a single test turning red.
-        verify(loop).handleRunningModeChange(eq(RM.Mode.DISCONNECTED_PUMP), eq(Action.DISCONNECT), eq(Sources.SMS), anyOrNull(), eq(120), anyOrNull())
+        assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.DISCONNECTED_PUMP, 120))
 
         //RESTART - requires confirmation
         smsCommunicatorPlugin.messages = ArrayList()
@@ -586,16 +587,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("set successfully")
         // "set successfully" says nothing about WHAT was set. The eating-soon preset above is 90 mg/dL for
-        // 45 minutes, so that is what has to be written — target, duration and reason all three.
-        val mealTtCaptor = argumentCaptor<TT>()
-        verify(persistenceLayer).insertAndCancelCurrentTemporaryTarget(mealTtCaptor.capture(), eq(Action.TT), eq(Sources.SMS), anyOrNull(), anyOrNull())
-        assertThat(mealTtCaptor.firstValue.reason).isEqualTo(TT.Reason.EATING_SOON)
-        assertThat(mealTtCaptor.firstValue.lowTarget).isEqualTo(90.0)
-        assertThat(mealTtCaptor.firstValue.highTarget).isEqualTo(90.0)
-        assertThat(mealTtCaptor.firstValue.duration).isEqualTo(2700000L) // 45 minutes
+        // 45 minutes, so that is what has to be asked for — target, duration and reason all three.
+        assertThat(lastAction()).isEqualTo(BatchAction.TempTarget(TT.Reason.EATING_SOON.text, 90.0, 90.0, 45, 0))
 
         //TARGET STOP/CANCEL
-        whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "TARGET STOP")
         smsCommunicatorPlugin.processSms(sms)
@@ -605,7 +600,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("Temp Target canceled successfully")
-        verify(persistenceLayer).cancelCurrentTemporaryTargetIfAny(anyLong(), eq(Action.CANCEL_TT), eq(Sources.SMS), anyOrNull(), anyOrNull())
+        // Duration 0 is how a batch says "cancel the running target".
+        assertThat((lastAction() as BatchAction.TempTarget).durationMinutes).isEqualTo(0)
     }
 
     /**
@@ -623,8 +619,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
 
-        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop suspended Temp basal canceled")
-        verify(loop).handleRunningModeChange(eq(RM.Mode.SUSPENDED_BY_USER), eq(Action.SUSPEND), eq(Sources.SMS), anyOrNull(), eq(180), anyOrNull())
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop suspended")
+        assertThat(lastAction()).isEqualTo(BatchAction.RunningMode(RM.Mode.SUSPENDED_BY_USER, 180))
     }
 
     @Test fun processProfileTest() = runTest {
@@ -718,9 +714,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messageToConfirm).isNull()
 
         //PROFILE 1 90(OK)
-        whenever(wizardBolusExecutor.prepareBatch(anyOrNull())).thenReturn(WizardBolusExecutor.PrepareResult.Preview(insulin = 0.0, carbs = 0, bolusId = 42L))
-        whenever(wizardBolusExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble()))
-            .thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 1 90")
         smsCommunicatorPlugin.processSms(sms)
@@ -741,7 +734,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(switch.timeShiftHours).isEqualTo(0)
         assertThat(switch.durationMinutes).isEqualTo(0)
         // The parked batch is confirmed by its own id, and the switch is recorded as coming from SMS.
-        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble())
+        verify(wizardBolusExecutor).confirm(eq(42L), eq(Sources.SMS), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())
     }
 
     /**
@@ -764,7 +757,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
 
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Cannot switch profile: no insulin is in use, and none was selected.")
-        verifyBlocking(wizardBolusExecutor, never()) { confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble()) }
+        verifyBlocking(wizardBolusExecutor, never()) { confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull()) }
     }
 
     @Test fun processBasalTest() = runTest {
@@ -795,8 +788,11 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("Temp basal canceled")
+        assertThat(lastAction()).isEqualTo(BatchAction.CancelTempBasal)
 
         whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+        // The executor takes a temp basal only in the pump's own style, so the SMS side checks it before the pass code.
+        testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.PERCENT
         //BASAL a%
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL a%")
@@ -829,6 +825,21 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Temp basal 20% for 30 min started successfully\nVirtual Pump")
+        assertThat(lastAction()).isEqualTo(BatchAction.TempBasal(rate = 20.0, isPercent = true, durationMinutes = 30))
+
+        //BASAL 1 30 on a percent pump: refused before a pass code is asked for
+        smsCommunicatorPlugin.messageToConfirm = null
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BASAL 1 30"))
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("This pump takes a temp basal only in percent, not in U/h.")
+        assertThat(smsCommunicatorPlugin.messageToConfirm).isNull()
+
+        testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE
+        //BASAL 20% 30 on an absolute pump: refused the same way
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BASAL 20% 30"))
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("This pump takes a temp basal only in U/h, not in percent.")
+        assertThat(smsCommunicatorPlugin.messageToConfirm).isNull()
 
         //BASAL a
         smsCommunicatorPlugin.messages = ArrayList()
@@ -863,6 +874,26 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Temp basal 1.00U/h for 30 min started successfully\nVirtual Pump")
+        assertThat(lastAction()).isEqualTo(BatchAction.TempBasal(rate = 1.0, isPercent = false, durationMinutes = 30))
+    }
+
+    /** A temp basal the pump did not set is reported with the executor's reason, and only to the sender. */
+    @Test fun processBasalFailureTest() = runTest {
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        testPumpPlugin.pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE
+        whenever(constraintChecker.applyBasalConstraints(anyOrNull(), anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(wizardBolusExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
+            invocation.getArgument<((WizardBolusExecutor.Failure) -> Unit)?>(2)?.invoke(WizardBolusExecutor.Failure("Pump not reachable"))
+            WizardBolusExecutor.ConfirmResult.Delivered
+        }
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BASAL 1 30"))
+        val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Temp basal start failed\nPump not reachable\nVirtual Pump")
+        assertThat(smsCommunicatorPlugin.messages).hasSize(4)
     }
 
     @Test fun processExtendedTest() = runTest {
@@ -893,6 +924,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("Extended bolus canceled")
+        assertThat(lastAction()).isEqualTo(BatchAction.CancelExtendedBolus)
 
         //EXTENDED a%
         smsCommunicatorPlugin.messages = ArrayList()
@@ -919,6 +951,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump")
+        assertThat(lastAction()).isEqualTo(BatchAction.ExtendedBolus(insulin = 1.0, durationMinutes = 20))
     }
 
     @Test fun processBolusTest() = runTest {
@@ -977,12 +1010,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("Bolus 1.00 U delivered successfully")
-        // The "1.00 U" in that reply is the mocked queue's own canned answer, not the amount we asked for:
-        // the stub returns bolusDelivered(1.0) whatever it is given. Read the amount off the real request.
-        val bolusCaptor = argumentCaptor<DetailedBolusInfo>()
-        verify(commandQueue).bolus(bolusCaptor.capture())
-        assertThat(bolusCaptor.firstValue.insulin).isEqualTo(1.0)
-        assertThat(bolusCaptor.firstValue.carbs).isEqualTo(0.0)
+        // The fake executor previews what it is given, so the reply's amount is only as good as the batch.
+        // Read the amount off the batch itself: a real bolus, not a record-only entry.
+        val bolus = lastAction() as BatchAction.Bolus
+        assertThat(bolus.insulin).isEqualTo(1.0)
+        assertThat(bolus.carbs).isEqualTo(0)
+        assertThat(bolus.recordOnly).isFalse()
+        assertThat(smsCommunicatorPlugin.lastRemoteBolusTime).isEqualTo(dateUtilMocked.now())
 
         //BOLUS 1 (Suspended pump)
         smsCommunicatorPlugin.lastRemoteBolusTime = 0
@@ -1015,17 +1049,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
-        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Meal Bolus 1.00 U delivered successfully\nVirtual Pump\nTarget 5.0 for 45 minutes")
-        // A meal bolus is a bolus PLUS an eating-soon temp target. Both halves are checked here, because the
-        // order of the two is a behaviour the executor path would change.
-        val mealBolusCaptor = argumentCaptor<DetailedBolusInfo>()
-        verify(commandQueue, atLeastOnce()).bolus(mealBolusCaptor.capture())
-        assertThat(mealBolusCaptor.lastValue.insulin).isEqualTo(1.0)
-        val eatingSoonCaptor = argumentCaptor<TT>()
-        verify(persistenceLayer).insertAndCancelCurrentTemporaryTarget(eatingSoonCaptor.capture(), eq(Action.TT), eq(Sources.SMS), anyOrNull(), anyOrNull())
-        assertThat(eatingSoonCaptor.firstValue.reason).isEqualTo(TT.Reason.EATING_SOON)
-        assertThat(eatingSoonCaptor.firstValue.lowTarget).isEqualTo(90.0)
-        assertThat(eatingSoonCaptor.firstValue.duration).isEqualTo(2700000L) // 45 minutes
+        // The target is shown in the user's display units, the same as the TARGET command's reply (mg/dL here).
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Meal Bolus 1.00 U delivered successfully\nVirtual Pump\nTarget 90 for 45 minutes")
+        // A meal bolus is a bolus PLUS an eating-soon temp target, in one batch. The executor sets the target
+        // once the bolus is accepted, the same order as the phone's insulin dialog.
+        val meal = batches.last()
+        assertThat(meal).hasSize(2)
+        assertThat((meal[0] as BatchAction.Bolus).insulin).isEqualTo(1.0)
+        assertThat(meal[1]).isEqualTo(BatchAction.TempTarget(TT.Reason.EATING_SOON.text, 90.0, 90.0, 45, 0))
 
         //BOLUS 1 MEAL within the minimum remote-bolus distance must be rejected (meal form previously bypassed the spacing guard)
         smsCommunicatorPlugin.lastRemoteBolusTime = dateUtilMocked.now() - 100
@@ -1037,7 +1068,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     }
 
     @Test fun processBolusStopPressedTest() = runTest {
-        // A bolus the user cancels mid-delivery still succeeds (partial), and the reply is prefixed with "STOP PRESSED".
+        // A bolus the user cancels mid-delivery still succeeds (partial). The executor does not report how much was
+        // given, so the reply says "STOP PRESSED" and leaves the amount to the pump status that follows.
         whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
         whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
         whenever(constraintChecker.applyExtendedBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
@@ -1052,7 +1084,32 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("To deliver bolus 1.00U reply with code")
         val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        assertThat(smsCommunicatorPlugin.messages[3].text).contains("STOP PRESSED Bolus 1.00 U delivered successfully")
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("STOP PRESSED\nVirtual Pump")
+    }
+
+    /**
+     * The bolus reply waits for the pump. A delivery that fails after confirm returned still has to reach the
+     * sender as a failure - not as the "delivered" reply - and must not count as a remote bolus.
+     */
+    @Test fun processBolusFailureTest() = runTest {
+        whenever(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
+        whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        whenever(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
+        whenever(dateUtilMocked.now()).thenReturn(Constants.REMOTE_BOLUS_MIN_DISTANCE + 1002L)
+        smsCommunicatorPlugin.lastRemoteBolusTime = 0
+        whenever(wizardBolusExecutor.confirm(anyLong(), anyOrNull(), anyOrNull(), anyBoolean(), anyDouble(), anyOrNull())).thenAnswer { invocation ->
+            invocation.getArgument<((WizardBolusExecutor.Failure) -> Unit)?>(2)?.invoke(WizardBolusExecutor.Failure("Pump not reachable"))
+            WizardBolusExecutor.ConfirmResult.Delivered
+        }
+
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(Sms("1234", "BOLUS 1"))
+        val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+
+        assertThat(smsCommunicatorPlugin.messages[3].text)
+            .isEqualTo("Bolus failed. Verify real state before sending another command!\nPump not reachable\nVirtual Pump")
+        assertThat(smsCommunicatorPlugin.lastRemoteBolusTime).isEqualTo(0L)
     }
 
     @Test fun processCalTest() = runTest {
@@ -1130,13 +1187,11 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1 g entered successfully")
-        // Carbs travel as a bolus request with no insulin. With no time given they are stamped with
-        // dateUtil.now(), which the mock reports as 0.
-        val carbsCaptor = argumentCaptor<DetailedBolusInfo>()
-        verify(commandQueue).bolus(carbsCaptor.capture())
-        assertThat(carbsCaptor.firstValue.carbs).isEqualTo(1.0)
-        assertThat(carbsCaptor.firstValue.insulin).isEqualTo(0.0)
-        assertThat(carbsCaptor.firstValue.timestamp).isEqualTo(dateUtilMocked.now())
+        // Carbs travel as a batch bolus with no insulin. With no time given they are for now: offset 0.
+        val carbs = lastAction() as BatchAction.Bolus
+        assertThat(carbs.carbs).isEqualTo(1)
+        assertThat(carbs.insulin).isEqualTo(0.0)
+        assertThat(carbs.carbsTimeOffsetMinutes).isEqualTo(0)
 
         //CARBS 1 a
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1164,12 +1219,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1 g entered successfully")
         // "12:01PM" in the reply is the mocked timeString, so it would read the same for any timestamp.
-        // The parsed time has to be today at 12:01 local — the same wall clock the parser uses.
-        val timedCarbsCaptor = argumentCaptor<DetailedBolusInfo>()
-        verify(commandQueue, atLeastOnce()).bolus(timedCarbsCaptor.capture())
-        assertThat(timedCarbsCaptor.lastValue.carbs).isEqualTo(1.0)
-        assertThat(timedCarbsCaptor.lastValue.timestamp)
-            .isEqualTo(DateTime().withHourOfDay(12).withMinuteOfHour(1).withSecondOfMinute(0).withMillisOfSecond(0).millis)
+        // The parsed time has to be today at 12:01 local — the same wall clock the parser uses — and it
+        // reaches the executor as minutes from now.
+        val timedCarbs = lastAction() as BatchAction.Bolus
+        assertThat(timedCarbs.carbs).isEqualTo(1)
+        val twelveOhOne = DateTime().withHourOfDay(12).withMinuteOfHour(1).withSecondOfMinute(0).withMillisOfSecond(0).millis
+        assertThat(timedCarbs.carbsTimeOffsetMinutes).isEqualTo(((twelveOhOne - dateUtilMocked.now()) / 60_000L).toInt())
 
         //CARBS 1 3:01AM
         whenever(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
