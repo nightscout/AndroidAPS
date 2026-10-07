@@ -27,6 +27,7 @@
     <string name="constraint_applied">Omezení aplikováno!</string>
     <string name="tt_label">DC</string>
     <string name="pump_unreachable">Pumpa nedostupná</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Ovladač pumpy neodpovídá. \"%1$s\" běží po %2$d min a žádný jiný příkaz se nemůže dostat do pumpy. Zkontrolujte pumpu, poté restartujte AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
