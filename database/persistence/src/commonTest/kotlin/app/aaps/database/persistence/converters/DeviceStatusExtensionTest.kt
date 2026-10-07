@@ -5,11 +5,8 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.embedments.InterfaceIDs
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class DeviceStatusExtensionTest {
 

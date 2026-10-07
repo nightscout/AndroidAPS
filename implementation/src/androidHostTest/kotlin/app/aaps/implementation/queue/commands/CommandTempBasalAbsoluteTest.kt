@@ -1,9 +1,7 @@
 package app.aaps.implementation.queue.commands
 
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.cancel
 import app.aaps.implementation.pump.PumpEnactResultObject
@@ -21,11 +19,10 @@ class CommandTempBasalAbsoluteTest : TestBaseWithProfile() {
         absoluteRate: Double = 1.5,
         durationInMinutes: Int = 30,
         enforceNew: Boolean = true,
-        tbrType: PumpSync.TemporaryBasalType = PumpSync.TemporaryBasalType.NORMAL,
-        callback: Callback? = null
+        tbrType: PumpSync.TemporaryBasalType = PumpSync.TemporaryBasalType.NORMAL
     ) = CommandTempBasalAbsolute(
         aapsLogger, rh, activePlugin, pumpEnactResultProvider::invoke,
-        absoluteRate, durationInMinutes, enforceNew, tbrType, callback
+        absoluteRate, durationInMinutes, enforceNew, tbrType
     )
 
     @Test
@@ -42,66 +39,40 @@ class CommandTempBasalAbsoluteTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `executeWithCallback forwards execute result to callback`() = runTest {
+    fun `executeAndComplete completes with execute result`() = runTest {
         val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
         val pump = mock<PumpWithConcentration> {
             on { setTempBasalAbsolute(1.5, 30, true, PumpSync.TemporaryBasalType.NORMAL) } doReturn pumpResult
         }
         whenever(activePlugin.activePump).thenReturn(pump)
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() { received = result }
-        }
+        val command = newCommand(1.5, 30, true, PumpSync.TemporaryBasalType.NORMAL)
 
-        newCommand(1.5, 30, true, PumpSync.TemporaryBasalType.NORMAL, callback).executeWithCallback()
+        command.executeAndComplete()
 
+        val received = command.completion.await()
         assertThat(received).isSameInstanceAs(pumpResult)
     }
 
     @Test
-    fun `executeWithCallback with null callback does not crash`() = runTest {
-        val pumpResult = PumpEnactResultObject(rh).success(true).enacted(true)
-        val pump = mock<PumpWithConcentration> {
-            on { setTempBasalAbsolute(1.5, 30, true, PumpSync.TemporaryBasalType.NORMAL) } doReturn pumpResult
-        }
-        whenever(activePlugin.activePump).thenReturn(pump)
-
-        newCommand(callback = null).executeWithCallback()
-    }
-
-    @Test
-    fun `cancel invokes callback with success by default`() {
+    fun `cancel completes with success by default`() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() { received = result }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced)
+        command.cancel(app.aaps.core.ui.R.string.command_replaced)
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isTrue()
+        val received = command.completion.await()
+        assertThat(received.success).isTrue()
     }
 
     @Test
-    fun `cancel invokes callback with failure when success=false`() {
+    fun `cancel completes with failure when success=false`() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() { received = result }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
+        command.cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isFalse()
-    }
-
-    @Test
-    fun `cancel with null callback does not crash`() {
-        whenever(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("timeout")
-
-        newCommand(callback = null).cancel(app.aaps.core.ui.R.string.connectiontimedout)
+        val received = command.completion.await()
+        assertThat(received.success).isFalse()
     }
 
     @Test

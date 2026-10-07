@@ -1,6 +1,5 @@
 package app.aaps.pump.carelevo.data.mapper
 
-import app.aaps.pump.carelevo.ext.parseIsoInstant
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoBasalSegmentInfusionInfoEntity
 import app.aaps.pump.carelevo.data.model.entities.CarelevoExtendBolusInfusionInfoEntity
@@ -13,9 +12,10 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionI
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
+import app.aaps.pump.carelevo.ext.parseIsoInstant
 import com.google.common.truth.Truth.assertThat
-import kotlin.time.Instant
 import org.junit.jupiter.api.Test
+import kotlin.time.Instant
 
 /**
  * Pure-logic unit tests for the entity <-> domain mappers in `CarelevoInfusionInfoMapper.kt`.

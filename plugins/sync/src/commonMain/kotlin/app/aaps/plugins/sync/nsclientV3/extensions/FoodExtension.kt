@@ -1,10 +1,9 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import kotlin.time.Clock
-
 import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.IDs
 import app.aaps.core.nssdk.localmodel.food.NSFood
+import kotlin.time.Clock
 
 fun NSFood.toFood(): FD =
     FD(

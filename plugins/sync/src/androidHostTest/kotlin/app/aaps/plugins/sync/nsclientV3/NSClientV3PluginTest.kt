@@ -36,21 +36,19 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.core.nssdk.remotemodel.LastModified
+import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.ws.NsConnection
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
-import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -69,6 +67,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.reflect.KClass
 
 @Suppress("SpellCheckingInspection")
@@ -243,7 +242,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             value = 99.0,
             trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
-            sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+            sourceSensor = SourceSensor.DEXCOM_G6,
             ids = IDs(nightscoutId = "nightscoutId")
         )
         val dataPair = DataSyncSelector.PairGlucoseValue(glucoseValue, 1000)

@@ -1,5 +1,7 @@
 package app.aaps.core.utils
 
+import app.aaps.core.utils.MidnightUtils.millisFrom
+import app.aaps.core.utils.MidnightUtils.secondsFrom
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn

@@ -1,8 +1,5 @@
 package app.aaps.plugins.automation.compose
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,7 +36,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.Scene
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.compose.actions.ActionEditor
 

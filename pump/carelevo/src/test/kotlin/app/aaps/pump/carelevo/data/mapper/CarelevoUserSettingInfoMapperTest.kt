@@ -1,10 +1,9 @@
 package app.aaps.pump.carelevo.data.mapper
 
-import app.aaps.pump.carelevo.ext.parseIsoInstant
 import app.aaps.pump.carelevo.data.model.entities.CarelevoUserSettingInfoEntity
 import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
+import app.aaps.pump.carelevo.ext.parseIsoInstant
 import com.google.common.truth.Truth.assertThat
-import kotlin.time.Instant
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 

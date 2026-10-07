@@ -507,7 +507,7 @@ class BolusWizard(
      * Execute normal bolus wizard flow (bolus + carbs + superbolus + BCR save).
      * No UI dependency — errors reported via [onError] callback.
      */
-    suspend fun executeNormal(onError: (WizardBolusExecutor.Failure) -> Unit, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
+    suspend fun executeNormal(onError: (WizardBolusExecutor.Failure) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
         if (accepted) {
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
@@ -552,7 +552,6 @@ class BolusWizard(
                 else                           -> Action.TREATMENT
             }
             val bolusCalculatorResult = createBolusCalculatorResult()
-            quickWizardEntry?.markAsUsed()
             // Schedule carb timer before bolus delivery. Scheduling in the bolus completion callback
             // fails when the screen is off because Android blocks startActivity() from the background.
             if (useAlarm && carbs > 0 && carbTime > 0) {
@@ -613,18 +612,10 @@ class BolusWizard(
                 )
             }
         }
-        if (quickWizardEntry != null) {
-            scheduleECarbsFromQuickWizardCompose(quickWizardEntry, onError, forcedRecordOnly)
-        }
         if (eCarbsGrams > 0) {
             scheduleECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours, onError, forcedRecordOnly)
         }
     }
-
-    /**
-     * Execute bolus advisor flow (correction-only bolus, no carbs, eat reminder).
-     * No UI dependency — errors reported via [onError] callback.
-     */
 
     private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (WizardBolusExecutor.Failure) -> Unit, forcedRecordOnly: Boolean = false) {
         // delayMinutes is already the total delay from now — the caller folds the meal carbTime into it.
@@ -661,54 +652,6 @@ class BolusWizard(
             // eCarbs delivery now rides the shared executor (one audited path).
             appScope.launch {
                 wizardBolusExecutor.deliverECarbs(eCarbsGrams, eventTime, durationHours, totalDelayMinutes, notes, Sources.WizardDialog, onError)
-            }
-        }
-    }
-
-    private fun scheduleECarbsFromQuickWizardCompose(quickWizardEntry: QuickWizardEntry, onError: (WizardBolusExecutor.Failure) -> Unit, forcedRecordOnly: Boolean = false) {
-        val eCarbsYesNo = quickWizardEntry.useEcarbs()
-        if (eCarbsYesNo == QuickWizardEntry.ALWAYS) {
-            val timeOffset = quickWizardEntry.time()
-            val duration = quickWizardEntry.duration()
-            val carbs2 = quickWizardEntry.carbs2()
-
-            val currentTime = Clock.System.now().toEpochMilliseconds()
-            val eventTime: Long = currentTime + (timeOffset * 60000)
-
-            if (carbs2 > 0) {
-                val buttonText = quickWizardEntry.buttonText()
-                if (forcedRecordOnly) {
-                    uel.log(
-                        action = Action.EXTENDED_CARBS,
-                        source = Sources.QuickWizard,
-                        note = buttonText,
-                        listValues = listOfNotNull(
-                            ValueWithUnit.Timestamp(eventTime),
-                            ValueWithUnit.Gram(carbs2),
-                            ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
-                            ValueWithUnit.Hour(duration).takeIf { duration != 0 }
-                        )
-                    )
-                    val detailedBolusInfo = DetailedBolusInfo().apply {
-                        carbs = carbs2.toDouble()
-                        notes = buttonText
-                        carbsDuration = T.hours(duration.toLong()).msecs()
-                        carbsTimestamp = eventTime
-                    }
-                    appScope.launch {
-                        persistenceLayer.insertOrUpdateCarbs(
-                            carbs = detailedBolusInfo.createCarbs(),
-                            action = Action.EXTENDED_CARBS,
-                            source = Sources.QuickWizard,
-                            note = buttonText
-                        )
-                    }
-                } else {
-                    // eCarbs delivery now rides the shared executor (one audited path).
-                    appScope.launch {
-                        wizardBolusExecutor.deliverECarbs(carbs2, eventTime, duration, timeOffset, buttonText, Sources.QuickWizard, onError)
-                    }
-                }
             }
         }
     }

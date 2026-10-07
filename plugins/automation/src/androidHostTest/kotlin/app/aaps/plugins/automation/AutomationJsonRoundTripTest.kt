@@ -3,8 +3,6 @@ package app.aaps.plugins.automation
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.plugins.automation.AutomationStringsValues
-import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.lenientDouble
@@ -13,8 +11,11 @@ import app.aaps.plugins.automation.actions.ActionFactory
 import app.aaps.plugins.automation.triggers.TriggerBg
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory
+import app.aaps.plugins.automation.triggers.TriggerUnknown
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.BeforeEach
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import kotlin.test.assertIs
 
 /**
  * Guards the stored automation format across the org.json to kotlinx.serialization move.
@@ -108,13 +110,16 @@ class AutomationJsonRoundTripTest : TestBase() {
         assertThat((trigger["data"] as kotlinx.serialization.json.JsonObject).lenientString("connectorType")).isEqualTo("AND")
     }
 
-    @Test fun unparseableTriggerDegradesInsteadOfThrowing() {
+    @Test fun unparseableTriggerDegradesInsteadOfThrowing() = runTest {
         val broken = "{\"title\":\"Broken\",\"enabled\":true,\"trigger\":\"not json at all\",\"actions\":[]}"
 
         val event = eventFactory.fromJSON(broken)
 
         assertThat(event.title).isEqualTo("Broken")
-        assertThat(event.trigger.list).isEmpty()
+        // It loads, but it must never fire. An empty connector here would be always true (#5194).
+        assertThat(event.trigger.list).hasSize(1)
+        assertIs<TriggerUnknown>(event.trigger.list[0])
+        assertThat(event.canRun()).isFalse()
     }
 
     @Test fun quotedNumberStillRead() {

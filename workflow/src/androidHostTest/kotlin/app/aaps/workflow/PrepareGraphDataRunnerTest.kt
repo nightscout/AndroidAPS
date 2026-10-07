@@ -1,8 +1,5 @@
 package app.aaps.workflow
 
-import app.aaps.core.objects.workflow.WorkOutcome
-import kotlinx.coroutines.test.TestScope
-import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.model.CA
@@ -21,9 +18,11 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.ProgressData
+import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

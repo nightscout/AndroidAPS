@@ -1,8 +1,8 @@
 package app.aaps.pump.danar.comm
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpInsulin
-import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgBolusProgress(
     injector: MetroMemberInjector

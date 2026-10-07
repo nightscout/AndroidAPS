@@ -1,11 +1,11 @@
 package app.aaps.plugins.source
 
-import org.mockito.kotlin.mock
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 
 class XdripSourcePluginTest : TestBaseWithProfile() {
 

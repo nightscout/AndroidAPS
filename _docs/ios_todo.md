@@ -4,13 +4,15 @@ Replaces the open half of `_docs/ios_blockers.md`. That file was a handoff chann
 sessions on two branches; the branches are merged into `dev` now and the sessions message each
 other directly, so what remains useful is this list.
 
-Every item below was checked against the tree on **2026-09-23** at `d45d3c1860`. Symbols, not line
-numbers - line numbers rot. Re-check before starting one: three items in the old file were already
-done when it was audited, and one said the opposite of what the code did.
+Every item below was checked against the tree on **2026-09-23** at `d45d3c1860`; the scene and
+socket items were re-checked on **2026-10-05** at `74aae7d98a`. Symbols, not line numbers - line
+numbers rot. Re-check before starting one: three items in the old file were already done when it was
+audited, one said the opposite of what the code did, and the scene item below was wrong twice over -
+it described a safety gap that the client/master split makes unreachable.
 
-The iOS side compiles for device, links `AapsShared.framework` and runs **720 simulator tests, 0
-failures**. Nothing here is a build problem. These are features that are missing, deliberate costs
-that need a decision, and one safety gap.
+The iOS side compiles for device, links `AapsShared.framework` and runs **730 simulator tests, 0
+failures**. Nothing here is a build problem. These are features that are missing and deliberate costs
+that need a decision.
 
 ---
 
@@ -22,22 +24,42 @@ that need a decision, and one safety gap.
 were conflated before and the old file claimed iOS alarms were silent for ten days after they worked.
 What is missing is the full-screen alarm surface Android raises, not the sound.
 
-### A timed scene never ends
-`IosSceneExpiryScheduler.schedule` logs at error instead of scheduling. Scenes compile and the editor
-works, so this looks finished. `SceneExpiryRunner` reverts two actions at expiry whose effect does not
-stop on its own, so on iOS a timed scene stays active indefinitely.
+### A subscribe that never gets its ack leaves the client silently stalled
+Measured on 2026-10-05 against Nightscout 15.0.7, on the simulator and on an iPhone 15 Pro Max. The
+earlier version of this item guessed at the behaviour; these are the readings.
 
-### A dropped Nightscout socket may never be noticed
-The catch-up logic is shared and correct - a connect clears `initialLoadFinished` and refetches from
-the high-water mark. What iOS lacks is anything that makes the connect happen: the process suspends in
-the background, `IosForegroundWatcher` **exists but nothing constructs it** (only `SocketNsConnection`
-mentions it, in a comment), and the connectivity trigger fires on the allowed-verdict flip rather than
-on network changes. Recovery rests on socket.io-client-swift's own reconnect surviving suspension,
-which nobody has verified. A shared watchdog - force a load when `connected` has been false for longer
-than N - would close this on every platform, which is the better shape.
+**What is actually broken.** `SwiftNsSocket.emitWithAck` uses `timingOut(after: 0)`, which means no
+timeout at all: if the `subscribe` ack never arrives the closure never runs, so
+`NsConnectHandler.onConnectStorage` never clears `initialLoadFinished`, never calls `executeLoop`,
+and never reports a result. The socket stays up and answers pings while no data arrives, and nothing
+retries. This is the one state found that does not heal itself - every other drop recovered within a
+second. A timeout alone only makes the stall visible; recovery needs a resubscribe or a socket
+restart.
 
-Read `IosForegroundWatcher`'s KDoc before wiring it: closing the socket on backgrounding is only safe
-if something reopens it.
+**What is cosmetic rather than broken.** socket.io-client-swift emits `reconnect`, never
+`disconnect`, when a transport drops - confirmed three times (twice on a phone when an interface went
+down, once by closing the engine deliberately). `NsSocket.EVENT_DISCONNECT` is `"disconnect"`, so
+`onDisconnectStorage` does not run and `SocketNsConnection._connected` keeps its old value.
+`disconnect storage event` was logged **zero** times across every run. It stays invisible to the user
+because `NSClientV3Plugin.status` tests `isAllowed` - network reachability from `receiverDelegate` -
+before it looks at the socket, so a real outage is reported honestly by that signal instead. The
+stale flag only shows through when the network is up and the socket is dead. Worth mapping `reconnect`
+onto the disconnect path so the flag is honest on its own evidence, but it is not the user-visible
+bug it was once written up as.
+
+**Suspension costs liveness, not data.** A phone left suspended for three hours produced no pushes
+and no socket events at all; on resume the connectivity flow called `setClient()`, the socket
+reconnected, and 36 glucose values and 37 treatments were backfilled within three seconds from the
+correct high-water mark. So the shared catch-up logic works. `IosForegroundWatcher` still **exists but
+nothing constructs it** (only `SocketNsConnection` mentions it, in a comment); wiring it would shorten
+the gap, not create the recovery. Read its KDoc first: closing the socket on backgrounding is only
+safe if something reopens it.
+
+**Not worth copying from the issue:** `.forceWebsockets(true)`, dropping `.compress`, and sharing one
+`SocketManager` were each measured for 180 s against a healthy server and were indistinguishable from
+the current code - 1 connect, 1 upgrade, 7 pings, 0 reconnects. Nightscout behind nginx negotiates
+`permessage-deflate` happily. Forcing websockets would also cost the polling fallback that Android
+keeps. See issue 5185.
 
 ### The pairing PIN is not protected from screenshots
 `blockScreenshotsWhileVisible` returns **false** on iOS on purpose - Apple has no `FLAG_SECURE`, and a
@@ -83,6 +105,13 @@ Enclave EC key would close the gap and is a larger change.
 
 They look like gaps in the code and are not. Each has been proposed as a bug at least once.
 
+- **`IosSceneExpiryScheduler.schedule` only logs an error.** It cannot be reached. `config.AAPSCLIENT`
+  is hardcoded `true` in `IosClientConfig`, and `RoleBranch.prepare`/`commit` send the command to the
+  master on a client instead of calling the local lambda, while `SceneActions.stop` goes through
+  `ClientControlActionDispatcher`. So `SceneExecutor.activate` - the only caller of `schedule` - runs
+  on the master, which schedules expiry with its own working scheduler. The client runs
+  `validateActivation` locally and nothing else, and that is a pure query. This was written up twice
+  as "a timed scene never ends on iOS", which would be true only if iOS ever shipped as a master.
 - **`IosLocationPermissions` returns an empty list.** `PermissionGroup.permissions` holds Android
   permission strings; iOS asks at the point of use through `CLLocationManager`. `AutomationRuntime`
   reporting nothing missing on iOS is correct. `IosLocationServiceController` still requests it.
@@ -101,7 +130,18 @@ They look like gaps in the code and are not. Each has been proposed as a bug at 
 
 ---
 
-## Corrected while writing this
+## Corrected on 2026-10-05
+
+- **Scene expiry was never a gap.** Verified through `IosClientConfig.AAPSCLIENT`, `RoleBranch` and
+  `SceneActionsImpl`: activation is a round-trip to the master on a client. Moved to section 4 with
+  the reasoning, so it does not get re-raised a third time.
+- **The socket item was guesswork** and is now measurements. The claim that recovery "rests on
+  socket.io-client-swift's own reconnect surviving suspension, which nobody has verified" is
+  answered: it does not survive suspension, and recovery comes from the connectivity flow instead.
+- **The status line does not lie during an outage.** `isAllowed` is checked before the socket, so the
+  stale `_connected` flag is masked in every case a user can see except "network up, socket dead".
+
+## Corrected while writing this (2026-09-23)
 
 - Alarms are **not** silent on iOS. Fixed in `e1fa702fc3`; the old file said otherwise until
   2026-09-21.

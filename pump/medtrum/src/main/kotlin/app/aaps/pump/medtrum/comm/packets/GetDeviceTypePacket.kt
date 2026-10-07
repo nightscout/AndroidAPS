@@ -1,9 +1,9 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.pump.medtrum.comm.enums.CommandType.GET_DEVICE_TYPE
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
-import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class GetDeviceTypePacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 

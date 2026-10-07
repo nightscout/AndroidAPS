@@ -95,7 +95,7 @@ class TomatoPlugin(
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.NONE,
-                sourceSensor = SourceSensor.LIBRE_1_TOMATO
+                sourceSensor = SourceSensor.LIBRE_1
             )
             try {
                 persistenceLayer.insertCgmSourceData(Sources.Tomato, glucoseValues, emptyList(), null)

@@ -9,13 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 internal fun CarelevoPatchFlowStep04Attach(

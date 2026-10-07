@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -31,7 +31,6 @@ import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.pump.tickerFlow
-import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject

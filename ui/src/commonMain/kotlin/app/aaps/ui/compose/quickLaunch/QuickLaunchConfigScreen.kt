@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.navigation.ElementCategory
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow

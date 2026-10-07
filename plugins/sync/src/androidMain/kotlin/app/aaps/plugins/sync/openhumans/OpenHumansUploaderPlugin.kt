@@ -1,8 +1,5 @@
 package app.aaps.plugins.sync.openhumans
 
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import android.content.Intent
 import android.util.DisplayMetrics
@@ -22,14 +19,17 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.di.OpenHumansScope
 import app.aaps.plugins.sync.openhumans.compose.OHComposeContent
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
@@ -40,15 +40,6 @@ import app.aaps.plugins.sync.openhumans.keys.OhStringKey
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.io.ByteArrayOutputStream
-import java.security.MessageDigest
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
-import java.util.concurrent.TimeUnit
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
-import kotlin.time.Duration.Companion.hours
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -62,6 +53,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
+import java.util.concurrent.TimeUnit
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+import kotlin.time.Duration.Companion.hours
 
 @SingleIn(OpenHumansScope::class)
 @Inject

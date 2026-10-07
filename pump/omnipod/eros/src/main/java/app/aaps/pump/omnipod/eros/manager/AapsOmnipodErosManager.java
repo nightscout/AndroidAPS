@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
-import java.util.function.Supplier;
-
 import app.aaps.core.data.model.BS;
 import app.aaps.core.data.model.TE;
 import app.aaps.core.data.pump.defs.PumpType;
@@ -33,7 +31,6 @@ import app.aaps.core.interfaces.pump.PumpRate;
 import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.pump.defs.PumpTypeExtensionKt;
 import app.aaps.core.interfaces.resources.ResourceHelper;
-import app.aaps.core.interfaces.rx.AapsSchedulers;
 import app.aaps.core.interfaces.rx.bus.RxBus;
 import app.aaps.core.interfaces.rx.events.Event;
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview;

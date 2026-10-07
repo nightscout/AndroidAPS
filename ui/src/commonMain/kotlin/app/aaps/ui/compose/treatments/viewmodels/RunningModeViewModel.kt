@@ -21,10 +21,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import dev.zacsweers.metro.Inject
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +32,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * ViewModel for RunningModeScreen managing running mode state and business logic.

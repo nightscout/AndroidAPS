@@ -1,10 +1,11 @@
 package app.aaps.ios.shell.config
 
-import app.aaps.core.keys.interfaces.AppPlatform
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
+import app.aaps.core.keys.interfaces.AppPlatform
+import app.aaps.core.keys.interfaces.TextRef
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -12,12 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSBundle
-import platform.Foundation.NSUserDomainMask
 import platform.Foundation.NSDocumentDirectory
-import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSFileManager
+import platform.Foundation.NSSearchPathForDirectoriesInDomains
+import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIDevice
 
 /**

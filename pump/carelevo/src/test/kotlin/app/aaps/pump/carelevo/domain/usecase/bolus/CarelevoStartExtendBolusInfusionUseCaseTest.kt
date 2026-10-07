@@ -5,8 +5,6 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -20,6 +18,8 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)

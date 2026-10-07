@@ -33,9 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.source.SourceStrings
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,12 +40,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.extensions.directionToDescription
 import app.aaps.core.ui.extensions.directionToIcon
 import app.aaps.ui.compose.components.ContentContainer

@@ -28,7 +28,6 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalDateUtil

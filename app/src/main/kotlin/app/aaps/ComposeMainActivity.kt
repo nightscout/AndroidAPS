@@ -77,21 +77,20 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.interfaces.ui.UiRestart
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.FallbackViewModelFactory
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.core.ui.compose.pump.PumpActivityDialog
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.utils.isRunningRealPumpTest
@@ -313,6 +312,9 @@ class ComposeMainActivity : MetroAppCompatActivity() {
             rxBus = rxBus,
             snackbarHostPresence = snackbarHostPresence,
             clientControlActionDispatcher = clientControlActionDispatcher,
+            bolusProgressData = bolusProgressData,
+            commandQueue = commandQueue,
+            pumpCommunicationStatus = pumpCommunicationStatus,
             // The two per-build bitmaps the shared root cannot paint itself.
             appIcon = { modifier -> Image(painterResource(iconsProvider.getIcon()), null, modifier) },
             splashLogo = { modifier -> Image(painterResource(CoreUiR.drawable.splash_logo), null, modifier) },
@@ -446,9 +448,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
         }
 
         val state by mainViewModel.uiState.collectAsStateWithLifecycle()
-        val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
-        val pumpStatusBanner by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
-        val pumpQueueStatus by pumpCommunicationStatus.queueStatusFlow.collectAsStateWithLifecycle()
 
         NavHost(
             navController = navController,
@@ -566,31 +565,6 @@ class ComposeMainActivity : MetroAppCompatActivity() {
                     )
                 },
             )
-        }
-
-        // Modal bolus progress overlay — shown above everything for standard bolus
-        bolusState?.let { state ->
-            if (!state.isSMB) {
-                val pumpStatus = pumpStatusBanner?.text ?: ""
-                val queueStatus = pumpQueueStatus
-                PumpActivityDialog(
-                    bolusState = state,
-                    pumpStatus = pumpStatus,
-                    queueStatus = queueStatus,
-                    isModal = true,
-                    onStop = {
-                        if (config.AAPSCLIENT) {
-                            clientControlActionDispatcher.stopBolus()
-                            bolusProgressData.stopPressed()
-                        } else {
-                            commandQueue.cancelAllBoluses(null)
-                        }
-                    },
-                    // Only reachable via the stalled-state Dismiss button (client/follower): hides the
-                    // local mirror dialog. Delivery belongs to the master — this does not touch the pump.
-                    onDismiss = { bolusProgressData.clear() }
-                )
-            }
         }
     }
 

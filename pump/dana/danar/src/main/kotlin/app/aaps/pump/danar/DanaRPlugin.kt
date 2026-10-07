@@ -6,13 +6,13 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -38,6 +38,11 @@ import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.danar.services.DanaRExecutionService
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -46,14 +51,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey as MetroIntKey
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.max
+import dev.zacsweers.metro.IntKey as MetroIntKey
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
@@ -170,6 +170,8 @@ class DanaRPlugin(
         val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
         result.success(resultOK && (abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep || danaPump.bolusStopped))
             .bolusDelivered(delivered.cU)
+        // Enacted = the pump really gave insulin. A stopped bolus can be a success with nothing given.
+        result.enacted(result.success && delivered.cU > 0)
         if (!result.success) result.comment(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,

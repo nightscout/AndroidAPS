@@ -1,11 +1,10 @@
 package app.aaps.implementation.sharedPreferences
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.keys.PreferenceKeyResolver
-import app.aaps.core.keys.interfaces.NonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.data.plugin.PluginType
 import dev.zacsweers.metro.Inject
 
 /**

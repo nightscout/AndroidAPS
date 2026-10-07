@@ -5,12 +5,12 @@ import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Observable
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.Optional
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 internal class CarelevoPatchInfoMonitorUseCaseTest {
 

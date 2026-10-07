@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.elements
 
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.interfaces.resources.TextResolver
 
 class ComparatorExists(private val rh: TextResolver, var value: Compare = Compare.EXISTS) {
 

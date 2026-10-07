@@ -5,6 +5,7 @@ import app.aaps.pump.insight.app_layer.Service
 import app.aaps.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage
 import app.aaps.pump.insight.app_layer.parameter_blocks.ParameterBlock
 import app.aaps.pump.insight.connection_service.InsightConnectionService
+import app.aaps.pump.insight.utils.ParameterBlockUtil.writeConfigurationBlock
 
 @SuppressWarnings("unchecked")
 object ParameterBlockUtil {

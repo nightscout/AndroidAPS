@@ -76,10 +76,10 @@ import app.aaps.wear.interaction.actions.WearSummaryCardBg
 import app.aaps.wear.interaction.actions.formatDurationMinutes
 import app.aaps.wear.interaction.actions.toTextColor
 import dev.zacsweers.metro.Inject
-import java.util.Date
-import kotlin.math.abs
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
+import java.util.Date
+import kotlin.math.abs
 
 // Loop mode / insulin / secondary-text colors shared with the wizard result screen live in
 // app.aaps.wear.interaction.actions.PlusMinusInputScreen.kt — imported above so the two screens

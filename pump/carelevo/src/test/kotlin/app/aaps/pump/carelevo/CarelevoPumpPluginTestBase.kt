@@ -60,11 +60,10 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusi
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoDeleteUserSettingInfoUseCase
+import dev.zacsweers.metro.Provider
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -77,7 +76,8 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.Optional
-import dev.zacsweers.metro.Provider
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)

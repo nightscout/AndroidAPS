@@ -10,8 +10,12 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStringIds
-import app.aaps.implementation.ImplementationStringIds
 import app.aaps.core.ui.locale.LocaleHelper
+import app.aaps.implementation.ImplementationStringIds
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,10 +23,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.Locale
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by adrian on 2019-12-23.

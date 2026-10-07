@@ -1,6 +1,5 @@
 package app.aaps
 
-import app.aaps.di.GeneratedStringOwners
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
@@ -15,15 +14,12 @@ import androidx.work.Configuration
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
-import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.InsulinType
@@ -31,17 +27,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileRepository
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.tempTargets.toJson
-import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
@@ -49,9 +38,10 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.di.metro.MetroGraphs
 import app.aaps.database.di.DatabaseConfig
 import app.aaps.di.ExternalOptionsOverride
+import app.aaps.di.GeneratedStringOwners
+import app.aaps.di.metro.MetroGraphs
 import app.aaps.di.metro.MetroWorkerFactory
 import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue
 import app.aaps.implementation.maintenance.migration.PreferenceMigrations
@@ -60,7 +50,6 @@ import app.aaps.implementation.receivers.ChargingStateReceiver
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.TimeDateOrTZChangeReceiver
-import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp

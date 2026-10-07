@@ -27,10 +27,6 @@ import app.aaps.plugins.sync.tidepool.utils.GsonInstance
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.util.LinkedList
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.time.Instant
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -39,6 +35,10 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import java.util.LinkedList
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.time.Instant
 
 @SingleIn(AppScope::class)
 @Inject

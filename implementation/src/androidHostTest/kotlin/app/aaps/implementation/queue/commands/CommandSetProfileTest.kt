@@ -2,9 +2,7 @@ package app.aaps.implementation.queue.commands
 
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.cancel
@@ -34,10 +32,10 @@ class CommandSetProfileTest : TestBaseWithProfile() {
     /** Real English for the Named strings; the mocked rh still answers the resource ids below. */
     private val text by lazy { generatedTextResolver(rh) }
 
-    private fun newCommand(hasNsId: Boolean = false, callback: Callback? = null) =
+    private fun newCommand(hasNsId: Boolean = false) =
         CommandSetProfile(
             aapsLogger, text, smsCommunicator, activePlugin, dateUtil, commandQueue, config, persistenceLayer,
-            pumpEnactResultProvider::invoke, effectiveProfile, hasNsId, callback
+            pumpEnactResultProvider::invoke, effectiveProfile, hasNsId
         )
 
     @Test
@@ -118,54 +116,39 @@ class CommandSetProfileTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `executeWithCallback forwards execute result to callback`() = runTest {
+    fun `executeAndComplete completes with execute result`() = runTest {
         whenever(commandQueue.isThisProfileSet(effectiveProfile)).thenReturn(true)
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch)
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() {
-                received = result
-            }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).executeWithCallback()
+        command.executeAndComplete()
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isTrue()
+        val received = command.completion.await()
+        assertThat(received.success).isTrue()
         assertThat(received.enacted).isFalse()
     }
 
     @Test
-    fun `cancel invokes callback with success by default`() {
+    fun `cancel completes with success by default`() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() {
-                received = result
-            }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced)
+        command.cancel(app.aaps.core.ui.R.string.command_replaced)
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isTrue()
+        val received = command.completion.await()
+        assertThat(received.success).isTrue()
     }
 
     @Test
-    fun `cancel invokes callback with failure when success=false`() {
+    fun `cancel completes with failure when success=false`() = runTest {
         whenever(rh.gs(app.aaps.core.ui.R.string.command_replaced)).thenReturn("replaced")
-        var received: PumpEnactResult? = null
-        val callback = object : Callback() {
-            override fun run() {
-                received = result
-            }
-        }
+        val command = newCommand()
 
-        newCommand(callback = callback).cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
+        command.cancel(app.aaps.core.ui.R.string.command_replaced, success = false)
 
-        assertThat(received).isNotNull()
-        assertThat(received!!.success).isFalse()
+        val received = command.completion.await()
+        assertThat(received.success).isFalse()
     }
 
     @Test

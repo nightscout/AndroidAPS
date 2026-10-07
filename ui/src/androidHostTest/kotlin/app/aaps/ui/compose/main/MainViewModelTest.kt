@@ -1,10 +1,8 @@
 package app.aaps.ui.compose.main
 
 import app.aaps.core.data.model.ActiveSceneState
-import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneEndAction
-import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
@@ -30,7 +28,7 @@ import app.aaps.core.interfaces.scenes.SceneActions
 import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
-import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.UrlOpener
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
@@ -145,7 +143,9 @@ internal class MainViewModelTest {
         val state = sut.uiState.value
         assertThat(state.isSimpleMode).isTrue()
         assertThat(state.isDrawerOpen).isFalse()
-        assertThat(state.runningMode).isEqualTo(RM.Mode.DISABLED_LOOP)
+        // Null, not DISABLED_LOOP: until something is read from the database the running mode is
+        // unknown, and the chip draws that as a question mark rather than claiming the loop is off.
+        assertThat(state.runningMode).isNull()
         assertThat(state.tempTargetState).isEqualTo(TempTargetChipState.None)
         assertThat(state.quickWizardItems).isEmpty()
     }

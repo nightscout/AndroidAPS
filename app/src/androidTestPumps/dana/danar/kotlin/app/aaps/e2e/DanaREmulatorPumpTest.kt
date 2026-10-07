@@ -14,9 +14,9 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.di.EmulatedOptions
 import app.aaps.di.ResetGraphRule
 import app.aaps.di.testGraphs
-import app.aaps.pump.danar.di.DanaRAccessors
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import app.aaps.pump.danar.di.DanaRAccessors
 import app.aaps.pump.danar.emulator.EmulatorRfcommTransport
 import app.aaps.testcategories.ShardB
 import com.google.common.truth.Truth.assertThat

@@ -1,5 +1,6 @@
 package app.aaps.implementation.overview
 
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -54,6 +55,6 @@ class LastBgDataImpl(
 
     override fun isActualBg(): Boolean =
         lastBg()?.let { lastBg ->
-            lastBg.timestamp > dateUtil.now() - T.mins(9).msecs()
+            lastBg.timestamp > dateUtil.now() - T.mins(Constants.OLD_BG_MINUTES).msecs()
         } == true
 }

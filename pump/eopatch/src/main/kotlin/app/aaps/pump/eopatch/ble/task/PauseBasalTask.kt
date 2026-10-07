@@ -13,6 +13,9 @@ import app.aaps.pump.eopatch.alarm.AlarmCode
 import app.aaps.pump.eopatch.alarm.IAlarmRegistry
 import app.aaps.pump.eopatch.core.api.BasalPause
 import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
@@ -23,9 +26,6 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.time.Duration.Companion.minutes
 
 @SingleIn(AppScope::class)

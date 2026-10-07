@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
-import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject

@@ -51,7 +51,7 @@ class SensorGlucoseElementTest {
             value = value,
             trendArrow = TrendArrow.FLAT,
             noise = null,
-            sourceSensor = SourceSensor.DEXCOM_G6_NATIVE
+            sourceSensor = SourceSensor.DEXCOM_G6
         )
 
     @Test

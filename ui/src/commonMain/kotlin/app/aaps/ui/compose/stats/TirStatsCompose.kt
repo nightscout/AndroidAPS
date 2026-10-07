@@ -15,13 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.stats.TIR
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.ui.compose.LocalDecimalFormatter
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalDateUtil
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 
 /**
  * Data class containing TIR (Time In Range) statistics.

@@ -1,8 +1,5 @@
 package app.aaps.plugins.automation.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,11 +39,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 

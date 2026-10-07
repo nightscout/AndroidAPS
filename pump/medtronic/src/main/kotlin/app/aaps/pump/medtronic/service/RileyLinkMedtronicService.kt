@@ -25,8 +25,8 @@ import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.keys.MedtronicIntPreferenceKey
 import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 /**

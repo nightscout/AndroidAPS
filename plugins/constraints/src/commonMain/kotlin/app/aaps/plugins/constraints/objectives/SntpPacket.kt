@@ -1,5 +1,8 @@
 package app.aaps.plugins.constraints.objectives
 
+import app.aaps.plugins.constraints.objectives.SntpPacket.parseResponse
+import app.aaps.plugins.constraints.objectives.SntpPacket.readTimeStamp
+
 /**
  * The SNTP wire format, with no socket and no platform types.
  *

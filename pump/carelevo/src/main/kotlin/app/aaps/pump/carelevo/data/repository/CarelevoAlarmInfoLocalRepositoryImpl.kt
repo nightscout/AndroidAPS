@@ -5,13 +5,13 @@ import app.aaps.pump.carelevo.data.mapper.transformToDomainModel
 import app.aaps.pump.carelevo.data.mapper.transformToEntity
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
 import app.aaps.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import java.util.Optional
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.Inject
 
 @ContributesBinding(AppScope::class)
 class CarelevoAlarmInfoLocalRepositoryImpl @Inject constructor(

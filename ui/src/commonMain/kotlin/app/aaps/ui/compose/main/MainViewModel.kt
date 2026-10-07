@@ -50,7 +50,6 @@ import app.aaps.core.interfaces.scenes.SceneChainResolver
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UrlOpener
-import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
@@ -88,7 +87,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlin.math.abs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -104,6 +102,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 // Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
 // unscoped so each screen gets its own.
@@ -341,7 +340,7 @@ class MainViewModel(
             } else {
                 modeName
             }
-        } else ""
+        } else rh.gs(CoreUiStrings.unknown)
 
         return ChipState(
             isProfileLoaded = profileData?.isLoaded ?: false,
@@ -355,7 +354,7 @@ class MainViewModel(
             tempTargetProgress = ttProgress,
             tempTargetReason = if (ttExpired) null else ttData?.reason,
             tempTargetRecordId = if (ttExpired) 0 else ttData?.recordId ?: 0,
-            runningMode = rmData?.mode ?: RM.Mode.DISABLED_LOOP,
+            runningMode = rmData?.mode,
             runningModeText = rmText,
             runningModeRemaining = rmRemaining,
             runningModeProgress = rmProgress,
@@ -413,6 +412,10 @@ class MainViewModel(
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
+        // The eCarbs amount is stored in the preset, so the limit may have been lowered since it was entered.
+        val eCarbs = entry.eCarbsGrams()
+        if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbs, aapsLogger)).value() != eCarbs)
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
 
         return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, isEnabled = true)
     }
@@ -452,6 +455,10 @@ class MainViewModel(
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
+            return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
+        // The eCarbs amount is stored in the preset, so the limit may have been lowered since it was entered.
+        val eCarbs = entry.eCarbsGrams()
+        if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbs, aapsLogger)).value() != eCarbs)
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, detail = detail, disabledReason = rh.gs(UiStrings.carbs_constraint_violation))
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints)
         if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
@@ -550,7 +557,7 @@ class MainViewModel(
             listOf(BatchAction.Bolus(
                 insulin = 0.0, carbs = carbs, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0,
                 recordOnly = false, notes = entry.buttonText(), timestamp = 0L, iCfg = null,
-                eCarbsGrams = if (hasEcarbs) entry.carbs2() else 0,
+                eCarbsGrams = entry.eCarbsGrams(),
                 eCarbsDelayMinutes = if (hasEcarbs) entry.time() else 0,
                 eCarbsDurationHours = if (hasEcarbs) entry.duration() else 0
             )),
@@ -935,7 +942,7 @@ private data class ChipState(
     val tempTargetProgress: Float = 0f,
     val tempTargetReason: TT.Reason? = null,
     val tempTargetRecordId: Long = 0,
-    val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
+    val runningMode: RM.Mode? = null,
     val runningModeText: String = "",
     val runningModeRemaining: String = "",
     val runningModeProgress: Float = 0f,

@@ -7,10 +7,10 @@ import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseRequest
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoDefaultRequestModel
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusionInfoRequestModel
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.time.Clock
-import dev.zacsweers.metro.Inject
 
 class CarelevoPatchRptInfusionInfoProcessUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository

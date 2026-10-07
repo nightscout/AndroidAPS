@@ -1,22 +1,22 @@
 package app.aaps.plugins.automation.triggers
 
-import kotlin.time.Instant
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.lenientBoolean
 import app.aaps.core.utils.lenientInt
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.InputTime
 import app.aaps.plugins.automation.elements.InputWeekDay
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import kotlin.time.Instant
 
 class TriggerRecurringTime(deps: TriggerDeps) : Trigger(deps) {
 

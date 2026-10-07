@@ -21,7 +21,6 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 
 /**
  * Data class containing TDD (Total Daily Dose) statistics for profile calculations.

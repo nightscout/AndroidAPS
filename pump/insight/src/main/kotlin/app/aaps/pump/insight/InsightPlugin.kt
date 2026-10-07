@@ -14,17 +14,17 @@ import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.PumpState.TemporaryBasal
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
+import app.aaps.core.interfaces.pump.comment
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -123,6 +124,12 @@ import app.aaps.pump.insight.keys.InsightIntKey
 import app.aaps.pump.insight.keys.InsightLongNonKey
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -132,17 +139,10 @@ import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import android.app.NotificationManager as AndroidNotificationManager
-import app.aaps.core.interfaces.pump.comment
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver

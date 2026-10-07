@@ -1,8 +1,5 @@
 package app.aaps.plugins.automation.compose.actions
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +11,10 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.Scene
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent

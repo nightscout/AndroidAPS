@@ -29,8 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.aaps.core.interfaces.stats.DexcomTIR
-import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings

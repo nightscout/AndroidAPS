@@ -1,8 +1,8 @@
 package app.aaps.database.entities
 
-import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.offsetAt
+import kotlin.time.Instant
 
 /**
  * Offset of the device time zone at [timestamp], in milliseconds.

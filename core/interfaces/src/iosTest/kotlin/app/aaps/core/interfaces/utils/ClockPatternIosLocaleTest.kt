@@ -1,11 +1,11 @@
 package app.aaps.core.interfaces.utils
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
 import platform.Foundation.NSDateFormatter
 import platform.Foundation.NSDateFormatterNoStyle
 import platform.Foundation.NSDateFormatterShortStyle
 import platform.Foundation.NSLocale
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 /**
  * The same reader, against the patterns a real `NSDateFormatter` produces.

@@ -1,15 +1,11 @@
 package app.aaps.wear.complications.cwf
 
-import app.aaps.wear.complications.ComplicationAction
-import app.aaps.wear.complications.ComplicationTapActivity
-import app.aaps.wear.complications.ModernBaseComplicationProviderService
-
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
+import android.graphics.drawable.Icon
 import android.hardware.display.DisplayManager
 import android.view.Display
-import android.graphics.drawable.Icon
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.PhotoImageComplicationData
@@ -20,18 +16,20 @@ import androidx.wear.watchface.complications.data.SmallImageType
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.shared.impl.weardata.ResFileMap
 import app.aaps.wear.R
+import app.aaps.wear.complications.ComplicationAction
+import app.aaps.wear.complications.ComplicationTapActivity
+import app.aaps.wear.complications.ModernBaseComplicationProviderService
+import app.aaps.wear.complications.cwf.CwfFaceComplication.Companion.LANDING_BIAS_MS
+import app.aaps.wear.complications.cwf.CwfFaceComplication.Companion.landingSecond
 import app.aaps.wear.watchfaces.CustomWatchface
 import dev.zacsweers.metro.HasMemberInjections
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 import app.aaps.wear.data.ComplicationData as ComplicationStore

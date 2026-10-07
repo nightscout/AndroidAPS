@@ -1,9 +1,5 @@
 package app.aaps.wear.complications.cwf
 
-import app.aaps.wear.complications.CwfAmbientBgComplication
-import app.aaps.wear.complications.CwfAmbientStatusComplication
-import app.aaps.wear.complications.CwfImageComplication
-
 import android.content.ComponentName
 import android.content.Context
 import android.hardware.display.DisplayManager
@@ -15,8 +11,17 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.wear.complications.CwfAmbientBgComplication
+import app.aaps.wear.complications.CwfAmbientStatusComplication
+import app.aaps.wear.complications.CwfImageComplication
+import app.aaps.wear.complications.cwf.CwfComplicationUpdater.Companion.COALESCE_MS
+import app.aaps.wear.complications.cwf.CwfComplicationUpdater.Companion.DEMAND_TIMEOUT_MS
+import app.aaps.wear.complications.cwf.CwfComplicationUpdater.Companion.FACE_DEDUPE_MS
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.events.EventWearPreferenceChange
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -29,9 +34,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Asks the system to refresh the Custom watch face image complications when the picture has actually

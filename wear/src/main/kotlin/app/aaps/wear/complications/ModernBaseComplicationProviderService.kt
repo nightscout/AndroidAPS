@@ -14,21 +14,20 @@ import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.wear.data.ComplicationData as ComplicationStore
 import app.aaps.wear.data.ComplicationDataRepository
-import app.aaps.wear.di.WearMetroService
 import app.aaps.wear.interaction.utils.Constants
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.WearUtil
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
-import java.time.Instant
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.util.concurrent.TimeUnit
+import app.aaps.wear.data.ComplicationData as ComplicationStore
 
 /**
  * Modern base class for complications using DataStore and AndroidX Wear APIs

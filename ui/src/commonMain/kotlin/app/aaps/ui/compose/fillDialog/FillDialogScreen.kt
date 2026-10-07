@@ -54,12 +54,11 @@ import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
+import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap

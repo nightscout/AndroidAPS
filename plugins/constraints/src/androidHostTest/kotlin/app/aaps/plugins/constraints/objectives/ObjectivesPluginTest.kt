@@ -1,6 +1,5 @@
 package app.aaps.plugins.constraints.objectives
 
-import app.aaps.plugins.constraints.ConstraintsStringsValues
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -11,8 +10,8 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.sharedPreferences.PreferencesImpl
+import app.aaps.plugins.constraints.ConstraintsStringsValues
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
-import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
 import app.aaps.plugins.constraints.objectives.objectives.Objective3
@@ -22,6 +21,7 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective6
 import app.aaps.plugins.constraints.objectives.objectives.Objective7
 import app.aaps.plugins.constraints.objectives.objectives.Objective8
 import app.aaps.plugins.constraints.objectives.objectives.Objective9
+import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.impl.sharedPreferences.SPImpl
 import app.aaps.shared.tests.SharedPreferencesMock

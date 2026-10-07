@@ -40,7 +40,7 @@ data class MainUiState(
     val tempTargetReason: TT.Reason? = null, // TT reason for icon coloring
     val tempTargetRecordId: Long = 0, // DB record ID (for scene override detection)
     // Running mode state for chip
-    val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
+    val runningMode: RM.Mode? = null,
     val runningModeText: String = "",
     val runningModeRemaining: String = "", // short remaining time, e.g. "30'" (temporary modes only)
     val runningModeProgress: Float = 0f, // 0-1 progress for temporary modes

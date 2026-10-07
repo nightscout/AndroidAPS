@@ -5,6 +5,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -57,14 +58,13 @@ import app.aaps.pump.diaconn.pumplog.LogTbStartV3
 import app.aaps.pump.diaconn.pumplog.LogTbStopV3
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
 import app.aaps.shared.impl.extensions.safeGetPackageInfo
-import app.aaps.core.interfaces.di.MetroMemberInjector
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.time.DateUtils
 import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Response
 import java.util.UUID
-import dev.zacsweers.metro.Inject
 
 /**
  * BigLogInquireResponsePacket

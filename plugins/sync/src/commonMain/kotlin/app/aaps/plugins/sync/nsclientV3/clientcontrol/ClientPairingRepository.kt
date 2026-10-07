@@ -6,8 +6,6 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.localmodel.clientcontrol.SignedEnvelope
@@ -15,6 +13,8 @@ import app.aaps.core.nssdk.utils.ClientControlCrypto
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * Client-side store of the single master pairing.
@@ -82,13 +82,28 @@ class ClientPairingRepository(
      * [now] is persisted so [OrphanDetector][app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector]
      * can ignore settings/aaps docs whose `srvModified` predates the pairing — master may not
      * have republished the roster yet.
+     *
+     * Returns false when the secret could not be wrapped. Nothing is written in that case, so an
+     * existing pairing survives and the caller must tell the user that pairing failed.
      */
-    suspend fun pair(payload: PairingPayload, now: Long): Unit = mutex.withLock {
+    suspend fun pair(payload: PairingPayload, now: Long): Boolean = mutex.withLock {
+        // Wrap the secret BEFORE anything is stored. [SecureEncrypt.encrypt] returns an empty string
+        // when the key store refuses the key - seen on the iOS simulator, where the app carries no
+        // entitlements and the Keychain answers errSecMissingEntitlement (-34018). Writing the other
+        // four keys anyway produced the worst possible state: the client reported itself paired and
+        // authorized while every send was refused with "publish called while unpaired", and no user
+        // could tell why. All five keys or none.
+        val secretEnc = secureEncrypt.encrypt(payload.secretHex, SECURE_ENCRYPT_ALIAS)
+        if (secretEnc.isEmpty()) {
+            aapsLogger.error(LTag.NSCLIENT, "ClientControl: the pairing secret could not be stored - nothing was saved and pairing was refused")
+            return@withLock false
+        }
         preferences.put(StringNonKey.NsClientControlMasterInstallId, payload.masterInstallId)
         preferences.put(StringNonKey.NsClientControlClientId, payload.clientId)
-        preferences.put(StringNonKey.NsClientControlMasterSecretEnc, secureEncrypt.encrypt(payload.secretHex, SECURE_ENCRYPT_ALIAS))
+        preferences.put(StringNonKey.NsClientControlMasterSecretEnc, secretEnc)
         preferences.put(LongNonKey.NsClientControlCounterSent, 0L)
         preferences.put(LongNonKey.NsClientControlPairedAt, now)
+        true
     }
 
     /** Clears all pairing state. Counter reset stops a re-pair from inheriting the old counter. */

@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.versionChecker
 
-import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
-import app.aaps.plugins.constraints.ConstraintsStrings
 import android.os.Build
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -16,7 +14,8 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.versionChecker.VersionDefinition
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.plugins.constraints.versionChecker.keys.VersionCheckerLongKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding

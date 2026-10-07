@@ -1,11 +1,11 @@
 package app.aaps.pump.danarkorean.comm
 
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.danar.comm.MessageBase
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.launch
 
 class MsgInitConnStatusTimeK(

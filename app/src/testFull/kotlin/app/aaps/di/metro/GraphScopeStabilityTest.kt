@@ -1,5 +1,9 @@
 package app.aaps.di.metro
 
+import app.aaps.di.metro.GraphScopeStabilityTest.Companion.FRESH_EACH_READ
+import app.aaps.di.metro.GraphScopeStabilityTest.Companion.PUMP_UNREADABLE
+import app.aaps.di.metro.GraphScopeStabilityTest.Companion.SINGLE_INSTANCE
+import app.aaps.di.metro.GraphScopeStabilityTest.Companion.UNREADABLE
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 

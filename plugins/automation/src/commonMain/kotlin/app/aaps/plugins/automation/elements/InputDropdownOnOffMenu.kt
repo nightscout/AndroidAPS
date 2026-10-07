@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.elements
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.plugins.automation.AutomationStrings
 
 class InputDropdownOnOffMenu(private val rh: TextResolver) {
 

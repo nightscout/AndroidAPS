@@ -55,6 +55,7 @@ import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
 import app.aaps.pump.omnipod.dash.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
@@ -74,7 +75,6 @@ import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.R as CommonR
 
@@ -447,7 +447,7 @@ class DashOverviewViewModel(
 
     private fun onDiscardPodClicked() {
         _events.tryEmit(
-            OmnipodOverviewEvent.ShowDialog(
+            OmnipodOverviewEvent.ConfirmDiscardPod(
                 rh.gs(CommonR.string.omnipod_common_pod_management_button_discard_pod),
                 rh.gs(CommonR.string.omnipod_common_pod_management_discard_pod_confirmation)
             )

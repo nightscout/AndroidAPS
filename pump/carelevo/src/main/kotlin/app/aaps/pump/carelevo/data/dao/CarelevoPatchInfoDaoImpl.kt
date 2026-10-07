@@ -4,13 +4,13 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.carelevo.common.keys.CarelevoStringNonKey
 import app.aaps.pump.carelevo.data.common.CarelevoGsonHelper
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.util.Optional
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 @ContributesBinding(AppScope::class)

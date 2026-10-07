@@ -56,6 +56,7 @@
     <string name="ignore30m">Ignore 30m</string>
     <string name="carbs_suggestion">Carbs Suggestion</string>
     <string name="open_loop_new_suggestion">New suggestion available</string>
+    <string name="open_loop_suggestion_too_old">This suggestion is too old. Nothing was sent to the pump. Wait for the next one.</string>
     <string name="basal_set_correctly">Basal set correctly</string>
     <string name="last_run_label">Last run</string>
     <string name="loop_aps_label">APS</string>

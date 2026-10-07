@@ -26,6 +26,7 @@ import app.aaps.pump.danars.comm.DanaRSPacketOptionGetPumpTime
 import app.aaps.pump.danars.encryption.BleEncryption
 import app.aaps.pump.danars.encryption.EncryptionType
 import app.aaps.pump.danars.services.BLEComm
+import app.aaps.pump.danars.services.DanaRSAlarmReporter
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -117,8 +118,9 @@ class BLECommRSv3IntegrationTest : TestBase() {
         bleComm = BLEComm(
             aapsLogger, rh, context, rxBus,
             danaRSMessageHashTable, danaPump, danaRSPlugin, bleEncryption,
-            pumpSync, dateUtil, preferences, configBuilder, notificationManager,
-            emulatorTransport
+            dateUtil, preferences, configBuilder, notificationManager,
+            emulatorTransport,
+            DanaRSAlarmReporter(rh, notificationManager, pumpSync, danaPump)
         ).apply {
             messageTimeoutMs = 5000
         }

@@ -3,11 +3,10 @@ package app.aaps.database.persistence.converters
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.data.NewEntries
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.Test
 
 /**
  * Tests for [NewEntries.fromDb] which maps the Room aggregate entity [NewEntries]

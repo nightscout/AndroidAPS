@@ -59,6 +59,7 @@ fun DanaUserOptionsScreen(
         onGlucoseUnitChange = viewModel::updateGlucoseUnit,
         onShutdownHourChange = viewModel::updateShutdownHour,
         onLowReservoirChange = viewModel::updateLowReservoir,
+        onAutoLockChange = viewModel::updateAutoLock,
         onSave = viewModel::save
     )
 }
@@ -78,6 +79,7 @@ internal fun DanaUserOptionsContent(
     onGlucoseUnitChange: (Boolean) -> Unit = {},
     onShutdownHourChange: (Double) -> Unit = {},
     onLowReservoirChange: (Double) -> Unit = {},
+    onAutoLockChange: (Boolean) -> Unit = {},
     onSave: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
@@ -139,6 +141,16 @@ internal fun DanaUserOptionsContent(
                         onCheckedChange = onButtonScrollChange,
                         modifier = itemModifier
                     )
+
+                    // Auto lock (Dana-i2 only)
+                    if (state.showAutoLock)
+                        SwitchRow(
+                            label = stringResource(R.string.danai2_auto_lock),
+                            summary = if (state.autoLock) stringResource(R.string.option_on) else stringResource(R.string.option_off),
+                            checked = state.autoLock,
+                            onCheckedChange = onAutoLockChange,
+                            modifier = itemModifier
+                        )
 
                     // Beep on press
                     SwitchRow(

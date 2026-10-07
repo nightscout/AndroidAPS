@@ -28,7 +28,6 @@ import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
-import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
 import app.aaps.plugins.constraints.objectives.objectives.Objective3
@@ -38,6 +37,7 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective6
 import app.aaps.plugins.constraints.objectives.objectives.Objective7
 import app.aaps.plugins.constraints.objectives.objectives.Objective8
 import app.aaps.plugins.constraints.objectives.objectives.Objective9
+import app.aaps.plugins.constraints.objectives.objectives.PlainDurationText
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile

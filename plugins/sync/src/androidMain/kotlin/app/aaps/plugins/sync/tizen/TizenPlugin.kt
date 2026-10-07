@@ -1,7 +1,5 @@
 package app.aaps.plugins.sync.tizen
 
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.plugins.sync.SyncStrings
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
@@ -15,6 +13,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -37,6 +36,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.ui.compose.icons.IcPluginTizen
 import app.aaps.core.ui.extensions.toStringFull
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap

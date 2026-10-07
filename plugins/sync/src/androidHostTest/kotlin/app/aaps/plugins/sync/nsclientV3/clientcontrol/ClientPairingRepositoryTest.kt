@@ -23,8 +23,13 @@ internal class ClientPairingRepositoryTest {
 
     private var rejectsBlobValidation = false
 
+    // SecureEncrypt answers "" when the key store refuses the key (the iOS Keychain does this when the
+    // app has no entitlements). Set this to reproduce that without a key store.
+    private var encryptFails = false
+
     private val secureEncrypt = object : SecureEncrypt {
-        override fun encrypt(plaintextSecret: String, keystoreAlias: String): String = "ENC:$keystoreAlias:${plaintextSecret.reversed()}"
+        override fun encrypt(plaintextSecret: String, keystoreAlias: String): String =
+            if (encryptFails) "" else "ENC:$keystoreAlias:${plaintextSecret.reversed()}"
         override fun decrypt(encryptedSecret: String): String = encryptedSecret.removePrefix("ENC:NsClientControlSecret:").reversed()
         override fun isValidDataString(data: String?): Boolean = !rejectsBlobValidation && data != null && data.startsWith("ENC:")
         override fun deleteKey(keystoreAlias: String) {}
@@ -47,6 +52,7 @@ internal class ClientPairingRepositoryTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         rejectsBlobValidation = false
+        encryptFails = false
         stringStore.clear()
         longStore.clear()
         whenever(preferences.get(any<StringNonKey>())).thenAnswer { invocation ->
@@ -73,7 +79,7 @@ internal class ClientPairingRepositoryTest {
     @Test
     fun pairPersistsEncryptedSecretOnly() = runTest {
         val payload = samplePayload(secretHex = "deadbeef".repeat(8))
-        sut.pair(payload, now)
+        assertThat(sut.pair(payload, now)).isTrue()
         assertThat(sut.isPaired()).isTrue()
         val stored = stringStore[StringNonKey.NsClientControlMasterSecretEnc]!!
         assertThat(stored).startsWith("ENC:NsClientControlSecret:")
@@ -178,5 +184,37 @@ internal class ClientPairingRepositoryTest {
         sut.nextSignedEnvelope("hello", "{}", 1_000L) // counter = 1
         sut.pair(PairingPayload(masterInstallId = "master2", clientId = "client2", secretHex = "ff".repeat(32), expiresAt = 1L), now)
         assertThat(longStore[LongNonKey.NsClientControlCounterSent]).isEqualTo(0L)
+    }
+
+    /**
+     * The secret could not be wrapped, so nothing at all may be written. Storing the other four keys
+     * used to leave the client claiming to be paired while every send was refused.
+     */
+    @Test
+    fun pairStoresNothingWhenTheSecretCannotBeWrapped() = runTest {
+        encryptFails = true
+        assertThat(sut.pair(samplePayload(), now)).isFalse()
+        assertThat(sut.isPaired()).isFalse()
+        assertThat(sut.currentPairing()).isNull()
+        assertThat(stringStore[StringNonKey.NsClientControlClientId]).isNull()
+        assertThat(stringStore[StringNonKey.NsClientControlMasterInstallId]).isNull()
+        assertThat(stringStore[StringNonKey.NsClientControlMasterSecretEnc]).isNull()
+        assertThat(longStore[LongNonKey.NsClientControlPairedAt]).isNull()
+    }
+
+    /** A failed re-pair must not damage the pairing the client already had. */
+    @Test
+    fun pairFailureLeavesAnExistingPairingAlone() = runTest {
+        assertThat(sut.pair(samplePayload(), now)).isTrue()
+        val before = sut.currentPairing()!!
+
+        encryptFails = true
+        val other = PairingPayload(masterInstallId = "other-master", clientId = "other-client", secretHex = "11".repeat(32), expiresAt = 99_000L)
+        assertThat(sut.pair(other, now + 1)).isFalse()
+
+        val after = sut.currentPairing()!!
+        assertThat(after.masterInstallId).isEqualTo(before.masterInstallId)
+        assertThat(after.clientId).isEqualTo(before.clientId)
+        assertThat(after.masterSecretEnc).isEqualTo(before.masterSecretEnc)
     }
 }

@@ -1,7 +1,7 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import app.aaps.pump.medtrum.comm.enums.CommandType.CANCEL_BOLUS
 import app.aaps.core.interfaces.di.MetroMemberInjector
+import app.aaps.pump.medtrum.comm.enums.CommandType.CANCEL_BOLUS
 
 class CancelBolusPacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 

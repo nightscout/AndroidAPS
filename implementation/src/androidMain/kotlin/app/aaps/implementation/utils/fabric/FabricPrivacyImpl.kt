@@ -11,13 +11,13 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Some users do not wish to be tracked, Fabric Answers and Crashlytics do not provide an easy way

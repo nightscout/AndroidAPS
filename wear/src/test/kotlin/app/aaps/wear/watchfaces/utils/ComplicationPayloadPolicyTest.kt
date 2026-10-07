@@ -1,8 +1,8 @@
 package app.aaps.wear.watchfaces.utils
 
-import android.support.wearable.complications.ComplicationData as WireComplicationData
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import android.support.wearable.complications.ComplicationData as WireComplicationData
 
 /**
  * Truth table for [shouldDropSmallImage] - whether a complication's small image is dropped so the

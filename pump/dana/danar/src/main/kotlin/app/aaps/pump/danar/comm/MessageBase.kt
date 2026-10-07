@@ -2,6 +2,7 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -23,15 +24,14 @@ import app.aaps.pump.danar.comm.MessageOriginalNames.getName
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.utils.CRC.getCrc16
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import org.joda.time.DateTime
 import org.joda.time.IllegalInstantException
 import java.nio.charset.StandardCharsets
 import java.util.Calendar
 import java.util.GregorianCalendar
-import dev.zacsweers.metro.Inject
 
 /*
  *  00  01   02  03   04   05  06

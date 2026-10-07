@@ -12,9 +12,6 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.work.WorkManager
-import app.aaps.di.ResetGraphRule
-import app.aaps.di.testGraphs
-import app.aaps.pump.equil.di.EquilAccessors
 import app.aaps.ComposeMainActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
@@ -27,7 +24,9 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
 import app.aaps.di.EmulatedOptions
-import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
+import app.aaps.pump.equil.di.EquilAccessors
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.After

@@ -19,6 +19,7 @@ import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineStart
@@ -28,7 +29,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.Inject
 
 data class BondedDevice(val name: String, val address: String)
 

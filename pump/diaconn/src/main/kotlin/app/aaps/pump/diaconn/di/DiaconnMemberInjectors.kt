@@ -1,5 +1,6 @@
 package app.aaps.pump.diaconn.di
 
+import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.pump.diaconn.packet.AppCancelSettingPacket
 import app.aaps.pump.diaconn.packet.AppCancelSettingResponsePacket
 import app.aaps.pump.diaconn.packet.AppConfirmSettingPacket
@@ -75,7 +76,6 @@ import app.aaps.pump.diaconn.packet.TimeInquireResponsePacket
 import app.aaps.pump.diaconn.packet.TimeReportPacket
 import app.aaps.pump.diaconn.packet.TimeSettingPacket
 import app.aaps.pump.diaconn.packet.TimeSettingResponsePacket
-import app.aaps.core.interfaces.di.FeatureMemberInjectors
 import app.aaps.pump.diaconn.service.DiaconnG8Service
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -84,7 +84,6 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoMap
 import dev.zacsweers.metro.MembersInjector
 import dev.zacsweers.metro.Provides
-import kotlin.reflect.KClass
 
 /**
  * Member injectors for the Diaconn protocol packets - the `@ContributesAndroidInjector` replacement.

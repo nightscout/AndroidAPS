@@ -48,9 +48,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
-import java.util.Optional
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -68,6 +65,9 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import java.util.Optional
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 /**
  * Second suite over the REAL [CarelevoPatch], covering what [CarelevoPatchTest] leaves open:

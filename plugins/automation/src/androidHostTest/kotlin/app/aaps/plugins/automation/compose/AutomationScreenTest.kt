@@ -1,11 +1,11 @@
 package app.aaps.plugins.automation.compose
 
-import app.aaps.core.interfaces.resources.TextRefIdRegistry
-import app.aaps.plugins.automation.AutomationStringIds
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.plugins.automation.AutomationStringIds
 import app.aaps.plugins.automation.R
 import org.junit.Before
 import org.junit.Rule

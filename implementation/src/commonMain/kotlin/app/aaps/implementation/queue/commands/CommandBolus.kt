@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
@@ -20,10 +19,9 @@ class CommandBolus(
     override val pumpEnactResultProvider: () -> PumpEnactResult,
     private val bolusProgressData: BolusProgressData,
     private val detailedBolusInfo: DetailedBolusInfo,
-    override val callback: Callback?,
     type: Command.CommandType,
     private val bolusGeneration: Long,
-) : Command {
+) : Command() {
 
     override var commandType: Command.CommandType = type
 

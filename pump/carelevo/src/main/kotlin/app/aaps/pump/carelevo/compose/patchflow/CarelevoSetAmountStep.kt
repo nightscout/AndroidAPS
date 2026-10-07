@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.carelevo.R
@@ -41,6 +40,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Wizard step for choosing the insulin fill amount. Replaces the former bottom sheet so the choice

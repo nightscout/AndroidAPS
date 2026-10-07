@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

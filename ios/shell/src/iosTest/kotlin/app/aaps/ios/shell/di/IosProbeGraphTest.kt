@@ -2,7 +2,9 @@ package app.aaps.ios.shell.di
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.implementation.logging.AAPSLoggerIos
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -10,8 +12,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
-import app.aaps.core.objects.di.CoreObjectsGraph
-import app.aaps.shared.clientbindings.ClientGraphBindings
 
 /**
  * What Metro has to do on Kotlin/Native, checked rather than displayed.

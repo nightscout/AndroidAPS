@@ -25,7 +25,6 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.FlowPreview

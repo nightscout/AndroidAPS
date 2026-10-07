@@ -1,8 +1,5 @@
 package app.aaps.plugins.sync.wear.wearintegration
 
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import android.app.NotificationManager
 import android.content.Context
 import android.content.res.Configuration
@@ -27,6 +24,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -47,6 +45,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
@@ -62,7 +61,6 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
-import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -102,14 +100,20 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.LightGeneralColors
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.ui.extensions.toStringShort
+import app.aaps.plugins.sync.SyncStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -117,10 +121,6 @@ import java.util.LinkedList
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.min
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 // Quiet-period that closes a Wear-event batch. Long enough to absorb a Data Layer reconnect-flush,
 // short enough that live data stays effectively real-time.
@@ -225,7 +225,8 @@ class DataHandlerMobile(
         }
         onEvent<EventData.OpenLoopRequestConfirmed> {
             if (rejectIfNotReady()) return@onEvent
-            loop.acceptChangeRequest()
+            // A refused accept (loop paused, suggestion too old) must say so, or the watch shows it as done.
+            loop.acceptChangeRequest()?.let { sendError(it) }
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.NOTIFICATION_ID)
         }
         onEvent<EventData.ActionResendData> { resendData(it.from) }

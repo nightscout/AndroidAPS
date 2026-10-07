@@ -36,7 +36,6 @@ import app.aaps.core.interfaces.overview.graph.AapsClientStatusData
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 
 /**
  * @see AapsClientStatusCardCollapsedPreview

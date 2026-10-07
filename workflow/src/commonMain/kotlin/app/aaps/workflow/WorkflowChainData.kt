@@ -7,12 +7,11 @@ import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALC
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
 import app.aaps.workflow.WorkflowChainData.Companion.GEN_KEY
 import app.aaps.workflow.WorkflowChainData.Companion.JOB_KEY
-
-import kotlin.concurrent.atomics.AtomicReference
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * Holds the input data for in-flight calculation chains.

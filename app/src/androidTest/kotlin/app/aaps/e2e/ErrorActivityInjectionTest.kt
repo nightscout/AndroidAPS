@@ -6,9 +6,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import app.aaps.di.testGraphs
 import app.aaps.AapsInstrumentedTest
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.di.testGraphs
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith

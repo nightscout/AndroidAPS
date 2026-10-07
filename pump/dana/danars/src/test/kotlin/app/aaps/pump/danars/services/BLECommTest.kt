@@ -14,6 +14,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.R
+import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.comm.DanaRSMessageHashTable
 import app.aaps.pump.danars.comm.DanaRSPacket
@@ -24,10 +26,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import java.util.concurrent.atomic.AtomicReference
 
@@ -69,12 +75,12 @@ class BLECommTest : TestBase() {
             danaPump,
             danaRSPlugin,
             bleEncryption,
-            pumpSync,
             dateUtil,
             preferences,
             configBuilder,
             notificationManager,
-            bleTransport
+            bleTransport,
+            DanaRSAlarmReporter(rh, notificationManager, pumpSync, danaPump)
         )
 
         `when`(rh.gs(anyInt())).thenReturn("test")
@@ -250,5 +256,83 @@ class BLECommTest : TestBase() {
         threads.forEach { it.join() }
 
         assertThat(failure.get()).isNull()
+    }
+
+    /**
+     * The length byte must be read unsigned. A Dana-i2 bulk history packet is up to 202 bytes,
+     * read as a signed byte that length was negative and the packet could not be parsed.
+     */
+    @Test
+    fun packetLongerThan127BytesIsParsed() {
+        whenever(bleEncryption.getDecryptedPacket(any())).thenReturn(null)
+        val length = 202
+        val longPacket = ByteArray(length + 7).apply {
+            this[0] = 0xA5.toByte()
+            this[1] = 0xA5.toByte()
+            this[2] = length.toByte()
+            this[length + 5] = 0x5A.toByte()
+            this[length + 6] = 0x5A.toByte()
+        }
+
+        // BLE delivers it in parts of 20 bytes
+        longPacket.toList().chunked(20).forEach { bleComm.onCharacteristicChanged(it.toByteArray()) }
+
+        verify(bleEncryption, times(1)).getDecryptedPacket(any())
+    }
+
+    /**
+     * A pump with easy mode (Dana-i2 0x0C) gets the easy menu check (0xF4) after the pump check.
+     * Its reply sets the easy mode and basal unit, then the handshake continues with the BLE5 time info.
+     */
+    @Test
+    fun easyModePumpIsCheckedBeforeTheBle5TimeInfo() {
+        whenever(danaPump.hwModel).thenReturn(0x0C)
+        whenever(preferences.get(eq(DanaStringComposedKey.Ble5PairingKey), anyVararg<Any>())).thenReturn("982316")
+        whenever(bleEncryption.getEncryptedPacket(anyInt(), anyOrNull(), anyOrNull())).thenReturn(byteArrayOf(0))
+        val ok = "OK".encodeToByteArray()
+        // Real reply of the Korean Dana-i2: OK M 0C P 30 + pairing key
+        val pumpCheckReply = byteArrayOf(0x02, 0x00) + ok + byteArrayOf('M'.code.toByte(), 0x0C, 'P'.code.toByte(), 0x30) + "982316".encodeToByteArray()
+        val easyMenuReply = byteArrayOf(0x02, BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASY_MENU_CHECK.toByte(), 0x01, 0x00)
+        whenever(bleEncryption.getDecryptedPacket(any())).thenReturn(pumpCheckReply, easyMenuReply)
+
+        bleComm.onCharacteristicChanged(framedPacket())
+        verify(bleEncryption).getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASY_MENU_CHECK, null, null)
+        verify(bleEncryption, never()).getEncryptedPacket(eq(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION), anyOrNull(), anyOrNull())
+
+        bleComm.onCharacteristicChanged(framedPacket())
+        verify(danaPump).isEasyModeEnabled = true
+        verify(danaPump, times(2)).isConfigUD = false // reset on the pump check, then the reply (U/h)
+        verify(bleEncryption).getEncryptedPacket(eq(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION), anyOrNull(), anyOrNull())
+    }
+
+    /** Decrypted "PUMP" reply to the pump check, optionally with the Dana-i2 error byte */
+    private fun pumpReply(vararg errorByte: Int): ByteArray =
+        byteArrayOf(BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte(), BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte()) +
+            "PUMP".encodeToByteArray() + errorByte.map { it.toByte() }.toByteArray()
+
+    /**
+     * Dana-i2 adds 1 error byte to the "PUMP" reply. This 7 byte reply used to miss the "PUMP" check
+     * and fall into the wrong serial branch, which cleared the pairing and hid the real pump error.
+     */
+    @Test
+    fun danaI2PumpErrorShowsTheErrorAndKeepsThePairing() {
+        whenever(rh.gs(R.string.occlusion)).thenReturn("Occlusion")
+        whenever(bleEncryption.getDecryptedPacket(any())).thenReturn(pumpReply(0x02))
+
+        bleComm.onCharacteristicChanged(framedPacket())
+
+        verify(bleTransport).updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = "Occlusion"))
+        verify(danaRSPlugin, never()).clearPairing()
+    }
+
+    @Test
+    fun olderPumpErrorWithoutErrorByteStillShowsPumpError() {
+        whenever(rh.gs(R.string.pumperror)).thenReturn("Pump Error")
+        whenever(bleEncryption.getDecryptedPacket(any())).thenReturn(pumpReply())
+
+        bleComm.onCharacteristicChanged(framedPacket())
+
+        verify(bleTransport).updatePairingState(PairingState(step = PairingStep.ERROR, errorMessage = "Pump Error"))
+        verify(danaRSPlugin, never()).clearPairing()
     }
 }

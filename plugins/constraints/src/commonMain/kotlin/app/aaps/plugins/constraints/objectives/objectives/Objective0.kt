@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -16,6 +14,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject

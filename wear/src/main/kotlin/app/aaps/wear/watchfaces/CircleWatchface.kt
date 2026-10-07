@@ -31,16 +31,16 @@ import app.aaps.wear.watchfaces.utils.WatchFace
 import app.aaps.wear.watchfaces.utils.WatchFaceTime
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import dev.zacsweers.metro.Inject
-import java.util.Calendar
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.max
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.max
 
 @SuppressLint("Deprecated")
 class CircleWatchface : WatchFace() {

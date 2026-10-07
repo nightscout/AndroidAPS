@@ -1,6 +1,5 @@
 package app.aaps.integration
 
-import app.aaps.plugins.automation.LocationPermissions
 import app.aaps.core.interfaces.alerts.ReminderScheduler
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -16,6 +15,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
 import app.aaps.plugins.automation.AutomationEventFactory
 import app.aaps.plugins.automation.AutomationRuntime
+import app.aaps.plugins.automation.LocationPermissions
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDeps
 import app.aaps.plugins.automation.triggers.TriggerFactory

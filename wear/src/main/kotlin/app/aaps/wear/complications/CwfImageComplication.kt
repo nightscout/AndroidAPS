@@ -1,8 +1,7 @@
 package app.aaps.wear.complications
 
-import app.aaps.wear.complications.cwf.CwfFaceComplication
-
 import app.aaps.wear.R
+import app.aaps.wear.complications.cwf.CwfFaceComplication
 
 /**
  * The whole Custom watch face as one image, under its own name.

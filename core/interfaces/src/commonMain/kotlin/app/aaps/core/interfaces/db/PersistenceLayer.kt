@@ -63,10 +63,11 @@ interface PersistenceLayer {
 
     /**
      * Perform database maintenance
-     * @param keepDays remove all records older than
+     * @param olderThan remove all records with a timestamp before this time (epoch ms). The caller
+     *   decides the time, so it can check the clock before anything is deleted.
      * @param deleteTrackedChanges delete tracked changes from all tables
      */
-    suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String
+    suspend fun cleanupDatabase(olderThan: Long, deleteTrackedChanges: Boolean): String
 
     /**
      * Full VACUUM of the database: defragments the file and returns free pages to the OS.
@@ -761,6 +762,19 @@ interface PersistenceLayer {
      * @return running running mode or default
      */
     suspend fun getRunningModeActiveAt(timestamp: Long): RM
+
+    /**
+     * Get the running mode at a time, or null when none is known.
+     *
+     * [getRunningModeActiveAt] answers with [RM.DEFAULT_MODE] when nothing is stored, which reads as
+     * "the loop is disabled" rather than "nothing is known". A follower that has never synced a
+     * permanent record - a fresh install, or one whose Nightscout pruned it - would then be told the
+     * loop is off. Display code uses this instead and shows the difference.
+     *
+     * @param timestamp time
+     * @return running mode, or null when none applies at that time
+     */
+    suspend fun getRunningModeActiveAtOrNull(timestamp: Long): RM?
 
     /**
      *  Get running mode by NS id

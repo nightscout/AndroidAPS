@@ -37,9 +37,9 @@ import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.util.concurrent.ConcurrentHashMap
 
 @SingleIn(AppScope::class)
 @Inject

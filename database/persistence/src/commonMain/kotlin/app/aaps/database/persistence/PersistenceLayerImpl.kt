@@ -135,13 +135,13 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.reflect.KClass
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.milliseconds
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -166,8 +166,8 @@ class PersistenceLayerImpl(
     override suspend fun clearDatabases() = repository.clearDatabases()
     override val databaseClearedFlow: Flow<Unit> get() = repository.databaseClearedFlow()
     override suspend fun clearApsResults() = repository.clearApsResults()
-    override suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = withContext(aapsIoDispatcher) {
-        repository.cleanupDatabase(keepDays, deleteTrackedChanges)
+    override suspend fun cleanupDatabase(olderThan: Long, deleteTrackedChanges: Boolean): String = withContext(aapsIoDispatcher) {
+        repository.cleanupDatabase(olderThan, deleteTrackedChanges)
     }
 
     override suspend fun vacuumDatabase() = withContext(aapsIoDispatcher) {
@@ -1367,9 +1367,11 @@ class PersistenceLayerImpl(
         }
     }
 
-    override suspend fun getRunningModeActiveAt(timestamp: Long): RM = withContext(aapsIoDispatcher) {
+    override suspend fun getRunningModeActiveAt(timestamp: Long): RM =
+        getRunningModeActiveAtOrNull(timestamp) ?: RM(timestamp = 0, mode = RM.DEFAULT_MODE, duration = 0)
+
+    override suspend fun getRunningModeActiveAtOrNull(timestamp: Long): RM? = withContext(aapsIoDispatcher) {
         repository.getRunningModeActiveAt(timestamp)?.fromDb()
-            ?: RM(timestamp = 0, mode = RM.DEFAULT_MODE, duration = 0)
     }
 
     override suspend fun getRunningModeByNSId(nsId: String): RM? = withContext(aapsIoDispatcher) {

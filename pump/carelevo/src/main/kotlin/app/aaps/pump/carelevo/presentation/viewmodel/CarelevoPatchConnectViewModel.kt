@@ -27,6 +27,7 @@ import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoConnectNewPatch
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectPrepareEvent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -40,7 +41,6 @@ import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.TimeUnit
-import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Duration.Companion.milliseconds
 

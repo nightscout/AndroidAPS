@@ -1,12 +1,5 @@
 package info.nightscout.pump.combov2
 
-import app.aaps.core.interfaces.di.PumpDriver
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.plugin.PluginBase
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey as MetroIntKey
-import dev.zacsweers.metro.binding
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.data.model.BS
@@ -20,10 +13,13 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -51,6 +47,11 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -104,12 +105,11 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.joda.time.DateTime
 import java.util.Locale
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
+import dev.zacsweers.metro.IntKey as MetroIntKey
 import info.nightscout.comboctl.base.BluetoothAddress as ComboCtlBluetoothAddress
 import info.nightscout.comboctl.base.LogLevel as ComboCtlLogLevel
 import info.nightscout.comboctl.base.Logger as ComboCtlLogger

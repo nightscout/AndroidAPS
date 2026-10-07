@@ -1,11 +1,11 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.utils.lenientString
+import app.aaps.plugins.automation.AutomationStrings
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive

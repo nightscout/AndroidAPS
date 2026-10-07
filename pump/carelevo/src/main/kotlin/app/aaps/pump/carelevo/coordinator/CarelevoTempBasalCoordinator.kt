@@ -15,11 +15,11 @@ import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoCancelTempBasalInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoStartTempBasalInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.model.StartTempBasalInfusionRequestModel
-import kotlinx.coroutines.runBlocking
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.Provider
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.runBlocking
 
 @SingleIn(AppScope::class)
 class CarelevoTempBasalCoordinator @Inject constructor(

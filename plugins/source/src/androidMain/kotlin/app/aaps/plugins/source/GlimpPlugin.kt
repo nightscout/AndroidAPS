@@ -97,7 +97,7 @@ class GlimpPlugin(
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.fromString(inputData.getString("myTrend")),
-                sourceSensor = SourceSensor.LIBRE_1_GLIMP
+                sourceSensor = SourceSensor.LIBRE_1
             )
             try {
                 persistenceLayer.insertCgmSourceData(Sources.Glimp, glucoseValues, emptyList(), null)

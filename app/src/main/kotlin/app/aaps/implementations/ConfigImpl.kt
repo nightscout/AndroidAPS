@@ -1,7 +1,5 @@
 package app.aaps.implementations
 
-import app.aaps.core.keys.interfaces.AppPlatform
-import app.aaps.core.keys.interfaces.TextRef
 import android.os.Build
 import app.aaps.BuildConfig
 import app.aaps.R
@@ -9,9 +7,12 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.keys.interfaces.AppPlatform
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.di.ExternalOptionsOverride
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import dev.zacsweers.metro.Inject
 
 // @Singleton (not @Reusable): Config owns the single app-global init-progress flow that
 // ComposeMainActivity's splash gate observes; a guaranteed single instance keeps that flow shared

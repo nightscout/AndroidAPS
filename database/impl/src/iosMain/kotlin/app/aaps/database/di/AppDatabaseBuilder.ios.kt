@@ -4,7 +4,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import androidx.sqlite.execSQL
 import app.aaps.database.AppDatabase
 import app.aaps.database.AppRepository
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -44,17 +43,17 @@ import platform.Foundation.NSUserDomainMask
  * for the opposite reason: iOS evicts it under storage pressure, so the app would come back empty on
  * its own.
  *
- * ## No migrations here, on purpose
+ * ## The migrations are shared
  *
- * The Android builder passes fifteen `Migration` objects. They are absent here because there is no
- * older database on iOS to come from: nothing imports an Android database, so the first file this
- * creates is created at the current schema version.
+ * This used to pass none, because nothing imports an Android database, so the first file an iOS
+ * install creates is created at the current schema version. That covered arriving on iOS but not
+ * staying: once a build reaches a user their database sits at the version that shipped, and the next
+ * schema change needs a path for them like any other.
  *
- * That covers arriving on iOS. It does not cover staying: once an iOS build reaches a user, their
- * database sits at whatever version shipped, and the next schema change needs a migration path for
- * them like any other. At that point the migration list has to move to commonMain and be passed
- * here too, rather than be copied, because two histories drift and a schema that differs by
- * platform corrupts data instead of failing loudly.
+ * So `databaseMigrations` in commonMain is passed here as well, and is the only place a migration is
+ * written. Do not copy the list into a platform source set: two histories drift, and a schema that
+ * differs by platform corrupts data instead of failing loudly. Room runs only the steps it needs, so
+ * the entries older than the version this platform started at cost nothing.
  *
  * @param log where the file move reports itself. The first argument says whether it failed, so a
  *   caller with a real logger can raise the failure and leave the ordinary case at debug. The
@@ -78,6 +77,7 @@ class IosAppDatabaseBuilder(
             // platforms rather than following whatever the OS happens to ship.
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(Dispatchers.IO)
+            .addMigrations(*databaseMigrations)
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onOpen(connection: SQLiteConnection) {
                     super.onOpen(connection)
@@ -178,20 +178,6 @@ class IosAppDatabaseBuilder(
         listOf(applicationSupportPath(fileName), documentsPath(fileName)).forEach { base ->
             (SUFFIXES + INCIDENTAL_SUFFIXES).forEach { suffix -> manager.removeItemAtPath(base + suffix, null) }
         }
-    }
-
-    /**
-     * The same computed indexes the Android builder creates.
-     *
-     * Room cannot declare an index over an expression, so both platforms add these by hand. They
-     * belong in commonMain next to the migrations for the same reason.
-     */
-    private fun createCustomIndexes(connection: SQLiteConnection) {
-        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryBasals_end` ON `temporaryBasals` (`timestamp` + `duration`)")
-        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_extendedBoluses_end` ON `extendedBoluses` (`timestamp` + `duration`)")
-        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryTargets_end` ON `temporaryTargets` (`timestamp` + `duration`)")
-        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_carbs_end` ON `carbs` (`timestamp` + `duration`)")
-        connection.execSQL("CREATE INDEX IF NOT EXISTS `index_runningModes_end` ON `runningModes` (`timestamp` + `duration`)")
     }
 
     /**

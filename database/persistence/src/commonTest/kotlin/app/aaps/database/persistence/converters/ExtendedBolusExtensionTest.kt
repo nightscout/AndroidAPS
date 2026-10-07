@@ -3,11 +3,9 @@ package app.aaps.database.persistence.converters
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.IDs
 import app.aaps.database.entities.ExtendedBolus
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class ExtendedBolusExtensionTest {
 

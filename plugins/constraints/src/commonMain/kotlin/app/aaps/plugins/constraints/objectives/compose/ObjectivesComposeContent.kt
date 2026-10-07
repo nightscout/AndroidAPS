@@ -1,17 +1,17 @@
 package app.aaps.plugins.constraints.objectives.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.constraints.ConstraintsStrings
 
 class ObjectivesComposeContent : ComposablePluginContent {
 

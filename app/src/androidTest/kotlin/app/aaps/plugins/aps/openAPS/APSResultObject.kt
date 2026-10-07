@@ -4,7 +4,6 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -18,6 +17,7 @@ import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -31,11 +31,11 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import dev.zacsweers.metro.HasMemberInjections
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 import kotlin.math.max
 

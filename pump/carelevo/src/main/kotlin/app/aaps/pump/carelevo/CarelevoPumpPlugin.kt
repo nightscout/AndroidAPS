@@ -46,7 +46,6 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.withEntries
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.icons.IcPluginCarelevo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
@@ -81,6 +80,12 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainMo
 import app.aaps.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
 import app.aaps.pump.carelevo.domain.type.AlarmType.Companion.isCritical
 import app.aaps.pump.carelevo.ext.transformNotificationStringResources
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -102,15 +107,10 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.IntKey as MetroIntKey
-import dev.zacsweers.metro.Provider
-import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.binding
 import java.util.concurrent.TimeUnit
 import kotlin.jvm.optionals.getOrNull
+import app.aaps.core.ui.R as CoreUiR
+import dev.zacsweers.metro.IntKey as MetroIntKey
 
 // Pump plugin registration — @MetroIntKey range 1000–1200, see AppRootGraph for the overview
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())

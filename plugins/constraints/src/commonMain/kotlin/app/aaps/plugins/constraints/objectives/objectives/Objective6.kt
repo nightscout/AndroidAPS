@@ -1,6 +1,5 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
-import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
@@ -8,6 +7,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.constraints.ConstraintsStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject

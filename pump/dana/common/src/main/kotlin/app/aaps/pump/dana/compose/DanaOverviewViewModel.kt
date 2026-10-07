@@ -43,6 +43,7 @@ import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineStart
@@ -58,7 +59,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import dev.zacsweers.metro.Inject
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class DanaOverviewEvent {
@@ -379,6 +379,10 @@ open class DanaOverviewViewModel(
 
             // 10. Basal/bolus step
             add(PumpInfoRow(label = rh.gs(R.string.basal_bolus_step), value = "${pump.basalStep} / ${pump.bolusStep}"))
+
+            // Easy mode, only for pump variants that have it
+            if (pump.hasEasyMode)
+                add(PumpInfoRow(label = rh.gs(R.string.dana_easy_mode), value = rh.gs(if (pump.isEasyModeEnabled) R.string.option_on else R.string.option_off)))
 
             // 11. Firmware
             if (pump.hwModel != 0) {

@@ -6,12 +6,12 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlin.time.Clock
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlin.time.Clock
 
 // App-scoped: a view model injects this, and ViewModelOwnershipTest requires every concrete class
 // a view model injects to have one owner. It is a stateless view over the app-scoped DAOs, so one

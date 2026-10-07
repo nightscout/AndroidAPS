@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
@@ -297,6 +298,53 @@ class DanaRSPluginTest : DanaRSTestBase() {
     fun cancelExtendedBolusIsANoOpSuccessWhenNoneRunning() {
         val result = runBlocking { danaRSPlugin.cancelExtendedBolus() }
         assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
+    }
+
+    /** Binds [service] the way Android would, so deliverTreatment talks to it. */
+    private fun bind(service: DanaRSService) {
+        runBlocking { danaRSPlugin.onStart() }
+        val connection = argumentCaptor<ServiceConnection>()
+        verify(context).bindService(any<Intent>(), connection.capture(), any<Int>())
+        val binder = mock<DanaRSService.LocalBinder>()
+        whenever(binder.serviceInstance).thenReturn(service)
+        connection.firstValue.onServiceConnected(mock<ComponentName>(), binder)
+    }
+
+    /** A service whose bolus() returns [connectionOk] and reports [delivered] U as given, like the real one. */
+    private fun bolusService(connectionOk: Boolean, delivered: Double): DanaRSService = mock<DanaRSService>().also { service ->
+        whenever(service.bolus(any())).thenAnswer {
+            bolusProgressData.start(1.0, isSMB = false)
+            bolusProgressData.updateProgress(delivered = PumpInsulin(delivered))
+            connectionOk
+        }
+    }
+
+    @Test
+    fun deliveredBolusIsEnacted() {
+        bind(bolusService(connectionOk = true, delivered = 1.0))
+        val result = runBlocking { danaRSPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isTrue()
+        assertThat(result.bolusDelivered).isWithin(0.0001).of(1.0)
+    }
+
+    /** A stopped bolus counts as a success, but if nothing was given nothing changed on the pump. */
+    @Test
+    fun stoppedBolusWithNothingGivenIsNotEnacted() {
+        danaPump.bolusStopped = true
+        bind(bolusService(connectionOk = true, delivered = 0.0))
+        val result = runBlocking { danaRSPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isTrue()
+        assertThat(result.enacted).isFalse()
+    }
+
+    @Test
+    fun failedBolusIsNotEnacted() {
+        whenever(rh.gs(eq(app.aaps.pump.dana.R.string.boluserrorcode), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("bolus error")
+        bind(bolusService(connectionOk = false, delivered = 0.4))
+        val result = runBlocking { danaRSPlugin.deliverTreatment(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        assertThat(result.success).isFalse()
         assertThat(result.enacted).isFalse()
     }
 

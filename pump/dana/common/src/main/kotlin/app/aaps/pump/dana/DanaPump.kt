@@ -16,6 +16,9 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,9 +30,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.InvalidParameterException
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -106,6 +106,12 @@ class DanaPump(
         get() = hwModel >= 7
     val profile24
         get() = hwModel >= 7
+    val isDanaI2
+        get() = hwModel == 0x0B || hwModel == 0x0C
+
+    /** RS Easy, Dana-i and Dana-i2 variants that have an easy mode (it can be on or off, see [isEasyModeEnabled]) */
+    val hasEasyMode
+        get() = hwModel == 0x06 || hwModel == 0x0A || hwModel == 0x0C
 
     var protocol = 0
     var productCode = 0
@@ -293,6 +299,7 @@ class DanaPump(
     var cannulaVolume = 0
     var refillAmount = 0
     var target = 0 // mgdl 40~400 mmol 2.2~22 => 220~2200
+    var autoLock = false // Dana-i2 only
     var userOptionsFromPump: ByteArray? = null
     var initialBolusAmount = 0.0
 
@@ -482,6 +489,8 @@ class DanaPump(
             0x06       -> "DanaRS Korean"
             0x07       -> "Dana-i (BLE4.2)"
             0x09, 0x0A -> "Dana-i (BLE5)"
+            0x0B       -> "Dana-i2"
+            0x0C       -> "Dana-i2 Korean"
             else       -> "Unknown Dana pump"
         }
 
@@ -500,6 +509,8 @@ class DanaPump(
             0x07 -> PumpType.DANA_I
             0x09 -> PumpType.DANA_I
             0x0A -> PumpType.DANA_I // Korean version
+            0x0B -> PumpType.DANA_I2
+            0x0C -> PumpType.DANA_I2 // Korean version
             else -> PumpType.DANA_RS // having here default type non TBR capable is causing problem with disabling loop
         }
 
@@ -521,7 +532,11 @@ class DanaPump(
         PROFILE_CHANGE(13),
         CARBS(14),
         PRIME_CANNULA(15),
-        TIME_CHANGE(16)
+        TIME_CHANGE(16),
+
+        // Dana-i2 only
+        STEP_BOLUS_COMMAND(18), // Data[0] setting amount (U * 100), Data[1] command type 0 = normal, 1 = algorithm
+        BASAL_RATE_CHANGE(19) // Data[0] new rate (U/h * 100, or U/d), Data[1] 0x80 if U/d + reason flag
         ;
 
         companion object {

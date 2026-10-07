@@ -1,8 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,7 +30,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -47,14 +43,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
-import kotlin.time.Clock
+import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.sync.SyncStrings
 import kotlinx.coroutines.delay
+import kotlin.time.Clock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

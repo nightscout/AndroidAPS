@@ -1,6 +1,5 @@
 package app.aaps.pump.dana.keys
 
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.dana.R

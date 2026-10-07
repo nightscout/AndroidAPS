@@ -25,6 +25,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
 import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
 import com.google.gson.Gson
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -36,7 +37,6 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.EnumSet
 import java.util.TimeZone
-import dev.zacsweers.metro.Inject
 
 @Inject
 class OmnipodDashPodStateManagerImpl(

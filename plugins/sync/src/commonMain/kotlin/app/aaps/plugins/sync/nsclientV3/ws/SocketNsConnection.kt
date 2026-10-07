@@ -2,7 +2,6 @@ package app.aaps.plugins.sync.nsclientV3.ws
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.keys.BooleanKey
@@ -16,17 +15,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.add
-import kotlinx.serialization.json.buildJsonArray
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.doubleOrNull
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.longOrNull
-import kotlinx.serialization.json.put
 
 /**
  * [NsConnection] owned by a coroutine scope instead of a service.

@@ -27,19 +27,19 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseC
 import app.aaps.pump.carelevo.presentation.model.CarelevoConnectSafetyCheckEvent
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
-import dev.zacsweers.metro.Inject
 import kotlin.jvm.optionals.getOrNull
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())

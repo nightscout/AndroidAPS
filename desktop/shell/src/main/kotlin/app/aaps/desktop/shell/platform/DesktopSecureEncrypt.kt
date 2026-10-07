@@ -6,11 +6,11 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.utils.toHex
+import app.aaps.implementation.maintenance.DesktopFolders
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import app.aaps.implementation.maintenance.DesktopFolders
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.attribute.PosixFilePermission

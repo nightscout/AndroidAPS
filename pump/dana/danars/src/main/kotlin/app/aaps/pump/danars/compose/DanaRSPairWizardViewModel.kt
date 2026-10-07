@@ -25,6 +25,7 @@ import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.services.BLEComm
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineScope
@@ -38,7 +39,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
-import dev.zacsweers.metro.Inject
 import kotlin.experimental.xor
 
 enum class WizardStep {

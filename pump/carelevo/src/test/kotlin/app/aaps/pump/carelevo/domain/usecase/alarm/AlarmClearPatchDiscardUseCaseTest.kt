@@ -7,8 +7,6 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Completable
-import kotlin.time.Clock
-import kotlin.time.Instant
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,6 +21,8 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Covers [AlarmClearPatchDiscardUseCase.persistAlarmDiscarded]: the happy path plus every

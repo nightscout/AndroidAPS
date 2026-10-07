@@ -17,12 +17,14 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T.Companion.msecs
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -99,6 +101,11 @@ import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
 import app.aaps.pump.omnipod.eros.ui.compose.OmnipodErosComposeContent
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -116,14 +123,7 @@ import org.joda.time.Duration
 import org.joda.time.Instant
 import java.util.Optional
 import java.util.function.Supplier
-import app.aaps.core.interfaces.di.PumpDriver
-import app.aaps.core.interfaces.plugin.PluginBase
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.IntKey as MetroIntKey
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 
 /**
  * Created by andy on 23.04.18.

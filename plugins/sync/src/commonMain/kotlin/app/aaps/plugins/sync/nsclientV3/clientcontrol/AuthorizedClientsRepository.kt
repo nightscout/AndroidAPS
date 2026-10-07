@@ -5,8 +5,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import app.aaps.core.nssdk.localmodel.clientcontrol.AuthorizedClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.ClientState
 import app.aaps.core.nssdk.utils.ClientControlCrypto
@@ -15,6 +13,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 

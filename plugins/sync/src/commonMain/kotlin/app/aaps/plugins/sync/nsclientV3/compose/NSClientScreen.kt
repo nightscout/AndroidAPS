@@ -1,8 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,13 +47,16 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.sync.SyncStrings
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 private val jsonPrettyPrint = Json { prettyPrint = true }
 

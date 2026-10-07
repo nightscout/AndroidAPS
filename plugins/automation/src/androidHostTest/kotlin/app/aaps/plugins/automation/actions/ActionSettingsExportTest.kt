@@ -1,8 +1,7 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.navigation.ElementType
-import app.aaps.core.ui.R as CoreUiR
+import app.aaps.core.ui.CoreUiStrings
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach

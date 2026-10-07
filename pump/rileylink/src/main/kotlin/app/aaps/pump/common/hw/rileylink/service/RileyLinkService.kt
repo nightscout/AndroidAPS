@@ -20,9 +20,9 @@ import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkError
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkDoubleKey
-import java.util.Locale
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
+import java.util.Locale
 
 /**
  * Created by andy on 5/6/18.

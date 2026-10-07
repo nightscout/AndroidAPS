@@ -3,10 +3,10 @@ package app.aaps.pump.omnipod.eros.util
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
 import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
-import org.joda.time.Duration
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import org.joda.time.Duration
 
 /**
  * Was Java. Kept as functions rather than turned into properties, so the existing `getX()` call sites -

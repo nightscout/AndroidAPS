@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.wear.compose
 
-import app.aaps.plugins.sync.SyncStrings
 import android.graphics.BitmapFactory
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -29,6 +28,7 @@ import app.aaps.core.keys.PushedWatchfaceId
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.shared.impl.weardata.JsonKeyValues
 import app.aaps.shared.impl.weardata.JsonKeys

@@ -28,7 +28,6 @@ import app.aaps.core.objects.extensions.profileNames
 import app.aaps.core.objects.extensions.toScenes
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
-import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject

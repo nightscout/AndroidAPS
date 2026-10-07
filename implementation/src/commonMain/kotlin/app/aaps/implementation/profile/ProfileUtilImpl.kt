@@ -1,12 +1,10 @@
 package app.aaps.implementation.profile
 
-import dev.zacsweers.metro.Inject
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.format.NumberFormatPlatform
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
@@ -14,8 +12,10 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlin.math.roundToInt
 

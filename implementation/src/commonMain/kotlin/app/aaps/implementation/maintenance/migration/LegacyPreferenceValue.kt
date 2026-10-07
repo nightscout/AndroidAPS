@@ -1,5 +1,11 @@
 package app.aaps.implementation.maintenance.migration
 
+import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue.asBoolean
+import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue.asDouble
+import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue.asJsonArrayText
+import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue.asLong
+import app.aaps.implementation.maintenance.migration.LegacyPreferenceValue.asString
+
 /**
  * Reads a value out of the raw preference store as the type a migration expects, or reports that it
  * cannot.

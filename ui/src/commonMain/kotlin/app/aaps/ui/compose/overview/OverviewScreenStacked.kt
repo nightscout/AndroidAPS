@@ -45,7 +45,7 @@ fun OverviewScreenStacked(
     tempTargetProgress: Float,
     tempTargetReason: TT.Reason?,
     tempTargetSceneManaged: Boolean = false,
-    runningMode: RM.Mode,
+    runningMode: RM.Mode?,
     runningModeText: String,
     runningModeRemaining: String,
     runningModeProgress: Float,

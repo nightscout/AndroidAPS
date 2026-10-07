@@ -6,10 +6,10 @@ import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.time.Clock
-import dev.zacsweers.metro.Inject
 
 class CarelevoFinishImmeBolusInfusionUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,

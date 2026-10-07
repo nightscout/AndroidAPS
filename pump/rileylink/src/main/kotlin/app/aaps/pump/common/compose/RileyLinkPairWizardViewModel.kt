@@ -20,16 +20,16 @@ import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.ble.data.GattAttributes
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkStringKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import dev.zacsweers.metro.Inject
 
 enum class RileyLinkPairStep {
     BLE_SCAN,

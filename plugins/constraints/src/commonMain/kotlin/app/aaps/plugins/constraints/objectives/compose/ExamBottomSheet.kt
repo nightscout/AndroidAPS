@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.objectives.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +36,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.constraints.ConstraintsStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

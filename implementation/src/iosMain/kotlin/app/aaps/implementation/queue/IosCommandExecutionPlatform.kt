@@ -4,8 +4,8 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import platform.Foundation.NSProcessInfo
 import platform.Foundation.NSActivityUserInitiated
+import platform.Foundation.NSProcessInfo
 import platform.Foundation.beginActivityWithOptions
 import platform.Foundation.endActivity
 

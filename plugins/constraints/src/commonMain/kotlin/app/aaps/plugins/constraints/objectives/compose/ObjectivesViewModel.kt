@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.objectives.compose
 
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.constraints.ConstraintsStrings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.time.T
@@ -17,6 +15,8 @@ import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.constraints.ConstraintsStrings
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui

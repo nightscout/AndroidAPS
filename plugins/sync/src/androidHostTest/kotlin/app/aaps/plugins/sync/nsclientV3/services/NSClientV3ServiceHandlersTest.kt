@@ -1,10 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.services
 
-import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.SettingsIdentifiers
@@ -13,14 +14,12 @@ import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector
 import app.aaps.plugins.sync.nsclientV3.compose.NSClientRepositoryImpl
 import app.aaps.plugins.sync.nsclientV3.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.ws.NsFrameHandler
-import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

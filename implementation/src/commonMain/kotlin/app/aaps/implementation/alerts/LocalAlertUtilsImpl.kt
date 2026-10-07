@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.implementation.alerts.keys.LocalAlertLongKey
@@ -29,9 +28,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 /**
  * Created by adrian on 17/12/17.

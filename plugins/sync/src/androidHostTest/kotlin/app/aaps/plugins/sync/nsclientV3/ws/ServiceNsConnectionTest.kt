@@ -13,9 +13,9 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.never

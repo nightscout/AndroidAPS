@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.stats.viewmodels
 
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -8,10 +9,8 @@ import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
-import org.mockito.kotlin.whenever
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class StatsViewModelTest {

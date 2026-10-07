@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.interfaces.plugin.PermissionGroup
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.ui.UiStrings
 
 @Preview(showBackground = true)

@@ -10,13 +10,13 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

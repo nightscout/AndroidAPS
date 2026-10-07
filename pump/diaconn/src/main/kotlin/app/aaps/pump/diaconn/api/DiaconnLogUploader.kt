@@ -2,12 +2,11 @@ package app.aaps.pump.diaconn.api
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
 @Inject

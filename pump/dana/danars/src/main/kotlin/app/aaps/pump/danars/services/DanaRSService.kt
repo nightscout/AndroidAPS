@@ -6,6 +6,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -82,6 +83,7 @@ import app.aaps.pump.danars.comm.DanaRSPacketOptionGetUserOption
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpTime
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import app.aaps.pump.danars.comm.DanaRSPacketOptionSetUserOption
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -90,7 +92,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import dev.zacsweers.metro.Inject
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
@@ -347,7 +348,7 @@ class DanaRSService : MetroService() {
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false
         danaPump.bolusProgressLastTimeStamp = dateUtil.now()
-        val start = danaRSPacketBolusSetStepBolusStart().with(detailedBolusInfo.insulin, preferencesSpeed)
+        val start = danaRSPacketBolusSetStepBolusStart().with(detailedBolusInfo.insulin, preferencesSpeed, algorithm = detailedBolusInfo.bolusType == BS.Type.SMB)
         val bolusStart = dateUtil.now()
         var connectionBroken = false
         if (detailedBolusInfo.insulin > 0) {

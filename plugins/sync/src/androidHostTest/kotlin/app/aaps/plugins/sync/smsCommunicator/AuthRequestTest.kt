@@ -2,14 +2,14 @@ package app.aaps.plugins.sync.smsCommunicator
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.plugins.sync.SyncStringsValues
-import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach

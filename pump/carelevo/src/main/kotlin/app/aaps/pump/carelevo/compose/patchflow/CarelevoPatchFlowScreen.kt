@@ -18,11 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.ProfileGateWizardStep
 import app.aaps.core.ui.compose.pump.WizardScreen
 import app.aaps.core.ui.compose.siteRotation.SiteLocationWizardStep
@@ -35,6 +34,7 @@ import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectViewMod
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchNeedleInsertionViewModel
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchSafetyCheckViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 @Composable
 internal fun CarelevoPatchFlowScreen(

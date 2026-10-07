@@ -28,6 +28,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -137,6 +138,12 @@ internal class StatusViewModelTest {
         gate.complete(Unit)
         assertThat(awaitValue(running, 0)).isEqualTo(0)
         assertThat(finished.get()).isEqualTo(1)
+
+        // Wait until the last refresh is back on Main and has written the usage. `running` drops inside
+        // the IO hop, so without this the test could return while that coroutine is still on its way
+        // back to Main. tearDown() then resets Main, the resume crashes, and the next runTest in this
+        // JVM fails with UncaughtExceptionsBeforeTest (seen on CI in an unrelated test class).
+        withTimeout(5_000) { viewModel.uiState.first { it.cannulaStatus?.level == USAGE_TEXT } }
     }
 
     private suspend fun awaitMore(counter: AtomicInteger, than: Int) =
@@ -161,5 +168,13 @@ internal class StatusViewModelTest {
         whenever(cannulaChange.timestamp).thenReturn(1_000L)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(any())).thenReturn(null)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)).thenReturn(cannulaChange)
+        // Only the cannula usage is formatted here (no profile, so no reservoir level), so this text
+        // marks the moment the refresh has finished.
+        whenever(decimalFormatter.to0Decimal(any<Double>(), any<String>())).thenReturn(USAGE_TEXT)
+    }
+
+    private companion object {
+
+        const val USAGE_TEXT = "12 U"
     }
 }

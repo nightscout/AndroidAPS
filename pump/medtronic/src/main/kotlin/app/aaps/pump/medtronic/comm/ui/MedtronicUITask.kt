@@ -14,9 +14,9 @@ import app.aaps.pump.medtronic.defs.MedtronicUIResponseType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import app.aaps.pump.medtronic.util.MedtronicUtil
+import dev.zacsweers.metro.Inject
 import org.joda.time.LocalDateTime
 import java.util.Locale
-import dev.zacsweers.metro.Inject
 
 /**
  * Created by andy on 6/14/18.

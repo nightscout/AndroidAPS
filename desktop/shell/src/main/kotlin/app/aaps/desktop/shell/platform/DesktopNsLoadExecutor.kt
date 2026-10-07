@@ -4,7 +4,6 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.objects.workflow.WorkOutcome
-import app.aaps.plugins.sync.nsclientV3.ws.NsLoadChain
 import app.aaps.plugins.sync.nsclientV3.workers.DataSyncRunner
 import app.aaps.plugins.sync.nsclientV3.workers.LoadBgRunner
 import app.aaps.plugins.sync.nsclientV3.workers.LoadDeviceStatusRunner
@@ -14,6 +13,7 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadProfileStoreRunner
 import app.aaps.plugins.sync.nsclientV3.workers.LoadSettingsRunner
 import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusRunner
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsRunner
+import app.aaps.plugins.sync.nsclientV3.ws.NsLoadChain
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadExecutor
 import app.aaps.plugins.sync.nsclientV3.ws.NsLoadStep
 import dev.zacsweers.metro.AppScope

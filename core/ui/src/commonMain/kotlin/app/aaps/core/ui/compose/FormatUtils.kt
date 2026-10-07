@@ -44,6 +44,18 @@ fun formatMinutesAsDuration(minutes: Int, rh: TextResolver): String {
 }
 
 /**
+ * True when this unit label is the minutes unit, so the value is a duration and reads better as
+ * "2 h 20 min" than as "140".
+ *
+ * This is the default of `asDuration` on the shared inputs ([NumberInputRow], [SliderWithButtons]
+ * and the value dialog). Before the labels became [TextRef]s the inputs compared the resource id
+ * themselves. When that check went away the flag defaulted to off, and every minutes field outside
+ * Preferences lost its hours hint without anything failing. A default that follows the unit cannot
+ * be forgotten at a call site, and a caller can still pass the flag itself.
+ */
+fun TextRef?.isMinutesUnit(): Boolean = this == CoreUiStrings.units_min
+
+/**
  * Formats a slider/input value for display, handling durations, resource format strings,
  * unit labels, and plain value formatting.
  *
@@ -53,8 +65,8 @@ fun formatMinutesAsDuration(minutes: Int, rh: TextResolver): String {
  * 3. unitLabel set → "formatted_value unitLabel"
  * 4. Plain → valueFormat.format(value)
  *
- * @param asDuration render the value as a duration. Callers say so explicitly, rather than the
- *   format being inferred from the label text.
+ * @param asDuration render the value as a duration. The shared inputs default it to
+ *   [isMinutesUnit] of their unit label and pass it on; a caller can still set it itself.
  */
 @Composable
 fun formatSliderDisplayValue(

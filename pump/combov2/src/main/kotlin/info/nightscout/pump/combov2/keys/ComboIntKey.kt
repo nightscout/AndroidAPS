@@ -1,6 +1,5 @@
 package info.nightscout.pump.combov2.keys
 
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 import info.nightscout.pump.combov2.R

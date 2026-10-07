@@ -4,10 +4,10 @@ import app.aaps.core.interfaces.smsCommunicator.Sms
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.math.max
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.max
 
 @SingleIn(AppScope::class)
 @Inject

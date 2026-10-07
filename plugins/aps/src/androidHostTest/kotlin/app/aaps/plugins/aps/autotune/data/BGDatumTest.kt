@@ -85,7 +85,7 @@ class BGDatumTest : TestBaseWithProfile() {
             raw = 0.0,
             noise = 0.0,
             trendArrow = TrendArrow.SINGLE_UP,
-            sourceSensor = SourceSensor.DEXCOM_G6_NATIVE
+            sourceSensor = SourceSensor.DEXCOM_G6
         ).apply {
             id = 42L
         }

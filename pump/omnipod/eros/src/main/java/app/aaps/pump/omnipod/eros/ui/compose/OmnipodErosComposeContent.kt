@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import app.aaps.core.ui.compose.metroViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -23,6 +22,7 @@ import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.core.ui.compose.pump.PumpOverviewScreen
@@ -122,15 +122,15 @@ class OmnipodErosComposeContent(
                     }
 
                     is OmnipodOverviewEvent.ShowDialog              -> {
-                        if (event.title == context.getString(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_discard_pod)) {
-                            showDiscardConfirm = true
-                            dialogTitle = event.title
-                            dialogMessage = event.message
-                        } else {
-                            dialogTitle = event.title
-                            dialogMessage = event.message
-                            showDialog = true
-                        }
+                        dialogTitle = event.title
+                        dialogMessage = event.message
+                        showDialog = true
+                    }
+
+                    is OmnipodOverviewEvent.ConfirmDiscardPod        -> {
+                        dialogTitle = event.title
+                        dialogMessage = event.message
+                        showDiscardConfirm = true
                     }
 
                     is OmnipodOverviewEvent.ShowErrorDialog         -> {

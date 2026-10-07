@@ -3,7 +3,6 @@ package app.aaps.pump.common
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.SystemClock
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
@@ -46,13 +45,16 @@ import app.aaps.pump.common.driver.refresh.PumpDataRefreshType
 import app.aaps.pump.common.sync.PumpDbEntryCarbs
 import app.aaps.pump.common.sync.PumpSyncEntriesCreator
 import app.aaps.pump.common.sync.PumpSyncStorage
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Created by andy on 23.04.18.
@@ -94,7 +96,6 @@ abstract class PumpPluginAbstract protected constructor(
     final override var pumpDescription = PumpDescription()
 
     protected open var serviceConnection: ServiceConnection? = null
-    protected var serviceRunning = false
     protected var pumpState = PumpDriverState.NotInitialized
     protected var displayConnectionMessages = false
     protected var timeChangeType: TimeChangeType? = null
@@ -119,20 +120,21 @@ abstract class PumpPluginAbstract protected constructor(
     override suspend fun onStart() {
         super.onStart()
         initPumpStatusData()
+        // Own scope on IO, like the io scheduler used before, cancelled in onStop like the
+        // CompositeDisposable was cleared. Created for every driver, not only one with a service,
+        // because the status refresh loop runs on it too.
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         if (hasService()) {
             val intent = Intent(context, serviceClass)
             context.bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
-            // Own scope on IO, like the io scheduler used before, cancelled in onStop like the
-            // CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a
-            // scheduled collector could miss an exit sent before it starts.
-            val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-            scope = newScope
+            // UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss an exit
+            // sent before it starts.
             rxBus.toFlow(EventAppExit::class)
                 .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
                     context.unbindService(serviceConnection!!)
                 }
         }
-        serviceRunning = true
         onStartScheduledPumpActions()
     }
 
@@ -143,7 +145,6 @@ abstract class PumpPluginAbstract protected constructor(
                 context.unbindService(serviceConnection)
             }
         }
-        serviceRunning = false
         scope?.cancel()
         scope = null
         super.onStop()
@@ -361,26 +362,29 @@ abstract class PumpPluginAbstract protected constructor(
 
     // PumpDataRefreshCapable
 
+    /**
+     * Checks every minute whether any status needs a refresh, and if so queues a status read.
+     *
+     * Runs on [scope], so onStop ends it. Call it from [onStartScheduledPumpActions].
+     */
     protected fun startRefreshOfPumpCommands() {
-
-        // check status every minute (if any status needs refresh we send readStatus command)
-        Thread {
-            do {
-                SystemClock.sleep(60000)
-                if (this.isDriverInitialized && !isInPreventConnectMode()) {
-                    val statusRefresh = workWithStatusRefresh(
-                        PumpDataRefreshAction.GetData, null, null
-                    )
-                    if (doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
-                        if (!commandQueue.statusInQueue()) {
-                            runBlocking { commandQueue.readStatus("Scheduled Status Refresh") }
-                        }
+        scope?.launch {
+            while (true) {
+                delay(60.seconds)
+                try {
+                    if (isDriverInitialized && !isInPreventConnectMode()) {
+                        val statusRefresh = workWithStatusRefresh(PumpDataRefreshAction.GetData, null, null)
+                        if (doWeHaveAnyStatusNeededRefereshing(statusRefresh) && !commandQueue.statusInQueue())
+                            commandQueue.readStatus("Scheduled Status Refresh")
                     }
-                    doCustomScheduledActions()
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    // One failed round must not end the loop for good. The next round tries again.
+                    aapsLogger.error(LTag.PUMP, "Scheduled status refresh failed", e)
                 }
-            } while (serviceRunning)
-        }.start()
-
+            }
+        }
     }
 
     @Synchronized
@@ -414,9 +418,6 @@ abstract class PumpPluginAbstract protected constructor(
         }
     }
 
-    protected open fun doCustomScheduledActions() {
-
-    }
 
     protected fun doWeHaveAnyStatusNeededRefereshing(statusRefresh: Map<PumpDataRefreshType?, Long?>?): Boolean {
         aapsLogger.debug(LTag.PUMP, "Do we have status needed to refresh: $statusRefresh, currentTime=${System.currentTimeMillis()}")

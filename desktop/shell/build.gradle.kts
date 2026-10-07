@@ -107,7 +107,12 @@ val desktopPackageName = if (desktopClient == 1) "AAPSClient" else "AAPSClient$d
 // Named after the package rather than a fixed "AAPSClient", so building client 2 cannot leave an
 // icon called AAPSClient.icns holding the blue owl, and two clients built in one tree do not
 // overwrite each other's icon.
-val icnsOutput = layout.buildDirectory.file("generated/icon/macos/$desktopPackageName.icns")
+// Deliberately NOT under `generated/icon`: that directory is the resources root (see
+// `resources.srcDir` below), so an .icns written inside it is swept up by `processResources`, which
+// both ships a launcher icon inside the jar for nothing and makes Gradle fail the build for using
+// one task's output as another's input without a declared dependency. jpackage reads this file from
+// `macOS.iconFile`, not from the resources.
+val icnsOutput = layout.buildDirectory.file("generated/macosIcon/$desktopPackageName.icns")
 val makeIcns = tasks.register<Exec>("makeDesktopIcns") {
     description = "Builds the macOS .icns launcher icon from the phone artwork."
     val source = rootProject.file("core/ui/src/androidMain/res/mipmap-xxxhdpi/$desktopIconName.png")

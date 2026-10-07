@@ -2,8 +2,6 @@ package app.aaps.plugins.automation
 
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.plugins.automation.AutomationStringsValues
-import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.lenientBoolean
@@ -14,13 +12,20 @@ import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerConnectorTest
+import app.aaps.plugins.automation.triggers.TriggerUnknown
 import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.skyscreamer.jsonassert.JSONAssert
+import kotlin.test.assertIs
 
 class AutomationEventTest : TestBase() {
 
@@ -109,6 +114,29 @@ class AutomationEventTest : TestBase() {
         val event = eventFactory.fromJSON(legacyJson)
         assertThat(event.id).isNotEmpty()
         assertThat(event.title).isEqualTo("Legacy")
+    }
+
+    @Test fun unknownTopLevelTriggerLoadsAndNeverRuns() = runTest {
+        // Issue #5194. The top level used to be cast to a connector, so it has to be wrapped, not
+        // returned as is - and it must not fire.
+        val unknownTrigger = "{\"type\":\"TriggerFromTheFuture\",\"data\":{}}"
+        val json = buildJsonObject {
+            put("title", "Future")
+            put("trigger", unknownTrigger)
+            put("actions", buildJsonArray { })
+        }.toString()
+        val event = eventFactory.fromJSON(json)
+        assertThat(event.trigger.list).hasSize(1)
+        assertIs<TriggerUnknown>(event.trigger.list[0])
+        assertThat(event.canRun()).isFalse()
+        assertThat(event.trigger.list[0].toJSON()).isEqualTo(unknownTrigger)
+    }
+
+    @Test fun missingTriggerStaysEmptyConnector() = runTest {
+        // A user action has no trigger and must still be runnable from its button.
+        val event = eventFactory.fromJSON("{\"title\":\"No trigger\",\"userAction\":true,\"actions\":[]}")
+        assertThat(event.trigger.size()).isEqualTo(0)
+        assertThat(event.canRun()).isTrue()
     }
 
     /**

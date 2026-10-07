@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -63,7 +64,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Two-page confirmation screen for an action authored on (or relayed by) the master.

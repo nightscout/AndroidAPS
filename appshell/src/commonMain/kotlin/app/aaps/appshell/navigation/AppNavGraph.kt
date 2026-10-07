@@ -1,7 +1,5 @@
 package app.aaps.appshell.navigation
 
-import androidx.navigation.NavBackStackEntry
-import androidx.savedstate.read
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,16 +24,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import kotlin.time.Clock
-import app.aaps.plugins.main.MainStrings
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
+import androidx.savedstate.read
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -56,7 +51,9 @@ import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.VisibilityContext
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ScreenMode
@@ -66,12 +63,14 @@ import app.aaps.core.ui.compose.navigation.LocalPluginNavigationRequest
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.siteRotation.SiteLocationPickerScreen
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.ui.search.SearchableProvider
-import app.aaps.core.ui.compose.siteRotation.SiteLocationPickerScreen
 import app.aaps.plugins.automation.AutomationRuntime
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.configuration.setupwizard.SetupWizardScreen
+import app.aaps.plugins.main.MainStrings
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.AuthorizedClientsScreen
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.compose.PairWithMasterScreen
 import app.aaps.ui.compose.calibrationDialog.CalibrationDialogScreen
@@ -120,6 +119,7 @@ import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
 import app.aaps.ui.compose.wizardDialog.WizardDialogScreen
 import app.aaps.ui.search.BuiltInSearchables
 import kotlinx.coroutines.launch
+import kotlin.time.Clock
 
 /**
  * Safe popBackStack that prevents double-navigation during transitions.
@@ -760,7 +760,17 @@ fun NavGraphBuilder.appNavGraph(
                 preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
                 navController.safePopBackStack()
             },
-            onBack = { navController.safePopBackStack() },
+            // Closing counts as processed, the same as finishing. The flag is "processed", not
+            // "completed": its only job is to decide whether the app opens the wizard by itself on
+            // start. Leaving it unset meant anyone who closed the wizard met it again on every
+            // launch, and on a client there was no way out - the last page is the patient name,
+            // which is not skippable, so with no name typed the Finish button is never drawn at
+            // all. This is only reached from the exit dialog's confirm, so it is a deliberate
+            // close, and the wizard stays reachable from the menu.
+            onBack = {
+                preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
+                navController.safePopBackStack()
+            },
             onImportSettings = { navController.navigate(AppRoute.ImportSettings.createRoute("LOCAL")) },
             onPluginPreferences = { pluginId -> navController.navigate(AppRoute.PluginPreferences.createRoute(pluginId)) },
             onPluginOpen = { pluginId -> onNavigationRequest(NavigationRequest.Plugin(pluginId), navController) },

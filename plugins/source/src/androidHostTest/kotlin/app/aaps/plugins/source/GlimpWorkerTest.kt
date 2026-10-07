@@ -66,7 +66,7 @@ class GlimpWorkerTest : TestBaseWithProfile() {
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.FORTY_FIVE_DOWN,
-                sourceSensor = SourceSensor.LIBRE_1_GLIMP
+                sourceSensor = SourceSensor.LIBRE_1
             )
             verify(persistenceLayer).insertCgmSourceData(Sources.Glimp, listOf(expectedGv), emptyList(), null)
         }

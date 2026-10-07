@@ -15,12 +15,13 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
-import app.aaps.core.interfaces.concurrent.AapsLock
-import app.aaps.core.interfaces.concurrent.withLock
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
+import app.aaps.core.interfaces.concurrent.AapsLock
+import app.aaps.core.interfaces.concurrent.withLock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -41,12 +42,10 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.PumpCommandGate
@@ -54,13 +53,14 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.formatMinutesAsDuration
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -238,6 +238,12 @@ class WizardBolusExecutorImpl(
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+        // The eCarbs amount is STORED in the preset, so the carbs limit may have been lowered after it was entered
+        // (also: a settings import, or a preset synced from a device with a higher limit). Re-check it exactly like
+        // the immediate carbs above — a preset that no longer fits the limit is refused, never silently trimmed.
+        val eCarbsGrams = entry.eCarbsGrams()
+        if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbsGrams, aapsLogger)).value() != eCarbsGrams)
+            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         val insulinAfterConstraints = wizard.insulinAfterConstraints
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
         if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
@@ -251,7 +257,6 @@ class WizardBolusExecutorImpl(
         // Build the master's color-coded confirmation lines here so the client renders the master's EXACT
         // wizard confirmation (shared builder). advisorApplies offers the high-BG "correct now, eat later" fork.
         val advisorApplies = wizard.needsBolusAdvisor()
-        val eCarbsGrams = if (entry.useEcarbs() == QuickWizardEntry.ALWAYS) entry.carbs2() else 0
         return WizardBolusExecutor.PrepareResult.Preview(
             insulin = wizard.calculatedTotalInsulin,
             carbs = wizard.carbs,
@@ -373,6 +378,14 @@ class WizardBolusExecutorImpl(
         // (lastUsed cooldown) here — the master is SOT and republishes the pref; the client never writes it. Null for a
         // dialog/wear batch, or a guid the master hasn't synced yet (graceful → no mark).
         val entry = bolus?.quickWizardGuid?.takeIf { it.isNotEmpty() }?.let { quickWizard.get(it) }
+        // A CARBS-mode QuickWizard arrives here with the preset's eCarbs amount. That amount is STORED, so the carbs
+        // limit may have been lowered after it was entered — refuse the preset rather than trim it silently, matching
+        // the WIZARD-mode path in prepareQuickWizard and the disabled button the overview already shows for an
+        // over-limit `carbs`. Only for a QuickWizard: a wear or dialog eCarbs value was clamped by its own input
+        // field moments ago, and capFixed below is what bounds the rest of a batch.
+        if (entry != null && bolus != null && bolus.eCarbsGrams > 0 &&
+            constraintChecker.applyCarbsConstraints(ConstraintObject(bolus.eCarbsGrams, aapsLogger)).value() != bolus.eCarbsGrams
+        ) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         // Gate + pump-init only for an actual INSULIN delivery — carbs-only, a record-only log, and a TT-only batch
         // are always allowed (mirrors executeBolus, which gates only when insulin > 0).
         if (bolus != null && !recordOnly && bolus.insulin > 0.0) {
@@ -501,7 +514,14 @@ class WizardBolusExecutorImpl(
         return WizardBolusExecutor.PrepareResult.Preview(insulin, carbs, bolusId, lines = lines, advisorApplies = false, advisorLines = emptyList())
     }
 
-    override suspend fun confirm(bolusId: Long, source: Sources, onError: (WizardBolusExecutor.Failure) -> Unit, asAdvisor: Boolean, correctionU: Double): WizardBolusExecutor.ConfirmResult {
+    override suspend fun confirm(
+        bolusId: Long,
+        source: Sources,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
+        asAdvisor: Boolean,
+        correctionU: Double,
+        onSuccess: () -> Unit
+    ): WizardBolusExecutor.ConfirmResult {
         // Atomic consume-once: remove(bolusId) returns the parked dose and removes it in one step, so two
         // concurrent commits of the same id can't both deliver (the loser gets null → NoPending). A non-matching
         // id removes nothing, leaving other actors' parked doses intact.
@@ -542,7 +562,8 @@ class WizardBolusExecutorImpl(
                         eventType = p.eventType,
                         recordOnly = true,
                         iCfg = p.iCfg,
-                        timestamp = p.bolusTimestamp
+                        timestamp = p.bolusTimestamp,
+                        onSuccess = onSuccess
                     )
                 }
 
@@ -551,12 +572,16 @@ class WizardBolusExecutorImpl(
                     // Carbs dialog uses, so a client carb entry and a master carb entry are identical (TE.Type, duration,
                     // delay) — not the generic deliver() which would tag it CARBS_CORRECTION instead of deliverECarbs's
                     // CORRECTION_BOLUS convention.
-                    deliverECarbs(p.carbs, dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs(), p.carbsDurationHours, p.carbTimeMinutes, notes, source, wrapped)
+                    deliverECarbs(p.carbs, dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs(), p.carbsDurationHours, p.carbTimeMinutes, notes, source, wrapped, onSuccess)
 
                 else                             -> {
                     // Insulin (± carbs): deliver the parked amounts as-is. carbsTime = now + offset; carbsDuration in hours.
+                    // With no insulin and no carbs this is a no-op, and onSuccess is not called (see confirm's contract).
                     val carbsTime = if (p.carbs > 0) dateUtil.now() + T.mins(p.carbTimeMinutes.toLong()).msecs() else null
-                    deliver(p.insulin, p.carbs, carbsTime = carbsTime, carbsDuration = p.carbsDurationHours, bolusCalculatorResult = p.bcr, notes = notes, source = source, onError = wrapped, eventType = p.eventType)
+                    deliver(
+                        p.insulin, p.carbs, carbsTime = carbsTime, carbsDuration = p.carbsDurationHours, bolusCalculatorResult = p.bcr, notes = notes, source = source,
+                        onError = wrapped, eventType = p.eventType, onSuccess = onSuccess
+                    )
                 }
             }
             // eCarbs split (e.g. a CARBS-mode QuickWizard entry with eCarbs configured): the immediate carbs are
@@ -597,7 +622,7 @@ class WizardBolusExecutorImpl(
         // High-BG advisor branch (user chose "correct now, eat later"): a correction-only CORRECTION_BOLUS —
         // no carbs, no eCarbs, no super-bolus, no eat reminder. mg/dL BG comes from the BCR's glucoseValue.
         if (asAdvisor) {
-            deliverBolusAdvisor(p.insulin, p.bcr?.glucoseValue, p.bcr, notes, source, onError)
+            executeBolusAdvisor(p.insulin, p.bcr?.glucoseValue, p.bcr, notes, source, onError, onSuccess)
             p.entry?.markAsUsed()
             return WizardBolusExecutor.ConfirmResult.Delivered
         }
@@ -656,7 +681,7 @@ class WizardBolusExecutorImpl(
                 totalInsulin = correctedInsulin  // actual delivered amount (already coerced ≥ 0)
             )
         else p.bcr
-        deliverWizardBolus(correctedInsulin, p.carbs, carbTimeOffset.toInt(), p.bcr?.glucoseValue, correctedBcr, notes, source, onError)
+        executeWizardBolus(correctedInsulin, p.carbs, carbTimeOffset.toInt(), p.bcr?.glucoseValue, correctedBcr, notes, source, onError, onSuccess)
         if (carbs2 > 0) deliverECarbs(carbs2, eventTime, duration, eCarbsDelay, notes, source, onError)
         if (useAlarm && p.carbs > 0 && carbTimeOffset > 0)
             automation.scheduleTimeToEatReminder(T.mins(carbTimeOffset).secs().toInt())
@@ -1091,6 +1116,19 @@ class WizardBolusExecutorImpl(
         notes: String?,
         source: Sources,
         onError: (WizardBolusExecutor.Failure) -> Unit
+    ) = executeWizardBolus(insulin, carbs, carbTimeMinutes, mgdlGlucose, bolusCalculatorResult, notes, source, onError, onSuccess = {})
+
+    /** [deliverWizardBolus] with an [onSuccess], for [confirm]'s caller. */
+    private suspend fun executeWizardBolus(
+        insulin: Double,
+        carbs: Int,
+        carbTimeMinutes: Int,
+        mgdlGlucose: Double?,
+        bolusCalculatorResult: BCR?,
+        notes: String?,
+        source: Sources,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onSuccess: () -> Unit
     ) {
         // Type-specific entry point: build the canonical BOLUS_WIZARD end state from the wizard inputs,
         // then funnel into the shared core. Phone (WizardDialog) and watch (QuickWizard) differ only in
@@ -1117,7 +1155,7 @@ class WizardBolusExecutorImpl(
                 ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
                 ValueWithUnit.Minute(carbTimeMinutes).takeIf { carbTimeMinutes != 0 }
             )
-            executeBolus(detailedBolusInfo, action, uelValues, notes, bolusCalculatorResult, source, onError)
+            executeBolus(detailedBolusInfo, action, uelValues, notes, bolusCalculatorResult, source, onError, onSuccess)
         }
     }
 
@@ -1128,6 +1166,17 @@ class WizardBolusExecutorImpl(
         notes: String?,
         source: Sources,
         onError: (WizardBolusExecutor.Failure) -> Unit
+    ) = executeBolusAdvisor(insulin, mgdlGlucose, bolusCalculatorResult, notes, source, onError, onSuccess = {})
+
+    /** [deliverBolusAdvisor] with an [onSuccess], for [confirm]'s caller. */
+    private suspend fun executeBolusAdvisor(
+        insulin: Double,
+        mgdlGlucose: Double?,
+        bolusCalculatorResult: BCR?,
+        notes: String?,
+        source: Sources,
+        onError: (WizardBolusExecutor.Failure) -> Unit,
+        onSuccess: () -> Unit
     ) {
         // Correction-only advisor bolus (BG high, carbs imminent): canonical CORRECTION_BOLUS end state,
         // and the eat reminder is scheduled on delivery success. The BCR rides the DBI but is not persisted
@@ -1149,7 +1198,10 @@ class WizardBolusExecutorImpl(
                 detailedBolusInfo, Action.BOLUS_ADVISOR, uelValues, notes,
                 bolusCalculatorResult = null,
                 source, onError,
-                onSuccess = { automation.scheduleAutomationEventEatReminder() }
+                onSuccess = {
+                    automation.scheduleAutomationEventEatReminder()
+                    onSuccess()
+                }
             )
         }
     }
