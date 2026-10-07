@@ -50,6 +50,7 @@
     <string name="ignore30m">Ignorovat 30 m</string>
     <string name="carbs_suggestion">Návrh sacharidů</string>
     <string name="open_loop_new_suggestion">Dostupné nové doporučení</string>
+    <string name="open_loop_suggestion_too_old">Tento návrh je příliš starý. Nic nebylo odesláno do pumpy. Počkejte na další.</string>
     <string name="basal_set_correctly">Bazál nastaven správně</string>
     <string name="last_run_label">Poslední spuštění</string>
     <string name="loop_aps_label">APS</string>
