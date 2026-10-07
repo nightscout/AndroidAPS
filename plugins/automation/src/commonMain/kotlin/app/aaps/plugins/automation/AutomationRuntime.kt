@@ -468,24 +468,37 @@ class AutomationRuntime(
     // Id-backfill + the EMPTY_EVENT starter happen once in [bootstrap] (master); a master push is already
     // canonical, so applying it is a pure reparse → no store → no echo. @VisibleForTesting + internal:
     // production reaches this only via start()/self-observe; tests drive it to assert the load behavior.
-    internal fun loadFromSP() {
+    // Returns false if anything stored could not be read: the whole list, or one event. One bad event is
+    // skipped, so the events after it still load. [bootstrap] must not write back after such a load (#5214).
+    internal fun loadFromSP(): Boolean {
         eventsLock.withLock {
             // Carry run-timers across the reparse: lastRun isn't serialized, so a naive reload would reset
             // every event's timer and (on a master that executes) risk re-firing automations right after a
             // remote push. Preserve it by id for events that still exist; new/changed ids start fresh.
             val previousLastRun = automationEvents.associate { it.id to it.lastRun }
             automationEvents.clear()
+            var clean = true
             val data = preferences.get(StringNonKey.AutomationEvents)
-            if (data != "")
-                runCatching {
-                    val array = Json.parseToJsonElement(data).jsonArray
-                    for (element in array) {
+            if (data != "") {
+                val array = runCatching { Json.parseToJsonElement(data).jsonArray }
+                    .onFailure {
+                        aapsLogger.error(LTag.AUTOMATION, "Cannot parse stored automation list", it)
+                        clean = false
+                    }
+                    .getOrNull()
+                for (element in array ?: emptyList()) {
+                    runCatching {
                         val event = automationEventFactory.fromJSON(element.toString())
                         previousLastRun[event.id]?.let { event.lastRun = it }
                         automationEvents.add(event)
+                    }.onFailure {
+                        aapsLogger.error(LTag.AUTOMATION, "Cannot parse stored automation event: $element", it)
+                        clean = false
                     }
-                }.onFailure { aapsLogger.error(LTag.AUTOMATION, "Cannot parse stored automation list", it) }
+                }
+            }
             notifyChanged() // fan out to UI/wear collectors; does NOT persist
+            return clean
         }
     }
 
@@ -495,6 +508,9 @@ class AutomationRuntime(
     // MASTER: id-backfill legacy id-less events (fromJSON assigns ids in-memory) and seed the EMPTY_EVENT
     // starter on a fresh install (pref never initialized = ""), then persist once via putRemote if the
     // canonical form changed. Idempotent for already-canonical data.
+    // Nothing is written if the stored data could not be fully read. The list in memory then misses what
+    // failed, and writing it back would delete that from disk at every start - all rules, if the whole
+    // list failed (#5214). Neither the id-backfill nor the starter is worth that.
     private fun bootstrap() {
         eventsLock.withLock {
             if (config.AAPSCLIENT) {
@@ -502,7 +518,7 @@ class AutomationRuntime(
                 return
             }
             val before = preferences.get(StringNonKey.AutomationEvents)
-            loadFromSP()
+            if (!loadFromSP()) return
             if (before == "") automationEvents.add(automationEventFactory.fromJSON(EMPTY_EVENT))
             notifyChanged()
             val after = eventsToJson()
