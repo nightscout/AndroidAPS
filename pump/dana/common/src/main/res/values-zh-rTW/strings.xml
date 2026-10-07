@@ -9,6 +9,12 @@
     <string name="speederror">速度錯誤</string>
     <string name="insulinlimitviolation">胰島素限制違規</string>
     <string name="boluserrorcode">請求：%1$.2fU 已注射：%2$.2fU 錯誤代碼：%3$s</string>
+    <string name="danai2_bolus_error_no_prime">幫浦尚未灌注</string>
+    <string name="danai2_bolus_error_not_enough_insulin">儲藥槽中的胰島素不足</string>
+    <string name="danai2_bolus_error_easy_sleep">幫浦的簡易睡眠模式已開啟</string>
+    <string name="danai2_pump_check_error">幫浦檢查錯誤</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">簡易模式</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">自動鎖定</string>
     <string name="danar_valuenotsetproperly">值未正確設定</string>
     <string name="danar_setbasalstep001">設定基礎速率為 0.01 U/h</string>
     <string name="resetpairing">重置配對資訊？</string>
@@ -18,6 +24,7 @@
     <string name="danar_disablebolusblock">幫浦已啟用「注射鎖」。啟用期間，AAPS 無法輸送胰島素。請在幫浦設定中停用「注射鎖」。</string>
     <string name="overview_bolusprogress_stoped">已停止</string>
     <string name="unsupportedfirmware">不支援的幫浦韌體</string>
+    <string name="danars_unsupported_model">不支援的幫浦型號（代碼 %1$s）</string>
     <string name="pumperror">幫浦錯誤</string>
     <string name="lowbattery">電池電量過低</string>
     <string name="basalcompare">低於預設基礎速率</string>
