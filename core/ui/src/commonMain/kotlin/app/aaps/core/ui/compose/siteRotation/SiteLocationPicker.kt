@@ -122,6 +122,44 @@ fun SiteLocationPicker(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
+
+            IconButton(
+                onClick = { sitesSelectionsVisible = !sitesSelectionsVisible },
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    imageVector = IcCannulaChange,
+                    contentDescription = stringResource(CoreUiStrings.careportal_pump_site_management),
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            if (!sitesSelectionsVisible) {
+
+                val tooltipState = remember { TooltipState() }
+                val scope = rememberCoroutineScope()
+                TooltipBox(
+                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                    tooltip = {
+                        PlainTooltip {
+                            Text(stringResource(CoreUiStrings.site_filter_info))
+                        }
+                    },
+                    state = tooltipState
+                ) {
+                    IconButton(
+                        onClick = { scope.launch { tooltipState.show() } },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = stringResource(CoreUiStrings.carousel_show_card),
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+            }
         }
 
         if (sitesSelectionsVisible) {
@@ -159,30 +197,33 @@ fun SiteLocationPicker(
                         )
                     }
                 }
-            }
 
-            val tooltipState = remember { TooltipState() }
-            val scope = rememberCoroutineScope()
-            TooltipBox(
-                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
-                tooltip = {
-                    PlainTooltip {
-                        Text(stringResource(CoreUiStrings.site_filter_info))
-                    }
-                },
-                state = tooltipState
-            ) {
-                IconButton(
-                    onClick = { scope.launch { tooltipState.show() } },
-                    modifier = Modifier.size(32.dp)
+                val tooltipState = remember { TooltipState() }
+                val scope = rememberCoroutineScope()
+                TooltipBox(
+                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                    tooltip = {
+                        PlainTooltip {
+                            Text(stringResource(CoreUiStrings.site_filter_info))
+                        }
+                    },
+                    state = tooltipState
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Info,
-                        contentDescription = stringResource(CoreUiStrings.carousel_show_card),
-                        modifier = Modifier.size(20.dp)
-                    )
+                    IconButton(
+                        onClick = { scope.launch { tooltipState.show() } },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = stringResource(CoreUiStrings.carousel_show_card),
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
+
+        } else {
+
         }
 
         val filteredEntries = entries.filter { te ->
