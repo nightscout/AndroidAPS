@@ -257,6 +257,7 @@ private fun ErrorContent(
         PairWithMasterViewModel.ErrorReason.AmbiguousPin       -> stringResource(SyncStrings.pair_with_master_error_ambiguous_pin)
         PairWithMasterViewModel.ErrorReason.OfferExpired       -> stringResource(SyncStrings.pair_with_master_error_expired)
         PairWithMasterViewModel.ErrorReason.NetworkUnavailable -> stringResource(SyncStrings.pair_with_master_error_network)
+        PairWithMasterViewModel.ErrorReason.SecretStoreFailed  -> stringResource(SyncStrings.pair_with_master_error_secret_store)
     }
     Column(
         modifier = Modifier

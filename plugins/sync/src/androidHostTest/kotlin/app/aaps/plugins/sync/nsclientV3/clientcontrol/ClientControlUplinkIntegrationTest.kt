@@ -218,10 +218,14 @@ class ClientControlUplinkIntegrationTest {
         // ---------- pairing: same secret on both sides ----------
         val (entry, secretHex) = masterAuthorizedRepository.addPending("phone", pairTtlMs = 60_000L, now = now - 10_000L)
         masterAuthorizedRepository.markActive(entry.clientId, counterReceived = 0L, now = now - 5_000L)
-        clientPairingRepository.pair(
-            PairingPayload(masterInstallId = "master-1", clientId = entry.clientId, secretHex = secretHex, expiresAt = now + 60_000L),
-            now = now - 10_000L
-        )
+        // check(), not a bare call: pair() refuses when the secret cannot be wrapped, and a test that
+        // silently ran unpaired would pass for the wrong reason. It also keeps setUp returning Unit.
+        check(
+            clientPairingRepository.pair(
+                PairingPayload(masterInstallId = "master-1", clientId = entry.clientId, secretHex = secretHex, expiresAt = now + 60_000L),
+                now = now - 10_000L
+            )
+        ) { "the test pairing was not stored" }
     }
 
     /** Drives the client publisher: emit a local edit, run the 2 s debounce, then deliver the captured doc to the master. */

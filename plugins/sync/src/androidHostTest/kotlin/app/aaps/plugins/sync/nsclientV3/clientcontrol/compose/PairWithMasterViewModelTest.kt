@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.nssdk.localmodel.clientcontrol.MasterPairing
+import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientControlPublisher
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.ClientPairingRepository
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.PairingOfferFetcher
@@ -22,6 +23,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
 
 /**
@@ -139,5 +141,50 @@ internal class PairWithMasterViewModelTest {
 
         verify(repository).unpair()
         assertThat(sut.state.value).isEqualTo(PairWithMasterViewModel.UiState.PinEntry)
+    }
+
+    /**
+     * Drives the screen to [PairWithMasterViewModel.UiState.Confirming], which is the only state
+     * `confirmPair` acts from.
+     */
+    private suspend fun offerIsWaiting(): PairingPayload {
+        val payload = PairingPayload(masterInstallId = "m1", clientId = "c1", secretHex = "00".repeat(32), expiresAt = 99_000L)
+        whenever(fetcher.findOfferForPin(any())).thenReturn(PairingOfferFetcher.Result.Success(payload))
+        return payload
+    }
+
+    @Test
+    fun `confirmPair says hello and reports Success when the pairing was stored`() = runTest {
+        offerIsWaiting()
+        whenever(repository.pair(any(), any())).thenReturn(true)
+        val sut = createViewModel()
+        sut.onPinEntered("1234")
+        advanceUntilIdle()
+
+        sut.confirmPair()
+        advanceUntilIdle()
+
+        verify(publisher).publish(any())
+        assertThat(sut.state.value).isEqualTo(PairWithMasterViewModel.UiState.Success)
+    }
+
+    /**
+     * The repository refused to store the pairing (its key store would not keep the secret). The
+     * screen must say so rather than show Success for a client the master will never hear from, and
+     * no hello may go out.
+     */
+    @Test
+    fun `confirmPair reports an error and sends no hello when the pairing was refused`() = runTest {
+        offerIsWaiting()
+        whenever(repository.pair(any(), any())).thenReturn(false)
+        val sut = createViewModel()
+        sut.onPinEntered("1234")
+        advanceUntilIdle()
+
+        sut.confirmPair()
+        advanceUntilIdle()
+
+        verify(publisher, never()).publish(any())
+        assertThat(sut.state.value).isEqualTo(PairWithMasterViewModel.UiState.Error(PairWithMasterViewModel.ErrorReason.SecretStoreFailed))
     }
 }

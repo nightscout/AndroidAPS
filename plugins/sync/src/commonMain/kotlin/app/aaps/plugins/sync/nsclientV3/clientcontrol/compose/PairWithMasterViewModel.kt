@@ -90,7 +90,13 @@ class PairWithMasterViewModel(
         // pair() takes the repository mutex, so it joins the coroutine that was already here. The
         // order is unchanged: store the pairing, show Sending, then say hello.
         viewModelScope.launch {
-            repository.pair(payload, dateUtil.now())
+            // A pairing that cannot keep its secret is not a pairing: the repository stored nothing,
+            // so stop here instead of showing Success and leaving the user with a client the master
+            // never hears from.
+            if (!repository.pair(payload, dateUtil.now())) {
+                _state.value = UiState.Error(ErrorReason.SecretStoreFailed)
+                return@launch
+            }
             _state.value = UiState.Sending
             publisher.publish(ClientControlMessage.Hello())
             _state.value = UiState.Success
@@ -125,5 +131,5 @@ class PairWithMasterViewModel(
         data class AlreadyPaired(val pairing: MasterPairing) : UiState()
     }
 
-    enum class ErrorReason { WrongPin, AmbiguousPin, OfferExpired, NetworkUnavailable }
+    enum class ErrorReason { WrongPin, AmbiguousPin, OfferExpired, NetworkUnavailable, SecretStoreFailed }
 }
