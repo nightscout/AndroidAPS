@@ -31,8 +31,10 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
@@ -891,6 +893,103 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
         assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
         assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo("Initializing…")
         verify(runningModeGuard, never()).rejectionMessage(any())
+        verify(quickWizard, never()).get(any<String>())
+    }
+
+    // ---- a stored QuickWizard eCarbs amount is re-checked against the CURRENT carbs limit ----
+
+    /** Carbs capped at [limit], the way SafetyMaxCarbs caps them; everything else passed through. */
+    private fun stubCarbsLimit(limit: Int) {
+        stubPassthroughConstraints()
+        whenever(constraintsChecker.applyCarbsConstraints(any())).thenAnswer {
+            ConstraintObject(it.getArgument<Constraint<Int>>(0).value().coerceAtMost(limit), aapsLogger)
+        }
+    }
+
+    @Test
+    fun prepareQuickWizard_storedECarbsAboveTheCurrentLimit_isRefused() = runTest {
+        // The eCarbs amount lives IN the preset, so lowering the carbs limit afterwards (or importing settings)
+        // leaves a stored value above it. Refuse the preset, like an over-limit `carbs` already is — never deliver
+        // it uncapped, and never trim it silently behind the user's back.
+        whenever(config.appInitialized).thenReturn(true)
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(mock())
+        whenever(profileFunction.getProfile()).thenReturn(mock<EffectiveProfile>())
+        whenever(profileFunction.getProfileName()).thenReturn("Test")
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isInitialized()).thenReturn(true)
+        whenever(pump.pumpDescription).thenReturn(PumpDescription())
+        stubCarbsLimit(48)
+        val entry = mock<QuickWizardEntry>()
+        whenever(quickWizard.get("g")).thenReturn(entry)
+        whenever(entry.carbs()).thenReturn(20)        // within the limit → clears the existing carbs check
+        whenever(entry.eCarbsGrams()).thenReturn(100) // stored above the limit → must stop here
+        whenever(entry.doCalc(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(mock<BolusWizard>())
+        val executor = create()
+
+        val result = executor.prepareQuickWizard("g")
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        // The SAME message an over-limit `carbs` produces — the two fields now fail identically.
+        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo(baseText.gs(CoreUiStrings.wizard_carbs_constraint))
+        verify(commandQueue, never()).bolus(anyOrNull())
+    }
+
+    @Test
+    fun prepareBatch_quickWizardECarbsAboveTheCurrentLimit_isRefused() = runTest {
+        // Same preset, CARBS mode: it reaches the master through prepareBatch instead, so the guard lives there too.
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        stubCarbsLimit(48)
+        whenever(quickWizard.get("qw-1")).thenReturn(mock<QuickWizardEntry>())
+        val executor = create()
+        val actions = listOf(
+            BatchAction.Bolus(
+                insulin = 0.0, carbs = 20, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false,
+                notes = "Pizza", timestamp = 0L, iCfg = null, quickWizardGuid = "qw-1", eCarbsGrams = 100, eCarbsDurationHours = 4
+            )
+        )
+
+        val result = executor.prepareBatch(actions)
+
+        assertThat(result).isInstanceOf(WizardBolusExecutor.PrepareResult.Error::class.java)
+        assertThat((result as WizardBolusExecutor.PrepareResult.Error).message).isEqualTo(baseText.gs(CoreUiStrings.wizard_carbs_constraint))
+    }
+
+    @Test
+    fun prepareBatch_quickWizardECarbsWithinTheLimit_stillPrepares() = runTest {
+        // The guard must not block a preset that does fit — only one that no longer does.
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        stubCarbsLimit(48)
+        whenever(quickWizard.get("qw-1")).thenReturn(mock<QuickWizardEntry>())
+        val executor = create()
+        val actions = listOf(
+            BatchAction.Bolus(
+                insulin = 0.0, carbs = 20, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false,
+                notes = "Pizza", timestamp = 0L, iCfg = null, quickWizardGuid = "qw-1", eCarbsGrams = 40, eCarbsDurationHours = 4
+            )
+        )
+
+        assertThat(executor.prepareBatch(actions)).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
+    }
+
+    @Test
+    fun prepareBatch_nonQuickWizardECarbsAboveTheLimit_isNotRefused() = runTest {
+        // Deliberate scope: a wear or dialog eCarbs value was clamped by its own input field moments ago, so there is
+        // no stale-preset problem to solve and refusing it would only break a live entry. Only a QuickWizard is checked.
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        stubCarbsLimit(48)
+        val executor = create()
+        val actions = listOf(
+            BatchAction.Bolus(
+                insulin = 0.0, carbs = 20, carbsTimeOffsetMinutes = 0, carbsDurationHours = 0, recordOnly = false,
+                notes = "", timestamp = 0L, iCfg = null, eCarbsGrams = 100, eCarbsDurationHours = 4
+            )
+        )
+
+        assertThat(executor.prepareBatch(actions)).isInstanceOf(WizardBolusExecutor.PrepareResult.Preview::class.java)
         verify(quickWizard, never()).get(any<String>())
     }
 

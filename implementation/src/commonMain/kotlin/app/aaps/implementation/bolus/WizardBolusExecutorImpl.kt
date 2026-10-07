@@ -238,6 +238,12 @@ class WizardBolusExecutorImpl(
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs()) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
+        // The eCarbs amount is STORED in the preset, so the carbs limit may have been lowered after it was entered
+        // (also: a settings import, or a preset synced from a device with a higher limit). Re-check it exactly like
+        // the immediate carbs above — a preset that no longer fits the limit is refused, never silently trimmed.
+        val eCarbsGrams = entry.eCarbsGrams()
+        if (constraintChecker.applyCarbsConstraints(ConstraintObject(eCarbsGrams, aapsLogger)).value() != eCarbsGrams)
+            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         val insulinAfterConstraints = wizard.insulinAfterConstraints
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
         if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep)
@@ -251,7 +257,6 @@ class WizardBolusExecutorImpl(
         // Build the master's color-coded confirmation lines here so the client renders the master's EXACT
         // wizard confirmation (shared builder). advisorApplies offers the high-BG "correct now, eat later" fork.
         val advisorApplies = wizard.needsBolusAdvisor()
-        val eCarbsGrams = if (entry.useEcarbs() == QuickWizardEntry.ALWAYS) entry.carbs2() else 0
         return WizardBolusExecutor.PrepareResult.Preview(
             insulin = wizard.calculatedTotalInsulin,
             carbs = wizard.carbs,
@@ -373,6 +378,14 @@ class WizardBolusExecutorImpl(
         // (lastUsed cooldown) here — the master is SOT and republishes the pref; the client never writes it. Null for a
         // dialog/wear batch, or a guid the master hasn't synced yet (graceful → no mark).
         val entry = bolus?.quickWizardGuid?.takeIf { it.isNotEmpty() }?.let { quickWizard.get(it) }
+        // A CARBS-mode QuickWizard arrives here with the preset's eCarbs amount. That amount is STORED, so the carbs
+        // limit may have been lowered after it was entered — refuse the preset rather than trim it silently, matching
+        // the WIZARD-mode path in prepareQuickWizard and the disabled button the overview already shows for an
+        // over-limit `carbs`. Only for a QuickWizard: a wear or dialog eCarbs value was clamped by its own input
+        // field moments ago, and capFixed below is what bounds the rest of a batch.
+        if (entry != null && bolus != null && bolus.eCarbsGrams > 0 &&
+            constraintChecker.applyCarbsConstraints(ConstraintObject(bolus.eCarbsGrams, aapsLogger)).value() != bolus.eCarbsGrams
+        ) return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.wizard_carbs_constraint))
         // Gate + pump-init only for an actual INSULIN delivery — carbs-only, a record-only log, and a TT-only batch
         // are always allowed (mirrors executeBolus, which gates only when insulin > 0).
         if (bolus != null && !recordOnly && bolus.insulin > 0.0) {
