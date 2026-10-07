@@ -27,6 +27,7 @@
     <string name="constraint_applied">已套用限制！</string>
     <string name="tt_label">臨時目標</string>
     <string name="pump_unreachable">幫浦無法使用</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">幫浦驅動程式無回應。「%1$s」已執行 %2$d 分鐘，其他指令無法傳達至幫浦。請檢查幫浦，然後重新啟動 AAPS。</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/小時</string>
