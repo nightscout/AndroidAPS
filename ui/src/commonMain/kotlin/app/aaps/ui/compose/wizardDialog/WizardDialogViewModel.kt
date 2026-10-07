@@ -112,8 +112,29 @@ class WizardDialogViewModel(
 
     private var wizard: BolusWizard? = null
 
+    /**
+     * The stored bolus percentage this dialog has already taken into its own state.
+     *
+     * The slider is a per bolus value and is never written back, so the only way to tell whether the
+     * settings sheet changed the global percentage is to remember what it was when we last read it.
+     */
+    private var appliedPercentagePreference: Int? = null
+
     init {
         viewModelScope.launch { initialize() }
+    }
+
+    /**
+     * The percentage to start a bolus from: the stored one, but 100% when the last glucose value is
+     * older than [app.aaps.core.keys.IntKey.OverviewResetBolusPercentageTime], or when there is none
+     * at all. A percentage above 100 should not ride on data that may already be stale.
+     */
+    private suspend fun initialBolusPercentage(): Int {
+        val percentage = preferences.get(IntKey.OverviewBolusPercentage)
+        if (percentage == 100) return 100
+        val maxAge = T.mins(preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()).msecs()
+        val last = persistenceLayer.getLastGlucoseValue()
+        return if (last != null && last.timestamp >= dateUtil.now() - maxAge) percentage else 100
     }
 
     private suspend fun initialize() {
@@ -139,15 +160,8 @@ class WizardDialogViewModel(
         val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
         val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
 
-        // Percentage: reset to 100% if last BG is too old
-        var percentage = preferences.get(IntKey.OverviewBolusPercentage)
-        val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
-        persistenceLayer.getLastGlucoseValue().let {
-            if (it != null) {
-                if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
-                    percentage = 100
-            } else percentage = 100
-        }
+        val percentage = initialBolusPercentage()
+        appliedPercentagePreference = preferences.get(IntKey.OverviewBolusPercentage)
 
         // Current BG
         val actualBg = iobCobCalculator.ads.actualBg()
@@ -192,7 +206,6 @@ class WizardDialogViewModel(
                 showNotes = showNotes,
                 hasTempTarget = tempTarget != null,
                 useBolusAdvisor = useBolusAdvisor,
-                defaultPercentage = percentage,
                 simpleMode = preferences.simpleMode,
                 carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
                 carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
@@ -322,21 +335,34 @@ class WizardDialogViewModel(
     }
 
     fun refreshAfterSettings() {
+        viewModelScope.launch { refreshAfterSettingsSuspend() }
+    }
+
+    private suspend fun refreshAfterSettingsSuspend() {
         // Re-read preferences that may have changed in settings sheet
         val useTrend = preferences.get(BooleanNonKey.WizardIncludeTrend)
         val useCOB = preferences.get(BooleanNonKey.WizardIncludeCob)
         val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
-        val percentage = preferences.get(IntKey.OverviewBolusPercentage)
+        // The slider holds a per bolus percentage that is never stored, so dismissing the sheet must
+        // not overwrite it. Take the stored value only when the sheet actually changed it, and put it
+        // through the same stale data check the dialog started with.
+        val stored = preferences.get(IntKey.OverviewBolusPercentage)
+        val percentage =
+            if (stored != appliedPercentagePreference) {
+                appliedPercentagePreference = stored
+                initialBolusPercentage()
+            } else {
+                uiState.value.percentage
+            }
         _uiState.update {
             it.copy(
                 useTrend = useTrend,
                 useCOB = useCOB,
                 useBolusAdvisor = useBolusAdvisor,
-                percentage = percentage,
-                defaultPercentage = percentage
+                percentage = percentage
             )
         }
-        recalculate()
+        recalculateSuspend()
     }
 
     // --- Calculation ---
