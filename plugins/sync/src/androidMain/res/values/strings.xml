@@ -54,7 +54,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Multiple pairings matched that PIN. Ask the master to generate a new one and retry.</string>
     <string name="pair_with_master_error_expired">This pairing has expired. Generate a new PIN on the master.</string>
     <string name="pair_with_master_error_network">Cannot reach Nightscout. Check the connection and try again.</string>
-    <string name="pair_with_master_error_secret_store">This phone could not store the pairing secret, so pairing was cancelled. Nothing was changed. Try again, and if it keeps failing, restart the phone.</string>
+    <string name="pair_with_master_error_secret_store">The pairing secret could not be stored, so pairing was cancelled. Nothing was changed. Try again, and if it keeps failing, restart the app.</string>
     <string name="pair_with_master_retry">Try again</string>
     <string name="pair_with_master_already_paired_title">Already paired</string>
     <string name="pair_with_master_already_paired_master">Currently paired with master %1$s. Unpair first to enter a new PIN.</string>
