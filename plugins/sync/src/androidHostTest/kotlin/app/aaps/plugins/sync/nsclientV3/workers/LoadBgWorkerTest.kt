@@ -150,7 +150,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
             value = 99.0,
             trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
-            sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+            sourceSensor = SourceSensor.DEXCOM_G6,
             ids = IDs(
                 nightscoutId = "nightscoutId"
             )
@@ -192,7 +192,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
             value = 99.0,
             trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
-            sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+            sourceSensor = SourceSensor.DEXCOM_G6,
             ids = IDs(nightscoutId = "nightscoutId")
         )
 
@@ -332,7 +332,7 @@ internal class LoadBgWorkerTest : TestBaseWithProfile() {
             value = 99.0,
             trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
-            sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+            sourceSensor = SourceSensor.DEXCOM_G6,
             ids = IDs(nightscoutId = "nightscoutId")
         )
 

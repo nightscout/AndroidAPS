@@ -58,7 +58,7 @@ class BgSourceScreenTest {
         value = 100.0 + id,
         trendArrow = TrendArrow.FLAT,
         noise = null,
-        sourceSensor = SourceSensor.DEXCOM_NATIVE_UNKNOWN
+        sourceSensor = SourceSensor.DEXCOM_UNKNOWN
     )
 
     private fun render(state: BgSourceUiState) {

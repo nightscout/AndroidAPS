@@ -82,7 +82,7 @@ class PatchedSiAppWorkerTest : TestBaseWithProfile() {
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.FORTY_FIVE_DOWN,
-                sourceSensor = SourceSensor.SIBIONIC
+                sourceSensor = SourceSensor.SIBIONIC_UNKNOWN
             )
             verify(persistenceLayer).insertCgmSourceData(Sources.SiBionic, listOf(expectedGv), emptyList(), null)
         }

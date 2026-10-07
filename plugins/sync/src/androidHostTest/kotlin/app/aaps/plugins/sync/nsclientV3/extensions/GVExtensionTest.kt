@@ -20,7 +20,7 @@ class GVExtensionTest : TestBase() {
         raw: Double = 120000.0,
         trendArrow: TrendArrow = TrendArrow.FLAT,
         noise: Double = 1.0,
-        sourceSensor: SourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+        sourceSensor: SourceSensor = SourceSensor.DEXCOM_G6,
         nightscoutId: String? = null
     ) = GV(
         id = id,
@@ -90,8 +90,8 @@ class GVExtensionTest : TestBase() {
     @Test
     fun `contentEqualsTo returns false if sourceSensor differs`() {
         // Arrange
-        val gv1 = createBaseGV(sourceSensor = SourceSensor.DEXCOM_G6_NATIVE)
-        val gv2 = createBaseGV(sourceSensor = SourceSensor.DEXCOM_G7_NATIVE)
+        val gv1 = createBaseGV(sourceSensor = SourceSensor.DEXCOM_G6)
+        val gv2 = createBaseGV(sourceSensor = SourceSensor.DEXCOM_G7)
 
         // Act & Assert
         assertFalse(gv1.contentEqualsTo(gv2))

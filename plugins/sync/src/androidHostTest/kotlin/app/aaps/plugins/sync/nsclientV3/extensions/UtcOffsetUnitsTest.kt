@@ -52,7 +52,7 @@ internal class UtcOffsetUnitsTest {
         val gv = GV(
             timestamp = 10000, value = 120.0, isValid = true, utcOffset = plusTwoHoursMs,
             raw = null, trendArrow = TrendArrow.FLAT, noise = null,
-            sourceSensor = SourceSensor.DEXCOM_G6_NATIVE, ids = IDs()
+            sourceSensor = SourceSensor.DEXCOM_G6, ids = IDs()
         )
 
         val ns = gv.toNSSvgV3()

@@ -67,7 +67,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(20).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -77,7 +77,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(15).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -87,7 +87,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(10).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -97,7 +97,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(5).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -117,7 +117,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(20).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -127,7 +127,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(20).msecs() + 1,
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -137,7 +137,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(10).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -147,7 +147,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(15).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -157,7 +157,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(5).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -174,7 +174,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(20).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -184,7 +184,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(20).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -194,7 +194,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(10).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -204,7 +204,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(15).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -214,7 +214,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = T.mins(5).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -232,7 +232,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(0).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -242,7 +242,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-5).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -252,7 +252,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 101.0,
                 timestamp = now + T.mins(-10).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -262,7 +262,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-15).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -272,7 +272,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-20).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -282,7 +282,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-25).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -292,7 +292,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 99.0,
                 timestamp = now + T.mins(-30).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -302,7 +302,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-35).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -312,7 +312,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-40).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -322,7 +322,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-45).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -340,7 +340,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(0).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -350,7 +350,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-5).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -360,7 +360,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 101.0,
                 timestamp = now + T.mins(-10).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -370,7 +370,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-15).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -380,7 +380,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-20).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -390,7 +390,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-25).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -400,7 +400,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 99.0,
                 timestamp = now + T.mins(-30).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -410,7 +410,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-35).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -420,7 +420,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-40).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -430,7 +430,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-45).msecs(),
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE,
+                sourceSensor = SourceSensor.DEXCOM_G6,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -448,7 +448,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(0).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -458,7 +458,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-5).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -472,7 +472,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 101.0,
                 timestamp = now + T.mins(-10).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -482,7 +482,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-15).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -492,7 +492,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-20).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -502,7 +502,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-25).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -512,7 +512,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 99.0,
                 timestamp = now + T.mins(-30).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -522,7 +522,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-35).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )
@@ -532,7 +532,7 @@ class BgQualityCheckPluginTest : TestBase() {
                 noise = 0.0,
                 value = 100.0,
                 timestamp = now + T.mins(-40).msecs(),
-                sourceSensor = SourceSensor.LIBRE_1_OTHER,
+                sourceSensor = SourceSensor.LIBRE_1,
                 trendArrow = TrendArrow.FLAT
             )
         )

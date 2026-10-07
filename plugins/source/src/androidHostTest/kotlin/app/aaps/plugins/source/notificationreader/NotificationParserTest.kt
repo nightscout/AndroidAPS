@@ -22,18 +22,18 @@ class NotificationParserTest {
                 "com.ottai.seas", "com.sinocare.cgm.ce",
             ),
             packageToSensor = mapOf(
-                "com.dexcom.g7" to SourceSensor.DEXCOM_G7_NATIVE,
-                "com.dexcom.g6" to SourceSensor.DEXCOM_G6_NATIVE,
-                "com.dexcom.g6.region1.mmol" to SourceSensor.DEXCOM_G6_NATIVE,
-                "com.dexcom.dexcomone" to SourceSensor.DEXCOM_NATIVE_UNKNOWN,
-                "com.dexcom.stelo" to SourceSensor.DEXCOM_NATIVE_UNKNOWN,
-                "com.camdiab.fx_alert.mmoll" to SourceSensor.DEXCOM_NATIVE_UNKNOWN,
+                "com.dexcom.g7" to SourceSensor.DEXCOM_G7,
+                "com.dexcom.g6" to SourceSensor.DEXCOM_G6,
+                "com.dexcom.g6.region1.mmol" to SourceSensor.DEXCOM_G6,
+                "com.dexcom.dexcomone" to SourceSensor.DEXCOM_UNKNOWN,
+                "com.dexcom.stelo" to SourceSensor.DEXCOM_UNKNOWN,
+                "com.camdiab.fx_alert.mmoll" to SourceSensor.DEXCOM_UNKNOWN,
                 "com.medtronic.diabetes.guardian" to SourceSensor.MM_600_SERIES,
                 "com.medtronic.diabetes.minimedmobile.eu" to SourceSensor.MM_600_SERIES,
                 "com.senseonics.gen12androidapp" to SourceSensor.EVERSENSE,
                 "com.microtech.aidexx" to SourceSensor.AIDEX,
-                "com.ottai.seas" to SourceSensor.OTTAI,
-                "com.sinocare.cgm.ce" to SourceSensor.SINO,
+                "com.ottai.seas" to SourceSensor.SYAI_TAG,
+                "com.sinocare.cgm.ce" to SourceSensor.SINOCARE,
             )
         )
     }
@@ -178,7 +178,7 @@ class NotificationParserTest {
             val result = parser.extractGlucose(listOf("142"), "com.dexcom.g7", useMgdl = true)
             assertThat(result).isNotNull()
             assertThat(result!!.glucoseMgdl).isEqualTo(142)
-            assertThat(result.sourceSensor).isEqualTo(SourceSensor.DEXCOM_G7_NATIVE)
+            assertThat(result.sourceSensor).isEqualTo(SourceSensor.DEXCOM_G7)
         }
 
         @Test

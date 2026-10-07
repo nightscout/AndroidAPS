@@ -101,7 +101,7 @@ class NotificationCollectorServiceTest {
     fun `valid glucose notification is inserted`() {
         whenever(packageConfig.isSupportedPackage(any())).thenReturn(true)
         whenever(plugin.isEnabled()).thenReturn(true)
-        whenever(parser.extractGlucose(any(), any(), any())).thenReturn(NotificationParser.GlucoseResult(100, SourceSensor.DEXCOM_NATIVE_UNKNOWN))
+        whenever(parser.extractGlucose(any(), any(), any())).thenReturn(NotificationParser.GlucoseResult(100, SourceSensor.DEXCOM_UNKNOWN))
         whenever(deduplicator.process(any(), any())).thenReturn(true)
         runBlocking {
             whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
@@ -119,7 +119,7 @@ class NotificationCollectorServiceTest {
     fun `duplicate notification is not inserted`() {
         whenever(packageConfig.isSupportedPackage(any())).thenReturn(true)
         whenever(plugin.isEnabled()).thenReturn(true)
-        whenever(parser.extractGlucose(any(), any(), any())).thenReturn(NotificationParser.GlucoseResult(100, SourceSensor.DEXCOM_NATIVE_UNKNOWN))
+        whenever(parser.extractGlucose(any(), any(), any())).thenReturn(NotificationParser.GlucoseResult(100, SourceSensor.DEXCOM_UNKNOWN))
         whenever(deduplicator.process(any(), any())).thenReturn(false)
 
         service.onNotificationPosted(sbn("com.foo"))

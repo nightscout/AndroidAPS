@@ -68,7 +68,9 @@ class Converters {
     @TypeConverter
     fun toSourceSensor(sourceSensor: String?): GlucoseValue.SourceSensor? {
         return sourceSensor?.let {
-            GlucoseValue.SourceSensor.entries.firstOrNull { enumValue -> enumValue.name == it } ?: GlucoseValue.SourceSensor.UNKNOWN
+            GlucoseValue.SourceSensor.entries.firstOrNull { enumValue -> enumValue.name == it }
+                ?: LEGACY_SOURCE_SENSOR_NAMES[it]
+                ?: GlucoseValue.SourceSensor.UNKNOWN
         }
     }
 

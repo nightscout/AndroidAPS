@@ -60,7 +60,7 @@ internal class BgSourceViewModelTest {
             value = 100.0,
             trendArrow = TrendArrow.FLAT,
             noise = null,
-            sourceSensor = SourceSensor.DEXCOM_NATIVE_UNKNOWN
+            sourceSensor = SourceSensor.DEXCOM_UNKNOWN
         )
 
     @Test

@@ -16,10 +16,10 @@ class GlucoseValueExtensionTest : TestBase() {
         val gv = GV(
             id = 1L, timestamp = 1000L, value = 120.0, isValid = true, utcOffset = 0,
             raw = 120000.0, trendArrow = TrendArrow.FLAT, noise = 1.0,
-            sourceSensor = SourceSensor.DEXCOM_G6_NATIVE, ids = IDs()
+            sourceSensor = SourceSensor.DEXCOM_G6, ids = IDs()
         )
         val json = gv.toXdripJson()
-        assertThat(json.getString("device")).isEqualTo(SourceSensor.DEXCOM_G6_NATIVE.text)
+        assertThat(json.getString("device")).isEqualTo(SourceSensor.DEXCOM_G6.text)
         assertThat(json.getLong("mills")).isEqualTo(1000L)
         assertThat(json.getBoolean("isValid")).isTrue()
         assertThat(json.getDouble("mgdl")).isEqualTo(120.0)

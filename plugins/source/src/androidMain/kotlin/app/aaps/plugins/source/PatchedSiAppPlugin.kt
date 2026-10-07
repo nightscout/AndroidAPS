@@ -107,7 +107,7 @@ class PatchedSiAppPlugin(
                                         raw = null,
                                         noise = null,
                                         trendArrow = TrendArrow.fromString(jsonObject.getString("direction")),
-                                        sourceSensor = SourceSensor.SIBIONIC
+                                        sourceSensor = SourceSensor.SIBIONIC_UNKNOWN
                                     )
 
                                 else  -> aapsLogger.debug(LTag.BGSOURCE, "Unknown entries type: $type")

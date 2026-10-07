@@ -34,8 +34,8 @@ class PackageConfigTest {
     @Test
     fun `parse JSON maps known sensors correctly`() {
         val config = PackageConfig.fromJson(testJson)
-        assertThat(config.sensorForPackage("com.dexcom.g7")).isEqualTo(SourceSensor.DEXCOM_G7_NATIVE)
-        assertThat(config.sensorForPackage("com.dexcom.g6")).isEqualTo(SourceSensor.DEXCOM_G6_NATIVE)
+        assertThat(config.sensorForPackage("com.dexcom.g7")).isEqualTo(SourceSensor.DEXCOM_G7)
+        assertThat(config.sensorForPackage("com.dexcom.g6")).isEqualTo(SourceSensor.DEXCOM_G6)
         assertThat(config.sensorForPackage("com.medtronic.diabetes.guardian")).isEqualTo(SourceSensor.MM_600_SERIES)
         assertThat(config.sensorForPackage("com.senseonics.gen12androidapp")).isEqualTo(SourceSensor.EVERSENSE)
     }
@@ -165,6 +165,6 @@ class PackageConfigTest {
         """.trimIndent()
         val config = PackageConfig.fromJson(json)
         assertThat(config.isSupportedPackage("com.dexcom.g7")).isTrue()
-        assertThat(config.sensorForPackage("com.dexcom.g7")).isEqualTo(SourceSensor.DEXCOM_G7_NATIVE)
+        assertThat(config.sensorForPackage("com.dexcom.g7")).isEqualTo(SourceSensor.DEXCOM_G7)
     }
 }

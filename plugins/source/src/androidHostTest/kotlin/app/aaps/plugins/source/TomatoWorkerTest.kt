@@ -65,7 +65,7 @@ class TomatoWorkerTest : TestBaseWithProfile() {
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.NONE,
-                sourceSensor = SourceSensor.LIBRE_1_TOMATO
+                sourceSensor = SourceSensor.LIBRE_1
             )
             verify(persistenceLayer).insertCgmSourceData(Sources.Tomato, listOf(expectedGv), emptyList(), null)
         }

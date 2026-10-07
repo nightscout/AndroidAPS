@@ -7,6 +7,7 @@ import app.aaps.database.entities.TABLE_APS_RESULTS
 import app.aaps.database.entities.TABLE_BOLUSES
 import app.aaps.database.entities.TABLE_CALIBRATION_ENTRIES
 import app.aaps.database.entities.TABLE_EFFECTIVE_PROFILE_SWITCHES
+import app.aaps.database.entities.TABLE_GLUCOSE_VALUES
 import app.aaps.database.entities.TABLE_HEART_RATE
 import app.aaps.database.entities.TABLE_PREFERENCE_CHANGES
 import app.aaps.database.entities.TABLE_PROFILE_SWITCHES
@@ -281,6 +282,62 @@ private val migration34to35 = object : Migration(34, 35) {
     }
 }
 
+
+/**
+ * `SourceSensor` used to hold one entry per app or bridge that delivered a reading, so one sensor had
+ * several entries. They were merged into one entry per sensor, which renames the value stored in the
+ * `sourceSensor` column.
+ *
+ * The column has to be rewritten, not just translated on read. Three queries compare the stored
+ * value as text - `findByTimestampAndSensor`, which is how a re-delivered reading is recognised, and
+ * the two pump id lookups - and a bound parameter carries the new name. Without this, every
+ * re-delivered reading older than the upgrade would miss its own row and be inserted a second time,
+ * losing the Nightscout id and the invalidated flag with it, so a reading the user had deleted would
+ * come back.
+ *
+ * The pairs are written out here rather than read from `LEGACY_SOURCE_SENSOR_NAMES`, because a
+ * migration has to keep doing the same thing forever while that map may grow. The map stays as the
+ * safety net for a row this missed.
+ */
+/**
+ * The names `migration35to36` rewrites, and what each one becomes.
+ *
+ * Spelled out here and deliberately not read from `LEGACY_SOURCE_SENSOR_NAMES`: a migration has to
+ * keep doing the same thing forever, while that map grows whenever entries are merged again. A test
+ * checks that the two still agree, so they cannot drift apart unnoticed.
+ */
+internal val MIGRATION_35_TO_36_PAIRS: Map<String, String> = mapOf(
+    "DEXCOM_NATIVE_UNKNOWN" to "DEXCOM_UNKNOWN",
+    "DEXCOM_G6_NATIVE" to "DEXCOM_G6",
+    "DEXCOM_G6_NATIVE_XDRIP" to "DEXCOM_G6",
+    "DEXCOM_G7_NATIVE" to "DEXCOM_G7",
+    "DEXCOM_G7_NATIVE_XDRIP" to "DEXCOM_G7",
+    "DEXCOM_G7_XDRIP" to "DEXCOM_G7",
+    "LIBRE_1_OTHER" to "LIBRE_1",
+    "LIBRE_1_NET" to "LIBRE_1",
+    "LIBRE_1_BLUE" to "LIBRE_1",
+    "LIBRE_1_PL" to "LIBRE_1",
+    "LIBRE_1_BLUCON" to "LIBRE_1",
+    "LIBRE_1_TOMATO" to "LIBRE_1",
+    "LIBRE_1_RF" to "LIBRE_1",
+    "LIBRE_1_LIMITTER" to "LIBRE_1",
+    "LIBRE_1_BUBBLE" to "LIBRE_1",
+    "LIBRE_1_ATOM" to "LIBRE_1",
+    "LIBRE_1_GLIMP" to "LIBRE_1",
+    "LIBRE_2_NATIVE" to "LIBRE_2",
+    "SIBIONIC" to "SIBIONIC_UNKNOWN",
+    "SINO" to "SINOCARE",
+    "OTTAI" to "SYAI_TAG",
+)
+
+private val migration35to36 = object : Migration(35, 36) {
+    override fun migrate(connection: SQLiteConnection) {
+        val cases = MIGRATION_35_TO_36_PAIRS.entries.joinToString(separator = " ") { (old, new) -> "WHEN '$old' THEN '$new'" }
+        connection.execSQL("UPDATE `$TABLE_GLUCOSE_VALUES` SET `sourceSensor` = CASE `sourceSensor` $cases ELSE `sourceSensor` END")
+        dropCustomIndexes(connection)
+    }
+}
+
 /** Every migration, in order. Passed to the Room builder by each platform. */
 internal val databaseMigrations: Array<Migration> = arrayOf(
     migration22to23,
@@ -296,4 +353,5 @@ internal val databaseMigrations: Array<Migration> = arrayOf(
     migration32to33,
     migration33to34,
     migration34to35,
+    migration35to36,
 )

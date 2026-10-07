@@ -270,7 +270,7 @@ class LoopHubTest : TestBase() {
             GV(
                 timestamp = 1_000_000L, raw = 90.0, value = 93.0,
                 trendArrow = TrendArrow.FLAT, noise = null,
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE_XDRIP
+                sourceSensor = SourceSensor.DEXCOM_G6
             )
         )
         whenever(persistenceLayer.getBgReadingsDataFromTime(1001_000, false))

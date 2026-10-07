@@ -107,7 +107,7 @@ class PatchedSinoAppPlugin(
                                         raw = null,
                                         noise = null,
                                         trendArrow = TrendArrow.fromString(jsonObject.getString("direction")),
-                                        sourceSensor = SourceSensor.SINO
+                                        sourceSensor = SourceSensor.SINOCARE
                                     )
 
                                 else  -> aapsLogger.debug(LTag.BGSOURCE, "Unknown entries type: $type")
