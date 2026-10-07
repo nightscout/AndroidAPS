@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.carbsDialog
 
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.configuration.Config
@@ -11,6 +12,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +27,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class CarbsDialogViewModelTest {
@@ -103,5 +108,51 @@ internal class CarbsDialogViewModelTest {
         assertThat(state.notes).isEqualTo("late dinner")
         assertThat(state.alarmChecked).isTrue()
         assertThat(state.bolusReminderChecked).isTrue()
+    }
+
+    /** `glucose + 3 * delta < 70` is the "heading low" test the reminder row is gated on. */
+    private fun glucoseHeadingLow(headingLow: Boolean) {
+        // Built before the whenever(), because Mockito cannot have one stubbing started inside another.
+        val status = mock<GlucoseStatus> {
+            on { glucose } doReturn if (headingLow) 80.0 else 120.0
+            on { delta } doReturn if (headingLow) -5.0 else 0.0
+        }
+        whenever(glucoseStatusProvider.glucoseStatusData).thenReturn(status)
+    }
+
+    @Test
+    fun `turning the bolus reminder on in the settings sheet shows the row at once`() {
+        whenever(preferences.get(BooleanKey.OverviewUseBolusReminder)).thenReturn(true)
+        glucoseHeadingLow(true)
+
+        sut.refreshCarbsButtons()
+
+        assertThat(sut.uiState.value.showBolusReminder).isTrue()
+    }
+
+    @Test
+    fun `the reminder row stays hidden when the glucose is not heading low`() {
+        whenever(preferences.get(BooleanKey.OverviewUseBolusReminder)).thenReturn(true)
+        glucoseHeadingLow(false)
+
+        sut.refreshCarbsButtons()
+
+        assertThat(sut.uiState.value.showBolusReminder).isFalse()
+    }
+
+    @Test
+    fun `turning the bolus reminder off hides the row and clears the tick`() {
+        whenever(preferences.get(BooleanKey.OverviewUseBolusReminder)).thenReturn(true)
+        glucoseHeadingLow(true)
+        sut.refreshCarbsButtons()
+        sut.updateBolusReminder(true)
+        assertThat(sut.uiState.value.bolusReminderChecked).isTrue()
+
+        whenever(preferences.get(BooleanKey.OverviewUseBolusReminder)).thenReturn(false)
+        sut.refreshCarbsButtons()
+
+        val state = sut.uiState.value
+        assertThat(state.showBolusReminder).isFalse()
+        assertThat(state.bolusReminderChecked).isFalse()
     }
 }

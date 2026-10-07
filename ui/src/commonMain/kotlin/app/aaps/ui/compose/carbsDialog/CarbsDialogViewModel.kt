@@ -103,12 +103,6 @@ class CarbsDialogViewModel(
         // COB removal limit: a negative entry may remove at most the carbs currently on board (floored, ≥0).
         val cobLimit = (iobCobCalculator.getCobInfo("carbsDialog").displayCob ?: 0.0).toInt().coerceAtLeast(0)
 
-        // Bolus reminder: visible when preference enabled AND predicted BG is low
-        val showBolusReminder = if (preferences.get(BooleanKey.OverviewUseBolusReminder)) {
-            val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-            glucoseStatus != null && glucoseStatus.glucose + 3 * glucoseStatus.delta < 70.0
-        } else false
-
         // Auto-detect hypo condition
         val autoHypo = detectAutoHypo(now)
 
@@ -132,7 +126,7 @@ class CarbsDialogViewModel(
                 carbsButtonIncrement3 = preferences.get(IntKey.OverviewCarbsButtonIncrement3),
                 units = units,
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
-                showBolusReminder = showBolusReminder,
+                showBolusReminder = showBolusReminder(),
                 hypoTtTarget = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.HYPOGLYCEMIA), units),
                 hypoTtDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA),
                 eatingSoonTtTarget = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), units),
@@ -168,12 +162,32 @@ class CarbsDialogViewModel(
         return true
     }
 
+    /**
+     * Whether the bolus reminder row belongs on screen: the preference is on, and the prediction says
+     * the glucose is heading low.
+     *
+     * Read in both places that build the state, so that turning the preference on in the settings
+     * sheet takes effect at once. It used to be read only when the dialog opened, so switching it on
+     * from inside the dialog did nothing until the dialog was opened again - and the reminder could
+     * not be asked for either, because submitting needs the row to have been ticked.
+     */
+    private fun showBolusReminder(): Boolean {
+        if (!preferences.get(BooleanKey.OverviewUseBolusReminder)) return false
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
+        return glucoseStatus != null && glucoseStatus.glucose + 3 * glucoseStatus.delta < 70.0
+    }
+
+    /** Re-reads everything the settings sheet of this dialog can change. */
     fun refreshCarbsButtons() {
+        val showBolusReminder = showBolusReminder()
         _uiState.update {
             it.copy(
                 carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
                 carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
-                carbsButtonIncrement3 = preferences.get(IntKey.OverviewCarbsButtonIncrement3)
+                carbsButtonIncrement3 = preferences.get(IntKey.OverviewCarbsButtonIncrement3),
+                showBolusReminder = showBolusReminder,
+                // Never leave the tick set on a row that is no longer shown.
+                bolusReminderChecked = it.bolusReminderChecked && showBolusReminder
             )
         }
     }
