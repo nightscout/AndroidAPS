@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Più accoppiamenti corrispondono a quel PIN. Chiedi al master di generarne uno nuovo e riprovare.</string>
     <string name="pair_with_master_error_expired">Questa accoppiamento è scaduto. Genera un nuovo PIN sul master.</string>
     <string name="pair_with_master_error_network">Impossibile raggiungere Nightscout. Controlla la connessione e riprova.</string>
+    <string name="pair_with_master_error_secret_store">Questo telefono non può memorizzare il segreto di accoppiamento, quindi l\'accoppiamento è stato annullato. Nulla è stato modificato. Riprova e se continua a fallire, riavvia il telefono.</string>
     <string name="pair_with_master_retry">Riprova</string>
     <string name="pair_with_master_already_paired_title">Già associato</string>
     <string name="pair_with_master_already_paired_master">Attualmente accoppiato con il master %1$s. Disaccoppiati prima per inserire un nuovo PIN.</string>
@@ -255,6 +256,8 @@
     <string name="sms_read_status_failed">Lettura stato fallita</string>
     <string name="sms_profile_switch_created">Cambio profilo creato</string>
     <string name="sms_wrong_tbr_duration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
+    <string name="sms_tbr_percent_only">Questo micro richiede una basale temporanea solo in percentuale, non in U/h.</string>
+    <string name="sms_tbr_absolute_only">Questo micro prende una basale temporanea solo in U/h, non in percentuale.</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">L\'applicazione richiede l\'autorizzazione SMS per il controllo remoto tramite messaggi di testo</string>
