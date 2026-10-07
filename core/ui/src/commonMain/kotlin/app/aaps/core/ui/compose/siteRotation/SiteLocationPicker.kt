@@ -222,9 +222,7 @@ fun SiteLocationPicker(
                 }
             }
 
-        } else {
-
-        }
+        } 
 
         val filteredEntries = entries.filter { te ->
             when (te.type) {
