@@ -190,6 +190,9 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 rxBus = graph.rxBus,
                 snackbarHostPresence = graph.snackbarHostPresence,
                 clientControlActionDispatcher = graph.clientControlActionDispatcher,
+                bolusProgressData = graph.bolusProgressData,
+                commandQueue = graph.commandQueue,
+                pumpCommunicationStatus = graph.pumpCommunicationStatus,
                 // The real app icon, so the About dialog and the drawer show what the home screen
                 // shows. Icon() would tint a logo to one flat colour, so Image() draws it.
                 appIcon = { modifier -> AppIconImage(appIcon, modifier) },

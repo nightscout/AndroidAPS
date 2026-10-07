@@ -294,6 +294,9 @@ private fun AapsDesktopApp(graph: DesktopAppGraph, appIcon: Painter, appName: St
             rxBus = graph.rxBus,
             snackbarHostPresence = graph.snackbarHostPresence,
             clientControlActionDispatcher = graph.clientControlActionDispatcher,
+            bolusProgressData = graph.bolusProgressData,
+            commandQueue = graph.commandQueue,
+            pumpCommunicationStatus = graph.pumpCommunicationStatus,
             // Image rather than Icon: Icon paints its vector in a single tint, which flattens a logo
             // to one colour. Android passes the launcher bitmap here and this is the same file.
             appIcon = { modifier -> Image(appIcon, contentDescription = null, modifier = modifier) },
