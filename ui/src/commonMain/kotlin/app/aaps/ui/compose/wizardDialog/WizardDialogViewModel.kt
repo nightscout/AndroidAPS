@@ -117,6 +117,10 @@ class WizardDialogViewModel(
      *
      * The slider is a per bolus value and is never written back, so the only way to tell whether the
      * settings sheet changed the global percentage is to remember what it was when we last read it.
+     *
+     * Null until it has been read once. Nothing is applied on that first read, because with nothing
+     * to compare against there is no evidence the sheet changed anything, and the safe answer is to
+     * leave the slider alone.
      */
     private var appliedPercentagePreference: Int? = null
 
@@ -125,16 +129,18 @@ class WizardDialogViewModel(
     }
 
     /**
-     * The percentage to start a bolus from: the stored one, but 100% when the last glucose value is
-     * older than [app.aaps.core.keys.IntKey.OverviewResetBolusPercentageTime], or when there is none
-     * at all. A percentage above 100 should not ride on data that may already be stale.
+     * The percentage to start a bolus from: [stored], but 100% when the last glucose value is older
+     * than [IntKey.OverviewResetBolusPercentageTime], or when there is none at all. A percentage
+     * above 100 should not ride on data that may already be stale.
+     *
+     * Takes the stored value as a parameter so that the caller reads the preference once, and the
+     * value that is remembered is the same one that was clamped.
      */
-    private suspend fun initialBolusPercentage(): Int {
-        val percentage = preferences.get(IntKey.OverviewBolusPercentage)
-        if (percentage == 100) return 100
+    private suspend fun bolusPercentageFor(stored: Int): Int {
+        if (stored == 100) return 100
         val maxAge = T.mins(preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()).msecs()
         val last = persistenceLayer.getLastGlucoseValue()
-        return if (last != null && last.timestamp >= dateUtil.now() - maxAge) percentage else 100
+        return if (last != null && last.timestamp >= dateUtil.now() - maxAge) stored else 100
     }
 
     private suspend fun initialize() {
@@ -160,8 +166,9 @@ class WizardDialogViewModel(
         val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
         val useBolusAdvisor = preferences.get(BooleanKey.OverviewUseBolusAdvisor)
 
-        val percentage = initialBolusPercentage()
-        appliedPercentagePreference = preferences.get(IntKey.OverviewBolusPercentage)
+        val storedPercentage = preferences.get(IntKey.OverviewBolusPercentage)
+        val percentage = bolusPercentageFor(storedPercentage)
+        appliedPercentagePreference = storedPercentage
 
         // Current BG
         val actualBg = iobCobCalculator.ads.actualBg()
@@ -347,19 +354,18 @@ class WizardDialogViewModel(
         // not overwrite it. Take the stored value only when the sheet actually changed it, and put it
         // through the same stale data check the dialog started with.
         val stored = preferences.get(IntKey.OverviewBolusPercentage)
-        val percentage =
-            if (stored != appliedPercentagePreference) {
-                appliedPercentagePreference = stored
-                initialBolusPercentage()
-            } else {
-                uiState.value.percentage
-            }
+        val previouslyApplied = appliedPercentagePreference
+        appliedPercentagePreference = stored
+        // Null means "keep what the slider has", resolved inside update() so that nothing read before
+        // the database call above can be written back over a newer value.
+        val changedInSheet = previouslyApplied != null && stored != previouslyApplied
+        val percentage = if (changedInSheet) bolusPercentageFor(stored) else null
         _uiState.update {
             it.copy(
                 useTrend = useTrend,
                 useCOB = useCOB,
                 useBolusAdvisor = useBolusAdvisor,
-                percentage = percentage
+                percentage = percentage ?: it.percentage
             )
         }
         recalculateSuspend()

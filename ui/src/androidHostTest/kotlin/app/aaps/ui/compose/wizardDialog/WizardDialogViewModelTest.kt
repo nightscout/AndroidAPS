@@ -79,7 +79,8 @@ internal class WizardDialogViewModelTest {
         MockitoAnnotations.openMocks(this)
         // init { viewModelScope.launch { initialize() } } is deferred by StandardTestDispatcher, so construction
         // touches no collaborators and the internal BolusWizard stays null; the pure state flips below don't need it.
-        // The scheduler is shared with runTest below, so advanceUntilIdle() drives what the view model launches.
+        // The scheduler is shared with runTest below, so the first advanceUntilIdle() in a test body runs
+        // initialize() before the refresh queued after it, and drives everything the view model launches.
         // Stubbed before construction: init { } queues initialize() on the shared scheduler, so it runs
         // before any test body. With no profile store it returns straight away, which is all these tests need.
         whenever(profileRepository.profile).thenReturn(MutableStateFlow(null))
@@ -135,6 +136,22 @@ internal class WizardDialogViewModelTest {
         advanceUntilIdle()
 
         assertThat(sut.uiState.value.percentage).isEqualTo(150)
+    }
+
+    /**
+     * The first read has nothing to compare against, so it only remembers the stored value. Without
+     * this, a dismissal before the dialog finished starting up would apply the stored percentage over
+     * whatever the slider held.
+     */
+    @Test
+    fun `the first read of the stored percentage does not touch the slider`() = runTest(mainDispatcher.scheduler) {
+        stubForRefresh(storedPercentage = 150)
+        val before = sut.uiState.value.percentage
+
+        sut.refreshAfterSettings()
+        advanceUntilIdle()
+
+        assertThat(sut.uiState.value.percentage).isEqualTo(before)
     }
 
     @Test
