@@ -19,6 +19,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -144,6 +145,10 @@ class SmsCommunicatorPlugin(
     notificationManager: NotificationManager,
     private val runningModeGuard: RunningModeGuard,
     private val bolusProgressData: BolusProgressData,
+    // Deferred on purpose. Metro finds a cycle otherwise: WizardBolusExecutorImpl needs Automation, and
+    // automation's ActionFactory needs SmsCommunicator, which is this plugin. Nothing here touches the
+    // executor while the graph is being built - it is only used once a command arrives.
+    private val wizardBolusExecutorProvider: () -> WizardBolusExecutor,
     val repository: SmsCommunicatorRepository
 ) : PluginBaseWithPreferences(
     PluginDescription()
@@ -682,7 +687,12 @@ class SmsCommunicatorPlugin(
             var percentage = 100
             if (divided.size > 2) percentage = SafeParse.stringToInt(divided[2])
             if (pIndex > list.size) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
-            else if (percentage == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
+            // Refuse an implausible percentage before asking for a pass code, so a typo ("400" for "40") costs
+            // one reply instead of a confirmed switch. The executor checks the same range again when the switch
+            // is applied and stays the authority; this is the same split the in-app screen uses, where the
+            // number field is bounded by CPP_PERCENTAGE_RANGE and prepareBatch re-checks it.
+            else if (percentage.toDouble() !in Constants.CPP_PERCENTAGE_RANGE)
+                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(CoreUiStrings.valueoutofrange, "Profile-Percentage")))
             else if (pIndex == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(SyncStrings.wrong_format)))
             else {
                 val profile = store.getSpecificProfile(list[pIndex - 1] as String)
@@ -698,9 +708,7 @@ class SmsCommunicatorPlugin(
                             profileName = list[pIndex - 1] as String,
                             percentage = finalPercentage,
                             receivedSms = receivedSms,
-                            store = store,
-                            profileFunction = profileFunction,
-                            dateUtil = dateUtil,
+                            wizardBolusExecutor = wizardBolusExecutorProvider(),
                             rh = rh,
                             smsCommunicator = this
                         )
