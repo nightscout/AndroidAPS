@@ -94,6 +94,7 @@
     <string name="objectives_open_exam">Mở bài kiểm tra</string>
     <string name="objectives_exam_question_progress">Câu hỏi %1$d trong %2$d</string>
     <string name="objectives_exam_reset">Đặt lại</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">đáp án chính xác</string>
     <string name="objectives_exam_previous">Trước</string>
     <string name="objectives_exam_next">Tiếp theo</string>
     <string name="objectives_exam_next_unanswered">Câu chưa trả lời tiếp theo</string>
