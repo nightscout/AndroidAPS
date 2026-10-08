@@ -11,6 +11,10 @@
     <!-- Omnipod - Preferences -->
     <string name="omnipod_common_preferences_category_other">Ostalo</string>
     <!-- Omnipod - Pod Status -->
+    <!-- Omnipod - PDM Notification -->
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Commands -->
     <!-- Omnipod - Alerts -->

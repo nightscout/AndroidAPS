@@ -2,11 +2,10 @@ package app.aaps.pump.omnipod.dash.ui.wizard.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.InsulinManager
@@ -34,6 +33,7 @@ import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardStep
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardViewModel
+import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
@@ -42,23 +42,27 @@ import app.aaps.pump.omnipod.dash.history.data.InitialResult
 import app.aaps.pump.omnipod.dash.history.data.ResolvedResult
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.I8n
-import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.await
 import kotlinx.coroutines.rx3.rxSingle
-import javax.inject.Inject
-import javax.inject.Provider
 import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
-@HiltViewModel
-class DashOmnipodWizardViewModel @Inject constructor(
+// Registers itself: @ViewModelKey infers the key from the class. No graph entry, and deliberately
+// unscoped so each screen gets its own.
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+@ViewModelKey
+@Inject
+class DashOmnipodWizardViewModel(
     private val omnipodManager: OmnipodDashManager,
     private val podStateManager: OmnipodDashPodStateManager,
     private val preferences: Preferences,
@@ -68,31 +72,28 @@ class DashOmnipodWizardViewModel @Inject constructor(
     private val notificationManager: NotificationManager,
     private val pumpSync: PumpSync,
     private val fabricPrivacy: FabricPrivacy,
-    private val insulinManager: InsulinManager,
+    insulinManager: InsulinManager,
     profileFunction: ProfileFunction,
     profileRepository: ProfileRepository,
-    private val persistenceLayer: PersistenceLayer,
-    pumpEnactResultProvider: Provider<PumpEnactResult>,
+    persistenceLayer: PersistenceLayer,
+    pumpEnactResultProvider: () -> PumpEnactResult,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
-) : OmnipodWizardViewModel(logger, aapsSchedulers, pumpEnactResultProvider, profileFunction, profileRepository) {
-
-    private val _siteRotationEntries = MutableStateFlow<List<TE>>(emptyList())
-
-    init {
-        viewModelScope.launch {
-            val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
-            loadInsulins(insulins, activeLabel)
-            loadSiteRotationEntriesInternal()
-            resolveProfileGate()
-            _ready.value = true
-        }
-    }
+) : OmnipodWizardViewModel(
+    logger,
+    aapsSchedulers,
+    pumpEnactResultProvider,
+    profileFunction,
+    profileRepository,
+    insulinManager,
+    persistenceLayer
+) {
 
     override val pumpSource: Sources = Sources.OmnipodDash
 
-    override fun fallbackICfg(): ICfg? = insulinManager.insulins.firstOrNull()
+    init {
+        initializeWizard()
+    }
 
     override val concentrationEnabled: Boolean
         get() = preferences.get(BooleanKey.GeneralInsulinConcentration)
@@ -103,38 +104,6 @@ class DashOmnipodWizardViewModel @Inject constructor(
     override fun bodyType(): BodyType =
         BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
 
-    override fun siteRotationEntries(): List<TE> = _siteRotationEntries.value
-
-    private suspend fun loadSiteRotationEntriesInternal() {
-        _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
-            System.currentTimeMillis() - T.days(45).msecs(), false
-        ).filter { it.type == TE.Type.CANNULA_CHANGE || it.type == TE.Type.SENSOR_CHANGE }
-    }
-
-    override fun executeInsulinProfileSwitch() {
-        val selected = selectedInsulin.value ?: return
-        val activeLabel = activeInsulinLabel.value
-        if (selected.insulinLabel == activeLabel) return
-        viewModelScope.launch {
-            profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.OmnipodDash)
-        }
-    }
-
-    override fun saveSiteLocation() {
-        val location = getSelectedSiteLocation().takeIf { it != TE.Location.NONE } ?: return
-        val arrow = getSelectedSiteArrow().takeIf { it != TE.Arrow.NONE }
-        viewModelScope.launch {
-            try {
-                val now = System.currentTimeMillis()
-                val entries = persistenceLayer.getTherapyEventDataFromToTime(now - 60_000, now)
-                    .filter { it.type == TE.Type.CANNULA_CHANGE }
-                entries.firstOrNull()?.let { te ->
-                    persistenceLayer.insertOrUpdateTherapyEvent(te.copy(location = location, arrow = arrow))
-                }
-            } catch (_: Exception) {
-            }
-        }
-    }
 
     // region Action implementations — code copied verbatim from existing VMs
 
@@ -162,14 +131,14 @@ class DashOmnipodWizardViewModel @Inject constructor(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
                         source.onSuccess(
-                            pumpEnactResultProvider.get()
+                            pumpEnactResultProvider()
                                 .success(false)
                                 .comment(I8n.textFromException(throwable, rh))
                         )
                     },
                     onComplete = {
                         logger.debug("Pod activation part 1 completed")
-                        source.onSuccess(pumpEnactResultProvider.get().success(true))
+                        source.onSuccess(pumpEnactResultProvider().success(true))
                     }
                 )
         }
@@ -177,7 +146,7 @@ class DashOmnipodWizardViewModel @Inject constructor(
     override fun doInsertCannula(): Single<PumpEnactResult> = rxSingle(Dispatchers.IO) {
         val profile = pumpSync.expectedPumpState().profile
             ?: throw IllegalStateException("No profile set")
-        val basalProgram = mapProfileToBasalProgram(profile)
+        val basalProgram = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_DASH)
         logger.debug(
             LTag.PUMPCOMM,
             "Mapped profile to basal program. profile={}, basalProgram={}",
@@ -232,10 +201,10 @@ class DashOmnipodWizardViewModel @Inject constructor(
             // Without this it stays 0.0 (wrong reservoir display, and bolus/basal gates that read it) until the next
             // loop poll. Fire-and-forget so the activation-complete UI isn't delayed by the BLE round-trip.
             viewModelScope.launch { commandQueue.readStatus(rh.gs(CommonR.string.omnipod_common_pod_activation_wizard_pod_activated_title)) }
-            pumpEnactResultProvider.get().success(true)
+            pumpEnactResultProvider().success(true)
         } catch (throwable: Throwable) {
             logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-            pumpEnactResultProvider.get().success(false).comment(I8n.textFromException(throwable, rh))
+            pumpEnactResultProvider().success(false).comment(I8n.textFromException(throwable, rh))
         }
     }
 

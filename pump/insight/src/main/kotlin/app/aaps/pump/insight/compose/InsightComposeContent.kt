@@ -22,15 +22,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -48,8 +49,11 @@ import app.aaps.pump.insight.descriptors.BolusType
 import app.aaps.pump.insight.descriptors.InsightState
 import app.aaps.pump.insight.descriptors.OperatingMode
 import app.aaps.pump.insight.events.EventLocalInsightUpdateGUI
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -61,12 +65,12 @@ private enum class InsightScreen { OVERVIEW, PAIR_WIZARD }
 
 class InsightComposeContent(
     private val insightPlugin: InsightPlugin,
+    private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue,
     private val context: Context,
-    private val aapsSchedulers: AapsSchedulers,
     private val pumpSync: PumpSync,
     private val blePreCheck: BlePreCheck,
     private val ch: ConcentrationHelper,
@@ -82,12 +86,12 @@ class InsightComposeContent(
         val overviewState = remember {
             InsightOverviewState(
                 insightPlugin = insightPlugin,
+                aapsLogger = aapsLogger,
                 rh = rh,
                 rxBus = rxBus,
                 dateUtil = dateUtil,
                 commandQueue = commandQueue,
                 context = context,
-                aapsSchedulers = aapsSchedulers,
                 ch = ch,
                 appScope = appScope
             )
@@ -246,17 +250,17 @@ internal sealed class InsightOverviewEvent {
 
 internal class InsightOverviewState(
     private val insightPlugin: InsightPlugin,
+    private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue,
     @Suppress("unused") private val context: Context,
-    private val aapsSchedulers: AapsSchedulers,
     private val ch: ConcentrationHelper,
     private val appScope: CoroutineScope
 ) {
 
-    private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private var refreshPending = false
     private var tbrOverNotificationPending = false
 
@@ -267,16 +271,20 @@ internal class InsightOverviewState(
     val uiState: StateFlow<PumpOverviewUiState> = _uiState
 
     fun start() {
-        disposable.add(
-            rxBus.toObservable(EventLocalInsightUpdateGUI::class.java)
-                .observeOn(aapsSchedulers.main)
-                .subscribe({ refresh() }, {})
-        )
+        // Own scope on Main, like the main scheduler used before, cancelled in stop() like the
+        // CompositeDisposable was cleared. appScope must not be used here, it is app lifetime.
+        // UNDISPATCHED because RxBus has no replay, so a scheduled collector could miss an update
+        // sent before it starts.
+        val newScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
+        scope = newScope
+        rxBus.toFlow(EventLocalInsightUpdateGUI::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { refresh() }
         refresh()
     }
 
     fun stop() {
-        disposable.clear()
+        scope?.cancel()
+        scope = null
     }
 
     fun performUnpair() {

@@ -16,8 +16,11 @@ repo's `values-xx/` files** (which would conflict with Crowdin's own sync).
    base_url: "https://api.crowdin.com"
    ```
    Proper YAML, one key per line — no JSON-style quoted keys on a single line.
-4. Invoke the CLI via `java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" ...`
-   (the installer does not put it on PATH).
+4. Invoke the CLI as `crowdin ...`. The installer does put a `crowdin.bat` on PATH — check with
+   `where crowdin`, which resolves to `C:\Program Files (x86)\CrowdinCLI\crowdin.bat`. Wrap it as
+   `powershell.exe -Command "crowdin ..."` so it starts with an allowed command prefix.
+   The `java -jar "C:/Program Files (x86)/CrowdinCLI/crowdin-cli.jar" ...` form below still works and
+   is the fallback if `where crowdin` finds nothing.
 
 ## Project specifics
 
@@ -27,6 +30,15 @@ repo's `values-xx/` files** (which would conflict with Crowdin's own sync).
 - Project has **"Export only approved"** enabled. Downloads hide unapproved translations
   even when they exist. To see all (approved + unapproved), query the REST API:
   `GET /api/v2/projects/309752/languages/{lang}/translations?fileId={id}`.
+- Sources reach Crowdin through Crowdin's GitHub integration, not through the CLI. It syncs `dev` a
+  few minutes after a push and reads **only the paths listed in `crowdin.yml`**. Translations come
+  back as "New Crowdin updates" pull requests, which hold the last approved export - so the repo's
+  `values-xx/` files are a record of what was approved.
+- **The integration owns `crowdin.yml`.** Saving its settings in the Crowdin web UI rewrites the
+  file and strips every comment (commit "Update Crowdin configuration file [ci skip]", e.g.
+  `2be1bd2831`). Keep notes in commit messages or here, never in `crowdin.yml`.
+- Some `values-xx/` folders in the repo are for languages that are not Crowdin target languages
+  (in 2026-09: `cy`, `fi`, `sl`, `ta`). `upload translations` skips them without a message.
 
 ## Workflow — translate without touching the repo
 
@@ -121,6 +133,103 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
   suggests `--dest`, which is a different option for file rename).
 - **`crowdin file list` prints only "Fetching project info"** unless you pass
   `-c <yml> --base-path=<dir>`.
+- **`upload translations` skips a translation that is the same as the English text** (names, units,
+  "STEP 1."), so the count on Crowdin comes out lower than the file. That is expected;
+  `--import-eq-suggestions` would import them too.
+- **A hand-written translation in a short folder** (e.g. `values-ko` next to Crowdin's
+  `values-ko-rKR`) is not what Crowdin reads or writes. To bring it in, copy it into the temp
+  workspace under the Crowdin folder name (`values-ko-rKR`) and upload with `-l <lang>`.
+
+## Moving a source file
+
+The version that worked, on the stale Omnipod files in 2026-09-18. Each sync came a minute or
+two after the push.
+
+1. **Move.** Move the file and change its path in `crowdin.yml`, in one commit. Keep it a pure
+   move - nothing left at the old path - so git records a rename and `git log --follow` keeps
+   working.
+2. **Placeholder.** In a second commit, put a file containing exactly `<resources></resources>` at
+   the old path, and list the old path in `crowdin.yml` again. Push both commits. At the sync
+   Crowdin empties the old file to 0 strings. Say in the commit message that the entry is
+   temporary - not in a comment in `crowdin.yml`, which the integration strips.
+3. **Check that no string drops out** of the new file (the script in the next section, with the
+   new file's id and `res` folder). If any do, restore them - see below. Do it before the next
+   "New Crowdin updates" PR is merged.
+4. **Cleanup.** Once the old file has 0 strings, remove the placeholder and its `crowdin.yml`
+   entry, and push. At the sync Crowdin deletes the empty old file.
+5. **Check** with the script and no arguments: it must print nothing.
+
+Restoring approvals (step 3): upload the repo's translations of that file with auto-approve, in a
+temp workspace as in the workflow above (a `crowdin.yml` listing only that file, with the source
+and all its `values-xx/` folders copied in):
+
+```bash
+crowdin upload translations -b dev --base-path=<dir> -c <dir>/crowdin.yml --auto-approve-imported --no-progress --plain
+```
+
+The repo holds the last approved export, so this approves exactly what was approved before.
+Strings already approved with the same text are left alone. Then run the script again - it must
+print nothing.
+
+Why each step is there:
+
+- **The new path is a new file** on Crowdin, with a new id. Translation memory refills it within a
+  few minutes (18% → 70% → 100%) - **but not all approvals come back.** Where the memory holds more
+  than one translation of the same English text (from other files), it can pick one that is not
+  approved. `pump/dana/common` lost approval on 22 strings in 8 languages that way, and only
+  approved translations are exported. Comments on strings do not carry over.
+- **Only changing the path is not enough.** The Dana files were deleted at the sync that took their
+  paths out of `crowdin.yml`, but `pump/omnipod-dash` and `pump/omnipod-eros` left it in 2025 and
+  their files stayed on Crowdin, unchanged, until 2026-09.
+- **The placeholder must be listed, and must be a valid resource file.** The integration reads
+  only listed paths, so an unlisted file is never seen. A zero-byte file was ignored even when
+  listed - no change after a quarter of an hour.
+- The live `omnipod/dash` and `omnipod/eros` files were not affected by emptying and deleting the
+  old ones.
+
+If a stale file is found some other time, the same steps 2, 4 and 5 remove it. The CLI can also
+delete it directly: `crowdin file delete <path on Crowdin, without /dev> -b dev`.
+
+## Checking for stale files and strings that would drop out
+
+Save as a `.js` file in a scratch directory and run with `node` from the repo root. It prints the
+Crowdin files that have no `source:` line in `crowdin.yml` (and the other way round). With
+`<fileId>:<res dir>` arguments it also prints, per language, the strings that the repo has
+translated but Crowdin has not approved - the ones the next export would drop. No output means
+everything is fine.
+
+```js
+// node crowdin-check.js [<fileId>:<res dir> ...]   e.g. 5881:pump/dana/common/src/main/res
+const fs = require('fs'), os = require('os'), path = require('path')
+const token = /api_token:\s*"([^"]+)"/.exec(fs.readFileSync(path.join(os.homedir(), '.crowdin.yml'), 'utf8'))[1]
+const base = 'https://api.crowdin.com/api/v2/projects/309752'
+const get = async url => (await fetch(url, { headers: { Authorization: `Bearer ${token}` } })).json()
+const names = xml => [...xml.matchAll(/<string\s+name="([^"]+)"/g)].map(m => m[1])
+
+;(async () => {
+  const onCrowdin = (await get(`${base}/files?branchId=1&recursion=1&limit=500`)).data.map(x => x.data.path.replace(/^\/dev/, ''))
+  const listed = [...fs.readFileSync('crowdin.yml', 'utf8').matchAll(/^\s*- source:\s*(\S+)/gm)].map(m => m[1])
+  onCrowdin.filter(p => !listed.includes(p)).forEach(p => console.log('only on Crowdin:', p))
+  listed.filter(p => !onCrowdin.includes(p)).forEach(p => console.log('not on Crowdin yet:', p))
+
+  const languages = (await get(base)).data.targetLanguages
+  for (const arg of process.argv.slice(2)) {
+    const [fileId, dir] = arg.split(':')
+    const strings = (await get(`${base}/strings?fileId=${fileId}&limit=500`)).data.map(x => x.data)
+    const nameOf = new Map(strings.map(s => [s.id, s.identifier]))
+    for (const l of languages) {
+      const repoFile = path.join(dir, `values-${l.androidCode}`, 'strings.xml')
+      if (!fs.existsSync(repoFile)) continue
+      const approved = new Set((await get(`${base}/approvals?fileId=${fileId}&languageId=${l.id}&limit=500`)).data.map(x => nameOf.get(x.data.stringId)))
+      const lost = names(fs.readFileSync(repoFile, 'utf8')).filter(n => strings.some(s => s.identifier === n) && !approved.has(n))
+      if (lost.length) console.log(`${dir} ${l.id}: ${lost.join(', ')}`)
+    }
+  }
+})()
+```
+
+It reads 500 strings and 500 approvals per file and language, which covers every file today; a
+bigger file needs `offset` paging.
 
 ## Finding file IDs in the project
 

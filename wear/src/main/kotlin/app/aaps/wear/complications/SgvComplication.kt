@@ -3,14 +3,11 @@ package app.aaps.wear.complications
 import android.app.PendingIntent
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
-import androidx.wear.watchface.complications.data.CountUpTimeReference
 import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.data.ShortTextComplicationData
-import androidx.wear.watchface.complications.data.TimeDifferenceComplicationText
-import androidx.wear.watchface.complications.data.TimeDifferenceStyle
 import app.aaps.core.interfaces.logging.LTag
-import java.time.Instant
-import java.util.concurrent.TimeUnit
+import app.aaps.core.interfaces.rx.weardata.EventData
+import dev.zacsweers.metro.HasMemberInjections
 
 /**
  * SGV (Sensor Glucose Value) Complication
@@ -20,7 +17,8 @@ import java.util.concurrent.TimeUnit
  * - Time auto-updates every minute (battery efficient)
  * - Delta is static until new BG reading
  */
-class SgvComplication : ModernBaseComplicationProviderService() {
+@HasMemberInjections
+open class SgvComplication : ModernBaseComplicationProviderService() {
 
 
     override fun buildComplicationData(
@@ -45,13 +43,13 @@ class SgvComplication : ModernBaseComplicationProviderService() {
     }
 
     private fun buildShortTextComplication(
-        bgData: app.aaps.core.interfaces.rx.weardata.EventData.SingleBg,
+        bgData: EventData.SingleBg,
         pendingIntent: PendingIntent
     ): ShortTextComplicationData {
         val mainText = bgData.sgvString + bgData.slopeArrow
 
         // Title: auto-updating time + delta (e.g., "5m +0.1")
-        val titleText = buildDeltaAndTimeTitle(bgData)
+        val titleText = buildCountUpText(bgData.timeStamp, "^1 ${bgData.delta}")
 
         return ShortTextComplicationData.Builder(
             text = PlainComplicationText.Builder(text = mainText).build(),
@@ -61,22 +59,6 @@ class SgvComplication : ModernBaseComplicationProviderService() {
             .setTapAction(pendingIntent)
             .build()
     }
-
-    /**
-     * Build combined delta and time title (e.g., "5m +0.1" mmol/L or "5m +1" mg/dL)
-     * Time auto-updates, delta is static until new BG reading
-     * Uses ^1 placeholder which is replaced with the time difference
-     */
-    private fun buildDeltaAndTimeTitle(bgData: app.aaps.core.interfaces.rx.weardata.EventData.SingleBg): TimeDifferenceComplicationText =
-        // SHORT_SINGLE_UNIT rounds to nearest; adding 30_000ms makes it round down instead,
-        // matching CWF, AAPS overview, and BgGraphActivity
-        TimeDifferenceComplicationText.Builder(
-            style = TimeDifferenceStyle.SHORT_SINGLE_UNIT,
-            countUpTimeReference = CountUpTimeReference(Instant.ofEpochMilli(bgData.timeStamp + 30_000L))
-        )
-            .setMinimumTimeUnit(TimeUnit.MINUTES)
-            .setText("^1 ${bgData.delta}")
-            .build()
 
     override fun getComplicationAction(): ComplicationAction = ComplicationAction.LOOP_STATUS
 

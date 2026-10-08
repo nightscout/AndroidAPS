@@ -35,7 +35,6 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 /**
  * Unit test for [DashOmnipodWizardViewModel]'s synchronous, pure wizard-navigation and selection
@@ -61,7 +60,7 @@ internal class DashOmnipodWizardViewModelTest {
     @Mock private lateinit var profileFunction: ProfileFunction
     @Mock private lateinit var profileRepository: ProfileRepository
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    @Mock private lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Mock private lateinit var pumpEnactResultProvider: () -> PumpEnactResult
     @Mock private lateinit var logger: AAPSLogger
     @Mock private lateinit var aapsSchedulers: AapsSchedulers
 

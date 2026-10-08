@@ -19,7 +19,6 @@
     <string name="updatingbasalrates">Atualizar valores das basais</string>
     <string name="description_pump_diaconn_g8">Integração da bomba para bombas Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Transgressão Bólus máx</string>
     <string name="commanderror">Erro no comando</string>
     <string name="speederror">Erro velocidade</string>

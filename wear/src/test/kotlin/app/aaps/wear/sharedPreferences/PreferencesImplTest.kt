@@ -108,18 +108,6 @@ internal class PreferencesImplTest {
     }
 
     @Test
-    fun getDependingOnReturnsDependencyChildren() {
-        val wearControlDependents = sut.getDependingOn("wearcontrol")
-        assertThat(wearControlDependents).containsAtLeast(
-            BooleanKey.WearWizardBg,
-            BooleanKey.WearWizardTt,
-            BooleanKey.WearWizardTrend,
-            BooleanKey.WearWizardCob,
-            BooleanKey.WearWizardIob
-        )
-    }
-
-    @Test
     fun getAllPreferenceKeysReturnsOnlyPreferenceKeysAndExcludesNonPreferenceEnums() {
         val all = sut.getAllPreferenceKeys()
         assertThat(all).isNotEmpty()
@@ -133,10 +121,10 @@ internal class PreferencesImplTest {
     }
 
     @Test
-    fun registerPreferencesIsIdempotentForAlreadyRegisteredClass() {
+    fun registerPreferencesIsIdempotentForAlreadyRegisteredKeys() {
         val before = sut.getAllPreferenceKeys().size
-        // BooleanKey is already registered in the default prefsList -> adding again is a no-op
-        sut.registerPreferences(BooleanKey::class.java)
+        // BooleanKey is already in the default prefsList -> adding its keys again is a no-op
+        sut.registerPreferences(BooleanKey.entries)
         val after = sut.getAllPreferenceKeys().size
         assertThat(after).isEqualTo(before)
     }
@@ -252,5 +240,52 @@ internal class PreferencesImplTest {
         sut.put(key, true)
         verify(sp, times(1)).putBoolean(eq(key.key), eq(true))
         assertThat(first.value).isTrue()
+    }
+
+    /**
+     * A settings import writes every key in one batch BELOW `Preferences`, so nothing updates the
+     * flows on the way past. `reloadFromStore` is what publishes them afterwards.
+     */
+    @Test
+    fun reloadFromStorePublishesAWriteThatBypassedPreferences() {
+        val key = BooleanKey.WearWizardCob
+        val flow = sut.observe(key)
+        assertThat(flow.value).isTrue() // default
+
+        store[key.key] = false // written behind Preferences' back, as a batch import does
+        assertThat(flow.value).isTrue() // still stale, which is the whole problem
+
+        sut.reloadFromStore()
+
+        assertThat(flow.value).isFalse()
+    }
+
+    /**
+     * The case the previous refresh could not do. A composed key is cached under its COMPOSED name
+     * (`appwidget_7`), and the registry only holds the template (`appwidget_`), so any refresh that
+     * looked the key up from the cached name silently skipped it. The flow keeps its reader instead.
+     */
+    @Test
+    fun reloadFromStoreRefreshesComposedKeysToo() {
+        val key = IntComposedKey.WidgetOpacity
+        val flow = sut.observe(key, 7)
+        assertThat(flow.value).isEqualTo(key.defaultValue)
+
+        store[key.composeKey(7)] = 80
+
+        sut.reloadFromStore()
+
+        assertThat(flow.value).isEqualTo(80)
+    }
+
+    @Test
+    fun reloadFromStoreLeavesAnUnchangedValueAlone() {
+        val key = BooleanKey.WearWizardCob
+        store[key.key] = true
+        val flow = sut.observe(key)
+
+        sut.reloadFromStore()
+
+        assertThat(flow.value).isTrue()
     }
 }

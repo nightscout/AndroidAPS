@@ -1,9 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
 import android.os.SystemClock
-import app.aaps.core.data.model.BS
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -17,6 +14,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
@@ -27,6 +25,7 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
 import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
 import com.google.gson.Gson
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -38,15 +37,12 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.EnumSet
 import java.util.TimeZone
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class OmnipodDashPodStateManagerImpl @Inject constructor(
+@Inject
+class OmnipodDashPodStateManagerImpl(
     private val logger: AAPSLogger,
     private val rxBus: RxBus,
-    private val preferences: Preferences,
-    private val config: Config
+    private val preferences: Preferences
 ) : OmnipodDashPodStateManager {
 
     private val gson = Gson()
@@ -55,7 +51,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     /** Internal (rather than private) to allow unit testing within this module.
      *  Lazily deserialized on first access to keep Gson reflection off the main thread
-     *  during app startup (Dagger constructs this @Singleton eagerly). */
+     *  during app startup. */
     internal var podState: PodState
         get() = _podState ?: synchronized(this) { _podState ?: load().also { _podState = it } }
         set(value) {
@@ -217,6 +213,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val alarmType: AlarmType?
         get() = podState.alarmType
 
+    override val pdmRef: String?
+        get() = podState.pdmRef
+
     override var tempBasal: OmnipodDashPodStateManager.TempBasal?
         get() = podState.tempBasal
         set(tempBasal) {
@@ -351,8 +350,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun needsBasalCorrection(): Boolean {
-        if (!config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)) return false  // Semaphore file check
-
         val correctionThreshold = -PodConstants.POD_PULSE_BOLUS_UNITS / 2  // -0.025U
         
         if (!isActivationCompleted) return false  // Don't correct during activation/priming
@@ -502,7 +499,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BS.Type) {
+    override fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BolusType) {
         podState.lastBolus = OmnipodDashPodStateManager.LastBolus(
             startTime = System.currentTimeMillis(),
             requestedUnits = requestedUnits,
@@ -769,7 +766,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun onStart() {
-        logger.info(LTag.PUMP, "Omnipod Dash drift compensation: ${if (config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)) "enabled" else "disabled"}")
         when (getCommandConfirmationFromState()) {
             CommandConfirmationSuccess, CommandConfirmationDenied -> {
                 val now = SystemClock.elapsedRealtime()
@@ -962,7 +958,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 response.activeAlerts,
                 response.bolusPulsesRemaining
             )
-            podState.alarmType = response.alarmType
+            // A faulted pod answers every later command with this same fault response, so only latch the
+            // first one: its VV byte snapshot is the one a real PDM captures, later ones drift.
+            if (podState.alarmType == null) {
+                podState.alarmType = response.alarmType
+                podState.pdmRef = response.pdmRef
+            }
         }
         
         store()
@@ -1057,6 +1058,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var minutesSinceActivation: Short? = null,
         var activeAlerts: EnumSet<AlertType>? = null,
         var alarmType: AlarmType? = null,
+        var pdmRef: String? = null,
 
         var basalProgram: BasalProgram? = null,
         var tempBasal: OmnipodDashPodStateManager.TempBasal? = null,

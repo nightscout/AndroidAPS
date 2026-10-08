@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Vòng tròn)</string>
     <string name="label_watchface_digital_style">AAPS(Kỹ thuật số)</string>
     <string name="label_watchface_custom">AAPS(Tùy chỉnh)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Tùy chỉnh) – luôn bật</string>
     <string name="label_actions_tile">Hành động</string>
     <string name="label_temp_target_tile">Mục tiêu tạm thời</string>
     <string name="label_quick_wizard_tile">Thiết lập nhanh</string>
@@ -60,7 +61,7 @@
     <string name="pref_prime_in_menu">Prime trong menu</string>
     <string name="pref_single_target">Mục tiêu đơn lẻ</string>
     <string name="pref_wizard_percentage">Tính toán theo phần trăm</string>
-    <string name="pref_complication_tap_action">Hoạt động khi chạm vào ô hiển thị</string>
+    <string name="pref_complication_tap_action">Thao tác chạm vào Complication</string>
     <string name="pref_complication_bg_graph_hours">Khoảng thời gian hiển thị biểu đồ đường huyết</string>
     <string name="duration_1_hour">1 giờ</string>
     <string name="duration_3_hours">3 giờ</string>
@@ -83,6 +84,11 @@
     <string name="menu_bg_graph">Biểu đồ BG</string>
     <string name="menu_resync">Đồng bộ lại</string>
     <string name="menu_prime_fill">Prime/Fill</string>
+    <string name="menu_install_watchface">Cài đặt mặt đồng hồ</string>
+    <string name="menu_installing_watchface">Đang cài đặt mặt đồng hồ…</string>
+    <string name="watchface_installed_active">Đã cài đặt và kích hoạt mặt đồng hồ</string>
+    <string name="watchface_installed_select">Mặt đồng hồ đã được cài đặt. Hãy chọn mặt đồng hồ này trong trình chọn mặt đồng hồ</string>
+    <string name="watchface_install_failed">Cài đặt mặt đồng hồ thất bại</string>
     <string name="menu_none">Không</string>
     <string name="menu_default">Mặc định</string>
     <string name="menu_menu">Danh Mục</string>
@@ -91,6 +97,7 @@
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
     <string name="action_scene_confirmation">Đã yêu cầu ngữ cảnh</string>
     <string name="scene_end">Kết thúc</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Bỏ qua</string>
     <string name="action_treatment_confirmation">Yêu cầu xử lý</string>
     <string name="action_bolus_confirmation">Bolus được yêu cầu</string>
     <string name="action_wizard_confirmation">Yêu cầu tính toán</string>
@@ -102,6 +109,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Cao[%s]</string>
     <string name="action_carbs">Carbs</string>
     <string name="action_carbs_gram">Carbs [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Xoá lượng carb tối đa: %1$d g (COB)</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Phần trăm\n[%]</string>
     <string name="action_start_minutes">Bắt đầu\n[phút]</string>
@@ -153,6 +161,21 @@
     <string name="pref_simplify_ui">Giao diện đơn giản</string>
     <string name="pref_vibrate_hourly">Rung báo theo giờ</string>
     <string name="pref_show_weeknumber">Hiển thị số tuần</string>
+    <string name="pref_complication_1">Thông tin tiện ích 1</string>
+    <string name="pref_complication_2">Thông tin tiện ích 2</string>
+    <string name="pref_complication_3">Thông tin tiện ích 3</string>
+    <string name="pref_complication_4">Thông tin tiện ích 4</string>
+    <string name="pref_complication_5">Thông tin tiện ích 5</string>
+    <string name="complication_summary_none">Nhấn để chọn nguồn dữ liệu</string>
+    <string name="pref_complication_type_priority">Ưu tiên loại Tiện ích</string>
+    <string name="pref_complication_type_priority_all">Mặc định cho tất cả</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Thay đổi tại đây sẽ được áp dụng vào lần tiếp theo bạn chọn nguồn dữ liệu. Chọn lại cùng một nguồn là chưa đủ: trước tiên hãy chọn một nguồn dữ liệu khác, sau đó chọn nguồn bạn muốn.</string>
+    <string name="complication_type_priority_value">Giá trị hoặc chỉ báo</string>
+    <string name="complication_type_priority_text">Văn bản</string>
+    <string name="complication_type_priority_icon">Biểu tượng</string>
+    <string name="complication_type_priority_use_default">Sử dụng mặc định</string>
+    <string name="cwf_complication_layout">Bố cục Tiện ích</string>
+    <string name="cwf_complication_layout_description">Vị trí và kích thước của các Tiện ích, được lấy từ mặt đồng hồ tùy chỉnh đã tải.</string>
     <string name="pref_include_external">Thêm các hiển thị bên ngoài vào mẫu</string>
     <string name="pref_switch_external">Chuyển đổi dữ liệu bên ngoài trên mặt đồng hồ</string>
     <string name="custom_pref_show_seconds">Hiển thị giây</string>
@@ -225,6 +248,12 @@
     <string name="complication_blood_glucose_ext1">Đường huyết Ext1</string>
     <string name="complication_blood_glucose_ext2">Đường huyết Ext2</string>
     <string name="complication_bg_graph">Đồ thị BG</string>
+    <string name="complication_cwf_image">Mặt đồng hồ tùy chỉnh</string>
+    <string name="complication_cwf_ambient_bg">Đường huyết Ambient trên mặt đồng hồ tùy chỉnh</string>
+    <string name="complication_cwf_ambient_status">Trạng thái Ambient của mặt đồng hồ tùy chỉnh</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s %2$s</string>
+    <string name="complication_cwf_lower">Hình nền của mặt đồng hồ tùy chỉnh</string>
+    <string name="complication_cwf_upper">Thời gian trên mặt đồng hồ tùy chỉnh</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
@@ -238,6 +267,8 @@
     <string name="complication_iob_icon">Biểu tượng IoB</string>
     <string name="complication_iob_detailed">Chi tiết IoB</string>
     <string name="complication_uploader_phone_battery">Pin thiết bị gửi dữ liệu / Điện thoại</string>
+    <string name="running_mode_resume">Tiếp tục vòng lặp</string>
+    <string name="running_mode_reconnect">Kết nối lại bơm</string>
     <string name="label_running_mode_title">Chế độ thể dục</string>
     <string name="label_bg_graph_tile">Biểu đồ BG</string>
     <string name="tile_tap_action">Hoạt động khi chạm</string>
@@ -257,10 +288,9 @@
     <string name="contacting_master_unknown">Trạng thái không xác định — hãy kiểm tra điện thoại</string>
     <string name="tile_settings">Cài đặt Tile</string>
     <string name="loop_status_error">Không tải được trạng thái</string>
-    <string name="loop_status_tempt_duration">%1$d phút (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d phút</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">Còn %1$d phút</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s còn lại</string>
     <string name="loop_status_tbr_continues">Tiếp tục liều nền tạm thời</string>
     <string name="loop_status_tbr_cancel">Đang thiết lập liều nền thường</string>
     <string name="loop_status_smb">%1$.2f U</string>
@@ -288,6 +318,18 @@
     <string name="loop_status_target_range">Phạm vi</string>
     <string name="loop_status_target">Mục tiêu</string>
     <string name="loop_status_adjusted_target">Mục tiêu đã điều chỉnh</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Đến khi kết thúc</string>
+    <string name="loop_status_scene_ended">Đã kết thúc</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Tác vụ tiếp theo</string>
+    <string name="loop_status_profile">Cấu hình</string>
+    <string name="loop_status_no_profile">Chưa có cấu hình</string>
+    <string name="loop_status_profile_percentage">Phần trăm</string>
+    <string name="loop_status_profile_timeshift">Điều chỉnh thời gian</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Quay lại</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Độ nhạy</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Được thiết lập bởi ngữ cảnh đang hoạt động</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
     <string name="loop_status_refresh">Làm mới</string>
     <string name="confirm">Xác nhận</string>

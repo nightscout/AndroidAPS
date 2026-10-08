@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.BlePreCheck
@@ -21,6 +20,7 @@ import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.pump.medtrum.code.PatchStep
@@ -39,8 +39,8 @@ class MedtrumComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: MedtrumOverviewViewModel = hiltViewModel()
-        val patchViewModel: MedtrumPatchViewModel = hiltViewModel()
+        val overviewViewModel: MedtrumOverviewViewModel = metroViewModel()
+        val patchViewModel: MedtrumPatchViewModel = metroViewModel()
 
         // Patch workflow state
         var showPatchWorkflow by remember { mutableStateOf(false) }

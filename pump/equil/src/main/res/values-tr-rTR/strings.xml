@@ -104,24 +104,8 @@
     <string name="equil_history_item18">Anormal İnfüzyon Durduruldu</string>
     <string name="equil_common_overview_button_suspend_delivery">Askıya al</string>
     <string name="equil_common_overview_button_resume_delivery">İletime devam et</string>
-    <string name="equil_common_moments_ago">Dakika önce</string>
-    <string name="equil_common_less_than_a_minute_ago">Bir dakikadan az önce</string>
-    <string name="equil_common_time_ago">%1$s dak önce</string>
-    <string name="equil_common_composite_time">%1$s ve %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Henüz tüm adımları tamamlamadınız. Çıkmak istediğinize emin misin?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Çıkış</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d dakika</item>
-        <item quantity="other">%1$d dakika</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d saat</item>
-        <item quantity="other">%1$d saat</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d gün</item>
-        <item quantity="other">%1$d gün</item>
-    </plurals>
     <string name="equil_support_error">Cihaz yazılımı sürümü çok düşük. Desteklenmiyor</string>
     <string name="equil_set_pair_password">Paylaşım şifresini belirleyin</string>
     <string name="equil_hint1">Pompayı tabana yerleştirdikten sonra, havanın kalıcı iğneden boşaltılıp boşaltılmayacağını seçin.</string>

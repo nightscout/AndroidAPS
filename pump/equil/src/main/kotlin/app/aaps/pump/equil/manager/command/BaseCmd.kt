@@ -11,7 +11,6 @@ import app.aaps.pump.equil.manager.EquilCmdModel
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.EquilPacketCodec
 import app.aaps.pump.equil.manager.EquilResponse
-import app.aaps.pump.equil.manager.Utils
 
 abstract class BaseCmd(
     val createTime: Long,

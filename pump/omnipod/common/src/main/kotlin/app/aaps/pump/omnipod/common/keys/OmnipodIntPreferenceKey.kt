@@ -3,6 +3,7 @@ package app.aaps.pump.omnipod.common.keys
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.omnipod.common.R
 
 enum class OmnipodIntPreferenceKey(
@@ -10,19 +11,10 @@ enum class OmnipodIntPreferenceKey(
     override val min: Int,
     override val max: Int,
     override val defaultValue: Int,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
-    override val entries: Map<Int, Int> = emptyMap(),
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
+    private val entriesResIds: Map<Int, Int> = emptyMap(),
     override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
     ExpirationReminderHours(
@@ -42,4 +34,7 @@ enum class OmnipodIntPreferenceKey(
     );
 
     override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val entries: Map<Int, TextRef> = entriesResIds.mapValues { TextRef.AndroidRes(it.value) }
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

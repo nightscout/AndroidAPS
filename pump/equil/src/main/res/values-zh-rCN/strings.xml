@@ -114,21 +114,8 @@
     <string name="equil_history_item18">异常输注停止</string>
     <string name="equil_common_overview_button_suspend_delivery">暂停</string>
     <string name="equil_common_overview_button_resume_delivery">恢复输注</string>
-    <string name="equil_common_moments_ago">刚刚</string>
-    <string name="equil_common_less_than_a_minute_ago">不到一分钟前</string>
-    <string name="equil_common_time_ago">%1$s 前</string>
-    <string name="equil_common_composite_time">%1$s 和 %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">您尚未完成所有步骤。您确定要退出吗？</string>
     <string name="equil_common_wizard_exit_confirmation_title">退出</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="other">%1$d 分钟</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="other">%1$d 小时</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="other">%1$d 天</item>
-    </plurals>
     <string name="equil_support_error">固件版本过低。不支持</string>
     <string name="equil_password_tips">可选设置与Equil v5.3 泵配对的密码。 此密码将来也会用于取消配对，所以请务必记住它。 密码规则：长度必须为4个字符，从ABCDEF0123456789中选择。</string>
     <string name="equil_set_pair_password">设置配对密码</string>

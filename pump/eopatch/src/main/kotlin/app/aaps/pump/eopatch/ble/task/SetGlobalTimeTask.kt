@@ -5,19 +5,21 @@ import app.aaps.pump.eopatch.core.api.GetGlobalTime
 import app.aaps.pump.eopatch.core.api.SetGlobalTime
 import app.aaps.pump.eopatch.core.response.GlobalTimeResponse
 import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.milliseconds
 
 @Suppress("unused", "PrivatePropertyName")
-@Singleton
-class SetGlobalTimeTask @Inject constructor() : TaskBase(TaskFunc.SET_GLOBAL_TIME) {
+@SingleIn(AppScope::class)
+@Inject
+class SetGlobalTimeTask() : TaskBase(TaskFunc.SET_GLOBAL_TIME) {
 
     @Inject lateinit var setGlobalTime: SetGlobalTime
     @Inject lateinit var getGlobalTime: GetGlobalTime
@@ -39,7 +41,7 @@ class SetGlobalTimeTask @Inject constructor() : TaskBase(TaskFunc.SET_GLOBAL_TIM
         val oldMilli = response.globalTimeInMilli
         val oldOffset = response.timeZoneOffset.toLong()
         val offset = TimeZone.getDefault().getOffset(newMilli)
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(offset.toLong()).toInt()
+        val minutes = offset.toLong().milliseconds.inWholeMinutes.toInt()
         val newOffset = minutes / 15
 
         val diff: Long = abs(oldMilli - newMilli)

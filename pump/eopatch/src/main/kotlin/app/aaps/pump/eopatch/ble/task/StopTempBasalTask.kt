@@ -3,16 +3,17 @@ package app.aaps.pump.eopatch.ble.task
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.eopatch.core.api.TempBasalScheduleStop
 import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class StopTempBasalTask @Inject constructor() : TaskBase(TaskFunc.STOP_TEMP_BASAL) {
+@SingleIn(AppScope::class)
+@Inject
+class StopTempBasalTask() : TaskBase(TaskFunc.STOP_TEMP_BASAL) {
 
     @Inject lateinit var tempBasalScheduleStop: TempBasalScheduleStop
 

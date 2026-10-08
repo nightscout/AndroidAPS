@@ -5,9 +5,11 @@
     <string name="select">Выбрать</string>
     <string name="set">Задать</string>
     <string name="migrating_preferences">Перенос настроек…</string>
+    <string name="optimizing_database">Оптимизация БД...</string>
     <string name="initializing_plugins">Инициализация плагинов…</string>
     <string name="initializing">Инициализация…</string>
     <string name="migrating_profile_switches">Перенос переключателей профиля…</string>
     <string name="migrating_effective_profile_switches">Перенос эффективных переключателей профиля…</string>
     <string name="migrating_boluses">Перенос болюсов…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">У старых записей нет настроек инсулина, и профиль не был активен, поэтому для них использовался %1$s. Проверьте настройки инсулина — перенесенные записи уже не обновятся.</string>
 </resources>

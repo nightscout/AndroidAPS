@@ -6,15 +6,16 @@ import app.aaps.pump.eopatch.ble.PatchStateManager
 import app.aaps.pump.eopatch.core.api.BasalScheduleSetBig
 import app.aaps.pump.eopatch.core.response.BasalScheduleSetResponse
 import app.aaps.pump.eopatch.vo.NormalBasal
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class StartNormalBasalTask @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class StartNormalBasalTask(
     val patchStateManager: PatchStateManager,
     val aapsSchedulers: AapsSchedulers,
 ) : TaskBase(TaskFunc.START_NORMAL_BASAL) {

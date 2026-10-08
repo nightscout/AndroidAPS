@@ -14,12 +14,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Covers [BgGraphComplication]: the synthetic sine-curve preview graph, the image build path
- * for both supported types (which exercises the full bitmap render via `renderBgGraph`), the
- * unsupported-type fallback and the action/name accessors. Built via [Robolectric] so a Context
- * is attached without running onCreate's Dagger injection; the `@Inject` fields are set directly.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
 internal class BgGraphComplicationTest {

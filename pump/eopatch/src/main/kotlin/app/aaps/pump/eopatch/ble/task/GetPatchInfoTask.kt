@@ -15,16 +15,18 @@ import app.aaps.pump.eopatch.core.response.ModelNameResponse
 import app.aaps.pump.eopatch.core.response.PumpDurationResponse
 import app.aaps.pump.eopatch.core.response.SerialNumberResponse
 import app.aaps.pump.eopatch.core.response.WakeUpTimeResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Predicate
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class GetPatchInfoTask @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class GetPatchInfoTask(
     val updateConnectionTask: UpdateConnectionTask
 ) : TaskBase(TaskFunc.GET_PATCH_INFO) {
 

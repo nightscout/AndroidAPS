@@ -2,15 +2,18 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.hilt)
     id("com.android.application")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("android-app-dependencies")
     id("test-app-dependencies")
     id("jacoco-app-dependencies")
+    // Metro must be applied here too: createGraphFactory is a compiler intrinsic, not a library call, so
+    // the module that CREATES a graph needs the plugin. Koin needed no such thing (koinApplication is
+    // an ordinary function) and kotlin-inject only needed the generated create() on the classpath.
+    // It must come AFTER the plugin that registers the kotlin extension, or it fails to apply.
+    alias(libs.plugins.metro)
 }
 
 repositories {
@@ -18,9 +21,14 @@ repositories {
     google()
 }
 
+// `--exclude=ios-testflight-*`, because such a tag names one past iOS submission rather than this
+// build. `git describe` takes the nearest annotated tag whatever the distance, so a single TestFlight
+// tag made every later build announce itself as "ios-testflight-20260906-085036-44-g45d9d88" - in the
+// About dialog and in every log line. All four shells exclude it, iOS included: 53 commits past that
+// submission, calling yourself by its name is wrong there too.
 fun generateGitBuild(): String {
     try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always", "--abbrev=7")
+        val processBuilder = ProcessBuilder("git", "describe", "--always", "--abbrev=7", "--exclude=ios-testflight-*")
         val output = File.createTempFile("git-build", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()
@@ -81,6 +89,29 @@ fun allCommitted(): Boolean {
     }
 }
 
+
+/**
+ * Which module owns which string names, generated rather than hand written.
+ *
+ * Android resolves through AAPT, so this registers the `R.string` id maps and every translation
+ * keeps working. The list is `StringOwnerModules.ALL`, shared with the desktop and iOS shells, so a
+ * module cannot be registered on one platform and forgotten on another.
+ */
+val generateAppStringOwners = tasks.register<GenerateStringOwnerRegistryTask>("generateAppStringOwners") {
+    owners.set(StringOwnerModules.ALL)
+    packageName.set("app.aaps.di")
+    objectName.set("GeneratedStringOwners")
+    useResourceIds.set(true)
+    outputDir.set(layout.buildDirectory.dir("generated/stringOwners"))
+}
+
+// AGP will not take a Provider through the SourceSet API, so the directory is attached per variant.
+// addGeneratedSourceDirectory also wires the task dependency, which a bare srcDir would not.
+androidComponents {
+    onVariants { variant ->
+        variant.sources.kotlin?.addGeneratedSourceDirectory(generateAppStringOwners, GenerateStringOwnerRegistryTask::outputDir)
+    }
+}
 android {
 
     namespace = "app.aaps"
@@ -95,8 +126,8 @@ android {
         buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
         buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
 
-        // For Hilt injected instrumentation tests in app module
-        testInstrumentationRunner = "app.aaps.runners.HiltTestRunner"
+        // Runner for instrumentation tests in this module.
+        testInstrumentationRunner = "app.aaps.runners.AapsTestRunner"
     }
 
     flavorDimensions += "standard"
@@ -152,53 +183,34 @@ android {
         resValues = true
     }
 
-    // ---- Gradle Managed Devices (DRAFT — not yet wired into .circleci/config.yml) -----------------
-    // Splits the app module's androidTest suite across emulators WITHOUT hand-rolling coverage or
-    // result collection: AGP owns the emulator lifecycle and merges each shard's JaCoCo .ec files and
-    // JUnit XMLs through the normal pipeline, so jacocoAllDebugReport / Codecov keep working. The
-    // system image mirrors the hand-launched CI emulator (android-31, google_apis_playstore, x86_64);
-    // adopting this replaces the `emulator -avd citest` + taskset launch in the CI config, so it is a
-    // real change to that file — kept here as a reviewable draft.
-    //
-    // Two ways to drive it (choose in the CI config):
-    //   1. AUTO-shard by test COUNT across N instances of `emu` — annotations unused, a new test
-    //      distributes itself, zero maintenance, but balance is approximate (count, not time):
-    //        ./gradlew :app:emuFullDebugAndroidTest \
-    //          -Pandroid.experimental.androidTest.numManagedDeviceShards=2
-    //   2. EXPLICIT time-balance via the @ShardA annotation (the ~278s/277s split we measured) —
-    //      run each shard as its own task, filtered, on its own device:
-    //        :app:emuAFullDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.annotation=app.aaps.testcategories.ShardA
-    //        :app:emuBFullDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notAnnotation=app.aaps.testcategories.ShardA
-    //      Caveat: two Gradle invocations of the same module collide on build outputs, so option 2
-    //      needs them serialised or in separate checkouts. Option 1 is the simpler parallel path;
-    //      option 2 buys guaranteed balance for this lopsided suite at the cost of that orchestration.
-    testOptions {
-        managedDevices {
-            localDevices {
-                create("emu") {   // for option 1 (auto-shard: numManagedDeviceShards=2 spins up 2 instances)
-                    device = "Pixel 6"
-                    apiLevel = 31
-                    systemImageSource = "google_apis_playstore"
-                }
-                create("emuA") {  // for option 2 (explicit @ShardA balance across two devices)
-                    device = "Pixel 6"
-                    apiLevel = 31
-                    systemImageSource = "google_apis_playstore"
-                }
-                create("emuB") {
-                    device = "Pixel 6"
-                    apiLevel = 31
-                    systemImageSource = "google_apis_playstore"
+
+    sourceSets {
+        getByName("aapsclient2") { kotlin.directories.add("src/aapsclient/kotlin") }
+        getByName("aapsclient3") { kotlin.directories.add("src/aapsclient/kotlin") }
+
+        // Instrumented tests that drive one pump, added only where that pump is in the build. An e2e
+        // test for a Dana emulator has nothing to test without :pump:dana:danar, so it should not compile
+        // there - and before this it did not compile for a follower either, it just failed unnoticed
+        // because CI only builds `full`: :app:compileAapsclientDebugAndroidTestKotlin was red on dev
+        // with "Unresolved reference 'dana'".
+        //
+        // Keyed on the module being in settings.gradle, the same single source of truth the driver
+        // dependencies above are derived from, so removing a pump takes its tests with it. Dana R and
+        // Dana RS are separate keys so either one can be removed alone; `dana/common` holds the base
+        // class both use and needs only :pump:dana:common.
+        val pumpTestSources = mapOf(
+            ":pump:dana:common" to "src/androidTestPumps/dana/common/kotlin",
+            ":pump:dana:danar" to "src/androidTestPumps/dana/danar/kotlin",
+            ":pump:dana:danars" to "src/androidTestPumps/dana/danars/kotlin",
+            ":pump:equil" to "src/androidTestPumps/equil/kotlin"
+        )
+        listOf("androidTestFull", "androidTestPumpcontrol").forEach { name ->
+            findByName(name)?.let { set ->
+                pumpTestSources.forEach { (path, dir) ->
+                    if (rootProject.findProject(path) != null) set.kotlin.directories.add(dir)
                 }
             }
         }
-    }
-
-    sourceSets {
-        getByName("full") { kotlin.directories.add("src/withPumps/kotlin") }
-        getByName("pumpcontrol") { kotlin.directories.add("src/withPumps/kotlin") }
-        getByName("aapsclient2") { kotlin.directories.add("src/aapsclient/kotlin") }
-        getByName("aapsclient3") { kotlin.directories.add("src/aapsclient/kotlin") }
     }
 }
 
@@ -217,11 +229,9 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":ui"))
-    // Feature plugins self-register into the Hilt plugin map (see e.g. :plugins:smoothing SmoothingModule).
-    // Adding/removing a plugin is therefore just an include in settings.gradle — no edit needed here.
-    rootProject.subprojects
-        .filter { it.path.startsWith(":plugins:") && it.buildFile.exists() }
-        .forEach { implementation(project(it.path)) }
+    // The shell carries the navigation graph and, with it, the feature plugins - as `api`, so the DI
+    // graph built here still sees every plugin that self-registers into the plugin map.
+    implementation(project(":appshell"))
     implementation(project(":implementation"))
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))
@@ -229,12 +239,21 @@ dependencies {
     implementation(project(":workflow"))
 
     // Pump drivers — only for full + pumpcontrol flavors. Derived from the :pump:* modules included
-    // in settings.gradle (single source of truth) minus two exceptions:
-    //  - :pump:virtual is @AllConfigs (all flavors) and is wired above as a plain implementation
-    //  - :pump:combov2:comboctl is a support lib pulled in transitively by :pump:combov2
-    // buildFile.exists() skips the phantom :pump:omnipod container Gradle auto-creates from the
-    // nested :pump:omnipod:* includes (it has no build script / no consumable variant).
-    val pumpExclusions = setOf(":pump:virtual", ":pump:combov2:comboctl")
+    // in settings.gradle (single source of truth) minus one exception:
+    //  - :pump:virtual is @AllConfigs (all flavors) and is wired above as a plain implementation,
+    //    so listing it again per flavor would declare it twice for different configurations.
+    // buildFile.exists() skips the phantom :pump:omnipod and :pump:dana containers Gradle
+    // auto-creates from the nested :pump:omnipod:* and :pump:dana:* includes (they have no build
+    // script / no consumable variant).
+    //
+    // Support modules nested under a driver (:pump:combov2:comboctl, :pump:omnipod:common,
+    // :pump:dana:common, and the :protocol and :emulator modules of carelevo, equil and the Dana
+    // drivers) need NO exception. They arrive transitively through their driver anyway, and naming
+    // the same project path twice resolves to one node in the graph rather than two copies -
+    // verified by building an APK with comboctl un-excluded. Keeping
+    // them out of this list would only be tidiness, and it is tidiness that has to be maintained by
+    // hand every time a module is added.
+    val pumpExclusions = setOf(":pump:virtual")
     rootProject.subprojects
         .filter { it.path.startsWith(":pump:") && it.path !in pumpExclusions && it.buildFile.exists() }
         .forEach {
@@ -242,16 +261,17 @@ dependencies {
             "pumpcontrolImplementation"(project(it.path))
         }
 
+    implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.process)
 
     testImplementation(project(":shared:tests"))
     androidTestImplementation(project(":shared:tests"))
     androidTestImplementation(libs.androidx.test.rules)
     // UiAutomator for the in-process E2E UI test (app/src/androidTest/.../e2e). Drives the real
-    // Compose UI (booted under the Hilt test app) via the accessibility bridge.
+    // Compose UI via the accessibility bridge.
     androidTestImplementation(libs.androidx.test.uiautomator)
     // Initializes WorkManager for instrumented tests (BaseTestApp), since the production
-    // Configuration.Provider/manifest initializer don't apply under the Hilt test application.
+    // Configuration.Provider/manifest initializer do not apply under the test application.
     androidTestImplementation(libs.androidx.work.testing)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
     androidTestImplementation(libs.kotlinx.coroutines.test)
@@ -261,34 +281,17 @@ dependencies {
 
     debugImplementation(libs.com.squareup.leakcanary.android)
 
-    /* Dagger2 - We are going to use dagger.android which includes
-     * support for Activity and fragment injection so we need to include
-     * the following dependencies */
-    ksp(libs.com.google.dagger.android.processor)
-    ksp(libs.com.google.dagger.compiler)
-    implementation(libs.com.google.dagger.hilt.android)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    // Hilt WorkManager integration: HiltWorkerFactory + @HiltWorker assisted-injection glue.
-    // androidx.hilt:hilt-compiler is a SEPARATE annotation processor from the dagger hilt-compiler above.
-    implementation(libs.androidx.hilt.work)
-    ksp(libs.androidx.hilt.compiler)
-    // Hilt instrumentation testing: lets androidTest reuse the production @InstallIn graph
-    // (single source of truth) with @TestInstallIn overrides instead of a hand-maintained component.
-    androidTestImplementation(libs.com.google.dagger.hilt.android.testing)
-    // KSP no longer inherits main-config processors into androidTest (KSP 2.3.10+), so the Hilt
-    // test-app (@CustomTestApplication → HiltTestApplication_Application) and @HiltAndroidTest
-    // graph must be generated by registering the processors on the androidTest config explicitly.
-    kspAndroidTest(libs.com.google.dagger.hilt.compiler)
-    kspAndroidTest(libs.com.google.dagger.compiler)
-    kspAndroidTest(libs.com.google.dagger.android.processor)
+
+
 
     // MainApp
     implementation(libs.com.uber.rxdogtag2.rxdogtag)
     // Remote config
     api(libs.com.google.firebase.config)
     // Navigation Compose
-    api(libs.androidx.compose.navigation)
+    api(libs.jetbrains.androidx.compose.navigation)
 }
+
 
 println("-------------------")
 println("isMaster: ${isMaster()}")
@@ -301,4 +304,3 @@ if (!gitAvailable()) {
 if (isMaster() && !allCommitted()) {
     throw GradleException("There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update")
 }
-

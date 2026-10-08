@@ -99,7 +99,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Lydvarsel for ubekreftet SMB</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Lydvarsel for ubekreftet bolus</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Lyd når varsling om pauset levering er aktivert</string>
-    <string name="omnipod_dash_use_bonding">Bond BT-enhet på Android 15</string>
+    <string name="omnipod_dash_use_bonding">Bluetooth-paring</string>
+    <string name="omnipod_dash_use_bonding_summary">Prøv dette bare hvis pod-en ikke klarer å opprettholde en stabil forbindelse. Telefonen vil vise forespørsler om paring som du må godta. La dette være avslått hvis pod-en kobler til uten problemer. Har ingen effekt på versjoner under Android 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ingen aktiv Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod-aktivering)</string>
@@ -109,6 +110,22 @@
     <string name="omnipod_common_pod_status_pod_fault">Pod-feil</string>
     <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod feil: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">PDM-varsel</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Ref: %1$s</string>
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Tomt reservoar</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Insulintilførselen er stoppet. Bytt pod nå.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Automatisk avstenging</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Insulintilførselen er stoppet. PDM-en og pod-en har ikke kommunisert de siste 4 timene. Bytt pod nå for å gjenoppta insulintilførselen.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod-en er utløpt</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Insulintilførselen er stoppet. Bytt pod nå.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Blokkering oppdaget</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Insulintilførselen er stoppet. Bytt pod nå. Kontroller blodsukkeret</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod-feil</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Insulintilførselen er stoppet. Bytt pod nå.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod utløper snart</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod utløper snart</string>
@@ -165,5 +182,5 @@
         <item quantity="one">Pod varsel: %1$s</item>
         <item quantity="other">Pod varsler: %1$s</item>
     </plurals>
-    <string name="omnipod_common_overview_pod_hard_end_date">Pod hard slutt</string>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod avslutter</string>
 </resources>

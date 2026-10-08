@@ -1,10 +1,8 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
-import app.aaps.core.data.model.BS
-import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.DeliveryStatus
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
 import app.aaps.shared.tests.TestBase
@@ -12,7 +10,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 
 /**
  * Tests for [OmnipodDashPodStateManagerImpl.needsBasalCorrection].
@@ -29,15 +26,13 @@ import org.mockito.Mockito.`when`
 class NeedsBasalCorrectionTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var config: Config
 
     private lateinit var sut: OmnipodDashPodStateManagerImpl
 
     // ---- setup --------------------------------------------------------------------------------
 
     @BeforeEach fun setUp() {
-        `when`(config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)).thenReturn(true)
-        sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences, config)
+        sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences)
         sut.activationProgress = ActivationProgress.COMPLETED
     }
 
@@ -54,12 +49,6 @@ class NeedsBasalCorrectionTest : TestBase() {
     }
 
     // ---- prerequisite checks ------------------------------------------------------------------
-
-    @Test fun `drift compensation disabled — returns false`() {
-        `when`(config.isEnabled(ExternalOptions.ENABLE_OMNIPOD_DRIFT_COMPENSATION)).thenReturn(false)
-        setDrift(10, 0, 0.0)    // drift = +0.5, would reset if enabled
-        assertThat(sut.needsBasalCorrection()).isFalse()
-    }
 
     @Test fun `activation not completed — returns false`() {
         sut.activationProgress = ActivationProgress.NOT_STARTED
@@ -181,7 +170,7 @@ class NeedsBasalCorrectionTest : TestBase() {
             rate              = 0.0
         )
         // createLastBolus sets startTime = now, satisfying the < 5 min recency check
-        sut.createLastBolus(requestedUnits = 1.0, historyId = 1L, bolusType = BS.Type.NORMAL)
+        sut.createLastBolus(requestedUnits = 1.0, historyId = 1L, bolusType = BolusType.DEFAULT)
         setDrift(10, 0, 0.55)   // drift = -0.05
         assertThat(sut.needsBasalCorrection()).isTrue()
     }

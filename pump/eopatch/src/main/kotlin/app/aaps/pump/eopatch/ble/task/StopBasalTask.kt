@@ -11,6 +11,9 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.pump.eopatch.core.api.BasalStop
 import app.aaps.pump.eopatch.core.response.BasalStopResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
@@ -21,11 +24,10 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class StopBasalTask @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class StopBasalTask(
     private val commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
     private val uel: UserEntryLogger,

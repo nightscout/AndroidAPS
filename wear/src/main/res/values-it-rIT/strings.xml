@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Personalizzato)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Custom) sempre attivo</string>
     <string name="label_actions_tile">Azioni</string>
     <string name="label_temp_target_tile">Target Temporaneo</string>
     <string name="label_quick_wizard_tile">Procedura Guidata Veloce</string>
@@ -86,6 +87,7 @@
     <string name="action_user_action_confirmation">Azione Utente Richiesta</string>
     <string name="action_scene_confirmation">Scena Richiesta</string>
     <string name="scene_end">Fine</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Salta</string>
     <string name="action_treatment_confirmation">Trattamento richiesto</string>
     <string name="action_bolus_confirmation">Bolo richiesto</string>
     <string name="action_wizard_confirmation">Calcolo richiesto</string>
@@ -148,6 +150,21 @@
     <string name="pref_simplify_ui">Semplifica UI</string>
     <string name="pref_vibrate_hourly">Vibra a ogni ora</string>
     <string name="pref_show_weeknumber">Mostra numero settimana</string>
+    <string name="pref_complication_1">Complicazione 1</string>
+    <string name="pref_complication_2">Complicazione 2</string>
+    <string name="pref_complication_3">Complicazione 3</string>
+    <string name="pref_complication_4">Complicazione 4</string>
+    <string name="pref_complication_5">Complicazione 5</string>
+    <string name="complication_summary_none">Tocca per selezionare una sorgente dati</string>
+    <string name="pref_complication_type_priority">Priorità tipo di complicazione</string>
+    <string name="pref_complication_type_priority_all">Predefinito per tutti gli slot</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Una modifica qui si applica la prossima volta che si sceglie una fonte di dati. Scegliere la stessa non è sufficiente: scegliere prima una fonte di dati diversa, poi scegliere quella che si desidera.</string>
+    <string name="complication_type_priority_value">Valore o indicatore</string>
+    <string name="complication_type_priority_text">Testo</string>
+    <string name="complication_type_priority_icon">Icona</string>
+    <string name="complication_type_priority_use_default">Usa predefinito</string>
+    <string name="cwf_complication_layout">Layout di complicazioni</string>
+    <string name="cwf_complication_layout_description">Posizione e dimensione delle complicazioni, prese dalla faccia dell\'orologio personalizzato caricato.</string>
     <string name="pref_include_external">Includi viste esterne nel modello</string>
     <string name="pref_switch_external">Cambia dati esterni in Watchface</string>
     <string name="custom_pref_show_seconds">Mostra secondi</string>
@@ -220,6 +237,12 @@
     <string name="complication_blood_glucose_ext1">Glicemia Ext1</string>
     <string name="complication_blood_glucose_ext2">Glicemia Ext2</string>
     <string name="complication_bg_graph">Grafico BG</string>
+    <string name="complication_cwf_image">Watchface personalizzata</string>
+    <string name="complication_cwf_ambient_bg">Glucosio della Watchface personalizzata</string>
+    <string name="complication_cwf_ambient_status">Stato della Watchface personalizzata</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Sfondo personalizzato della Watchface</string>
+    <string name="complication_cwf_upper">Orologio della Watchface personalizzata</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
     <string name="complication_br_cob_iob_ext1">BR, CoB &amp; IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
@@ -232,6 +255,8 @@
     <string name="complication_iob_icon">Icona IoB</string>
     <string name="complication_iob_detailed">IoB Dettagliato</string>
     <string name="complication_uploader_phone_battery">Caricamento/Batteria Telefono</string>
+    <string name="running_mode_resume">Riprendi loop</string>
+    <string name="running_mode_reconnect">Riconnetti micro</string>
     <string name="label_running_mode_title">Modalità esecuzione</string>
     <string name="label_bg_graph_tile">Grafico BG</string>
     <string name="tile_tap_action">Azione al tocco</string>
@@ -251,10 +276,7 @@
     <string name="contacting_master_unknown">Stato sconosciuto — controlla il telefono</string>
     <string name="tile_settings">Impostazioni delle caselle</string>
     <string name="loop_status_error">Impossibile aggiornare lo stato</string>
-    <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d min</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">%1$d min rimasti</string>
     <string name="loop_status_tbr_continues">Continua basale temporanea</string>
     <string name="loop_status_tbr_cancel">Impostazione basale normale</string>
     <string name="loop_status_smb">%1$.2f U</string>
@@ -282,6 +304,18 @@
     <string name="loop_status_target_range">Intervallo</string>
     <string name="loop_status_target">Target</string>
     <string name="loop_status_adjusted_target">Obiettivo adattato</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Fino alla fine</string>
+    <string name="loop_status_scene_ended">Finito</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Follow-up</string>
+    <string name="loop_status_profile">Profilo</string>
+    <string name="loop_status_no_profile">Nessun profilo selezionato</string>
+    <string name="loop_status_profile_percentage">Percentuale</string>
+    <string name="loop_status_profile_timeshift">Timeshift</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Ritorna a</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Sensibilità</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Impostato dalla scena attiva</string>
     <string name="loop_status">Stato loop</string>
     <string name="loop_status_refresh">Aggiorna</string>
     <string name="confirm">Conferma</string>

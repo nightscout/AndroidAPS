@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
     <!-- Watch Face Push (Wear OS 6+): PUSH_WATCH_FACES gates binding to the system push service;
          SET_PUSHED_WATCH_FACE_AS_ACTIVE allows re-activating the pushed AAPS watchface after the
          one-shot activation on first install was used -->
@@ -19,9 +20,12 @@
     <!-- androidx.wear.watchfacepush requires minSdk 36; all usages are runtime-guarded by SDK checks -->
     <uses-sdk tools:overrideLibrary="androidx.wear.tiles,androidx.wear.watchfacepush" />
 
-    <!-- Package visibility for the pushed watchface, so the install state can be verified -->
+    <!-- Package visibility for the pushed watchfaces, so the install state can be verified. Both
+         faces, whichever one the slot holds: without its entry here getPackageInfo throws for an
+         installed face, the menu believes it missing, and "Install watchface" never goes away. -->
     <queries>
-        <package android:name="${applicationId}.watchfacepush.aapsv4" />
+        <package android:name="${applicationId}.watchfacepush.wfs" />
+        <package android:name="${applicationId}.watchfacepush.cwf" />
     </queries>
 
     <application
@@ -30,6 +34,14 @@
         android:icon="${appIcon}"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault">
+
+        <!-- androidx.wear.watchfacepush declares the wear-sdk platform library as required, which
+             blocks install on watches older than Wear OS 4 (INSTALL_FAILED_MISSING_SHARED_LIBRARY).
+             Make it optional: all Watch Face Push usage is guarded by SDK checks (Wear OS 6+). -->
+        <uses-library
+            android:name="wear-sdk"
+            android:required="false"
+            tools:node="replace" />
 
         <meta-data
             android:name="com.google.android.wearable.standalone"
@@ -206,9 +218,132 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
+        <!-- Same reading as SgvComplication, but a tap opens the menu. Used only by the ambient
+             layer of the pushed Watch Face Format face, whose slots are invisible while the watch
+             is awake yet still answer taps - see CwfAmbientBgComplication. -->
+        <service
+            android:name=".complications.CwfAmbientBgComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_sgv"
+            android:label="@string/complication_cwf_ambient_bg"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
+        </service>
+
+        <service
+            android:name=".complications.CwfAmbientStatusComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_ins"
+            android:label="@string/complication_cwf_ambient_status"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
+        </service>
+
+        <!-- Publishes the whole Custom watch face as a full-screen image, for Watch Face Format
+             faces on watches that can no longer run a code-based watch face.
+             LARGE_IMAGE is the manifest tag for ComplicationType.PHOTO_IMAGE.
+
+             All three picture sources below carry HIDDEN: they are left out of the complication
+             chooser, where three "Custom watchface" entries looked like a mistake, and where the
+             chooser is the wrong place anyway - AAPS ships the Watch Face Format face that shows the
+             picture, and its slots are not customizable. A hidden source can still be named as a
+             default provider, which is how that face binds them; a slot that already holds one keeps
+             it, as HIDDEN only stops new choices. -->
+        <service
+            android:name=".complications.CwfImageComplication"
+            android:exported="true"
+            android:icon="@drawable/watchface_custom"
+            android:label="@string/complication_cwf_image"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE,SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="60" />
+            <meta-data
+                android:name="android.support.wearable.complications.HIDDEN"
+                android:value="true" />
+        </service>
+        <!-- The whole Custom watch face as one picture, for the pushed WFF document. One provider
+             rather than two halves: the halves had to agree with each other from outside, and each
+             paid its own data read and its own compression. This one keeps the layers privately and
+             blends them, which a Galaxy Watch 4 measured at about 1 ms per layer. -->
+        <service
+            android:name=".complications.cwf.CwfFaceComplication"
+            android:exported="true"
+            android:icon="@drawable/watchface_custom"
+            android:label="@string/label_watchface_custom"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE,SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="60" />
+            <meta-data
+                android:name="android.support.wearable.complications.HIDDEN"
+                android:value="true" />
+        </service>
+        <!-- The same face without seconds, for the always-on slot of the pushed document. The
+             runtime swaps the two pictures itself when the watch dozes, which is the only way the
+             second hand goes at the moment the screen dims rather than at the next minute - see
+             CwfMinuteFrame. Only meaningful beside its twin. -->
+        <service
+            android:name=".complications.cwf.CwfAmbientFaceComplication"
+            android:exported="true"
+            android:icon="@drawable/watchface_custom"
+            android:label="@string/label_watchface_custom_ambient"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE,SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="60" />
+            <meta-data
+                android:name="android.support.wearable.complications.HIDDEN"
+                android:value="true" />
+        </service>
         <service
             android:name=".complications.BgGraphComplication"
             android:exported="true"
@@ -227,7 +362,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -356,7 +491,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -449,7 +584,7 @@
                 android:value="300" />
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -482,7 +617,7 @@
 
             <meta-data
                 android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
-                android:value="${applicationId}.watchfacepush.aapsv4" />
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />
@@ -510,6 +645,27 @@
         </service>
 
         <service
+            android:name=".complications.RunningModeComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_loop_closed_white"
+            android:label="@string/label_running_mode_title"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE,ICON" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
+        </service>
+
+        <service
             android:name=".complications.UploaderBatteryComplication"
             android:exported="true"
             android:icon="@drawable/ic_battery_charging_wireless_50"
@@ -525,6 +681,9 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="${applicationId}.watchfacepush.wfs,${applicationId}.watchfacepush.cwf" />
         </service>
 
         <service
@@ -701,10 +860,13 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <!-- singleTask: entry-point activity (launcher, tile tap, complication MENU action) — reuse
+             the alive instance Android 12+ keeps on back instead of stacking a duplicate on top -->
         <activity
             android:name=".interaction.menus.MainMenuActivity"
             android:exported="true"
             android:label="@string/label_actions_activity"
+            android:launchMode="singleTask"
             android:theme="@style/WearAppCompatDark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -714,19 +876,34 @@
         <activity
             android:name=".interaction.WatchfaceConfigurationActivity"
             android:exported="true"
-            android:label="@string/menu_settings" />
+            android:label="@string/menu_settings"
+            android:taskAffinity="" />
+        <!-- Not exported: only ever opened from the watch face's own settings screen, in-process. -->
+        <activity
+            android:name=".interaction.ComplicationTypeSettingsActivity"
+            android:exported="false"
+            android:label="@string/pref_complication_type_priority" />
+        <!-- taskAffinity="": activities launched from tiles/complications (NEW_TASK) get their own
+             task, so back returns to the tile/watchface instead of a lingering main menu. Launches
+             from within the app (no NEW_TASK) still stack in the caller's task as before. -->
         <activity
             android:name=".interaction.actions.WizardActivity"
             android:exported="true"
             android:label="@string/menu_wizard"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
+        <!-- taskAffinity="" on the two service-launched overlays: without it their NEW_TASK launch
+             routes into the default app task, dragging a backgrounded main menu to the front —
+             which is then what remains on screen once the overlay finishes -->
         <activity
             android:name=".interaction.actions.ContactingMasterActivity"
             android:exported="false"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name="androidx.wear.activity.ConfirmationActivity"
             android:exported="false"
+            android:taskAffinity=""
             android:theme="@android:style/Theme.DeviceDefault" />
         <activity
             android:name=".interaction.menus.FillMenuActivity"
@@ -741,10 +918,19 @@
         <activity
             android:name=".interaction.activities.LoopStatusActivity"
             android:exported="true"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.BgGraphActivity"
             android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/WearAppCompatDark" />
+        <!-- Proof of concept for the WFF port, deliberately not in any menu: renders the Custom
+             watch face into a bitmap and shows it. Started with adb, see the class KDoc. -->
+        <activity
+            android:name=".interaction.activities.CwfRenderPreviewActivity"
+            android:exported="true"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.menus.PreferenceMenuActivity"
@@ -759,16 +945,19 @@
             android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
             android:label="@string/menu_treatment"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.BolusActivity"
             android:exported="true"
             android:label="@string/action_insulin"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.ProfileSwitchActivity"
             android:exported="true"
             android:label="@string/status_profile_switch"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.AcceptActivity"
@@ -786,16 +975,19 @@
             android:name=".interaction.actions.ECarbActivity"
             android:exported="true"
             android:label="@string/action_ecarbs"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.CarbActivity"
             android:exported="true"
             android:label="@string/action_carbs"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:exported="true"
             android:label="@string/menu_tempt"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
 
         <activity
@@ -806,6 +998,13 @@
             android:name=".interaction.actions.RunningModeTimedActivity"
             android:exported="true"
             android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
+
+        <!-- taskAffinity="": opened from the watchface by a complication tap; back returns to the watchface -->
+        <activity
+            android:name=".interaction.actions.RunningModePickerActivity"
+            android:exported="true"
+            android:taskAffinity=""
             android:theme="@style/WearAppCompatDark" />
 
         <activity

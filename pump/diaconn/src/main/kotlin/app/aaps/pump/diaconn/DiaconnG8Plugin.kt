@@ -11,9 +11,12 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.PumpPluginConstraints
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -34,15 +37,15 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.pump.mapState
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPluginDiaconn
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.diaconn.compose.DiaconnComposeContent
@@ -54,20 +57,30 @@ import app.aaps.pump.diaconn.keys.DiaconnIntNonKey
 import app.aaps.pump.diaconn.keys.DiaconnIntentKey
 import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.pump.diaconn.service.DiaconnG8Service
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.IntKey
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.max
 
-@Singleton
-class DiaconnG8Plugin @Inject constructor(
+@ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
+@PumpDriver
+@IntKey(1100)
+@SingleIn(AppScope::class)
+@Inject
+class DiaconnG8Plugin(
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
+    override val rh: ResourceHelper,
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,
@@ -76,13 +89,12 @@ class DiaconnG8Plugin @Inject constructor(
     private val pumpSync: PumpSync,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val aapsSchedulers: AapsSchedulers,
     private val diaconnHistoryDatabase: DiaconnHistoryDatabase,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val bolusProgressData: BolusProgressData,
-    private val blePreCheck: BlePreCheck
+    private val blePreCheck: BlePreCheck,
+    notificationManager: NotificationManager
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
@@ -94,17 +106,14 @@ class DiaconnG8Plugin @Inject constructor(
             )
         }
         .icon(IcPluginDiaconn)
-        .pluginName(R.string.diaconn_g8_pump)
-        .shortName(R.string.diaconn_g8_pump_shortname)
-        .description(R.string.description_pump_diaconn_g8),
-    ownPreferences = listOf(
-        DiaconnIntentKey::class.java, DiaconnIntKey::class.java, DiaconnBooleanKey::class.java,
-        DiaconnStringNonKey::class.java, DiaconnIntNonKey::class.java,
-    ),
-    aapsLogger, rh, preferences, commandQueue
+        .pluginName(TextRef.AndroidRes(R.string.diaconn_g8_pump))
+        .description(TextRef.AndroidRes(R.string.description_pump_diaconn_g8)),
+    ownPreferences = DiaconnIntentKey.entries + DiaconnIntKey.entries + DiaconnBooleanKey.entries + DiaconnStringNonKey.entries +
+        DiaconnIntNonKey.entries,
+    aapsLogger, rh, preferences, commandQueue, notificationManager
 ), Pump, Diaconn, PumpPluginConstraints, OwnDatabasePlugin {
 
-    private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private var diaconnG8Service: DiaconnG8Service? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
@@ -114,28 +123,30 @@ class DiaconnG8Plugin @Inject constructor(
         super.onStart()
         val intent = Intent(context, DiaconnG8Service::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }) { fabricPrivacy.logException(it) }
-
-        disposable += rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { diaconnG8Pump.reset() }
-        disposable += rxBus
-            .toObservable(EventDiaconnG8DeviceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           pumpSync.connectNewPump()
-                           changePump()
-                       }) { fabricPrivacy.logException(it) }
+        // Own scope on IO, like the io scheduler used before, cancelled in onStop like the
+        // CompositeDisposable was cleared. UNDISPATCHED because RxBus has no replay, so a scheduled
+        // collector could miss an event sent before it starts.
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { context.unbindService(mConnection) }
+        rxBus.toFlow(EventConfigBuilderChange::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { diaconnG8Pump.reset() }
+        rxBus.toFlow(EventDiaconnG8DeviceChange::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) {
+                pumpSync.connectNewPump()
+                changePump()
+            }
         changePump() // load device name on app start
     }
 
     override suspend fun onStop() {
+        scope?.cancel()
+        scope = null
         context.unbindService(mConnection)
-        disposable.clear()
+        // onServiceDisconnected is not called after unbindService, so drop the reference here.
+        // Otherwise the destroyed service stays alive after a pump switch or config change.
+        diaconnG8Service = null
         super.onStop()
     }
 
@@ -211,11 +222,11 @@ class DiaconnG8Plugin @Inject constructor(
 
     // Diaconn Pump Interface
     override fun loadHistory(): PumpEnactResult {
-        return diaconnG8Service?.loadHistory() ?: pumpEnactResultProvider.get().success(false)
+        return diaconnG8Service?.loadHistory() ?: pumpEnactResultProvider().success(false)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        return diaconnG8Service?.setUserSettings() ?: pumpEnactResultProvider.get().success(false)
+        return diaconnG8Service?.setUserSettings() ?: pumpEnactResultProvider().success(false)
     }
 
     // Constraints interface
@@ -242,7 +253,7 @@ class DiaconnG8Plugin @Inject constructor(
     override fun isBusy(): Boolean = false
 
     override suspend fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (!isInitialized()) {
             // Not initialized yet — deferred, not a genuine error; re-pushed on reconnect. success=true keeps it
             // out of the central failure alarm; enacted stays false so nothing is shown. Profile-set notifications
@@ -296,7 +307,7 @@ class DiaconnG8Plugin @Inject constructor(
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
         var connectionOK = false
         if (detailedBolusInfo.insulin > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo) == true
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         result.success = connectionOK
         result.bolusDelivered = bolusProgressData.state.value?.delivered?.cU ?: 0.0
 
@@ -314,7 +325,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     // This is called from APS
     override suspend fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         val doTempOff = baseBasalRate.cU - absoluteRate == 0.0
         val doLowTemp = absoluteRate < baseBasalRate.cU
         val doHighTemp = absoluteRate > baseBasalRate.cU
@@ -390,7 +401,7 @@ class DiaconnG8Plugin @Inject constructor(
         // Already constrained in IU (queue) and in cU (PumpWithConcentration boundary); no re-apply here.
         // round to the pump's native extended-bolus step (cU)
         val insulinAfterConstraint = Round.roundTo(insulin, pumpDescription.extendedBolusStep)
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
 
         if (diaconnG8Pump.isExtendedInProgress && abs(diaconnG8Pump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
@@ -426,7 +437,7 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     override suspend fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (diaconnG8Pump.isTempBasalInProgress) {
             diaconnG8Service?.tempBasalStop()
             result.success = !diaconnG8Pump.isTempBasalInProgress
@@ -444,7 +455,7 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     override suspend fun cancelExtendedBolus(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         if (diaconnG8Pump.isExtendedInProgress) {
             diaconnG8Service?.extendedBolusStop()
             result.success = !diaconnG8Pump.isExtendedInProgress
@@ -465,7 +476,11 @@ class DiaconnG8Plugin @Inject constructor(
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.G2e
     override fun model(): PumpType = PumpType.DIACONN_G8
-    override fun serialNumber(): String = diaconnG8Pump.serialNo.toString()
+    // `serialNo` is 0 until the pump has been connected to and asked, so "0" is not a serial, it is
+    // "not read yet". Reporting it as text made callers compare a real stored serial against "0" and
+    // conclude the pump had been swapped. Only this driver knows what its own unset value looks like,
+    // so it is translated here into the blank that means unknown everywhere else.
+    override fun serialNumber(): String = if (diaconnG8Pump.serialNo == 0) "" else diaconnG8Pump.serialNo.toString()
     override val isFakingTempsByExtendedBoluses: Boolean = false
     override suspend fun loadTDDs(): PumpEnactResult = loadHistory()
     override fun getCustomActions(): List<CustomAction>? = null

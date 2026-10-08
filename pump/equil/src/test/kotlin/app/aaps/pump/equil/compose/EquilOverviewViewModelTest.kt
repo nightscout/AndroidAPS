@@ -65,10 +65,10 @@ internal class EquilOverviewViewModelTest {
 
         // init { } subscribes to these via launchIn(viewModelScope), and PumpCommunicationStatus
         // subscribes to the two core events at construction. Unstubbed -> construction NPEs.
-        whenever(rxBus.toFlow(EventEquilDataChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventEquilModeChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventEquilDataChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventEquilModeChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
 
         // formatting collaborators used by buildPairedInfoRows / buildStatusBanner
         whenever(ch.insulinAmountString(any())).thenReturn("0 U")

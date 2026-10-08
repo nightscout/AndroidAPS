@@ -22,7 +22,6 @@
     <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
     <string name="insight_pairing">Emparelhamento Insight</string>
     <string name="tube_changed">Tubo mudado</string>
-    <string name="insightpump_shortname">Visão</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
     <string name="disable_vibration">Desativar vibrações na entrega manual de bolus</string>
     <string name="disable_vibration_summary">Para bolus e bolus estendido (disponível apenas com firmware Insight 3.x)</string>
@@ -46,4 +45,7 @@
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="pump_alert">Alerta da Bomba</string>
+    <string name="unpair">Desfazer pareamento</string>
+    <string name="reset_pairing">Redefinir informações de pareamento?</string>
+    <string name="reservoir_level">Nível do reservatório</string>
 </resources>

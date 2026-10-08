@@ -1,21 +1,25 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metro)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     id("android-module-dependencies")
     id("test-module-dependencies")
+    // Robolectric plus the compose-ui-test artifacts, so the pairing wizard and the alert screen
+    // can be driven on the JVM. Paired with jacoco-module-dependencies below, which is what makes
+    // the Compose classes Robolectric loads show up in coverage.
+    id("compose-test-module-dependencies")
     id("jacoco-module-dependencies")
 }
 
 android {
 
     namespace = "app.aaps.pump.insight"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+}
+
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -31,7 +35,4 @@ dependencies {
     api(libs.androidx.room.runtime)
 
     ksp(libs.androidx.room.compiler)
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
 }

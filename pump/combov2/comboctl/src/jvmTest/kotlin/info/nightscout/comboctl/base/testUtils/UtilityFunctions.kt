@@ -5,9 +5,9 @@ import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.base.Nonce
 import info.nightscout.comboctl.base.TransportLayer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
@@ -33,8 +33,19 @@ fun runBlockingWithWatchdog(
         lateinit var blockJob: Job
         val watchdogJob = launch {
             delay(timeout)
-            // On timeout, dump what is still alive under the block so a hang points at the stuck
-            // coroutine instead of only reporting "timeout reached".
+            // On timeout, dump what is still alive under the block.
+            //
+            // This has never once been informative, and that is worth knowing before spending time on
+            // it again: PumpIO runs its packet receiver and its long RT button press loop in its own
+            // internalScope, which is not a child of blockJob, so `children` is empty on every hang.
+            // What localises a hang instead is the module's own log - a healthy checkDoubleLongButtonPress
+            // prints 78 lines starting at PumpIO.connect(), so a failing run that printed none had not
+            // reached connect() at all.
+            //
+            // DebugProbes.dumpCoroutines() would answer it directly, but kotlinx-coroutines-debug needs
+            // its agent attached at JVM start; calling DebugProbes.install() from here fails with
+            // "class redefinition failed: attempted to delete a method" and breaks four other tests.
+            // Wiring -javaagent into this module's test task is the way in, if it is worth the cost.
             val active = blockJob.children.toList()
             println("[WATCHDOG] timeout after ${timeout}ms; blockJob active=${blockJob.isActive} children=${active.size}")
             active.forEachIndexed { i, child -> println("[WATCHDOG]   child[$i] active=${child.isActive} completed=${child.isCompleted} cancelled=${child.isCancelled}") }

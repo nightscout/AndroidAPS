@@ -1,0 +1,78 @@
+package app.aaps.shared.impl.weardata
+
+enum class JsonKeys(val key: String) {
+    METADATA("metadata"),
+    ENABLESECOND("enableSecond"),
+    HIGHCOLOR("highColor"),
+    MIDCOLOR("midColor"),
+    LOWCOLOR("lowColor"),
+    LOWBATCOLOR("lowBatColor"),
+    CARBCOLOR("carbColor"),
+    BASALBACKGROUNDCOLOR("basalBackgroundColor"),
+    BASALCENTERCOLOR("basalCenterColor"),
+    GRIDCOLOR("gridColor"),
+    TEMPTARGETCOLOR("tempTargetColor"),
+    TEMPTARGETLOOPCOLOR("tempTargetLoopColor"),
+    TEMPTARGETPROFILECOLOR("tempTargetProfileColor"),
+    RESERVOIRCOLOR("reservoirColor"),
+    RESERVOIRWARNINGCOLOR("reservoirWarningColor"),
+    RESERVOIRURGENTCOLOR("reservoirUrgentColor"),
+    POINTSIZE("pointSize"),
+    WIDTH("width"),
+    HEIGHT("height"),
+    TOPMARGIN("topmargin"),
+    LEFTMARGIN("leftmargin"),
+    ROTATION("rotation"),
+    VISIBILITY("visibility"),
+    TEXTSIZE("textsize"),           // Also used in Complications
+    TEXTVALUE("textvalue"),
+    GRAVITY("gravity"),
+    FONT("font"),                   // Also used in Complications
+    FONTSTYLE("fontStyle"),         // Also used in Complications
+    FONTCOLOR("fontColor"),         // Also used in Complications
+    COLOR("color"),                 // Also used for Complications Background Color
+    ALLCAPS("allCaps"),
+    DAYNAMEFORMAT("dayNameFormat"),
+    MONTHFORMAT("monthFormat"),
+    BACKGROUND("background"),       // Background image for textView, also used in Complications
+    LEFTOFFSET("leftOffset"),       // Boolean allow left offset according to dynData value or key for LeftOffset Range definition
+    TOPOFFSET("topOffset"),         // Boolean allow top offset according to dynData value or key for TopOffset Range definition
+    ROTATIONOFFSET("rotationOffset"),// Boolean allow rotation offset according to dynData value or key for rotation Offset Range definition
+    DYNVALUE("dynValue"),           // Boolean allow replacement of text value by dynData value or key for dynValue Range definition
+    DYNDATA("dynData"),             //Bloc of DynDatas definition, and DynData keyValue within view
+    VALUEKEY("valueKey"),           // Indentify which value (default is View Value)
+    MINDATA("minData"),             // Min data Value (default defined for each value, note unit mg/dl for all bg, deltas)
+    MAXDATA("maxData"),             // Max data idem min data (note all value below min or above max will be considered as equal min or mas)
+    MINVALUE("minValue"),           // min returned value (when data value equals minData
+    MAXVALUE("maxValue"),           //
+    INVALIDVALUE("invalidValue"),
+    IMAGE("image"),
+    INVALIDIMAGE("invalidImage"),
+    INVALIDCOLOR("invalidColor"),
+    INVALIDFONTCOLOR("invalidFontColor"),
+    INVALIDTEXTSIZE("invalidTextSize"),
+    TWINVIEW("twinView"),
+    TOPOFFSETTWINHIDDEN("topOffsetTwinHidden"),
+    LEFTOFFSETTWINHIDDEN("leftOffsetTwinHidden"),
+    DYNPREF("dynPref"),
+    DYNPREFCOLOR("dynPrefColor"),
+    PREFKEY("prefKey"),
+    INVALIDTOPOFFSET("invalidTopOffset"),
+    INVALIDLEFTOFFSET("invalidLeftOffset"),
+    INVALIDROTATIONOFFSET("invalidRotationOffset"),
+    INVALIDTEXTVALUE("invalidTextvalue"),
+    COMPLICATIONSTYLE("complicationStyle"), // Key for Complication global styling block
+    ICONCOLOR("iconColor"),         // Complication slots only: set icon color
+    TITLESIZE("titleSize"),         // Complication slots only: text size for Complication Title/label
+    TITLESTYLE("titleStyle"),       // Complication slots only: title Style for Complication Title/label
+    FONTTITLE("fontTitle"),         // Complication slots only: typeface for the title/label text (see ComplicationStyle.titleTypeface)
+    FONTTITLECOLOR("fontTitleColor"), // Complication slots only: color for the title/label text (see ComplicationStyle.titleColor)
+    BORDERRADIUS("borderRadius"),   // Complication slots only: corner radius of the complication
+    BORDERCOLOR("borderColor"),     // Complication slots only: border color, absent or transparent means no border
+    BORDERWIDTH("borderWidth"),     // Complication slots only: border thickness, same 400x400 space as width/height
+    RINGWIDTH("ringWidth"),         // Complication slots only: ring width, same 400x400 space as width/height
+    RINGPRIMARYCOLOR("ringPrimaryColor"), // Complication slots only: ring color
+    RINGSECONDARYCOLOR("ringSecondaryColor"), // Complication slots only: color of the unfilled part of the ring
+    IMAGEFIT("imageFit"),           // Complication slots only: how a SMALL_IMAGE/PHOTO_IMAGE fills the slot (see JsonKeyValues FIT_CENTER/CENTER_CROP/FIT_XY)
+    DEFAULT("default")
+}

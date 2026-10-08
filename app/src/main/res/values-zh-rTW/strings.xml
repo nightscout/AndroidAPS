@@ -11,4 +11,5 @@
     <string name="migrating_profile_switches">正在移轉設定檔切換…</string>
     <string name="migrating_effective_profile_switches">正在移轉生效的設定檔切換…</string>
     <string name="migrating_boluses">正在移轉注射…</string>
+    <string name="insulin_migration_default_used" comment="Shown once after the database migration when no profile was active, so the insulin actually used could not be determined. %1$s is the substituted insulin name, e.g. Ultra-Rapid-Oref. The already migrated records are NOT corrected later.">較舊的記錄沒有胰島素設定，且當時沒有啟用中的設定檔，因此這些記錄使用了 %1$s。請檢查你的胰島素設定——已完成移轉的記錄之後不會再更新。</string>
 </resources>

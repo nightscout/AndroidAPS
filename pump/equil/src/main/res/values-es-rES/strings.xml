@@ -114,24 +114,8 @@
     <string name="equil_history_item18">Infusión anormal detenida</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspender</string>
     <string name="equil_common_overview_button_resume_delivery">Reanudar la entrega</string>
-    <string name="equil_common_moments_ago">Hace un momento</string>
-    <string name="equil_common_less_than_a_minute_ago">Hace menos de un minuto</string>
-    <string name="equil_common_time_ago">%1$s ago</string>
-    <string name="equil_common_composite_time">%1$s and %2$s</string>
     <string name="equil_common_wizard_exit_confirmation_text">Aún no has completado todos los pasos. ¿Estás seguro de que quieres salir?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Salir</string>
-    <plurals name="equil_common_minutes">
-        <item quantity="one">%1$d minuto</item>
-        <item quantity="other">%1$d minutos</item>
-    </plurals>
-    <plurals name="equil_common_hours">
-        <item quantity="one">%1$d hora</item>
-        <item quantity="other">%1$d horas</item>
-    </plurals>
-    <plurals name="equil_common_days">
-        <item quantity="one">%1$d día</item>
-        <item quantity="other">%1$d días</item>
-    </plurals>
     <string name="equil_support_error">Versión del firmware demasiado baja. No compatible</string>
     <string name="equil_password_tips">Opcionalmente, establezca una contraseña para el emparejamiento con la bomba Equil v5.3. Esta contraseña también se usará para desvincularla en el futuro, así que asegúrese de recordarla. Regla de la contraseña: Debe tener 4 caracteres, elegidos entre ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Establecer la contraseña de emparejamiento</string>

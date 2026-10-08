@@ -1,0 +1,737 @@
+package app.aaps.implementation.stats
+
+import androidx.collection.LongSparseArray
+import app.aaps.core.data.aps.AverageTDD
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TDD
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.TimeZone
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.TimeZone as JavaTimeZone
+
+class TddCalculatorImplTest : TestBase() {
+
+    @Mock lateinit var rh: ResourceHelper
+    @Mock lateinit var activePlugin: ActivePlugin
+    @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var processedTbrEbData: ProcessedTbrEbData
+    @Mock lateinit var persistenceLayer: PersistenceLayer
+
+    private lateinit var tddCalculator: TddCalculatorImpl
+
+    private val now = 1000000000L
+    private val midnight = MidnightTime.calc(now)
+
+    @BeforeEach
+    fun setup() {
+        tddCalculator = TddCalculatorImpl(aapsLogger, activePlugin, profileFunction, dateUtil, processedTbrEbData, persistenceLayer)
+        whenever(dateUtil.now()).thenReturn(now)
+    }
+
+    @Test
+    fun `averageTDD returns null when input is null`() {
+        val result = tddCalculator.averageTDD(null)
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `averageTDD returns null when input is empty`() {
+        val tdds = LongSparseArray<TDD>()
+        val result = tddCalculator.averageTDD(tdds)
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `averageTDD calculates correct average for single day`() {
+        val tdds = LongSparseArray<TDD>()
+        val tdd = TDD(timestamp = midnight).apply {
+            basalAmount = 20.0
+            bolusAmount = 10.0
+            totalAmount = 30.0
+            carbs = 150.0
+        }
+        tdds.put(midnight, tdd)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.data?.basalAmount).isEqualTo(20.0)
+        assertThat(result?.data?.bolusAmount).isEqualTo(10.0)
+        assertThat(result?.data?.totalAmount).isEqualTo(30.0)
+        assertThat(result?.data?.carbs).isEqualTo(150.0)
+        assertThat(result?.allDaysHaveCarbs).isTrue()
+    }
+
+    @Test
+    fun `averageTDD calculates correct average for multiple days`() {
+        val tdds = LongSparseArray<TDD>()
+
+        val tdd1 = TDD(timestamp = midnight).apply {
+            basalAmount = 20.0
+            bolusAmount = 10.0
+            totalAmount = 30.0
+            carbs = 150.0
+        }
+        val tdd2 = TDD(timestamp = midnight + T.days(1).msecs()).apply {
+            basalAmount = 30.0
+            bolusAmount = 20.0
+            totalAmount = 50.0
+            carbs = 200.0
+        }
+        val tdd3 = TDD(timestamp = midnight + T.days(2).msecs()).apply {
+            basalAmount = 25.0
+            bolusAmount = 15.0
+            totalAmount = 40.0
+            carbs = 175.0
+        }
+
+        tdds.put(midnight, tdd1)
+        tdds.put(midnight + T.days(1).msecs(), tdd2)
+        tdds.put(midnight + T.days(2).msecs(), tdd3)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.data?.basalAmount).isWithin(0.01).of(25.0)  // (20+30+25)/3
+        assertThat(result?.data?.bolusAmount).isWithin(0.01).of(15.0)  // (10+20+15)/3
+        assertThat(result?.data?.totalAmount).isWithin(0.01).of(40.0)  // (30+50+40)/3
+        assertThat(result?.data?.carbs).isWithin(0.01).of(175.0)  // (150+200+175)/3
+        assertThat(result?.allDaysHaveCarbs).isTrue()
+    }
+
+    @Test
+    fun `averageTDD detects days without carbs`() {
+        val tdds = LongSparseArray<TDD>()
+
+        val tdd1 = TDD(timestamp = midnight).apply {
+            basalAmount = 20.0
+            bolusAmount = 10.0
+            totalAmount = 30.0
+            carbs = 150.0
+        }
+        val tdd2 = TDD(timestamp = midnight + T.days(1).msecs()).apply {
+            basalAmount = 30.0
+            bolusAmount = 20.0
+            totalAmount = 50.0
+            carbs = 0.0  // No carbs
+        }
+
+        tdds.put(midnight, tdd1)
+        tdds.put(midnight + T.days(1).msecs(), tdd2)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.allDaysHaveCarbs).isFalse()
+    }
+
+    @Test
+    fun `averageTDD handles zero values correctly`() {
+        val tdds = LongSparseArray<TDD>()
+
+        val tdd1 = TDD(timestamp = midnight).apply {
+            basalAmount = 0.0
+            bolusAmount = 0.0
+            totalAmount = 0.0
+            carbs = 0.0
+        }
+        val tdd2 = TDD(timestamp = midnight + T.days(1).msecs()).apply {
+            basalAmount = 0.0
+            bolusAmount = 0.0
+            totalAmount = 0.0
+            carbs = 0.0
+        }
+
+        tdds.put(midnight, tdd1)
+        tdds.put(midnight + T.days(1).msecs(), tdd2)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.data?.basalAmount).isEqualTo(0.0)
+        assertThat(result?.data?.bolusAmount).isEqualTo(0.0)
+        assertThat(result?.data?.totalAmount).isEqualTo(0.0)
+        assertThat(result?.data?.carbs).isEqualTo(0.0)
+        assertThat(result?.allDaysHaveCarbs).isFalse()
+    }
+
+    @Test
+    fun `averageTDD handles large numbers correctly`() {
+        val tdds = LongSparseArray<TDD>()
+
+        val tdd1 = TDD(timestamp = midnight).apply {
+            basalAmount = 1000.0
+            bolusAmount = 500.0
+            totalAmount = 1500.0
+            carbs = 5000.0
+        }
+        val tdd2 = TDD(timestamp = midnight + T.days(1).msecs()).apply {
+            basalAmount = 2000.0
+            bolusAmount = 1000.0
+            totalAmount = 3000.0
+            carbs = 10000.0
+        }
+
+        tdds.put(midnight, tdd1)
+        tdds.put(midnight + T.days(1).msecs(), tdd2)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.data?.basalAmount).isEqualTo(1500.0)
+        assertThat(result?.data?.bolusAmount).isEqualTo(750.0)
+        assertThat(result?.data?.totalAmount).isEqualTo(2250.0)
+        assertThat(result?.data?.carbs).isEqualTo(7500.0)
+    }
+
+    @Test
+    fun `averageTDD handles fractional values correctly`() {
+        val tdds = LongSparseArray<TDD>()
+
+        val tdd1 = TDD(timestamp = midnight).apply {
+            basalAmount = 20.5
+            bolusAmount = 10.3
+            totalAmount = 30.8
+            carbs = 150.7
+        }
+        val tdd2 = TDD(timestamp = midnight + T.days(1).msecs()).apply {
+            basalAmount = 25.7
+            bolusAmount = 15.9
+            totalAmount = 41.6
+            carbs = 200.3
+        }
+        val tdd3 = TDD(timestamp = midnight + T.days(2).msecs()).apply {
+            basalAmount = 22.3
+            bolusAmount = 12.1
+            totalAmount = 34.4
+            carbs = 175.5
+        }
+
+        tdds.put(midnight, tdd1)
+        tdds.put(midnight + T.days(1).msecs(), tdd2)
+        tdds.put(midnight + T.days(2).msecs(), tdd3)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.data?.basalAmount).isWithin(0.01).of((20.5 + 25.7 + 22.3) / 3.0)
+        assertThat(result?.data?.bolusAmount).isWithin(0.01).of((10.3 + 15.9 + 12.1) / 3.0)
+        assertThat(result?.data?.totalAmount).isWithin(0.01).of((30.8 + 41.6 + 34.4) / 3.0)
+        assertThat(result?.data?.carbs).isWithin(0.01).of((150.7 + 200.3 + 175.5) / 3.0)
+    }
+
+    @Test
+    fun `averageTDD sets timestamp to current time`() {
+        val tdds = LongSparseArray<TDD>()
+        val tdd = TDD(timestamp = midnight).apply {
+            basalAmount = 20.0
+            bolusAmount = 10.0
+            totalAmount = 30.0
+            carbs = 150.0
+        }
+        tdds.put(midnight, tdd)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.data?.timestamp).isEqualTo(now)
+    }
+
+    @Test
+    fun `averageTDD handles seven days correctly`() {
+        val tdds = LongSparseArray<TDD>()
+
+        for (i in 0 until 7) {
+            val tdd = TDD(timestamp = midnight + T.days(i.toLong()).msecs()).apply {
+                basalAmount = 20.0 + i
+                bolusAmount = 10.0 + i
+                totalAmount = 30.0 + (i * 2)
+                carbs = 150.0 + (i * 10)
+            }
+            tdds.put(midnight + T.days(i.toLong()).msecs(), tdd)
+        }
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        // Average of (20, 21, 22, 23, 24, 25, 26) = 23
+        assertThat(result?.data?.basalAmount).isWithin(0.01).of(23.0)
+        // Average of (10, 11, 12, 13, 14, 15, 16) = 13
+        assertThat(result?.data?.bolusAmount).isWithin(0.01).of(13.0)
+        // Average of (30, 32, 34, 36, 38, 40, 42) = 36
+        assertThat(result?.data?.totalAmount).isWithin(0.01).of(36.0)
+        // Average of (150, 160, 170, 180, 190, 200, 210) = 180
+        assertThat(result?.data?.carbs).isWithin(0.01).of(180.0)
+        assertThat(result?.allDaysHaveCarbs).isTrue()
+    }
+
+    @Test
+    fun `averageTDD respects original TDD immutability`() {
+        val tdds = LongSparseArray<TDD>()
+        val originalBasal = 20.0
+        val originalBolus = 10.0
+        val tdd = TDD(timestamp = midnight).apply {
+            basalAmount = originalBasal
+            bolusAmount = originalBolus
+            totalAmount = 30.0
+            carbs = 150.0
+        }
+        tdds.put(midnight, tdd)
+
+        tddCalculator.averageTDD(tdds)
+
+        // Verify original TDD wasn't modified
+        assertThat(tdd.basalAmount).isEqualTo(originalBasal)
+        assertThat(tdd.bolusAmount).isEqualTo(originalBolus)
+    }
+
+    @Test
+    fun `averageTDD handles mixed carb data correctly`() {
+        val tdds = LongSparseArray<TDD>()
+
+        // Day 1: Has carbs
+        val tdd1 = TDD(timestamp = midnight).apply {
+            basalAmount = 20.0
+            bolusAmount = 10.0
+            totalAmount = 30.0
+            carbs = 150.0
+        }
+        // Day 2: No carbs
+        val tdd2 = TDD(timestamp = midnight + T.days(1).msecs()).apply {
+            basalAmount = 25.0
+            bolusAmount = 15.0
+            totalAmount = 40.0
+            carbs = 0.0
+        }
+        // Day 3: Has carbs
+        val tdd3 = TDD(timestamp = midnight + T.days(2).msecs()).apply {
+            basalAmount = 22.0
+            bolusAmount = 12.0
+            totalAmount = 34.0
+            carbs = 175.0
+        }
+
+        tdds.put(midnight, tdd1)
+        tdds.put(midnight + T.days(1).msecs(), tdd2)
+        tdds.put(midnight + T.days(2).msecs(), tdd3)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.allDaysHaveCarbs).isFalse()
+        // Carb average still calculated: (150 + 0 + 175) / 3 = 108.33...
+        assertThat(result?.data?.carbs).isWithin(0.01).of(108.33)
+    }
+
+    @Test
+    fun `averageTDD result has correct AverageTDD structure`() {
+        val tdds = LongSparseArray<TDD>()
+        val tdd = TDD(timestamp = midnight).apply {
+            basalAmount = 20.0
+            bolusAmount = 10.0
+            totalAmount = 30.0
+            carbs = 150.0
+        }
+        tdds.put(midnight, tdd)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isInstanceOf(AverageTDD::class.java)
+        assertThat(result?.data).isInstanceOf(TDD::class.java)
+        assertThat(result?.allDaysHaveCarbs).isInstanceOf(Boolean::class.java)
+    }
+
+    @Test
+    fun `averageTDD handles very small fractional differences`() {
+        val tdds = LongSparseArray<TDD>()
+
+        val tdd1 = TDD(timestamp = midnight).apply {
+            basalAmount = 20.001
+            bolusAmount = 10.001
+            totalAmount = 30.002
+            carbs = 150.001
+        }
+        val tdd2 = TDD(timestamp = midnight + T.days(1).msecs()).apply {
+            basalAmount = 20.002
+            bolusAmount = 10.002
+            totalAmount = 30.004
+            carbs = 150.002
+        }
+
+        tdds.put(midnight, tdd1)
+        tdds.put(midnight + T.days(1).msecs(), tdd2)
+
+        val result = tddCalculator.averageTDD(tdds)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.data?.basalAmount).isWithin(0.0001).of(20.0015)
+        assertThat(result?.data?.bolusAmount).isWithin(0.0001).of(10.0015)
+    }
+
+    /**
+     * A day computed from part of its data must not be left in the cache when the answer is refused.
+     *
+     * `calculate` used to store every day it managed to compute and only afterwards decide whether it
+     * had enough of them, so a run that found one day of seven stored that day and returned null. The
+     * caller correctly discarded the answer; the database kept it. That is how a full Nightscout sync
+     * produced wrong totals - treatments arrive oldest first, the loop asks for seven days while only
+     * the first chunk has landed, and invalidation only ever deletes *forward* from a changed record,
+     * so nothing ever reached back to remove the row. Only "Recalculate" in the statistics screen,
+     * which wipes the table outright, fixed it.
+     */
+    @Test
+    fun `a result too short to be returned is not cached`() = runTest {
+        givenSevenDayWindow(profileAvailableFromDay = 6)
+
+        val result = tddCalculator.calculate(now, days = 7, allowMissingDays = false)
+
+        assertThat(result).isNull()
+        verify(persistenceLayer, never()).insertOrUpdateCachedTotalDailyDose(any())
+    }
+
+    /** The other direction, so the fix above cannot quietly become "never cache anything". */
+    @Test
+    fun `a complete result is still cached`() = runTest {
+        givenSevenDayWindow(profileAvailableFromDay = 0)
+
+        val result = tddCalculator.calculate(now, days = 7, allowMissingDays = false)
+
+        assertThat(result).isNotNull()
+        assertThat(result?.size()).isEqualTo(7)
+        verify(persistenceLayer, times(7)).insertOrUpdateCachedTotalDailyDose(any())
+    }
+
+    /**
+     * The extended boluses are now read once for the whole interval instead of once per 5-minute step.
+     * The result must stay the same as the old per-step `getExtendedBolusActiveAt`: one bolus already
+     * running at the start counts only until it ends, one starting later counts from its start.
+     */
+    @Test
+    fun `extended boluses of the interval are counted per step from one query`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = false)
+        // 1.2 U/h, started 30 min before the interval, ends 15 min into it: steps +0, +5, +10
+        val runningAtStart = EB(id = 1, timestamp = intervalStart - T.mins(30).msecs(), duration = T.mins(45).msecs(), amount = 0.9)
+        // 2.4 U/h, starts 30 min into the interval: steps +30 ... +55
+        val startingLater = EB(id = 2, timestamp = intervalStart + T.mins(30).msecs(), duration = T.mins(60).msecs(), amount = 2.4)
+        whenever(persistenceLayer.getExtendedBolusesActiveAt(intervalStart)).thenReturn(listOf(runningAtStart))
+        whenever(persistenceLayer.getExtendedBolusesStartingFromTimeToTime(intervalStart, intervalEnd, true)).thenReturn(listOf(startingLater))
+
+        val tdd = tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        // 3 steps * 1.2 / 12 + 6 steps * 2.4 / 12
+        assertThat(tdd?.bolusAmount).isWithin(0.0001).of(0.3 + 1.2)
+        verify(persistenceLayer, times(1)).getExtendedBolusesActiveAt(any())
+        verify(persistenceLayer, times(1)).getExtendedBolusesStartingFromTimeToTime(any(), any(), any())
+    }
+
+    /** A bolus that starts exactly at the start is returned by both queries and must count once. */
+    @Test
+    fun `an extended bolus returned by both queries is counted once`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = false)
+        // 1.2 U/h for 10 min: steps +0 and +5
+        val atStart = EB(id = 3, timestamp = intervalStart, duration = T.mins(10).msecs(), amount = 0.2)
+        whenever(persistenceLayer.getExtendedBolusesActiveAt(intervalStart)).thenReturn(listOf(atStart))
+        whenever(persistenceLayer.getExtendedBolusesStartingFromTimeToTime(intervalStart, intervalEnd, true)).thenReturn(listOf(atStart))
+
+        val tdd = tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        assertThat(tdd?.bolusAmount).isWithin(0.0001).of(0.2)
+    }
+
+    /**
+     * Two extended boluses that overlap at the start, the later started one ending first. The per-step
+     * `getExtendedBolusActiveAt` returned the later one while it ran, then the older one again. Reading
+     * only the last started one at the start lost the older one after that.
+     */
+    @Test
+    fun `an older extended bolus that overlaps at the start counts again after the later one ends`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = false)
+        // 1.2 U/h, from 60 min before the interval to 90 min into it
+        val older = EB(id = 4, timestamp = intervalStart - T.mins(60).msecs(), duration = T.mins(150).msecs(), amount = 3.0)
+        // 2.4 U/h, from 10 min before the interval to 10 min into it: steps +0 and +5
+        val later = EB(id = 5, timestamp = intervalStart - T.mins(10).msecs(), duration = T.mins(20).msecs(), amount = 0.8)
+        whenever(persistenceLayer.getExtendedBolusesActiveAt(intervalStart)).thenReturn(listOf(older, later))
+        whenever(persistenceLayer.getExtendedBolusesStartingFromTimeToTime(intervalStart, intervalEnd, true)).thenReturn(emptyList())
+
+        val tdd = tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        // 2 steps * 2.4 / 12 + 10 steps * 1.2 / 12
+        assertThat(tdd?.bolusAmount).isWithin(0.0001).of(0.4 + 1.0)
+    }
+
+    /** A pump that fakes temporary basals with extended boluses already counts them as basal. */
+    @Test
+    fun `extended boluses are not read when the pump fakes temps with them`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = true)
+
+        tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        verify(persistenceLayer, never()).getExtendedBolusesActiveAt(any())
+        verify(persistenceLayer, never()).getExtendedBolusesStartingFromTimeToTime(any(), any(), any())
+    }
+
+    /**
+     * A percent temporary basal is converted with the profile of its own step, and a step without one
+     * counts the profile's basal. `getBasalData`, used before, could return a value cached with the
+     * profile of another caller.
+     */
+    @Test
+    fun `a percent temporary basal uses the profile of its step and other steps the profile basal`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = true)
+        val profile = mock<EffectiveProfile>()
+        whenever(profile.getBasal(any())).thenReturn(2.0)
+        whenever(profileFunction.getProfile(any())).thenReturn(profile)
+        // 50 % in the first 30 minutes, nothing after
+        givenTemporaryBasals { t -> if (t < intervalStart + T.mins(30).msecs()) percent(50.0) else null }
+
+        val tdd = tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        // 6 steps at 1.0 U/h and 6 steps at 2.0 U/h, each step is 5 minutes
+        assertThat(tdd?.basalAmount).isWithin(0.0001).of(0.5 + 1.0)
+    }
+
+    /** One read of the database for the interval, then every step looks up its own time. */
+    @Test
+    fun `the temporary basals of an interval are read once`() = runTest {
+        givenIntervalWithoutBasal(fakingTemps = true)
+
+        tddCalculator.calculateInterval(intervalStart, intervalEnd, allowMissingData = false)
+
+        verify(processedTbrEbData, times(1)).getTempBasalsIncludingConvertedExtended(intervalStart, intervalEnd)
+        assertThat(temporaryBasalLookups).isEqualTo(12)
+    }
+
+    /**
+     * The insulin used since the last cannula change is weeks of 5-minute steps. Whole days that are
+     * stored must be read instead, and only the rest summed in steps.
+     */
+    @Test
+    fun `whole stored days are read and the rest is summed in steps`() = runTest {
+        inZone("Europe/Prague") {
+            givenBasal { 1.2 } // 0.1 U per step
+            val dayB = pragueMidnight("2026-01-13")
+            val dayC = pragueMidnight("2026-01-14")
+            val dayD = pragueMidnight("2026-01-15")
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(null)
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(dayB)).thenReturn(TDD(timestamp = dayB, basalAmount = 10.0, bolusAmount = 5.0, totalAmount = 15.0))
+
+            // From 22:00 the day before dayB to 03:00 on dayD
+            val tdd = tddCalculator.calculateIntervalWithCachedDays(dayB - T.hours(2).msecs(), dayD + T.hours(3).msecs(), allowMissingData = false)
+
+            // 2 h in steps, dayB stored, dayC not stored so 24 h in steps, 3 h in steps
+            assertThat(tdd?.totalAmount).isWithin(0.0001).of(2.4 + 15.0 + 28.8 + 3.6)
+            assertThat(tdd?.bolusAmount).isWithin(0.0001).of(5.0)
+            // Every step looked up once, from one read per summed part
+            assertThat(temporaryBasalLookups).isEqualTo(24 + 288 + 36)
+            verify(processedTbrEbData, times(3)).getTempBasalsIncludingConvertedExtended(any(), any())
+            verify(persistenceLayer, times(1)).getCalculatedTotalDailyDose(dayC)
+        }
+    }
+
+    /** With nothing stored, the day by day sum must give exactly what one long interval gives. */
+    @Test
+    fun `with nothing stored the result is the same as calculateInterval`() = runTest {
+        inZone("Europe/Prague") {
+            // A rate that changes every step, so a step counted twice or lost would show
+            givenBasal { t -> 1.0 + (t / T.mins(5).msecs() % 3) * 0.1 }
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(null)
+            val dayB = pragueMidnight("2026-01-13")
+            val boluses = listOf(
+                BS(timestamp = dayB + T.hours(8).msecs(), amount = 3.0, type = BS.Type.NORMAL, iCfg = mock<ICfg>()),
+                BS(timestamp = dayB + T.hours(30).msecs(), amount = 2.0, type = BS.Type.NORMAL, iCfg = mock<ICfg>())
+            )
+            whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenAnswer { invocation ->
+                boluses.filter { it.timestamp in invocation.getArgument<Long>(0)..invocation.getArgument<Long>(1) }
+            }
+            val start = dayB - T.hours(5).msecs() + T.mins(17).msecs()
+            val end = dayB + T.hours(52).msecs() + T.mins(3).msecs()
+
+            val byDays = tddCalculator.calculateIntervalWithCachedDays(start, end, allowMissingData = false)
+            val inOne = tddCalculator.calculateInterval(start, end, allowMissingData = false)
+
+            assertThat(byDays?.basalAmount).isWithin(0.0001).of(inOne!!.basalAmount)
+            assertThat(byDays?.bolusAmount).isWithin(0.0001).of(5.0)
+            assertThat(byDays?.totalAmount).isWithin(0.0001).of(inOne.totalAmount)
+        }
+    }
+
+    /** A missing profile in a day that has to be summed makes the whole answer unavailable, as before. */
+    @Test
+    fun `a summed day without profile makes the result null`() = runTest {
+        inZone("Europe/Prague") {
+            givenBasal { 1.2 }
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(null)
+            val dayB = pragueMidnight("2026-01-13")
+            val dayC = pragueMidnight("2026-01-14")
+            val profile = mock<EffectiveProfile>()
+            whenever(profileFunction.getProfile(any())).thenAnswer { invocation -> if (invocation.getArgument<Long>(0) >= dayC) null else profile }
+
+            val tdd = tddCalculator.calculateIntervalWithCachedDays(dayB - T.hours(2).msecs(), dayC + T.hours(3).msecs(), allowMissingData = false)
+
+            assertThat(tdd).isNull()
+        }
+    }
+
+    /**
+     * A stored day covers 24 hours from its midnight. 2026-03-29 in Prague is 23 hours long, so a stored
+     * value for it does not match the day and must not be used.
+     */
+    @Test
+    fun `a DST change day is summed even when it is stored`() = runTest {
+        inZone("Europe/Prague") {
+            givenBasal { 1.2 }
+            whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(TDD(timestamp = 0, totalAmount = 100.0))
+            val dstDay = pragueMidnight("2026-03-29")
+            val nextDay = pragueMidnight("2026-03-30")
+
+            val tdd = tddCalculator.calculateIntervalWithCachedDays(dstDay - T.hours(1).msecs(), nextDay + T.hours(1).msecs(), allowMissingData = false)
+
+            // 1 h + 23 h + 1 h in steps
+            assertThat(tdd?.totalAmount).isWithin(0.0001).of(25 * 1.2)
+            verify(persistenceLayer, never()).getCalculatedTotalDailyDose(any())
+        }
+    }
+
+    private fun pragueMidnight(date: String): Long =
+        LocalDateTime.parse("${date}T00:00:00").atZone(ZoneId.of("Europe/Prague")).toInstant().toEpochMilli()
+
+    /** `MidnightTime` uses the system zone, so the tests that cross midnight fix it. */
+    private inline fun <R> inZone(zoneId: String, block: () -> R): R {
+        val previous = JavaTimeZone.getDefault()
+        JavaTimeZone.setDefault(JavaTimeZone.getTimeZone(zoneId))
+        try {
+            return block()
+        } finally {
+            JavaTimeZone.setDefault(previous)
+        }
+    }
+
+    /** A profile for every step, no boluses, no carbs, no extended boluses, and the basal from [rate]. */
+    private suspend fun givenBasal(rate: (Long) -> Double) {
+        val profile = mock<EffectiveProfile>()
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(true)
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        givenTemporaryBasals { t -> absolute(rate(t)) }
+        whenever(profileFunction.getProfile(any())).thenReturn(profile)
+    }
+
+    /** How often a step asked for its temporary basal, see [givenTemporaryBasals]. */
+    private var temporaryBasalLookups = 0
+
+    /** The temporary basal running at each time, as [ProcessedTbrEbData] would answer for a range. */
+    private suspend fun givenTemporaryBasals(running: (Long) -> TB?) {
+        whenever(processedTbrEbData.getTempBasalsIncludingConvertedExtended(any(), any())).thenReturn(object : ProcessedTbrEbData.TempBasalsInRange {
+            override suspend fun at(timestamp: Long): TB? {
+                temporaryBasalLookups++
+                return running(timestamp)
+            }
+        })
+    }
+
+    private fun absolute(rate: Double) = TB(timestamp = 0, utcOffset = 0, type = TB.Type.NORMAL, isAbsolute = true, rate = rate, duration = T.hours(1).msecs())
+
+    private fun percent(percent: Double) = TB(timestamp = 0, utcOffset = 0, type = TB.Type.NORMAL, isAbsolute = false, rate = percent, duration = T.hours(1).msecs())
+
+    // A 5-minute aligned hour, so every step is easy to count
+    private val intervalStart = T.mins(5).msecs() * 4000
+    private val intervalEnd = intervalStart + T.mins(60).msecs()
+
+    /** A profile for every step, no boluses, no carbs and no basal, so only extended boluses add up. */
+    private suspend fun givenIntervalWithoutBasal(fakingTemps: Boolean) {
+        val profile = mock<EffectiveProfile>()
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(fakingTemps)
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        // No temporary basal, and the mocked profile's basal is 0.0
+        givenTemporaryBasals { null }
+        whenever(profileFunction.getProfile(any())).thenReturn(profile)
+    }
+
+    /**
+     * Nothing cached, no boluses or carbs, and a flat temporary basal so every day the profile covers
+     * produces a non-zero total. [profileAvailableFromDay] is the first day of the window that has a
+     * profile - days before it make `calculateInterval` bail out, which is how a partial result is
+     * produced without having to fake a half-written database.
+     */
+    private suspend fun givenSevenDayWindow(profileAvailableFromDay: Int) {
+        val profile = mock<EffectiveProfile>()
+        val pump = mock<PumpWithConcentration>()
+        whenever(activePlugin.activePump).thenReturn(pump)
+        whenever(pump.isFakingTempsByExtendedBoluses).thenReturn(true)
+        whenever(persistenceLayer.getCalculatedTotalDailyDose(any())).thenReturn(null)
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        givenTemporaryBasals { absolute(1.0) }
+
+        val windowStart = MidnightTime.calcDaysBack(now, 7)
+        val profileFrom = MidnightTime.calc(windowStart + T.days(profileAvailableFromDay.toLong()).msecs())
+        whenever(profileFunction.getProfile(any())).thenAnswer { invocation ->
+            if (invocation.getArgument<Long>(0) >= profileFrom) profile else null
+        }
+    }
+
+    /**
+     * [addDaysInLocalZone] replaced `java.time`'s `atZone(zone).plusDays(days)`, which cannot leave the
+     * JVM. This runs both and demands the same millisecond, so the claim that the translation is exact
+     * is checked rather than asserted in a comment.
+     *
+     * The zones and dates are chosen so the window crosses a DST change in each direction, plus Lord Howe
+     * for its half-hour shift. A `days * 24h` shortcut would be an hour out on every one of these, and an
+     * hour at a window edge moves a bolus in or out of a TDD.
+     */
+    @Test
+    fun `adding calendar days matches the java time arithmetic it replaced`() {
+        val cases = listOf(
+            // zone, local midnight the window starts at, days
+            Triple("Europe/Prague", "2026-03-27T00:00:00", 5L),      // spring forward on the 29th
+            Triple("Europe/Prague", "2026-10-23T00:00:00", 5L),      // fall back on the 25th
+            Triple("America/New_York", "2026-03-06T00:00:00", 3L),   // spring forward on the 8th
+            Triple("America/New_York", "2026-10-30T00:00:00", 7L),   // fall back on Nov 1st
+            Triple("Australia/Lord_Howe", "2026-04-03T00:00:00", 2L) // 30-minute shift on the 5th
+        )
+
+        for ((zoneId, localStart, days) in cases) {
+            val javaZone = ZoneId.of(zoneId)
+            val startMs = LocalDateTime.parse(localStart).atZone(javaZone).toInstant().toEpochMilli()
+
+            val expected = Instant.ofEpochMilli(startMs).atZone(javaZone)
+                .plusDays(days)
+                .toInstant().toEpochMilli()
+            val actual = addDaysInLocalZone(startMs, days, TimeZone.of(zoneId))
+
+            assertThat(actual).isEqualTo(expected)
+        }
+    }
+}

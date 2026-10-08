@@ -12,12 +12,13 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.wear.activity.ConfirmationActivity
 import androidx.wear.tiles.TileService
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -37,10 +38,13 @@ import app.aaps.wear.complications.BrTtComplication
 import app.aaps.wear.complications.CobDetailedComplication
 import app.aaps.wear.complications.CobIconComplication
 import app.aaps.wear.complications.CobIobComplication
+import app.aaps.wear.complications.CwfAmbientBgComplication
+import app.aaps.wear.complications.CwfAmbientStatusComplication
 import app.aaps.wear.complications.IobDetailedComplication
 import app.aaps.wear.complications.IobIconComplication
 import app.aaps.wear.complications.LongStatusComplication
 import app.aaps.wear.complications.LongStatusFlippedComplication
+import app.aaps.wear.complications.RunningModeComplication
 import app.aaps.wear.complications.SgvComplication
 import app.aaps.wear.complications.SgvComplicationExt1
 import app.aaps.wear.complications.SgvComplicationExt2
@@ -49,10 +53,10 @@ import app.aaps.wear.complications.TargetComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
-import androidx.wear.activity.ConfirmationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
 import app.aaps.wear.interaction.actions.ContactingMasterActivity
 import app.aaps.wear.interaction.actions.ProfileSwitchActivity
+import app.aaps.wear.interaction.menus.PreferenceMenuActivity
 import app.aaps.wear.tile.ActionsTileService
 import app.aaps.wear.tile.BgGraphTileService
 import app.aaps.wear.tile.QuickWizardTileService
@@ -60,32 +64,34 @@ import app.aaps.wear.tile.RunningModeTileService
 import app.aaps.wear.tile.SceneTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.UserActionTileService
+import app.aaps.wear.watchfaces.PushedFace
+import app.aaps.wear.watchfaces.WatchFacePushHelper
 import com.google.android.gms.wearable.WearableListenerService
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.serialization.json.Json
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.serialization.json.Json
 
-@Singleton
-class DataHandlerWear @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class DataHandlerWear(
     private val context: Context,
     private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
-    private val complicationDataRepository: ComplicationDataRepository
+    private val complicationDataRepository: ComplicationDataRepository,
+    private val watchFacePushHelper: WatchFacePushHelper
 ) {
 
     // Coroutine scope for DataStore operations
     private val dataStoreScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val disposable = CompositeDisposable()
 
     init {
         setupBus()
@@ -103,10 +109,11 @@ class DataHandlerWear @Inject constructor(
         crossinline detail: (T) -> String = { "" },
         crossinline handler: (T) -> Unit
     ) {
-        disposable += rxBus
-            .toObservable(T::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { event ->
+        // dataStoreScope is Dispatchers.IO, matching observeOn(aapsSchedulers.io). UNDISPATCHED because
+        // these subscribe from setupBus() on a replay-0 bus: a scheduled collector could miss anything
+        // sent before it started.
+        rxBus.toFlow(T::class)
+            .collectResilient(dataStoreScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) { event ->
                 aapsLogger.debug(LTag.WEAR, "${T::class.java.simpleName} received from ${event.sourceNodeId}${detail(event)}")
                 handler(event)
             }
@@ -161,7 +168,13 @@ class DataHandlerWear @Inject constructor(
         }
         onEvent<EventData.OpenLoopRequest> { handleOpenLoopRequest(it) }
         onEvent<EventData.OpenSettings> {
-            context.startActivity(Intent(context, WatchfaceConfigurationActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            // The Display screen holds the settings of the code-based faces. With the complications
+            // face installed through Watch Face Push nothing there is the wearer's, so the phone's
+            // button opens the main settings menu instead, from which every screen is reachable
+            val target =
+                if (watchFacePushHelper.isSupported() && watchFacePushHelper.selectedFace == PushedFace.WFS) PreferenceMenuActivity::class.java
+                else WatchfaceConfigurationActivity::class.java
+            context.startActivity(Intent(context, target).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
         }
         onEvent<EventData.ActionProfileSwitchOpenActivity> { event ->
             context.startActivity(Intent(context, ProfileSwitchActivity::class.java).apply {
@@ -225,6 +238,15 @@ class DataHandlerWear @Inject constructor(
             preferences.put(DoubleKey.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
             preferences.put(IntKey.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
             preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
+            // The Watch Face Push face the wearer chose on the phone. Stored whatever the watch
+            // can do with it, so a watch updated to Wear OS 6 later installs the chosen face on
+            // its next start; swapped now when the watch can. Either way the phone is told what
+            // the watch has, which is what lets its screen show the choice only where it applies
+            val faceChanged = watchFacePushHelper.selectFace(it.pushedWatchface)
+            dataStoreScope.launch {
+                if (faceChanged) watchFacePushHelper.installOrUpdate()
+                else watchFacePushHelper.reportStatus()
+            }
         }
         onEvent<EventData.QuickWizard> {
             val serialized = it.serialize()
@@ -413,6 +435,11 @@ class DataHandlerWear @Inject constructor(
             SgvLargeComplication::class.java,
             // BG graph image complication (for WFF watchfaces on watches without CWF support)
             BgGraphComplication::class.java,
+            // Ambient readouts of the pushed Watch Face Format face. Without these they refresh
+            // only on their own 300 second period, and the ambient glucose was seen 4 minutes
+            // behind the value drawn in the face itself.
+            CwfAmbientBgComplication::class.java,
+            CwfAmbientStatusComplication::class.java,
             // Long status complications (show detailed glucose + status info)
             LongStatusComplication::class.java,
             LongStatusFlippedComplication::class.java,
@@ -432,7 +459,9 @@ class DataHandlerWear @Inject constructor(
             BrCobIobComplicationExt1::class.java,
             BrCobIobComplicationExt2::class.java,
             // Battery complication
-            UploaderBatteryComplication::class.java
+            UploaderBatteryComplication::class.java,
+            // Running mode complication
+            RunningModeComplication::class.java
             // Note: WallpaperComplication is abstract, subclasses will auto-update
         )
 

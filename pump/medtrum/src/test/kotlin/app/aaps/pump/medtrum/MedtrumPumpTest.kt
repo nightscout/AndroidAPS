@@ -11,7 +11,6 @@ import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.ModelType
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
@@ -40,7 +39,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
             "\"basal\":[{\"time\":\"00:00\",\"value\":\"2.1\"},{\"time\":\"04:00\",\"value\":\"1.9\"},{\"time\":\"06:00\",\"value\":\"1.7\"}," +
             "{\"time\":\"08:00\",\"value\":\"1.5\"},{\"time\":\"16:00\",\"value\":\"1.6\"},{\"time\":\"21:00\",\"value\":\"1.7\"},{\"time\":\"23:00\",\"value\":\"2\"}]," +
             "\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-        val profile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(profileJSON), dateUtil)!!, activePlugin)
+        val profile = ProfileSealed.Pure(pureProfileFromJson(profileJSON, dateUtil)!!, activePlugin)
 
         // Call
         val result = medtrumPump.buildMedtrumProfileArray(profile)
@@ -58,7 +57,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
             "\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"},{\"time\":\"02:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\"," +
             "\"basal\":[{\"time\":\"00:00\",\"value\":\"600\"}]," +
             "\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-        val profile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(profileJSON), dateUtil)!!, activePlugin)
+        val profile = ProfileSealed.Pure(pureProfileFromJson(profileJSON, dateUtil)!!, activePlugin)
 
         // Call
         val result = medtrumPump.buildMedtrumProfileArray(profile)
@@ -82,7 +81,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
             "\"basal\":[{\"time\":\"00:00\",\"value\":\"2.1\"},{\"time\":\"04:00\",\"value\":\"1.9\"},{\"time\":\"06:00\",\"value\":\"1.7\"}," +
             "{\"time\":\"08:00\",\"value\":\"1.5\"},{\"time\":\"16:00\",\"value\":\"1.6\"},{\"time\":\"21:00\",\"value\":\"1.7\"},{\"time\":\"23:00\",\"value\":\"2\"}]," +
             "\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-        val profile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(profileJSON), dateUtil)!!, activePlugin)
+        val profile = ProfileSealed.Pure(pureProfileFromJson(profileJSON, dateUtil)!!, activePlugin)
         val profileArray = medtrumPump.buildMedtrumProfileArray(profile)
 
         val localDate = LocalDate.of(2023, 1, 1)

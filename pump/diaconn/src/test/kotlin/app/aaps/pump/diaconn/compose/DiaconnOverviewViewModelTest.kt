@@ -25,7 +25,6 @@ import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.R
 import app.aaps.pump.diaconn.events.EventDiaconnG8NewStatus
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -84,13 +83,13 @@ internal class DiaconnOverviewViewModelTest {
         whenever(diaconnG8Pump.lastBolusAmountFlow).thenReturn(MutableStateFlow<Double?>(null))
 
         // rx wiring touched at construction (PumpCommunicationStatus + init subscriptions)
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toObservable(EventDiaconnG8NewStatus::class.java)).thenReturn(Observable.empty())
-        whenever(rxBus.toObservable(EventInitializationChanged::class.java)).thenReturn(Observable.empty())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventDiaconnG8NewStatus::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventInitializationChanged::class)).thenReturn(emptyFlow())
         whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
-        whenever(persistenceLayer.observeChanges(EB::class.java)).thenReturn(emptyFlow())
-        whenever(persistenceLayer.observeChanges(TB::class.java)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(EB::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeChanges(TB::class)).thenReturn(emptyFlow())
 
         // formatting collaborators (called during buildUiState before the isConfigured branch)
         whenever(ch.fromPump(any(), any())).thenReturn(0.0)
@@ -128,7 +127,7 @@ internal class DiaconnOverviewViewModelTest {
     }
 
     private fun createViewModel() = DiaconnOverviewViewModel(
-        aapsLogger, rh, rxBus, aapsSchedulers, commandQueue, dateUtil, diaconnG8Pump,
+        aapsLogger, rh, rxBus, commandQueue, dateUtil, diaconnG8Pump,
         activePlugin, persistenceLayer, uel, preferences, ch, context
     )
 

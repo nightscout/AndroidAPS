@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS(Kruhový)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (vlastní)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Vlastní) vždy zapnuto</string>
     <string name="label_actions_tile">Akce</string>
     <string name="label_temp_target_tile">Dočasný cíl</string>
     <string name="label_quick_wizard_tile">Rychlý průvodce</string>
@@ -61,6 +62,10 @@
     <string name="pref_single_target">Jeden cíl</string>
     <string name="pref_wizard_percentage">Procento kalkulačky</string>
     <string name="pref_complication_tap_action">Akce po klepnutí na komplikaci</string>
+    <string name="pref_complication_bg_graph_hours">Časový rozsah grafu glykémie</string>
+    <string name="duration_1_hour">1 hodina</string>
+    <string name="duration_3_hours">3 hodiny</string>
+    <string name="duration_6_hours">6 hodin</string>
     <string name="pref_unicode_in_complications">Znaky Unicode v komplikacích</string>
     <string name="pref_version">Verze:</string>
     <string name="pref_moreWatchfaceSettings">Další nastavení ciferníku</string>
@@ -79,6 +84,11 @@
     <string name="menu_bg_graph">Graf glykémie</string>
     <string name="menu_resync">Re-Sync</string>
     <string name="menu_prime_fill">Plnění/doplňování</string>
+    <string name="menu_install_watchface">Nainstalovat ciferník</string>
+    <string name="menu_installing_watchface">Instalace ciferníku…</string>
+    <string name="watchface_installed_active">Cifrerník byl nainstalován a nastaven jako aktivní</string>
+    <string name="watchface_installed_select">Ciferník byl nainstalován, vyberte ho v seznamu ciferníků</string>
+    <string name="watchface_install_failed">Instalace ciferníku se nezdařila</string>
     <string name="menu_none">Nic</string>
     <string name="menu_default">Výchozí</string>
     <string name="menu_menu">Menu</string>
@@ -87,6 +97,7 @@
     <string name="action_user_action_confirmation">Požadována Uživatelská akce</string>
     <string name="action_scene_confirmation">Scéna byla vyžádána</string>
     <string name="scene_end">Konec</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Přeskočit</string>
     <string name="action_treatment_confirmation">Požadováno ošetření</string>
     <string name="action_bolus_confirmation">Požadován bolus</string>
     <string name="action_wizard_confirmation">Požadován kalkulátor</string>
@@ -98,6 +109,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Horní [%s]</string>
     <string name="action_carbs">Sacharidy</string>
     <string name="action_carbs_gram">Sacharidy [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Max. odstranění: %1$d g (COB)</string>
     <string name="action_ecarbs">eSacharidy</string>
     <string name="action_percentage">Procento\n[%]</string>
     <string name="action_start_minutes">Spustit\n[minuty]</string>
@@ -149,6 +161,21 @@
     <string name="pref_simplify_ui">Zjednodušené rozhraní</string>
     <string name="pref_vibrate_hourly">Vibrovat každou hodinu</string>
     <string name="pref_show_weeknumber">Zobrazit číslo týdne</string>
+    <string name="pref_complication_1">Komplikace 1</string>
+    <string name="pref_complication_2">Komplikace 2</string>
+    <string name="pref_complication_3">Komplikace 3</string>
+    <string name="pref_complication_4">Komplikace 4</string>
+    <string name="pref_complication_5">Komplikace 5</string>
+    <string name="complication_summary_none">Klepnutím vyberte zdroj dat</string>
+    <string name="pref_complication_type_priority">Priorita typu komplikace</string>
+    <string name="pref_complication_type_priority_all">Výchozí nastavení pro všechny sloty</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Změna zde aplikuje při příštím výběru zdroje dat. Znovu vybrat ten samý nestačí: nejprve vyberte jiný zdroj dat a poté zvolte ten, který chcete.</string>
+    <string name="complication_type_priority_value">Hodnota nebo tvar</string>
+    <string name="complication_type_priority_text">Text</string>
+    <string name="complication_type_priority_icon">Ikona</string>
+    <string name="complication_type_priority_use_default">Použít výchozí</string>
+    <string name="cwf_complication_layout">Rozvržení komplikace</string>
+    <string name="cwf_complication_layout_description">Pozice a velikost komplikací, převzatých z vlastního ciferníku.</string>
     <string name="pref_include_external">Zahrnout do šablony externí zobrazení</string>
     <string name="pref_switch_external">Přepnout externí data ve watchface</string>
     <string name="custom_pref_show_seconds">Zobrazovat sekundy</string>
@@ -221,6 +248,12 @@
     <string name="complication_blood_glucose_ext1">Glykémie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glykémie Ext2</string>
     <string name="complication_bg_graph">Graf glykémie</string>
+    <string name="complication_cwf_image">Vlastní ciferník</string>
+    <string name="complication_cwf_ambient_bg">Vlastní ciferník ambientní glykémie</string>
+    <string name="complication_cwf_ambient_status">Vlastní ciferník ambientní stav</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s %2$s</string>
+    <string name="complication_cwf_lower">Vlastní ciferník pozadí</string>
+    <string name="complication_cwf_upper">Vlastní ciferník hodiny</string>
     <string name="complication_br_cob_iob">Bazál, COB &amp; IOB</string>
     <string name="complication_br_cob_iob_ext1">Bazál, COB a IOB Ext1</string>
     <string name="complication_br_cob_iob_ext2">Bazál, COB a IOB Ext2</string>
@@ -234,6 +267,8 @@
     <string name="complication_iob_icon">Ikona IOB</string>
     <string name="complication_iob_detailed">Detailní IOB</string>
     <string name="complication_uploader_phone_battery">Baterie telefonu/uploaderu</string>
+    <string name="running_mode_resume">Obnovit smyčku</string>
+    <string name="running_mode_reconnect">Znovu připojit pumpu</string>
     <string name="label_running_mode_title">Režim smyčky</string>
     <string name="label_bg_graph_tile">Graf glykémie</string>
     <string name="tile_tap_action">Akce při klepnutí</string>
@@ -253,10 +288,9 @@
     <string name="contacting_master_unknown">Neznámý stav — zkontrolujte telefon</string>
     <string name="tile_settings">Nastavení dlaždice</string>
     <string name="loop_status_error">Nepodařilo se načíst stav</string>
-    <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d min</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">Zbývá %1$d min</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">zbývá %1$s</string>
     <string name="loop_status_tbr_continues">Dočasný bazál pokračuje</string>
     <string name="loop_status_tbr_cancel">Nastavuji normální bazál</string>
     <string name="loop_status_smb">%1$.2f U</string>
@@ -284,6 +318,18 @@
     <string name="loop_status_target_range">Rozsah</string>
     <string name="loop_status_target">Cíl</string>
     <string name="loop_status_adjusted_target">Upravený cíl</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Až do ukončení</string>
+    <string name="loop_status_scene_ended">Ukončeno</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Navazující</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Není vybrán žádný profil</string>
+    <string name="loop_status_profile_percentage">Procenta</string>
+    <string name="loop_status_profile_timeshift">Posun času</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Návrat na</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Citlivost</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Nastavení podle aktivní scény</string>
     <string name="loop_status">Stav smyčky</string>
     <string name="loop_status_refresh">Obnovit</string>
     <string name="confirm">Potvrdit</string>

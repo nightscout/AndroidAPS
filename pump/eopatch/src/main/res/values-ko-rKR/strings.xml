@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day를 위한 펌프 통합</string>
     <string name="low_reservoir">레저버 적음 경고</string>
     <string name="patch_expiration_reminders">패치 만료 알림</string>
@@ -80,5 +79,4 @@
     <string name="string_resumed_insulin_delivery_message">인슐린 주입이 재시작되었습니다.</string>
     <string name="string_temp_basal_remained_hhmm">남은 시간: %1$s:%2$s</string>
     <string name="string_resume_failed">재시작 실패함</string>
-    <!-- Permission rationales -->
 </resources>

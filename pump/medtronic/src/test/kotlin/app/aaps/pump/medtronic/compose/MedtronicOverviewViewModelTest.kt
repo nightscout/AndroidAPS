@@ -42,7 +42,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 
@@ -68,8 +67,8 @@ internal class MedtronicOverviewViewModelTest {
     private val medtronicUtil: MedtronicUtil = mock()
     private val rileyLinkServiceData: RileyLinkServiceData = mock()
     private val serviceTaskExecutor: ServiceTaskExecutor = mock()
-    private val resetTaskProvider: Provider<ResetRileyLinkConfigurationTask> = mock()
-    private val wakeTaskProvider: Provider<WakeAndTuneTask> = mock()
+    private val resetTaskProvider: () -> ResetRileyLinkConfigurationTask = mock()
+    private val wakeTaskProvider: () -> WakeAndTuneTask = mock()
 
     @BeforeEach
     fun setUp() {
@@ -82,11 +81,11 @@ internal class MedtronicOverviewViewModelTest {
 
         // rx wiring touched at construction: PumpCommunicationStatus init + the three medtronicRefresh
         // collectors launched in viewModelScope (UnconfinedTestDispatcher runs them eagerly).
-        whenever(rxBus.toFlow(EventPumpStatusChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventQueueChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventMedtronicPumpValuesChanged::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)).thenReturn(emptyFlow())
-        whenever(rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventQueueChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventMedtronicPumpValuesChanged::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventMedtronicPumpConfigurationChanged::class)).thenReturn(emptyFlow())
 
         // Pump state read by buildUiState() -> buildInfoRows() (kept minimal to skip optional branches).
         whenever(rileyLinkServiceData.rileyLinkServiceState).thenReturn(RileyLinkServiceState.NotStarted)

@@ -1,6 +1,6 @@
 package app.aaps.pump.eopatch.core.ble
 
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 object AppConstant {
 
@@ -8,7 +8,7 @@ object AppConstant {
     const val INSULIN_DECIMAL_PLACE_VAR = 100f
     const val INSULIN_UNIT_P = 0.05f
     const val BASAL_RATE_PER_HOUR_MIN = BASAL_MIN_AMOUNT
-    val PUMP_DURATION_MILLI: Long = TimeUnit.SECONDS.toMillis(4)
+    val PUMP_DURATION_MILLI: Long = 4.seconds.inWholeMilliseconds
     const val INSULIN_UNIT_STEP_U = INSULIN_UNIT_P
     const val BOLUS_UNIT_STEP = INSULIN_UNIT_STEP_U
     const val SEGMENT_MAX_SIZE_48 = 48

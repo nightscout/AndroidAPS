@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day 胰島素幫浦整合</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Pod 未確認此次注射已結束。已記錄 %1$s，但 Pod 可能實際給得更多。再次注射胰島素前，請先檢查 Pod。</string>
     <string name="low_reservoir">儲液盒低警報</string>
     <string name="patch_expiration_reminders">貼片過期提醒</string>
     <string name="patch_buzzer_reminders">貼片嗶聲提醒</string>
@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">要退出取消註冊嚮導嗎？貼片可能仍保持啟動並持續輸注胰島素。</string>
     <string name="patch_force_reset">強制重設</string>
     <string name="patch_force_reset_confirm">這將在本機清除貼片狀態，不會向貼片發送指令。僅在一般取消註冊失敗時使用。貼片將持續輸注，直到電池耗盡或手動關閉。</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">精確鬧鐘</string>
-    <string name="permission_exact_alarm_description">應用程式需要排程精確鬧鐘的權限，以進行貼片管理</string>
 </resources>

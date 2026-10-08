@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class DiaconnG8PluginTest : TestBaseWithProfile() {
@@ -45,8 +46,8 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         diaconnG8Pump = DiaconnG8Pump(aapsLogger, dateUtil, decimalFormatter)
         diaconnG8Plugin = DiaconnG8Plugin(
             aapsLogger, rh, preferences, commandQueue, rxBus, context, diaconnG8Pump,
-            pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil, aapsSchedulers,
-            diaconnHistoryDatabase, pumpEnactResultProvider, BolusProgressData(ch, rh, CoroutineScope(Dispatchers.Unconfined)), blePreCheck
+            pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, dateUtil,
+            diaconnHistoryDatabase, pumpEnactResultProvider, BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined)), blePreCheck, mock()
         )
     }
 

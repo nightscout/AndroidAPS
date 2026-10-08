@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Vienetai</string>
+    <string name="setupwizard_units_prompt">Pasirinkite glikemijos matavimo vienetus</string>
+    <string name="next_button">Toliau</string>
+    <string name="previous_button">Atgal</string>
+    <string name="setupwizard_finish">UŽBAIGTI</string>
+    <string name="welcome">Sveiki</string>
+    <string name="welcometosetupwizard">Sveiki atvykę į sąrankos vedlį. Jis lydės jus per visą nustatymų procesą\n</string>
+    <string name="end_user_license_agreement">Licencinė sutartis su naudotoju</string>
+    <string name="end_user_license_agreement_text">NEGALIMA NAUDOTI MEDICININIAMS SPRENDIMAMS PRIIMTI. KIEK TAI LEIDŽIA TAIKYTINI TEISĖS AKTAI, PROGRAMAI NESUTEIKIAMA JOKIA GARANTIJA. JEI RAŠTU AIŠKIAI NENURODYTA KITAIP, AUTORIŲ TEISIŲ TURĖTOJAI IR (ARBA) KITOS ŠALYS PROGRAMĄ PATEIKIA „TOKIĄ, KOKIA YRA“, NESUTEIKDAMI JOKIŲ AIŠKIŲ AR NUMANOMŲ GARANTIJŲ, ĮSKAITANT, BE KITA KO, NUMANOMAS KOMERCINIO TINKAMUMO IR TINKAMUMO KONKREČIAM TIKSLUI GARANTIJAS. VISA SU PROGRAMOS KOKYBE IR VEIKIMU SUSIJUSI RIZIKA TENKA JUMS. JEI PAaiškėtų, KAD PROGRAMA TURI TRŪKUMŲ, VISAS BŪTINOS TECHNINĖS PRIEŽIŪROS, REMONTO AR KLAIDŲ IŠTAISYMO IŠLAIDAS PRISIIMATE JŪS.</string>
+    <string name="end_user_license_agreement_i_understand">SUPRATAU IR SUTINKU</string>
+    <string name="display_settings">Ekrano nustatymai</string>
+    <string name="low_mark">Žemoji riba</string>
+    <string name="high_mark">Aukštoji riba</string>
+    <string name="low_mark_comment">Žemoji tikslinės glikemijos riba (tik rodymui)</string>
+    <string name="high_mark_comment">Aukštoji tikslinės glikemijos riba (tik rodymui)</string>
+    <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
+    <string name="master_password_summary">Pagrindinis slaptažodis naudojamas atsarginės nustatymų kopijos šifravimui ir programos saugumui užtikrinti. Atsiminkite jį arba užsirašykite saugioje vietoje.</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
+    <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
+    <string name="syncinfotext">Sinchronizuokite duomenis debesyje. Jūs galite kol kas praleisti šį veiksmą, bet negalėsite baigti mokymosi programos, kol nenustatysite duomenų perdavimo į Nightscout arba Tidepool.</string>
+    <string name="status_label">Būsena:</string>
+    <string name="diawarning">Svarbu: DKS profiliuose IVT turi būti bent 5 val. Tai atitinka 3 val. IVT įprastoje pompos terapijoje.</string>
+    <string name="profile">Profilis</string>
+    <string name="doprofileswitch">Profilio keitimas</string>
+    <string name="exitwizard">Praleisti sąrankos vedlį</string>
+    <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Pasirinkite vieną iš galimų algoritmų. Jie surikiuoti nuo seniausio iki naujausio. Naujesni algoritmai paprastai turi daugiau galimybių. Prieš naudodami būtinai perskaitykite AAPS dokumentaciją ir tinkamai sukonfigūruokite pasirinktą algoritmą.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Nustatykite RileyLink. Pasirinkę RileyLink, galėsite tęsti sąranką, kai tik RileyLink statusas bus „Prisijungta“. Tai gali užtrukti apie minutę.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galėsite tęsti, kai prijungsite pompą.\n</string>
+    <string name="startobjective">Pradėti pirmąjį mokymo etapą</string>
+    <string name="open_objectives">Atidaryti mokymo programą</string>
+    <string name="setupwizard_permissions">Leidimai</string>
+    <string name="setupwizard_profile_info">Sukurkite profilį su baze, IA, JIF ir glikemijos tikslu. Vėliau galėsite sukurti daugiau profilių.</string>
+    <string name="setupwizard_permissions_info">Kad AAPS veiktų tinkamai, reikia prieigos prie saugyklos ir kitų leidimų. Toliau suteikite reikiamus leidimus.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink būklė:</string>
+    <string name="setupwizard_client_control_title">Kliento valdymas</string>
+    <string name="setupwizard_client_control_info">Susiekite kliento įrenginius, kad jie per Nightscout galėtų siųsti pasirašytas komandas šiam pagrindiniam įrenginiui. Tai naujas rekomenduojamas nuotolinio AAPS valdymo būdas.</string>
+    <string name="setupwizard_ns_receive_info">Tiesioginis terapijos įrašų ir duomenų priėmimas iš Nightscout (mažiau saugus būdas) dabar pagal numatytuosius nustatymus yra išjungtas. Žemiau esančius nustatymus įjunkite tik jei ši funkcija vis dar reikalinga. Ji būtina, jei duomenis norite įvesti per Nightscout arba trečiųjų šalių programėles.</string>
+    <string name="setupwizard_open_ns_receive_settings">Nightscout duomenų priėmimas</string>
+    <string name="setupwizard_pair_with_master_info">Susiekite šį klientą su pagrindiniu AAPS įrenginiu, kad jis galėtų saugiu kanalu siųsti komandas.</string>
+    <string name="setupwizard_pairing_ws_warning">Norint susieti, būtinas Nightscout WebSocket ryšys. Grįžkite į ankstesnį veiksmą ir pirmiausia jį įjunkite.</string>
+    <string name="setupwizard_pairing_status_master">Susietų klientų: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Nėra susietų klientų</string>
+    <string name="setupwizard_pairing_status_client_paired">Susieta su pagrindiniu įrenginiu</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Dar nesusieta</string>
+    <string name="readstatus">Būsenos nuskaitymas</string>
+    <!-- Provider-agnostic cloud export/import strings -->
+    <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump_description">Kokią pompą naudosite su AAPS?</string>
+    <string name="configbuilder_aps_description">Kuris DKS algoritmas turėtų koreguoti terapiją?</string>
+    <string name="configbuilder_sync_description">Duomenų įkėlimo, sinchronizavimo ir ryšio įskiepiai.</string>
+    <string name="configbuilder_bgsource_description">Iš kur AAPS gaus duomenis?</string>
+    <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudosite?</string>
+    <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite realią pompą, AAPS nukopijuos bazės nustatymus iš profilio į pompą, todėl nustatymai pompoje gali pasikeisti. Įsitikinkite, kad bazės nustatymai AAPS yra teisingi. Jei nesate tikri arba nenorite keisti bazės nustatymų pompoje, paspauskite Atšaukti ir pompą prijunkite vėliau.</string>
+    <string name="nsclient_version_does_not_match">AAPSClient ir AAPS versijos nesutampa. Atnaujinkite.</string>
+    <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
+    <!-- Maintenance -->
+    <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
+    <!-- Google Drive Storage -->
+    <!-- Import source selection dialog -->
+    <string name="loading">Įkeliama…</string>
+    <string name="warning_wrong_directory_selected">Pasirinktas netinkamas aplankas</string>
+    <string name="warning_wrong_directory_message">Pasirinkote aplanką „%1$s“, jau esantį AAPS aplanke, o ne patį AAPS aplanką. Pasirinkite pagrindinį AAPS aplanką. Programėlė reikiamus aplankus sukurs ir tvarkys automatiškai.</string>
+    <!-- Google Drive error messages (used by GoogleDriveManager) -->
+    <!-- Provider-agnostic cloud storage strings -->
+    <!-- Authorization status strings -->
+</resources>

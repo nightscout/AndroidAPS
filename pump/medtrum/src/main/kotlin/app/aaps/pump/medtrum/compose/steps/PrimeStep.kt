@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.core.ui.compose.pump.announceWhenShown
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.compose.MedtrumPatchViewModel
@@ -147,9 +148,11 @@ internal fun PrimeStepContent(
             }
 
             PrimeState.PRIMING  -> {
+                val waitText = stringResource(R.string.wait_for_priming)
                 Text(
-                    text = stringResource(R.string.wait_for_priming),
-                    style = MaterialTheme.typography.bodyLarge
+                    text = waitText,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.announceWhenShown(waitText)
                 )
                 Spacer(Modifier.height(16.dp))
                 LinearProgressIndicator(
@@ -171,6 +174,7 @@ internal fun PrimeStepContent(
             }
 
             PrimeState.COMPLETE -> {
+                // The Next button that appears now is announced by WizardStepLayout.
                 Text(
                     text = stringResource(R.string.press_next).stripHtml(),
                     style = MaterialTheme.typography.bodyLarge

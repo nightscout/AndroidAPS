@@ -27,6 +27,10 @@ import com.polidea.rxandroidble3.RxBleDevice
 import com.polidea.rxandroidble3.Timeout
 import com.polidea.rxandroidble3.exceptions.BleException
 import com.polidea.rxandroidble3.internal.RxBleLog
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.android.MainThreadDisposable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -40,11 +44,11 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class Patch @Inject constructor(
+@ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
+@Inject
+class Patch(
     private val aapsLogger: AAPSLogger
 ) : IBleDevice {
 

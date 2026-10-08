@@ -8,9 +8,11 @@ import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -20,20 +22,20 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.objects.workflow.MetroService
 import app.aaps.pump.diaconn.DiaconnG8Plugin
 import app.aaps.pump.diaconn.DiaconnG8Pump
 import app.aaps.pump.diaconn.R
@@ -74,11 +76,9 @@ import app.aaps.pump.diaconn.packet.TempBasalSettingPacket
 import app.aaps.pump.diaconn.packet.TimeInquirePacket
 import app.aaps.pump.diaconn.packet.TimeSettingPacket
 import app.aaps.pump.diaconn.pumplog.PumpLogUtil
-import dagger.android.DaggerService
-import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
@@ -88,17 +88,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Provider
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
-class DiaconnG8Service : DaggerService() {
+class DiaconnG8Service : MetroService() {
 
-    @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var injector: MetroMemberInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
@@ -109,19 +107,16 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var bleCommonService: BLECommonService
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var diaconnLogUploader: DiaconnLogUploader
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationManager: NotificationManager
-    @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject lateinit var pumpEnactResultProvider: () -> PumpEnactResult
     @Inject lateinit var ch: ConcentrationHelper
     @Inject lateinit var bolusProgressData: BolusProgressData
 
-    private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
     private val mBinder: IBinder = LocalBinder()
     private var lastApproachingDailyLimit: Long = 0
@@ -132,10 +127,11 @@ class DiaconnG8Service : DaggerService() {
         super.onCreate()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ stopSelf() }, fabricPrivacy::logException)
+        // Same scope as the preference observer below: IO, like the io scheduler used before, and
+        // cancelled in onDestroy like the CompositeDisposable was cleared. UNDISPATCHED because
+        // RxBus has no replay, so a scheduled collector could miss an exit sent before it starts.
+        rxBus.toFlow(EventAppExit::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP, start = CoroutineStart.UNDISPATCHED) { stopSelf() }
         preferences.observe(DiaconnIntKey.BolusSpeed).drop(1).onEach {
             diaconnG8Pump.bolusSpeed = preferences.get(DiaconnIntKey.BolusSpeed)
             diaconnG8Pump.speed = preferences.get(DiaconnIntKey.BolusSpeed)
@@ -160,7 +156,6 @@ class DiaconnG8Service : DaggerService() {
     override fun onDestroy() {
         scope?.cancel()
         scope = null
-        disposable.clear()
         super.onDestroy()
     }
 
@@ -237,12 +232,12 @@ class DiaconnG8Service : DaggerService() {
             val tz = DateTimeZone.getDefault()
             val instant = DateTime.now().millis
             val offsetInMilliseconds = tz.getOffset(instant).toLong()
-            val offset = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds).toInt()
+            val offset = offsetInMilliseconds.milliseconds.inWholeHours.toInt()
             if (timeDiff > 0 || abs(timeDiff) > 60) {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), app.aaps.core.ui.R.raw.error)
+                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), AlarmSound.ERROR)
 
                     //de-initialize pump
                     diaconnG8Pump.reset()
@@ -270,10 +265,10 @@ class DiaconnG8Service : DaggerService() {
             diaconnG8Pump.syncExtendedBolusFromPump()
             rxBus.send(EventDiaconnG8NewStatus())
             rxBus.send(EventInitializationChanged())
-            if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+            if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.DAILY_RESERVOIR_LIMIT_WARNING) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
+                    notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, TextRef.AndroidRes(R.string.approachingdailylimit))
                     pumpSync.insertAnnouncement(
                         rh.gs(R.string.approachingdailylimit) + ": " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits + "U",
                         null,
@@ -291,7 +286,7 @@ class DiaconnG8Service : DaggerService() {
 
     fun loadHistory(): PumpEnactResult {
         if (!diaconnG8Plugin.isInitialized()) {
-            val result = pumpEnactResultProvider.get().success(false)
+            val result = pumpEnactResultProvider().success(false)
             result.comment = "pump not initialized"
             return result
         }
@@ -301,7 +296,7 @@ class DiaconnG8Service : DaggerService() {
             sendMessage(IncarnationInquirePacket(injector))
         }
 
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
         var apsLastLogNum = 9999
         var apsWrappingCount = -1
         // get saved last log info
@@ -447,7 +442,7 @@ class DiaconnG8Service : DaggerService() {
     }
 
     fun setUserSettings(): PumpEnactResult {
-        val result = pumpEnactResultProvider.get()
+        val result = pumpEnactResultProvider()
 
         val msg: DiaconnG8Packet = when (diaconnG8Pump.setUserOptionType) {
             DiaconnG8Pump.ALARM       -> SoundSettingPacket(injector, diaconnG8Pump.beepAndAlarm, diaconnG8Pump.alarmIntensity)
@@ -524,8 +519,22 @@ class DiaconnG8Service : DaggerService() {
         diaconnG8Pump.bolusingSetAmount = 0.0
         diaconnG8Pump.bolusingInjAmount = 0.0
 
+        // The end of the bolus is only known from the pump's final report. If that report is lost, or
+        // the link drops after the start was confirmed, this loop used to wait forever and stall the
+        // whole command queue (#5209). Give up when the link is gone, or a minute after the bolus would
+        // have ended at the slowest pump speed (60 s/U), and report it as broken communication - like
+        // DanaR does. Not from expectedEnd: that uses the speed the pump reported, and if that inquiry
+        // got no answer, a slow bolus could still be running normally. The real amount is then read from
+        // the pump history by the loadEvents() below.
+        val giveUpAt = bolusStart + (insulin * 60 * 1000).toLong() + 60 * 1000L
+        var connectionBroken = false
         if (diaconnG8Pump.isReadyToBolus) {
             while (!diaconnG8Pump.bolusDone) {
+                if (!isConnected || System.currentTimeMillis() > giveUpAt) {
+                    aapsLogger.error(LTag.PUMPCOMM, "Bolus end not received (connected=$isConnected), giving up")
+                    connectionBroken = true
+                    break
+                }
                 if (diaconnG8Pump.isPumpVersionGe3_53) {
                     val delivered = PumpInsulin(diaconnG8Pump.bolusingInjAmount)
                     bolusProgressData.updateProgress(delivered = delivered)
@@ -536,7 +545,7 @@ class DiaconnG8Service : DaggerService() {
                         progressPercent = ((totalwaitTime - waitTime) * 100 / totalwaitTime).toInt()
                     }
                     val percent = min(progressPercent, 100)
-                    bolusProgressData.updateProgress(percent, rh.gs(R.string.waitingforbolusend))
+                    bolusProgressData.updateProgress(percent, TextRef.AndroidRes(R.string.waitingforbolusend))
                 }
                 SystemClock.sleep(200)
             }
@@ -552,7 +561,7 @@ class DiaconnG8Service : DaggerService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
         }
         diaconnG8Pump.bolusingDetailedBolusInfo = null
-        return !start.failed
+        return !start.failed && !connectionBroken
     }
 
     fun bolusStop() {
@@ -562,8 +571,15 @@ class DiaconnG8Service : DaggerService() {
             sendMessage(stop, 100)
             // otp process
             if (!processConfirm(stop.msgType)) return
-            while (!diaconnG8Pump.bolusStopped) {
+            // Bounded like DanaR's bolusStop: a lost stop report or a link drop must not keep this
+            // thread waiting forever (#5209).
+            val giveUpAt = System.currentTimeMillis() + 10 * 1000L
+            while (!diaconnG8Pump.bolusStopped && isConnected && System.currentTimeMillis() < giveUpAt) {
                 SystemClock.sleep(200)
+            }
+            if (!diaconnG8Pump.bolusStopped) {
+                aapsLogger.warn(LTag.PUMPCOMM, "bolusStop: no stop report (connected=$isConnected), treating as stopped after timeout")
+                diaconnG8Pump.bolusStopped = true
             }
         } else {
             diaconnG8Pump.bolusStopped = true

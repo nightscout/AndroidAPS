@@ -22,13 +22,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkDialog
+import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.BlePreCheckHost
 import app.aaps.core.ui.compose.pump.PumpOverviewScreen
 import app.aaps.pump.common.compose.RileyLinkPairWizardEvent
@@ -49,7 +49,7 @@ class MedtronicComposeContent(
         onNavigateBack: () -> Unit,
         onSettings: (() -> Unit)?
     ) {
-        val overviewViewModel: MedtronicOverviewViewModel = hiltViewModel()
+        val overviewViewModel: MedtronicOverviewViewModel = metroViewModel()
         val snackbarHostState = LocalSnackbarHostState.current
 
         // Navigation state
@@ -144,7 +144,7 @@ class MedtronicComposeContent(
                         onFailed = { showRileyLinkPairWizard = false }
                     )
                 } else {
-                    val rlWizardViewModel: RileyLinkPairWizardViewModel = hiltViewModel()
+                    val rlWizardViewModel: RileyLinkPairWizardViewModel = metroViewModel()
 
                     LaunchedEffect(rlWizardViewModel) {
                         rlWizardViewModel.events.collect { event ->
@@ -164,12 +164,12 @@ class MedtronicComposeContent(
             }
 
             showRileyLinkStats      -> {
-                val rlStatusViewModel: RileyLinkStatusViewModel = hiltViewModel()
+                val rlStatusViewModel: RileyLinkStatusViewModel = metroViewModel()
                 RileyLinkStatusScreen(viewModel = rlStatusViewModel)
             }
 
             showHistory             -> {
-                val historyViewModel: MedtronicHistoryViewModel = hiltViewModel()
+                val historyViewModel: MedtronicHistoryViewModel = metroViewModel()
                 val historyState by historyViewModel.uiState.collectAsStateWithLifecycle()
 
                 MedtronicHistoryScreen(

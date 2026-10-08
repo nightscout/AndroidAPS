@@ -4,7 +4,6 @@ import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
@@ -13,11 +12,9 @@ import app.aaps.pump.diaconn.common.RecordTypes
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecord
 import app.aaps.pump.diaconn.database.DiaconnHistoryRecordDao
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -30,7 +27,9 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -42,7 +41,6 @@ internal class DiaconnHistoryViewModelTest {
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var decimalFormatter: DecimalFormatter
     @Mock private lateinit var rxBus: RxBus
-    @Mock private lateinit var aapsSchedulers: AapsSchedulers
     @Mock private lateinit var context: Context
 
     private val diaconnHistoryRecordDao: DiaconnHistoryRecordDao = mock()
@@ -54,16 +52,17 @@ internal class DiaconnHistoryViewModelTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
         // init runs synchronously (not in a launch): builds the type list, subscribes to status events,
-        // and loads records for the first type — every collaborator it touches must be stubbed.
+        // and starts the record load for the first type — every collaborator it touches must be
+        // stubbed. The load itself runs on viewModelScope, so the StandardTestDispatcher defers it.
         whenever(rh.gs(anyInt())).thenReturn("")
-        whenever(rxBus.toObservable(EventPumpStatusChanged::class.java)).thenReturn(Observable.empty())
-        whenever(aapsSchedulers.main).thenReturn(Schedulers.trampoline())
-        whenever(aapsSchedulers.io).thenReturn(Schedulers.trampoline())
+        whenever(rxBus.toFlow(EventPumpStatusChanged::class)).thenReturn(emptyFlow())
         whenever(dateUtil.now()).thenReturn(0L)
-        whenever(diaconnHistoryRecordDao.allFromByType(anyLong(), anyByte())).thenReturn(Single.just(emptyList()))
+        diaconnHistoryRecordDao.stub {
+            on { allFromByType(anyLong(), anyByte()) } doReturn emptyList()
+        }
         sut = DiaconnHistoryViewModel(
             aapsLogger, rh, commandQueue, diaconnHistoryRecordDao, dateUtil, decimalFormatter, rxBus,
-            aapsSchedulers, context
+            context
         )
     }
 

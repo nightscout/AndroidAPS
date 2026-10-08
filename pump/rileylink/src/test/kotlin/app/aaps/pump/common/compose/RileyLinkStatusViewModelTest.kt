@@ -58,7 +58,7 @@ internal class RileyLinkStatusViewModelTest {
         // buildState() reads activePumpInternal first; a non-RileyLink pump makes it return default state.
         whenever(activePlugin.activePumpInternal).thenReturn(activePump)
         // Defensive: the deferred collector body calls rxBus.toFlow(...) before .collect { } if ever run.
-        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventRileyLinkDeviceStatusChange::class)).thenReturn(emptyFlow())
 
         sut = RileyLinkStatusViewModel(
             rh, rileyLinkServiceData, rileyLinkUtil, activePlugin, dateUtil, preferences, rxBus

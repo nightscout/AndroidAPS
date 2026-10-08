@@ -1,25 +1,24 @@
 package app.aaps.wear.interaction.actions
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import kotlinx.coroutines.coroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,10 +41,12 @@ import androidx.wear.compose.foundation.CurvedLayout
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.curvedText
+import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.rx.weardata.LoopStatusData
 import app.aaps.wear.R
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import kotlin.math.round
 import kotlin.math.roundToInt
 
@@ -62,6 +64,9 @@ internal val TempTargetYellow       = Color(0xFFF4D700)
 internal val LoopClosedColor        = Color(0xFF00C03E)
 internal val LoopOpenColor          = Color(0xFF4983D7)
 internal val LoopLgsColor           = Color(0xFF800080)
+// Suspend TEXT color (status header, confirm lines, belt graph) — yellow keeps suspended
+// distinguishable from disabled red in text. Suspend ICONS are red like ic_loop_paused;
+// icon surfaces (tile, complication, picker) must NOT use this constant.
 internal val LoopSuspendedColor     = Color(0xFFFFFF13)
 internal val LoopDisabledColor      = Color(0xFFFF1313)
 internal val LoopDisconnectedColor  = Color(0xFF939393)
@@ -91,12 +96,12 @@ private val BtnV = 57.dp
 internal fun PlusMinusInputScreen(
     value: Double,
     onValueChange: (Double) -> Unit,
-    min: Double,
-    max: Double,
+    valueRange: ClosedFloatingPointRange<Double>,
     stepValues: List<Double>,
-    format: DecimalFormat,
+    format: NumberFormat,
     label: String,
     displayText: String? = null,
+    hint: String? = null,
     allowZero: Boolean = false,
     isActive: Boolean = true,
     symmetricLargeSteps: Boolean = false,
@@ -128,7 +133,7 @@ internal fun PlusMinusInputScreen(
 
     fun step(delta: Double) {
         val v = currentValue.value
-        val newValue = (round((v + delta) * roundingFactor) / roundingFactor).coerceIn(min, max)
+        val newValue = (round((v + delta) * roundingFactor) / roundingFactor).coerceIn(valueRange)
         if (newValue != v) {
             currentValue.value = newValue   // update immediately for next step
             onValueChange(newValue)
@@ -200,6 +205,14 @@ internal fun PlusMinusInputScreen(
                         fontSize = labelFontSize,
                         textAlign = TextAlign.Center,
                     )
+                    if (hint != null) {
+                        Text(
+                            text = hint,
+                            color = WearWarningAmber,
+                            fontSize = 10.sp,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
                 }
                 StepButton(step = stepValues[0], isIncrement = true, onStep = ::step, enabled = enabled)
             }
@@ -219,6 +232,14 @@ internal fun PlusMinusInputScreen(
                     fontSize = labelFontSize,
                     textAlign = TextAlign.Center,
                 )
+                if (hint != null) {
+                    Text(
+                        text = hint,
+                        color = WearWarningAmber,
+                        fontSize = 10.sp,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
 
             // Bottom-left: decrement (fine step)
@@ -309,7 +330,7 @@ private fun StepButton(
     ) {
         if (useTextLabel) {
             val label = labelOverride ?: remember(step, isIncrement) {
-                val fmt = DecimalFormat("#.#")
+                val fmt = NumberFormat.UP_TO_1_DECIMAL
                 val prefix = if (isIncrement) "+" else "-"
                 "$prefix${fmt.format(step).replaceFirst("^0+(?!$)".toRegex(), "")}"
             }
@@ -337,13 +358,33 @@ internal fun CurvedTitle(title: String) {
     }
 }
 
+/**
+ * Mode name TEXT color, shared by the loop status screen and the running-mode picker subtitle
+ * so the two cannot drift apart. Text keeps suspended yellow vs disabled red; icons are red.
+ */
+internal fun LoopStatusData.LoopMode.toTextColor(): Color = when (this) {
+    LoopStatusData.LoopMode.CLOSED         -> LoopClosedColor
+    LoopStatusData.LoopMode.OPEN           -> LoopOpenColor
+    LoopStatusData.LoopMode.LGS            -> LoopLgsColor
+    LoopStatusData.LoopMode.DISABLED       -> LoopDisabledColor
+    LoopStatusData.LoopMode.SUSPENDED      -> LoopSuspendedColor
+    LoopStatusData.LoopMode.PUMP_SUSPENDED -> LoopDisabledColor
+    LoopStatusData.LoopMode.DST_SUSPENDED  -> LoopDisabledColor
+    LoopStatusData.LoopMode.DISCONNECTED   -> LoopDisconnectedColor
+    LoopStatusData.LoopMode.SUPERBOLUS     -> LoopSuperbolusColor
+    LoopStatusData.LoopMode.UNKNOWN        -> LoopUnknownColor
+}
+
 @Composable
-internal fun formatDurationMinutes(totalMinutes: Int): String {
+internal fun formatDurationMinutes(totalMinutes: Int): String = formatDurationMinutes(LocalContext.current, totalMinutes)
+
+/** Non-composable variant for callers outside a composition (e.g. the running-mode picker subtitle). */
+internal fun formatDurationMinutes(context: Context, totalMinutes: Int): String {
     val hours = totalMinutes / 60
     val mins = totalMinutes % 60
     return when {
-        hours == 0 -> stringResource(R.string.action_minutes_format, totalMinutes)
-        mins == 0  -> stringResource(R.string.action_duration_hours_format, hours)
-        else       -> stringResource(R.string.action_duration_hours_minutes_format, hours, mins)
+        hours == 0 -> context.getString(R.string.action_minutes_format, totalMinutes)
+        mins == 0  -> context.getString(R.string.action_duration_hours_format, hours)
+        else       -> context.getString(R.string.action_duration_hours_minutes_format, hours, mins)
     }
 }

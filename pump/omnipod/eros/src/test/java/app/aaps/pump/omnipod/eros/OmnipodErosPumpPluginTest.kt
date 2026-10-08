@@ -13,7 +13,6 @@ import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import app.aaps.shared.tests.TestBaseWithProfile
-import app.aaps.shared.tests.rx.TestAapsSchedulers
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider
@@ -48,7 +47,7 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
             .thenReturn("")
 
         plugin = OmnipodErosPumpPlugin(
-            aapsLogger, rh, preferences, commandQueue, TestAapsSchedulers(), rxBus, context,
+            aapsLogger, rh, preferences, commandQueue, rxBus, context,
             erosPodStateManager, aapsOmnipodErosManager, fabricPrivacy, rileyLinkServiceData, aapsOmnipodUtil,
             rileyLinkUtil, omnipodAlertUtil, pumpSync, uiInteraction, notificationManager, erosHistoryDatabase, pumpEnactResultProvider,
             protectionCheck, blePreCheck

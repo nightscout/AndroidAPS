@@ -7,15 +7,16 @@ import app.aaps.pump.eopatch.ble.PatchStateManager
 import app.aaps.pump.eopatch.core.api.BasalResume
 import app.aaps.pump.eopatch.core.response.BaseResponse
 import app.aaps.pump.eopatch.core.response.PatchBooleanResponse
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
-import java.lang.Exception
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ResumeBasalTask @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class ResumeBasalTask(
     val alarmRegistry: IAlarmRegistry,
     val startNormalBasalTask: StartNormalBasalTask,
     val patchStateManager: PatchStateManager

@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Mise à jour des débits basal</string>
     <string name="description_pump_diaconn_g8">Intégration de la pompe Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">G8</string>
     <string name="maxbolusviolation">Violation bolus Max</string>
     <string name="commanderror">Erreur de commande</string>
     <string name="speederror">Erreur de vitesse</string>

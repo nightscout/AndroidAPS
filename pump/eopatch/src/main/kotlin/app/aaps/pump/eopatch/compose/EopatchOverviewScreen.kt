@@ -1,11 +1,11 @@
 package app.aaps.pump.eopatch.compose
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -114,16 +115,19 @@ fun EopatchOverviewScreen(
             text = {
                 Column {
                     durationLabels.forEachIndexed { index, label ->
+                        // One radio button per duration: the clickable row and the RadioButton were
+                        // two stops, the radio one without a name.
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { selectedDurationIndex = index },
+                                .selectable(
+                                    selected = selectedDurationIndex == index,
+                                    role = Role.RadioButton,
+                                    onClick = { selectedDurationIndex = index }
+                                ),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            RadioButton(
-                                selected = selectedDurationIndex == index,
-                                onClick = { selectedDurationIndex = index }
-                            )
+                            RadioButton(selected = selectedDurationIndex == index, onClick = null)
                             Text(label)
                         }
                     }

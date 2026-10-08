@@ -37,17 +37,22 @@ import app.aaps.pump.medtrum.comm.ReadDataPacket
 import app.aaps.pump.medtrum.comm.WriteCommandPackets
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.UUID
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @SuppressLint("MissingPermission")
-@Singleton
-class MedtrumBleTransportImpl @Inject constructor(
+@ContributesBinding(AppScope::class, binding = binding<MedtrumBleTransport>())
+@SingleIn(AppScope::class)
+@Inject
+class MedtrumBleTransportImpl(
     private val aapsLogger: AAPSLogger,
     private val context: Context,
     private val preferences: Preferences,
@@ -67,7 +72,10 @@ class MedtrumBleTransportImpl @Inject constructor(
         private const val MANUFACTURER_ID = 18305
     }
 
-    private val handler = Handler(HandlerThread("MedtrumBleHandler").also { it.start() }.looper)
+    // `by lazy`: Metro owns this class now and builds it when the graph resolves, and starting a
+    // HandlerThread there both breaks the plain-JVM graph tests and starts a thread for users who
+    // never touch a Medtrum pump.
+    private val handler by lazy { Handler(HandlerThread("MedtrumBleHandler").also { it.start() }.looper) }
     private val bluetoothAdapter: BluetoothAdapter?
         get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
 
@@ -277,6 +285,10 @@ class MedtrumBleTransportImpl @Inject constructor(
         }
     }
 
+    // connectGatt(Context, ...) is deprecated from API 37 in favour of an overload taking
+    // BluetoothGattConnectionSettings, a class that does not exist below API 37 while our minSdk is 31.
+    // This module does not depend on :core:utils, so it cannot use connectGattCompat from there.
+    @Suppress("DEPRECATION")
     @Synchronized
     private fun connectGatt(device: BluetoothDevice) {
         writeSequenceNumber = 0

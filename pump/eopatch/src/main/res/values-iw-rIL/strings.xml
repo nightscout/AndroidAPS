@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">אינטגרציית משאבה עבור EOPatch2 / GlucoMen Day</string>
     <string name="low_reservoir">התראות על כמות אינסולין נמוכה</string>
     <string name="patch_expiration_reminders">תזכורת תפוגת ה-Patch</string>
@@ -65,5 +64,4 @@
     <string name="string_resumed_insulin_delivery_message">הזרקת האינסולין התחדשה.</string>
     <string name="string_temp_basal_remained_hhmm">זמן נותר: %1$s:%2$s</string>
     <string name="string_resume_failed">חידוש ההזרקה נכשל.</string>
-    <!-- Permission rationales -->
 </resources>

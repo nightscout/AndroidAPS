@@ -2,13 +2,12 @@ import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
-import javax.inject.Inject
 
 plugins {
-    alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     id("com.android.application")
     kotlin("plugin.serialization")
+    alias(libs.plugins.metro)
     id("android-app-dependencies")
     id("test-app-dependencies")
     id("jacoco-app-dependencies")
@@ -19,9 +18,11 @@ repositories {
     google()
 }
 
+// `--exclude=ios-testflight-*` for the same reason as in `:app` - the tag names one past iOS
+// submission, and `git describe` would otherwise report it however far away it is.
 fun generateGitBuild(): String {
     try {
-        val processBuilder = ProcessBuilder("git", "describe", "--always")
+        val processBuilder = ProcessBuilder("git", "describe", "--always", "--exclude=ios-testflight-*")
         val output = File.createTempFile("git-build", "")
         processBuilder.redirectOutput(output)
         val process = processBuilder.start()
@@ -50,15 +51,13 @@ android {
         buildConfigField("String", "BUILDVERSION", "\"${generateGitBuild()}-${generateDate()}\"")
     }
 
-    android {
-        buildTypes {
-            debug {
-                enableUnitTestCoverage = true
-                // Disable androidTest coverage, since it performs offline coverage
-                // instrumentation and that causes online (JavaAgent) instrumentation
-                // to fail in this project.
-                enableAndroidTestCoverage = false
-            }
+    buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+            // Disable androidTest coverage, since it performs offline coverage
+            // instrumentation and that causes online (JavaAgent) instrumentation
+            // to fail in this project.
+            enableAndroidTestCoverage = false
         }
     }
 
@@ -124,18 +123,25 @@ allprojects {
 }
 
 /**
- * Validates a Watch Face Push face APK (built by :wear:watchfacepush) with Google's offline
- * validator and embeds the APK plus its validation token into this variant's assets under
- * `watchfacepush/`. The token is a hash over the exact APK bytes, so it must be regenerated on
- * every face build — never hardcoded.
+ * Validates the Watch Face Push face APKs (built by :wear:watchfacepush, one per face) with
+ * Google's offline validator and embeds each APK plus its validation token into this variant's
+ * assets under `watchfacepush/`, as `<face>.apk` and `<face>_token.txt`. The token is a hash
+ * over the exact APK bytes, so it must be regenerated on every face build — never hardcoded.
+ *
+ * Both faces are embedded although only one is ever installed: Watch Face Push gives an app one
+ * slot, and the wear app fills it with the face the wearer selected (see `WatchFacePushHelper`).
  */
 abstract class EmbedWatchFaceTask @Inject constructor(
-    private val execOperations: org.gradle.process.ExecOperations
+    private val execOperations: ExecOperations
 ) : DefaultTask() {
 
-    /** Resolved artifact of :wear:watchfacepush — the variant's APK output directory */
+    /** Resolved artifact of :wear:watchfacepush — the APK output directory of the `wfs` face */
     @get:InputFiles
-    abstract val watchFaceApkDir: ConfigurableFileCollection
+    abstract val wfsApkDir: ConfigurableFileCollection
+
+    /** Resolved artifact of :wear:watchfacepush — the APK output directory of the `cwf` face */
+    @get:InputFiles
+    abstract val cwfApkDir: ConfigurableFileCollection
 
     @get:Input
     abstract val clientPackageName: Property<String>
@@ -148,8 +154,16 @@ abstract class EmbedWatchFaceTask @Inject constructor(
 
     @TaskAction
     fun run() {
-        val watchFaceApk = watchFaceApkDir.asFileTree.files.singleOrNull { it.extension == "apk" }
-            ?: throw GradleException("Expected exactly one watch face APK in ${watchFaceApkDir.files}")
+        val assetDir = outputDir.get().asFile.resolve("watchfacepush")
+        assetDir.deleteRecursively()
+        assetDir.mkdirs()
+        embed("wfs", wfsApkDir, assetDir)
+        embed("cwf", cwfApkDir, assetDir)
+    }
+
+    private fun embed(face: String, apkDir: ConfigurableFileCollection, assetDir: File) {
+        val watchFaceApk = apkDir.asFileTree.files.singleOrNull { it.extension == "apk" }
+            ?: throw GradleException("Expected exactly one $face watch face APK in ${apkDir.files}")
         val stdout = ByteArrayOutputStream()
         execOperations.javaexec {
             classpath = validatorClasspath
@@ -162,12 +176,9 @@ abstract class EmbedWatchFaceTask @Inject constructor(
         }
         val output = stdout.toString()
         val token = Regex("generated token: (\\S+)").find(output)?.groupValues?.get(1)
-            ?: throw GradleException("Watch face validation did not produce a token:\n$output")
-        val assetDir = outputDir.get().asFile.resolve("watchfacepush")
-        assetDir.deleteRecursively()
-        assetDir.mkdirs()
-        watchFaceApk.copyTo(assetDir.resolve("aapsv4.apk"), overwrite = true)
-        assetDir.resolve("aapsv4_token.txt").writeText(token)
+            ?: throw GradleException("Watch face validation of the $face face did not produce a token:\n$output")
+        watchFaceApk.copyTo(assetDir.resolve("$face.apk"), overwrite = true)
+        assetDir.resolve("${face}_token.txt").writeText(token)
     }
 }
 
@@ -179,22 +190,29 @@ extensions.configure<ApplicationAndroidComponentsExtension>("androidComponents")
     onVariants { variant ->
         val flavor = variant.flavorName ?: return@onVariants
         val flavorCap = flavor.replaceFirstChar { it.uppercase() }
-        // The face is always embedded from its release build (signed with the debug key in the
-        // face module) — the wear app's own build type does not change the face APK. Consumed as
-        // an artifact configuration so the producing tasks are wired in automatically.
-        val faceApkConfiguration = configurations.create("watchFaceApk${variant.name.replaceFirstChar { it.uppercase() }}") {
-            isCanBeConsumed = false
-            isCanBeResolved = true
+        val variantCap = variant.name.replaceFirstChar { it.uppercase() }
+        // The faces are always embedded from their release build (signed with the debug key in
+        // the face module) — the wear app's own build type does not change the face APKs.
+        // Consumed as artifact configurations so the producing tasks are wired in automatically,
+        // one per face: the face module names them watchfaceApk<Flavor><Face>.
+        val faceApkConfigurations = listOf("wfs", "cwf").associateWith { face ->
+            val faceCap = face.replaceFirstChar { it.uppercase() }
+            val configuration = configurations.create("watchFaceApk$variantCap$faceCap") {
+                isCanBeConsumed = false
+                isCanBeResolved = true
+            }
+            dependencies.add(
+                configuration.name,
+                dependencies.project(mapOf("path" to ":wear:watchfacepush", "configuration" to "watchfaceApk$flavorCap$faceCap"))
+            )
+            configuration
         }
-        dependencies.add(
-            faceApkConfiguration.name,
-            dependencies.project(mapOf("path" to ":wear:watchfacepush", "configuration" to "watchfaceApk$flavorCap"))
-        )
         val taskProvider = project.tasks.register(
-            "embed${variant.name.replaceFirstChar { it.uppercase() }}WatchFace",
+            "embed${variantCap}WatchFace",
             EmbedWatchFaceTask::class.java
         ) {
-            watchFaceApkDir.from(faceApkConfiguration)
+            wfsApkDir.from(faceApkConfigurations.getValue("wfs"))
+            cwfApkDir.from(faceApkConfigurations.getValue("cwf"))
             clientPackageName.set(variant.applicationId)
             validatorClasspath.from(watchFacePushValidator)
         }
@@ -225,6 +243,10 @@ dependencies {
     implementation(libs.androidx.wear.watchface.complications.data)
     implementation(libs.androidx.wear.watchface.complications.datasource)
     implementation(libs.androidx.wear.watchface.complications.datasource.ktx)
+    implementation(libs.androidx.wear.watchface.complications)
+    implementation(libs.androidx.wear.watchface.complications.rendering)
+    implementation(libs.androidx.wear.watchface.editor)
+    implementation(libs.androidx.wear.watchface.client)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
@@ -240,8 +262,7 @@ dependencies {
     implementation(libs.com.google.android.gms.playservices.wearable)
     implementation(files("${rootDir}/wear/libs/hellocharts-library-1.5.8.aar"))
 
-    ksp(libs.com.google.dagger.android.processor)
-    ksp(libs.com.google.dagger.compiler)
+    // Declared here rather than inherited: :shared:impl used to export it, and stopped when it became
 
     // Robolectric lets a few Android-coupled unit tests (Intent/Build) run on the JVM. It is a JUnit4
     // runner, so the vintage engine bridges those tests onto the JUnit Platform alongside the Jupiter tests.

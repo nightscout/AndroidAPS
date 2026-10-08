@@ -3,9 +3,9 @@ package app.aaps.pump.eopatch.vo
 import app.aaps.pump.eopatch.AppConstant
 import app.aaps.pump.eopatch.code.BasalStatus
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
-import java.util.*
-import java.util.concurrent.TimeUnit
+import java.util.Calendar
 import kotlin.math.max
+import kotlin.time.Duration.Companion.minutes
 
 class NormalBasal : SegmentsEntity<BasalSegment>() {
 
@@ -170,7 +170,7 @@ class NormalBasal : SegmentsEntity<BasalSegment>() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
 
-        curIndexTime = calendar.timeInMillis + TimeUnit.MINUTES.toMillis((segmentIndex * 30).toLong())
+        curIndexTime = calendar.timeInMillis + (segmentIndex * 30).toLong().minutes.inWholeMilliseconds
         return curIndexTime
     }
 

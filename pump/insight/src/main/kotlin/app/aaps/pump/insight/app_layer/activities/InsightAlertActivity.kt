@@ -20,21 +20,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.pump.insight.InsightAlertService
 import app.aaps.pump.insight.compose.InsightAlertScreen
 import app.aaps.pump.insight.compose.InsightAlertUiState
 import app.aaps.pump.insight.descriptors.Alert
 import app.aaps.pump.insight.utils.AlertUtils
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class InsightAlertActivity : DaggerAppCompatActivity() {
+class InsightAlertActivity : MetroAppCompatActivity() {
 
     @Inject lateinit var alertUtils: AlertUtils
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var snackbarHostPresence: SnackbarHostPresence
     private var alertService: InsightAlertService? = null
 
     private var state by mutableStateOf(
@@ -82,6 +83,7 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
                     )
                     GlobalSnackbarHost(
                         rxBus = rxBus,
+                        snackbarHostPresence = snackbarHostPresence,
                         hostState = snackbarHostState,
                         modifier = Modifier.align(Alignment.BottomCenter)
                     )
@@ -105,7 +107,7 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
         val icon = alert.alertCategory?.let { alertUtils.getAlertIcon(it) } ?: Icons.Default.Error
         val errorCode = alert.alertType?.let { alertUtils.getAlertCode(it) } ?: ""
         val title = alert.alertType?.let { alertUtils.getAlertTitle(it) } ?: ""
-        val description = alertUtils.getAlertDescription(alert)?.let { HtmlHelper.fromHtml(it) }
+        val description = alertUtils.getAlertDescription(alert)
         state = InsightAlertUiState(
             icon = icon,
             errorCode = errorCode,

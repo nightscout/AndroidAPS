@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.metro)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.hilt)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -10,13 +10,11 @@ plugins {
 
 android {
     namespace = "app.aaps.pump.omnipod.eros"
+}
 
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+ksp {
+    arg("room.incremental", "true")
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -30,25 +28,18 @@ dependencies {
     implementation(project(":pump:rileylink"))
 
     api(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.rxjava3)
 
     implementation(libs.kotlinx.coroutines.rx3)
 
-    implementation(libs.com.google.dagger.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     androidTestImplementation(project(":shared:tests"))
     // optional - Test helpers
-    testImplementation(libs.androidx.room.testing)
     testImplementation(project(":implementation"))
     testImplementation(project(":shared:impl"))
     testImplementation(project(":shared:tests"))
 
 
-    ksp(libs.com.google.dagger.compiler)
-    ksp(libs.com.google.dagger.hilt.compiler)
-    ksp(libs.com.google.dagger.android.processor)
     ksp(libs.androidx.room.compiler)
 }

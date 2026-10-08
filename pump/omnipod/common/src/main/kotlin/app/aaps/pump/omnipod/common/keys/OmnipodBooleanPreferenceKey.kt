@@ -2,23 +2,14 @@ package app.aaps.pump.omnipod.common.keys
 
 import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.omnipod.common.R
 
 enum class OmnipodBooleanPreferenceKey(
     override val key: String,
     override val defaultValue: Boolean,
-    override val titleResId: Int = 0,
-    override val summaryResId: Int? = null,
-    override val calculatedDefaultValue: Boolean = false,
-    override val engineeringModeOnly: Boolean = false,
-    override val defaultedBySM: Boolean = false,
-    override val showInApsMode: Boolean = true,
-    override val showInNsClientMode: Boolean = true,
-    override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanPreferenceKey? = null,
-    override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false,
-    override val exportable: Boolean = true
+    private val titleResId: Int,
+    private val summaryResId: Int? = null,
 ) : BooleanPreferenceKey {
 
     BolusBeepsEnabled("AAPS.Omnipod.bolus_beeps_enabled", true, titleResId = R.string.omnipod_common_preferences_bolus_beeps_enabled),
@@ -42,4 +33,6 @@ enum class OmnipodBooleanPreferenceKey(
     AutomaticallyAcknowledgeAlerts("AAPS.Omnipod.automatically_acknowledge_alerts_enabled", false, titleResId = R.string.omnipod_common_preferences_automatically_silence_alerts);
 
     override val preferenceType: PreferenceType = PreferenceType.SWITCH
+    override val title: TextRef = TextRef.AndroidRes(titleResId)
+    override val summary: TextRef? = summaryResId?.let { TextRef.AndroidRes(it) }
 }

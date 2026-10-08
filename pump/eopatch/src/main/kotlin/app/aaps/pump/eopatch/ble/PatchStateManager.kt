@@ -13,16 +13,18 @@ import app.aaps.pump.eopatch.vo.NormalBasalManager
 import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchState
 import app.aaps.pump.eopatch.vo.TempBasalManager
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.Callable
 import java.util.stream.Stream
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PatchStateManager @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class PatchStateManager(
     private val pm: PreferenceManager,
     private val patchConfig: PatchConfig,
     private val tempBasalManager: TempBasalManager,

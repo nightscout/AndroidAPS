@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS (sirkel)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
     <string name="label_watchface_custom">AAPS(Tilpasset)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS(Egendefinert) alltid-på</string>
     <string name="label_actions_tile">Handlinger</string>
     <string name="label_temp_target_tile">Midlertidig mål</string>
     <string name="label_quick_wizard_tile">Hurtigknapp</string>
@@ -83,6 +84,11 @@
     <string name="menu_bg_graph">BS-graf</string>
     <string name="menu_resync">Re-synk</string>
     <string name="menu_prime_fill">Prime/fylling</string>
+    <string name="menu_install_watchface">Installer urskive</string>
+    <string name="menu_installing_watchface">Installerer urskiven…</string>
+    <string name="watchface_installed_active">Urskiven er installert og satt som aktiv</string>
+    <string name="watchface_installed_select">Urskive installert, velg den i urskivevelgeren</string>
+    <string name="watchface_install_failed">Installasjon av urskive mislyktes</string>
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Meny</string>
@@ -91,6 +97,7 @@
     <string name="action_user_action_confirmation">Brukerhandling forespurt</string>
     <string name="action_scene_confirmation">Scene forespurt</string>
     <string name="scene_end">Avslutt</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Hopp over</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>
     <string name="action_wizard_confirmation">Beregning forespurt</string>
@@ -102,6 +109,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Høy [%s]</string>
     <string name="action_carbs">Karbo</string>
     <string name="action_carbs_gram">Karbo [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Maks fjerning: %1$d g (COB)</string>
     <string name="action_ecarbs">eKarbo</string>
     <string name="action_percentage">Prosent\n[%]</string>
     <string name="action_start_minutes">Start\n[minutter]</string>
@@ -153,6 +161,21 @@
     <string name="pref_simplify_ui">Forenkle brukergrensesnittet</string>
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ukenummer</string>
+    <string name="pref_complication_1">Komplikasjon 1</string>
+    <string name="pref_complication_2">Komplikasjon 2</string>
+    <string name="pref_complication_3">Komplikasjon 3</string>
+    <string name="pref_complication_4">Komplikasjon 4</string>
+    <string name="pref_complication_5">Komplikasjon 5</string>
+    <string name="complication_summary_none">Trykk for å velge datakilde</string>
+    <string name="pref_complication_type_priority">Prioritet for komplikasjonstype</string>
+    <string name="pref_complication_type_priority_all">Standard for alle plasser</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">En endring her gjelder neste gang du velger en datakilde. Det er ikke nok å velge den samme på nytt: Velg først en annen datakilde, og velg deretter den du ønsker.</string>
+    <string name="complication_type_priority_value">Verdi eller måler</string>
+    <string name="complication_type_priority_text">Tekst</string>
+    <string name="complication_type_priority_icon">Ikon</string>
+    <string name="complication_type_priority_use_default">Bruk standard</string>
+    <string name="cwf_complication_layout">Komplikasjonslayout</string>
+    <string name="cwf_complication_layout_description">Plassering og størrelse på komplikasjonene, hentet fra den innlastede egendefinerte urskiven.</string>
     <string name="pref_include_external">Inkluder eksterne visninger i mal</string>
     <string name="pref_switch_external">Bytt ekstern dataer i urskiven</string>
     <string name="custom_pref_show_seconds">Vis sekunder</string>
@@ -225,6 +248,12 @@
     <string name="complication_blood_glucose_ext1">BS Ekstern1</string>
     <string name="complication_blood_glucose_ext2">BS Ekstern2</string>
     <string name="complication_bg_graph">BS-graf</string>
+    <string name="complication_cwf_image">Egendefinert urskive</string>
+    <string name="complication_cwf_ambient_bg">Egendefinert urskive – glukose i omgivelsesmodus</string>
+    <string name="complication_cwf_ambient_status">Egendefinert urskive – status i omgivelsesmodus</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Egendefinert urskive – bakgrunn</string>
+    <string name="complication_cwf_upper">Egendefinert urskive – klokke</string>
     <string name="complication_br_cob_iob">Basaldose, COB &amp; IOB</string>
     <string name="complication_br_cob_iob_ext1">Basal, COB &amp; IOB Eks1</string>
     <string name="complication_br_cob_iob_ext2">Basal, COB &amp; IOB Eks2</string>
@@ -238,6 +267,8 @@
     <string name="complication_iob_icon">IOB</string>
     <string name="complication_iob_detailed">IOB-detaljert</string>
     <string name="complication_uploader_phone_battery">Opplaster/mobilbatteri</string>
+    <string name="running_mode_resume">Gjenoppta loop</string>
+    <string name="running_mode_reconnect">Koble til pumpen på nytt</string>
     <string name="label_running_mode_title">Kjøremodus</string>
     <string name="label_bg_graph_tile">BS-graf</string>
     <string name="tile_tap_action">Handling ved trykk</string>
@@ -257,10 +288,9 @@
     <string name="contacting_master_unknown">Status ukjent — sjekk telefonen</string>
     <string name="tile_settings">Flisinnstillinger</string>
     <string name="loop_status_error">Kunne ikke laste inn loopstatus</string>
-    <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d min</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f E/t (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">%1$d min gjenstår</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s gjenstår</string>
     <string name="loop_status_tbr_continues">Midl. basal fortsetter</string>
     <string name="loop_status_tbr_cancel">Setter vanlig basal</string>
     <string name="loop_status_smb">%1$.2f E</string>
@@ -288,6 +318,18 @@
     <string name="loop_status_target_range">Målområde</string>
     <string name="loop_status_target">Målverdi</string>
     <string name="loop_status_adjusted_target">Justert mål</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Inntil avsluttet</string>
+    <string name="loop_status_scene_ended">Avsluttet</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Oppfølgingsscene</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Ingen profil angitt</string>
+    <string name="loop_status_profile_percentage">Prosent</string>
+    <string name="loop_status_profile_timeshift">Tidsforskyving</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Returnerer til</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dt</string>
+    <string name="loop_status_sensitivity">Sensitivitet</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Angitt av den aktive scenen</string>
     <string name="loop_status">Loopstatus</string>
     <string name="loop_status_refresh">Oppdater</string>
     <string name="confirm">Bekreft</string>

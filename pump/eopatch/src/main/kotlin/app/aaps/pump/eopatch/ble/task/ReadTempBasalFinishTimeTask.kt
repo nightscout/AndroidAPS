@@ -4,15 +4,17 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.eopatch.core.api.TempBasalFinishTimeGet
 import app.aaps.pump.eopatch.core.response.TempBasalFinishTimeResponse
 import app.aaps.pump.eopatch.vo.TempBasalManager
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ReadTempBasalFinishTimeTask @Inject constructor() : TaskBase(TaskFunc.READ_TEMP_BASAL_FINISH_TIME) {
+@SingleIn(AppScope::class)
+@Inject
+class ReadTempBasalFinishTimeTask() : TaskBase(TaskFunc.READ_TEMP_BASAL_FINISH_TIME) {
 
     @Inject lateinit var tempBasalFinishTimeGet: TempBasalFinishTimeGet
     @Inject lateinit var tempBasalManager: TempBasalManager

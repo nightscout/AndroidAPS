@@ -3,6 +3,7 @@
     <string name="label_watchface_circle">AAPS (Cercle)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
     <string name="label_watchface_custom">AAPS (perso)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (Personnalisé) toujours visible</string>
     <string name="label_actions_tile">Actions</string>
     <string name="label_temp_target_tile">Cible Temp</string>
     <string name="label_quick_wizard_tile">Assistant</string>
@@ -61,6 +62,10 @@
     <string name="pref_single_target">Cible Unique</string>
     <string name="pref_wizard_percentage">Pourcentage de l\'Assistant</string>
     <string name="pref_complication_tap_action">Action Appui Complication</string>
+    <string name="pref_complication_bg_graph_hours">Intervalle de temps du graphique glycémie</string>
+    <string name="duration_1_hour">1 heure</string>
+    <string name="duration_3_hours">3 heures</string>
+    <string name="duration_6_hours">6 heures</string>
     <string name="pref_unicode_in_complications">Unicode dans Complications</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">Plus de paramètres</string>
@@ -79,6 +84,11 @@
     <string name="menu_bg_graph">Graphique Glycémie</string>
     <string name="menu_resync">Re-sync</string>
     <string name="menu_prime_fill">Amorcer/Remplir</string>
+    <string name="menu_install_watchface">Installer le cadran</string>
+    <string name="menu_installing_watchface">Installation du cadran…</string>
+    <string name="watchface_installed_active">Cadran installé et défini comme actif</string>
+    <string name="watchface_installed_select">Cadran installé, sélectionnez-le dans le sélecteur de cadran de montre</string>
+    <string name="watchface_install_failed">L\'installation du cadran a échoué</string>
     <string name="menu_none">Aucun</string>
     <string name="menu_default">Défaut</string>
     <string name="menu_menu">Menu</string>
@@ -98,6 +108,7 @@
     <string name="action_high_unit" comment="In temp target menu, higher value from range">Haut [%s]</string>
     <string name="action_carbs">Glucides</string>
     <string name="action_carbs_gram">Glucides [g]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">Suppression max : %1$d g (GA)</string>
     <string name="action_ecarbs">eGlucides</string>
     <string name="action_percentage">Pourcentage\n[%]</string>
     <string name="action_start_minutes">Démarrage\n[minutes]</string>
@@ -149,6 +160,21 @@
     <string name="pref_simplify_ui">Interface simplifiée</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
     <string name="pref_show_weeknumber">Afficher numéro semaine</string>
+    <string name="pref_complication_1">Complication 1</string>
+    <string name="pref_complication_2">Complication 2</string>
+    <string name="pref_complication_3">Complication 3</string>
+    <string name="pref_complication_4">Complication 4</string>
+    <string name="pref_complication_5">Complication 5</string>
+    <string name="complication_summary_none">Appuyez pour sélectionner une complication</string>
+    <string name="pref_complication_type_priority">Priorité du type de complication</string>
+    <string name="pref_complication_type_priority_all">Par défaut pour tous</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Un changement ici s\'applique la prochaine fois que vous choisissez une source de données. Choisir le même ne suffit pas : choisir une source de données différente, puis choisir celle que vous voulez.</string>
+    <string name="complication_type_priority_value">Valeur ou jauge</string>
+    <string name="complication_type_priority_text">Texte</string>
+    <string name="complication_type_priority_icon">Icône</string>
+    <string name="complication_type_priority_use_default">Choix par défaut</string>
+    <string name="cwf_complication_layout">Mise en page des complications</string>
+    <string name="cwf_complication_layout_description">Position et taille des complications, prises à partir du cadran de montre chargé.</string>
     <string name="pref_include_external">Inclure les vues externes dans le modèle</string>
     <string name="pref_switch_external">Intervertir les données externes sur le cadran</string>
     <string name="custom_pref_show_seconds">Afficher les secondes</string>
@@ -204,6 +230,12 @@
     <string name="tile_action_2">Action 2</string>
     <string name="tile_action_3">Action 3</string>
     <string name="tile_action_4">Action 4</string>
+    <string name="tile_scene_1">Scénario 1</string>
+    <string name="tile_scene_2">Scénario 2</string>
+    <string name="tile_scene_3">Scénario 3</string>
+    <string name="tile_scene_4">Scénario 4</string>
+    <string name="tile_scene_auto">Automatique</string>
+    <string name="tile_scene_unavailable">Indisponible</string>
     <string name="datalayer_notification_title">Service de premier plan de la couche de données</string>
     <string name="datalayer_notification_text">AAPS est en cours d\'exécution au premier plan. Pour masquer les notifications, allez dans les options de développement, Notifications des applications, Apps montre autorisées, sélectionnez AAPS, Désactivez Service avant plan couche de données.</string>
     <string name="on">ACTIVEE</string>
@@ -214,6 +246,11 @@
     <string name="complication_blood_glucose_large">Glycémie (grande)</string>
     <string name="complication_blood_glucose_ext1">Glycémie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glycémie Ext2</string>
+    <string name="complication_bg_graph">Graphique Gly</string>
+    <string name="complication_cwf_image">Cadran personnalisé</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Arrière-plan du cadran personnalisé</string>
+    <string name="complication_cwf_upper">Horloge du cadran personnalisé</string>
     <string name="complication_br_cob_iob">DB, GA &amp; IA</string>
     <string name="complication_br_cob_iob_ext1">DB, GA &amp; IA Ext1</string>
     <string name="complication_br_cob_iob_ext2">DB, GA &amp; IA Ext2</string>
@@ -237,6 +274,7 @@
     <string name="action_running_mode_selected">Mode de fonctionnement demandé</string>
     <string name="title_activity_disconnect_pump">Déconnecter la pompe</string>
     <string name="title_activity_suspend_loop">Suspendre la boucle</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">U</string>
     <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
     <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
@@ -245,10 +283,9 @@
     <string name="contacting_master_unknown">État inconnu — vérifier le téléphone</string>
     <string name="tile_settings">Paramètres des tuiles</string>
     <string name="loop_status_error">Impossible de charger l\'état</string>
-    <string name="loop_status_tempt_duration">%1$d min (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d min</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">%1$d min restantes</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">%1$s restants</string>
     <string name="loop_status_tbr_continues">Basal Temp. continue</string>
     <string name="loop_status_tbr_cancel">Définir la basale du profil</string>
     <string name="loop_status_smb">%1$.2f U</string>
@@ -292,7 +329,10 @@
     <string name="wizard_result_cob">GA (%1$.1f g)</string>
     <string name="wizard_result_carbs">Glucides (%1$d g)</string>
     <string name="wizard_result_subtotal">Sous-total</string>
+    <string name="wizard_result_correction">Correction</string>
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>

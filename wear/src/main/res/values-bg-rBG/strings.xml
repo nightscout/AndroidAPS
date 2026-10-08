@@ -257,10 +257,7 @@
     <string name="contacting_master_unknown">Непознат статус - вижте телефона</string>
     <string name="tile_settings">Настройки на тайлове</string>
     <string name="loop_status_error">Невъзможно зареждане на състояние</string>
-    <string name="loop_status_tempt_duration">%1$d мин (%2$s)</string>
-    <string name="loop_status_tbr_duration">%1$d мин</string>
     <string name="loop_status_tbr_rate">%1$.2f Е/ч (%2$d%%)</string>
-    <string name="loop_status_tbr_duration_remaining">%1$d мин остават</string>
     <string name="loop_status_tbr_continues">Вр базал продължава</string>
     <string name="loop_status_tbr_cancel">Прилагане на временен базал</string>
     <string name="loop_status_smb">%1$.2f Ед</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Integrace pumpy EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Patch nepotvrdil konec bolusu. %1$s je zaznamenán, ale patch mohl vydat víc. Před poskytnutím více inzulínu zkontrolujte patch.</string>
     <string name="low_reservoir">Nízký stav zásobníku</string>
     <string name="patch_expiration_reminders">Připomenutí expirace pumpy</string>
     <string name="patch_buzzer_reminders">Alarmy pumpy</string>
@@ -93,7 +93,4 @@
     <string name="wizard_exit_deactivation_warning">Ukončit průvodce deaktivací? Patch může zůstat aktivní a pokračovat v podávání inzulínu.</string>
     <string name="patch_force_reset">Vynutit reset</string>
     <string name="patch_force_reset_confirm">Toto vymaže stav patche lokálně bez zasílání příkazů patchi. Použijte pouze pokud selhala běžná deaktivace. Patch bude nadále podávat inzulín, dokud se nevybije baterie nebo dokud nebude ručně vypnut.</string>
-    <!-- Permission rationales -->
-    <string name="permission_exact_alarm_title">Přesné alarmy</string>
-    <string name="permission_exact_alarm_description">Aplikace potřebuje oprávnění pro plánování přesných alarmů pro správu patche</string>
 </resources>

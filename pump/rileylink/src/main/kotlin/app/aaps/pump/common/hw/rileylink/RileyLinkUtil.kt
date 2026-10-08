@@ -8,15 +8,17 @@ import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b
 import app.aaps.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import app.aaps.pump.common.hw.rileylink.data.RLHistoryItem
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.util.concurrent.CopyOnWriteArrayList
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by andy on 17/05/2018.
  */
-@Singleton
-class RileyLinkUtil @Inject constructor(
+@SingleIn(AppScope::class)
+@Inject
+class RileyLinkUtil(
     private val aapsLogger: AAPSLogger,
     private val context: Context
 ) {

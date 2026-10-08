@@ -12,10 +12,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -29,16 +30,14 @@ import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.watchfaces.utils.WatchFace
 import app.aaps.wear.watchfaces.utils.WatchFaceTime
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
-import dagger.android.AndroidInjection
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.max
@@ -47,12 +46,10 @@ import kotlin.math.max
 class CircleWatchface : WatchFace() {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var complicationDataRepository: app.aaps.wear.data.ComplicationDataRepository
 
-    private var disposable = CompositeDisposable()
     private val watchfaceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     // DataStore as single source of truth - using EventData models directly
@@ -96,12 +93,12 @@ class CircleWatchface : WatchFace() {
 
 
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        injectMetroMembers(this)
         super.onCreate()
         sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CIRCLE.ordinal)
         rxBus.send(EventUpdateSelectedWatchface())
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-        val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface")
+        val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:CircleWatchface")
         wakeLock.acquire(30000)
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         val bounds = windowManager.currentWindowMetrics.bounds
@@ -126,10 +123,9 @@ class CircleWatchface : WatchFace() {
             }
         }
 
-        disposable += rxBus
-            .toObservable(EventData.Preferences::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe {
+        // watchfaceScope is Main.immediate, matching observeOn(aapsSchedulers.main).
+        rxBus.toFlow(EventData.Preferences::class)
+            .collectResilient(watchfaceScope, aapsLogger, LTag.WEAR, start = CoroutineStart.UNDISPATCHED) {
                 if (myLayout != null) {  // Only update if layout initialized
                     prepareDrawTime()
                     prepareLayout()
@@ -142,7 +138,6 @@ class CircleWatchface : WatchFace() {
     }
 
     override fun onDestroy() {
-        disposable.clear()
         watchfaceScope.cancel()
         super.onDestroy()
     }
@@ -300,7 +295,7 @@ class CircleWatchface : WatchFace() {
     override fun onTimeChanged(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
         if (oldTime.hasMinuteChanged(newTime) && myLayout != null) {
             val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface_onTimeChanged")
+            val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:CircleWatchface_onTimeChanged")
             wakeLock.acquire(30000)
             /*Preparing the layout just on every minute tick:
              *  - hopefully better battery life

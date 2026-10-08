@@ -8,7 +8,6 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.insulin.program.util.P
 import app.aaps.pump.omnipod.common.bledriver.pod.command.insulin.program.util.ProgramTempBasalUtil
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ProgramReminder
 import java.nio.ByteBuffer
-import java.util.*
 
 // NOT SUPPORTED: percentage temp basal
 class ProgramTempBasalCommand private constructor(

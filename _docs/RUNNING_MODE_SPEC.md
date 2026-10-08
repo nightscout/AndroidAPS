@@ -35,7 +35,7 @@ fix it.
 ─── ENFORCEMENT ─────────────────────────────────────────────────
   RunningModeGuard           UI/SMS/Wear pre-check (snackbar reject)
                              core/objects/.../runningMode/RunningModeGuard.kt
-  CommandQueueImpl gate      last-resort queue-level reject (callback)
+  CommandQueueImpl gate      last-resort queue-level reject (failed result)
                              implementation/.../queue/CommandQueueImplementation.kt
   RunningModeReconciler      observes RM DB changes, drives pump commands
                              plugins/aps/.../runningMode/RunningModeReconciler.kt
@@ -75,9 +75,9 @@ RM row and restores the underlying mode. Never persisted as `RESUME`.
 | `CLOSED_LOOP_LGS`   | DISABLED_LOOP, OPEN_LOOP, CLOSED_LOOP, DISCONNECTED_PUMP, SUSPENDED_BY_USER, SUPER_BOLUS       |
 | `DISABLED_LOOP`     | OPEN_LOOP, CLOSED_LOOP, CLOSED_LOOP_LGS, DISCONNECTED_PUMP, SUPER_BOLUS                        |
 | `SUPER_BOLUS`       | DISCONNECTED_PUMP, RESUME                                                                      |
-| `DISCONNECTED_PUMP` | RESUME                                                                                         |
+| `DISCONNECTED_PUMP` | DISCONNECTED_PUMP (extend: new duration from now), RESUME                                      |
 | `SUSPENDED_BY_PUMP` | (empty — auto-cleared by `runningModePreCheck` when pump unsuspends)                           |
-| `SUSPENDED_BY_USER` | DISCONNECTED_PUMP, RESUME                                                                      |
+| `SUSPENDED_BY_USER` | DISCONNECTED_PUMP, SUSPENDED_BY_USER (extend: new duration from now), RESUME                   |
 | `SUSPENDED_BY_DST`  | DISCONNECTED_PUMP only — **not RESUME**. User cannot manually exit; expires by duration.       |
 | `RESUME`            | error (invalid mode)                                                                           |
 
@@ -209,6 +209,8 @@ not issue insulin directly.
   `Loop.applyMaxIOBConstraints` (LoopPlugin.kt:428).
 - `DISABLED_LOOP` (Stopped bucket): reconciler issues `cancelTempBasal` on entry,
   same as SUSPENDED_BY_USER. User-triggered and constraint-forced behave identically.
+  A new row of the *same* Stopped mode (the user extends a suspend) is NoOp: the entry
+  already cancelled the APS TBR, so a TBR active then was set by hand and is kept.
 - `SUSPENDED_BY_USER` is the temporary counterpart of `DISABLED_LOOP`: loop algorithm
   is paused (`pausesLoopExecution = true`) and the entry-side TBR cancel runs, but the
   pump remains fully usable for manual delivery — `PumpCommandGate` allows BOLUS, TBR,
@@ -221,9 +223,19 @@ not issue insulin directly.
   cleans this TBR up at the natural RM end if no earlier change cancels it.
   `BolusWizard` writes the SUPER_BOLUS row and lets the reconciler issue the
   TBR — it does *not* call `commandQueue.tempBasalAbsolute(0.0, ...)` directly.
+- Zero-delivery retry: the loop is paused in these modes, so nothing else would send a
+  failed zero-TBR again. `KeepAliveWorker` calls `Loop.verifyZeroDelivery()` every tick,
+  which lands in `RunningModeReconciler.verifyZeroDelivery()`. It sends the zero-TBR again
+  when it is missing, or when it ends within 15 min while the mode goes on longer (pump
+  maximum TBR shorter than the mode, or a mode without end). The running mode itself is
+  never changed on a failure.
 - Failure feedback: TBR enforcement commands (cancelTempBasal, tempBasalAbsolute,
   tempBasalPercent) issued by the reconciler use `EventShowSnackbar(...Error)` on
-  failure. Defensive `cancelExtended` is silent (log only).
+  failure. Defensive `cancelExtended` is silent (log only). When the zero-TBR stays
+  missing in a zero-delivery mode for 10 min, the reconciler raises the URGENT
+  `NotificationId.ZERO_DELIVERY_NOT_SET` alarm, repeats it every 15 min, and dismisses
+  it once a zero-TBR is on the pump or the mode ends. Not raised for a pump that cannot
+  do a TBR at all.
 
 ## Known inconsistencies (these may be bugs)
 

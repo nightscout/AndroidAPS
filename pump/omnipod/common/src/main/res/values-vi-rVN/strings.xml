@@ -42,7 +42,7 @@
     <string name="omnipod_common_overview_lot_number">Số Lô</string>
     <string name="omnipod_common_overview_pod_sequence_number">Số thứ tự</string>
     <string name="omnipod_common_overview_pod_expiry_date">Pod hết hạn</string>
-    <string name="omnipod_common_overview_last_connection">Kết nối lần cuối</string>
+    <string name="omnipod_common_overview_last_connection">Kết nối gần nhất</string>
     <string name="omnipod_common_overview_last_bolus">Liều bolus mới nhất</string>
     <string name="omnipod_common_overview_temp_basal_rate">Tỷ lệ liều nền tạm thời</string>
     <string name="omnipod_common_overview_base_basal_rate">Tỷ lệ Liều nền Cơ bản</string>
@@ -99,7 +99,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Đã bật âm thanh thông báo SMB không chắc chắn</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Đã bật âm thanh thông báo Bolus không chắc chắn</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Âm thanh khi thông báo tạm dừng tiêm được bật</string>
-    <string name="omnipod_dash_use_bonding">Thiết bị Bond BT trên Android 15</string>
+    <string name="omnipod_dash_use_bonding">Ghép nối Bluetooth</string>
+    <string name="omnipod_dash_use_bonding_summary">Chỉ thử tùy chọn này nếu pod không thể duy trì kết nối ổn định. Điện thoại sẽ hiển thị các yêu cầu ghép nối mà bạn phải chấp nhận. Để tắt nếu pod kết nối bình thường. Không có tác dụng trên Android dưới phiên bản 15.</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Không có Pod hoạt động</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Đang thiết lập (đang chờ kích hoạt Pod)</string>
@@ -109,6 +110,22 @@
     <string name="omnipod_common_pod_status_pod_fault">Sự cố Pod</string>
     <string name="omnipod_common_pod_status_inactive">Không hoạt động</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Sự cố Pod: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">Thông báo từ PDM</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">Tham chiếu: %1$s</string>
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">Hết insulin</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">Đã dừng phân phối insulin. Hãy thay Pod ngay.</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">Tự động tắt</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">Đã dừng phân phối insulin. PDM và Pod không liên lạc với nhau trong 4 giờ qua. Hãy thay Pod ngay để tiếp tục phân phối insulin.</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod đã hết hạn</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">Đã dừng phân phối insulin. Hãy thay Pod ngay.</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">Phát hiện tắc nghẽn</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">Đã dừng phân phối insulin. Hãy thay Pod ngay. Kiểm tra đường huyết</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod lỗi</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">Đã dừng phân phối insulin. Hãy thay Pod ngay.</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod sẽ sớm hết hạn</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod sẽ sớm hết hạn</string>
@@ -145,7 +162,7 @@
     <string name="omnipod_common_alert_finish_setup_reminder_reminder">Nhắc hoàn tất thiết lập</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
-    <string name="omnipod_common_moments_ago">Vừa nãy</string>
+    <string name="omnipod_common_moments_ago">Cách đây ít phút</string>
     <string name="omnipod_common_less_than_a_minute_ago">Chưa đầy một phút trước</string>
     <string name="omnipod_common_composite_time">%1$s và %2$s</string>
     <string name="omnipod_common_time_ago">%1$s trước</string>

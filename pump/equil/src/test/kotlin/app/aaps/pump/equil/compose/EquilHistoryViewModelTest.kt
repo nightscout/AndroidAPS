@@ -55,7 +55,7 @@ internal class EquilHistoryViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
 
         // init evaluates rxBus.toFlow(...) synchronously (before the deferred launchIn) -> must stub
-        whenever(rxBus.toFlow(EventEquilDataChanged::class.java)).thenReturn(emptyFlow())
+        whenever(rxBus.toFlow(EventEquilDataChanged::class)).thenReturn(emptyFlow())
 
         sut = EquilHistoryViewModel(
             equilHistoryRecordDao,

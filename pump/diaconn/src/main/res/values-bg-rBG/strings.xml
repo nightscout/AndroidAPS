@@ -23,7 +23,6 @@
     <string name="updatingbasalrates">Обновява базални стойности</string>
     <string name="description_pump_diaconn_g8">Интеграция на помпа за Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Превишавате макс болус</string>
     <string name="commanderror">Грешка при команда</string>
     <string name="speederror">Скорост грешка</string>
