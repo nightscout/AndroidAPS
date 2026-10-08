@@ -6,6 +6,8 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 
 /**
  * AAPS card component with proper elevation visibility in dark mode.
@@ -27,7 +29,9 @@ fun AapsCard(
     content: @Composable ColumnScope.() -> Unit
 ) {
     ElevatedCard(
-        modifier = modifier,
+        // Selected was only the container colour. Said only when on: "not selected" on every card
+        // of every list, outside remove mode, would bury the content.
+        modifier = if (selected) modifier.semantics { this.selected = true } else modifier,
         colors = CardDefaults.elevatedCardColors(
             containerColor = if (selected) {
                 MaterialTheme.colorScheme.secondaryContainer

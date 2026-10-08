@@ -41,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
@@ -49,6 +51,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.reorderActions
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import kotlinx.coroutines.launch
@@ -142,6 +145,7 @@ fun QuickLauchConfigScreen(
                     it.action.typeId == item.action.typeId && it.action.dynamicId == item.action.dynamicId
                 }
                 val stableKey = if (dupIndex > 0) "${base}_$dupIndex" else base
+                val moveActions = reorderActions(index, state.selectedItems.lastIndex) { from, to -> viewModel.moveItem(from, to) }
                 ReorderableItem(
                     reorderableState,
                     key = stableKey,
@@ -155,7 +159,12 @@ fun QuickLauchConfigScreen(
                             onEdit = if (item.action is QuickLaunchAction.ProfileAction) {
                                 { editingProfileIndex = index }
                             } else null,
-                            dragModifier = Modifier.draggableHandle()
+                            // Dragging is the only way to reorder; a screen reader gets Move up / Move down.
+                            dragModifier = Modifier
+                                .draggableHandle()
+                                .semantics {
+                                    customActions = moveActions
+                                }
                         )
                     }
                 }

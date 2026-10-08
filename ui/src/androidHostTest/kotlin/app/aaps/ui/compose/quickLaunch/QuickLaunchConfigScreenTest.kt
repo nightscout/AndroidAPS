@@ -1,10 +1,12 @@
 package app.aaps.ui.compose.quickLaunch
 
 import android.content.Context
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasScrollToNodeAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -28,6 +30,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Robolectric composable test for [QuickLauchConfigScreen].
@@ -196,6 +199,29 @@ class QuickLaunchConfigScreenTest {
         assertThat(stored).containsExactly(QuickLaunchAction.Wizard, QuickLaunchAction.QuickLaunchConfig).inOrder()
         // Without this the user could pin an action ahead of the button that reopens this screen.
         assertThat(stored.last()).isEqualTo(QuickLaunchAction.QuickLaunchConfig)
+    }
+
+    /**
+     * Reordering is drag-only on screen, which a screen reader cannot do. The reorder handle offers
+     * Move up / Move down instead, and they must save the same order a drag would.
+     */
+    @Test
+    fun moveDownActionOnTheHandleReordersLikeADrag() {
+        viewModels.givenSelected(listOf(QuickLaunchAction.Wizard, QuickLaunchAction.Carbs))
+
+        setScreen()
+        // The screen scrolls to the last selected action when the list loads; bring the first
+        // selected row back into the composed window.
+        compose.onNode(hasScrollToNodeAction()).performScrollToNode(hasText(selectedHeader))
+        val moveDown = context.getString(CoreUiR.string.a11y_move_down)
+        // Only the first of the two rows can move down, so exactly one handle offers it.
+        val handles = compose.onAllNodesWithContentDescription(context.getString(CoreUiR.string.reorder)).fetchSemanticsNodes()
+        val moveDownActions = handles.flatMap { it.config[SemanticsActions.CustomActions] }.filter { it.label == moveDown }
+        assertThat(moveDownActions).hasSize(1)
+        moveDownActions.single().action()
+        compose.waitForIdle()
+
+        assertThat(storedActions()).containsExactly(QuickLaunchAction.Carbs, QuickLaunchAction.Wizard, QuickLaunchAction.QuickLaunchConfig).inOrder()
     }
 
     // ---------------------------------------------------------------------------------------------

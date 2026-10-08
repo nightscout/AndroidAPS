@@ -370,10 +370,10 @@ class SetupWizardE2ETest {
         assertVisible("Sick Day")                            // the created scene row
 
         // Activate: the card's Activate (Play) icon → confirmation dialog → Activate.
-        click("Activate")                                    // Play IconButton (content-desc)
+        click("Activate: Sick Day")                          // Play IconButton (content-desc names its scene)
         assertTextContains("Activate scene")                 // SceneActivationDialog title
         click("Activate")                                    // dialog confirm button (text)
-        assertVisible("End Scene")                           // card now active
+        assertVisible("End Scene: Sick Day")                 // card now active (Stop IconButton content-desc)
 
         // The overview renders ActiveSceneBanner while a scene is active — return there so the banner
         // (scene name, remaining time, progress, End button) is exercised, then end it from the banner.

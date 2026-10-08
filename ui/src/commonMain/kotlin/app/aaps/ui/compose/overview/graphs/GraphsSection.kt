@@ -58,6 +58,7 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.rowAction
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import com.patrykandpatrick.vico.compose.cartesian.Scroll
@@ -427,6 +428,7 @@ fun GraphsSection(
             if (!isSimpleMode) {
                 GraphEditButton(
                     onClick = { editingBgOverlays = true },
+                    graphName = stringResource(CoreUiStrings.glucose),
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(end = 4.dp, top = 2.dp)
@@ -477,6 +479,7 @@ fun GraphsSection(
             if (!isSimpleMode) {
                 GraphEditButton(
                     onClick = { editingIobOverlays = true },
+                    graphName = stringResource(CoreUiStrings.iob),
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(end = 4.dp, top = 2.dp)
@@ -528,6 +531,7 @@ fun GraphsSection(
                 if (!isSimpleMode) {
                     GraphEditButton(
                         onClick = { editingGraphIndex = i },
+                        graphName = seriesListLabel(secondary.series),
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(end = 4.dp, top = 2.dp)
@@ -688,6 +692,7 @@ private fun seriesShortNameId(type: SeriesType): TextRef = when (type) {
 @Composable
 private fun GraphEditButton(
     onClick: () -> Unit,
+    graphName: String,
     modifier: Modifier = Modifier
 ) {
     IconButton(
@@ -699,7 +704,8 @@ private fun GraphEditButton(
     ) {
         Icon(
             imageVector = Icons.Filled.Edit,
-            contentDescription = stringResource(CoreUiStrings.switch_to_edit),
+            // One per graph, so it names its graph: "Edit: COB", not "Edit" four times.
+            contentDescription = rowAction(CoreUiStrings.switch_to_edit, graphName),
             modifier = Modifier.size(16.dp)
         )
     }

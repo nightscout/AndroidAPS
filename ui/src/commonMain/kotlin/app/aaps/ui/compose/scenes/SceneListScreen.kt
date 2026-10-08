@@ -51,6 +51,7 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.rowAction
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 
@@ -303,22 +304,22 @@ internal fun SceneCard(
             Row {
                 if (isActive) {
                     IconButton(onClick = onDeactivate, enabled = masterReachable) {
-                        Icon(Icons.Default.Stop, contentDescription = stringResource(CoreUiStrings.scene_deactivate))
+                        Icon(Icons.Default.Stop, contentDescription = rowAction(CoreUiStrings.scene_deactivate, scene.name))
                     }
                 } else {
                     IconButton(
                         onClick = onActivate,
                         enabled = scene.isEnabled && activationReason == null
                     ) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = stringResource(CoreUiStrings.scene_activate))
+                        Icon(Icons.Default.PlayArrow, contentDescription = rowAction(CoreUiStrings.scene_activate, scene.name))
                     }
                 }
                 IconButton(onClick = onEdit, enabled = editEnabled) {
-                    Icon(Icons.Default.Edit, contentDescription = stringResource(CoreUiStrings.switch_to_edit))
+                    Icon(Icons.Default.Edit, contentDescription = rowAction(CoreUiStrings.switch_to_edit, scene.name))
                 }
                 if (scene.isDeletable) {
                     IconButton(onClick = onDelete, enabled = editEnabled) {
-                        Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
+                        Icon(Icons.Default.Delete, contentDescription = rowAction(CoreUiStrings.delete, scene.name))
                     }
                 }
             }

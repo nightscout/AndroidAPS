@@ -175,7 +175,9 @@ private fun ExtendedBolusItem(
             .padding(horizontal = 2.dp)
             .combinedClickable(
                 onClick = onClick,
-                onLongClick = onLongPress
+                onLongClick = onLongPress,
+                // Long press is the only way into remove mode; TalkBack says "double-tap and hold to Remove".
+                onLongClickLabel = stringResource(CoreUiStrings.remove)
             ),
         selected = isSelected
     ) {

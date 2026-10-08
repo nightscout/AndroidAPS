@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.AnnotatedString
@@ -47,6 +48,8 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.MasterOfflineBanner
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.reorderActions
+import app.aaps.core.ui.compose.rowAction
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.automation.AutomationStrings
 import sh.calvin.reorderable.ReorderableItem
@@ -159,7 +162,13 @@ private fun EventsList(
         itemsIndexed(
             items = state.events,
             key = { _, e -> e.key }
-        ) { _, event ->
+        ) { index, event ->
+            // Dragging is the only way to reorder; a screen reader gets Move up / Move down, which
+            // move like a drag and then save like the end of one.
+            val moveActions = reorderActions(index, state.events.lastIndex) { from, to ->
+                onMove(from, to)
+                onMoveFinished()
+            }
             ReorderableItem(
                 state = reorderState,
                 key = event.key
@@ -169,7 +178,11 @@ private fun EventsList(
                     event = event,
                     elevation = elevation,
                     editingEnabled = editingEnabled,
-                    dragModifier = if (editingEnabled && !event.readOnly) Modifier.draggableHandle(onDragStopped = { onMoveFinished() }) else Modifier,
+                    dragModifier = if (editingEnabled && !event.readOnly)
+                        Modifier
+                            .draggableHandle(onDragStopped = { onMoveFinished() })
+                            .semantics { customActions = moveActions }
+                    else Modifier,
                     onToggleEnabled = { checked -> onToggleEnabled(event.position, checked) },
                     onEdit = { onEditEvent(event.position) },
                     onDelete = { onDeleteEvent(event.position) }
@@ -228,7 +241,8 @@ private fun AutomationEventCard(
                 IconRow(event = event)
             }
             IconButton(onClick = onEdit, enabled = editingEnabled) {
-                Icon(Icons.Default.Edit, contentDescription = stringResource(AutomationStrings.automation_edit_rule))
+                // Repeated on every rule, so each names its rule.
+                Icon(Icons.Default.Edit, contentDescription = rowAction(AutomationStrings.automation_edit_rule, event.title))
             }
             if (event.readOnly) {
                 Icon(
@@ -238,7 +252,7 @@ private fun AutomationEventCard(
                 )
             } else {
                 IconButton(onClick = onDelete, enabled = editingEnabled) {
-                    Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
+                    Icon(Icons.Default.Delete, contentDescription = rowAction(CoreUiStrings.delete, event.title))
                 }
             }
             IconButton(
