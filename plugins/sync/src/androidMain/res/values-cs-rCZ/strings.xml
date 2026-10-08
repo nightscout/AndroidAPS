@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Více párování odpovídá kódu PIN. Požádejte na hlavním zařízení o vygenerování nového a opakujte akci.</string>
     <string name="pair_with_master_error_expired">Toto párování vypršelo. Vygenerujte nový PIN na hlavním zařízení.</string>
     <string name="pair_with_master_error_network">K Nightscoutu se nelze připojit. Zkontrolujte připojení a zkuste to znovu.</string>
+    <string name="pair_with_master_error_secret_store">Tento telefon nemohl uložit klíč párování, takže spárování bylo zrušeno. Nic se nezměnilo. Zkuste to znovu, a pokud se nedaří, restartujte telefon.</string>
     <string name="pair_with_master_retry">Zkuste to znovu</string>
     <string name="pair_with_master_already_paired_title">Již spárováno</string>
     <string name="pair_with_master_already_paired_master">Momentálně spárováno s hlavním zařízením %1$s. Před zadáním nového PINu nejprve odpárujte.</string>
