@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -39,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -227,9 +229,12 @@ private fun ClientControlSwitchRow(
     enabled: Boolean,
     onToggle: (Boolean) -> Unit
 ) {
+    // This switch allows or blocks remote control from paired phones; a screen reader read it as
+    // "Switch, on" with no name. The whole row is the switch now.
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .toggleable(value = enabled, role = Role.Switch, onValueChange = onToggle)
             .padding(horizontal = AapsSpacing.large, vertical = AapsSpacing.medium),
         horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
         verticalAlignment = Alignment.CenterVertically
@@ -246,7 +251,7 @@ private fun ClientControlSwitchRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        Switch(checked = enabled, onCheckedChange = onToggle)
+        Switch(checked = enabled, onCheckedChange = null)
     }
 }
 

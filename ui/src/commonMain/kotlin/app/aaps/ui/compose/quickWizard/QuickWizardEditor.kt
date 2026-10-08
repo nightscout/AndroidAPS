@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.PhoneAndroid
@@ -14,15 +15,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.InterfacesStrings
@@ -30,6 +32,7 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.IntKey
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.LabeledSwitch
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TimeRangePicker
@@ -441,34 +444,25 @@ private fun SwitchRow(
     modifier: Modifier = Modifier,
     icon: ImageVector? = null
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            icon?.let {
+    // One control for a screen reader, named by its label (the Switch alone had no name).
+    LabeledSwitch(
+        label = label,
+        checked = checked,
+        onCheckedChange = onCheckedChange,
+        modifier = modifier,
+        leadingContent = icon?.let {
+            {
                 Icon(
                     imageVector = it,
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(20.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyLarge
-            )
         }
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
-    }
+    )
 }
 
 /**
@@ -481,16 +475,15 @@ private fun TrendRadioButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // One radio button for a screen reader, named by its label.
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        androidx.compose.material3.RadioButton(
-            selected = selected,
-            onClick = onClick
-        )
+        RadioButton(selected = selected, onClick = null)
         Text(
             text = label,
             modifier = Modifier.padding(start = 8.dp),

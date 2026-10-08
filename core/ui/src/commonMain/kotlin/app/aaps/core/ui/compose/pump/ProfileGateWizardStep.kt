@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.CoreUiStrings
@@ -75,17 +76,17 @@ fun ProfileGateWizardStep(host: ProfileGateStepHost) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            // One radio button per profile: the row had no role and the RadioButton
+                            // was a second, unnamed stop.
                             .selectable(
                                 selected = isSelected,
+                                role = Role.RadioButton,
                                 onClick = { host.selectProfile(name) }
                             )
                             .padding(vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RadioButton(
-                            selected = isSelected,
-                            onClick = { host.selectProfile(name) }
-                        )
+                        RadioButton(selected = isSelected, onClick = null)
                         Text(
                             text = name,
                             style = MaterialTheme.typography.bodyMedium
