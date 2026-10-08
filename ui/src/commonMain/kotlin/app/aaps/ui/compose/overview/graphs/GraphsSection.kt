@@ -536,20 +536,24 @@ fun GraphsSection(
             }
         }
         if (editingGraphIndex >= 0 && editingGraphIndex < activeCount) {
-            val editing = graphConfig.secondaryGraphs[editingGraphIndex]
+            // Read once. The lambdas below can run after the sheet has closed and the index is
+            // already -1: NumberInputRow saves a focused field when it leaves the screen.
+            val index = editingGraphIndex
+            val editing = graphConfig.secondaryGraphs[index]
             GraphSeriesBottomSheet(
-                title = stringResource(CoreUiStrings.graph_number, editingGraphIndex + 2),
+                title = stringResource(CoreUiStrings.graph_number, index + 2),
                 selectedSeries = editing.series,
                 availableSeries = CONFIGURABLE_SERIES,
                 height = editing.height,
                 onHeightChange = { h ->
-                    val graphs = graphConfig.secondaryGraphs.toMutableList()
-                    graphs[editingGraphIndex] = graphs[editingGraphIndex].copy(height = h)
-                    graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
+                    // The current config, not the captured one: after "Remove graph" the captured
+                    // config still holds the removed graph, and writing it back would restore it.
+                    withSecondaryGraphHeight(graphViewModel.graphConfigFlow.value, index, editing.series, h)
+                        ?.let { graphViewModel.updateGraphConfig(it) }
                 },
                 onToggle = { type ->
                     val graphs = graphConfig.secondaryGraphs.toMutableList()
-                    val current = graphs[editingGraphIndex].series.toMutableList()
+                    val current = graphs[index].series.toMutableList()
                     if (type in current) {
                         current.remove(type)
                     } else {
@@ -558,16 +562,16 @@ fun GraphsSection(
                     }
                     if (current.isEmpty()) {
                         // Auto-remove graph when all series deselected
-                        graphs.removeAt(editingGraphIndex)
+                        graphs.removeAt(index)
                         editingGraphIndex = -1
                     } else {
-                        graphs[editingGraphIndex] = graphs[editingGraphIndex].copy(series = current)
+                        graphs[index] = graphs[index].copy(series = current)
                     }
                     graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
                 },
                 onRemoveGraph = {
                     val graphs = graphConfig.secondaryGraphs.toMutableList()
-                    graphs.removeAt(editingGraphIndex)
+                    graphs.removeAt(index)
                     editingGraphIndex = -1
                     graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
                 },
@@ -620,6 +624,24 @@ fun GraphsSection(
         // Spacer so the last graph / Add button isn't covered by QuickLaunch toolbar
         Spacer(Modifier.height(48.dp))
     }
+}
+
+/**
+ * [config] with the height of secondary graph [index] set to [height], or null when that graph no
+ * longer shows [expectedSeries].
+ *
+ * The height field saves its text when the settings sheet closes, so this can run after the graph
+ * was removed. Then [index] points to another graph, or to nothing, and nothing may be written.
+ * Graphs have no id, so the graph is recognised by its series. The height is not compared: quick
+ * taps on the +/- buttons can arrive before the screen has caught up with the previous one.
+ * With two graphs showing the same series, the other one could get the height. That is harmless.
+ */
+internal fun withSecondaryGraphHeight(config: GraphConfig, index: Int, expectedSeries: List<SeriesType>, height: Int): GraphConfig? {
+    val graph = config.secondaryGraphs.getOrNull(index) ?: return null
+    if (graph.series != expectedSeries) return null
+    val graphs = config.secondaryGraphs.toMutableList()
+    graphs[index] = graph.copy(height = height)
+    return config.copy(secondaryGraphs = graphs)
 }
 
 // =========================================================================
