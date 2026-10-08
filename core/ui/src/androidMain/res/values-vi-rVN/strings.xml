@@ -366,7 +366,6 @@
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_management">Ngữ cảnh</string>
     <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các ngữ cảnh</string>
-    <string name="scene_action_count">%1$d hành động</string>
     <string name="scene_start_from_template">Bắt đầu từ mẫu</string>
     <string name="scene_editor_target">Mục tiêu</string>
     <string name="scene_editor_tt_preset">Thiết lập sẵn TT</string>
