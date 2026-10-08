@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Có nhiều kết nối ghép đôi khớp với mã PIN này. Hãy yêu cầu thiết bị chính tạo mã mới và thử lại.</string>
     <string name="pair_with_master_error_expired">Ghép đôi này đã hết hạn. Hãy tạo mã PIN mới trên thiết bị chính.</string>
     <string name="pair_with_master_error_network">Không thể kết nối đến Nightscout. Hãy kiểm tra kết nối và thử lại.</string>
+    <string name="pair_with_master_error_secret_store">Không thể lưu thông tin bảo mật ghép đôi nên quá trình ghép đôi đã bị hủy. Không có thay đổi nào được thực hiện. Hãy thử lại, nếu vẫn không thành công, hãy khởi động lại ứng dụng.</string>
     <string name="pair_with_master_retry">Thử lại</string>
     <string name="pair_with_master_already_paired_title">Đã được kích hoạt</string>
     <string name="pair_with_master_already_paired_master">Hiện đang được ghép đôi với thiết bị chính %1$s. Hãy hủy ghép đôi trước khi nhập mã PIN mới.</string>
@@ -255,6 +256,8 @@
     <string name="sms_read_status_failed">Đọc trạng thái thất bại</string>
     <string name="sms_profile_switch_created">Đã tạo chuyển đổi cấu hình</string>
     <string name="sms_wrong_tbr_duration">Thời gian TBR phải là bội số của %1$d phút và lớn hơn 0.</string>
+    <string name="sms_tbr_percent_only">Bơm này chỉ nhận liều nền tạm thời theo phần trăm, không phải theo U/h.</string>
+    <string name="sms_tbr_absolute_only">Bơm này chỉ nhận liều nền tạm thời theo U/h, không phải theo phần trăm.</string>
     <string name="a11y_otp_qr_code">Mã QR để thiết lập mật khẩu dùng một lần</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Ứng dụng cần quyền SMS để điều khiển từ xa qua tin nhắn</string>
