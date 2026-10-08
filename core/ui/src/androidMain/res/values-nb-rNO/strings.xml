@@ -382,6 +382,7 @@
     <string name="scene_editor_enabled">Aktivert</string>
     <string name="scene_editor_disabled">Deaktivert</string>
     <string name="scene_summary">%1$d handlinger, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">Ubestemt (manuell slutt)</string>
     <string name="scene_some_actions_failed">Noen handlinger mislyktes</string>
     <string name="scene_no_active">Ingen aktiv scene</string>
