@@ -382,6 +382,7 @@
     <string name="scene_editor_enabled">Povolené</string>
     <string name="scene_editor_disabled">Zakázané</string>
     <string name="scene_summary">%1$d akcií, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">Neurčitý (manuálne ukončenie)</string>
     <string name="scene_some_actions_failed">Niektoré akcie zlyhali</string>
     <string name="scene_no_active">Žiadna aktívna scéna</string>
