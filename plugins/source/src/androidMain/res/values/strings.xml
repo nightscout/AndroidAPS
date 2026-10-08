@@ -57,5 +57,6 @@
 
     <string name="aidex_sensor_replace">Sensor replacement required, please replace with a new sensor as soon as possible</string>
     <string name="aidex_signal_lost">Sensor signal lost, please check the connection</string>
+    <string name="a11y_bg_duplicate" comment="Screen-reader state of a glucose reading in the BG source list that has the same time as another one; on screen it is only a coloured background.">duplicate reading</string>
 
 </resources>

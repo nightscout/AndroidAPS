@@ -53,6 +53,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
@@ -202,7 +203,15 @@ private fun ObjectiveTimelineItem(
             isAccomplished = objective.state == ObjectiveState.ACCOMPLISHED,
             isActive = objective.state == ObjectiveState.STARTED,
             isLast = isLast,
-            lineColor = if (objective.state == ObjectiveState.ACCOMPLISHED) accomplishedColor else lockedColor
+            lineColor = if (objective.state == ObjectiveState.ACCOMPLISHED) accomplishedColor else lockedColor,
+            stateLabel = stringResource(
+                when (objective.state) {
+                    ObjectiveState.ACCOMPLISHED -> ConstraintsStrings.objectives_state_done
+                    ObjectiveState.STARTED      -> ConstraintsStrings.objectives_state_in_progress
+                    ObjectiveState.NOT_STARTED  -> ConstraintsStrings.objectives_state_not_started
+                    ObjectiveState.LOCKED       -> ConstraintsStrings.objectives_state_locked
+                }
+            )
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -247,13 +256,17 @@ private fun TimelineIndicator(
     isAccomplished: Boolean,
     isActive: Boolean,
     isLast: Boolean,
-    lineColor: Color
+    lineColor: Color,
+    stateLabel: String
 ) {
     val checkColor = MaterialTheme.colorScheme.onPrimary
+    // The circle and tick are drawn, so done / in progress / locked was colour only. Said before the
+    // objective's content, in the order the timeline is read.
     Box(
         modifier = Modifier
             .width(32.dp)
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .semantics { contentDescription = stateLabel },
         contentAlignment = Alignment.TopCenter
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {

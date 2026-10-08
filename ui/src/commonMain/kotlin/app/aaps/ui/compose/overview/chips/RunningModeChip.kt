@@ -26,9 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.RM
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcLoopClosed
@@ -42,6 +45,7 @@ import app.aaps.core.ui.compose.icons.IcLoopPausedPump
 import app.aaps.core.ui.compose.icons.IcLoopSuperbolus
 import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.ui.compose.loopColor
+import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.compose.overview.graphs.TriangleShape
 
 /**
@@ -104,12 +108,15 @@ fun RunningModeChip(
                             modifier = Modifier.fillMaxSize()
                         )
                         if (smbEnabled) {
+                            // Only a small drawn triangle; named so the chip reads "Closed Loop, SMB".
+                            val smbLabel = stringResource(CoreUiStrings.smb_shortname)
                             Box(
                                 modifier = Modifier
                                     .align(Alignment.BottomEnd)
                                     .offset(x = 4.dp, y = 4.dp)
                                     .size(13.dp)
                                     .background(AapsTheme.elementColors.insulin, TriangleShape)
+                                    .semantics { contentDescription = smbLabel }
                             )
                         }
                     }

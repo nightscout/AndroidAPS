@@ -48,6 +48,7 @@ import app.aaps.pump.omnipod.eros.R
 import app.aaps.pump.omnipod.eros.definition.PodHistoryEntryType
 import app.aaps.pump.omnipod.eros.history.database.ErosHistoryRecordEntity
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
+import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -158,7 +159,8 @@ internal fun ErosHistoryCardContent(
         ) {
             Icon(
                 imageVector = if (isSuccess) Icons.Filled.CheckCircle else Icons.Filled.Error,
-                contentDescription = null,
+                // Success or failure was only this icon and its colour. Read first in the row.
+                contentDescription = stringResource(if (isSuccess) CoreUiR.string.success else CoreUiR.string.error),
                 modifier = Modifier
                     .size(20.dp)
                     .padding(top = 2.dp),

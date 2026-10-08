@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -170,10 +172,12 @@ fun NSClientScreenContent(
                 LabelValueRow(label = stringResource(SyncStrings.queue), value = uiState.queue)
             }
 
+            // One switch for a screen reader ("Running, switch, on"): the Switch alone had no name.
             Row(
                 modifier = Modifier
                     .padding(start = AapsSpacing.extraLarge)
-                    .align(Alignment.CenterVertically),
+                    .align(Alignment.CenterVertically)
+                    .toggleable(value = !uiState.paused, role = Role.Switch, onValueChange = { isRunning -> onPauseChanged(!isRunning) }),
                 horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -182,10 +186,7 @@ fun NSClientScreenContent(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Switch(
-                    checked = !uiState.paused,
-                    onCheckedChange = { isRunning -> onPauseChanged(!isRunning) }
-                )
+                Switch(checked = !uiState.paused, onCheckedChange = null)
             }
         }
 
