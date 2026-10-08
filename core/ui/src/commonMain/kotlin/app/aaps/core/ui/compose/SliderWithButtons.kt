@@ -30,9 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.setProgress
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -254,9 +259,25 @@ fun SliderWithButtons(
                     valueRange = 0f..1f,
                     modifier = Modifier
                         .weight(1f)
-                        .semantics {
+                        // Replaces the Slider's own semantics with one node. Adding a name with
+                        // `semantics` did not work: on a device the name landed on a separate node
+                        // next to the SeekBar, merged or not, and TalkBack focused the bare SeekBar
+                        // ("37 percent"). A Robolectric test did not show that.
+                        // The progress action uses the same 0..1 position as a drag, mapped to a
+                        // value through the control points and rounded to the step.
+                        .clearAndSetSemantics {
                             dialogLabel?.let { contentDescription = it }
                             stateDescription = spokenValue
+                            progressBarRangeInfo = ProgressBarRangeInfo(
+                                current = dragValue?.let { valueToPosition(it) } ?: currentPosition,
+                                range = 0f..1f
+                            )
+                            if (enabled) {
+                                setProgress { targetPosition ->
+                                    onValueChange(roundToStep(positionToValue(targetPosition), step).coerceIn(minValue, maxValue))
+                                    true
+                                }
+                            } else disabled()
                         }
                 )
             } else {
