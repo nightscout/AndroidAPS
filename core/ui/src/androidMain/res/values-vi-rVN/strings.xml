@@ -27,6 +27,7 @@
     <string name="constraint_applied">Đã áp dụng giới hạn!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Không thể kết nối với bơm</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Trình điều khiển bơm không phản hồi. \"%1$s\" đã chạy trong %2$d phút và không có lệnh nào khác có thể kết nối với bơm. Hãy kiểm tra bơm, sau đó khởi động lại AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -381,6 +382,7 @@
     <string name="scene_editor_enabled">Đã bật</string>
     <string name="scene_editor_disabled">Đã tắt</string>
     <string name="scene_summary">%1$d hành động, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">Không thời hạn (kết thúc thủ công)</string>
     <string name="scene_some_actions_failed">Một số hành động thất bại</string>
     <string name="scene_no_active">Không có ngữ cảnh nào đang hoạt động</string>
@@ -787,7 +789,7 @@
     <string name="connection_error">Lỗi kết nối bơm</string>
     <string name="reading_pump_history">Đang đọc lịch sử bơm</string>
     <string name="password_cleared">Đã xóa bỏ mật khẩu!</string>
-    <string name="pairing">Đang ghép đôi</string>
+    <string name="pairing">Ghép đôi</string>
     <string name="initializing">Đang khởi chạy…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Cảnh báo</string>
