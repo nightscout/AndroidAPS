@@ -48,6 +48,7 @@ fun ActiveSceneBanner(
     onDismiss: () -> Unit = {},
     formatDuration: (Long) -> String,
     endEnabled: Boolean = true,
+    chainTargetName: String? = null,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
@@ -63,6 +64,7 @@ fun ActiveSceneBanner(
                 onDismiss = onDismiss,
                 formatDuration = formatDuration,
                 endEnabled = endEnabled,
+                chainTargetName = chainTargetName,
                 modifier = modifier
             )
         }
@@ -77,6 +79,8 @@ internal fun ActiveSceneBannerContent(
     onDismiss: () -> Unit = {},
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
     endEnabled: Boolean = true,
+    /** Name of the scene that starts when this one ends; null when there is none (or it was deleted). */
+    chainTargetName: String? = null,
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
@@ -130,6 +134,14 @@ internal fun ActiveSceneBannerContent(
                     } else {
                         Text(
                             text = stringResource(CoreUiStrings.scene_active),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    // What the scene sets in motion when it ends, as the scene list shows it
+                    if (!expired && chainTargetName != null) {
+                        Text(
+                            text = stringResource(CoreUiStrings.scene_chain_indicator, chainTargetName),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

@@ -28,6 +28,7 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
+import app.aaps.ui.compose.scenes.sceneSummaryWithChain
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithDisplayName
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -175,10 +176,9 @@ class QuickLaunchResolver(
         }
 
         is QuickLaunchAction.ProfileAction     -> null // label already shows profile name + params
-        is QuickLaunchAction.SceneAction       -> {
-            val scene = sceneRepository.getScene(action.sceneId)
-            scene?.let { "${it.actions.size} actions" }
-        }
+        // Same line as Manage -> Scenes and the Scenes sheet, follow-up included
+        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)
+            ?.let { sceneSummaryWithChain(it, rh, sceneRepository::getScene) }
 
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)
             ?.pluginDescription?.description?.let { rh.gs(it) }
