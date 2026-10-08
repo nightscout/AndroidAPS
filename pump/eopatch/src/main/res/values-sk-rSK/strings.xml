@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">Integrácia pumpy pre EOPatch2 / GlucoMen Day</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">Náplasťová pumpa nepotvrdila ukončenie podania bolusu. Bolo zaznamenané množstvo %1$s avšak pumpa mohla podať vyššie množstvo inzulínu. Pred podaním ďalšieho inzulínu skontrolujte pumpu.</string>
     <string name="low_reservoir">Výstraha nízkeho stavu zásobníka</string>
     <string name="patch_expiration_reminders">Pripomenutie expirácie Patch</string>
     <string name="patch_buzzer_reminders">Patch tón pripomenutia</string>

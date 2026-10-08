@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Flere sammenkoblinger samsvarte med denne PIN-koden. Be hovedenheten generere en ny og prøv igjen.</string>
     <string name="pair_with_master_error_expired">Denne sammenkoblingen har utløpt. Generer en ny PIN-kode på hovedenheten.</string>
     <string name="pair_with_master_error_network">Kan ikke koble til Nightscout. Kontroller forbindelsen og prøv igjen.</string>
+    <string name="pair_with_master_error_secret_store">Paringshemmeligheten kunne ikke lagres, så paringen ble avbrutt. Ingenting ble endret. Prøv igjen, og hvis det fortsatt ikke fungerer, start appen på nytt.</string>
     <string name="pair_with_master_retry">Prøv igjen</string>
     <string name="pair_with_master_already_paired_title">Allerede sammenkoblet</string>
     <string name="pair_with_master_already_paired_master">Er allerede koblet til hovedenhet %1$s. Koble fra først for å angi en ny PIN-kode.</string>
@@ -255,6 +256,8 @@
     <string name="sms_read_status_failed">Lesing av status mislyktes</string>
     <string name="sms_profile_switch_created">Profilbytte opprettet</string>
     <string name="sms_wrong_tbr_duration">Varigheten av midlertidig basal må være et multiplum av %1$d minutter og større enn 0.</string>
+    <string name="sms_tbr_percent_only">Denne pumpen støtter midlertidig basaldose kun i prosent, ikke i E/t.</string>
+    <string name="sms_tbr_absolute_only">Denne pumpen støtter midlertidig basaldose kun i E/t, ikke i prosent.</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Appen trenger SMS-tillatelse for fjernkontroll via tekstmeldinger</string>

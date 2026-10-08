@@ -27,6 +27,7 @@
     <string name="constraint_applied">Begrensning brukt!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pumpe er utilgjengelig</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Pumpedriveren svarer ikke. \"%1$s\" har pågått i %2$d min, og ingen andre kommandoer får kontakt med pumpen. Kontroller pumpen og start deretter AAPS på nytt.</string>
     <string name="insulin_unit_shortname">E</string>
     <string name="pump_base_basal_rate">%1$.2f E/t</string>
     <string name="pump_base_basal_rate_dynamic">%1$s E/t</string>

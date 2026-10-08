@@ -50,6 +50,7 @@
     <string name="ignore30m">Ignora | 30m</string>
     <string name="carbs_suggestion">Suggerimento CHO</string>
     <string name="open_loop_new_suggestion">Nuovo suggerimento disponibile</string>
+    <string name="open_loop_suggestion_too_old">Questo suggerimento è troppo vecchio. Niente è stato inviato al micro. Attendere il prossimo.</string>
     <string name="basal_set_correctly">Basale impostata correttamente</string>
     <string name="last_run_label">Ultima esecuzione</string>
     <string name="loop_aps_label">APS</string>

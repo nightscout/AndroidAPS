@@ -50,6 +50,7 @@
     <string name="ignore30m">忽略30分鐘</string>
     <string name="carbs_suggestion">碳水化合物建議</string>
     <string name="open_loop_new_suggestion">有新建議可用</string>
+    <string name="open_loop_suggestion_too_old">此建議已過時。未傳送任何內容到幫浦。請等待下一則建議。</string>
     <string name="basal_set_correctly">基礎設置正確</string>
     <string name="last_run_label">最後執行</string>
     <string name="loop_aps_label">APS</string>

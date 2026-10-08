@@ -37,7 +37,7 @@
     <string name="automation_unit_meters">m</string>
     <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Angi et navn på oppgaven.</string>
-    <string name="automation_missing_trigger">Oppgi minst en trigger.</string>
+    <string name="automation_missing_trigger">Oppgi minst en utløser.</string>
     <string name="automation_missing_action">Oppgi minst en aksjon.</string>
     <string name="exportsettings_message">Eksporter innstillinger: %1$s</string>
     <string name="export_settings_short">Tekst i behandlinger:</string>
@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Kanylealder %1$s %2$.1f time</string>
     <string name="triggerPodChangeLabel">Pod-aktivering</string>
     <string name="triggerPodChangeDesc">Pod aktivert</string>
+    <string name="triggerUnknownLabel">Ukjent utløser</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Ukjent utløser %1$s – blir aldri sann</string>
     <string name="triggerInsulinAgeLabel">Insulinalder</string>
     <string name="triggerInsulinAgeDesc">Insulinalder %1$s %2$.1f time</string>
     <string name="triggerPumpBatteryAgeLabel">Batterialder for pumpe</string>
@@ -162,6 +164,6 @@
     <string name="selected_coords">Valgt: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
     <string name="permission_location_title">Sted</string>
-    <string name="permission_location_description">Nødvendig for stedsbaserte automasjonstriggere og identifisering av WiFi-nettverk</string>
-    <string name="permission_background_location_description">Nødvendig for at automasjonstriggere skal fungere når appen er i bakgrunnen</string>
+    <string name="permission_location_description">Nødvendig for stedsbaserte automasjonsutløsere og identifisering av WiFi-nettverk</string>
+    <string name="permission_background_location_description">Nødvendig for at automasjonsutløsere skal fungere når appen er i bakgrunnen</string>
 </resources>

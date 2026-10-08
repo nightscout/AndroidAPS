@@ -9,6 +9,12 @@
     <string name="speederror">Hastighetsfeil</string>
     <string name="insulinlimitviolation">Insulingrensen nådd</string>
     <string name="boluserrorcode">Forespurt: %1$.2fE Levert: %2$.2fE Feilkode: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">Pumpen er ikke primet</string>
+    <string name="danai2_bolus_error_not_enough_insulin">Ikke nok insulin i reservoaret</string>
+    <string name="danai2_bolus_error_easy_sleep">Enkel søvnmodus er aktivert på pumpen</string>
+    <string name="danai2_pump_check_error">Feil ved kontroll av pumpen</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Enkel modus</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Automatisk låsing</string>
     <string name="danar_valuenotsetproperly">Verdien er ikke satt riktig</string>
     <string name="danar_setbasalstep001">Sett basaltrinn til 0,01 E/t</string>
     <string name="resetpairing">Tilbakestill sammenkoblingsinformasjon?</string>
@@ -18,6 +24,7 @@
     <string name="danar_disablebolusblock">Bolussperre er aktivert på pumpen. AAPS kan ikke levere insulin så lenge den er aktiv. Deaktiver bolussperre i pumpeinnstillingene.</string>
     <string name="overview_bolusprogress_stoped">Stoppet</string>
     <string name="unsupportedfirmware">Pumpens firmvare støttes ikke</string>
+    <string name="danars_unsupported_model">Pumpemodellen støttes ikke (kode %1$s)</string>
     <string name="pumperror">Pumpefeil</string>
     <string name="lowbattery">Lavt batterinivå</string>
     <string name="basalcompare">Levert mindre enn innstilt basaldose</string>

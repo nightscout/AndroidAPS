@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Stáří kanyly %1$s %2$.1f h</string>
     <string name="triggerPodChangeLabel">Aktivace Podu</string>
     <string name="triggerPodChangeDesc">Pod aktivován</string>
+    <string name="triggerUnknownLabel">Neznámý spouštěč</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Neznámý spouštěč %1$s - nikdy neplatí</string>
     <string name="triggerInsulinAgeLabel">Stáří inzulínu</string>
     <string name="triggerInsulinAgeDesc">Stáří inzulínu %1$s %2$.1f h</string>
     <string name="triggerPumpBatteryAgeLabel">Stáří baterie v pumpě</string>

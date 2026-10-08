@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">套管使用時間 %1$s %2$.1f 小時</string>
     <string name="triggerPodChangeLabel">幫浦註冊</string>
     <string name="triggerPodChangeDesc">幫浦已註冊</string>
+    <string name="triggerUnknownLabel">未知觸發條件</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">未知觸發條件 %1$s - 永遠不會成立</string>
     <string name="triggerInsulinAgeLabel">胰島素使用時間</string>
     <string name="triggerInsulinAgeDesc">胰島素使用時間 %1$s %2$.1f 小時</string>
     <string name="triggerPumpBatteryAgeLabel">幫浦電池使用時間</string>
