@@ -191,6 +191,9 @@
     <string name="a11y_arrow_unknown">neznámý</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">snížení %1$s o %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">zvýšení %1$s o %2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Posunout nahoru</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Posunout dolů</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Krok %1$d z %2$d</string>
     <string name="decrement">snížení</string>
     <string name="increment">zvýšení</string>
     <string name="a11y_high">vysoká</string>
@@ -382,6 +385,7 @@
     <string name="scene_editor_enabled">Povoleno</string>
     <string name="scene_editor_disabled">Zakázáno</string>
     <string name="scene_summary">%1$d akcí, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">Neurčený (ruční ukončení)</string>
     <string name="scene_some_actions_failed">Některé akce selhaly</string>
     <string name="scene_no_active">Žádná aktivní scéna</string>
