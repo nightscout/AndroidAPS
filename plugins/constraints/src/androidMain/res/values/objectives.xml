@@ -93,6 +93,7 @@
     <string name="objectives_open_exam">Open exam</string>
     <string name="objectives_exam_question_progress">Question %1$d of %2$d</string>
     <string name="objectives_exam_reset">Reset</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">correct answer</string>
     <string name="objectives_exam_previous">Previous</string>
     <string name="objectives_exam_next">Next</string>
     <string name="objectives_exam_next_unanswered">Next unanswered</string>

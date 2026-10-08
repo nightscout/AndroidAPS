@@ -8,8 +8,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
@@ -138,6 +142,32 @@ class MorePreferenceComponentsTest {
         compose.waitForIdle()
 
         assertThat(calls).containsExactly(5.0)
+    }
+
+    /**
+     * The slider runs on a 0..1 position, so on its own a screen reader read "30 percent" - where the
+     * thumb sits - with no name. It must say the setting's name and the real value.
+     */
+    @Test
+    fun sliderSpeaksItsNameAndTheRealValue() {
+        render {
+            PreferenceSliderWithButtons(
+                value = 3.0,
+                onValueChange = {},
+                valueRange = 0.0..10.0,
+                showValue = true,
+                dialogLabel = "Max bolus"
+            )
+        }
+
+        val slider = compose.onNode(SemanticsMatcher.keyIsDefined(SemanticsActions.SetProgress))
+        slider.assert(hasContentDescription("Max bolus"))
+        slider.assert(
+            SemanticsMatcher("speaks the value, not the position") {
+                val state = it.config.getOrNull(SemanticsProperties.StateDescription)
+                state != null && state.startsWith("3") && !state.contains("%")
+            }
+        )
     }
 
     @Test

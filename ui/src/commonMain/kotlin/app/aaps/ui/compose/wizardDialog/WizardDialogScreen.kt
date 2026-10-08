@@ -756,11 +756,15 @@ internal fun WizardDialogContent(
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
+                                    val ageText = "(${uiState.bgAgeMinutes} min)"
+                                    // Old is only the red colour on screen; a screen reader says it.
+                                    val ageSpoken = if (bgIsOld) listOf(ageText, stringResource(UiStrings.a11y_bg_old_reading)).joinToString(", ") else ageText
                                     Text(
-                                        text = "(${uiState.bgAgeMinutes} min)",
+                                        text = ageText,
                                         style = MaterialTheme.typography.bodySmall,
                                         color = if (bgIsOld) MaterialTheme.colorScheme.error
-                                        else MaterialTheme.colorScheme.onSurfaceVariant
+                                        else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.semantics { contentDescription = ageSpoken }
                                     )
                                 } else {
                                     Text(

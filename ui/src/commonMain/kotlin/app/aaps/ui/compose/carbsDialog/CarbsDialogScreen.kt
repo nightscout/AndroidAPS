@@ -32,7 +32,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -58,6 +57,7 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
+import app.aaps.core.ui.compose.LabeledSwitch
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.bottomBarSafeArea
@@ -370,22 +370,12 @@ internal fun CarbsDialogContent(
 
                     // Bolus Reminder (conditional)
                     if (uiState.showBolusReminder) {
-                        Row(
+                        LabeledSwitch(
+                            label = stringResource(CoreUiStrings.bolus_reminder),
+                            checked = uiState.bolusReminderChecked,
+                            onCheckedChange = onBolusReminderChange,
                             modifier = itemModifier
-                                .clickable { onBolusReminderChange(!uiState.bolusReminderChecked) },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = stringResource(CoreUiStrings.bolus_reminder),
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Switch(
-                                checked = uiState.bolusReminderChecked,
-                                onCheckedChange = { onBolusReminderChange(it) }
-                            )
-                        }
+                        )
                     }
 
                     // Carb time (at bottom)
@@ -439,50 +429,9 @@ private fun TempTargetCheckboxes(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onHypoChange(!hypoChecked) },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(UiStrings.start_hypo_tt),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f)
-            )
-            Switch(checked = hypoChecked, onCheckedChange = { onHypoChange(it) })
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onEatingSoonChange(!eatingSoonChecked) },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(UiStrings.start_eating_soon_tt),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f)
-            )
-            Switch(checked = eatingSoonChecked, onCheckedChange = { onEatingSoonChange(it) })
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onActivityChange(!activityChecked) },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(UiStrings.start_activity_tt),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f)
-            )
-            Switch(checked = activityChecked, onCheckedChange = { onActivityChange(it) })
-        }
+        LabeledSwitch(label = stringResource(UiStrings.start_hypo_tt), checked = hypoChecked, onCheckedChange = onHypoChange)
+        LabeledSwitch(label = stringResource(UiStrings.start_eating_soon_tt), checked = eatingSoonChecked, onCheckedChange = onEatingSoonChange)
+        LabeledSwitch(label = stringResource(UiStrings.start_activity_tt), checked = activityChecked, onCheckedChange = onActivityChange)
     }
 }
 

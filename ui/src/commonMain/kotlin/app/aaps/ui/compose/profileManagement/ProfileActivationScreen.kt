@@ -4,7 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.ICfg
@@ -352,9 +353,11 @@ fun ProfileActivationScreen(
 
                     // Temporary Target switch (only when duration > 0 and percentage < 100)
                     if (showTTOption) {
+                        // One control for a screen reader: "Temporary target, Activity, switch, off".
+                        // A clickable row beside a separate Switch was two stops, one of them unnamed.
                         Row(
                             modifier = itemModifier
-                                .clickable { withTT = !withTT },
+                                .toggleable(value = withTT, role = Role.Switch, onValueChange = { withTT = it }),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
@@ -369,10 +372,7 @@ fun ProfileActivationScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            Switch(
-                                checked = withTT,
-                                onCheckedChange = { withTT = it }
-                            )
+                            Switch(checked = withTT, onCheckedChange = null)
                         }
                     }
 

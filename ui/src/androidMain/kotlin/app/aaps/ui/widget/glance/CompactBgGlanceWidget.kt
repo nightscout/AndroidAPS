@@ -19,6 +19,8 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.layout.Alignment
+import androidx.glance.semantics.contentDescription
+import androidx.glance.semantics.semantics
 import androidx.glance.layout.Box
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
@@ -88,7 +90,9 @@ private fun CompactContent(state: WidgetRenderState) {
                 fontSize = TEXT_SIZE,
                 fontWeight = FontWeight.Bold,
                 textDecoration = if (state.strikeThrough) TextDecoration.LineThrough else TextDecoration.None
-            )
+            ),
+            // Says "old reading" when the value is struck through.
+            modifier = GlanceModifier.semantics { contentDescription = state.bgSpoken }
         )
         if (state.arrowResId != null) {
             Image(

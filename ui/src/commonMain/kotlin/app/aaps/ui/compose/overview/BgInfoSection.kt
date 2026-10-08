@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalAapsScale
+import app.aaps.ui.compose.components.bgSpokenDescription
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -37,7 +38,8 @@ import kotlin.math.sin
  * Shows BG value centered in a ring, with trend indicated by an arc position.
  *
  * @param bgInfo Current BG info data, or null if no data available
- * @param timeAgoText Formatted "time ago" string (e.g., "2 min")
+ * @param timeAgoText Formatted "time ago" string in the user's language, including the word "ago"
+ *   (`DateUtil.minAgo`, e.g. "2 min ago")
  * @param modifier Optional modifier for the composable
  * @param size Size of the circular BG display. Defaults to [AapsSpacing.bgCircleSize] scaled by
  *   [LocalAapsScale] so the circle grows on tablets to match scaled typography. Pass an explicit
@@ -76,14 +78,15 @@ fun BgInfoSection(
     val ringColor = bgColor.copy(alpha = 0.3f)
     val ringStrokeWidth = AapsSpacing.bgRingStrokeWidth * LocalAapsScale.current
 
-    // Build accessibility description: "BG 120, Flat, delta +2, 2 min ago"
-    val a11yDescription = buildString {
-        append("BG ${bgInfo.bgText}")
-        append(", ${bgInfo.trendDescription}")
-        bgInfo.deltaText?.let { append(", delta $it") }
-        if (timeAgoText.isNotEmpty()) append(", $timeAgoText ago")
-        if (bgInfo.isOutdated) append(", outdated")
-    }
+    // High/low is the colour and an old reading is struck through, so the description says both.
+    val a11yDescription = bgSpokenDescription(
+        bgText = bgInfo.bgText,
+        range = bgInfo.bgRange,
+        trend = bgInfo.trendDescription,
+        deltaText = bgInfo.deltaText,
+        timeAgo = timeAgoText,
+        isOutdated = bgInfo.isOutdated
+    )
 
     Box(
         contentAlignment = Alignment.Center,

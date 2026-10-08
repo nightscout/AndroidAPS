@@ -14,13 +14,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.SliderWithButtons
 import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import app.aaps.core.ui.compose.formatSliderDisplayValue
+import app.aaps.core.ui.compose.stringResource
 
 private const val MAX_SLIDER_STEPS = 200.0
 
@@ -84,10 +89,14 @@ fun PreferenceSliderWithButtons(
         asDuration = asDuration
     ) else ""
 
+    // The row holds only the value; the setting's name is a separate text above it. Without this a
+    // screen reader said "3 U, double-tap to activate" with nothing saying which setting it was.
+    val labelledValueText = dialogLabel?.let { stringResource(InterfacesStrings.confirmation_line, it, displayText) }
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .then(if (enabled) Modifier.clickable { showDialog = true } else Modifier)
+            .then(if (enabled) Modifier.clickable(role = Role.Button) { showDialog = true } else Modifier)
+            .then(if (labelledValueText != null) Modifier.semantics { contentDescription = labelledValueText } else Modifier)
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End

@@ -1,12 +1,12 @@
 package app.aaps.core.ui.compose.insulin
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -20,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.ICfg
@@ -113,23 +114,20 @@ fun SelectInsulin(
                     val isSelected = iCfg.insulinLabel == selectedInsulin?.insulinLabel
                     val isActive = iCfg.insulinLabel == activeInsulinLabel
 
+                    // One radio button for a screen reader: "Lyumjev..., radio button, selected".
+                    // A clickable row with its own RadioButton was two stops - the name without the
+                    // state, then a radio button without the name.
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
+                            .selectable(selected = isSelected, role = Role.RadioButton) {
                                 onInsulinSelect(iCfg)
                                 expanded = false
                             }
                             .padding(vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RadioButton(
-                            selected = isSelected,
-                            onClick = {
-                                onInsulinSelect(iCfg)
-                                expanded = false
-                            }
-                        )
+                        RadioButton(selected = isSelected, onClick = null)
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = iCfg.insulinLabel,

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateBefore
@@ -33,6 +34,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -98,16 +104,30 @@ fun ExamBottomSheet(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Options
+            // This exam must be passed before the loop can be closed. Each answer is one checkbox for a
+            // screen reader, named by its text; before, the Checkbox was a separate stop with no name,
+            // and after checking, the correct answers were told apart only by colour.
+            val correctAnswer = stringResource(ConstraintsStrings.objectives_exam_correct_answer)
             state.options.forEach { option ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .toggleable(
+                            value = option.isChecked,
+                            enabled = !state.isAnswered,
+                            role = Role.Checkbox,
+                            onValueChange = { onOptionToggle(option.index) }
+                        )
+                        .then(
+                            if (state.isAnswered && option.isCorrect) Modifier.semantics { stateDescription = correctAnswer }
+                            else Modifier
+                        )
                         .padding(vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
                         checked = option.isChecked,
-                        onCheckedChange = { onOptionToggle(option.index) },
+                        onCheckedChange = null,
                         enabled = !state.isAnswered
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -151,7 +171,9 @@ fun ExamBottomSheet(
                 Text(
                     text = disabledText,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
+                    // Appears after a wrong answer; announced so the user knows why they must wait.
+                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite }
                 )
             }
 
