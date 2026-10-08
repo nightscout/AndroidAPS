@@ -337,7 +337,6 @@
     <string name="scene_action_careportal">Registro: %1$s</string>
     <string name="scene_management">Cenários</string>
     <string name="scene_management_desc">Criar, editar e gerenciar cenários</string>
-    <string name="scene_action_count">%1$d ações</string>
     <string name="scene_start_from_template">Começar a partir de um modelo</string>
     <string name="scene_editor_target">Alvo</string>
     <string name="scene_editor_tt_preset">Predefinição de TT</string>
