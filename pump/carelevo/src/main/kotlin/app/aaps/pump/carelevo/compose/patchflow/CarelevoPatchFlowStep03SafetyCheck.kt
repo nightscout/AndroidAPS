@@ -21,6 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -217,7 +220,10 @@ private fun CarelevoPatchFlowStep03SafetyCheckContent(
         errorMessage?.let { ErrorBanner(message = stringResource(it)) }
         Text(
             text = stringResource(titleRes),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            // The title changes when the 100-210 s check finishes; said so a screen reader user
+            // does not have to keep checking. The countdown below is left quiet on purpose.
+            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite }
         )
         Text(
             text = stringResource(descRes),

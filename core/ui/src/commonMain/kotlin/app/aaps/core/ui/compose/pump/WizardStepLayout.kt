@@ -18,8 +18,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.stringResource
 
 @Immutable
 data class WizardButton(
@@ -54,9 +59,16 @@ fun WizardStepLayout(
 
         // Bottom buttons pinned
         if (primaryButton != null || secondaryButton != null) {
+            // Most waits in a pump wizard end the same way: the primary button (Next, Retry, Pair)
+            // appears or becomes enabled - priming done, pod activated, a device picked. On screen
+            // that is obvious; a screen reader said nothing. Announce the button when it becomes
+            // usable, so the user knows the step is ready. A plain Row does not merge, so a pane
+            // title is safe here.
+            val readyButton = primaryButton?.takeIf { it.enabled && !it.loading }?.text
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .then(if (readyButton != null) Modifier.announceWhenShown(readyButton) else Modifier)
                     .padding(vertical = AapsSpacing.extraLarge),
                 horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large)
             ) {
@@ -70,10 +82,21 @@ fun WizardStepLayout(
                     }
                 }
                 primaryButton?.let { btn ->
+                    // While busy only a spinner is drawn, so a screen reader heard "Button, disabled"
+                    // with no name. It keeps its name and says it is busy.
+                    val busy = stringResource(CoreUiStrings.please_wait)
                     Button(
                         onClick = btn.onClick,
                         enabled = btn.enabled && !btn.loading,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .then(
+                                if (btn.loading) Modifier.semantics {
+                                    contentDescription = btn.text
+                                    stateDescription = busy
+                                }
+                                else Modifier
+                            )
                     ) {
                         if (btn.loading) {
                             CircularProgressIndicator(

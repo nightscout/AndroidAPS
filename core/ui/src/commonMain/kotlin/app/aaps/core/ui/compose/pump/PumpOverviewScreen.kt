@@ -22,8 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -105,11 +108,18 @@ private fun CommunicationStatusCard(banner: StatusBanner?, queueStatus: Annotate
     ) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
             banner?.let {
+                // Critical / warning was only the card colour, and a change (Connecting → Connected)
+                // was silent. The level is said after the text, and the text is a live region.
+                val severity = stringResourceOrNull(statusLevelToDescription(it.level))
                 Text(
                     text = it.text,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,
-                    color = fgColor
+                    color = fgColor,
+                    modifier = Modifier.semantics {
+                        liveRegion = LiveRegionMode.Polite
+                        severity?.let { level -> stateDescription = level }
+                    }
                 )
             }
             queueStatus?.let {
@@ -232,7 +242,8 @@ private fun ActionButtons(actions: List<PumpAction>) {
                     action.icon?.let {
                         Icon(
                             imageVector = it,
-                            contentDescription = action.label,
+                            // The text beside it names the button; naming the icon too read "Refresh Refresh".
+                            contentDescription = null,
                             modifier = Modifier.size(18.dp),
                             tint = Color.Unspecified
                         )

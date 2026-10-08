@@ -21,6 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,6 +31,7 @@ import app.aaps.core.ui.compose.pump.BluetoothPermissionsHost
 import app.aaps.core.ui.compose.pump.KeepScreenOnEffect
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
+import app.aaps.core.ui.compose.pump.announceWhenShown
 import info.nightscout.comboctl.base.PAIRING_PIN_SIZE
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.combov2.R
@@ -189,7 +193,10 @@ internal fun InProgressSection(
             Text(
                 text = state.stepDescription,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    // The same text node changes as pairing moves on, so a live region says each step.
+                    .semantics { liveRegion = LiveRegionMode.Polite }
             )
         }
 
@@ -221,8 +228,15 @@ private fun PinEntrySection(
     onSubmitPin: () -> Boolean
 ) {
     val visualTransformation = remember { ComboV2PinVisualTransformation() }
+    val enterPin = stringResource(R.string.combov2_enter_pin)
+    val pinFailure = stringResource(R.string.combov2_pairing_pin_failure)
 
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    // The pump now shows a PIN and pairing times out if it is not typed in. The field appears on
+    // its own, so a screen reader user must be told.
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.announceWhenShown(enterPin)
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -231,7 +245,7 @@ private fun PinEntrySection(
             OutlinedTextField(
                 value = pinText,
                 onValueChange = onPinTextChange,
-                label = { Text(stringResource(R.string.combov2_enter_pin)) },
+                label = { Text(enterPin) },
                 placeholder = { Text(stringResource(R.string.combov2_pin_hint)) },
                 visualTransformation = visualTransformation,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
@@ -247,10 +261,12 @@ private fun PinEntrySection(
         }
         if (pinFailed) {
             Text(
-                text = stringResource(R.string.combov2_pairing_pin_failure),
+                text = pinFailure,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .announceWhenShown(pinFailure)
             )
         }
     }
