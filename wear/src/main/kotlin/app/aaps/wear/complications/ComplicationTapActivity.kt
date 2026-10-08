@@ -12,6 +12,8 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.di.WearMetroActivity
 import app.aaps.wear.interaction.actions.ECarbActivity
@@ -40,6 +42,7 @@ class ComplicationTapActivity : WearMetroActivity() {
 
     @Inject lateinit var displayFormat: DisplayFormat
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var aapsLogger: AAPSLogger
 
     companion object {
@@ -135,6 +138,7 @@ class ComplicationTapActivity : WearMetroActivity() {
         }
 
         action = remapActionWithUserPreferences(action)
+        action = gateByWearControl(action)
         aapsLogger.debug(LTag.WEAR, "ComplicationTapActivity handling action: $action for complication: $complicationId")
 
         // Request an update for the complication that has just been tapped
@@ -178,6 +182,23 @@ class ComplicationTapActivity : WearMetroActivity() {
 
     private val complicationTapAction: String
         get() = sp.getString(R.string.key_complication_tap_action, "default")
+
+    /**
+     * The main menu and the tiles hide every control action while the phone has "Wear control" off,
+     * but a complication tap used to open the control screens directly - the phone's switch could
+     * be bypassed with one tap on the COB or target complication. Send those taps to the main menu
+     * instead, which shows the disabled state. Read-only screens stay reachable.
+     */
+    private fun gateByWearControl(action: ComplicationAction): ComplicationAction =
+        when (action) {
+            ComplicationAction.WIZARD,
+            ComplicationAction.BOLUS,
+            ComplicationAction.E_CARB,
+            ComplicationAction.TEMP_TARGET,
+            ComplicationAction.RUNNING_MODE -> if (preferences.get(BooleanKey.WearControl)) action else ComplicationAction.MENU
+
+            else                            -> action
+        }
 
     private fun remapActionWithUserPreferences(originalAction: ComplicationAction): ComplicationAction {
         val userPrefAction = complicationTapAction
