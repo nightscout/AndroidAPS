@@ -35,6 +35,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
@@ -213,7 +215,9 @@ private fun AutomationEventCard(
             Checkbox(
                 checked = event.isEnabled,
                 onCheckedChange = onToggleEnabled,
-                enabled = !event.readOnly && editingEnabled
+                enabled = !event.readOnly && editingEnabled,
+                // The title is a separate Text, so a screen reader heard only "checkbox, checked".
+                modifier = Modifier.semantics { contentDescription = event.title }
             )
             Column(modifier = Modifier.weight(1f)) {
                 Text(

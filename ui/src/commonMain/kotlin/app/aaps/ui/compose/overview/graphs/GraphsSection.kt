@@ -48,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.SecondaryGraph
 import app.aaps.core.interfaces.overview.graph.SeriesType
@@ -388,8 +389,7 @@ fun GraphsSection(
             // BgDataPoint.value is ALREADY in the user's units, so it must not be converted again -
             // only formatted. The unit decides the decimals; the "detect" helpers guess that from
             // the magnitude and would read a very high mmol/l reading as mg/dl.
-            bgReadings.takeLast(RECENT_VALUES_SPOKEN)
-                .asReversed()
+            newestReadings(bgReadings, RECENT_VALUES_SPOKEN)
                 .joinToString(", ") {
                     if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(it.value)
                     else decimalFormatter.to1Decimal(it.value)
@@ -625,6 +625,15 @@ fun GraphsSection(
         Spacer(Modifier.height(48.dp))
     }
 }
+
+/**
+ * The [count] newest readings, newest first.
+ *
+ * Sorted here rather than trusted: the graph data comes newest first, and reading it as oldest
+ * first made the screen reader speak the readings from 24 hours ago instead of the current ones.
+ */
+internal fun newestReadings(readings: List<BgDataPoint>, count: Int): List<BgDataPoint> =
+    readings.sortedByDescending { it.timestamp }.take(count)
 
 /**
  * [config] with the height of secondary graph [index] set to [height], or null when that graph no

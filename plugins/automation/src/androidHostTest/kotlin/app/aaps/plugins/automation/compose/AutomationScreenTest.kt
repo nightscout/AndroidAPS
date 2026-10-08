@@ -2,6 +2,9 @@ package app.aaps.plugins.automation.compose
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
@@ -96,6 +99,27 @@ class AutomationScreenTest {
 
         compose.onNodeWithText("Morning wakeup TT").assertIsDisplayed()
         compose.onNodeWithText("User: Snack reminder").assertIsDisplayed()
+    }
+
+    /** The title is a separate Text, so without its own name the checkbox was read as only "checkbox, checked". */
+    @Test
+    fun enableCheckboxIsNamedAfterTheRule() {
+        val state = AutomationUiState(events = listOf(event(key = 1L, position = 0, title = "Morning wakeup TT")))
+        compose.setContent {
+            MaterialTheme {
+                AutomationScreen(
+                    state = state,
+                    onToggleEnabled = { _, _ -> },
+                    onEditEvent = {},
+                    onDeleteEvent = {},
+                    onMove = { _, _ -> },
+                    onMoveFinished = {},
+                    onAddClick = {}
+                )
+            }
+        }
+
+        compose.onNode(isToggleable() and hasContentDescription("Morning wakeup TT")).assertIsOn()
     }
 
     @Test

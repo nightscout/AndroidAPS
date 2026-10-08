@@ -359,7 +359,9 @@ private fun SelectedActionItem(
                 ) {
                     Icon(
                         Icons.Default.Remove,
-                        contentDescription = stringResource(CoreUiStrings.remove),
+                        // With the name: a screen reader moving through the list hears every
+                        // button on its own, and a bare "Remove" does not say what goes.
+                        contentDescription = stringResource(UiStrings.a11y_quick_launch_remove, item.label),
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(16.dp)
                     )
@@ -394,7 +396,7 @@ private fun AvailableActionItem(
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = stringResource(CoreUiStrings.add),
+                    contentDescription = stringResource(UiStrings.a11y_quick_launch_add, item.label),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(16.dp)
                 )

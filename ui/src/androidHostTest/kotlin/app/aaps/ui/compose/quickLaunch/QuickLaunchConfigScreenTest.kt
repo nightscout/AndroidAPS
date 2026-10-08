@@ -5,7 +5,6 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasScrollToNodeAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -64,8 +63,6 @@ class QuickLaunchConfigScreenTest {
     private lateinit var careHeader: String
     private lateinit var editPreset: String
     private lateinit var permanent: String
-    private lateinit var addLabel: String
-    private lateinit var removeLabel: String
 
     @Before
     fun setUp() {
@@ -79,9 +76,10 @@ class QuickLaunchConfigScreenTest {
         careHeader = context.getString(app.aaps.ui.R.string.quick_launch_category_care)
         editPreset = context.getString(app.aaps.ui.R.string.quick_launch_edit_profile_preset)
         permanent = context.getString(app.aaps.ui.R.string.quick_launch_profile_permanent)
-        addLabel = context.getString(app.aaps.core.ui.R.string.add)
-        removeLabel = context.getString(app.aaps.core.ui.R.string.remove)
     }
+
+    private fun addLabelFor(name: String) = context.getString(app.aaps.ui.R.string.a11y_quick_launch_add, name)
+    private fun removeLabelFor(name: String) = context.getString(app.aaps.ui.R.string.a11y_quick_launch_remove, name)
 
     private fun setScreen(onNavigateBack: () -> Unit = {}) {
         val viewModel = viewModels.build()
@@ -173,10 +171,12 @@ class QuickLaunchConfigScreenTest {
 
     @Test
     fun removingTheSelectedActionWritesTheShorterListBackAndSaysTheListIsEmpty() {
+        viewModels.labelOf = { if (it == QuickLaunchAction.Wizard) "Bolus wizard" else it.typeId }
         viewModels.givenSelected(listOf(QuickLaunchAction.Wizard))
 
         setScreen()
-        compose.onNodeWithContentDescription(removeLabel).performClick()
+        // Found by the full label, so this also pins that a screen reader hears what is removed.
+        compose.onNodeWithContentDescription(removeLabelFor("Bolus wizard")).performClick()
 
         // The configuration button is not a user entry, so what is left is an empty selection.
         assertThat(storedActions()).containsExactly(QuickLaunchAction.QuickLaunchConfig)
@@ -185,13 +185,15 @@ class QuickLaunchConfigScreenTest {
 
     @Test
     fun addingAnAvailableActionAppendsItAndKeepsTheConfigButtonLast() {
+        viewModels.labelOf = { if (it == QuickLaunchAction.Wizard) "Bolus wizard" else it.typeId }
         viewModels.givenSelected(emptyList())
 
         setScreen()
-        compose.onAllNodesWithContentDescription(addLabel)[0].performClick()
+        // Found by the full label, so this also pins that a screen reader hears what is added.
+        compose.onNodeWithContentDescription(addLabelFor("Bolus wizard")).performClick()
 
         val stored = storedActions()
-        assertThat(stored).hasSize(2)
+        assertThat(stored).containsExactly(QuickLaunchAction.Wizard, QuickLaunchAction.QuickLaunchConfig).inOrder()
         // Without this the user could pin an action ahead of the button that reopens this screen.
         assertThat(stored.last()).isEqualTo(QuickLaunchAction.QuickLaunchConfig)
     }
