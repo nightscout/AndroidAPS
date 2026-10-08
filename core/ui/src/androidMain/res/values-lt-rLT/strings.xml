@@ -364,7 +364,6 @@
     <string name="scene_action_careportal">Įrašas: %1$s</string>
     <string name="scene_management">Scenarijai</string>
     <string name="scene_management_desc">Kurti, redaguoti ir tvarkyti scenarijus</string>
-    <string name="scene_action_count">Veiksmų: %1$d</string>
     <string name="scene_start_from_template">Pradėti nuo ruošinio</string>
     <string name="scene_editor_target">Tikslas</string>
     <string name="scene_editor_tt_preset">Laikino tikslo ruošinys</string>
