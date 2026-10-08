@@ -1,18 +1,12 @@
 package app.aaps.ui.compose.tempTarget
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -28,6 +22,7 @@ import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.stringResource
@@ -142,61 +137,15 @@ fun TempTargetEditor(
             color = MaterialTheme.colorScheme.primary
         )
 
-        // Date/Time selection row (matches ProfileActivationScreen pattern)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Date field
-            OutlinedTextField(
-                value = dateUtil.dateString(eventTime),
-                onValueChange = {},
-                readOnly = true,
-                enabled = false,
-                label = { Text(stringResource(CoreUiStrings.date)) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.DateRange,
-                        contentDescription = null,
-                        tint = if (eventTimeChanged) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                    disabledBorderColor = MaterialTheme.colorScheme.outline,
-                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable { onDateClick() },
-                singleLine = true
-            )
-
-            // Time field
-            OutlinedTextField(
-                value = dateUtil.timeString(eventTime),
-                onValueChange = {},
-                readOnly = true,
-                enabled = false,
-                label = { Text(stringResource(CoreUiStrings.time)) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Schedule,
-                        contentDescription = null,
-                        tint = if (eventTimeChanged) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                    disabledBorderColor = MaterialTheme.colorScheme.outline,
-                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable { onTimeClick() },
-                singleLine = true
-            )
-        }
+        // Date/Time selection row. The shared one: a copy of it here was read by a screen reader as
+        // "Date, 08.10.2026, disabled" (the field is disabled only so that it cannot be typed in).
+        DateTimeSection(
+            dateString = dateUtil.dateString(eventTime),
+            timeString = dateUtil.timeString(eventTime),
+            eventTimeChanged = eventTimeChanged,
+            onDateClick = onDateClick,
+            onTimeClick = onTimeClick
+        )
 
         // Notes field (conditional)
         if (showNotesField) {

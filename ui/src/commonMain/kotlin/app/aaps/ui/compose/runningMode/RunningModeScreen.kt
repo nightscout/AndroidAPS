@@ -23,11 +23,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -171,6 +175,13 @@ private fun executeAction(viewModel: RunningModeManagementViewModel, action: Pen
     viewModel.executeAction(action.targetMode, action.action, action.durationMinutes)
 }
 
+/**
+ * The title of the section a [CompactButton] sits in. The same duration buttons ("1h", "2h") are in
+ * both "Suspend loop" and "Disconnect pump", so on their own a screen reader could not tell them
+ * apart; each button says its section.
+ */
+private val LocalSectionTitle = staticCompositionLocalOf<String?> { null }
+
 @Composable
 private fun SectionCard(
     title: String,
@@ -186,10 +197,11 @@ private fun SectionCard(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.height(8.dp))
-            content()
+            CompositionLocalProvider(LocalSectionTitle provides title) { content() }
         }
     }
 }
@@ -379,7 +391,8 @@ private fun CompactButton(
         ) {
             Icon(
                 imageVector = mode.toIcon(),
-                contentDescription = null,
+                // Merged into the button before its text: "Disconnect pump, 1h".
+                contentDescription = LocalSectionTitle.current,
                 modifier = Modifier.size(48.dp),
                 tint = iconColor
             )

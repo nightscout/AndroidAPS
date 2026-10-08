@@ -659,7 +659,9 @@ internal fun WizardDialogContent(
                                                 CarbsType.CAKE  -> IcCake
                                                 CarbsType.PIZZA -> IcPizza
                                             },
-                                            contentDescription = type.name,
+                                            // Was the enum name ("BREAD"), untranslated and saying
+                                            // nothing about what the choice does to the carbs.
+                                            contentDescription = carbsTypeEffect(type),
                                             modifier = Modifier.size(24.dp)
                                         )
                                     }
@@ -681,18 +683,8 @@ internal fun WizardDialogContent(
                                                 }
                                             )
                                             Spacer(modifier = Modifier.height(4.dp))
-                                            val type = uiState.carbsType
                                             Text(
-                                                text = if (type == CarbsType.BREAD)
-                                                    stringResource(UiStrings.wizard_carbs_type_bread_desc)
-                                                else
-                                                    stringResource(
-                                                        UiStrings.wizard_carbs_type_desc,
-                                                        100 - type.carbsPercent,
-                                                        type.eCarbsPercent,
-                                                        type.eCarbsDelayMinutes,
-                                                        type.eCarbsDurationHours
-                                                    ),
+                                                text = carbsTypeEffect(uiState.carbsType),
                                                 fontWeight = FontWeight.Bold
                                             )
                                         }
@@ -994,3 +986,15 @@ private fun ProfileDropdown(
         }
     }
 }
+
+/** What a carbs type does to the entered carbs, said on its button and shown in the info tooltip. */
+@Composable
+private fun carbsTypeEffect(type: CarbsType): String =
+    if (type == CarbsType.BREAD) stringResource(UiStrings.wizard_carbs_type_bread_desc)
+    else stringResource(
+        UiStrings.wizard_carbs_type_desc,
+        100 - type.carbsPercent,
+        type.eCarbsPercent,
+        type.eCarbsDelayMinutes,
+        type.eCarbsDurationHours
+    )
