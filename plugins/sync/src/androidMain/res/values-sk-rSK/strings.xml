@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Viacero párovaní sa zhoduje s týmto PIN kódom. Požiadajte na hlavnom zariadení o vygenerovanie nového a skúste to znova.</string>
     <string name="pair_with_master_error_expired">Platnosť tohto párovania vypršala. Vygenerujte nový PIN kód na hlavnom zariadení.</string>
     <string name="pair_with_master_error_network">Nedá sa spojiť s Nightscout. Skontrolujte pripojenie a skúste to znova.</string>
+    <string name="pair_with_master_error_secret_store">Párovací kľúč sa nepodarilo uložiť preto bolo párovanie zrušené. Neboli vykonané žiadne zmeny. Skúste to znova a ak bude problém pretrvávať, reštartujte aplikáciu.</string>
     <string name="pair_with_master_retry">Skúsiť to znova</string>
     <string name="pair_with_master_already_paired_title">Už spárované</string>
     <string name="pair_with_master_already_paired_master">Momentálne spárované s hlavným zariadením %1$s. Najprv zrušte párovanie a zadajte nový PIN kód.</string>
@@ -255,6 +256,8 @@
     <string name="sms_read_status_failed">Načítanie stavu zlyhalo</string>
     <string name="sms_profile_switch_created">Prepnutie profilu vytvorené</string>
     <string name="sms_wrong_tbr_duration">Trvanie dočasného bazálu musí byť násobkom %1$d minút a musí byť väčšie ako 0.</string>
+    <string name="sms_tbr_percent_only">Táto pumpa prijíma dočasný bazál len v percentách, nie v U/h.</string>
+    <string name="sms_tbr_absolute_only">Táto pumpa prijíma dočasný bazál len v jednotkách U/h, nie v percentách.</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Aplikácia potrebuje povolenie SMS pre vzdialené ovládanie pomocou textových správ.</string>
