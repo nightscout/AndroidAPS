@@ -191,7 +191,7 @@ class Objective2 @Inject constructor(
         )
         tasks.add(
             ExamTask(this, R.string.update_label, R.string.blank, "update")
-                .option(Option(R.string.update_git, true))
+                .option(Option(R.string.update_git, false))
                 .option(Option(R.string.update_askfriend, false))
                 .option(Option(R.string.update_keys, true))
                 .option(Option(R.string.update_asap, true))
