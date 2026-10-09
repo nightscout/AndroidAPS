@@ -98,6 +98,7 @@ AAPS 或 NS 生成的所有标准报表数据都会出错，必须换算为国�
     <string name="objectives_open_exam">开启测验</string>
     <string name="objectives_exam_question_progress">问题 %1$d / %2$d</string>
     <string name="objectives_exam_reset">重置</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">正确答案</string>
     <string name="objectives_exam_previous">上一个</string>
     <string name="objectives_exam_next">下一个</string>
     <string name="objectives_exam_next_unanswered">下一个未回答</string>
