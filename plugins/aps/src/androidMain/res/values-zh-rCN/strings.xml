@@ -42,6 +42,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
     <string name="pump_not_initialized">泵未初始化!</string>
+    <string name="zero_basal_not_set">泵未接受零临时基础率。它可能仍在输注基础胰岛素。请检查泵。</string>
     <string name="description_loop">激活或停用这个工具触发闭环。</string>
     <string name="no_aps_selected">未选择 APS 或未提供结果</string>
     <string name="ignore5m">忽略5分钟</string>
@@ -49,6 +50,7 @@
     <string name="ignore30m">忽略30分钟</string>
     <string name="carbs_suggestion">碳水建议</string>
     <string name="open_loop_new_suggestion">新的建议可用</string>
+    <string name="open_loop_suggestion_too_old">此建议已过时。未向泵发送任何指令。请等待下一条建议。</string>
     <string name="basal_set_correctly">正确地设置基础率</string>
     <string name="last_run_label">上次运行</string>
     <string name="loop_aps_label">APS</string>
