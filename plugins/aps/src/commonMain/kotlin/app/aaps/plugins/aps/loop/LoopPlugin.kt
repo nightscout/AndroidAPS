@@ -793,6 +793,9 @@ class LoopPlugin(
     }
 
     private fun sendToWear(contentText: String) {
+        // With Wear control off the watch must not get an "accept" button; it gets the phone's bridged
+        // notification instead (presentSuggestion leaves localOnly false in that case).
+        if (!preferences.get(BooleanKey.WearControl)) return
         lastRun?.let {
             rxBus.send(
                 EventMobileToWear(
