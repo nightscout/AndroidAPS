@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
@@ -75,11 +78,25 @@ fun ProfileChip(
                     tint = contentColor,
                     modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )
+                // One line: the chip has a fixed height, so a second line was cut off. When the name plus
+                // "(110%) (2h 40')" does not fit, the text shrinks a few steps first and only then gets an
+                // ellipsis - a short name with a temporary switch, the common case, stays fully readable.
+                // weight(1f) keeps the scene badge on screen.
+                val textStyle = MaterialTheme.typography.bodyMedium
                 Text(
                     text = profileName,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = textStyle,
                     color = contentColor,
-                    modifier = Modifier.padding(start = AapsSpacing.medium)
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    autoSize = TextAutoSize.StepBased(
+                        minFontSize = MaterialTheme.typography.labelSmall.fontSize,
+                        maxFontSize = textStyle.fontSize,
+                        stepSize = 1.sp
+                    ),
+                    modifier = Modifier
+                        .weight(1f, fill = false)
+                        .padding(start = AapsSpacing.medium)
                 )
                 if (sceneManaged) {
                     SceneBadge(modifier = Modifier.padding(start = AapsSpacing.small))

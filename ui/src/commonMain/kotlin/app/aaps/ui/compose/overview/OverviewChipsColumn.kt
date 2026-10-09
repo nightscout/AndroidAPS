@@ -1,12 +1,9 @@
 package app.aaps.ui.compose.overview
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,75 +53,33 @@ fun OverviewChipsColumn(
     // The command chips (running mode / profile / temp target) open mutating screens — their click is disabled on an
     // unpaired client (same MASTER_OR_PAIRED_CLIENT gate as nav/Manage), while the chip stays visible as status.
     commandsAllowed: Boolean = true,
-    modifier: Modifier = Modifier,
-    trailingContent: @Composable (RowScope.() -> Unit)? = null
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        if (trailingContent != null) {
-            BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-                val chipsWidth = (maxWidth * 0.4f).coerceIn(140.dp, 220.dp)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier.width(chipsWidth),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        NarrowChips(
-                            runningMode = runningMode,
-                            runningModeText = runningModeText,
-                            runningModeRemaining = runningModeRemaining,
-                            runningModeProgress = runningModeProgress,
-                            runningModeSceneManaged = runningModeSceneManaged,
-                            smbEnabled = smbEnabled,
-                            profileName = profileName,
-                            isProfileModified = isProfileModified,
-                            profileProgress = profileProgress,
-                            profileSceneManaged = profileSceneManaged,
-                            tempTargetText = tempTargetText,
-                            tempTargetState = tempTargetState,
-                            tempTargetProgress = tempTargetProgress,
-                            tempTargetReason = tempTargetReason,
-                            tempTargetSceneManaged = tempTargetSceneManaged,
-                            tbrState = tbrState,
-                            onNavigate = onNavigate,
-                            onTbrChipClick = onTbrChipClick,
-                            commandsAllowed = commandsAllowed
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.weight(1f),
-                        content = trailingContent
-                    )
-                }
-            }
-        } else {
-            NarrowChips(
-                runningMode = runningMode,
-                runningModeText = runningModeText,
-                runningModeRemaining = runningModeRemaining,
-                runningModeProgress = runningModeProgress,
-                runningModeSceneManaged = runningModeSceneManaged,
-                smbEnabled = smbEnabled,
-                profileName = profileName,
-                isProfileModified = isProfileModified,
-                profileProgress = profileProgress,
-                profileSceneManaged = profileSceneManaged,
-                tempTargetText = tempTargetText,
-                tempTargetState = tempTargetState,
-                tempTargetProgress = tempTargetProgress,
-                tempTargetReason = tempTargetReason,
-                tempTargetSceneManaged = tempTargetSceneManaged,
-                tbrState = tbrState,
-                onNavigate = onNavigate,
-                onTbrChipClick = onTbrChipClick,
-                commandsAllowed = commandsAllowed
-            )
-        }
+        NarrowChips(
+            runningMode = runningMode,
+            runningModeText = runningModeText,
+            runningModeRemaining = runningModeRemaining,
+            runningModeProgress = runningModeProgress,
+            runningModeSceneManaged = runningModeSceneManaged,
+            smbEnabled = smbEnabled,
+            profileName = profileName,
+            isProfileModified = isProfileModified,
+            profileProgress = profileProgress,
+            profileSceneManaged = profileSceneManaged,
+            tempTargetText = tempTargetText,
+            tempTargetState = tempTargetState,
+            tempTargetProgress = tempTargetProgress,
+            tempTargetReason = tempTargetReason,
+            tempTargetSceneManaged = tempTargetSceneManaged,
+            tbrState = tbrState,
+            onNavigate = onNavigate,
+            onTbrChipClick = onTbrChipClick,
+            commandsAllowed = commandsAllowed
+        )
         IobCobChipsRow(
             iobUiState = iobUiState,
             cobUiState = cobUiState,
