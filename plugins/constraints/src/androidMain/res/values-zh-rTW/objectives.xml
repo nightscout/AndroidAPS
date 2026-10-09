@@ -93,6 +93,7 @@
     <string name="objectives_open_exam">開啟測驗</string>
     <string name="objectives_exam_question_progress">第 %1$d 題，共 %2$d 題</string>
     <string name="objectives_exam_reset">重設</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">正確答案</string>
     <string name="objectives_exam_previous">上一題</string>
     <string name="objectives_exam_next">下一題</string>
     <string name="objectives_exam_next_unanswered">下一個未作答</string>
