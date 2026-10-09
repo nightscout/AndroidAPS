@@ -15,6 +15,9 @@ raw data-driven decimals.
 Scope: `BgGraphCompose.kt`, `SecondaryGraphCompose.kt`, `GraphsSection.kt`, `GraphUtils.kt`.
 No public API changes — all new composable parameters default to the previous behavior.
 
+Section 4 (the insulin activity overlay) came later, on the `Todo/DynamicActivityCurve` branch: it
+is the same subject, for the one curve that was missed because it has no axis of its own.
+
 ---
 
 ## 1. Visible-window axis scaling
@@ -112,6 +115,96 @@ directions (which one is primary vs. secondary), neither curve loses its real ma
 
 ---
 
+## 4. The insulin activity overlay
+
+The yellow insulin-activity curve is the one curve that is never the primary series of a graph.
+It is always drawn on top of another series — BG on the main graph, IOB on the IOB/BAS graph —
+and its own axis is never shown. Vico only has a start and an end vertical axis, and on both of
+those graphs they are already taken, so the activity curve cannot have a range of its own: its
+points must be converted into the host axis' units before they reach the model.
+
+That conversion was the one scale left out of the visible-window work above. It used to be:
+
+```kotlin
+// BG graph
+scaleFactor = (maxBgY - minBgY) * 0.8 / activityData.maxActivity   // all three full-24h
+y           = minBgY + value * scaleFactor
+// IOB graph
+scale = processedIob.max() * 0.8 / activityData.maxActivity        // both full-24h
+y     = value * scale
+```
+
+Every factor came from the whole loaded 24 h while the host axis was already windowed, so the
+curve no longer had any fixed relationship with the frame it was drawn in: scrolled onto a calm
+window it shot far above the axis, and with the day's activity peak outside the window it
+flattened onto the floor. On the BG graph the anchor was wrong as well — `minBgY` is a full-range
+data value, not the axis floor, so zero activity could sit below the visible axis and push the
+whole curve out of the frame.
+
+### The rule
+
+`activityOverlayScale` (`GraphUtils.kt`) computes a single linear map from the **visible-window**
+activity range. One factor for both sides, so the curve stays linear:
+
+- positive side: the nice-ified activity max plots at `ACTIVITY_HEIGHT_FRACTION` (0.8) of the room
+  above the zero anchor, leaving a margin below the top of the graph.
+- negative side: the nice-ified activity min plots at most at the room below the anchor. No margin
+  — that room is already small and a negative excursion is the rare case.
+- the smaller of the two limits wins, so a deep negative dip shrinks the whole curve instead of
+  being clipped. A window holding only negative activity is scaled by its negative side alone.
+
+The range is passed through `zeroFloorNiceRange` even though no label is ever drawn from it: the
+bound then moves in discrete jumps, so the curve's height does not wobble on every scroll tick.
+
+**The host scale is never widened to make the activity fit.** The caller passes the room the host
+axis already leaves on each side of the anchor, and the curve is fitted inside it. This is a
+deliberate constraint: the BG and IOB scales are what the user actually reads, and an overlay with
+no axis of its own must not move them.
+
+### The two anchors
+
+| | BG graph | IOB/BAS graph |
+|---|---|---|
+| zero anchor | the **low mark** | IOB zero |
+| room above | `bgNice.max - lowMark` | `iobDataMax` (stops below the reserved basal band) |
+| room below | `lowMark - bgNice.min` | IOB's own negative sliver, usually none |
+
+On the IOB/BAS graph this is the ordinary vertical zero alignment — activity zero on IOB zero.
+
+On the BG graph the anchor is the low mark rather than the axis floor, because the low mark is the
+bottom edge of the green in-range belt: a horizontal reference the eye already uses, with the band
+between it and the axis floor left over for the rare negative excursion, which then reads as "below
+the green".
+
+### Where the negative tail is clipped
+
+The BG axis floor is `floor(dataMin / step) * step`, and `dataMin` is itself floored at the low
+mark, so the floor normally lands below the low mark and leaves 10–25% of the height underneath it.
+But when the low mark is an exact multiple of the step and the visible window holds no BG below it,
+the floor lands exactly **on** the low mark and there is no room at all:
+
+| lowMark | highMark | BG axis | room below lowMark |
+|---|---|---|---|
+| 72 (default) | 180 | 50..200 | 22 mg/dL (14.7%) |
+| 70 | 180 | 50..200 | 20 (13.3%) |
+| 75 | 180 | 50..200 | 25 (16.7%) |
+| **80** | **180** | **80..180** | **0** |
+| **90** | **140** | **90..140** | **0** |
+| **100** | any | **100..** | **0** |
+| 3.9 mmol | 10.0 | 2.0..10.0 | 1.9 (23.8%) |
+| **4.0 mmol** | **10.0** | **4.0..10.0** | **0** |
+| **5.0 mmol** | **9.0** | **5.0..9.0** | **0** |
+
+4.0 mmol/L is a common low mark, so this is not a corner case. In that situation the negative tail
+is clipped at the axis floor and the positive side deliberately keeps its full scale — it is not
+shrunk to compensate. The alternative would be to move the BG scale, which is exactly what the rule
+above forbids.
+
+`ActivityGraphData.maxActivity` (a `max(|activity|)` over the whole loaded day, computed in
+`PrepareGraphDataRunner`) was the only input to the old formulas. Nothing reads it any more.
+
+---
+
 ## Bug Fixes
 
 ### 1. BG pinch-zoom became unresponsive / snapped during live gestures
@@ -185,6 +278,10 @@ doesn't exist in the data.
 - Verified BG viewport reset (new BG reading, no recent interaction) returns to the correct
   default 6h window/scroll position.
 
+For the activity overlay (section 4), so far only unit tests: `GraphUtilsTest`'s
+`ActivityOverlayScaleTest` pins each anchor and each room case, plus a shape/room sweep asserting
+the curve never leaves the room it was given. Not yet verified on device.
+
 ## Known limitations / follow-ups
 
 - Behavior of the shared-fraction dual-axis construction has not been exhaustively tested for
@@ -192,3 +289,7 @@ doesn't exist in the data.
   by construction (no clipping is a property of `fractionAlignedRange`/
   `fractionAlignedNiceRange`), but only a subset of combinations has been manually verified on
   device.
+- The EPS (profile switch) layer on the BG graph has the same anchoring problem the activity
+  overlay just had: it is anchored at `minBgY`, a full-24h data value, while the BG axis floor is
+  windowed, so a low-percentage profile switch icon can fall below the visible axis. Not touched
+  here.
