@@ -50,6 +50,7 @@
     <string name="ignore30m">Ignorar 30m</string>
     <string name="carbs_suggestion">Sugerencia de carbohidratos</string>
     <string name="open_loop_new_suggestion">Nueva propuesta disponible</string>
+    <string name="open_loop_suggestion_too_old">Esta sugerencia es demasiado antigua. No se ha enviado nada a la bomba. Espera a la siguiente</string>
     <string name="basal_set_correctly">Basal establecida correctamente</string>
     <string name="last_run_label">Última ejecución</string>
     <string name="loop_aps_label">APS</string>
