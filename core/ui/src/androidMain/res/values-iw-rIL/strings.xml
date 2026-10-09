@@ -213,6 +213,7 @@
     <string name="careportal_openapsoffline">OpenAPS במצב לא מקוון</string>
     <string name="pump_battery_change">החלפת סוללת משאבה</string>
     <string name="temporary_target">ערך מטרה זמני</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <!-- Client-control action labels (shown in the pending/failure modal as "Couldn't {label}") -->
     <!-- Client-control failure reasons (mapped from a FailureReason code on the showing device) -->
     <string name="careportal_temporarytargetvalue">ערך המטרה הזמני</string>
