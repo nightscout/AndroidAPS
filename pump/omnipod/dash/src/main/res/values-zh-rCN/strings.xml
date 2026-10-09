@@ -22,6 +22,10 @@
     <string name="omnipod_dash_unknown">命令的未知状态</string>
     <string name="omnipod_common_history_tbr_value">%1$.2f U/h，%2$d 分钟</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">基础率校正</string>
+    <string name="omnipod_common_bolus_type_priming">充盈中</string>
     <string name="omnipod_common_alert_delivery_suspended">胰岛素输注已暂停</string>
     <string name="omnipod_common_history_total_delivered">总输注: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">另一个大剂量正在输注</string>
