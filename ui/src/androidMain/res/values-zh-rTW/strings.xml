@@ -182,6 +182,12 @@ Check the active state.</string>
     <string name="user_entry">使用者輸入</string>
     <string name="clone_label">複製</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">血糖圖表。最新讀取值 %1$s。%2$s。%3$s</string>
+    <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">通知：%1$d</string>
+    <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">無臨時目標，使用設定檔目標</string>
+    <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">由循環調整</string>
+    <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s 於 %2$s</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">差值 %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">舊讀取值</string>
     <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">血糖圖表。最新讀取值 %1$s</string>
     <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">執行</string>
     <string name="add_new_profile">新增設定檔</string>
@@ -280,6 +286,8 @@ Check the active state.</string>
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">已選擇的動作</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">新增 %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">移除 %1$s</string>
     <string name="quick_launch_no_dynamic_items">無可用項目</string>
     <string name="quick_launch_category_treatment">治療</string>
     <string name="quick_launch_category_care">照護入口</string>
