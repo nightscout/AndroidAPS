@@ -191,6 +191,9 @@
     <string name="a11y_arrow_unknown">未知</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">將 %1$s 減少 %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">將 %1$s 增加 %2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">上移</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">下移</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">第 %1$d 步，共 %2$d 步</string>
     <string name="decrement">減少</string>
     <string name="increment">增加</string>
     <string name="a11y_high">高</string>
