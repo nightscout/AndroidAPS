@@ -150,4 +150,6 @@
     <string name="advisoralarm">在应当吃饭时提醒</string>
     <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">插件 %1$s 启动失败，可能无法正常工作。请重启 AAPS。</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">插件 %1$s 发生错误，部分功能已停止。请重启 AAPS。</string>
 </resources>
