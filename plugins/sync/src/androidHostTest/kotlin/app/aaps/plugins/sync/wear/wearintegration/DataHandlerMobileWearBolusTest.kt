@@ -35,6 +35,7 @@ import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +43,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -108,6 +110,9 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
         whenever(rh.gs(any<TextRef>())).thenReturn("CONFIRM")
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.isInitialized()).thenReturn(true)
+        // The phone-side gate every therapy command passes on its way from the bus to its handler.
+        // The tests that post onto the bus need it open; the gate itself is tested at the bottom.
+        whenever(preferences.get(BooleanKey.WearControl)).thenReturn(true)
     }
     /**
      * Collects the payloads the handler ships to the watch. UNDISPATCHED so the collector is
@@ -440,5 +445,36 @@ class DataHandlerMobileWearBolusTest : TestBaseWithProfile() {
     @Test fun `onEvent dispatches a posted ActionProfileSwitchPreCheck to the handler`() {
         rxBus.send(EventData.ActionProfileSwitchPreCheck(timeShift = 0, percentage = 110, duration = 30))
         verifyBlocking(batchExecutor, timeout(2000)) { prepare(any(), any(), any()) }
+    }
+    // --- Wear control gate (issue #5215) ------------------------------------------------------------------
+    //
+    // "Wear control" used to be enforced only by the watch UI hiding its buttons. The phone is the device
+    // the user flipped the switch on, so it must refuse a therapy command by itself - whatever the watch
+    // currently shows - and tell the watch, so no spinner is left hanging.
+    @Test fun `with Wear control off a posted therapy command is refused and never reaches the executor`() {
+        whenever(preferences.get(BooleanKey.WearControl)).thenReturn(false)
+        // The reply comes from the collector on Dispatchers.IO, so wait for it with the same window the wiring tests use.
+        val reply = CompletableDeferred<EventData>()
+        val job = collectMobileToWear { reply.complete(it) }
+        rxBus.send(EventData.ActionBolusPreCheck(insulin = 1.0, carbs = 10))
+        val sent = runBlocking { withTimeout(2000) { reply.await() } }
+        job.cancel()
+        verifyBlocking(batchExecutor, never()) { prepare(any(), any(), any()) }
+        assertThat((sent as EventData.ConfirmAction).returnCommand).isInstanceOf(EventData.Error::class.java)
+    }
+    @Test fun `with Wear control off a read-only request still runs`() {
+        // Status, resend, snooze and the like are not control: the watch keeps showing data with the switch off.
+        whenever(preferences.get(BooleanKey.WearControl)).thenReturn(false)
+        rxBus.send(EventData.SnoozeAlert(0L))
+        verify(uiInteraction, timeout(2000)).stopAlarm("Muted from wear")
+    }
+    @Test fun `rejectIfWearControlOff refuses with an Error reply when off and passes when on`() {
+        whenever(preferences.get(BooleanKey.WearControl)).thenReturn(false)
+        val refusedEvents = captureAll { assertThat(sut.rejectIfWearControlOff()).isTrue() }
+        assertThat((refusedEvents.single() as EventData.ConfirmAction).returnCommand).isInstanceOf(EventData.Error::class.java)
+
+        whenever(preferences.get(BooleanKey.WearControl)).thenReturn(true)
+        val passedEvents = captureAll { assertThat(sut.rejectIfWearControlOff()).isFalse() }
+        assertThat(passedEvents).isEmpty()
     }
 }
