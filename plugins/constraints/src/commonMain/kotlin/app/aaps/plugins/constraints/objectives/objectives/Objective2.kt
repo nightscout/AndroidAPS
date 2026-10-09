@@ -202,7 +202,7 @@ class Objective2(
         )
         tasks.add(
             ExamTask(this, ConstraintsStrings.update_label, ConstraintsStrings.blank, "update")
-                .option(Option(ConstraintsStrings.update_git, true))
+                .option(Option(ConstraintsStrings.update_git, false))
                 .option(Option(ConstraintsStrings.update_askfriend, false))
                 .option(Option(ConstraintsStrings.update_keys, true))
                 .option(Option(ConstraintsStrings.update_asap, true))
