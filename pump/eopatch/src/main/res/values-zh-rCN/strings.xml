@@ -2,6 +2,7 @@
 <resources>
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day 泵集成</string>
+    <string name="eopatch_bolus_end_not_confirmed" comment="%1$s=insulin the patch reported, with its unit, for example: 1.50 U">贴片未确认大剂量输注结束。已记录 %1$s，但贴片实际可能已输注更多。在追加胰岛素前，请检查贴片。</string>
     <string name="low_reservoir">储药器药量低！警告！</string>
     <string name="patch_expiration_reminders">敷贴更换提醒</string>
     <string name="patch_buzzer_reminders">贴片蜂鸣提醒</string>
