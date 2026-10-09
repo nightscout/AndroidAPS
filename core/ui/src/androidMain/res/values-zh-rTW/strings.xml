@@ -382,6 +382,7 @@
     <string name="scene_editor_enabled">啟用</string>
     <string name="scene_editor_disabled">停用</string>
     <string name="scene_summary">%1$d 個動作, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">無限期（手動結束）</string>
     <string name="scene_some_actions_failed">部分動作失敗</string>
     <string name="scene_no_active">沒有作用中的場景</string>
