@@ -9,6 +9,12 @@
     <string name="speederror">Error de velocidad</string>
     <string name="insulinlimitviolation">Límite de insulina sobrepasado</string>
     <string name="boluserrorcode">Solicitado: %1$.2fU Entregado: %2$.2fU Código de error: %3$s</string>
+    <string name="danai2_bolus_error_no_prime">La bomba no está purgada</string>
+    <string name="danai2_bolus_error_not_enough_insulin">No hay suficiente insulina en el reservorio</string>
+    <string name="danai2_bolus_error_easy_sleep">El modo de sueño fácil está activado en la bomba</string>
+    <string name="danai2_pump_check_error">Error de comprobación de la bomba</string>
+    <string name="dana_easy_mode" comment="Label on the pump screen, value is On or Off. Easy mode is a simple menu of the Dana pump">Modo fácil</string>
+    <string name="danai2_auto_lock" comment="Name of the Dana-i2 pump setting AutoLock, shown with an On/Off switch">Bloqueo automático</string>
     <string name="danar_valuenotsetproperly">Valor no establecido correctamente</string>
     <string name="danar_setbasalstep001">Ajustar paso basal a 0.01 U/h</string>
     <string name="resetpairing">¿Restablecer información de emparejamiento?</string>
@@ -18,6 +24,7 @@
     <string name="danar_disablebolusblock">El bloqueo de bolo está activado en la bomba. AAPS no puede administrar insulina mientras esté activo. Desactiva el bloqueo de bolo en los ajustes de la bomba</string>
     <string name="overview_bolusprogress_stoped">Detenido</string>
     <string name="unsupportedfirmware">Firmware de la bomba no soportado</string>
+    <string name="danars_unsupported_model">Modelo de bomba no compatible (código %1$s)</string>
     <string name="pumperror">Error de bomba</string>
     <string name="lowbattery">Batería Baja</string>
     <string name="basalcompare">Entregar menos de la tasa basal preestablecida</string>
