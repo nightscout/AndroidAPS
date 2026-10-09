@@ -94,6 +94,7 @@
     <string name="objectives_open_exam">Abrir examen</string>
     <string name="objectives_exam_question_progress">Pregunta %1$d de %2$d</string>
     <string name="objectives_exam_reset">Restablecer</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">respuesta correcta</string>
     <string name="objectives_exam_previous">Anterior</string>
     <string name="objectives_exam_next">Siguiente</string>
     <string name="objectives_exam_next_unanswered">Siguiente sin responder</string>
