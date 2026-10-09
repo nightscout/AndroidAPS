@@ -27,6 +27,7 @@
     <string name="constraint_applied">¡Restricción aplicada!</string>
     <string name="tt_label">OT</string>
     <string name="pump_unreachable">Bomba no alcanzable</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">El controlador de la bomba no responde. \"%1$s\" lleva ejecutándose %2$d min y ¡ningún otro comando puede alcanzar la bomba! Comprueba la bomba y reinicia AAPS</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -190,6 +191,9 @@
     <string name="a11y_arrow_unknown">desconocido</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">disminuir %1$s en \%2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">incrementar %1$s en \%2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Subir</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Bajar</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Paso %1$d de %2$d</string>
     <string name="decrement">decremento</string>
     <string name="increment">incremento</string>
     <string name="a11y_high">alto</string>
@@ -381,6 +385,7 @@
     <string name="scene_editor_enabled">Habilitado</string>
     <string name="scene_editor_disabled">Deshabilitado</string>
     <string name="scene_summary">%1$d acciones, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">Indefinido (finalización manual)</string>
     <string name="scene_some_actions_failed">Se produjeron errores en algunas acciones</string>
     <string name="scene_no_active">Sin escena activa</string>
