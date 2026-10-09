@@ -193,11 +193,13 @@ class OverviewScreenVariantsTest {
 
     @Test
     @Config(qualifiers = WIDE)
-    fun `split layout shows the clock with the age of the BG reading`() {
+    fun `split layout has no large clock either`() {
+        // Phone landscape: the status bar has the time, the BG age is under the BG value, and the
+        // chips (a temporary profile name above all) need the width. Only the tablet keeps the clock.
         viewModels.withBg()
         setScreen(Variant.SPLIT)
 
-        compose.onNodeWithText(clockText).assertIsDisplayed()
+        compose.onNodeWithText(clockText).assertDoesNotExist()
     }
 
     @Test
