@@ -16,7 +16,9 @@ Scope: `BgGraphCompose.kt`, `SecondaryGraphCompose.kt`, `GraphsSection.kt`, `Gra
 No public API changes — all new composable parameters default to the previous behavior.
 
 Section 4 (the insulin activity overlay) came later, on the `Todo/DynamicActivityCurve` branch: it
-is the same subject, for the one curve that was missed because it has no axis of its own.
+is the same subject, for the one curve that was missed because it has no axis of its own. It also
+removes `ActivityGraphData.maxActivity` from `:core:interfaces` and `:workflow`, which that change
+left with no readers.
 
 ---
 
@@ -201,7 +203,7 @@ shrunk to compensate. The alternative would be to move the BG scale, which is ex
 above forbids.
 
 `ActivityGraphData.maxActivity` (a `max(|activity|)` over the whole loaded day, computed in
-`PrepareGraphDataRunner`) was the only input to the old formulas. Nothing reads it any more.
+`PrepareGraphDataRunner`) was the only input to the old formulas and was removed with them.
 
 ---
 
