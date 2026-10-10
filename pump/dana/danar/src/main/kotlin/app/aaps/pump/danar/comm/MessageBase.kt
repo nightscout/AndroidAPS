@@ -64,6 +64,12 @@ open class MessageBase(injector: MetroMemberInjector) {
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
+    /**
+     * True for a message whose payload holds the pump password. The serial log then shows only its length,
+     * not its bytes: the debug log is what "Send logs" shares for support (#5205).
+     */
+    open val containsSecret: Boolean = false
+
     var injector: MetroMemberInjector
     var buffer = ByteArray(512)
     private var position = 6

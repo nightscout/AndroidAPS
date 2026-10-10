@@ -10,6 +10,9 @@ class MsgInitConnStatusBasicK(
     injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
+    // Bytes 4-5 are the pump password
+    override val containsSecret: Boolean = true
+
     init {
         setCommand(0x0303)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
@@ -28,7 +31,7 @@ class MsgInitConnStatusBasicK(
         aapsLogger.debug(LTag.PUMPCOMM, "isUtilityEnable: $isUtilityEnable")
         aapsLogger.debug(LTag.PUMPCOMM, "Is EasyUI Enabled: " + danaPump.isEasyModeEnabled)
         aapsLogger.debug(LTag.PUMPCOMM, "easyUIMode: $easyUIMode")
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaPump.password)
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump password received")
         if (danaPump.isEasyModeEnabled) {
             notificationManager.post(NotificationId.EASY_MODE_ENABLED, TextRef.AndroidRes(app.aaps.pump.dana.R.string.danar_disableeasymode))
         } else {

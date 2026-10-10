@@ -67,7 +67,11 @@ class SerialIOThread(
                         // get it from hash table
                         hashTable.findMessage(command)
                     }
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< ${message.messageName} ${MessageBase.toHexString(extractedBuff)}")
+                    aapsLogger.debug(
+                        LTag.PUMPBTCOMM,
+                        if (message.containsSecret) "<<<<< ${message.messageName} (${extractedBuff.size} bytes, not logged: holds the pump password)"
+                        else "<<<<< ${message.messageName} ${MessageBase.toHexString(extractedBuff)}"
+                    )
 
                     // Process the message, then mark it received and wake the sender - both inside the
                     // message monitor. isReceived is set AFTER handleMessage so the sender never proceeds

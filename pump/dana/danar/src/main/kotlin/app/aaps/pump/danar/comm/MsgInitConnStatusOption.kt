@@ -9,6 +9,9 @@ class MsgInitConnStatusOption(
     injector: MetroMemberInjector
 ) : MessageBase(injector) {
 
+    // Bytes 9-10 are the pump password
+    override val containsSecret: Boolean = true
+
     init {
         setCommand(0x0304)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
@@ -27,7 +30,7 @@ class MsgInitConnStatusOption(
         if (bytes.size >= 21) {
             failed = false
             danaPump.password = intFromBuff(bytes, 9, 2) xor 0x3463
-            aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaPump.password)
+            aapsLogger.debug(LTag.PUMPCOMM, "Pump password received")
         } else {
             failed = true
         }
