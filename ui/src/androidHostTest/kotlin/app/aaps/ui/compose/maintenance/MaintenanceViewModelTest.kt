@@ -92,6 +92,21 @@ internal class MaintenanceViewModelTest {
         assertThat(sut.cloudDirectoryState.value).isEqualTo(MaintenanceViewModel.CloudDirectoryState.Hidden)
         assertThat(sut.exportConfig.value).isNull()
         assertThat(sut.isDirectoryAccessGranted.value).isFalse()
+        assertThat(sut.directoryPath.value).isNull()
+    }
+
+    @Test
+    fun `refreshExportConfig shows the chosen directory even when access is lost`() = runBlocking {
+        whenever(fileListProvider.isDirectoryAccessGranted()).thenReturn(false)
+        whenever(fileListProvider.directoryPath()).thenReturn("Documents/AAPS")
+        runEagerly()
+
+        sut.refreshExportConfig()
+
+        // The read runs on the IO dispatcher, so wait for it rather than assume it is done.
+        val path = withTimeout(10_000) { sut.directoryPath.first { it != null } }
+        assertThat(path).isEqualTo("Documents/AAPS")
+        assertThat(sut.isDirectoryAccessGranted.value).isFalse()
     }
 
     @Test

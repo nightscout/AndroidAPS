@@ -31,4 +31,12 @@ interface PrefsFileInfo {
      * for. On Android the permission can also be revoked after being granted.
      */
     fun isDirectoryAccessGranted(): Boolean
+
+    /**
+     * The export directory as the user should see it, for example `Documents/AAPS` on a phone or
+     * `C:\Users\me\AAPS` on Windows. Null when no directory is chosen.
+     *
+     * Still returned after access is lost, so the user knows which folder to choose again.
+     */
+    fun directoryPath(): String?
 }

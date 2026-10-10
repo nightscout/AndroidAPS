@@ -82,6 +82,8 @@ class IosPrefsFileInfo(
         }
         return NSFileManager.defaultManager.isWritableFileAtPath(directory)
     }
+
+    override fun directoryPath(): String? = exportDirectory
 }
 
 private fun Instant.toNSDate(): NSDate = NSDate.dateWithTimeIntervalSince1970(toEpochMilliseconds() / 1000.0)

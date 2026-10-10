@@ -52,6 +52,24 @@ class DesktopUrlOpener(
 }
 
 /**
+ * Shows a folder in the system file manager (Explorer, Finder, ...).
+ *
+ * The desktop has no folder to pick, so the "AAPS directory" row opens it instead. Where opening is
+ * not possible the path is logged, the same fallback [DesktopUrlOpener] uses.
+ */
+fun openFolder(directory: File, aapsLogger: AAPSLogger) {
+    val opened = runCatching {
+        if (!Desktop.isDesktopSupported()) return@runCatching false
+        val desktop = Desktop.getDesktop()
+        if (!desktop.isSupported(Desktop.Action.OPEN)) return@runCatching false
+        directory.mkdirs()
+        desktop.open(directory)
+        true
+    }.getOrDefault(false)
+    if (!opened) aapsLogger.error(LTag.CORE, "Could not open the folder; it is ${directory.path}")
+}
+
+/**
  * Nothing to ask for.
  *
  * A JVM has no runtime permission model, so both lists are genuinely empty - this is a true answer
@@ -104,6 +122,9 @@ class DesktopPrefsFileInfo(
 
     /** True: a desktop reads its own folder without asking anyone. */
     override fun isDirectoryAccessGranted(): Boolean = true
+
+    /** The AAPS folder itself, not its `preferences` child: the user also needs it to find `extra` and `exports`. */
+    override fun directoryPath(): String = DesktopFolders.root.path
 
     /**
      * How long ago an export was written, as a rough "3 d" or "5 h".

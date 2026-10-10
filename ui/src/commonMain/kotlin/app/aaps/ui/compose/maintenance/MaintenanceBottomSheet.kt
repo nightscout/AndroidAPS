@@ -67,7 +67,8 @@ fun MaintenanceBottomSheet(
     onToggleLogCloud: (Boolean) -> Unit = {},
     onToggleCsvLocal: (Boolean) -> Unit = {},
     onToggleCsvCloud: (Boolean) -> Unit = {},
-    isDirectoryAccessGranted: Boolean = false
+    isDirectoryAccessGranted: Boolean = false,
+    directoryPath: String? = null
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -97,7 +98,8 @@ fun MaintenanceBottomSheet(
             onToggleLogCloud = onToggleLogCloud,
             onToggleCsvLocal = onToggleCsvLocal,
             onToggleCsvCloud = onToggleCsvCloud,
-            isDirectoryAccessGranted = isDirectoryAccessGranted
+            isDirectoryAccessGranted = isDirectoryAccessGranted,
+            directoryPath = directoryPath
         )
     }
 }
@@ -127,10 +129,10 @@ internal fun MaintenanceBottomSheetContent(
     onToggleLogCloud: (Boolean) -> Unit = {},
     onToggleCsvLocal: (Boolean) -> Unit = {},
     onToggleCsvCloud: (Boolean) -> Unit = {},
-    isDirectoryAccessGranted: Boolean = false
+    isDirectoryAccessGranted: Boolean = false,
+    directoryPath: String? = null
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    MaterialTheme.colorScheme.error
     val isCloudActive = exportConfig?.isCloudActive == true
     val hasCloudError = exportConfig?.isCloudError == true
     val hasCloudCredentials = exportConfig?.hasCloudCredentials == true
@@ -189,7 +191,8 @@ internal fun MaintenanceBottomSheetContent(
 
         MaintenanceItem(
             text = stringResource(CoreUiStrings.aaps_directory),
-            description = stringResource(CoreUiStrings.maintenance_aaps_directory_desc),
+            // The chosen folder once there is one: "Select local storage folder" did not say where the files go.
+            description = directoryPath ?: stringResource(CoreUiStrings.maintenance_aaps_directory_desc),
             icon = Icons.Default.Folder,
             color = primaryColor,
             onDismiss = onDismiss,

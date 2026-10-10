@@ -22,7 +22,8 @@ internal fun MaintenanceBottomSheetContentPreview() {
                 csvCloud = false,
                 cloudDisplayName = "Google Drive"
             ),
-            isDirectoryAccessGranted = true
+            isDirectoryAccessGranted = true,
+            directoryPath = "Documents/AAPS"
         )
     }
 }
