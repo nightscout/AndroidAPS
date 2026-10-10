@@ -126,6 +126,7 @@ class UploadChunkBasalTest {
     ) {
         whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
         whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(emptyList())
+        whenever(persistenceLayer.getCarbsFromTimeNotExpanded(any(), any())).thenReturn(emptyList())
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(emptyList())
         whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(emptyList())
         whenever(persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenReturn(tbrs)

@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -19,6 +20,7 @@ import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
 import app.aaps.plugins.sync.tidepool.elements.BloodGlucoseElement
 import app.aaps.plugins.sync.tidepool.elements.BolusElement
+import app.aaps.plugins.sync.tidepool.elements.NoteElement
 import app.aaps.plugins.sync.tidepool.elements.ProfileElement
 import app.aaps.plugins.sync.tidepool.elements.SensorGlucoseElement
 import app.aaps.plugins.sync.tidepool.elements.WizardElement
@@ -36,6 +38,7 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import java.util.LinkedList
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.Instant
@@ -62,6 +65,27 @@ class UploadChunk(
         // Tidepool asks to upload "in chunks of 1,000 records". The time window can hold more: a full
         // sync sends up to 7 days, which is over 2000 CGM values alone.
         internal const val MAX_RECORDS_PER_UPLOAD = 1000
+
+        // A copy of a note closer than this to the original is the same note
+        internal val NOTE_COPY_WINDOW = T.hours(1).msecs()
+
+        /** A note found in the database, before it is picked for upload */
+        internal data class NoteCandidate(val timestamp: Long, val text: String, val source: String)
+
+        /**
+         * One Tidepool note per note the user wrote. The bolus wizard writes the same text to the bolus, to the
+         * carbs (at a later time when the carbs are delayed) and sometimes to a careportal event. So the bolus
+         * note is always kept, a carbs note only when no bolus note with the same text is within
+         * [NOTE_COPY_WINDOW], and an event note only when no bolus or carbs note with the same text is.
+         */
+        internal fun pickNotes(bolus: List<NoteCandidate>, carbs: List<NoteCandidate>, events: List<NoteCandidate>): List<NoteCandidate> {
+            fun List<NoteCandidate>.hasCopyOf(note: NoteCandidate) =
+                any { it.text.trim() == note.text.trim() && abs(it.timestamp - note.timestamp) <= NOTE_COPY_WINDOW }
+
+            val keptCarbs = carbs.filterNot { bolus.hasCopyOf(it) }
+            val keptEvents = events.filterNot { bolus.hasCopyOf(it) || keptCarbs.hasCopyOf(it) || carbs.hasCopyOf(it) }
+            return bolus + keptCarbs + keptEvents
+        }
     }
 
     private val maxUploadSize = T.days(7).msecs() // don't change this
@@ -108,6 +132,7 @@ class UploadChunk(
         val records = LinkedList<BaseElement>()
 
         records.addAll(getTreatments(start, end))
+        records.addAll(getNotes(start, end))
         records.addAll(getBloodTests(start, end))
         records.addAll(getBasals(start, end))
         records.addAll(getBgReadings(start, end))
@@ -160,6 +185,33 @@ class UploadChunk(
                 }
             }
         return result
+    }
+
+    /**
+     * The notes the user wrote between [start] and [end], one Tidepool note each (#2834).
+     *
+     * The sources are read one hour wider than the window, so a note just outside it still counts when
+     * [pickNotes] looks for copies of the same note.
+     */
+    private suspend fun getNotes(start: Long, end: Long): List<NoteElement> {
+        val from = start - NOTE_COPY_WINDOW
+        val to = end + NOTE_COPY_WINDOW
+        val bolusNotes = persistenceLayer.getBolusesFromTimeToTime(from, to, true)
+            .mapNotNull { bolus -> bolus.notes?.takeIf { it.isNotBlank() }?.let { NoteCandidate(bolus.timestamp, it, "bolus") } }
+        // Not expanded: an extended carbs entry is split into many, and every part carries the same note
+        val carbsNotes = persistenceLayer.getCarbsFromTimeNotExpanded(from, true)
+            .filter { it.timestamp <= to }
+            .mapNotNull { carbs -> carbs.notes?.takeIf { it.isNotBlank() }?.let { NoteCandidate(carbs.timestamp, it, "carbs") } }
+        // Announcements are not notes the user wrote: AAPS creates them, for example from pump errors
+        val eventNotes = persistenceLayer.getTherapyEventDataFromToTime(from, to)
+            .filter { it.type != TE.Type.ANNOUNCEMENT }
+            .mapNotNull { event -> event.note?.takeIf { it.isNotBlank() }?.let { NoteCandidate(event.timestamp, it, "event") } }
+        val selection = pickNotes(bolusNotes, carbsNotes, eventNotes)
+            .filter { it.timestamp in start..end }
+            .map { NoteElement(it.timestamp, it.text, it.source, dateUtil) }
+        if (selection.isNotEmpty())
+            tidepoolRepository.addLog("${selection.size} notes selected for upload")
+        return selection
     }
 
     private suspend fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {

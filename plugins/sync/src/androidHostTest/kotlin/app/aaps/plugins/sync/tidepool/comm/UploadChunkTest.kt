@@ -1,7 +1,10 @@
 package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -66,6 +69,7 @@ class UploadChunkTest {
         )
         whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(boluses)
         whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getCarbsFromTimeNotExpanded(any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenReturn(listOf())
@@ -89,6 +93,7 @@ class UploadChunkTest {
         whenever(config.VERSION_NAME).thenReturn("4.0.0")
         whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(listOf(BS(timestamp = 100, amount = 1.0, type = BS.Type.NORMAL, iCfg = iCfg)))
         whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getCarbsFromTimeNotExpanded(any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenReturn(listOf())
@@ -113,6 +118,7 @@ class UploadChunkTest {
         val boluses = (1..2500).map { BS(timestamp = it.toLong(), amount = 0.1, type = BS.Type.SMB, iCfg = iCfg) }
         whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(boluses)
         whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getCarbsFromTimeNotExpanded(any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenReturn(listOf())
@@ -122,6 +128,36 @@ class UploadChunkTest {
         val batches = sut.getBatches(1, 5000)
 
         assertThat(batches.map { JsonParser.parseString(it).asJsonArray.size() }).containsExactly(1000, 1000, 500).inOrder()
+    }
+
+    private val minute = 60_000L
+
+    // Notes (#2834); the choice between copies is tested in UploadChunkNotesTest
+    @Test
+    fun `notes are uploaded as Tidepool reportedState records and announcements are not`() = runTest {
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any()))
+            .thenReturn(listOf(BS(timestamp = 10 * minute, amount = 2.0, type = BS.Type.NORMAL, iCfg = iCfg, notes = "pizza")))
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getCarbsFromTimeNotExpanded(any(), any()))
+            .thenReturn(listOf(CA(timestamp = 40 * minute, duration = 0, amount = 60.0, notes = "pizza")))
+        whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(
+            listOf(
+                TE(timestamp = 20 * minute, type = TE.Type.NOTE, note = "site sore", glucoseUnit = GlucoseUnit.MGDL),
+                TE(timestamp = 25 * minute, type = TE.Type.ANNOUNCEMENT, note = "Pump error", glucoseUnit = GlucoseUnit.MGDL)
+            )
+        )
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getRunningModesFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+
+        val notes = JsonParser.parseString(sut.get(1, 120 * minute)).asJsonArray
+            .map { it.asJsonObject }
+            .filter { it["type"].asString == "reportedState" }
+
+        // The bolus note once (its carbs copy is dropped), the careportal note, and no announcement
+        assertThat(notes.map { it["notes"].asJsonArray.single().asString }).containsExactly("pizza", "site sore")
+        assertThat(notes.all { it["deviceId"].asString == "AAPS:SN-1" }).isTrue()
     }
 
     private fun convertResultJsonToBolusElements(json: String): List<BolusElement> {
