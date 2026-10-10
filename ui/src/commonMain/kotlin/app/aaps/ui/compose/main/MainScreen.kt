@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
@@ -337,11 +338,15 @@ fun MainScreen(
                         )
                     }
 
-                    // Version overlay
+                    // Version overlay. Fixed to the screen, not to the scrolling content. With the top
+                    // bar shown it is lifted into the bar's empty band under the search bar, so it sits
+                    // above the profile chip instead of level with the chip's text. In preview mode the
+                    // content starts right under the status bar, so there it stays at the content's edge.
                     VersionOverlay(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(contentPadding)
+                            .offset(y = if (showChrome) -VERSION_LABEL_LIFT else 0.dp)
                     )
 
                     // Status bar protection scrim — keeps system icons legible
@@ -572,3 +577,10 @@ fun MainScreen(
 
 private val PREVIEW_MODE_MIN_HEIGHT: Dp = 500.dp
 private const val AUTO_HIDE_DELAY_MS = 3000L
+
+/**
+ * How far the version label is lifted above the content's top edge while the top bar is shown. The
+ * bar has 8 dp of nothing under its search bar and the first chip starts a few dp into the content;
+ * this centers the 12 dp label between the two.
+ */
+private val VERSION_LABEL_LIFT: Dp = 6.dp

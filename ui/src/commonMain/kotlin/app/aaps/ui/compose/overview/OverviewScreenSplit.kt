@@ -149,15 +149,12 @@ fun OverviewScreenSplit(
                         onTbrChipClick = onTbrChipClick,
                         onIobChipClick = onIobChipClick,
                         commandsAllowed = commandsAllowed,
+                        // No clock here, unlike the tablet layout: the status bar has the time and the BG
+                        // age is under the BG value. The chips, above all a temporary profile name, need
+                        // the width more.
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 8.dp),
-                        trailingContent = {
-                            LargeClock(
-                                bgTimestamp = bgInfoState.bgInfo?.timestamp,
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                        }
+                            .padding(start = 8.dp)
                     )
                 }
 
