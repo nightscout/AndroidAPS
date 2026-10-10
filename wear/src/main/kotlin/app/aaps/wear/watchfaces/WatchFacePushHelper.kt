@@ -223,17 +223,41 @@ class WatchFacePushHelper(
         installOrUpdate()
     }
 
+    /** The last status sent to the phone, so a sync can skip the reply when nothing changed. */
+    private var lastReported: EventData.WatchFacePushStatus? = null
+
     /**
      * Tells the phone what this watch can do and which face it holds.
      *
      * The phone shows the face choice only on a watch that says it has Watch Face Push, and can
      * warn when the watch still holds the other face - after a reinstall the watch starts with the
      * default and only catches up once the preferences reach it. Sent after the startup sync, after
-     * every install, and in reply to the preferences, so the phone's picture is never older than
-     * the last exchange. Never throws: a failed listing reports "supported, face unknown".
+     * every install, and when the phone connects (its ping), so the phone's picture is never older
+     * than the last exchange - also after the phone app restarted and lost it. The preferences that
+     * come with every sync go through [reportStatusIfChanged] instead. Never throws: a failed
+     * listing reports "supported, face unknown".
      */
     suspend fun reportStatus() = withContext(Dispatchers.IO) {
-        val status = if (!isSupported()) {
+        send(currentStatus())
+    }
+
+    /**
+     * [reportStatus] for the preferences of a sync: about one per BG, all day, and the answer is
+     * the same each time. The listing still runs - a face the user removed from the picker is
+     * only seen here - but the message goes out only when the status differs from the last sent.
+     */
+    suspend fun reportStatusIfChanged() = withContext(Dispatchers.IO) {
+        val status = currentStatus()
+        if (status != lastReported) send(status)
+    }
+
+    private fun send(status: EventData.WatchFacePushStatus) {
+        lastReported = status
+        rxBus.send(EventWearToMobile(status))
+    }
+
+    private suspend fun currentStatus(): EventData.WatchFacePushStatus =
+        if (!isSupported()) {
             EventData.WatchFacePushStatus(supported = false)
         } else try {
             val packageName = listOwnFaces(createManager()).installedWatchFaceDetails.firstOrNull()?.packageName
@@ -245,8 +269,6 @@ class WatchFacePushHelper(
             aapsLogger.error(LTag.WEAR, "WatchFacePush: status listing failed", e)
             EventData.WatchFacePushStatus(supported = true)
         }
-        rxBus.send(EventWearToMobile(status))
-    }
 
     /**
      * One install at a time. Three callers can want one at the same moment - the startup sync, the
