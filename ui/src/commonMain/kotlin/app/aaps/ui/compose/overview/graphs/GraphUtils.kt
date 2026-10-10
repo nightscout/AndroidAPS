@@ -4,10 +4,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.overview.graph.SeriesType
@@ -130,6 +134,45 @@ const val MIN_GRAPH_ZOOM_MINUTES = 30.0
  * so the viewport doesn't snap back while the user is examining the graph.
  */
 const val INTERACTION_GRACE_MS = 60_000L
+
+/**
+ * Calls [onGesture] when the user scrolls or zooms the chart with a pointer: when a finger moves past the
+ * touch slop or a second finger comes down, again when the gesture ends (so the [INTERACTION_GRACE_MS]
+ * window counts from the last touch), and on a mouse wheel event.
+ *
+ * Taps do not count. Scroll or zoom changes made by code do not reach here, which is the point: the
+ * "use scroll or zoom on BG chart" objective must only be completed by the user.
+ *
+ * Events are observed in the [PointerEventPass.Initial] pass and never consumed, so the chart still
+ * gets every event.
+ */
+fun Modifier.onScrollOrZoomGesture(onGesture: () -> Unit): Modifier = pointerInput(onGesture) {
+    awaitPointerEventScope {
+        var downPosition: Offset? = null
+        var moved = false
+        while (true) {
+            val event = awaitPointerEvent(PointerEventPass.Initial)
+            val pressed = event.changes.filter { it.pressed }
+            val start = downPosition
+            when {
+                event.type == PointerEventType.Scroll -> onGesture()
+
+                pressed.isEmpty()                     -> {
+                    if (moved) onGesture()
+                    downPosition = null
+                    moved = false
+                }
+
+                start == null                         -> downPosition = pressed.first().position
+
+                !moved && (pressed.size > 1 || (pressed.first().position - start).getDistance() > viewConfiguration.touchSlop) -> {
+                    moved = true
+                    onGesture()
+                }
+            }
+        }
+    }
+}
 
 /**
  * Fraction of the graph height occupied by the basal overlay.

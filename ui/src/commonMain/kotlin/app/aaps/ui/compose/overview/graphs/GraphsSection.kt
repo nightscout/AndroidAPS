@@ -261,15 +261,12 @@ fun GraphsSection(
         sec2scroll, sec2zoom, sec3scroll, sec3zoom,
         sec4scroll, sec4zoom
     ) {
-        var initialValue = true
+        // Do not report a user interaction from here: the scroll/zoom values also change without the user
+        // (viewport reset on a new BG, the prediction nudge, Vico's initial scroll to the end). Real gestures
+        // are reported by onScrollOrZoomGesture on the BG chart.
         snapshotFlow { bgScrollState.value to bgZoomState.value }
             .debounce(30) // Wait for gesture to settle
             .collect { (scroll, zoom) ->
-                if (initialValue) {
-                    initialValue = false
-                } else {
-                    graphViewModel.onGraphInteraction()
-                }
                 val count = activeCount
                 // Sync zoom first, then scroll (order matters for proper positioning)
                 beltZoomState.zoom(Zoom.fixed(zoom))
@@ -420,6 +417,7 @@ fun GraphsSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(graphConfig.bgHeight.dp)
+                    .onScrollOrZoomGesture(graphViewModel::onGraphInteraction)
                     .then(
                         if (graphDescription != null) Modifier.semantics { contentDescription = graphDescription }
                         else Modifier
