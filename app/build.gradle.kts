@@ -261,6 +261,7 @@ dependencies {
             "pumpcontrolImplementation"(project(it.path))
         }
 
+    implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.process)
 
     testImplementation(project(":shared:tests"))

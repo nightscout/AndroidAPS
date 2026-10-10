@@ -1,6 +1,5 @@
 package app.aaps.plugins.configuration.setupwizard
 
-import app.aaps.plugins.configuration.ConfigurationStrings
 import androidx.compose.runtime.Composable
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.TextRef

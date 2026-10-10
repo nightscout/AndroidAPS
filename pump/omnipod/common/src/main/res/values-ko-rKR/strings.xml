@@ -100,6 +100,10 @@
     <string name="omnipod_common_pod_status_pod_fault">Pod 결함</string>
     <string name="omnipod_common_pod_status_inactive">비활성화됨</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod 결함: %1$03d %2$s</string>
+    <!-- Omnipod - PDM Notification -->
+    <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
+         to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
+         AlarmType.pdmFaultCategory / PdmFaultCategory). -->
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod가 곧 만료됩니다.</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod가 곧 만료됩니다.</string>

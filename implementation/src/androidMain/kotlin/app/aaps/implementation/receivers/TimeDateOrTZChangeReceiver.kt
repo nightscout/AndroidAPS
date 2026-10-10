@@ -8,6 +8,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventTimeZoneChanged
 import app.aaps.core.objects.workflow.MetroBroadcastReceiver
 import app.aaps.core.utils.receivers.BundleLogger
 import dev.zacsweers.metro.Inject
@@ -21,6 +23,7 @@ class TimeDateOrTZChangeReceiver : MetroBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var appScope: CoroutineScope
+    @Inject lateinit var rxBus: RxBus
 
     private var isDST = calculateDST()
 
@@ -55,6 +58,9 @@ class TimeDateOrTZChangeReceiver : MetroBroadcastReceiver() {
             Intent.ACTION_TIMEZONE_CHANGED == action -> {
                 aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::Timezone changed. Notifying pump driver.")
                 appScope.launch { activePump.timezoneOrDSTChanged(TimeChangeType.TimezoneChanged) }
+                // The IOB calculation reads the basal profile in the current time zone, so its cached
+                // values for the past are stale now.
+                rxBus.send(EventTimeZoneChanged())
             }
 
             Intent.ACTION_TIME_CHANGED == action     -> {

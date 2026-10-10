@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Parring fik timeout</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pumpeintegration til DANA Diabecare RS og Dana-i pumper</string>
     <string name="maxbolusviolation">Max bolus overtrædelse</string>
     <string name="commanderror">Kommando fejl</string>
@@ -74,7 +73,6 @@
     <string name="description_pump_dana_r">Pumpeintegration til DANA Diabecare R pumper</string>
     <string name="description_pump_dana_r_korean">Pumpeintegration til DANA Diabecare R pumper, koreansk version</string>
     <string name="description_pump_dana_r_v2">Pumpeintegration til DANA Diabecare R pumper med opgraderet firmware (v2)</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Valgte enhed ikke fundet</string>
     <string name="danar_switchtouhmode">Skift tilstand fra E/d til E/t på pumpen</string>
     <string name="danarkoreanpump">DanaR Koreansk</string>

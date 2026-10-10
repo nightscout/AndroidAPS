@@ -55,8 +55,8 @@ import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.pump.danarv2.comm.MsgCheckValueV2
 import app.aaps.pump.danarv2.comm.MsgHistoryEventsV2
 import app.aaps.pump.danarv2.comm.MsgSetAPSTempBasalStartV2
-import kotlinx.coroutines.launch
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
@@ -321,13 +321,11 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         val msg = MsgHistoryEventsV2(injector, danaPump.readHistoryFrom)
         aapsLogger.debug(LTag.PUMP, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.readHistoryFrom))
         mSerialIOThread?.sendMessage(msg)
-        while (!danaPump.historyDoneReceived && mRfcommSocket?.isConnected == true) {
-            SystemClock.sleep(100)
-        }
+        val completed = waitForHistoryDone()
         SystemClock.sleep(200)
         if (danaPump.lastEventTimeLoaded != 0L) danaPump.readHistoryFrom = danaPump.lastEventTimeLoaded - mins(1).msecs() else danaPump.readHistoryFrom = 0
         danaPump.lastConnection = System.currentTimeMillis()
-        return pumpEnactResultProvider().success(true)
+        return pumpEnactResultProvider().success(completed)
     }
 
     override suspend fun updateBasalsInPump(profile: Profile): Boolean {

@@ -34,6 +34,10 @@ import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoFinishImmeBolusInfusi
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartExtendBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.CarelevoStartImmeBolusInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.bolus.model.StartImmeBolusInfusionResponseModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.TimeoutCancellationException
@@ -42,10 +46,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 import kotlin.math.roundToInt

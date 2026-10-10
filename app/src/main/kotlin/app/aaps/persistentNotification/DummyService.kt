@@ -12,15 +12,15 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.workflow.MetroService
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import dev.zacsweers.metro.Inject
 
 /**
- * Keeps AndroidAPS in foreground state, so it won't be terminated by Android nor get restricted by the background execution limits
+ * Keeps AAPS in foreground state, so it won't be terminated by Android nor get restricted by the background execution limits
  */
 class DummyService : MetroService() {
 

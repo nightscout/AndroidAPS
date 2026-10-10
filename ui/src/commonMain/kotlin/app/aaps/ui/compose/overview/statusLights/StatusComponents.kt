@@ -28,7 +28,6 @@ import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.core.ui.compose.statusLevelToDescription
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
-import app.aaps.ui.UiStrings
 
 /**
  * Status rows content — sensor/insulin/cannula/battery with optional action buttons.

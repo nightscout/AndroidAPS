@@ -63,7 +63,6 @@ class AidexPlugin(
         }
         .icon(IcGenericCgm)
         .pluginName(TextRef.AndroidRes(R.string.aidex))
-        .shortName(TextRef.AndroidRes(R.string.aidex_short))
         .preferencesVisibleInSimpleMode(false)
         .description(TextRef.AndroidRes(R.string.description_source_aidex)),
     ownPreferences = emptyList(),

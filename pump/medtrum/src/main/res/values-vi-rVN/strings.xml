@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Tích hợp Bơm Medtrum Nano và Medtrum 300U</string>
     <string name="medtrum_pump_setting">Cài đặt Bơm Medtrum</string>
     <string name="pump_error">Lỗi Bơm: %1$s !! </string>

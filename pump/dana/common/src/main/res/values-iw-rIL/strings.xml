@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
     <string name="danarspump">Dana-i / RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">חיבור משאבות DANA RS/i</string>
     <string name="maxbolusviolation">בולוס גבוה מדי</string>
     <string name="commanderror">שגיאת פקודה</string>
@@ -74,7 +73,6 @@
     <string name="description_pump_dana_r">חיבור משאבת DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">חיבור משאבת DANA Diabecare R מהשוק הקוריאני</string>
     <string name="description_pump_dana_r_v2">חיבור משאבת DANA Diabecare R עם קושחה משודרגת</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">ההתקן שנבחר לא נמצא</string>
     <string name="danar_switchtouhmode">שנה מצב מיח\' ליום ליח\' לשעה במשאבה</string>
     <string name="danarkoreanpump">DanaR קוריאנית</string>

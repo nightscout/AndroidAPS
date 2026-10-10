@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Medtrum Nano 和 Medtrum 300U 的幫浦整合</string>
     <string name="medtrum_pump_setting">Medtrum 幫浦設定</string>
     <string name="pump_error">幫浦錯誤: %1$s !! </string>

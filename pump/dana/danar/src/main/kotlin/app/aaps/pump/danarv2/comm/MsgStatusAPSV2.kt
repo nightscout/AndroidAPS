@@ -1,8 +1,8 @@
 package app.aaps.pump.danarv2.comm
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.danar.comm.MessageBase
-import app.aaps.core.interfaces.di.MetroMemberInjector
 
 class MsgStatusAPSV2(
     injector: MetroMemberInjector

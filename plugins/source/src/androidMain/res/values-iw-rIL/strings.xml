@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">נתוני סוכר מ-NSClient</string>
-    <string name="ns_client_bg_short">נתוני סוכר מ-NS</string>
     <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
     <string name="source_xdrip">נתוני סוכר מ-xDrip+</string>
     <string name="description_source_xdrip">מקבל ערכי סוכר מ-xDrip ומיישומים מתאימים (Juggluco ועוד).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">קבלת ערכי סוכר בדם מאפליקציית Glimp.</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">קבלת ערכי סוכר מיישום Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">קבלת ערכי סוכר מאפליקציית Tomato (התקן MiaoMiao)</string>
     <string name="random_bg">נתוני סוכר אקראיים</string>
     <string name="description_source_random_bg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
-    <string name="random_bg_short">נתוני סוכר</string>
     <!-- Patched Syai Tag App -->
     <!-- Patched SI App -->
     <!-- Patched Sino App -->

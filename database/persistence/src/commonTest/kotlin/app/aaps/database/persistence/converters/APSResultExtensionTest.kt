@@ -1,11 +1,8 @@
 package app.aaps.database.persistence.converters
 
 import app.aaps.core.interfaces.aps.APSResult
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import app.aaps.database.entities.APSResult as DbAPSResult
 

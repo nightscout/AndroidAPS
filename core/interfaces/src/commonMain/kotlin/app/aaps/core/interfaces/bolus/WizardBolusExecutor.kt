@@ -66,8 +66,20 @@ interface WizardBolusExecutor {
      * comment through [onError], but returns [ConfirmResult.Cancelled] so the caller can tell it apart from a real
      * failure. [asAdvisor] delivers the correction-only advisor bolus (high-BG "eat later" branch) instead of the
      * carb wizard bolus.
+     *
+     * [onSuccess] runs when the bolus or carbs of the confirmed entry went through the pump (or were recorded, for a
+     * record-only entry). That happens after [confirm] has returned, because the delivery is asynchronous. An entry
+     * with no bolus and no carbs never calls it: its steps are awaited, so the return value and [onError] already
+     * tell the whole story. A dose that was started is followed by [onSuccess] or by [onError].
      */
-    suspend fun confirm(bolusId: Long, source: Sources, onError: (Failure) -> Unit, asAdvisor: Boolean = false, correctionU: Double = 0.0): ConfirmResult
+    suspend fun confirm(
+        bolusId: Long,
+        source: Sources,
+        onError: (Failure) -> Unit,
+        asAdvisor: Boolean = false,
+        correctionU: Double = 0.0,
+        onSuccess: () -> Unit = {}
+    ): ConfirmResult
 
     /**
      * Canonical wizard / quick-wizard bolus — a type-specific entry point taking exactly the wizard
@@ -204,7 +216,7 @@ interface WizardBolusExecutor {
 
     sealed interface ConfirmResult {
 
-        /** Bolus started (async). */
+        /** Bolus started (async). Its end is reported through `onSuccess` or `onError` of [confirm]. */
         data object Delivered : ConfirmResult
 
         /** Slot empty or id mismatch — nothing delivered (idempotent retry / stale confirm). */

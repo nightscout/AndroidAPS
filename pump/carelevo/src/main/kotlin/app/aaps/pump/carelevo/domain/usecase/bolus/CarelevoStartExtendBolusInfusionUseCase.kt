@@ -4,8 +4,8 @@ import app.aaps.pump.carelevo.domain.ext.generateUUID
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoExtendBolusInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
-import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
+import kotlin.time.Clock
 
 class CarelevoStartExtendBolusInfusionUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,

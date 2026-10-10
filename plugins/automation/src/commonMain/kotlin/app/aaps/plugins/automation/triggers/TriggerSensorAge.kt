@@ -1,15 +1,15 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sensors
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.lenientDouble
 import app.aaps.core.utils.lenientStringOrNull
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
 import kotlinx.serialization.json.JsonObject

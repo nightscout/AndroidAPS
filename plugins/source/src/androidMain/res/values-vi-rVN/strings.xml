@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Tải dữ liệu đường huyết (BG) từ Nightscout</string>
     <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">Nhận giá trị đường huyết (BG) từ xDrip+ và các ứng dụng tương thích (như Juggluco, v.v.).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Nhận đường huyết từ ứng dụng \'Build Your Own Dexcom App\'.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Nhận giá trị đường huyết từ Glimp.</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Nhận giá trị từ ứng dụng Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Nhận giá trị đường huyết từ ứng dụng Tomato (thiết bị MiaoMiao)</string>
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Tạo dữ liệu đường huyết ngẫu nhiên (chỉ dùng cho chế độ Demo)</string>
-    <string name="random_bg_short">Đường huyết</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Nhận dữ liệu đường huyết từ ứng dụng Syai/Ottai.</string>
@@ -49,7 +45,6 @@
     <string name="permission_notification_listener_title">Truy cập thông báo</string>
     <string name="permission_notification_listener_description">Cần để đọc đường huyết từ thông báo CGM</string>
     <string name="aidex">Ứng dụng CGM MicroTech</string>
-    <string name="aidex_short">Ứng dụng CGM</string>
     <string name="description_source_aidex">Nhận giá trị CGM từ LinX, LinX Vista, Equil G Smart 2, DiaExpert 2, v.v.</string>
     <string name="aidex_sensor_expired">Cảm biến đã hết hạn, vui lòng thay cảm biến mới</string>
     <string name="aidex_sensor_error">Lỗi cảm biến, vui lòng kiểm tra trạng thái cảm biến</string>

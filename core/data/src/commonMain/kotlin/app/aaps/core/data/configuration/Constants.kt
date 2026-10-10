@@ -13,6 +13,12 @@ object Constants {
     // OpenAPS algorithm
     const val NORMAL_TARGET_MGDL = 99 // 5.5 mmol/l = 99.1 mg/dL; use 99 to ensure consistent behavior across mg/dL and mmol/l units
 
+    /**
+     * A BG older than this is not actual: the overview strikes it through and the loop does not use it.
+     * An open loop suggestion older than this is refused too - it was calculated from such a BG.
+     */
+    const val OLD_BG_MINUTES = 9L
+
     // SMS COMMUNICATOR
     const val REMOTE_BOLUS_MIN_DISTANCE = 15 * 60 * 1000L
 

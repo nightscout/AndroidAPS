@@ -1,8 +1,8 @@
 package app.aaps.pump.danar.comm
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.dana.DanaPump
-import app.aaps.core.interfaces.di.MetroMemberInjector
 
 /**
  * Created by mike on 05.07.2016.

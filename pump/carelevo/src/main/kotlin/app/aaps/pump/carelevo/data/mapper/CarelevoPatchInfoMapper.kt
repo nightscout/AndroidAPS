@@ -1,8 +1,8 @@
 package app.aaps.pump.carelevo.data.mapper
 
-import app.aaps.pump.carelevo.ext.parseIsoInstant
 import app.aaps.pump.carelevo.data.model.entities.CarelevoPatchInfoEntity
 import app.aaps.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
+import app.aaps.pump.carelevo.ext.parseIsoInstant
 
 internal fun CarelevoPatchInfoEntity.transformToCarelevoPatchInfoDomainModel() = CarelevoPatchInfoDomainModel(
     address = address,

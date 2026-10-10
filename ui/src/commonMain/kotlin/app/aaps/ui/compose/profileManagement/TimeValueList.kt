@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.format.NumberFormat
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.PlusMinusEdit
@@ -52,10 +53,11 @@ fun TimeValueList(
     var showTimePicker by remember { mutableStateOf(false) }
     var editingIndex by remember { mutableIntStateOf(-1) }
 
+    val header = if (unitLabel.isNotEmpty()) "$title [$unitLabel]" else title
     Column(modifier = modifier.fillMaxWidth()) {
         if (title.isNotEmpty()) {
             Text(
-                text = if (unitLabel.isNotEmpty()) "$title [$unitLabel]" else title,
+                text = header,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -85,7 +87,8 @@ fun TimeValueList(
                 onAdd = { onAddEntry(index) },
                 valueRange = valueRange,
                 step = step,
-                valueFormat = valueFormat
+                valueFormat = valueFormat,
+                header = header
             )
         }
 
@@ -135,10 +138,10 @@ private fun TimeValueRow(
     onAdd: () -> Unit,
     valueRange: ClosedFloatingPointRange<Double>,
     step: Double,
-    valueFormat: NumberFormat
+    valueFormat: NumberFormat,
+    header: String
 ) {
     val dateUtil = LocalDateUtil.current
-    timeSeconds / 3600
     val timeString = dateUtil.timeStringFromSeconds(timeSeconds)
 
     Column {
@@ -168,6 +171,9 @@ private fun TimeValueRow(
                 valueRange = valueRange,
                 step = step,
                 valueFormat = valueFormat,
+                // The time and the list are beside and above it on screen; a screen reader needs them
+                // said, or every one of up to 24 rows is just "0.85, edit box".
+                label = stringResource(UiStrings.a11y_profile_entry, header, timeString),
                 modifier = Modifier.weight(1f)
             )
 
@@ -224,9 +230,10 @@ fun TargetValueList(
     var showTimePicker by remember { mutableStateOf(false) }
     var editingIndex by remember { mutableIntStateOf(-1) }
 
+    val header = if (unitLabel.isNotEmpty()) "$title [$unitLabel]" else title
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = if (unitLabel.isNotEmpty()) "$title [$unitLabel]" else title,
+            text = header,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -265,7 +272,8 @@ fun TargetValueList(
                 lowRange = lowRange,
                 highRange = highRange,
                 step = step,
-                valueFormat = valueFormat
+                valueFormat = valueFormat,
+                header = header
             )
         }
 
@@ -323,11 +331,16 @@ private fun TargetValueRow(
     lowRange: ClosedFloatingPointRange<Double>,
     highRange: ClosedFloatingPointRange<Double>,
     step: Double,
-    valueFormat: NumberFormat
+    valueFormat: NumberFormat,
+    header: String
 ) {
     val dateUtil = LocalDateUtil.current
-    timeSeconds / 3600
     val timeString = dateUtil.timeStringFromSeconds(timeSeconds)
+    val lowLabel = stringResource(CoreUiStrings.target_low_label)
+    val highLabel = stringResource(CoreUiStrings.target_high_label)
+    // "Target [mmol/L]: Low at 08:00" - the list, the field and the time, for a screen reader.
+    val lowSpoken = stringResource(UiStrings.a11y_profile_entry, stringResource(InterfacesStrings.confirmation_line, header, lowLabel), timeString)
+    val highSpoken = stringResource(UiStrings.a11y_profile_entry, stringResource(InterfacesStrings.confirmation_line, header, highLabel), timeString)
 
     Column(
         modifier = Modifier
@@ -391,7 +404,7 @@ private fun TargetValueRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(CoreUiStrings.target_low_label),
+                text = lowLabel,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.width(40.dp)
             )
@@ -402,6 +415,7 @@ private fun TargetValueRow(
                 valueRange = lowRange,
                 step = step,
                 valueFormat = valueFormat,
+                label = lowSpoken,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -414,7 +428,7 @@ private fun TargetValueRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(CoreUiStrings.target_high_label),
+                text = highLabel,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.width(40.dp)
             )
@@ -425,6 +439,7 @@ private fun TargetValueRow(
                 valueRange = highRange,
                 step = step,
                 valueFormat = valueFormat,
+                label = highSpoken,
                 modifier = Modifier.weight(1f)
             )
         }

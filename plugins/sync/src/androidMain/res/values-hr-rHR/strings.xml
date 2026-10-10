@@ -13,7 +13,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Koristite integracijske (testne) poslužitelje</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Učitava podatke u Tidepool</string>
     <string name="upload_now">Pošalji sada</string>
     <!-- Xdrip StatusLine -->

@@ -5,8 +5,8 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInf
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.basal.model.StartTempBasalInfusionRequestModel
-import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
+import kotlin.time.Clock
 
 class CarelevoStartTempBasalInfusionUseCase @Inject constructor(
     private val patchInfoRepository: CarelevoPatchInfoRepository,

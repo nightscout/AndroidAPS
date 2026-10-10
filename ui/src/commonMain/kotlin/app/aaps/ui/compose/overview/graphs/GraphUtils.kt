@@ -18,6 +18,9 @@ import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.concurrent.Volatile
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -25,12 +28,9 @@ import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-import kotlin.concurrent.Volatile
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 /**
- * Shared utilities for Vico graphs in AndroidAPS.
+ * Shared utilities for Vico graphs in AAPS.
  *
  * CRITICAL: All graphs MUST use the same x-coordinate system to ensure proper alignment.
  * This uses whole minutes from minTimestamp to avoid label repetition and precision errors.

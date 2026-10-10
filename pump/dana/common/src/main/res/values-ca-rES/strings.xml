@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairingtimedout">Temps d\'espera excedit en sincronitzar</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="maxbolusviolation">Superat el bolus màxim</string>
     <string name="commanderror">Ordre errònia</string>
     <string name="speederror">Error de velocitat</string>
@@ -72,7 +71,6 @@
     <string name="description_pump_dana_r">Sincronització de bombes model DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">Sincronització de bombes model DANA Diabecare R Corea</string>
     <string name="description_pump_dana_r_v2">Sincronització de bombes model DANA Diabecare R amb firmware actualitzat</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">No s\'ha trobat el dispositiu seleccionat</string>
     <string name="danar_switchtouhmode">Canviar mode de U/d a U/h a la bomba</string>
     <string name="danarkoreanpump">DanaR Coreana</string>

@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Integrace pumpy pro Medtrum Nano a Medtrum 300U</string>
     <string name="medtrum_pump_setting">Nastavení pumpy Medtrum</string>
     <string name="pump_error">Chyba pumpy: %1$s!! </string>
@@ -13,6 +12,7 @@
     <string name="patch_not_active">Patch není aktivován</string>
     <string name="pump_setting_failed">Načtení uživatelského nastavení do pumpy selhalo!</string>
     <string name="pump_sync_error">Chyba při synchronizaci historie z pumpy, záznam byl přeskočen. Zkontrolujte, zda je bolus správně synchronizován. Potvrďte, a pokud se chyba vrátí, změňte patch nebo pumpu.</string>
+    <string name="patch_reset_after_primed_error">Patch se sám restartoval a ztratil relaci. Již nemůže doručit inzulín. Odstraňte patch a začněte novou.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">Aktivní bolus</string>
     <string name="pump_state_label">Stav pumpy</string>

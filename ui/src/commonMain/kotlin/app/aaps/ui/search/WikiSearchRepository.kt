@@ -29,7 +29,7 @@ sealed class WikiSearchResult {
 }
 
 /**
- * Repository for searching AndroidAPS documentation on ReadTheDocs.
+ * Repository for searching AAPS documentation on ReadTheDocs.
  * Uses the RTD Search API v3 to query the wiki and returns results
  * as [SearchIndexEntry] items with [SearchCategory.WIKI].
  *
@@ -54,7 +54,7 @@ class WikiSearchRepository(
     private val json = Json { ignoreUnknownKeys = true }
 
     /**
-     * Search the AndroidAPS wiki for the given query.
+     * Search the AAPS wiki for the given query.
      *
      * @param query Search query string (minimum 3 characters)
      * @return [WikiSearchResult.Offline] if no connectivity,

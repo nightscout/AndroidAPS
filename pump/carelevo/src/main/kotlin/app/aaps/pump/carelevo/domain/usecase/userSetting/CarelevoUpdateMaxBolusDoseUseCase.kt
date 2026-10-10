@@ -2,8 +2,8 @@ package app.aaps.pump.carelevo.domain.usecase.userSetting
 
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
-import kotlin.time.Clock
 import dev.zacsweers.metro.Inject
+import kotlin.time.Clock
 
 class CarelevoUpdateMaxBolusDoseUseCase @Inject constructor(
     private val infusionInfoRepository: CarelevoInfusionInfoRepository,

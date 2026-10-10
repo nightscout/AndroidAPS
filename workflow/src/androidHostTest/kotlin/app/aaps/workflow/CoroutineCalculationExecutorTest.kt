@@ -18,6 +18,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -144,6 +146,71 @@ class CoroutineCalculationExecutorTest : TestBase() {
         sut.stop(MAIN_CALCULATION, "test")
 
         assertThat(prepareEnded.isCompleted).isTrue()
+    }
+
+    /** Nothing was started, so a history change does not have to wait for anything. */
+    @Test
+    fun `awaitIdle is true at once when nothing runs`() = runBlocking {
+        assertThat(sut.awaitIdle(MAIN_CALCULATION, 1.seconds)).isTrue()
+    }
+
+    /**
+     * A history change that waits for the running calculation must also wait for the post phase. That
+     * is where the loop runs, and starting the next calculation then would cancel the loop in the
+     * middle of a run.
+     */
+    @Test
+    fun `awaitIdle waits for the post phase too`() = runBlocking {
+        val postStarted = CompletableDeferred<Unit>()
+        val postGate = CompletableDeferred<Unit>()
+        whenever(post.run(anyOrNull(), any(), any())).doSuspendableAnswer {
+            postStarted.complete(Unit)
+            postGate.await()
+            WorkOutcome.Success
+        }
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = true)
+        withTimeout(5.seconds) { postStarted.await() }
+
+        val idle = async { sut.awaitIdle(MAIN_CALCULATION, 5.seconds) }
+        delay(100)
+        assertThat(idle.isCompleted).isFalse() // prepare is done, but the post phase still runs
+
+        postGate.complete(Unit)
+        assertThat(idle.await()).isTrue()
+    }
+
+    /**
+     * A run that is replaced ends too. Waiting must go on for the replacement, or the caller would
+     * stop that one - the restart this wait is there to avoid.
+     */
+    @Test
+    fun `awaitIdle goes on waiting when the run is replaced`() = runBlocking {
+        val firstGate = CompletableDeferred<Unit>()
+        val secondGate = CompletableDeferred<Unit>()
+        prepareBody = { firstGate.await() }
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = false)
+        awaitRuns(1)
+        val idle = async { sut.awaitIdle(MAIN_CALCULATION, 5.seconds) }
+        delay(100)
+
+        prepareBody = { secondGate.await() }
+        sut.start(MAIN_CALCULATION, generation = 2, runPost = false) // cancels the first run
+        awaitRuns(2)
+        delay(100)
+        assertThat(idle.isCompleted).isFalse()
+
+        secondGate.complete(Unit)
+        assertThat(idle.await()).isTrue()
+    }
+
+    /** A run that does not end within the limit gives false, so the caller can stop it after all. */
+    @Test
+    fun `awaitIdle gives up after the timeout`() = runBlocking {
+        prepareBody = { awaitCancellation() }
+        sut.start(MAIN_CALCULATION, generation = 1, runPost = false)
+        awaitRuns(1)
+
+        assertThat(sut.awaitIdle(MAIN_CALCULATION, 100.milliseconds)).isFalse()
     }
 
     /** The same gap on the replace path: a new start must not leave the old prepare phase running. */

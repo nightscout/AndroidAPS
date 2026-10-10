@@ -1,12 +1,5 @@
 package info.nightscout.pump.combov2
 
-import app.aaps.core.interfaces.di.PumpDriver
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.plugin.PluginBase
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.IntKey as MetroIntKey
-import dev.zacsweers.metro.binding
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.data.model.BS
@@ -20,10 +13,13 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -51,6 +47,11 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -104,12 +105,11 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.joda.time.DateTime
 import java.util.Locale
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
+import dev.zacsweers.metro.IntKey as MetroIntKey
 import info.nightscout.comboctl.base.BluetoothAddress as ComboCtlBluetoothAddress
 import info.nightscout.comboctl.base.LogLevel as ComboCtlLogLevel
 import info.nightscout.comboctl.base.Logger as ComboCtlLogger
@@ -150,7 +150,6 @@ class ComboV2Plugin(
             }
             .icon(IcPluginCombo)
             .pluginName(TextRef.AndroidRes(R.string.combov2_plugin_name))
-            .shortName(TextRef.AndroidRes(R.string.combov2_plugin_shortname))
             .description(TextRef.AndroidRes(R.string.combov2_plugin_description)),
         ownPreferences = ComboIntKey.entries + ComboBooleanKey.entries + ComboStringNonKey.entries + ComboIntNonKey.entries + ComboLongNonKey.entries,
         aapsLogger, rh, preferences, commandQueue, notificationManager
@@ -197,7 +196,7 @@ class ComboV2Plugin(
 
     // Set to true in when unpair() starts and back to false in the
     // pumpManager onPumpUnpaired callback. This fixes a race condition
-    // that can happen if the user unpairs the pump while AndroidAPS
+    // that can happen if the user unpairs the pump while AAPS
     // is calling connect().
     private var unpairing = false
 
@@ -1043,7 +1042,7 @@ class ComboV2Plugin(
 
         bolusJob = newBolusJob
 
-        // AndroidAPS expects deliverTreatment() calls to block and to be cancellable
+        // AAPS expects deliverTreatment() calls to block and to be cancellable
         // (via stopBolusDelivering()), so we run a separate bolus coroutine and
         // wait here until it is done.
         try {
@@ -1451,7 +1450,7 @@ class ComboV2Plugin(
 
                 _pairedStateUIFlow.value = true
 
-                // Notify AndroidAPS that this is a new pump and that
+                // Notify AAPS that this is a new pump and that
                 // the history that is associated with any previously
                 // paired pump is to be discarded.
                 pumpSync.connectNewPump()
@@ -1459,7 +1458,7 @@ class ComboV2Plugin(
                 // Schedule a status update, since pairing can take
                 // a while. By the time  we reach this point, the queue
                 // connection attempt may have reached the timeout,
-                // and reading the status is part of what AndroidAPS
+                // and reading the status is part of what AAPS
                 // was trying to do, so do that now.
                 // If we reach this point before the timeout, then the
                 // queue will contain a pump_driver_changed readstatus

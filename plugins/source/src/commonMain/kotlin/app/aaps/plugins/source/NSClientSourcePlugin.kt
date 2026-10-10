@@ -40,7 +40,6 @@ class NSClientSourcePlugin(
         }
         .icon(IcPluginNsClientBg)
         .pluginName(SourceStrings.ns_client_bg)
-        .shortName(SourceStrings.ns_client_bg_short)
         .description(SourceStrings.description_source_ns_client)
         // Forced on for a client, which has no other BG source. On a master it stays the user's choice, so
         // this is one-sided on purpose - no forced-off half.

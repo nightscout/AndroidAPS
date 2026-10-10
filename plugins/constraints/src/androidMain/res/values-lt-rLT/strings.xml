@@ -37,7 +37,6 @@
     <string name="loopenabled">Ciklas aktyvuotas</string>
     <string name="apsselected">DKS pasirinkta</string>
     <string name="closedmodeenabled">Uždaras ciklas aktyvus</string>
-    <string name="objectives_shortname">ETAPAI</string>
     <string name="description_objectives">Mokymosi programa</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>

@@ -10,7 +10,6 @@
     <string name="no_connectivity">Nėra ryšio</string>
     <string name="unsupported_ns_version">Nepalaikoma Nightscout versija</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Autorizuoti klientai</string>
     <string name="authorized_clients_add">Pridėti klientą</string>
@@ -75,7 +74,6 @@
     <string name="summary_tidepool_dev_servers">Įjungus duomenys bus įkeliami į bandomuosius, o ne įprastus serverius</string>
     <string name="title_tidepool_dev_servers">Naudoti integracijos (test) serverius</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Sinchronizuoti duomenis su Tidepool</string>
     <string name="upload_now">Įkelti dabar</string>
     <string name="tidepool_purge_data">Išvalyti visus duomenis</string>
@@ -85,7 +83,6 @@
     <string name="working">Dirbama</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Siųsti duomenis į xDrip+</string>
     <string name="xdrip_status_settings">Papildoma xDrip+ būsenos linija</string>
     <string name="xdrip_not_installed">xDrip+ neinstaliuota</string>
@@ -94,7 +91,6 @@
     <string name="xdrip_local_broadcasts_title">Įjungti duomenų perdavimą į xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="tizen">Išorinės susietos programėlės</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">Įjungia duomenų transliavimą įvairioms išorinėms susietoms programoms</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -102,7 +98,6 @@
     <string name="garmin_local_http_server_port">Vietinio HTTP serverio prievadas</string>
     <string name="garmin_local_http_server">Vietinis HTTP serveris</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Stebėti ir kontroliuoti AAPS naudojant WearOS laikrodį.</string>
     <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>
     <string name="pump_status">Pompos būklė</string>
@@ -169,7 +164,6 @@
     <string name="garmin_request_key">Užklausos raktas</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS komandos</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Nuotolinis AAPS valdymas naudojant SMS komandas.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">iš Authenticator programėlės: %1$s, po to - PIN</string>
     <string name="smscommunicator_tab_otp_label">Autentifikavimo sąrankos nustatymas</string>

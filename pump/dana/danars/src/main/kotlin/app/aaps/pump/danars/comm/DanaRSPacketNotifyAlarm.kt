@@ -2,22 +2,16 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
-import kotlinx.coroutines.runBlocking
+import app.aaps.pump.danars.services.DanaRSAlarmReporter
 import dev.zacsweers.metro.Inject
 
 @Inject
 class DanaRSPacketNotifyAlarm(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val pumpSync: PumpSync,
-    private val danaPump: DanaPump,
-    private val notificationManager: NotificationManager
+    private val alarmReporter: DanaRSAlarmReporter
 ) : DanaRSPacket() {
 
     init {
@@ -34,16 +28,16 @@ class DanaRSPacketNotifyAlarm(
                 errorString = rh.gs(app.aaps.pump.dana.R.string.batterydischarged)
 
             0x02       ->  // Pump Error
-                errorString = rh.gs(app.aaps.pump.dana.R.string.pumperror) + " " + alarmCode
+                errorString = rh.gs(app.aaps.pump.dana.R.string.pumperror)
 
             0x03       ->  // Occlusion
                 errorString = rh.gs(app.aaps.pump.dana.R.string.occlusion)
 
             0x04       ->  // LOW BATTERY
-                errorString = rh.gs(app.aaps.pump.dana.R.string.pumpshutdown)
+                errorString = rh.gs(app.aaps.pump.dana.R.string.lowbattery)
 
             0x05       ->  // Shutdown
-                errorString = rh.gs(app.aaps.pump.dana.R.string.lowbattery)
+                errorString = rh.gs(app.aaps.pump.dana.R.string.pumpshutdown)
 
             0x06       ->  // Basal Compare
                 errorString = rh.gs(app.aaps.pump.dana.R.string.basalcompare)
@@ -75,8 +69,7 @@ class DanaRSPacketNotifyAlarm(
             aapsLogger.debug(LTag.PUMPCOMM, "Error detected: $errorString")
             return
         }
-        notificationManager.post(NotificationId.DANA_PUMP_ALARM, errorString)
-        runBlocking { pumpSync.insertAnnouncement(errorString, null, danaPump.pumpType(), danaPump.serialNumber) }
+        alarmReporter.report(errorString)
     }
 
     override val friendlyName: String = "NOTIFY__ALARM"

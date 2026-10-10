@@ -1,8 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -36,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -50,13 +49,16 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.sync.SyncStrings
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 private val jsonPrettyPrint = Json { prettyPrint = true }
 
@@ -170,10 +172,12 @@ fun NSClientScreenContent(
                 LabelValueRow(label = stringResource(SyncStrings.queue), value = uiState.queue)
             }
 
+            // One switch for a screen reader ("Running, switch, on"): the Switch alone had no name.
             Row(
                 modifier = Modifier
                     .padding(start = AapsSpacing.extraLarge)
-                    .align(Alignment.CenterVertically),
+                    .align(Alignment.CenterVertically)
+                    .toggleable(value = !uiState.paused, role = Role.Switch, onValueChange = { isRunning -> onPauseChanged(!isRunning) }),
                 horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -182,10 +186,7 @@ fun NSClientScreenContent(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Switch(
-                    checked = !uiState.paused,
-                    onCheckedChange = { isRunning -> onPauseChanged(!isRunning) }
-                )
+                Switch(checked = !uiState.paused, onCheckedChange = null)
             }
         }
 

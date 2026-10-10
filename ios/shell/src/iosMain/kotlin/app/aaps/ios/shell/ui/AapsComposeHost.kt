@@ -15,18 +15,18 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.ComposeUIViewController
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.objects.di.CoreObjectsGraph
 import app.aaps.core.ui.compose.AapsCard
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.icons.IcAaps
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ios.shell.ShellInfo
 import app.aaps.ios.shell.di.IosProbeGraph
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import dev.zacsweers.metro.createGraphFactory
 import platform.UIKit.UIViewController
-import app.aaps.core.objects.di.CoreObjectsGraph
-import app.aaps.shared.clientbindings.ClientGraphBindings
 
 /**
  * The first AAPS composables that iOS actually runs.

@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.wear.compose
 
-import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -18,6 +17,7 @@ import app.aaps.core.keys.PushedWatchfaceId
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.wear.WearPlugin
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers

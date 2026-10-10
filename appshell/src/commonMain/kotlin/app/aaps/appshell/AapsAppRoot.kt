@@ -7,8 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,6 +40,8 @@ import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.PasswordHasher
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
@@ -58,14 +60,15 @@ import app.aaps.core.ui.compose.LocalMasterReachable
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
-import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.dialogs.PasswordCheckHost
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
 import app.aaps.core.ui.compose.preference.LocalClearExportPasswordStore
 import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.LocalVisibilityContext
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.compose.clientcontrol.ClientControlPendingDialog
 
@@ -110,6 +113,9 @@ fun AapsAppRoot(
     rxBus: RxBus,
     snackbarHostPresence: SnackbarHostPresence,
     clientControlActionDispatcher: ClientControlActionDispatcher,
+    bolusProgressData: BolusProgressData,
+    commandQueue: CommandQueue,
+    pumpCommunicationStatus: PumpCommunicationStatus,
     appIcon: @Composable (Modifier) -> Unit,
     splashLogo: @Composable (Modifier) -> Unit,
     onNavControllerReady: (NavHostController) -> Unit,
@@ -119,6 +125,9 @@ fun AapsAppRoot(
     val navController = rememberNavController().also(onNavControllerReady)
     val masterReachable by nsClient.masterReachable.collectAsStateWithLifecycle()
     val masterControlAllowed by nsClient.masterControlAllowed.collectAsStateWithLifecycle()
+    val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
+    val pumpStatusBanner by pumpCommunicationStatus.statusBannerFlow.collectAsStateWithLifecycle()
+    val pumpQueueStatus by pumpCommunicationStatus.queueStatusFlow.collectAsStateWithLifecycle()
 
     // Global self-heal — event-driven, NOT a poll (a timer would keep the CPU awake). Probe once when
     // we go offline, and again on each navigation while offline, so any screen/dialog the user opens
@@ -174,6 +183,25 @@ fun AapsAppRoot(
                     ) {
                         content(navController)
                     }
+
+                    BolusProgressOverlay(
+                        bolusState = bolusState,
+                        pumpStatus = pumpStatusBanner?.text ?: "",
+                        queueStatus = pumpQueueStatus,
+                        onStop = {
+                            // A client does not own the pump: ask the master to abort and show the press
+                            // locally. Only a master talks to its own queue.
+                            if (config.AAPSCLIENT) {
+                                clientControlActionDispatcher.stopBolus()
+                                bolusProgressData.stopPressed()
+                            } else {
+                                commandQueue.cancelAllBoluses(null)
+                            }
+                        },
+                        // Only reachable from the stalled-state Dismiss button on a client: hides the
+                        // local mirror. Delivery belongs to the master, so this touches no pump.
+                        onDismiss = { bolusProgressData.clear() }
+                    )
 
                     // Root-level snackbar host — subscribes to EventShowSnackbar
                     // and is the single visible SnackbarHost across every screen.

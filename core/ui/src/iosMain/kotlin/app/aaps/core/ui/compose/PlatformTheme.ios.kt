@@ -1,12 +1,12 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.interfaces.utils.usesTwelveHourClock
-import platform.Foundation.NSDateFormatter
-import platform.Foundation.NSDateFormatterShortStyle
-import platform.Foundation.NSDateFormatterNoStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import app.aaps.core.interfaces.utils.usesTwelveHourClock
+import platform.Foundation.NSDateFormatter
+import platform.Foundation.NSDateFormatterNoStyle
+import platform.Foundation.NSDateFormatterShortStyle
 import kotlin.math.min
 
 /** iOS styles its status bar through the view controller, not from inside the composition. */

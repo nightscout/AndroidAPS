@@ -8,8 +8,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import kotlin.time.Clock
-import kotlin.time.Instant
 import platform.Foundation.NSDate
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
@@ -17,6 +15,8 @@ import platform.Foundation.NSRelativeDateTimeFormatter
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
 import platform.Foundation.dateWithTimeIntervalSince1970
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * What the maintenance and import screens need to know about exports on iOS.

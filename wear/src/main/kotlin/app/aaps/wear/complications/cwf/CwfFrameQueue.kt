@@ -2,6 +2,7 @@ package app.aaps.wear.complications.cwf
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.wear.complications.cwf.CwfFrameQueue.Companion.TOLERANCE_MS
 import java.util.concurrent.ConcurrentSkipListMap
 import kotlin.math.abs
 

@@ -4,10 +4,10 @@ import app.aaps.core.interfaces.location.LocationServiceController
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PermissionGroup
+import app.aaps.plugins.automation.GeoPosition
 import app.aaps.plugins.automation.LastKnownLocation
 import app.aaps.plugins.automation.LocationPermissions
 import app.aaps.plugins.automation.PairedBtDevices
-import app.aaps.plugins.automation.GeoPosition
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject

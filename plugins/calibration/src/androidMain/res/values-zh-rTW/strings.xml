@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="calibration_shortname">校正</string>
     <string name="no_calibration_name">無校正</string>
     <string name="description_no_calibration">"未套用校正覆寫。傳感器數值將原樣使用。當傳感器已具備出廠校正且準確時，請使用此選項。"</string>
     <string name="linear_calibration_name">線性校正</string>

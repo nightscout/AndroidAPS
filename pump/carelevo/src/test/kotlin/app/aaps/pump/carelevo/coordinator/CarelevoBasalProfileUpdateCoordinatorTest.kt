@@ -3,8 +3,8 @@ package app.aaps.pump.carelevo.coordinator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoBasalInfusionInfoDomainModel
@@ -13,6 +13,7 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainMo
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,7 +32,6 @@ import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicInteger
-import dev.zacsweers.metro.Provider
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)

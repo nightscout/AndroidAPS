@@ -1,11 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol.compose
 
-import app.aaps.core.ui.compose.stringResource
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
-import androidx.navigationevent.NavigationEventInfo
-import androidx.navigationevent.compose.NavigationBackHandler
-import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,10 +33,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.aaps.core.ui.compose.metroViewModel
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.clearFocusOnTap
+import app.aaps.core.ui.compose.metroViewModel
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.sync.SyncStrings
 
 private const val PIN_LENGTH = 8
 
@@ -257,6 +257,7 @@ private fun ErrorContent(
         PairWithMasterViewModel.ErrorReason.AmbiguousPin       -> stringResource(SyncStrings.pair_with_master_error_ambiguous_pin)
         PairWithMasterViewModel.ErrorReason.OfferExpired       -> stringResource(SyncStrings.pair_with_master_error_expired)
         PairWithMasterViewModel.ErrorReason.NetworkUnavailable -> stringResource(SyncStrings.pair_with_master_error_network)
+        PairWithMasterViewModel.ErrorReason.SecretStoreFailed  -> stringResource(SyncStrings.pair_with_master_error_secret_store)
     }
     Column(
         modifier = Modifier

@@ -66,7 +66,7 @@ private fun GlucoseCircleContent(state: WidgetRenderState) {
     )
     val bitmap = remember(input, sidePx) { GlucoseCircleBitmapRenderer().render(sidePx, input) }
     // The bitmap has no text for screen readers.
-    val description = listOfNotNull(state.bgText, state.arrowDescription, state.deltaText, state.timeAgoText).joinToString(", ")
+    val description = listOfNotNull(state.bgSpoken, state.arrowDescription, state.deltaText, state.timeAgoText).joinToString(", ")
 
     val rootModifier = GlanceModifier
         .fillMaxSize()

@@ -42,15 +42,14 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.comm.DataLayerListenerServiceWear
-import app.aaps.wear.di.WearMetroService
 import com.google.common.util.concurrent.ListenableFuture
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
-import kotlin.math.sqrt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.guava.future
+import kotlin.math.sqrt
 
 private const val SPACING_ACTIONS = 3f
 private const val ICON_SIZE_FRACTION = 0.4f // Percentage of button diameter

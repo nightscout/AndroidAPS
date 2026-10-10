@@ -1,7 +1,9 @@
 package app.aaps.pump.danars.services
 
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -25,6 +27,9 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 
 class DanaRSServiceTest : TestBaseWithProfile() {
 
@@ -34,6 +39,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var bleComm: BLEComm
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var danaRSPacketGeneralInitialScreenInformationProvider: () -> DanaRSPacketGeneralInitialScreenInformation
     @Mock lateinit var danaRSPacketOptionSetUserOptionProvider: () -> DanaRSPacketOptionSetUserOption
     @Mock lateinit var danaRSPacketBolusSetStepBolusStopProvider: () -> DanaRSPacketBolusSetStepBolusStop
@@ -65,6 +71,7 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
         danaRSService.bolusProgressData = BolusProgressData(ch, CoroutineScope(Dispatchers.Unconfined))
+        danaRSService.detailedBolusInfoStorage = detailedBolusInfoStorage
         danaRSService.pumpEnactResultProvider = pumpEnactResultProvider
         danaRSService.danaRSPacketGeneralInitialScreenInformation = danaRSPacketGeneralInitialScreenInformationProvider
         danaRSService.danaRSPacketOptionSetUserOption = danaRSPacketOptionSetUserOptionProvider
@@ -156,6 +163,35 @@ class DanaRSServiceTest : TestBaseWithProfile() {
         val result = danaRSService.bolus(detailedBolusInfo)
 
         assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `stopped bolus info gets the real end time`() {
+        // Plugin stored 6 U with the estimated end (start + 6 U * 12 s), the bolus was stopped earlier
+        val estimatedEnd = 1_790_885_933_000L
+        val realEnd = 1_790_885_865_000L
+        val stored = DetailedBolusInfo().apply { insulin = 6.0; timestamp = estimatedEnd; bolusType = BS.Type.SMB }
+        `when`(detailedBolusInfoStorage.findDetailedBolusInfo(estimatedEnd, 6.0)).thenReturn(stored)
+
+        danaRSService.updateStoredBolusTime(stored, realEnd)
+
+        val captor = argumentCaptor<DetailedBolusInfo>()
+        verify(detailedBolusInfoStorage).add(captor.capture())
+        assertThat(captor.firstValue.timestamp).isEqualTo(realEnd)
+        assertThat(captor.firstValue.insulin).isEqualTo(6.0)
+        assertThat(captor.firstValue.bolusType).isEqualTo(BS.Type.SMB)
+        // The caller's object keeps its time
+        assertThat(stored.timestamp).isEqualTo(estimatedEnd)
+    }
+
+    @Test
+    fun `bolus info not found is not stored again`() {
+        val info = DetailedBolusInfo().apply { insulin = 1.0; timestamp = 1_000_000L }
+
+        danaRSService.updateStoredBolusTime(info, 2_000_000L)
+
+        verify(detailedBolusInfoStorage).findDetailedBolusInfo(1_000_000L, 1.0)
+        verifyNoMoreInteractions(detailedBolusInfoStorage)
     }
 
     @Test

@@ -35,7 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalAccessibilityManager
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -195,6 +198,7 @@ fun MainScreen(
             var chromeVisible by remember { mutableStateOf(false) }
             val showChrome = !previewMode || chromeVisible
             val interactionSource = remember { MutableInteractionSource() }
+            val accessibilityManager = LocalAccessibilityManager.current
 
             // Measure actual bar heights for content padding in non-preview mode
             var topBarHeightPx by remember { mutableIntStateOf(0) }
@@ -207,7 +211,9 @@ fun MainScreen(
                     return@LaunchedEffect
                 }
                 if (chromeVisible) {
-                    delay(AUTO_HIDE_DELAY_MS)
+                    // Honours the system "Time to take action" setting: a screen reader user moving
+                    // through the bars needs longer than 3 s before they hide again.
+                    delay(accessibilityManager?.calculateRecommendedTimeoutMillis(AUTO_HIDE_DELAY_MS, containsIcons = true, containsControls = true) ?: AUTO_HIDE_DELAY_MS)
                     chromeVisible = false
                 }
             }
@@ -235,6 +241,7 @@ fun MainScreen(
 
                 val activeSceneState by mainViewModel.activeSceneState.collectAsStateWithLifecycle()
                 val sceneExpired by mainViewModel.sceneExpired.collectAsStateWithLifecycle()
+                val activeSceneChainTargetName by mainViewModel.activeSceneChainTargetName.collectAsStateWithLifecycle()
                 val masterReachable by mainViewModel.masterReachable.collectAsStateWithLifecycle()
                 // Stable pairing signal — hides the mutating nav buttons on an unpaired client.
                 val masterOrPairedClient by mainViewModel.masterOrPairedClient.collectAsStateWithLifecycle()
@@ -276,6 +283,7 @@ fun MainScreen(
                         onAutoShowConsumed = onAutoShowConsumed,
                         activeSceneState = activeSceneState,
                         sceneExpired = sceneExpired,
+                        activeSceneChainTargetName = activeSceneChainTargetName,
                         onEndScene = { mainViewModel.requestSceneDeactivation() },
                         onDismissScene = { mainViewModel.dismissExpiredScene() },
                         endSceneEnabled = masterReachable,
@@ -452,6 +460,9 @@ fun MainScreen(
 
                     // Tap overlay to restore chrome in preview mode (only when hidden)
                     if (previewMode && !chromeVisible) {
+                        // Named: the top bar, menu and toolbar come back only through this, and a
+                        // screen reader announced it as a nameless control.
+                        val showControls = stringResource(UiStrings.a11y_show_controls)
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -459,6 +470,7 @@ fun MainScreen(
                                     interactionSource = interactionSource,
                                     indication = null
                                 ) { chromeVisible = true }
+                                .semantics { contentDescription = showControls }
                         )
                     }
                 }

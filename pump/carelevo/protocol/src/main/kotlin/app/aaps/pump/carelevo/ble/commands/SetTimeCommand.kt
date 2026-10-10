@@ -5,7 +5,6 @@ import app.aaps.pump.carelevo.ble.BleMultiCommand
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
 import kotlin.time.Instant
 
 /**

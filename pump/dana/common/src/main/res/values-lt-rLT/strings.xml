@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Susiejimui skirtas laikas baigėsi</string>
     <string name="danarspump">Dana-I/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS ir Dana-I pompų integracija</string>
     <string name="maxbolusviolation">Pažeistas maks boluso limitas</string>
     <string name="commanderror">Komandos klaida</string>
@@ -76,7 +75,6 @@
     <string name="description_pump_dana_r">DANA Diabecare R pompos integracija</string>
     <string name="description_pump_dana_r_korean">DANA Diabecare R pompos, skirtos vietinei P. Korėjos rinkai, integracija</string>
     <string name="description_pump_dana_r_v2">DANA Diabecare R pompos su atnaujinta programine-aparatine įranga integracija</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Pasirinktas įrenginys nerastas</string>
     <string name="danar_switchtouhmode">Pakeisti pompoje V/d režimą į V/val.</string>
     <string name="danarkoreanpump">DanaR Korean</string>

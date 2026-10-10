@@ -12,11 +12,11 @@ import app.aaps.pump.carelevo.domain.model.infusion.CarelevoImmeBolusInfusionInf
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.model.infusion.CarelevoTempBasalInfusionInfoDomainModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
-import io.reactivex.rxjava3.core.Observable
-import java.util.Optional
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import io.reactivex.rxjava3.core.Observable
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 @ContributesBinding(AppScope::class)

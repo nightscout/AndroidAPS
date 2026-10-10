@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">Glykémie z NS</string>
-    <string name="ns_client_bg_short">NSGL</string>
     <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
     <string name="source_xdrip">xDrip+ glykémie</string>
     <string name="description_source_xdrip">Přijímat hodnoty glykémie z xDripu+ a kompatibilních aplikací (Juggluco atd.).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Přijímat glykémie z upravené aplikace Dexcom (BYODA).</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Přijímat glykémie z aplikace Glimp.</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Přijímat glykémie z aplikace Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Přijímat glykémie z aplikace Tomato (MiaoMiao zařízení)</string>
     <string name="random_bg">Náhodná glykémie</string>
     <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
-    <string name="random_bg_short">Gly</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Přijímat glykémie z aplikace Syai/Ottai.</string>
@@ -49,7 +45,6 @@
     <string name="permission_notification_listener_title">Přístup k oznámením</string>
     <string name="permission_notification_listener_description">Vyžadováno pro čtení hodnot glykémie z oznámení CGM aplikace</string>
     <string name="aidex">Aplikace pro CGM MicroTech</string>
-    <string name="aidex_short">Aplikace CGM</string>
     <string name="description_source_aidex">Přijímat hodnoty CGM od LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 atd.</string>
     <string name="aidex_sensor_expired">Senzor vypršel, nahraďte prosím novým senzorem</string>
     <string name="aidex_sensor_error">Chyba senzoru, zkontrolujte stav senzoru</string>

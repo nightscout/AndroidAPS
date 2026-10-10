@@ -66,6 +66,9 @@ import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchState
 import app.aaps.pump.eopatch.vo.PatchState.Companion.create
 import app.aaps.pump.eopatch.vo.TempBasal
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -94,9 +97,6 @@ import java.util.Arrays
 import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import javax.crypto.KeyAgreement
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.ByteArray

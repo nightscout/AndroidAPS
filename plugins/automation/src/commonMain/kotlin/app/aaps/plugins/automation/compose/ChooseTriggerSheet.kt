@@ -1,9 +1,5 @@
 package app.aaps.plugins.automation.compose
 
-import kotlin.reflect.KClass
-import app.aaps.plugins.automation.AutomationStrings
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.compose.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -26,7 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.consumeOverscroll
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
 import app.aaps.plugins.automation.triggers.TriggerBTDevice
@@ -53,6 +52,7 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
+import kotlin.reflect.KClass
 
 enum class TriggerCategory(val labelResId: TextRef) {
     Time(AutomationStrings.automation_category_time),

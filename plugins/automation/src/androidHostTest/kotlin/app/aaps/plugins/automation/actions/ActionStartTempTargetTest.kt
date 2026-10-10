@@ -1,11 +1,10 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputTempTarget
 import com.google.common.truth.Truth.assertThat

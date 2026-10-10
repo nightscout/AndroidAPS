@@ -2,9 +2,9 @@ package app.aaps.pump.carelevo.coordinator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.SimpleResultResponse
 import app.aaps.pump.carelevo.ble.commands.TempBasalCancelCommand
@@ -14,6 +14,7 @@ import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoCancelTempBasalInfusi
 import app.aaps.pump.carelevo.domain.usecase.basal.CarelevoStartTempBasalInfusionUseCase
 import app.aaps.pump.carelevo.domain.usecase.basal.model.StartTempBasalInfusionRequestModel
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,7 +29,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
-import dev.zacsweers.metro.Provider
 
 /**
  * DIRECT unit tests of [CarelevoTempBasalCoordinator] — exercises the coordinator without going through

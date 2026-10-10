@@ -10,6 +10,7 @@
     <string name="configure">配置透明度</string>
     <string name="widget_description">AAPS 小工具</string>
     <string name="widget_bg_graph_description">AAPS 血糖圖表</string>
+    <string name="widget_glucose_circle_description">AAPS 血糖圓圈</string>
     <string name="widget_compact_bg_description">AAPS 血糖 + IOB + COB （精簡）</string>
     <string name="widget_small_description">AAPS 小型</string>
     <!--     Activities-->

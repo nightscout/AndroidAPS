@@ -104,7 +104,6 @@ class AutotunePlugin(
         .mainType(PluginType.GENERAL)
         .icon(IcPluginAutotune)
         .pluginName(TextRef.AndroidRes(app.aaps.core.ui.R.string.autotune))
-        .shortName(TextRef.AndroidRes(R.string.autotune_shortname))
         .composeContent { plugin ->
             AutotuneComposeContent(
                 autotunePlugin = plugin as AutotunePlugin,

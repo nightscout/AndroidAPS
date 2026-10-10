@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day를 위한 펌프 통합</string>
     <string name="low_reservoir">레저버 적음 경고</string>
     <string name="patch_expiration_reminders">패치 만료 알림</string>

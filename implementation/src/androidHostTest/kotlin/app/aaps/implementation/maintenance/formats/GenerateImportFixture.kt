@@ -2,8 +2,8 @@ package app.aaps.implementation.maintenance.formats
 
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.protection.SecureEncrypt
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey

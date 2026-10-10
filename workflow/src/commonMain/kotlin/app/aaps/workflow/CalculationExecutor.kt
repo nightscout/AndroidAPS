@@ -1,5 +1,7 @@
 package app.aaps.workflow
 
+import kotlin.time.Duration
+
 /**
  * Runs the two calculation phases, under a name that only one run may hold at a time.
  *
@@ -36,4 +38,14 @@ interface CalculationExecutor {
      * the loop would stall it.
      */
     suspend fun waitForPrepare(job: String, reason: String)
+
+    /**
+     * Waits until no phase of [job] is running or waiting to run, or until [timeout].
+     *
+     * Both phases, unlike [waitForPrepare]: the caller wants to start the next run, and starting it
+     * while the post phase runs would cancel the loop in the middle of a run.
+     *
+     * @return true when [job] is idle, false when [timeout] ran out first
+     */
+    suspend fun awaitIdle(job: String, timeout: Duration): Boolean
 }

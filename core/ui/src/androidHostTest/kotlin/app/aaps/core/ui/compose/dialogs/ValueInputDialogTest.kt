@@ -8,7 +8,9 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -109,5 +111,26 @@ class ValueInputDialogTest {
 
         assertThat(confirmed).isNull()
         assertThat(dismisses).isEqualTo(1)
+    }
+
+    // No caller passes asDuration: the minutes unit alone must turn the hours hint on.
+    @Test
+    fun minutesUnit_showsHoursPreview_withoutTheFlag() {
+        compose.setContent {
+            MaterialTheme {
+                ValueInputDialog(
+                    currentValue = 140.0,
+                    valueRange = 0.0..1440.0,
+                    step = 1.0,
+                    label = "Duration",
+                    unitLabel = CoreUiStrings.units_min,
+                    valueFormat = NumberFormat.INTEGER,
+                    onValueConfirm = {},
+                    onDismiss = {}
+                )
+            }
+        }
+
+        compose.onNodeWithText("= 2 h 20 min").assertIsDisplayed()
     }
 }

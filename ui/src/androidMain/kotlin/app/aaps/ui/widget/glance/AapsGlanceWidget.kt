@@ -21,6 +21,8 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.layout.Alignment
+import androidx.glance.semantics.contentDescription
+import androidx.glance.semantics.semantics
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
@@ -132,7 +134,9 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                         fontSize = 44.sp,
                         fontWeight = FontWeight.Bold,
                         textDecoration = if (state.strikeThrough) TextDecoration.LineThrough else TextDecoration.None
-                    )
+                    ),
+                    // Says "old reading" when the value is struck through.
+                    modifier = GlanceModifier.semantics { contentDescription = state.bgSpoken }
                 )
                 if (state.arrowResId != null) {
                     Spacer(modifier = GlanceModifier.width(4.dp))

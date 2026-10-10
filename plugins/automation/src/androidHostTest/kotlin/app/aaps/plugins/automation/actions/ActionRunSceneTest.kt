@@ -1,9 +1,8 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.Scene
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
-import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.AutomationStrings
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach

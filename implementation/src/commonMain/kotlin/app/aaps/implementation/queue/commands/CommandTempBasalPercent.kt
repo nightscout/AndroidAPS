@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.ui.CoreUiStrings
@@ -19,8 +18,7 @@ class CommandTempBasalPercent(
     private val durationInMinutes: Int,
     private val enforceNew: Boolean,
     private val tbrType: PumpSync.TemporaryBasalType,
-    override val callback: Callback?,
-) : Command {
+) : Command() {
 
     override val commandType: Command.CommandType = Command.CommandType.TEMPBASAL
 

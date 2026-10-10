@@ -42,6 +42,9 @@ import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchRptInfusio
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoCreateUserSettingInfoUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUserSettingInfoMonitorUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSettingInfoRequestModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -51,15 +54,12 @@ import java.time.LocalDateTime
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.TimeUnit
-import kotlin.time.Clock
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.time.Clock
 
 @OptIn(ExperimentalAtomicApi::class)
 @SingleIn(AppScope::class)

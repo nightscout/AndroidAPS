@@ -1,6 +1,5 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertType
@@ -30,14 +29,13 @@ import java.util.TimeZone
 class UpdatePodStateBolusTrackingTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var config: Config
 
     private lateinit var sut: OmnipodDashPodStateManagerImpl
 
     // ---- setup --------------------------------------------------------------------------------
 
     @BeforeEach fun setUp() {
-        sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences, config)
+        sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences)
         sut.activationProgress = ActivationProgress.COMPLETED
 
         // Baseline: 100 total pulses, 60 attributed as bolus → 40 basal pulses

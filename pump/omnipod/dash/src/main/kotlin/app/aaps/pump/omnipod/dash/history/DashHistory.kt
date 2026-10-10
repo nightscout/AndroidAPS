@@ -21,10 +21,10 @@ import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordDao
 import app.aaps.pump.omnipod.dash.history.database.HistoryRecordEntity
 import app.aaps.pump.omnipod.dash.history.mapper.HistoryMapper
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.lang.System.currentTimeMillis
-import dev.zacsweers.metro.Inject
 
 @Inject
 class DashHistory(

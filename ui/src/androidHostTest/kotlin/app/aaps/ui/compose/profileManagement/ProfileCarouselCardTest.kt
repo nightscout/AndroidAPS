@@ -1,16 +1,16 @@
 package app.aaps.ui.compose.profileManagement
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.runtime.CompositionLocalProvider
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.LocalDateUtil
-import org.mockito.kotlin.mock
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode

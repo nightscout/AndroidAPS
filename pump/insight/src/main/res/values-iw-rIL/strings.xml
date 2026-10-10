@@ -24,7 +24,6 @@
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">הצינורית הוחלפה</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insight_alert_notification_channel">התראות משאבת Insight</string>
     <string name="disable_vibration">ביטול רטט בעת הזרקת בולוס ידנית</string>
     <string name="disable_vibration_summary">עבור בולוס רגיל וממושך (זמין רק עם קושחה 3.x של משאבת Insight)</string>

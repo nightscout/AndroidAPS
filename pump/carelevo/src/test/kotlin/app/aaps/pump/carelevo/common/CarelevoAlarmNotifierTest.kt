@@ -1,10 +1,8 @@
 package app.aaps.pump.carelevo.common
 
-import android.app.NotificationManager as AndroidNotificationManager
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
@@ -40,6 +38,7 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowNotificationManager
+import android.app.NotificationManager as AndroidNotificationManager
 
 /**
  * Robolectric unit tests for [CarelevoAlarmNotifier].

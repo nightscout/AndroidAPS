@@ -12,11 +12,11 @@ import app.aaps.pump.carelevo.command.CmdAlarmClearPatchDiscard
 import app.aaps.pump.carelevo.command.CmdPumpResume
 import app.aaps.pump.carelevo.common.CarelevoPatch
 import app.aaps.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
 
 /**

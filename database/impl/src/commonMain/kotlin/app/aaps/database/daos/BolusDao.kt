@@ -33,28 +33,28 @@ internal interface BolusDao : TraceableDao<Bolus> {
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE (pumpId = :pumpId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (referenceId IS NULL)")
     suspend fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus?
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (temporaryId = :temporaryId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (temporaryId = :temporaryId) AND (pumpType = :pumpType) AND (pumpSerial = :pumpSerial) AND (+referenceId IS NULL)")
     suspend fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus?
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND type <> :exclude AND (referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND type <> :exclude AND (+referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getLastBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Bolus?
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND type == :only AND (referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND type == :only AND (+referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getLastBolusRecordOfType(only: Bolus.Type): Bolus?
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND (type <> :exclude) AND (referenceId IS NULL) ORDER BY timestamp ASC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND (type <> :exclude) AND (+referenceId IS NULL) ORDER BY timestamp ASC LIMIT 1")
     suspend fun getOldestBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Bolus?
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getBolusesFromTime(timestamp: Long): List<Bolus>
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND (timestamp BETWEEN :start AND :end) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND (timestamp BETWEEN :start AND :end) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getBolusesFromTime(start: Long, end: Long): List<Bolus>
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getAllBoluses(): List<Bolus>
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE (timestamp >= :timestamp) AND (+referenceId IS NULL) ORDER BY +id DESC")
     suspend fun getBolusesIncludingInvalidFromTime(timestamp: Long): List<Bolus>
 
     // for WS we need 1 record only

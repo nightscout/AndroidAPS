@@ -2,15 +2,12 @@ package app.aaps.plugins.aps.loop.extensions
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.keys.interfaces.TextRef
-
-import kotlinx.serialization.json.int
 import kotlinx.serialization.json.double
+import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertTrue
-
 
 class PumpEnactResultExtensionTest {
 

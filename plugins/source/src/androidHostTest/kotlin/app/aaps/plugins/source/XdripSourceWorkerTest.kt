@@ -96,7 +96,7 @@ class XdripSourceWorkerTest : TestBaseWithProfile() {
                 raw = 150.0,
                 noise = null,
                 trendArrow = TrendArrow.FORTY_FIVE_DOWN,
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE_XDRIP
+                sourceSensor = SourceSensor.DEXCOM_G6
             )
             verify(persistenceLayer).insertCgmSourceData(Sources.Xdrip, listOf(expectedGv), emptyList(), timestamp)
         }

@@ -1,8 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.asJsonObject
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest

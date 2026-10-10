@@ -1,11 +1,11 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.utils.lenientString
 import app.aaps.plugins.automation.triggers.Trigger

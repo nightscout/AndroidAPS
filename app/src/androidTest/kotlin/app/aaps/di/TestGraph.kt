@@ -1,7 +1,6 @@
 package app.aaps.di
 
 import androidx.test.core.app.ApplicationProvider
-import app.aaps.di.testGraphs
 import app.aaps.di.metro.MetroGraphs
 import app.aaps.helpers.IntegrationWaits
 import app.aaps.helpers.RxHelper

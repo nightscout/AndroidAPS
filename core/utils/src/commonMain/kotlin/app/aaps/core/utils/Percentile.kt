@@ -6,7 +6,7 @@ object Percentile {
 
     // Returns the value at a given percentile in a sorted numeric array, using the
     // "linear interpolation between closest ranks" method.
-    // The rank index is arr.size * p, matching oref0 lib/percentile.js so that AndroidAPS autosens and
+    // The rank index is arr.size * p, matching oref0 lib/percentile.js so that AAPS autosens and
     // autotune reproduce OpenAPS dosing. This differs on purpose from the (arr.size - 1) * p variant in
     // the original https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2 - do NOT change it to n - 1,
     // it would shift every median and change autosens/autotune output.

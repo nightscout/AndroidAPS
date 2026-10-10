@@ -4,10 +4,11 @@ import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TDD
+import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -15,6 +16,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.objects.extensions.convertedToAbsolute
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -22,6 +24,7 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
+import kotlin.math.min
 import kotlin.time.Instant
 
 /**
@@ -59,7 +62,7 @@ import kotlin.time.Instant
  * @property activePlugin Access to active pump for extended bolus handling
  * @property profileFunction Access to insulin profiles for basal rate calculation
  * @property dateUtil Date/time utilities
- * @property iobCobCalculator Calculator for basal data including TBR
+ * @property processedTbrEbData Temporary basals, including extended boluses of pumps that fake them
  * @property persistenceLayer Database access for boluses, carbs, and cached TDD
  *
  * @see TddCalculator
@@ -74,7 +77,7 @@ class TddCalculatorImpl(
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val persistenceLayer: PersistenceLayer
 ) : TddCalculator {
 
@@ -156,7 +159,45 @@ class TddCalculatorImpl(
         return calculateInterval(startTime, endTime, allowMissingData = false)
     }
 
-    override suspend fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? {
+    override suspend fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? =
+        sumInterval(startTime, endTime, allowMissingData)?.takeIf { it.hasData }?.tdd
+
+    override suspend fun calculateIntervalWithCachedDays(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? {
+        if (startTime >= endTime) return calculateInterval(startTime, endTime, allowMissingData)
+        val result = TDD(timestamp = startTime - startTime % (5 * 60 * 1000))
+        var hasData = false
+        // Walk the interval day by day. A whole day that is stored is read with one query, everything else
+        // (the part days at both ends, a day that is not stored) is summed in 5-minute steps as before.
+        var segmentStart = startTime
+        while (segmentStart < endTime) {
+            val midnight = MidnightTime.calc(segmentStart)
+            val nextMidnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight during DST change
+            val segmentEnd = min(nextMidnight, endTime)
+            // A stored day always covers 24 hours from its midnight (see `calculate`). On a DST change day,
+            // which is 23 or 25 hours long, that is not the same as this day, so it is summed instead.
+            val isWholeDay = segmentStart == midnight && segmentEnd == nextMidnight && nextMidnight - midnight == T.hours(24).msecs()
+            val cached = if (isWholeDay) persistenceLayer.getCalculatedTotalDailyDose(midnight) else null
+            val segment =
+                if (cached != null) cached.also { hasData = true }
+                else sumInterval(segmentStart, segmentEnd, allowMissingData)?.also { if (it.hasData) hasData = true }?.tdd ?: return null
+            result.basalAmount += segment.basalAmount
+            result.bolusAmount += segment.bolusAmount
+            result.totalAmount += segment.totalAmount
+            result.carbs += segment.carbs
+            result.carbInsulin += segment.carbInsulin
+            segmentStart = segmentEnd
+        }
+        return if (hasData) result else null
+    }
+
+    private class IntervalSum(val tdd: TDD, val hasData: Boolean)
+
+    /**
+     * Sums [startTime] to [endTime] in 5-minute steps.
+     *
+     * @return null if a step has no profile and [allowMissingData] is false
+     */
+    private suspend fun sumInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): IntervalSum? {
         val startTimeAligned = startTime - startTime % (5 * 60 * 1000)
         val endTimeAligned = endTime - endTime % (5 * 60 * 1000)
         val tdd = TDD(timestamp = startTimeAligned)
@@ -174,25 +215,40 @@ class TddCalculatorImpl(
                 if (ic > 0) tdd.carbInsulin += t.amount / ic
             }
         }
+        // Load the extended boluses of the whole interval once. This used to be one database query per
+        // 5-minute step, and the status lights ask for the insulin used since the last cannula change:
+        // 22 days of steps were about 6400 queries, run again on every pump status event.
+        //
+        // The two queries together give every extended bolus that can be active in the interval: all those
+        // already running at the start, and every one that starts later. The lookup below then picks the
+        // latest started one that is still running, as `getExtendedBolusActiveAt` does, also when two
+        // valid extended boluses overlap.
+        val extendedBoluses =
+            if (activePlugin.activePump.isFakingTempsByExtendedBoluses) emptyList()
+            else (persistenceLayer.getExtendedBolusesActiveAt(startTimeAligned) +
+                persistenceLayer.getExtendedBolusesStartingFromTimeToTime(startTimeAligned, endTimeAligned, true))
+                .distinctBy { it.id }
+        // The temporary basals of the whole interval, also from one read. This was `getBasalData` per step:
+        // its cache is cleared on every BG reload, so nearly every step was a database query, and dynamic
+        // ISF alone sums 32 hours on every loop run. The same problem was fixed in 2021 (#882) and came
+        // back when the steps moved to `getBasalData` to use its cache. The rate below uses the profile of
+        // the step, where `getBasalData` could return a value cached with another caller's profile.
+        val temporaryBasals = processedTbrEbData.getTempBasalsIncludingConvertedExtended(startTimeAligned, endTimeAligned)
         val calculationStep = T.mins(5).msecs()
         for (t in startTimeAligned until endTimeAligned step calculationStep) {
 
             val profile = profileFunction.getProfile(t) ?: if (allowMissingData) continue else return null
-            val tbr = iobCobCalculator.getBasalData(profile, t)
-            if (tbr.isTempBasalRunning) tbrFound = true
-            val absoluteRate = tbr.tempBasalAbsolute
+            val tbr = temporaryBasals.at(t)
+            if (tbr != null) tbrFound = true
+            val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
             tdd.basalAmount += absoluteRate / 60.0 * 5.0
 
-            if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                val eb = persistenceLayer.getExtendedBolusActiveAt(t)
-                val absoluteEbRate = eb?.rate ?: 0.0
-                tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
-            }
+            val eb = extendedBoluses.latestRunningAt(t) { it.duration }
+            val absoluteEbRate = eb?.rate ?: 0.0
+            tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
         }
         tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
-        //aapsLogger.debug(LTag.CORE, tdd.toString())
-        if (tdd.bolusAmount > 0 || tdd.basalAmount > 0 || tbrFound) return tdd
-        return null
+        return IntervalSum(tdd, hasData = tdd.bolusAmount > 0 || tdd.basalAmount > 0 || tbrFound)
     }
 
     override fun averageTDD(tdds: LongSparseArray<TDD>?): AverageTDD? {

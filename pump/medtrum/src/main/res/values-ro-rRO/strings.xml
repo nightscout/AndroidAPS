@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Integrarea pompei pentru Medtrum Nano și Medtrum 300U</string>
     <string name="medtrum_pump_setting">Setări pompă Medtrum</string>
     <string name="pump_error">Eroare pompă: %1$s!! </string>

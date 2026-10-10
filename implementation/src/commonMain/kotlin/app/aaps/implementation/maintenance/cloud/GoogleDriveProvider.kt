@@ -1,5 +1,6 @@
 package app.aaps.implementation.maintenance.cloud
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.CloudFile
@@ -11,10 +12,10 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.sharedPreferences.KeyValueStore
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.keys.interfaces.TextRef.Companion.withArgs
-import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.objects.crypto.platformCryptoPrimitives
 import app.aaps.core.ui.compose.icons.IcGoogleDrive
 import app.aaps.implementation.ImplementationStrings
+import app.aaps.implementation.maintenance.cloud.GoogleDriveProvider.Companion.REDIRECT_PORT
 import io.ktor.client.HttpClient
 
 /**

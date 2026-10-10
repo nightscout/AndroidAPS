@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcSettingsOff
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 import app.aaps.ui.search.M3SearchBar
 import app.aaps.ui.search.SearchUiState
 

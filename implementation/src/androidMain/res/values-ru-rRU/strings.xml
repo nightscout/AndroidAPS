@@ -19,6 +19,7 @@
     <string name="exported_failed">Не удалось экспортировать настройки!</string>
     <string name="filenotfound">Файл не найден</string>
     <string name="ue_exported">Записи пользователя экспортированы</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
     <string name="exported_at" comment="at placeholder we add export date">экспортировано в %1$s</string>
     <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>
     <string name="metadata_warning_different_flavour">Параметры были созданы с другим вариантом AAPS (%1$s) в то время как у вас: %2$s.\n\nНекоторые параметры могут отсутствать или быть недопустимы-после импорта проверьте и обновите параметры.</string>
@@ -38,6 +39,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Ошибка расшифровки, указан недопустимый пароль или файл параметров изменен! Возможно, импортированный файл был экспортирован с использованием другого главного пароля.</string>
     <string name="prefdecrypt_issue_wrong_format">Отсутствует конфигурация шифрования, формат параметров недопустим!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Неподдерживаемый или не прописанный алгоритм шифрования!</string>
+    <string name="metadata_label_format">Формат файла</string>
     <string name="metadata_label_created_at">Дата создания</string>
     <string name="metadata_label_aaps_version">Версия AAPS</string>
     <string name="metadata_label_aaps_flavour">Версия сборки</string>

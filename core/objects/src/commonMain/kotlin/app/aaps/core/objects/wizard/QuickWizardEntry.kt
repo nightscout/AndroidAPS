@@ -197,6 +197,12 @@ class QuickWizardEntry(
 
     fun carbs2(): Int = data.carbs2
 
+    /**
+     * The extended-carbs amount this preset really delivers: [carbs2] when eCarbs are switched on, 0 when they
+     * are off. Every caller needs the switch together with the amount, so the two stay in one place.
+     */
+    fun eCarbsGrams(): Int = if (useEcarbs() == ALWAYS) carbs2() else 0
+
     fun time(): Int = data.time
 
     fun duration(): Int = data.duration

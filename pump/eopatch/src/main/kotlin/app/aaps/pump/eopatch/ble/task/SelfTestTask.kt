@@ -8,13 +8,13 @@ import app.aaps.pump.eopatch.core.response.BatteryVoltageLevelPairingResponse
 import app.aaps.pump.eopatch.core.response.GlobalTimeResponse
 import app.aaps.pump.eopatch.core.response.TemperatureResponse
 import app.aaps.pump.eopatch.core.scan.PatchSelfTestResult
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.functions.Predicate
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)
 @Inject

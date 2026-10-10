@@ -7,7 +7,6 @@
     <string name="openaps_no_as_data">Dades d\'autosens no disponibles</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elements.\nValor actual:</string>
-    <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">Estat de l\'algoritme el 2017</string>
     <string name="description_smb">Algoritme més nou per usuaris avançats</string>
     <string name="openapsma_last_run_label">Última execució</string>
@@ -35,7 +34,6 @@
     <!--    Autotune   -->
     <!--    Loop -->
     <string name="smb_frequency_exceeded">S\'ha lliurat un bolus els darrers 3 minuts, ignorant SMB</string>
-    <string name="loop_shortname">LLAÇ</string>
     <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>

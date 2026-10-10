@@ -10,7 +10,6 @@ import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach

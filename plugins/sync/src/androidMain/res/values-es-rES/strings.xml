@@ -10,7 +10,6 @@
     <string name="no_connectivity">Sin conectividad</string>
     <string name="unsupported_ns_version">Versión de Nightscout no soportada</string>
     <!-- AAPSClient -->
-    <string name="ns_client_v3_short_name">NSv3</string>
     <!-- Authorized clients (paired devices that can issue signed commands) -->
     <string name="authorized_clients_title">Clientes autorizados</string>
     <string name="authorized_clients_add">Añadir cliente</string>
@@ -75,7 +74,6 @@
     <string name="summary_tidepool_dev_servers">Si se activa, las subidas irán a los servidores de prueba en lugar de a los servidores habituales</string>
     <string name="title_tidepool_dev_servers">Usar servidores de integración (prueba)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Carga datos a Tidepool</string>
     <string name="upload_now">Subir ahora</string>
     <string name="tidepool_purge_data">Eliminar todos los datos</string>
@@ -85,7 +83,6 @@
     <string name="working">Funcionando</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Enviar datos a xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Línea de estado avanzada</string>
     <string name="xdrip_not_installed">xDrip+ no instalado</string>
@@ -94,7 +91,6 @@
     <string name="xdrip_local_broadcasts_title">Activar las transmisiones a xDrip+</string>
     <!--    DataBroadcast-->
     <string name="tizen">Aplicaciones complementarias externas</string>
-    <string name="tizen_short">CAB</string>
     <string name="tizen_description">Permite la transmisión de datos a varias aplicaciones complementarias externas</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
@@ -102,7 +98,6 @@
     <string name="garmin_local_http_server_port">Puerto del servidor local HTTP</string>
     <string name="garmin_local_http_server">Servidor local HTTP</string>
     <!--    Wear-->
-    <string name="wear_shortname">RELOJ</string>
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
     <string name="pump_status">Estado de la bomba</string>
@@ -169,7 +164,6 @@
     <string name="garmin_request_key">Solicitar clave</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicador por SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Control remoto de AAPS mediante comandos SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de la aplicación Authenticator para: %1$s seguido del PIN</string>
     <string name="smscommunicator_tab_otp_label">Configurar el Authenticator</string>

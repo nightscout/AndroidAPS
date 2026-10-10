@@ -18,13 +18,13 @@ import app.aaps.pump.medtronic.defs.MedtronicNotificationType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.InvalidParameterException
 import java.util.Locale
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.experimental.or
 import kotlin.math.abs
 

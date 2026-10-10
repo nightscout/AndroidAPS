@@ -35,7 +35,6 @@
     <string name="loopenabled">הלולאה פעילה</string>
     <string name="apsselected">נבחר APS</string>
     <string name="closedmodeenabled">מצב סגור מופעל</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">תוכנית הלימוד</string>
     <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
     <string name="objectives_button_unfinish">ביטול השלמה</string>

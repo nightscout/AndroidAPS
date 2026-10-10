@@ -1,6 +1,5 @@
 package app.aaps.core.keys
 
-import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
 

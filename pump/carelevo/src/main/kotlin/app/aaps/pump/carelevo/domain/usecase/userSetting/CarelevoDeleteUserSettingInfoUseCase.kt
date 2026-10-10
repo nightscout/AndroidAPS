@@ -4,9 +4,9 @@ import app.aaps.pump.carelevo.domain.model.ResponseResult
 import app.aaps.pump.carelevo.domain.model.result.ResultSuccess
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.CarelevoUseCaseResponse
+import dev.zacsweers.metro.Inject
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import dev.zacsweers.metro.Inject
 
 class CarelevoDeleteUserSettingInfoUseCase @Inject constructor(
     private val userSettingInfoRepository: CarelevoUserSettingInfoRepository

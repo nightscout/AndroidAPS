@@ -1,11 +1,14 @@
 package app.aaps.implementation.plugin
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
-import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.aps.Sensitivity
+import app.aaps.core.interfaces.calibration.Calibration
+import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.constraints.Safety
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.NotificationAction
@@ -18,16 +21,13 @@ import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PermissionProvider
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.resources.TextResolver
-import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.smoothing.Smoothing
-import app.aaps.core.interfaces.calibration.Calibration
+import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.Sync
-import app.aaps.core.interfaces.constraints.Safety
+import app.aaps.core.keys.interfaces.TextRef
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

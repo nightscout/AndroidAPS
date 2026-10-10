@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">UTJEVNING</string>
     <string name="exponential_smoothing_name">Eksponentiell utjevning</string>
     <string name="description_exponential_smoothing">"Algoritme for eksponentiell utjevning, nyeste BS-verdi påvirkes"</string>
     <string name="avg_smoothing_name">Gjennomsnittlig utjevning</string>

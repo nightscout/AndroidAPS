@@ -4,14 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.key
-import app.aaps.core.keys.StringKey
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,34 +20,22 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import app.aaps.appshell.AapsAppRoot
-import app.aaps.appshell.navigation.appNavGraph
-import app.aaps.ui.search.SearchViewModel
-import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
-import app.aaps.ui.compose.maintenance.MaintenanceViewModel
-import app.aaps.ui.compose.manageSheet.ManageViewModel
-import app.aaps.ui.compose.loopSheet.LoopActionViewModel
-import app.aaps.ui.compose.scenesSheet.ScenesViewModel
-import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
-import app.aaps.ui.compose.overview.statusLights.StatusViewModel
-import app.aaps.ui.compose.main.MainViewModel
-import app.aaps.ui.compose.main.OverviewScreen
-import app.aaps.appshell.navigation.ElementNavigator
-import app.aaps.appshell.navigation.handleSearchResultClick
-import app.aaps.appshell.navigation.handleQuickLaunchAction
-import app.aaps.appshell.navigation.handleNotificationAction
 import app.aaps.appshell.navigation.AppRoute
+import app.aaps.appshell.navigation.ElementNavigator
+import app.aaps.appshell.navigation.appNavGraph
+import app.aaps.appshell.navigation.handleNotificationAction
+import app.aaps.appshell.navigation.handleQuickLaunchAction
+import app.aaps.appshell.navigation.handleSearchResultClick
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.IosNotificationDelegate
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.resources.TextRefValueRegistry
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.di.CoreObjectsGraph
-import app.aaps.ios.shell.platform.IosLanguage
-import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
-import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -61,23 +46,38 @@ import app.aaps.implementation.lifecycle.IosProtectionLifecycle
 import app.aaps.ios.shell.IosAppStartup
 import app.aaps.ios.shell.PluginStoreRegistry
 import app.aaps.ios.shell.di.IosAppGraph
+import app.aaps.ios.shell.platform.IosLanguage
 import app.aaps.ios.shell.platform.notOnThisPlatform
+import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
+import app.aaps.shared.clientbindings.ClientGraphBindings
 import app.aaps.shared.clientbindings.ClientViewModelFactory
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
+import app.aaps.ui.compose.loopSheet.LoopActionViewModel
+import app.aaps.ui.compose.main.MainViewModel
+import app.aaps.ui.compose.main.OverviewScreen
 import app.aaps.ui.compose.maintenance.ImportViewModel
+import app.aaps.ui.compose.maintenance.MaintenanceViewModel
+import app.aaps.ui.compose.manageSheet.ManageViewModel
 import app.aaps.ui.compose.overview.chips.ChipsViewModel
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
+import app.aaps.ui.compose.overview.statusLights.StatusViewModel
+import app.aaps.ui.compose.permissionsSheet.PermissionsViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileEditorViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileManagementViewModel
 import app.aaps.ui.compose.quickWizard.viewmodels.QuickWizardManagementViewModel
 import app.aaps.ui.compose.runningMode.RunningModeManagementViewModel
+import app.aaps.ui.compose.scenesSheet.ScenesViewModel
 import app.aaps.ui.compose.siteRotationDialog.viewModels.SiteRotationManagementViewModel
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 import app.aaps.ui.compose.tempTarget.TempTargetManagementViewModel
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
+import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
+import app.aaps.ui.search.SearchViewModel
 import dev.zacsweers.metro.createGraphFactory
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
 import platform.UIKit.UIApplicationDidBecomeActiveNotification
@@ -166,6 +166,10 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 graph.uiRestart.request()
             }
         }
+        // The user's "keep screen on" choice, which iOS honours through the idle timer. Placed
+        // beside the language effect because both are app wide settings applied while it runs.
+        KeepScreenOnEffect(graph.preferences)
+
         val restart by graph.uiRestart.signal.collectAsState()
         key(restart) {
         // iOS has no ambient application object, so the factory is provided here rather than found.
@@ -185,6 +189,9 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 rxBus = graph.rxBus,
                 snackbarHostPresence = graph.snackbarHostPresence,
                 clientControlActionDispatcher = graph.clientControlActionDispatcher,
+                bolusProgressData = graph.bolusProgressData,
+                commandQueue = graph.commandQueue,
+                pumpCommunicationStatus = graph.pumpCommunicationStatus,
                 // The real app icon, so the About dialog and the drawer show what the home screen
                 // shows. Icon() would tint a logo to one flat colour, so Image() draws it.
                 appIcon = { modifier -> AppIconImage(appIcon, modifier) },
@@ -314,6 +321,18 @@ fun aapsAppViewController(nsSocketFactory: NsSocketFactory): UIViewController {
                 // The overview is the start destination, the same as Android and desktop. Settings
                 // used to be, which left its back arrow inert - there was nothing behind it - and
                 // left every other screen unreachable, since they are all reached from the overview.
+                // First run opens the setup wizard, as `ComposeMainActivity` does on Android. The
+                // route and the screen are already shared through `appNavGraph`; only the trigger
+                // was Android's, so a new iOS user landed on an empty overview with nothing to
+                // follow and no hint that a wizard existed. Reported from TestFlight.
+                LaunchedEffect(Unit) {
+                    if (!graph.preferences.get(BooleanNonKey.GeneralSetupWizardProcessed)) {
+                        graph.protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
+                            if (result == ProtectionResult.GRANTED) navController.navigate(AppRoute.SetupWizard.route)
+                        }
+                    }
+                }
+
                 NavHost(navController = navController, startDestination = AppRoute.Main.route) {
                     appNavGraph(
                         navController = navController,

@@ -22,7 +22,6 @@
     <string name="updatingbasalrates">Updating basal rates</string>
     <string name="description_pump_diaconn_g8">Pump Integration for Diaconn G8 Pumps</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
-    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Max bolus violation</string>
     <string name="commanderror">Command error</string>
     <string name="speederror">Speed error</string>

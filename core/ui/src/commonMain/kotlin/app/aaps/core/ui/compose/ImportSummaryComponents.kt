@@ -1,8 +1,5 @@
 package app.aaps.core.ui.compose
 
-import app.aaps.core.ui.compose.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.material3.AlertDialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,6 +20,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
@@ -50,10 +51,19 @@ fun ImportSummaryItem(
     // Resolved here rather than in the click handler: stringResource is a composable call and the
     // lambda below is not composable.
     val label = stringResource(metaKey.label)
+    // OK / warning / error was only the icon and text colour, and the field name was only an icon:
+    // a screen reader heard "3.3.0.0". The row now says the name, the value and, when it matters,
+    // the level.
+    val levelState = when {
+        metaEntry.status.isWarning -> stringResource(CoreUiStrings.warning)
+        metaEntry.status.isError   -> stringResource(CoreUiStrings.error)
+        else                       -> null
+    }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .then(if (levelState != null) Modifier.semantics { stateDescription = levelState } else Modifier)
             .clickable {
                 val msg = if (metaEntry.info != null) {
                     "[$label] ${metaEntry.info}"
@@ -87,7 +97,7 @@ fun ImportSummaryItem(
 
         Icon(
             imageVector = metaKey.icon,
-            contentDescription = null,
+            contentDescription = label,
             modifier = Modifier.size(20.dp),
             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         )

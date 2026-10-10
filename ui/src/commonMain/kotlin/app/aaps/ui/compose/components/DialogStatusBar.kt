@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,12 +65,24 @@ fun DialogStatusBar(
             if (bg != null) {
                 val bgColor = bg.bgRange.toColor()
                 val bgDecoration = if (bg.isOutdated) TextDecoration.LineThrough else TextDecoration.None
+                // An old reading is only struck through and high/low is only the colour, so a
+                // screen reader said "7.2" for a reading it should not dose on. The value speaks
+                // the whole reading; the arrow and the delta below are part of it and stay quiet.
+                val bgSpoken = bgSpokenDescription(
+                    bgText = bg.bgText,
+                    range = bg.bgRange,
+                    trend = bg.trendArrow?.let { stringResource(it.directionToDescription()) },
+                    deltaText = bg.deltaText,
+                    timeAgo = bgInfo.timeAgoText,
+                    isOutdated = bg.isOutdated
+                )
                 Text(
                     text = bg.bgText,
                     style = MaterialTheme.typography.titleMedium,
                     color = bgColor,
                     textDecoration = bgDecoration,
-                    maxLines = 1
+                    maxLines = 1,
+                    modifier = Modifier.clearAndSetSemantics { contentDescription = bgSpoken }
                 )
                 // Trend arrow. Draw the icon, not TrendArrow.symbol. That field has no glyph for
                 // NONE or for the triple arrows - it holds the placeholders "??" and "X", which
@@ -78,7 +91,8 @@ fun DialogStatusBar(
                 bg.trendArrow?.let { arrow ->
                     Icon(
                         imageVector = arrow.directionToIcon(),
-                        contentDescription = stringResource(arrow.directionToDescription()),
+                        // Spoken as part of the glucose value above.
+                        contentDescription = null,
                         tint = bgColor,
                         // Scale with the text beside it, as the Text this replaced did.
                         modifier = Modifier.size(AapsSpacing.trendArrowSize * LocalAapsScale.current)
@@ -90,7 +104,9 @@ fun DialogStatusBar(
                         text = delta,
                         style = MaterialTheme.typography.bodyMedium,
                         color = bgColor,
-                        maxLines = 1
+                        maxLines = 1,
+                        // Spoken as part of the glucose value above.
+                        modifier = Modifier.clearAndSetSemantics { }
                     )
                 }
                 Separator()

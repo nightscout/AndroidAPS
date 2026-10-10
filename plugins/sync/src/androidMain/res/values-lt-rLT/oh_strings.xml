@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans leidžia įkelti diabeto valdymo duomenis ir skirti juos moksliniams projektams.</string>
     <string name="logout">Atsijungti</string>
     <string name="setup">Sąranka</string>

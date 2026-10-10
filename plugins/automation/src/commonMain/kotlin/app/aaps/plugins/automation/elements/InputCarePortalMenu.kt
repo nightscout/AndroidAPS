@@ -1,9 +1,9 @@
 package app.aaps.plugins.automation.elements
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.resources.TextResolver
+import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 
 class InputCarePortalMenu() {
 

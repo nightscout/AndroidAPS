@@ -256,6 +256,7 @@ key_usersuperbolus|BooleanKey|true
 language|StringKey|true
 last_bolus_amount|MedtrumDoubleNonKey|true
 last_bolus_time|MedtrumLongNonKey|true
+last_cleanup_cutoff|LongNonKey|true
 last_cleanup_run|LongNonKey|true
 last_connection|MedtrumLongNonKey|true
 last_expired_version_checker_warning|VersionCheckerLongKey|true

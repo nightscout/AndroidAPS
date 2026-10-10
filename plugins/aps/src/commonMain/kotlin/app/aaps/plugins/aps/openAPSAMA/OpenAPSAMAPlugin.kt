@@ -95,7 +95,6 @@ class OpenAPSAMAPlugin(
         }
         .icon(IcPluginOpenAPS)
         .pluginName(ApsStrings.openapsama)
-        .shortName(ApsStrings.oaps_shortname)
         .preferencesVisibleInSimpleMode(false)
         .showInList { config.APS || config.AAPSCLIENT }   // AAPSCLIENT: visible so a client can select the master's APS
         .description(ApsStrings.description_ama),

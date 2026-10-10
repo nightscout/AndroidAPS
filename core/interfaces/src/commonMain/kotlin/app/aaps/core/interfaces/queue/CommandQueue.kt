@@ -1,12 +1,12 @@
 package app.aaps.core.interfaces.queue
 
-import app.aaps.core.keys.interfaces.TextRef
 import androidx.compose.ui.text.AnnotatedString
 import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.keys.interfaces.TextRef
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 

@@ -28,8 +28,8 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.shared.tests.TestBaseWithProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import org.json.JSONArray
 import kotlinx.serialization.json.JsonObject
+import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

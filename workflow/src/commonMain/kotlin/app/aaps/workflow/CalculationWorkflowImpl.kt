@@ -16,6 +16,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.time.Duration
 
 /**
  * Decides what each calculation run contains; [CalculationExecutor] decides how it is run.
@@ -57,6 +58,8 @@ class CalculationWorkflowImpl(
     override suspend fun stopCalculation(job: String, from: String) = executor.stop(job, from)
 
     override suspend fun waitForCalculationFinish(job: String, reason: String) = executor.waitForPrepare(job, reason)
+
+    override suspend fun awaitCalculationIdle(job: String, timeout: Duration): Boolean = executor.awaitIdle(job, timeout)
 
     override suspend fun runCalculation(
         job: String,

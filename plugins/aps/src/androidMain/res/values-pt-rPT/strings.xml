@@ -9,7 +9,6 @@
     <string name="dynisf_shortname">DYNISF</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
-    <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
     <string name="description_smb_dynamic_isf">O algoritmo mais recente para utilizadores avançados com FSI dinâmico/automático</string>
@@ -39,7 +38,6 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Um bólus foi administrado nos últimos 3 minutos, a ignorar SMB</string>
     <string name="pump_not_initialized">Bomba não inicializada!</string>
-    <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
     <string name="no_aps_selected">NENHUM APS SELECIONADO OU RESULTADO FORNECIDO</string>
     <string name="ignore5m">Ignorar 5m</string>

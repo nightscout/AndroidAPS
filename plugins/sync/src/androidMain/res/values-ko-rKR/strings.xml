@@ -23,7 +23,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">테스트 서버 사용</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">데이터를 Tidepool로 업로드</string>
     <string name="upload_now">지금 업로드하기</string>
     <string name="not_connected">연결되지 않았습니다</string>
@@ -31,7 +30,6 @@
     <string name="working">처리중</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">xDrip+에 데이터 보내기</string>
     <string name="xdrip_status_settings">xDrip+ 상태 라인 고급</string>
     <string name="xdrip_not_installed">xDrip+가 설치되지 않음</string>
@@ -87,7 +85,6 @@
     <string name="weighted">몸무게</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS 통신기</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">SMS 명령을 사용하여 AAPS를 원격 제어합니다.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">인증 어플에서: %1$s 뒤에 PIN</string>
     <string name="smscommunicator_tab_otp_label">인증 설정</string>

@@ -82,7 +82,7 @@ class PatchedSinoAppWorkerTest : TestBaseWithProfile() {
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.FORTY_FIVE_DOWN,
-                sourceSensor = SourceSensor.SINO
+                sourceSensor = SourceSensor.SINOCARE
             )
             verify(persistenceLayer).insertCgmSourceData(Sources.Sino, listOf(expectedGv), emptyList(), null)
         }

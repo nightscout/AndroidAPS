@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Délai d\'appairage expiré</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Intégration des pompes DANA Diabecare RS et Dana-i</string>
     <string name="maxbolusviolation">Violation bolus Max</string>
     <string name="commanderror">Erreur de commande</string>
@@ -76,7 +75,6 @@
     <string name="description_pump_dana_r">Intégration des pompes Diabecare DANA R</string>
     <string name="description_pump_dana_r_korean">Intégration des pompes coréennes Diabecare DANA RS</string>
     <string name="description_pump_dana_r_v2">Intégration des pompes DANA Diabecare R avec firmware mis à jour</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Appareil sélectionné introuvable</string>
     <string name="danar_switchtouhmode">Changer le mode de U/j vers U/h sur la pompe</string>
     <string name="danarkoreanpump">DanaR Coréenne</string>

@@ -12,7 +12,6 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.text.format.DateFormat
 import android.util.TypedValue
 import android.view.Gravity
@@ -39,12 +38,11 @@ import androidx.wear.watchface.complications.ComplicationSlotBounds
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.style.CurrentUserStyleRepository
 import androidx.wear.watchface.style.UserStyleSchema
+import app.aaps.core.interfaces.InterfacesStringIds
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfData
-import app.aaps.core.interfaces.InterfacesStringIds
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
 import app.aaps.core.interfaces.rx.weardata.CwfResDataMap
@@ -52,6 +50,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.ResData
 import app.aaps.core.interfaces.rx.weardata.ResFormat
 import app.aaps.core.interfaces.rx.weardata.isEquals
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.impl.weardata.JsonKeyValues
 import app.aaps.shared.impl.weardata.JsonKeys
 import app.aaps.shared.impl.weardata.ResFileMap
@@ -63,8 +62,10 @@ import app.aaps.wear.R
 import app.aaps.wear.complications.cwf.CwfRenderTarget
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.utils.toVisibility
+import app.aaps.wear.watchfaces.CustomWatchface.Companion.PROVISIONAL_RING_WIDTH
+import app.aaps.wear.watchfaces.CustomWatchface.Companion.TEMPLE_RESOLUTION
+import app.aaps.wear.watchfaces.CustomWatchface.Companion.complicationSlots
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
-import app.aaps.wear.watchfaces.utils.secondVisibility
 import app.aaps.wear.watchfaces.utils.ComplicationImageFit
 import app.aaps.wear.watchfaces.utils.ComplicationRender
 import app.aaps.wear.watchfaces.utils.ComplicationSlotInfo
@@ -75,13 +76,14 @@ import app.aaps.wear.watchfaces.utils.WatchFaceComplications
 import app.aaps.wear.watchfaces.utils.WatchFaceSettingRow
 import app.aaps.wear.watchfaces.utils.WatchFaceSettings
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
+import app.aaps.wear.watchfaces.utils.secondVisibility
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
-import java.time.LocalDateTime
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.temporal.WeekFields

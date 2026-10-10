@@ -2,6 +2,7 @@ package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -10,7 +11,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.medtrum.MedtrumTestBase
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

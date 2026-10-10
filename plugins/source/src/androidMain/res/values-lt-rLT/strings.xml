@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient glikemija</string>
-    <string name="ns_client_bg_short">NS KG</string>
     <string name="description_source_ns_client">Gauti glikemijos duomenis iš Nightscout</string>
     <string name="source_xdrip">xDrip+</string>
     <string name="description_source_xdrip">Gauti glikemijos reikšmes iš xDrip+ ir suderinamų programų (Juggluco ir kt.).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Gauti glikemijos duomenis iš \'Build Your Own Dexcom App\'</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Gauti glikemijos duomenis iš Glimp</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Gauti glikemijos duomenis iš Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Gauti glikemijos duomenis iš Tomato (MiaoMiao)</string>
     <string name="random_bg">Atsitiktinė glikemija</string>
     <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
-    <string name="random_bg_short">KG</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Gauti gliukozės duomenis iš Syai/Ottai App.</string>
@@ -49,7 +45,6 @@
     <string name="permission_notification_listener_title">Prieiga prie pranešimų</string>
     <string name="permission_notification_listener_description">Reikalinga gliukozės reikšmėms nuskaityti iš CGM app pranešimų</string>
     <string name="aidex">MicroTech CGM App</string>
-    <string name="aidex_short">CGM App</string>
     <string name="description_source_aidex">Gauti CGM reikšmes iš LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 ir kt.</string>
     <string name="aidex_sensor_expired">Baigėsi jutiklio naudojimo laikas. Pakeiskite jutiklį.</string>
     <string name="aidex_sensor_error">Jutiklio klaida. Patikrinkite jutiklio būseną.</string>

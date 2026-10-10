@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BS</string>
-    <string name="ns_client_bg_short">NS BS</string>
     <string name="description_source_ns_client">Last ned BS-verdier fra Nightscout</string>
     <string name="source_xdrip">xDrip+ BS</string>
     <string name="description_source_xdrip">Motta BS-verdier fra xDrip+ og kompatible apper (Juggluco etc.).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Motta BS-verdier fra appen \'Build Your Own Dexcom App\'.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Motta BS-verdier fra Glimp.</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Motta BS-verdier fra appen Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Motta BS-verdier fra appen Tomato (MiaoMiao-enhet)</string>
     <string name="random_bg">Vilkårlig BS</string>
     <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
-    <string name="random_bg_short">BS</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Motta blodsukkerverdier fra Syai/Ottai App.</string>
@@ -49,7 +45,6 @@
     <string name="permission_notification_listener_title">Tilgang til varsler</string>
     <string name="permission_notification_listener_description">Kreves for å lese BS-verdier fra sensor-appens varsler</string>
     <string name="aidex">MicroTech sensorapp</string>
-    <string name="aidex_short">Sensorapp</string>
     <string name="description_source_aidex">Motta sensor-verdier fra LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 osv.</string>
     <string name="aidex_sensor_expired">Sensor utløpt, vennligst bytt ut med en ny sensor</string>
     <string name="aidex_sensor_error">Sensorfeil, vennligst sjekk sensorstatusen</string>

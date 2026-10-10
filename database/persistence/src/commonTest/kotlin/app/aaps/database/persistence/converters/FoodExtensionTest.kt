@@ -4,11 +4,11 @@ import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.IDs
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.embedments.InterfaceIDs
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.Test
 
 internal class FoodExtensionTest {
 

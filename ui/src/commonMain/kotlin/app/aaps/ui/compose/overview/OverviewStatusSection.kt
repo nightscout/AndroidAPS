@@ -55,7 +55,6 @@ import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.core.ui.compose.statusLevelToDescription
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.overview.statusLights.StatusItem
 import app.aaps.ui.compose.overview.statusLights.StatusSectionContent
 

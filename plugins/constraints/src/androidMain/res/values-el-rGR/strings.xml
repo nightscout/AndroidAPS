@@ -35,7 +35,6 @@
     <string name="loopenabled">Κύκλωμα ενεργοποιημένο</string>
     <string name="apsselected">Επιλέχθηκε APS</string>
     <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
-    <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
     <string name="doyouwantresetstart">Θέλετε έναρξη επαναφοράς στόχου? Μπορεί να χάσετε την πρόοδό σας.</string>
     <string name="objectives_button_unfinish">Επαναφορά ολοκληρωμένης κατάστασης</string>

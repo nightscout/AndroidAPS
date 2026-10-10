@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import app.aaps.di.newIntegrationWaits
-import app.aaps.di.newRxHelper
-import app.aaps.di.testGraphs
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
@@ -15,10 +12,11 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
+import app.aaps.di.newRxHelper
+import app.aaps.di.testGraphs
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui

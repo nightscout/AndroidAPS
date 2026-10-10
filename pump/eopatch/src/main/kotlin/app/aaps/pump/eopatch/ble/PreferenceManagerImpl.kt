@@ -14,11 +14,11 @@ import app.aaps.pump.eopatch.vo.PatchConfig
 import app.aaps.pump.eopatch.vo.PatchLifecycleEvent
 import app.aaps.pump.eopatch.vo.PatchState
 import app.aaps.pump.eopatch.vo.TempBasalManager
-import io.reactivex.rxjava3.core.Observable
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import io.reactivex.rxjava3.core.Observable
 
 /**
  * patch2 패키지에서 사용하는 프리퍼런스의 작업을 대신 처리하는 클래스

@@ -1,9 +1,8 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
-import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.InputProfileName
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking

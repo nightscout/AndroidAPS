@@ -85,7 +85,6 @@ abstract class AbstractDanaRPlugin protected constructor(
         }
         .icon(IcPluginDanaI)
         .pluginName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarpump))
-        .shortName(TextRef.AndroidRes(app.aaps.pump.dana.R.string.danarpump_shortname))
         .description(TextRef.AndroidRes(app.aaps.pump.dana.R.string.description_pump_dana_r)),
     ownPreferences = DanaStringNonKey.entries + DanaIntKey.entries + DanaIntNonKey.entries + DanaBooleanKey.entries + DanaIntentKey.entries,
     aapsLogger, rh, preferences, commandQueue, notificationManager

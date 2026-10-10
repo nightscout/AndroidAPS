@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">Glykémia z NS</string>
-    <string name="ns_client_bg_short">NS GL</string>
     <string name="description_source_ns_client">Získavať hodnoty glykémií z Nightscoutu</string>
     <string name="source_xdrip">xDrip+ glykémia</string>
     <string name="description_source_xdrip">Prijímať hodnoty glykémie z xDrip+ a kompatibilných aplikácí (Juggluco atď.).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Prijímať hodnoty glykémií z upravenej aplikácie Dexcom (BYODA).</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Získavať hodnoty glykémií z aplikácie Glimp.</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Prijímať hodnoty z aplikácie Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
     <string name="random_bg">Náhodná glykémia</string>
     <string name="description_source_random_bg">Vygeneruj náhodné dáta glykémií (iba Demo režim)</string>
-    <string name="random_bg_short">Gly</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Prijímať glykémie z aplikáce Syai/Ottai.</string>
@@ -49,7 +45,6 @@
     <string name="permission_notification_listener_title">Prístup k notifikáciam</string>
     <string name="permission_notification_listener_description">Potrebné pre čítanie hodnôt glykémie z notifikácií CGM aplikácie</string>
     <string name="aidex">MicroTech CGM aplikácia</string>
-    <string name="aidex_short">CGM aplikácia</string>
     <string name="description_source_aidex">Príjmanie CGM hodnôt z LinX, LinX Vista, Equil G, Smart 2, Diaexpert 2, atď.</string>
     <string name="aidex_sensor_expired">Senzor expiroval, prosím zaveďte nový senzor</string>
     <string name="aidex_sensor_error">Chyba senzora, prosím overte stav senzora</string>

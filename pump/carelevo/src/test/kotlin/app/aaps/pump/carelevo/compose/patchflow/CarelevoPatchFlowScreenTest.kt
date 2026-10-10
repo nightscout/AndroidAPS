@@ -32,7 +32,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalMetroViewModelFactory
 import app.aaps.core.ui.compose.LocalPreferences
@@ -93,6 +92,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import java.util.Optional
 import kotlin.reflect.KClass
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Compose render tests for the activation wizard host [CarelevoPatchFlowScreen]: step routing, the

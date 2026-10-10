@@ -2,21 +2,34 @@ package app.aaps.core.interfaces.queue
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.keys.interfaces.TextRef
+import kotlinx.coroutines.CompletableDeferred
 
-interface Command {
+/**
+ * A command waiting in the queue, or running.
+ *
+ * An abstract class and not an interface, so [completion] lives here once and every command
+ * gets its own instance without having to create it.
+ */
+abstract class Command {
 
-    val commandType: CommandType
-    val callback: Callback?
+    abstract val commandType: CommandType
 
     /**
      * Makes a fresh [PumpEnactResult].
      */
-    val pumpEnactResultProvider: () -> PumpEnactResult
+    abstract val pumpEnactResultProvider: () -> PumpEnactResult
+
+    /**
+     * The result of this command. The caller that put the command in the queue awaits it.
+     *
+     * It is completed once: by [executeAndComplete] when the command runs, or by [cancel] when the
+     * queue drops it. A later completion is ignored.
+     */
+    val completion = CompletableDeferred<PumpEnactResult>()
 
     enum class CommandType {
         BOLUS,
         SMB_BOLUS,
-        CARBS_ONLY_TREATMENT,
         TEMPBASAL,
         EXTENDEDBOLUS,
         BASAL_PROFILE,
@@ -34,27 +47,27 @@ interface Command {
         CUSTOM_COMMAND
     }
 
-    suspend fun execute(): PumpEnactResult = error("Not implemented")
-    suspend fun executeWithCallback() {
-        callback?.result(execute())?.run()
+    abstract suspend fun execute(): PumpEnactResult
+
+    suspend fun executeAndComplete() {
+        completion.complete(execute())
     }
 
-    fun status(): String
-    fun log(): String
+    abstract fun status(): String
+    abstract fun log(): String
 
     /**
      * Invoked when the queue drops this command without executing it (queue cleared,
-     * superseded by a newer same-type command, etc.). Resumes any caller waiting on the
-     * command's [callback] with a failure result carrying [comment] as the reason.
+     * superseded by a newer same-type command, etc.). Resumes any caller waiting on
+     * [completion] with a result carrying [comment] as the reason.
      * Override to add side-effects (e.g. clearing progress UI).
-     * Return success = true to avoid command failed dialog
-     */
-    /**
+     * Return success = true to avoid command failed dialog.
+     *
      * [cancelled] says the drop was on purpose, so nothing alarms about it - see
-     * [app.aaps.core.interfaces.pump.PumpEnactResult.cancelled]. It defaults to false because most
-     * drops are not: a connection timeout is a real delivery failure and must still ring.
+     * [PumpEnactResult.cancelled]. It defaults to false because most drops are not: a connection
+     * timeout is a real delivery failure and must still ring.
      */
-    fun cancel(comment: TextRef, success: Boolean = true, cancelled: Boolean = false) {
-        callback?.result(pumpEnactResultProvider().success(success).cancelled(cancelled).comment(comment))?.run()
+    open fun cancel(comment: TextRef, success: Boolean = true, cancelled: Boolean = false) {
+        completion.complete(pumpEnactResultProvider().success(success).cancelled(cancelled).comment(comment))
     }
 }

@@ -2,8 +2,8 @@ package app.aaps.pump.carelevo.domain.ext
 
 import app.aaps.pump.carelevo.domain.model.basal.CarelevoBasalSegmentDomainModel
 import com.google.common.truth.Truth.assertThat
-import java.util.UUID
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 /**
  * Pure-logic tests for `CarelevoDomainValueExt.kt` — the minute-based basal segment

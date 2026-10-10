@@ -1,11 +1,11 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.compose.icons.IcPatchPump
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.Comparator
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject

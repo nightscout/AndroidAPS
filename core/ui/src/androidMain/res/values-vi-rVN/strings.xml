@@ -349,6 +349,8 @@
     <string name="scene_active">Kích hoạt</string>
     <string name="scene_ended">Ngữ cảnh đã kết thúc</string>
     <string name="scene_end_active">Tắt ngữ cảnh đang chạy</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">Chuyển đến</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">Tác vụ tiếp theo %1$s sẽ không bắt đầu</string>
     <string name="scene_confirm_activate">Kích hoạt ngữ cảnh “%1$s”?</string>
     <string name="scene_confirm_deactivate">Kết thúc ngữ cảnh “%1$s” và hoàn tác các thay đổi?</string>
     <string name="scene_conflict_active_tt">Mục tiêu tạm thời đang hoạt động sẽ được thay thế</string>

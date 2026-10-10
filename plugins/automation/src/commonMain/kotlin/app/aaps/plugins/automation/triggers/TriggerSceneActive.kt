@@ -1,13 +1,13 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.plugins.automation.AutomationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.lenientStringOrNull
+import app.aaps.plugins.automation.AutomationStrings
 import app.aaps.plugins.automation.elements.ComparatorExists
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject

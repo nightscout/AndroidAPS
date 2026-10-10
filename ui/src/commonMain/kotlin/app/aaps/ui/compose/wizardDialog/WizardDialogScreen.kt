@@ -659,7 +659,9 @@ internal fun WizardDialogContent(
                                                 CarbsType.CAKE  -> IcCake
                                                 CarbsType.PIZZA -> IcPizza
                                             },
-                                            contentDescription = type.name,
+                                            // Was the enum name ("BREAD"), untranslated and saying
+                                            // nothing about what the choice does to the carbs.
+                                            contentDescription = carbsTypeEffect(type),
                                             modifier = Modifier.size(24.dp)
                                         )
                                     }
@@ -681,18 +683,8 @@ internal fun WizardDialogContent(
                                                 }
                                             )
                                             Spacer(modifier = Modifier.height(4.dp))
-                                            val type = uiState.carbsType
                                             Text(
-                                                text = if (type == CarbsType.BREAD)
-                                                    stringResource(UiStrings.wizard_carbs_type_bread_desc)
-                                                else
-                                                    stringResource(
-                                                        UiStrings.wizard_carbs_type_desc,
-                                                        100 - type.carbsPercent,
-                                                        type.eCarbsPercent,
-                                                        type.eCarbsDelayMinutes,
-                                                        type.eCarbsDurationHours
-                                                    ),
+                                                text = carbsTypeEffect(uiState.carbsType),
                                                 fontWeight = FontWeight.Bold
                                             )
                                         }
@@ -756,11 +748,15 @@ internal fun WizardDialogContent(
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
+                                    val ageText = "(${uiState.bgAgeMinutes} min)"
+                                    // Old is only the red colour on screen; a screen reader says it.
+                                    val ageSpoken = if (bgIsOld) listOf(ageText, stringResource(UiStrings.a11y_bg_old_reading)).joinToString(", ") else ageText
                                     Text(
-                                        text = "(${uiState.bgAgeMinutes} min)",
+                                        text = ageText,
                                         style = MaterialTheme.typography.bodySmall,
                                         color = if (bgIsOld) MaterialTheme.colorScheme.error
-                                        else MaterialTheme.colorScheme.onSurfaceVariant
+                                        else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.semantics { contentDescription = ageSpoken }
                                     )
                                 } else {
                                     Text(
@@ -990,3 +986,15 @@ private fun ProfileDropdown(
         }
     }
 }
+
+/** What a carbs type does to the entered carbs, said on its button and shown in the info tooltip. */
+@Composable
+private fun carbsTypeEffect(type: CarbsType): String =
+    if (type == CarbsType.BREAD) stringResource(UiStrings.wizard_carbs_type_bread_desc)
+    else stringResource(
+        UiStrings.wizard_carbs_type_desc,
+        100 - type.carbsPercent,
+        type.eCarbsPercent,
+        type.eCarbsDelayMinutes,
+        type.eCarbsDurationHours
+    )

@@ -3,13 +3,13 @@ package app.aaps.ui.compose.quickLaunch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.ui.graphics.vector.ImageVector
-import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileRepository
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.scenes.SceneStore
 import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.keys.StringNonKey
@@ -28,6 +28,7 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.label
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.ui.compose.scenes.SceneIcons
+import app.aaps.ui.compose.scenes.sceneSummaryWithChain
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithDisplayName
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -175,10 +176,9 @@ class QuickLaunchResolver(
         }
 
         is QuickLaunchAction.ProfileAction     -> null // label already shows profile name + params
-        is QuickLaunchAction.SceneAction       -> {
-            val scene = sceneRepository.getScene(action.sceneId)
-            scene?.let { "${it.actions.size} actions" }
-        }
+        // Same line as Manage -> Scenes and the Scenes sheet, follow-up included
+        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)
+            ?.let { sceneSummaryWithChain(it, rh, sceneRepository::getScene) }
 
         is QuickLaunchAction.PluginAction      -> findPlugin(action.className)
             ?.pluginDescription?.description?.let { rh.gs(it) }

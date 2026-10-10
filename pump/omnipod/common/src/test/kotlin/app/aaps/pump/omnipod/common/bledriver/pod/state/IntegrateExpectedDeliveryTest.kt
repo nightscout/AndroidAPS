@@ -1,6 +1,5 @@
 package app.aaps.pump.omnipod.common.bledriver.pod.state
 
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BasalProgram
 import app.aaps.shared.tests.TestBase
@@ -23,7 +22,6 @@ import java.util.TimeZone
 class IntegrateExpectedDeliveryTest : TestBase() {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var config: Config
 
     private lateinit var sut: OmnipodDashPodStateManagerImpl
 
@@ -45,7 +43,7 @@ class IntegrateExpectedDeliveryTest : TestBase() {
 
     @BeforeEach fun setUp() {
         savedTz = TimeZone.getDefault()
-        sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences, config)
+        sut = OmnipodDashPodStateManagerImpl(aapsLogger, rxBus, preferences)
     }
 
     @AfterEach fun restoreTz() { TimeZone.setDefault(savedTz) }

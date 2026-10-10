@@ -37,7 +37,6 @@
     <string name="loopenabled">Loop Actief</string>
     <string name="apsselected">APS geslecteerd</string>
     <string name="closedmodeenabled">Closed modus actief</string>
-    <string name="objectives_shortname">DOEL</string>
     <string name="description_objectives">Leerprogramma</string>
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
     <string name="objectives_button_unfinish">Voltooiing wissen</string>

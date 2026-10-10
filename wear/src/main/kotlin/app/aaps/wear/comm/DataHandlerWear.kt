@@ -29,8 +29,6 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.complications.BgGraphComplication
-import app.aaps.wear.complications.CwfAmbientBgComplication
-import app.aaps.wear.complications.CwfAmbientStatusComplication
 import app.aaps.wear.complications.BrCobIobComplication
 import app.aaps.wear.complications.BrCobIobComplicationExt1
 import app.aaps.wear.complications.BrCobIobComplicationExt2
@@ -40,6 +38,8 @@ import app.aaps.wear.complications.BrTtComplication
 import app.aaps.wear.complications.CobDetailedComplication
 import app.aaps.wear.complications.CobIconComplication
 import app.aaps.wear.complications.CobIobComplication
+import app.aaps.wear.complications.CwfAmbientBgComplication
+import app.aaps.wear.complications.CwfAmbientStatusComplication
 import app.aaps.wear.complications.IobDetailedComplication
 import app.aaps.wear.complications.IobIconComplication
 import app.aaps.wear.complications.LongStatusComplication
@@ -226,9 +226,14 @@ class DataHandlerWear(
         onEvent<EventData.Preferences> {
             if (it.wearControl != preferences.get(BooleanKey.WearControl)) {
                 preferences.put(BooleanKey.WearControl, it.wearControl)
+                // Every TileBase tile renders the disabled state itself, but only when asked to render.
+                // A tile missing here keeps its cached buttons until its own data changes.
                 TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
                 TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
                 TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(RunningModeTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(SceneTileService::class.java)
+                TileService.getUpdater(context).requestUpdate(UserActionTileService::class.java)
             }
             sp.putBoolean(R.string.key_units_mgdl, it.unitsMgdl)
             sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)

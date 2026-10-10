@@ -7,13 +7,18 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Protocol
 import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
+import okio.BufferedSink
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -47,8 +52,29 @@ class InfoInterceptorTest {
         val (chain, response) = chainFor(request)
 
         assertThat(sut.intercept(chain)).isEqualTo(response)
-        verify(aapsLogger).debug(LTag.TIDEPOOL, "Interceptor Body size: ${body.length}")
-        verify(aapsLogger).debug(LTag.TIDEPOOL, "Interceptor Body: $body")
+        // Run the lazy messages as a logger with the TIDEPOOL log on would
+        val messages = argumentCaptor<() -> String>()
+        verify(aapsLogger, times(2)).debug(eq(LTag.TIDEPOOL), messages.capture())
+        assertThat(messages.allValues.map { it() }).containsExactly("Interceptor Body size: ${body.length}", "Interceptor Body: $body").inOrder()
+    }
+
+    /** With the TIDEPOOL log off the messages are never built, so the body is not read for them. */
+    @Test
+    fun `body is not read when the log does not build the message`() {
+        var reads = 0
+        val body = object : RequestBody() {
+            override fun contentType() = "application/json".toMediaTypeOrNull()
+            override fun writeTo(sink: BufferedSink) {
+                reads++
+                sink.writeUtf8("[]")
+            }
+        }
+        val request = Request.Builder().url("https://api.tidepool.org/v1/datasets/1/data").post(body).build()
+        val (chain, response) = chainFor(request)
+
+        // The mocked logger never calls the lazy messages, as AAPSLoggerProduction with the tag off
+        assertThat(sut.intercept(chain)).isEqualTo(response)
+        assertThat(reads).isEqualTo(0)
     }
 
     @Test
@@ -57,6 +83,6 @@ class InfoInterceptorTest {
         val (chain, response) = chainFor(request)
 
         assertThat(sut.intercept(chain)).isEqualTo(response)
-        verify(aapsLogger, never()).debug(any<LTag>(), any<String>())
+        verify(aapsLogger, never()).debug(any<LTag>(), any<() -> String>())
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -59,6 +60,7 @@ fun DanaUserOptionsScreen(
         onGlucoseUnitChange = viewModel::updateGlucoseUnit,
         onShutdownHourChange = viewModel::updateShutdownHour,
         onLowReservoirChange = viewModel::updateLowReservoir,
+        onAutoLockChange = viewModel::updateAutoLock,
         onSave = viewModel::save
     )
 }
@@ -78,6 +80,7 @@ internal fun DanaUserOptionsContent(
     onGlucoseUnitChange: (Boolean) -> Unit = {},
     onShutdownHourChange: (Double) -> Unit = {},
     onLowReservoirChange: (Double) -> Unit = {},
+    onAutoLockChange: (Boolean) -> Unit = {},
     onSave: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
@@ -139,6 +142,16 @@ internal fun DanaUserOptionsContent(
                         onCheckedChange = onButtonScrollChange,
                         modifier = itemModifier
                     )
+
+                    // Auto lock (Dana-i2 only)
+                    if (state.showAutoLock)
+                        SwitchRow(
+                            label = stringResource(R.string.danai2_auto_lock),
+                            summary = if (state.autoLock) stringResource(R.string.option_on) else stringResource(R.string.option_off),
+                            checked = state.autoLock,
+                            onCheckedChange = onAutoLockChange,
+                            modifier = itemModifier
+                        )
 
                     // Beep on press
                     SwitchRow(
@@ -245,8 +258,10 @@ private fun SwitchRow(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // One switch for a screen reader, named by its label (the Switch alone read "On, switch"),
+    // the same way AlarmRadioOption below is one radio button.
     Row(
-        modifier = modifier,
+        modifier = modifier.toggleable(value = checked, role = Role.Switch, onValueChange = onCheckedChange),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -254,7 +269,7 @@ private fun SwitchRow(
             Text(text = label, style = MaterialTheme.typography.bodyLarge)
             Text(text = summary, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
+        Switch(checked = checked, onCheckedChange = null)
     }
 }
 

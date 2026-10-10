@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.tidepool.keys
 
-import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.plugins.sync.SyncStrings
 
 enum class TidepoolBooleanKey(
     override val key: String,

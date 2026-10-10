@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">SUAVIZAR</string>
     <string name="exponential_smoothing_name">Suavização exponencial</string>
     <string name="description_exponential_smoothing">"Algoritmo suavizador exponencial de segunda ordem"</string>
     <string name="avg_smoothing_name">Suavizar média</string>

@@ -10,6 +10,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.concurrent.Volatile
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -119,6 +120,24 @@ class CoroutineCalculationExecutor(
         aapsLogger.debug(LTag.AUTOSENS, "Waiting for calculation to finish: $reason")
         val finished = withTimeoutOrNull(STOP_WAIT) { prepareJob.join() }
         if (finished == null) aapsLogger.warn(LTag.AUTOSENS, "Calculation did not finish within $STOP_WAIT: $reason")
+    }
+
+    override suspend fun awaitIdle(job: String, timeout: Duration): Boolean {
+        var logged = false
+        // The outer job ends after the post phase, so joining it waits for both phases. Asked again
+        // after every join: a run that was replaced also ends, and its replacement is then the one
+        // still running under this name.
+        return withTimeoutOrNull(timeout) {
+            while (true) {
+                val run = mutex.withLock { runs[job] }
+                if (run == null || run.isCompleted) break
+                if (!logged) {
+                    aapsLogger.debug(LTag.WORKER, "Waiting for $job to finish")
+                    logged = true
+                }
+                run.join()
+            }
+        } != null
     }
 
     /**

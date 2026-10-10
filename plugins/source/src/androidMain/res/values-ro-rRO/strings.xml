@@ -2,12 +2,10 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">Glicemie NSClient</string>
-    <string name="ns_client_bg_short">NS GL</string>
     <string name="description_source_ns_client">Descărcați datele de glicemie din Nightscout</string>
     <string name="source_xdrip">Glicemie xDrip+</string>
     <string name="description_source_xdrip">Primiți valori glicemice de la xDrip+ și aplicații compatibile (Juggluco etc.).</string>
     <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Primiți valori de glicemie de la aplicația Dexcom modificată.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Primiți valorile glicemiei din aplicația Glimp.</string>
@@ -20,11 +18,9 @@
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Primiți valori de la aplicația Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Primiți valorile glicemiei din aplicația Tomato (dispozitiv MiaoMIao)</string>
     <string name="random_bg">Glicemie generată aleatoriu</string>
     <string name="description_source_random_bg">Generați glicemie aleatoare (doar mod demonstrativ)</string>
-    <string name="random_bg_short">Glicemie</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Primiți date de glicemie din aplicația Syai/Ottai.</string>
@@ -48,7 +44,6 @@
     <string name="permission_notification_listener_title">Acces la notificări</string>
     <string name="permission_notification_listener_description">Necesar pentru a citi valorile glicemiei din notificările aplicației CGM</string>
     <string name="aidex">Aplicația MicroTech CGM</string>
-    <string name="aidex_short">Aplicație CGM</string>
     <string name="description_source_aidex">Primiți valori CGM din LinX, LinX vista, Equil G. Smart 2, Diaexpert 2 șamd.</string>
     <string name="aidex_sensor_expired">Senzor expirat, vă rugăm să îl înlocuiți cu un senzor nou</string>
     <string name="aidex_sensor_error">Eroare senzor, vă rugăm să verificați starea senzorului</string>

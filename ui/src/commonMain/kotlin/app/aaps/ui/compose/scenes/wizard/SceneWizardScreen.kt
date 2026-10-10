@@ -26,7 +26,6 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.pump.StepProgressIndicator
 import app.aaps.core.ui.compose.stringResource
-import app.aaps.ui.UiStrings
 
 @Composable
 fun SceneWizardScreen(

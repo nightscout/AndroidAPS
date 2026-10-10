@@ -15,7 +15,6 @@ import app.aaps.plugins.sync.nsclientV3.ws.NsSocketFactory
 import app.aaps.plugins.sync.nsclientV3.ws.ServiceNsConnection
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

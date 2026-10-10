@@ -1,6 +1,5 @@
 package app.aaps.implementation.maintenance
 
-import app.aaps.implementation.ImplementationStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Description
@@ -12,6 +11,7 @@ import androidx.compose.material.icons.filled.Style
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.implementation.ImplementationStrings
 import app.aaps.implementation.maintenance.data.PrefsFormatKey
 
 enum class PrefsMetadataKeyImpl(override val key: String, override val icon: ImageVector, override val label: TextRef) : PrefsMetadataKey {

@@ -123,6 +123,7 @@ class UserEntryPresentationHelperImpl(
         Sources.ConfigBuilder       -> IcPluginConfigBuilder
         Sources.Dana                -> IcPluginDanaI
         Sources.DanaI               -> IcPluginDanaI
+        Sources.DanaI2              -> IcPluginDanaI
         Sources.DanaR               -> IcPluginDanaI
         Sources.DanaRC              -> IcPluginDanaI
         Sources.DanaRS              -> IcPluginDanaI
@@ -211,6 +212,7 @@ class UserEntryPresentationHelperImpl(
         Sources.ConfigBuilder       -> ElementType.CONFIGURATION.color()
         Sources.Dana                -> ElementType.PUMP.color()
         Sources.DanaI               -> ElementType.PUMP.color()
+        Sources.DanaI2              -> ElementType.PUMP.color()
         Sources.DanaR               -> ElementType.PUMP.color()
         Sources.DanaRC              -> ElementType.PUMP.color()
         Sources.DanaRS              -> ElementType.PUMP.color()

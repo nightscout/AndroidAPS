@@ -12,11 +12,12 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
-import app.aaps.di.ResetGraphRule
-import app.aaps.di.testGraphs
 import app.aaps.ComposeMainActivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.keys.BooleanNonKey
+import app.aaps.di.ResetGraphRule
+import app.aaps.di.testGraphs
+import app.aaps.ui.compose.wizardDialog.CarbsType
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -25,6 +26,7 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import java.io.File
 import java.util.regex.Pattern
+import app.aaps.ui.R as UiR
 
 /**
  * **In-process** end-to-end UI test: drives a fresh AAPS setup wizard all the way to a running,
@@ -370,10 +372,10 @@ class SetupWizardE2ETest {
         assertVisible("Sick Day")                            // the created scene row
 
         // Activate: the card's Activate (Play) icon → confirmation dialog → Activate.
-        click("Activate")                                    // Play IconButton (content-desc)
+        click("Activate: Sick Day")                          // Play IconButton (content-desc names its scene)
         assertTextContains("Activate scene")                 // SceneActivationDialog title
         click("Activate")                                    // dialog confirm button (text)
-        assertVisible("End Scene")                           // card now active
+        assertVisible("End Scene: Sick Day")                 // card now active (Stop IconButton content-desc)
 
         // The overview renders ActiveSceneBanner while a scene is active — return there so the banner
         // (scene name, remaining time, progress, End button) is exercised, then end it from the banner.
@@ -395,10 +397,22 @@ class SetupWizardE2ETest {
     private fun openAndCancelBolusWizard() {
         openVia("Treatments", expect = "Bolus wizard")
         openVia("Bolus wizard", expect = "Correction") // → wizard dialog (calculator)
-        click("CAKE")                                  // a quick-carb preset → exercises the calculation
+        click(cakeCarbsTypeLabel())                    // a quick-carb preset → exercises the calculation
         device.waitForIdle(IDLE_MS)
         click("Close")                                 // dismiss WITHOUT delivering — the cancel path
         returnToOverview()
+    }
+
+    /**
+     * The CAKE carbs-type button's description. It was the enum name "CAKE"; it now says what the
+     * choice does to the carbs, built from the same resource and numbers the dialog uses, so a
+     * rewording of that string cannot break this test.
+     */
+    private fun cakeCarbsTypeLabel(): String = with(CarbsType.CAKE) {
+        instrumentation.targetContext.getString(
+            UiR.string.wizard_carbs_type_desc,
+            100 - carbsPercent, eCarbsPercent, eCarbsDelayMinutes, eCarbsDurationHours
+        )
     }
 
     /**

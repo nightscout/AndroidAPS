@@ -2,6 +2,7 @@ package app.aaps.workflow
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import kotlinx.coroutines.CoroutineScope
+import kotlin.time.Duration
 
 /**
  * [CoroutineCalculationExecutor], built on first use instead of when the graph is assembled.
@@ -49,4 +50,6 @@ class LazyCalculationExecutor(
     override suspend fun stop(job: String, from: String) = delegate.stop(job, from)
 
     override suspend fun waitForPrepare(job: String, reason: String) = delegate.waitForPrepare(job, reason)
+
+    override suspend fun awaitIdle(job: String, timeout: Duration): Boolean = delegate.awaitIdle(job, timeout)
 }

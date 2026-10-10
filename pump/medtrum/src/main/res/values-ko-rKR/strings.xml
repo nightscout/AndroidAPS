@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_setting">Medtrum 펌프 설정</string>
     <string name="pump_error">펌프 오류: %1$s !! </string>
     <string name="pump_is_suspended">펌프 중지됨</string>

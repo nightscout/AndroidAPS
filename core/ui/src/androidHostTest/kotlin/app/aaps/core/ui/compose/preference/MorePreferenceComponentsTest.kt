@@ -3,11 +3,22 @@ package app.aaps.core.ui.compose.preference
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performSemanticsAction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
@@ -106,6 +117,57 @@ class MorePreferenceComponentsTest {
             )
         }
         compose.onRoot().assertIsDisplayed()
+    }
+
+    /**
+     * The preference slider saves on release only. A touch drag cannot be driven here (under
+     * Robolectric the Material3 Slider gets no touch events at all), so this uses the accessibility
+     * SetProgress action. It runs the same code a drag runs when the finger is lifted:
+     * onValueChange, then onValueChangeFinished.
+     */
+    @Test
+    fun sliderSavesTheReleasedValueOnce() {
+        val calls = mutableListOf<Double>()
+        render {
+            var value by remember { mutableStateOf(1.0) }
+            PreferenceSliderWithButtons(
+                value = value,
+                onValueChange = { calls.add(it); value = it },
+                valueRange = 0.0..10.0
+            )
+        }
+
+        compose.onNode(SemanticsMatcher.keyIsDefined(SemanticsActions.SetProgress))
+            .performSemanticsAction(SemanticsActions.SetProgress) { it(0.5f) }
+        compose.waitForIdle()
+
+        assertThat(calls).containsExactly(5.0)
+    }
+
+    /**
+     * The slider runs on a 0..1 position, so on its own a screen reader read "30 percent" - where the
+     * thumb sits - with no name. It must say the setting's name and the real value.
+     */
+    @Test
+    fun sliderSpeaksItsNameAndTheRealValue() {
+        render {
+            PreferenceSliderWithButtons(
+                value = 3.0,
+                onValueChange = {},
+                valueRange = 0.0..10.0,
+                showValue = true,
+                dialogLabel = "Max bolus"
+            )
+        }
+
+        val slider = compose.onNode(SemanticsMatcher.keyIsDefined(SemanticsActions.SetProgress))
+        slider.assert(hasContentDescription("Max bolus"))
+        slider.assert(
+            SemanticsMatcher("speaks the value, not the position") {
+                val state = it.config.getOrNull(SemanticsProperties.StateDescription)
+                state != null && state.startsWith("3") && !state.contains("%")
+            }
+        )
     }
 
     @Test

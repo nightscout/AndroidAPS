@@ -88,13 +88,13 @@ import app.aaps.pump.insight.utils.crypto.Cryptograph.deriveKeys
 import app.aaps.pump.insight.utils.crypto.Cryptograph.generateRSAKey
 import app.aaps.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import app.aaps.pump.insight.utils.crypto.KeyPair
-import org.spongycastle.crypto.InvalidCipherTextException
-import java.io.IOException
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.spongycastle.crypto.InvalidCipherTextException
+import java.io.IOException
 import java.security.SecureRandom
-import dev.zacsweers.metro.Inject
 import kotlin.math.max
 import kotlin.math.min
 

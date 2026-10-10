@@ -97,6 +97,7 @@
     <string name="action_user_action_confirmation">用戶操作請求</string>
     <string name="action_scene_confirmation">已請求場景</string>
     <string name="scene_end">結束</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">跳過</string>
     <string name="action_treatment_confirmation">已請求治療</string>
     <string name="action_bolus_confirmation">已請求注射</string>
     <string name="action_wizard_confirmation">已請求計算</string>
@@ -317,6 +318,18 @@
     <string name="loop_status_target_range">範圍</string>
     <string name="loop_status_target">目標</string>
     <string name="loop_status_adjusted_target">調整後目標</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">直到結束</string>
+    <string name="loop_status_scene_ended">已結束</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">後續</string>
+    <string name="loop_status_profile">設定檔</string>
+    <string name="loop_status_no_profile">尚未設定設定檔</string>
+    <string name="loop_status_profile_percentage">百分比</string>
+    <string name="loop_status_profile_timeshift">時間偏移</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">返回至</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+d 小時</string>
+    <string name="loop_status_sensitivity">敏感度</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">由啟用中的情境所設定</string>
     <string name="loop_status"> 循環狀態</string>
     <string name="loop_status_refresh">重新整理</string>
     <string name="confirm">確認</string>

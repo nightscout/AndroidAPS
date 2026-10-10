@@ -1,8 +1,8 @@
 package app.aaps.pump.diaconn.packet
 
 import app.aaps.core.interfaces.di.MetroMemberInjector
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 
 @SingleIn(AppScope::class)

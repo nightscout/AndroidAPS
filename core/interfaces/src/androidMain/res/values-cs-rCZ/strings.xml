@@ -54,7 +54,7 @@
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <string name="time_remaining_h_m">Zbývá %1$dh %2$dm</string>
-    <string name="time_remaining_m">Zbývá %1$dhm</string>
+    <string name="time_remaining_m">Zbývá %1$dm</string>
     <string name="later_today">Později během dneška</string>
     <string name="tomorrow">Zítra</string>
     <string name="today">Dnes</string>
@@ -159,4 +159,6 @@
     <string name="advisoralarm">Spustit alarm, když je čas na jídlo</string>
     <string name="wizard_ecarbs">eSach %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s se nepodařilo spustit a nemusí fungovat. Prosím restartujte AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">U pluginu %1$s došlo k chybě a jeho část byla zastavena. Prosím restartujte AAPS.</string>
 </resources>

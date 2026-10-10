@@ -167,8 +167,7 @@ fun ScenesBottomSheet(
                         },
                         supportingContent = {
                             Text(
-                                text = item.activationReason
-                                    ?: stringResource(CoreUiStrings.scene_action_count, item.actionCount),
+                                text = item.activationReason ?: item.summary,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },

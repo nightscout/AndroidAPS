@@ -44,5 +44,8 @@ data class WidgetRenderState(
     val arrowDescription: String?,
     val tbrDescription: String,
     val iobLabel: String,
-    val cobLabel: String
+    val cobLabel: String,
+    // The glucose value as spoken. An old reading is only struck through on screen, so a screen
+    // reader read it as if it were current; this adds "old reading" in that case.
+    val bgSpoken: String
 )

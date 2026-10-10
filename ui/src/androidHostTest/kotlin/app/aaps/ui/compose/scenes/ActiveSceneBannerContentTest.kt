@@ -2,6 +2,7 @@ package app.aaps.ui.compose.scenes
 
 import android.content.Context
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -9,20 +10,19 @@ import androidx.compose.ui.test.performClick
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneLifecycle
-import app.aaps.core.ui.R as CoreUiR
-import com.google.common.truth.Truth.assertThat
-import org.junit.Before
-import androidx.compose.runtime.CompositionLocalProvider
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.LocalDateUtil
-import org.mockito.kotlin.mock
+import com.google.common.truth.Truth.assertThat
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import app.aaps.core.ui.R as CoreUiR
 
 /** Robolectric composable test for [ActiveSceneBannerContent]: active (name + End) vs expired (ended + Close). */
 @RunWith(RobolectricTestRunner::class)
@@ -82,5 +82,19 @@ class ActiveSceneBannerContentTest {
         compose.onNodeWithText(endedLabel).assertIsDisplayed()
         compose.onNodeWithText(closeLabel).performClick()
         assertThat(dismissed).isTrue()
+    }
+
+    // The follow-up is what the scene sets in motion when the countdown ends, so the banner names it.
+    @Test
+    fun activeScene_showsFollowUpScene() {
+        val ctx: Context = RuntimeEnvironment.getApplication()
+        compose.setContent {
+            CompositionLocalProvider(LocalDateUtil provides dateUtil) {
+                MaterialTheme {
+                    ActiveSceneBannerContent(state = state(), expired = false, onEndClick = {}, chainTargetName = "Cooldown")
+                }
+            }
+        }
+        compose.onNodeWithText(ctx.getString(CoreUiR.string.scene_chain_indicator, "Cooldown")).assertIsDisplayed()
     }
 }

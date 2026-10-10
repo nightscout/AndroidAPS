@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">Τέλος χρόνου σύζευξης</string>
     <string name="danarspump">Dana-i/RS</string>
-    <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Ενσωμάτωση των αντιών DANA Diabecare RS και Dana-i</string>
     <string name="maxbolusviolation">Υπέρβαση μέγιστου bolus</string>
     <string name="commanderror">Σφάλμα εντολής</string>
@@ -74,7 +73,6 @@
     <string name="description_pump_dana_r">Ολοκλήρωση αντλίας για τις αντλίες Dana Diabecare R</string>
     <string name="description_pump_dana_r_korean">Ολοκλήρωση αντλίας για τις εγχώριες αντλίες Dana Diabecare R</string>
     <string name="description_pump_dana_r_v2">Ολοκλήρωση αντλίας για τις αντλίες Dana Diabecare R με αναβαθμισμένο λογισμικό</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Δεν βρέθηκε η επιλεγμένη συσκευή</string>
     <string name="danar_switchtouhmode">Αλλάξτε την επιλογή από U/d σε U/h στην αντλία</string>
     <string name="danarkoreanpump">DanaR Korean</string>

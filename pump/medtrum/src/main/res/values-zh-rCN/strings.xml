@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">移宇</string>
-    <string name="medtrum_pump_shortname">MT移宇</string>
     <string name="medtrum_pump_description">Medtrum Nano 和 Medtrum 300U 的泵集成</string>
     <string name="medtrum_pump_setting">Medtrum 泵设置</string>
     <string name="pump_error">泵错误: %1$s !! </string>

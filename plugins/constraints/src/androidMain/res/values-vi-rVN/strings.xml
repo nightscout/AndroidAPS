@@ -37,7 +37,6 @@
     <string name="loopenabled">Vòng lặp đã được kích hoạt</string>
     <string name="apsselected">APS đã được chọn</string>
     <string name="closedmodeenabled">Đã bật chế độ vòng lặp kín</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Chương trình đào tạo</string>
     <string name="doyouwantresetstart">Bạn có muốn đặt lại mục tiêu khởi động không? Tiến trình của bạn có thể sẽ bị mất.</string>
     <string name="objectives_button_unfinish">Đặt lại trạng thái đã hoàn thành</string>

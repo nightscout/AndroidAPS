@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Integração das bombas Medtrum Nano e Medtrum 300U</string>
     <string name="medtrum_pump_setting">Configurações da Bomba Medtrum</string>
     <string name="pump_error">Erro da Bomba: %1$s !! </string>

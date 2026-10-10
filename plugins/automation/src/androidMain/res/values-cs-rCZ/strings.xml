@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Stáří kanyly %1$s %2$.1f h</string>
     <string name="triggerPodChangeLabel">Aktivace Podu</string>
     <string name="triggerPodChangeDesc">Pod aktivován</string>
+    <string name="triggerUnknownLabel">Neznámý spouštěč</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Neznámý spouštěč %1$s - nikdy neplatí</string>
     <string name="triggerInsulinAgeLabel">Stáří inzulínu</string>
     <string name="triggerInsulinAgeDesc">Stáří inzulínu %1$s %2$.1f h</string>
     <string name="triggerPumpBatteryAgeLabel">Stáří baterie v pumpě</string>
@@ -151,6 +153,11 @@
     <string name="on">ZAP</string>
     <string name="off">VYP</string>
     <!--    Smoothing-->
+    <string name="change_smoothing">Změnit vyhlazování</string>
+    <string name="change_smoothing_to" comment="%1$s=name of the smoothing plugin. Example: Change smoothing to Average smoothing">Změnit vyhlazování na %1$s</string>
+    <string name="smoothing_label">Vyhlazování</string>
+    <string name="precondition_smoothing_not_active_name">Vyhlazování není aktivní</string>
+    <string name="precondition_smoothing_not_active" comment="%1$s=name of the smoothing plugin. Shown as a precondition. Example: Smoothing Average smoothing is not active">Vyhlazování %1$s není aktivní</string>
     <!--    Map Picker (OpenStreetMap)-->
     <string name="pick_from_map">Vybrat z mapy</string>
     <string name="tap_to_select_location">Klepněte na mapu pro výběr místa</string>

@@ -51,7 +51,6 @@ class SensitivityWeightedAveragePlugin(
         .mainType(PluginType.SENSITIVITY)
         .icon(IcAs)
         .pluginName(SensitivityStrings.sensitivity_weighted_average)
-        .shortName(SensitivityStrings.sensitivity_plugin_shortname)
         // Only meaningful with the AMA algorithm - see SensitivityAAPSPlugin, same rule.
         .showInList {
             val aps = activePlugin.activeAPS

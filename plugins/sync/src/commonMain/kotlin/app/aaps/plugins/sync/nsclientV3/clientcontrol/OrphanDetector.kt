@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.clientcontrol
 
-import app.aaps.plugins.sync.SyncStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -10,8 +9,8 @@ import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.nssdk.localmodel.configuration.NSRunningConfiguration
+import app.aaps.plugins.sync.SyncStrings
 import app.aaps.plugins.sync.nsclientV3.clientcontrol.OrphanDetector.Companion.POST_PAIRING_GRACE_MS
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject

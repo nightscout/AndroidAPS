@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.carelevo.ble.CarelevoBleTransport
 import app.aaps.pump.carelevo.ble.CarelevoBleTransportImpl
 import app.aaps.pump.carelevo.config.BleEnvConfig
+import app.aaps.pump.carelevo.di.CarelevoBleBindings.provideCarelevoBleTransport
 import app.aaps.pump.carelevo.emulator.CarelevoEmulatorBleTransport
 import app.aaps.pump.carelevo.emulator.CarelevoPumpEmulator
 import dev.zacsweers.metro.AppScope

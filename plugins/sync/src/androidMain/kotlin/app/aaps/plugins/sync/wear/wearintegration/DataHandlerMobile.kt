@@ -1,8 +1,5 @@
 package app.aaps.plugins.sync.wear.wearintegration
 
-import app.aaps.core.interfaces.InterfacesStrings
-import app.aaps.core.ui.CoreUiStrings
-import app.aaps.plugins.sync.SyncStrings
 import android.app.NotificationManager
 import android.content.Context
 import android.content.res.Configuration
@@ -27,6 +24,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -47,6 +45,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
@@ -62,7 +61,6 @@ import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
-import app.aaps.core.interfaces.overview.SensitivityOverview
 import app.aaps.core.interfaces.rx.weardata.ActiveSceneInfo
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -102,14 +100,20 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.clientcontrol.failText
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.LightGeneralColors
 import app.aaps.core.ui.extensions.generateCOBString
 import app.aaps.core.ui.extensions.toStringShort
+import app.aaps.plugins.sync.SyncStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -117,10 +121,6 @@ import java.util.LinkedList
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.min
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 // Quiet-period that closes a Wear-event batch. Long enough to absorb a Data Layer reconnect-flush,
 // short enough that live data stays effectively real-time.
@@ -201,6 +201,19 @@ class DataHandlerMobile(
     }
 
     /**
+     * [onEvent] for a command that changes therapy. The handler only runs while the phone's
+     * "Wear control" switch is on; otherwise the watch gets an error reply (see [rejectIfWearControlOff]).
+     * Register every bolus, carbs, target, profile, running mode, scene and user-action command through
+     * this, so a new one cannot forget the gate.
+     */
+    private inline fun <reified T : EventData> onControlEvent(crossinline handler: suspend (T) -> Unit) {
+        onEvent<T> { event ->
+            if (rejectIfWearControlOff()) return@onEvent
+            handler(event)
+        }
+    }
+
+    /**
      * Fire-immediately sibling of [onEvent] for non-suspend handlers (no concatMap serialization).
      * Emits the same uniform "<Type> received from <node>" debug line; extra diagnostics go through
      * [detail]. Errors are routed to [FabricPrivacy.logException], matching the prior subscriptions.
@@ -223,9 +236,10 @@ class DataHandlerMobile(
             if (rejectIfNotReady()) return@onEventSync
             activePlugin.activePump.stopBolusDelivering()
         }
-        onEvent<EventData.OpenLoopRequestConfirmed> {
-            if (rejectIfNotReady()) return@onEvent
-            loop.acceptChangeRequest()
+        onControlEvent<EventData.OpenLoopRequestConfirmed> {
+            if (rejectIfNotReady()) return@onControlEvent
+            // A refused accept (loop paused, suggestion too old) must say so, or the watch shows it as done.
+            loop.acceptChangeRequest()?.let { sendError(it) }
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.NOTIFICATION_ID)
         }
         onEvent<EventData.ActionResendData> { resendData(it.from) }
@@ -260,25 +274,25 @@ class DataHandlerMobile(
             )
         }
         onEvent<EventData.RunningModeRequest> { handleAvailableRunningModes() }
-        onEvent<EventData.RunningModeSelected> { handleRunningModeSelected(it) }
-        onEvent<EventData.RunningModeConfirmed> { handleRunningModeConfirmed(it) }
+        onControlEvent<EventData.RunningModeSelected> { handleRunningModeSelected(it) }
+        onControlEvent<EventData.RunningModeConfirmed> { handleRunningModeConfirmed(it) }
         onEvent<EventData.ActionTddStatus> { handleTddStatus() }
         onEvent<EventData.ActionProfileSwitchSendInitialData> { handleProfileSwitchSendInitialData() }
-        onEvent<EventData.ActionProfileSwitchPreCheck> { handleProfileSwitchPreCheck(it) }
-        onEvent<EventData.ActionProfileSwitchConfirmed> {
+        onControlEvent<EventData.ActionProfileSwitchPreCheck> { handleProfileSwitchPreCheck(it) }
+        onControlEvent<EventData.ActionProfileSwitchConfirmed> {
             // Commit the parked profile switch through the role-transparent relay (MASTER → local applyProfileSwitch;
             // CLIENT → signed BolusCommit so the MASTER applies it, not the follower locally).
             contacting() // CLIENT: show the spinner during the commit round-trip too (no-op on master).
             onCommitResult(batchExecutor.commit(it.bolusId, Sources.Wear, rh.gs(CoreUiStrings.careportal_profileswitch)))
         }
-        onEvent<EventData.ActionTempTargetPreCheck> { handleTempTargetPreCheck(it) }
-        onEvent<EventData.ActionTempTargetConfirmed> {
+        onControlEvent<EventData.ActionTempTargetPreCheck> { handleTempTargetPreCheck(it) }
+        onControlEvent<EventData.ActionTempTargetConfirmed> {
             // Commit the parked TT through the relay (MASTER → local applyTempTarget set/cancel; CLIENT → master applies).
             contacting() // CLIENT: show the spinner during the commit round-trip too (no-op on master).
             onCommitResult(batchExecutor.commit(it.bolusId, Sources.Wear, rh.gs(CoreUiStrings.temporary_target)))
         }
-        onEvent<EventData.ActionBolusPreCheck> { handleBolusPreCheck(it) }
-        onEvent<EventData.ActionBolusConfirmed> {
+        onControlEvent<EventData.ActionBolusPreCheck> { handleBolusPreCheck(it) }
+        onControlEvent<EventData.ActionBolusConfirmed> {
             // Commit the parked dose by id through the role-transparent relay (MASTER → local deliver; CLIENT →
             // signed BolusCommit). Consume-once = no double bolus; a failure surfaces to the watch.
             contacting() // CLIENT: show the spinner during the commit round-trip too (no-op on master).
@@ -291,8 +305,8 @@ class DataHandlerMobile(
                 sendQuickWizardListToWear()
             }
         }
-        onEvent<EventData.ActionECarbsPreCheck> { handleECarbsPreCheck(it) }
-        onEvent<EventData.ActionECarbsConfirmed> {
+        onControlEvent<EventData.ActionECarbsPreCheck> { handleECarbsPreCheck(it) }
+        onControlEvent<EventData.ActionECarbsConfirmed> {
             // Commit the parked eCarbs through the relay (MASTER → local deliverECarbs; CLIENT → master records them).
             contacting() // CLIENT: show the spinner during the commit round-trip too (no-op on master).
             onCommitResult(batchExecutor.commit(it.bolusId, Sources.Wear, rh.gs(CoreUiStrings.overview_treatment_label)))
@@ -300,18 +314,18 @@ class DataHandlerMobile(
         // Same pre-init gate as every other handler here. These reach the wizard/batch path, and before
         // ConfigBuilder.initialize() has run verifySelectionInCategories() the active APS is still null, so a
         // dose recompute would hit ProfileSealed's "APS not defined" guard.
-        onEvent<EventData.ActionFillPresetPreCheck> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionFillPresetPreCheck> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleFillPresetPreCheck(it)
         }
-        onEvent<EventData.ActionFillPreCheck> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionFillPreCheck> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleFillPreCheck(it)
         }
-        onEvent<EventData.ActionFillConfirmed> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionFillConfirmed> {
+            if (rejectIfNotReady()) return@onControlEvent
             // Defense-in-depth: Fill is off-relay and delivered locally only — a client must never reach here.
-            if (rejectIfAapsClient()) return@onEvent
+            if (rejectIfAapsClient()) return@onControlEvent
             if (constraintChecker.applyBolusConstraints(ConstraintObject(it.insulin, aapsLogger)).value() - it.insulin != 0.0) {
                 rxBus.send(EventShowSnackbar("aborting: previously applied constraint changed", EventShowSnackbar.Type.Warning))
                 sendError("aborting: previously applied constraint changed")
@@ -324,15 +338,15 @@ class DataHandlerMobile(
         // These two are the ones that actually recompute a dose. The executor they delegate to already
         // refuses before init, so this is defence in depth - but it keeps the refusal in one place with the
         // rest, so a later direct call here cannot bring back the "APS not defined" crash.
-        onEvent<EventData.ActionQuickWizardPreCheck> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionQuickWizardPreCheck> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleQuickWizardPreCheck(it)
         }
-        onEvent<EventData.ActionWizardPreCheck> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionWizardPreCheck> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleWizardPreCheck(it)
         }
-        onEvent<EventData.ActionWizardConfirmed> {
+        onControlEvent<EventData.ActionWizardConfirmed> {
             // Commit the parked wizard/quick-wizard dose by id through the role-transparent relay (MASTER → local
             // deliver; CLIENT → signed BolusCommit; wear has no advisor fork → asAdvisor=false). Refresh the watch's
             // quick-wizard list (lastUsed) only when something was actually delivered; a failure surfaces to the watch.
@@ -343,32 +357,32 @@ class DataHandlerMobile(
                 sendQuickWizardListToWear()
             }
         }
-        onEvent<EventData.ActionUserActionPreCheck> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionUserActionPreCheck> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleUserActionPreCheck(it)
         }
-        onEvent<EventData.ActionUserActionConfirmed> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionUserActionConfirmed> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleUserActionConfirmed(it)
         }
-        onEvent<EventData.ActionScenePreCheck> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionScenePreCheck> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleScenePreCheck(it)
         }
-        onEvent<EventData.ActionSceneConfirmed> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionSceneConfirmed> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleSceneConfirmed(it)
         }
-        onEvent<EventData.ActionSceneStop> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionSceneStop> {
+            if (rejectIfNotReady()) return@onControlEvent
             scenes.stopActiveScene()
         }
-        onEvent<EventData.ActionSceneStopPreCheck> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionSceneStopPreCheck> {
+            if (rejectIfNotReady()) return@onControlEvent
             handleSceneStopPreCheck(it)
         }
-        onEvent<EventData.ActionSceneStopConfirmed> {
-            if (rejectIfNotReady()) return@onEvent
+        onControlEvent<EventData.ActionSceneStopConfirmed> {
+            if (rejectIfNotReady()) return@onControlEvent
             // The master re-derives the follow-up itself and falls back to a plain stop if it is gone
             onCommitResult(sceneActions.stop(triggerChain = it.triggerChain))
         }
@@ -628,6 +642,26 @@ class DataHandlerMobile(
         if (!config.appInitialized) {
             aapsLogger.debug(LTag.WEAR, "Refusing a watch action: app not initialized or reconfiguring")
             sendError(rh.gs(SyncStrings.wear_phone_not_ready))
+            return true
+        }
+        return false
+    }
+
+    /**
+     * The phone's "Wear control" switch is the user's word that the watch may change therapy. The watch
+     * hides its control screens when the switch is off, but the watch is the device the switch is meant
+     * to restrain (a child's watch, a borrowed one, a stale build), so the phone must not rely on the
+     * watch UI to enforce it. Every command that changes therapy is refused here with an error reply,
+     * so the watch does not show a spinner that never resolves.
+     *
+     * Read-only requests (status, TDD, resend, health data, watchfaces) are not gated: the watch still
+     * displays data with control off. `CancelBolus` is not gated either - stopping a running bolus is a
+     * safety action, not control.
+     */
+    internal fun rejectIfWearControlOff(): Boolean {
+        if (!preferences.get(BooleanKey.WearControl)) {
+            aapsLogger.debug(LTag.WEAR, "Refusing a watch action: Wear control is off")
+            sendError(rh.gs(SyncStrings.wear_control_disabled))
             return true
         }
         return false

@@ -105,7 +105,7 @@ class DexcomWorkerTest : TestBaseWithProfile() {
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.FORTY_FIVE_DOWN,
-                sourceSensor = SourceSensor.DEXCOM_G6_NATIVE
+                sourceSensor = SourceSensor.DEXCOM_G6
             )
             val calibration = PersistenceLayer.Calibration(
                 timestamp = timestamp * 1000,
@@ -151,7 +151,7 @@ class DexcomWorkerTest : TestBaseWithProfile() {
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.FORTY_FIVE_DOWN,
-                sourceSensor = SourceSensor.DEXCOM_G7_NATIVE
+                sourceSensor = SourceSensor.DEXCOM_G7
             )
             verify(persistenceLayer).insertCgmSourceData(Sources.Dexcom, listOf(expectedGv), emptyList(), null)
         }
@@ -185,7 +185,7 @@ class DexcomWorkerTest : TestBaseWithProfile() {
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.FORTY_FIVE_DOWN,
-                sourceSensor = SourceSensor.DEXCOM_NATIVE_UNKNOWN
+                sourceSensor = SourceSensor.DEXCOM_UNKNOWN
             )
             verify(persistenceLayer).insertCgmSourceData(Sources.Dexcom, listOf(expectedGv), emptyList(), null)
         }

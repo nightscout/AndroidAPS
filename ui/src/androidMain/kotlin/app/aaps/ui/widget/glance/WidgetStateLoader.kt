@@ -217,6 +217,7 @@ class WidgetStateLoader(
             tbrDescription = tbrDescription,
             iobLabel = rh.gs(CoreUiStrings.iob),
             cobLabel = rh.gs(CoreUiStrings.cob),
+            bgSpoken = if (strikeThrough) listOf(bgText, rh.gs(UiStrings.a11y_bg_old_reading)).joinToString(", ") else bgText,
             deltaText = deltaText,
             timeAgoText = timeAgoText,
             iobText = iobText,

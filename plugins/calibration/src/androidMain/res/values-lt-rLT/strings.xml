@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="calibration_shortname">KAL</string>
     <string name="no_calibration_name">Be kalibravimo</string>
     <string name="description_no_calibration">"Kalibravimo korekcija netaikoma – naudojamos tokios sensoriaus reikšmės, kokios jos yra. Šį nustatymą rinkitės, jei sensorius yra gamykliškai sukalibruotas ir rodo tiksliai."</string>
     <string name="linear_calibration_name">Tiesinis kalibravimas</string>

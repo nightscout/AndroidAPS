@@ -22,13 +22,13 @@ import androidx.compose.ui.Modifier
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.SnackbarHostPresence
 import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.MetroAppCompatActivity
 import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.pump.insight.InsightAlertService
 import app.aaps.pump.insight.compose.InsightAlertScreen
 import app.aaps.pump.insight.compose.InsightAlertUiState
 import app.aaps.pump.insight.descriptors.Alert
 import app.aaps.pump.insight.utils.AlertUtils
-import app.aaps.core.ui.compose.MetroAppCompatActivity
 import dev.zacsweers.metro.Inject
 
 class InsightAlertActivity : MetroAppCompatActivity() {

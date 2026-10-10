@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodDashBleManager
+import app.aaps.pump.omnipod.common.bledriver.comm.OmnipodBleManager
 import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
 import app.aaps.pump.omnipod.common.bledriver.pod.command.DeactivateCommand
 import app.aaps.pump.omnipod.common.bledriver.pod.command.GetStatusCommand
@@ -40,6 +40,11 @@ import app.aaps.pump.omnipod.common.bledriver.pod.response.ResponseType
 import app.aaps.pump.omnipod.common.bledriver.pod.response.SetUniqueIdResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.response.VersionResponse
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.functions.Action
 import io.reactivex.rxjava3.functions.Consumer
@@ -49,11 +54,6 @@ import java.util.Date
 import java.util.EnumSet
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.SingleIn
-import dev.zacsweers.metro.binding
-import dev.zacsweers.metro.Inject
 import kotlin.time.Duration.Companion.hours
 
 @ContributesBinding(AppScope::class, binding = binding<OmnipodDashManager>())
@@ -62,7 +62,7 @@ import kotlin.time.Duration.Companion.hours
 class OmnipodDashManagerImpl(
     private val logger: AAPSLogger,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val bleManager: OmnipodDashBleManager,
+    private val bleManager: OmnipodBleManager,
     private val aapsSchedulers: AapsSchedulers
 ) : OmnipodDashManager {
 

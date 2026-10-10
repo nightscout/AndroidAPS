@@ -5,9 +5,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
+import dev.zacsweers.metro.Inject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import dev.zacsweers.metro.Inject
 
 @Inject
 class DanaRSPacketBolusGetStepBolusInformation(
@@ -27,9 +27,15 @@ class DanaRSPacketBolusGetStepBolusInformation(
         danaPump.initialBolusAmount = intFromBuff(data, 2, 2) / 100.0
         val hours = intFromBuff(data, 4, 1)
         val minutes = intFromBuff(data, 5, 1)
-        if (danaPump.usingUTC) danaPump.lastBolusTime = DateTime.now().withZone(DateTimeZone.UTC).withHourOfDay(hours).withMinuteOfHour(minutes).millis
-        else danaPump.lastBolusTime = DateTime.now().withHourOfDay(hours).withMinuteOfHour(minutes).millis
-        danaPump.lastBolusAmount = intFromBuff(data, 6, 2) / 100.0
+        if (isValidTime(hours, minutes)) {
+            if (danaPump.usingUTC) danaPump.lastBolusTime = DateTime.now().withZone(DateTimeZone.UTC).withHourOfDay(hours).withMinuteOfHour(minutes).millis
+            else danaPump.lastBolusTime = DateTime.now().withHourOfDay(hours).withMinuteOfHour(minutes).millis
+            danaPump.lastBolusAmount = intFromBuff(data, 6, 2) / 100.0
+        } else {
+            // A pump that never gave a bolus sends FF FF as time, and the amount bytes are not valid
+            danaPump.lastBolusTime = null
+            danaPump.lastBolusAmount = null
+        }
         danaPump.maxBolus = intFromBuff(data, 8, 2) / 100.0
         danaPump.bolusStep = intFromBuff(data, 10, 1) / 100.0
         failed = error != 0

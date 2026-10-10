@@ -116,7 +116,6 @@ open class OpenAPSSMBPlugin(
         }
         .icon(IcPluginOpenAPS)
         .pluginName(ApsStrings.openapssmb)
-        .shortName(CoreUiStrings.smb_shortname)
         .preferencesVisibleInSimpleMode(false)
         .showInList { config.APS || config.AAPSCLIENT }   // AAPSCLIENT: visible so a client can select the master's APS
         .description(ApsStrings.description_smb)

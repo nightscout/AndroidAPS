@@ -1352,6 +1352,11 @@ object ApplicationLayer {
                 "number of events: $numEvents"
         }
 
+        // The oldest events were lost before we could read them. Log this at a level
+        // that is kept in the logs, so a report of missing boluses can be checked later.
+        if (historyGap)
+            logger(LogLevel.WARN) { "History gap: the pump overwrote its oldest history events before they were read" }
+
         val events = mutableListOf<CMDHistoryEvent>()
         for (eventIndex in 0 until numEvents) {
             val payloadOffset = 7 + eventIndex * 18

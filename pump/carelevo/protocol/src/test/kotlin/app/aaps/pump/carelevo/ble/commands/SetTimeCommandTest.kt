@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlin.time.Instant
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.InterfacesStrings
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -31,12 +31,12 @@ import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.pump.tickerFlow
-import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -89,8 +89,16 @@ class StatusViewModel(
             .onEach { refreshState() }.launchIn(viewModelScope)
     }
 
+    /** The refresh that is still running, if any. */
+    private var refreshJob: Job? = null
+
     fun refreshState() {
-        viewModelScope.launch {
+        // Every pump status event calls this, and a Dana status read sends many of them in a row. Each
+        // call used to start its own cannula usage calculation and none was ever cancelled, so they
+        // piled up on the database until the IOB calculation and the pump status read stalled. Only the
+        // newest refresh matters, so the one still running is cancelled.
+        refreshJob?.cancel()
+        refreshJob = viewModelScope.launch {
             val pump = activePlugin.activePump
             val pumpDescription = pump.pumpDescription
             val isInitialized = pump.isInitialized()
@@ -123,12 +131,11 @@ class StatusViewModel(
                 )
             }
 
-            // Calculate cannula usage in background (expensive operation)
-            viewModelScope.launch {
-                val cannulaStatusWithUsage = buildCannulaStatus(isPatchPump, includeTddCalculation = true)
-                _uiState.update { state ->
-                    state.copy(cannulaStatus = cannulaStatusWithUsage)
-                }
+            // Calculate cannula usage (expensive operation). The items above are already shown, and the
+            // usage is part of this job, so a newer refresh cancels it too.
+            val cannulaStatusWithUsage = buildCannulaStatus(isPatchPump, includeTddCalculation = true)
+            _uiState.update { state ->
+                state.copy(cannulaStatus = cannulaStatusWithUsage)
             }
         }
     }
@@ -202,7 +209,7 @@ class StatusViewModel(
         // Calculate usage since last cannula change (expensive - can be deferred)
         val usage = if (includeTddCalculation && event != null) {
             withContext(aapsIoDispatcher) {
-                tddCalculator.calculateInterval(event.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+                tddCalculator.calculateIntervalWithCachedDays(event.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
             }
         } else 0.0
 

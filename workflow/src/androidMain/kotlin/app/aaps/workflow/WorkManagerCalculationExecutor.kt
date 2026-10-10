@@ -15,6 +15,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.delay
 import kotlin.time.Clock
+import kotlin.time.Duration
 
 /**
  * Runs the calculation phases as WorkManager workers.
@@ -96,6 +97,20 @@ class WorkManagerCalculationExecutor(
         aapsLogger.warn(LTag.AUTOSENS, "Calculation did not finish within ${STOP_WAIT_TIMEOUT_MS}ms: $reason")
     }
 
+    override suspend fun awaitIdle(job: String, timeout: Duration): Boolean {
+        // The whole unique work, so the post worker (still BLOCKED behind prepare, or running the loop)
+        // counts as busy too. Finished works stay listed until WorkManager prunes them.
+        fun busy() = workManager.getWorkInfosForUniqueWork(job).get().any { !it.state.isFinished }
+        if (!busy()) return true
+        aapsLogger.debug(LTag.WORKER, "Waiting for $job to finish")
+        val deadline = Clock.System.now() + timeout
+        while (Clock.System.now() < deadline) {
+            delay(IDLE_POLL_MS)
+            if (!busy()) return true
+        }
+        return false
+    }
+
     // Distinct per-job tag on the prepare (data-producing) stage; used by waitForPrepare().
     private fun prepareTag(job: String): String = "$job:prepare"
 
@@ -109,5 +124,8 @@ class WorkManagerCalculationExecutor(
 
         private const val STOP_WAIT_TIMEOUT_MS = 5_000L
         private const val STOP_WAIT_POLL_MS = 100L
+
+        /** awaitIdle waits for minutes, not seconds, so it asks WorkManager less often. */
+        private const val IDLE_POLL_MS = 500L
     }
 }

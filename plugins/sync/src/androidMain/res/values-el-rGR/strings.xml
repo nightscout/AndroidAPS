@@ -23,7 +23,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Χρησιμοποιήστε διακομιστές ολοκλήρωσης (δοκιμής)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
     <string name="upload_now">Ανέβασμα τώρα</string>
     <string name="not_connected">Μη συνδεδεμένο</string>
@@ -31,7 +30,6 @@
     <string name="working">Σε επεξεργασία</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Αποστολή δεδομένων στο xDrip+</string>
     <string name="xdrip_status_settings">Γραμμή Κατάστασης xDrip+ Για Προχωρημένους</string>
     <string name="xdrip_not_installed">xDrip+ μη εγκατεστημένο</string>
@@ -87,7 +85,6 @@
     <string name="weighted">σταθμισμένο</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Επικοινωνία με SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Απομακρυσμένος έλεγχος του AAPS με τη χρήση SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">από την εφαρμογή Ελέγχου Ταυτότητας για: %1$s ακολουθούμενο από PIN</string>
     <string name="smscommunicator_tab_otp_label">Ρύθμιση ελέγχου ταυτότητας</string>

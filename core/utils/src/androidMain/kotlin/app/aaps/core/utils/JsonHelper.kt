@@ -1,6 +1,5 @@
 package app.aaps.core.utils
 
-import kotlinx.serialization.json.JsonObject
 import org.json.JSONException
 import org.json.JSONObject
 

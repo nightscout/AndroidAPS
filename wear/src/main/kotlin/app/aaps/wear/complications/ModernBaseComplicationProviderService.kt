@@ -14,21 +14,20 @@ import app.aaps.core.interfaces.di.injectMetroMembers
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.wear.data.ComplicationData as ComplicationStore
 import app.aaps.wear.data.ComplicationDataRepository
-import app.aaps.wear.di.WearMetroService
 import app.aaps.wear.interaction.utils.Constants
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.WearUtil
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
-import java.time.Instant
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.util.concurrent.TimeUnit
+import app.aaps.wear.data.ComplicationData as ComplicationStore
 
 /**
  * Modern base class for complications using DataStore and AndroidX Wear APIs
@@ -64,7 +63,7 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
      * Build complication data using modern DataStore-backed data models
      *
      * Supports multiple datasets for AAPSClient mode:
-     * - Dataset 0 (data.bgData, data.statusData): Primary AndroidAPS instance
+     * - Dataset 0 (data.bgData, data.statusData): Primary AAPS instance
      * - Dataset 1 (data.bgData1, data.statusData1): AAPSClient1 (follower mode)
      * - Dataset 2 (data.bgData2, data.statusData2): AAPSClient2 (follower mode)
      *

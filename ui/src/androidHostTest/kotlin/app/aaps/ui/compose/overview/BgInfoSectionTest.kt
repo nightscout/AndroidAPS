@@ -11,6 +11,9 @@ import androidx.compose.ui.test.onNodeWithText
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.BgRange
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
+import app.aaps.ui.UiStringIds
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,8 +26,8 @@ import org.robolectric.annotation.GraphicsMode
  *
  * Pins what the user actually reads off the BG circle: the placeholder when there is no reading,
  * the value / delta / time-ago lines, the opt-out of the time-ago line, and the accessibility
- * description a screen reader speaks (which is built by string concatenation inside the file, so
- * it is the part a move can silently reword).
+ * description a screen reader speaks (built from translated pieces in `bgSpokenDescription`, so it
+ * is the part a refactor can silently reword).
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -33,6 +36,13 @@ class BgInfoSectionTest {
 
     @get:Rule
     val compose = createComposeRule()
+
+    // What MainApp does at startup: the spoken description names its strings, and a TextRef.Named
+    // resolves through this registry - without it those parts render as their raw names.
+    @Before
+    fun setUp() {
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
+    }
 
     private fun bgInfo(
         bgText: String = "120",
@@ -107,26 +117,46 @@ class BgInfoSectionTest {
         compose.onNodeWithText("+2").assertDoesNotExist()
     }
 
+    /**
+     * The time-ago text comes from `DateUtil.minAgo` and already says "ago". The description used to
+     * add another, so TalkBack read "1 min ago ago" on the main screen.
+     */
     @Test
     fun accessibilityDescriptionListsValueTrendDeltaAndAge() {
         compose.setContent {
             MaterialTheme {
-                BgInfoSection(bgInfo = bgInfo(), timeAgoText = "2 min")
+                BgInfoSection(bgInfo = bgInfo(), timeAgoText = "2 min ago")
             }
         }
 
-        compose.onNodeWithContentDescription("BG 120, Flat, delta +2, 2 min ago").assertExists()
+        compose.onNodeWithContentDescription("Glucose: 120, Flat, delta +2, 2 min ago").assertExists()
     }
 
     @Test
     fun accessibilityDescriptionSaysOutdated() {
         compose.setContent {
             MaterialTheme {
-                BgInfoSection(bgInfo = bgInfo(isOutdated = true), timeAgoText = "12 min")
+                BgInfoSection(bgInfo = bgInfo(isOutdated = true), timeAgoText = "12 min ago")
             }
         }
 
-        compose.onNodeWithContentDescription("BG 120, Flat, delta +2, 12 min ago, outdated").assertExists()
+        compose.onNodeWithContentDescription("Glucose: 120, Flat, delta +2, 12 min ago, old reading").assertExists()
+    }
+
+    /** High and low are only the colour of the circle, so they must be said. */
+    @Test
+    fun accessibilityDescriptionSaysHighAndLow() {
+        compose.setContent {
+            MaterialTheme {
+                Column {
+                    BgInfoSection(bgInfo = bgInfo(bgText = "250", bgRange = BgRange.HIGH), timeAgoText = "")
+                    BgInfoSection(bgInfo = bgInfo(bgText = "60", bgRange = BgRange.LOW), timeAgoText = "")
+                }
+            }
+        }
+
+        compose.onNodeWithContentDescription("Glucose: 250, high, Flat, delta +2").assertExists()
+        compose.onNodeWithContentDescription("Glucose: 60, low, Flat, delta +2").assertExists()
     }
 
     @Test
@@ -137,7 +167,7 @@ class BgInfoSectionTest {
             }
         }
 
-        compose.onNodeWithContentDescription("BG 120, Flat").assertExists()
+        compose.onNodeWithContentDescription("Glucose: 120, Flat").assertExists()
     }
 
     @Test
@@ -146,13 +176,13 @@ class BgInfoSectionTest {
             MaterialTheme {
                 BgInfoSection(
                     bgInfo = bgInfo(trendArrow = null, trendDescription = "Unknown", bgRange = BgRange.LOW),
-                    timeAgoText = "1 min"
+                    timeAgoText = "1 min ago"
                 )
             }
         }
 
         compose.onNodeWithText("120").assertIsDisplayed()
-        compose.onNodeWithContentDescription("BG 120, Unknown, delta +2, 1 min ago").assertExists()
+        compose.onNodeWithContentDescription("Glucose: 120, low, Unknown, delta +2, 1 min ago").assertExists()
     }
 
     @Test

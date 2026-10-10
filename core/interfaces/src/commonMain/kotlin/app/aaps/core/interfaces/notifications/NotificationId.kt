@@ -226,7 +226,11 @@ enum class NotificationId(
     // The pump is disconnected (or a super bolus runs) in AAPS, but the zero temp basal that stops the
     // insulin is not on the pump, and sending it again did not help. The pump may still give basal
     // while the user believes it does not. Appended at the END for the same reason as above.
-    ZERO_DELIVERY_NOT_SET(URGENT, PUMP);
+    ZERO_DELIVERY_NOT_SET(URGENT, PUMP),
+
+    // One command has been running in the queue for too long, so nothing else reaches the pump (#5209).
+    // Appended at the END for the same reason as above.
+    PUMP_DRIVER_NOT_RESPONDING(URGENT, PUMP);
 
     companion object {
 

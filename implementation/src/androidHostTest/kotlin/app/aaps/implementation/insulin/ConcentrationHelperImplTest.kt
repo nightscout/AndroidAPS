@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.stubTextRefResolution
 import com.google.common.truth.Truth.assertThat
@@ -18,7 +17,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
-import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.whenever
 

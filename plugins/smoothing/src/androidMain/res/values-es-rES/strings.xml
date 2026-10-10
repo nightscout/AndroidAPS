@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">SUAVIZADO</string>
     <string name="exponential_smoothing_name">Suavizado exponencial</string>
     <string name="description_exponential_smoothing">"Algoritmo de suavizado exponencial de segundo orden"</string>
     <string name="avg_smoothing_name">Suavizado promedio</string>

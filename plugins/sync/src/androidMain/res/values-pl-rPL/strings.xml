@@ -26,7 +26,6 @@
     <string name="summary_tidepool_dev_servers">Jeśli ta opcja jest włączona, dane przesyłane są na serwery testowe zamiast zwykłych</string>
     <string name="title_tidepool_dev_servers">Użyj serwerów integracyjnych (testowych)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Prześlij dane do Tidepool</string>
     <string name="upload_now">Prześlij teraz</string>
     <string name="not_connected">Nie połączono</string>
@@ -34,7 +33,6 @@
     <string name="working">Pracuje</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Wysyłaj dane do xDrip+</string>
     <string name="xdrip_status_settings">Zaawansowana linia statusu xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ nie jest zainstalowany</string>
@@ -48,7 +46,6 @@
     <string name="garmin_local_http_server_port">Port lokalnego serwera HTTP</string>
     <string name="garmin_local_http_server">Lokalny serwer HTTP</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitoruj i steruj AAPS używając zegarka z WearOS.</string>
     <string name="no_watch_connected">(Brak połączonego zegarka)</string>
     <string name="pump_status">Status pompy</string>
@@ -103,7 +100,6 @@
     <string name="garmin_request_key">Klucz zapytania</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Komunikator SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Zdalne sterowanie AAPS za pomocą poleceń SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikacji Authenticator dla: %1$s, z doklejonym PIN-em</string>
     <string name="smscommunicator_tab_otp_label">Ustawienia uwierzytelnienia</string>

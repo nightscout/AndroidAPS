@@ -3,8 +3,8 @@ package app.aaps.pump.carelevo.command
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.carelevo.ble.BleResponse
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
 import app.aaps.pump.carelevo.ble.commands.AlarmClearResponse
@@ -27,6 +27,7 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchSafetyCheckUseCa
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateLowInsulinNoticeAmountUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateMaxBolusDoseUseCase
 import com.google.common.truth.Truth.assertThat
+import dev.zacsweers.metro.Provider
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +47,6 @@ import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
 import java.util.Optional
-import dev.zacsweers.metro.Provider
 
 /**
  * JVM unit tests for [CarelevoActivationExecutor]. Every op is driven through the public [CarelevoActivationExecutor.execute]

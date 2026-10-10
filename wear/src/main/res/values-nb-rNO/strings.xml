@@ -97,6 +97,7 @@
     <string name="action_user_action_confirmation">Brukerhandling forespurt</string>
     <string name="action_scene_confirmation">Scene forespurt</string>
     <string name="scene_end">Avslutt</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">Hopp over</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>
     <string name="action_wizard_confirmation">Beregning forespurt</string>
@@ -317,6 +318,18 @@
     <string name="loop_status_target_range">Målområde</string>
     <string name="loop_status_target">Målverdi</string>
     <string name="loop_status_adjusted_target">Justert mål</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Inntil avsluttet</string>
+    <string name="loop_status_scene_ended">Avsluttet</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Oppfølgingsscene</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Ingen profil angitt</string>
+    <string name="loop_status_profile_percentage">Prosent</string>
+    <string name="loop_status_profile_timeshift">Tidsforskyving</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Returnerer til</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dt</string>
+    <string name="loop_status_sensitivity">Sensitivitet</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Angitt av den aktive scenen</string>
     <string name="loop_status">Loopstatus</string>
     <string name="loop_status_refresh">Oppdater</string>
     <string name="confirm">Bekreft</string>

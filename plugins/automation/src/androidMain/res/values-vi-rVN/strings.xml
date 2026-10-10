@@ -108,6 +108,8 @@
     <string name="triggerCannulaAgeDesc">Kim luồn đã dùng %1$s %2$.1f giờ</string>
     <string name="triggerPodChangeLabel">Kích hoạt Pod</string>
     <string name="triggerPodChangeDesc">Pod đã kích hoạt</string>
+    <string name="triggerUnknownLabel">Điều kiện kích hoạt không xác định</string>
+    <string name="triggerUnknownDesc" comment="%1$s=stored trigger type name, not translated. Example: Unknown trigger TriggerFromTheFuture - never true">Điều kiện kích hoạt không xác định %1$s - không bao giờ đúng</string>
     <string name="triggerInsulinAgeLabel">Thời gian insulin</string>
     <string name="triggerInsulinAgeDesc">Insulin đã dùng %1$s được %2$.1f giờ</string>
     <string name="triggerPumpBatteryAgeLabel">Pin của Bơm</string>

@@ -27,6 +27,7 @@
     <string name="constraint_applied">已套用限制！</string>
     <string name="tt_label">臨時目標</string>
     <string name="pump_unreachable">幫浦無法使用</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">幫浦驅動程式無回應。「%1$s」已執行 %2$d 分鐘，其他指令無法傳達至幫浦。請檢查幫浦，然後重新啟動 AAPS。</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/小時</string>
@@ -349,6 +350,8 @@
     <string name="scene_active">作用中</string>
     <string name="scene_ended">場景已結束</string>
     <string name="scene_end_active">結束目前場景</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">跳至</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">後續 %1$s 不會啟動</string>
     <string name="scene_confirm_activate">要啟用場景 \"%1$s\" 嗎？</string>
     <string name="scene_confirm_deactivate">結束場景 \"%1$s\" 並還原變更？</string>
     <string name="scene_conflict_active_tt">目前的臨時目標將被取代</string>

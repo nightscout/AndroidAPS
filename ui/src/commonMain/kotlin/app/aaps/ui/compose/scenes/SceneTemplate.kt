@@ -6,7 +6,6 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 
 /**
  * Pre-defined scene templates for quick creation.

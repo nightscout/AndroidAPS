@@ -1,6 +1,7 @@
 package app.aaps.pump.medtrum.comm.packets
 
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -18,9 +19,8 @@ import app.aaps.pump.medtrum.extension.toFloat
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.extension.toLong
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
-import app.aaps.core.interfaces.di.MetroMemberInjector
-import kotlinx.coroutines.runBlocking
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.runBlocking
 
 class GetRecordPacket(injector: MetroMemberInjector, private val recordIndex: Int) : MedtrumPacket(injector) {
 

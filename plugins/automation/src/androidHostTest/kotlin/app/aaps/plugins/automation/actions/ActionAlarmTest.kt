@@ -1,10 +1,9 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.interfaces.alerts.ReminderScheduler
-import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.elements.InputString
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.automation.AutomationStringsValues
+import app.aaps.plugins.automation.elements.InputString
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat

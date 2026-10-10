@@ -12,8 +12,6 @@ import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import dev.zacsweers.metro.Inject
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -22,6 +20,8 @@ import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 /**
  *

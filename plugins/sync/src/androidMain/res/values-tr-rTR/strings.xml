@@ -25,7 +25,6 @@
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Entegrasyon (test) sunucularını kullanın</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Tidepool\'a veri yükler</string>
     <string name="upload_now">Şimdi yükle</string>
     <string name="not_connected">Bağlantı yok</string>
@@ -33,7 +32,6 @@
     <string name="working">İşleniyor</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">xDrip+\'a verileri gönder</string>
     <string name="xdrip_status_settings">xDrip+ Durum Satırı Gelişmiş</string>
     <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
@@ -47,7 +45,6 @@
     <string name="garmin_local_http_server_port">Yerel HTTP sunucusu bağlantı noktası</string>
     <string name="garmin_local_http_server">Yerel HTTP sunucusu</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
     <string name="pump_status">Pompa durumu</string>
@@ -101,7 +98,6 @@
     <string name="garmin_request_key">Anahtar talebi</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS Kominikatör</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">SMS komutlarını kullanarak AAPS\'yi uzaktan kontrol edin.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator (kimlik doğrulama) uygulamasından %1$s için PIN girin</string>
     <string name="smscommunicator_tab_otp_label">Authenticator (kimlik doğrulama) kurulumu</string>

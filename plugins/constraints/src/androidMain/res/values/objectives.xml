@@ -93,6 +93,11 @@
     <string name="objectives_open_exam">Open exam</string>
     <string name="objectives_exam_question_progress">Question %1$d of %2$d</string>
     <string name="objectives_exam_reset">Reset</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Done</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">In progress</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Not started</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Locked</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">correct answer</string>
     <string name="objectives_exam_previous">Previous</string>
     <string name="objectives_exam_next">Next</string>
     <string name="objectives_exam_next_unanswered">Next unanswered</string>

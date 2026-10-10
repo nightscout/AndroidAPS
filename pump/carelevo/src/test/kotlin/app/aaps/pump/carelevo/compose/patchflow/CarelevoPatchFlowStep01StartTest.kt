@@ -18,7 +18,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.config.FillConfig
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
@@ -33,6 +32,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * UI test for [CarelevoPatchFlowStep01Start] — the first step of the patch activation wizard — and for

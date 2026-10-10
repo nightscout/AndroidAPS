@@ -1,13 +1,13 @@
 package app.aaps.di.metro
 
-import app.aaps.implementation.utils.TrendCalculatorImpl
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.TextRef
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import app.aaps.implementation.utils.TrendCalculatorImpl
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 /**
  * Every `@ContributesBinding` implementation reaches the graph, and is scoped.

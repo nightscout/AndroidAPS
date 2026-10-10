@@ -34,6 +34,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,9 +51,9 @@ import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.dialogs.ThreeButtonDialog
 import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.rowAction
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
-import app.aaps.ui.UiStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -172,11 +174,7 @@ fun SceneListScreen(
                     items(scenes, key = { it.id }) { scene ->
                         val isActive = activeState?.scene?.id == scene.id
                         val isInvalid = scene.id in invalidSceneIds
-                        val subtitle = stringResource(
-                            CoreUiStrings.scene_summary,
-                            scene.actions.size,
-                            viewModel.formatMinutes(scene.defaultDurationMinutes)
-                        )
+                        val subtitle = viewModel.summary(scene)
                         val chainTargetId = (scene.endAction as? SceneEndAction.ChainScene)?.sceneId
                         val chainTargetName = chainTargetId?.let { id -> scenes.firstOrNull { it.id == id }?.name }
                         SceneCard(
@@ -247,7 +245,9 @@ internal fun SceneCard(
             Checkbox(
                 checked = scene.isEnabled,
                 onCheckedChange = { onToggleEnabled() },
-                enabled = editEnabled
+                enabled = editEnabled,
+                // The name is a separate Text, so a screen reader heard only "checkbox, checked".
+                modifier = Modifier.semantics { contentDescription = scene.name }
             )
             Icon(
                 imageVector = SceneIcons.fromKey(scene.icon).icon,
@@ -304,22 +304,22 @@ internal fun SceneCard(
             Row {
                 if (isActive) {
                     IconButton(onClick = onDeactivate, enabled = masterReachable) {
-                        Icon(Icons.Default.Stop, contentDescription = stringResource(CoreUiStrings.scene_deactivate))
+                        Icon(Icons.Default.Stop, contentDescription = rowAction(CoreUiStrings.scene_deactivate, scene.name))
                     }
                 } else {
                     IconButton(
                         onClick = onActivate,
                         enabled = scene.isEnabled && activationReason == null
                     ) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = stringResource(CoreUiStrings.scene_activate))
+                        Icon(Icons.Default.PlayArrow, contentDescription = rowAction(CoreUiStrings.scene_activate, scene.name))
                     }
                 }
                 IconButton(onClick = onEdit, enabled = editEnabled) {
-                    Icon(Icons.Default.Edit, contentDescription = stringResource(CoreUiStrings.switch_to_edit))
+                    Icon(Icons.Default.Edit, contentDescription = rowAction(CoreUiStrings.switch_to_edit, scene.name))
                 }
                 if (scene.isDeletable) {
                     IconButton(onClick = onDelete, enabled = editEnabled) {
-                        Icon(Icons.Default.Delete, contentDescription = stringResource(CoreUiStrings.delete))
+                        Icon(Icons.Default.Delete, contentDescription = rowAction(CoreUiStrings.delete, scene.name))
                     }
                 }
             }

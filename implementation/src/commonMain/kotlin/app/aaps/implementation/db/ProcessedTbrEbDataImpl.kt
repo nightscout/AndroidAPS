@@ -1,6 +1,7 @@
 package app.aaps.implementation.db
 
 import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -31,4 +32,25 @@ class ProcessedTbrEbDataImpl(
 
     override suspend fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB? =
         persistenceLayer.getTemporaryBasalActiveAt(timestamp) ?: getConvertedExtended(timestamp)
+
+    override suspend fun getTempBasalsIncludingConvertedExtended(from: Long, to: Long): ProcessedTbrEbData.TempBasalsInRange {
+        // Every one running at the start, and every one starting later: together every entry that can be
+        // running inside the range, oldest first. latestRunningAt then picks as the "active at" query does,
+        // also when two valid entries overlap: all of those running at the start are here, not only the
+        // last started one.
+        val temporaryBasals = (persistenceLayer.getTemporaryBasalsActiveAt(from) +
+            persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(from, to, true)).distinctBy { it.id }
+        val extendedBoluses =
+            if (activePlugin.activePump.isFakingTempsByExtendedBoluses)
+                (persistenceLayer.getExtendedBolusesActiveAt(from) +
+                    persistenceLayer.getExtendedBolusesStartingFromTimeToTime(from, to, true)).distinctBy { it.id }
+            else emptyList()
+        return object : ProcessedTbrEbData.TempBasalsInRange {
+            override suspend fun at(timestamp: Long): TB? =
+                temporaryBasals.latestRunningAt(timestamp) { it.duration }
+                    ?: extendedBoluses.latestRunningAt(timestamp) { it.duration }?.let { eb ->
+                        profileFunction.getProfile(timestamp)?.let { eb.toTemporaryBasal(it) }
+                    }
+        }
+    }
 }

@@ -1,8 +1,8 @@
 package app.aaps.plugins.source
 
-import org.mockito.kotlin.mock
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
+import org.mockito.kotlin.mock
 
 class GlimpPluginTest : TestBaseWithProfile() {
 

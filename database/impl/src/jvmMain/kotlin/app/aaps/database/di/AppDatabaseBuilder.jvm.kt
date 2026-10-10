@@ -3,6 +3,7 @@ package app.aaps.database.di
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
 import app.aaps.database.AppDatabase
@@ -49,12 +50,13 @@ class JvmAppDatabaseBuilder {
     fun provideAppRepository(fileName: String): AppRepository =
         AppRepository { provideAppDatabase(fileName) }
 
-    internal fun provideAppDatabase(fileName: String): AppDatabase =
+    /** [driver] is only changed by tests, which wrap it to see the SQL the DAOs run. */
+    internal fun provideAppDatabase(fileName: String, driver: SQLiteDriver = BundledSQLiteDriver()): AppDatabase =
         Room
             .databaseBuilder<AppDatabase>(name = databasePath(fileName))
             // Same driver as Android and Apple: SQLite compiled from source, so the engine matches on
             // every platform rather than following whatever the OS happens to ship.
-            .setDriver(BundledSQLiteDriver())
+            .setDriver(driver)
             .setQueryCoroutineContext(Dispatchers.IO)
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onOpen(connection: SQLiteConnection) {

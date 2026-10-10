@@ -10,6 +10,7 @@ import androidx.preference.PreferenceManager
 import androidx.wear.watchface.editor.EditorRequest
 import androidx.wear.watchface.editor.WatchFaceEditorContract
 import app.aaps.wear.R
+import app.aaps.wear.interaction.ComplicationPickerSupport.Companion.cacheAssignedDataSourceNames
 import app.aaps.wear.watchfaces.utils.WatchFaceComplicationSlots
 
 /**

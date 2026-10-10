@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation
 
-import app.aaps.core.keys.interfaces.TextRef
 import android.app.Application
 import android.content.Intent
 import app.aaps.core.interfaces.configuration.Config
@@ -8,6 +7,7 @@ import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

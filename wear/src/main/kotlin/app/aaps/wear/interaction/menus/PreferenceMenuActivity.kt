@@ -6,13 +6,13 @@ import android.os.Bundle
 import androidx.core.graphics.drawable.toBitmap
 import app.aaps.shared.impl.weardata.ResFileMap
 import app.aaps.shared.impl.weardata.toDrawable
-import app.aaps.wear.data.ComplicationDataRepository
-import kotlinx.coroutines.runBlocking
-import dev.zacsweers.metro.Inject
 import app.aaps.wear.R
+import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
 import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.runBlocking
 
 class PreferenceMenuActivity : MenuListActivity() {
 

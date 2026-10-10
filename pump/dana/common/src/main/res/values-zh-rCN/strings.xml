@@ -2,7 +2,6 @@
 <resources>
     <string name="danars_pairingtimedout">配对超时</string>
     <string name="danarspump">丹纳-i/RS</string>
-    <string name="danarspump_shortname">丹纳泵</string>
     <string name="description_pump_dana_rs">与丹纳-RS或丹纳-i泵集成。</string>
     <string name="maxbolusviolation">超出最大大剂量的限制</string>
     <string name="commanderror">命令错误</string>
@@ -76,7 +75,6 @@
     <string name="description_pump_dana_r">与丹纳R泵集成</string>
     <string name="description_pump_dana_r_korean">与韩版丹纳R泵集成</string>
     <string name="description_pump_dana_r_v2">与升级了固件的丹纳Rv2泵集成</string>
-    <string name="danarpump_shortname">丹纳泵</string>
     <string name="devicenotfound">找不到所选设备</string>
     <string name="danar_switchtouhmode">在泵上更改模式，从U/d 改为 U/h</string>
     <string name="danarkoreanpump">丹纳R 韩版</string>

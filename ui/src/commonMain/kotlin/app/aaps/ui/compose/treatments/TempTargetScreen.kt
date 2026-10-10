@@ -44,7 +44,6 @@ import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.extensions.highValueToUnitsToString
 import app.aaps.core.ui.extensions.lowValueToUnitsToString
-import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.components.ContentContainer
 import app.aaps.ui.compose.treatments.viewmodels.TempTargetViewModel
 
@@ -173,7 +172,9 @@ private fun TempTargetItem(
             .padding(horizontal = 2.dp)
             .combinedClickable(
                 onClick = onClick,
-                onLongClick = onLongPress
+                onLongClick = onLongPress,
+                // Long press is the only way into remove mode; TalkBack says "double-tap and hold to Remove".
+                onLongClickLabel = stringResource(CoreUiStrings.remove)
             ),
         selected = isSelected
     ) {

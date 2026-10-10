@@ -2,9 +2,9 @@ package app.aaps.plugins.sync.wear.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import app.aaps.core.ui.compose.metroViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
+import app.aaps.core.ui.compose.metroViewModel
 
 internal class WearComposeContent : ComposablePluginContent {
 

@@ -8,23 +8,23 @@
     <string name="objectives_0_objective">Configurar la visualización y la monitorización, analizar los valores basales y los ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de glucosa están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
     <string name="objectives_0_learned">Has realizado la configuración básica del ecosistema de AAPS. Nightscout no es necesario para que AAPS funcione, pero es muy útil para realizar informes o monitorizar a otros pacientes. No es necesario estar conectado a NS todo el tiempo si sólo utilizas NS para ti. Puedes configurarlo para que cargue, por ejemplo, sólo en el wifi de casa y ahorrar batería</string>
-    <string name="objectives_openloop_objective">Comenzando en bucle abierto</string>
-    <string name="objectives_openloop_gate">Ejecutar en modo de bucle abierto durante unos días, y aceptar manualmente las basales temporales. Configure y use objetivos temporales y predeterminados (por ejemplo, para actividad o carbohidratos para hipoglucemia)</string>
+    <string name="objectives_openloop_objective">Iniciando con un lazo abierto</string>
+    <string name="objectives_openloop_gate">Funcionar en modo de lazo abierto durante unos días y aplicar manualmente muchas tasas basales temporales. Configurar y utilizar objetivos temporales y temporales predeterminados (por ejemplo, para actividad física o hidratos de tratamiento para hipoglucemias)</string>
     <string name="objectives_openloop_learned">El lazo abierto se puede utilizar para recomendaciones si no tiene una bomba compatible o si no está listo para cerrar el lazo</string>
-    <string name="objectives_maxbasal_objective">Entender el bucle abierto, incluidas las recomendaciones de basales temporales</string>
+    <string name="objectives_maxbasal_objective">Comprender tu lazo abierto, incluidas sus recomendaciones de tasa basal temporal</string>
     <string name="objectives_maxbasal_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
     <string name="objectives_maxbasal">Realizar la acción para cumplir la recomendación</string>
     <string name="objectives_maxbasal_learned">Tenga cuidado con las características de seguridad y ajuste los parámetros de seguridad cuando sea necesario.</string>
-    <string name="objectives_maxiobzero_objective">Iniciando el bucle cerrado con suspensión con baja glucosa</string>
+    <string name="objectives_maxiobzero_objective">Empezando a cerrar el lazo con suspensión por glucosa baja</string>
     <string name="objectives_maxiobzero_gate">Ejecutar en Laco cerrado en modo LGS - Suspensión de glucosa baja (ej. se establece automáticamente max IOB = 0) para unos días sin demasiados eventos LGS.</string>
     <string name="objectives_maxiobzero_learned">Establecer MaxIOB a cero evita la hipo y no añadirá más insulina por encima de la tasa basal (excepto en situaciones con IOB negativo)</string>
-    <string name="objectives_maxiob_objective">Ajuste del bucle cerrado, aumentando máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
+    <string name="objectives_maxiob_objective">Ajustando el lazo cerrado, aumentando la IOB máxima por encima de 0 y bajando gradualmente los objetivos de glucemia</string>
     <string name="objectives_maxiob_gate">Usar unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
     <string name="objectives_maxiob_learned">Actualica MaxIOB a medida que el niño/a crezca. No permita que el sistema le de más insulina de la que puede cubrir con la comida = un valor realmente alto es una mala idea. Max IOB es calculado 
  automáticamente en el modo simple</string>
     <string name="maxiobset">Máximo IOB configurado correctamente (no es necesario en modo simple)</string>
     <string name="objectives_autosens_objective">Ajustar las basales y ratios, si es necesario, y luego activar auto-sens</string>
-    <string name="objectives_autosens_gate">Una semana con éxito en bucle cerrado durante el día con entrada regular de carbohidratos</string>
+    <string name="objectives_autosens_gate">1 semana de funcionamiento exitoso del lazo durante el día con introducción regular de hidratos de carbono. En el modo simple, el autosens está activado por defecto</string>
     <string name="objectives_autosens_learned">Si el resultado de tu autosens no oscila en torno al 100% es probable que tu perfil esté equivocado.</string>
     <string name="objectives_smb_objective">Habilitar funciones adicionales para uso durante el día como SMB</string>
     <string name="objectives_smb_gate">Debes leer la wiki y aumentar el valor de maxIOB para que SMB funcione bien. Un buen comienzo sería maxIOB = bolo de comida promedio + 3x máxima basal diaria</string>
@@ -43,7 +43,7 @@
     <string name="objectives_usedisconnectpump">Simulación de ducha: Bomba desconectada durante 1 h</string>
     <string name="objectives_usereconnectpump">... y volver a conectar de la misma manera</string>
     <string name="objectives_usetemptarget">Crear objetivo temporal personalizado con una duración de 10 min</string>
-    <string name="objectives_useloop">Mostrar contenido del plugin Bucle</string>
+    <string name="objectives_useloop">Mostrar contenido del complemento de lazo</string>
     <string name="objectives_usescale">Desplázate o haz zoom en el gráfico de glucosa en sangre</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>
     <string name="objectives_exam_gate">Estudia las preguntas. Se te dan cuatro respuestas posibles para cada pregunta. Puede haber más de una respuesta correcta. Por favor, marca todas las que son correctas y seleccione VERIFICAR.</string>

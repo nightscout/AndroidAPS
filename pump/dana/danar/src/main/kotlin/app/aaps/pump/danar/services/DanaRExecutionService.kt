@@ -49,8 +49,8 @@ import app.aaps.pump.danar.comm.MsgStatusBasic
 import app.aaps.pump.danar.comm.MsgStatusBolusExtended
 import app.aaps.pump.danar.comm.MsgStatusTempBasal
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
-import kotlinx.coroutines.launch
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 class DanaRExecutionService : AbstractDanaRExecutionService() {

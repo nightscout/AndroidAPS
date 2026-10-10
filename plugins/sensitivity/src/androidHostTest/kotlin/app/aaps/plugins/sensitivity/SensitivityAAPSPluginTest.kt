@@ -3,7 +3,6 @@ package app.aaps.plugins.sensitivity
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.TE
-import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult

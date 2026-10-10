@@ -59,6 +59,23 @@ interface TddCalculator {
     suspend fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD?
 
     /**
+     * Same as [calculateInterval], but whole days inside the interval are read from the stored daily
+     * totals where they exist. Use it for long intervals, like the insulin used since the last cannula
+     * change: those are weeks of 5-minute steps otherwise.
+     *
+     * Only the stored days are read, nothing is stored. A stored day starts at local midnight and covers
+     * 24 hours, so a day that a DST change makes 23 or 25 hours long is always summed instead.
+     *
+     * Like the stored days themselves, a bolus at exactly local midnight is counted in both days.
+     *
+     * @param startTime start
+     * @param endTime end
+     * @param allowMissingData if true intervals without data are allowed (no profile, bolus, TBR)
+     * @return TDD or null if data is not available
+     */
+    suspend fun calculateIntervalWithCachedDays(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD?
+
+    /**
      * Calculate average TDD from list of daily TDDs
      * @param tdds list of precalculated data for days
      * @return [AverageTDD] or null if data is not available

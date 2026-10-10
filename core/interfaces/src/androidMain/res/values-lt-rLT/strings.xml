@@ -159,6 +159,4 @@
     <string name="advisoralarm">Įspėti apie laiką valgyti</string>
     <string name="wizard_ecarbs">iAV %1$d g / %2$d val. (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f V</string>
-    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Nepavyko paleisti įskiepio %1$s ir jis gali neveikti. Paleiskite AAPS iš naujo.</string>
-    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Įskiepyje %1$s įvyko klaida ir dalis jo funkcijų nustojo veikti. Paleiskite AAPS iš naujo.</string>
 </resources>

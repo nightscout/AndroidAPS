@@ -22,6 +22,10 @@
     <string name="omnipod_dash_unknown">指令狀態未知</string>
     <string name="omnipod_common_history_tbr_value">%1$.2f U/h，%2$d 分鐘</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">微量注射</string>
+    <string name="omnipod_common_bolus_type_basal_correction">基礎修正</string>
+    <string name="omnipod_common_bolus_type_priming">預充</string>
     <string name="omnipod_common_alert_delivery_suspended">胰島素輸送已暫停</string>
     <string name="omnipod_common_history_total_delivered">總輸送量：%1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">另一個注射正在進行中</string>

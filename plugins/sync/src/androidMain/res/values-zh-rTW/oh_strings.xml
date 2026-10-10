@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans 允許您上傳糖尿病資料並捐贈給科學項目。</string>
     <string name="logout">登出</string>
     <string name="setup">設定</string>

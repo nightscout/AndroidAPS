@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Medtrum Nano ir Medtrum 300U pompos integracija</string>
     <string name="medtrum_pump_setting">Medtrum pompos nustatymai</string>
     <string name="pump_error">Pompos klaida: %1$s !! </string>

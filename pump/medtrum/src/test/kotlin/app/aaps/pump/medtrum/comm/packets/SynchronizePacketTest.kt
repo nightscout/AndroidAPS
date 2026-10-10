@@ -1,12 +1,12 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.pump.medtrum.MedtrumTestBase
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.util.MedtrumTimeUtil
 import com.google.common.truth.Truth.assertThat
-import app.aaps.core.interfaces.di.MetroMemberInjector
 import org.junit.jupiter.api.Test
 
 class SynchronizePacketTest : MedtrumTestBase() {

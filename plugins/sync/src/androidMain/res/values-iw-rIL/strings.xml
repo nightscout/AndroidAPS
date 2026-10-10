@@ -27,7 +27,6 @@
     <string name="summary_tidepool_dev_servers">אם האפשרות מופעלת, נתונים יישלחו לשרתי ניסוי במקום לשרתים הרגילים</string>
     <string name="title_tidepool_dev_servers">שימוש בשרתי אינטגרציה (בדיקה)</string>
     <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">מעלה נתונים ל-Tidepool</string>
     <string name="upload_now">העלה עכשיו</string>
     <string name="not_connected">לא מחובר</string>
@@ -35,7 +34,6 @@
     <string name="working">עובד</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
-    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">שליחת נתוני סוכר אל xDrip</string>
     <string name="xdrip_status_settings">שורת מצב xDrip מתקדמת</string>
     <string name="xdrip_not_installed">xDrip+ אינו מותקן</string>
@@ -49,7 +47,6 @@
     <string name="garmin_local_http_server_port">פורט שרת HTTP מקומי</string>
     <string name="garmin_local_http_server">שרת HTTP מקומי</string>
     <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="pump_status">סטטוס המשאבה</string>
     <string name="loop_status">סטטוס הלולאה</string>
@@ -98,7 +95,6 @@
     <string name="garmin_request_key">בקש מפתח</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">תקשורת SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">שליטה מרחוק על AndroidAPS באמצעות SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">מיישום מאמת עבור: %1$s ואחריו PIN</string>
     <string name="smscommunicator_tab_otp_label">הגדרת מאמת</string>

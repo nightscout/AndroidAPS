@@ -12,8 +12,6 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.plugins.sync.SyncStringsValues
-import app.aaps.shared.tests.generatedTextResolver
 import app.aaps.core.interfaces.scenes.ActiveSceneSync
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
@@ -27,8 +25,10 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.clientcontrol.PairingPayload
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
+import app.aaps.plugins.sync.SyncStringsValues
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.services.RunningConfigurationPublisher
+import app.aaps.shared.tests.generatedTextResolver
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -218,10 +218,14 @@ class ClientControlUplinkIntegrationTest {
         // ---------- pairing: same secret on both sides ----------
         val (entry, secretHex) = masterAuthorizedRepository.addPending("phone", pairTtlMs = 60_000L, now = now - 10_000L)
         masterAuthorizedRepository.markActive(entry.clientId, counterReceived = 0L, now = now - 5_000L)
-        clientPairingRepository.pair(
-            PairingPayload(masterInstallId = "master-1", clientId = entry.clientId, secretHex = secretHex, expiresAt = now + 60_000L),
-            now = now - 10_000L
-        )
+        // check(), not a bare call: pair() refuses when the secret cannot be wrapped, and a test that
+        // silently ran unpaired would pass for the wrong reason. It also keeps setUp returning Unit.
+        check(
+            clientPairingRepository.pair(
+                PairingPayload(masterInstallId = "master-1", clientId = entry.clientId, secretHex = secretHex, expiresAt = now + 60_000L),
+                now = now - 10_000L
+            )
+        ) { "the test pairing was not stored" }
     }
 
     /** Drives the client publisher: emit a local edit, run the 2 s debounce, then deliver the captured doc to the master. */

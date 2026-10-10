@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 /**
- * AndroidAPS TopAppBar component with proper elevation visibility in dark mode.
+ * AAPS TopAppBar component with proper elevation visibility in dark mode.
  *
  * **Always use this instead of Material 3's bare [TopAppBar].** Direct uses of
  * `TopAppBar` mix differing default colors and break the consistent status-bar
@@ -66,7 +66,7 @@ fun AapsTopAppBar(
 }
 
 /**
- * AndroidAPS TopAppBar component with scroll behavior support.
+ * AAPS TopAppBar component with scroll behavior support.
  *
  * **Always use this instead of Material 3's bare [TopAppBar]** — see the
  * single-arg overload above for the rationale.

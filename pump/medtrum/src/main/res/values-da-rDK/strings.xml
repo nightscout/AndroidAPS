@@ -2,7 +2,6 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Pumpeintegration for Medtrum Nano og Medtrum 300IE</string>
     <string name="medtrum_pump_setting">Medtrum pumpeindstillinger</string>
     <string name="pump_error">Pumpefejl: %1$s!! </string>

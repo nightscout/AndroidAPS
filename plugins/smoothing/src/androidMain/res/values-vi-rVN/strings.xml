@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="smoothing_shortname">SMOOTH</string>
     <string name="exponential_smoothing_name">Làm mượt theo hàm mũ</string>
     <string name="description_exponential_smoothing">"Thuật toán làm mượt theo hàm mũ bậc hai"</string>
     <string name="avg_smoothing_name">Làm mượt trung bình</string>

@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.pump.carelevo.ble.BleCommand
 import app.aaps.pump.carelevo.ble.CarelevoBleSession
-import app.aaps.pump.carelevo.ble.commands.AdditionalPrimingCommand
 import app.aaps.pump.carelevo.ble.commands.AlarmClearCommand
 import app.aaps.pump.carelevo.ble.commands.BuzzModeCommand
 import app.aaps.pump.carelevo.ble.commands.InfusionThresholdCommand
@@ -31,16 +30,16 @@ import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchNeedleInsertionC
 import app.aaps.pump.carelevo.domain.usecase.patch.CarelevoPatchSafetyCheckUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateLowInsulinNoticeAmountUseCase
 import app.aaps.pump.carelevo.domain.usecase.userSetting.CarelevoUpdateMaxBolusDoseUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.runBlocking
-import kotlin.time.Clock
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.Provider
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.SingleIn
 import kotlin.jvm.optionals.getOrNull
+import kotlin.time.Clock
 
 /**
  * Runs activation operations that are routed through the AAPS [app.aaps.core.interfaces.queue.CommandQueue]

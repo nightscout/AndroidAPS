@@ -4,8 +4,6 @@ import android.app.Service
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import app.aaps.core.interfaces.di.injectMetroMembers
-import app.aaps.wear.di.WearMetroActivity
-import app.aaps.wear.di.WearMetroService
 
 /**
  * Base classes for the Android entry points in this module, replacing `WearMetroActivity` and

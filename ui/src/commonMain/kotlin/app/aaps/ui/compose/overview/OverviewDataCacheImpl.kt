@@ -14,12 +14,14 @@ import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
+import app.aaps.core.data.model.latestRunningAt
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.db.compensateForClockSkew
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -86,15 +88,13 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.apsAdjustedTargetMgdl
+import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.CoreUiStrings
-import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
-import kotlin.math.abs
-import kotlin.math.max
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -114,6 +114,8 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.math.abs
+import kotlin.math.max
 
 /**
  * Implementation of OverviewDataCache using MutableStateFlow.
@@ -146,6 +148,7 @@ private const val URGENT_BATTERY_VOLTAGE = 1.3
 class OverviewDataCacheImpl(
     private val aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val profileUtil: ProfileUtil,
     private val profileFunction: ProfileFunction,
     private val preferences: Preferences,
@@ -570,7 +573,7 @@ class OverviewDataCacheImpl(
             else                    -> BgRange.IN_RANGE
         }
 
-        val isOutdated = lastGv.timestamp < dateUtil.now() - 9 * 60 * 1000L
+        val isOutdated = lastGv.timestamp < dateUtil.now() - T.mins(Constants.OLD_BG_MINUTES).msecs()
         val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
         val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
@@ -595,7 +598,7 @@ class OverviewDataCacheImpl(
         // No new DB event fires when time merely passes, so without this the strikethrough would
         // never appear for an actually-stale value.
         if (!isOutdated) {
-            val delayMs = lastGv.timestamp + T.mins(9).msecs() - dateUtil.now()
+            val delayMs = lastGv.timestamp + T.mins(Constants.OLD_BG_MINUTES).msecs() - dateUtil.now()
             if (delayMs > 0) {
                 staleBgTransitionJob = scope.launch {
                     delay(delayMs)
@@ -689,15 +692,24 @@ class OverviewDataCacheImpl(
         // which touches activePump and crashes at startup before the pump plugin is selected.
         // Loop will correct mode itself when it next runs; the RM observer will pick it up.
         val now = dateUtil.now()
-        val rmRecord = persistenceLayer.getRunningModeActiveAt(now)
+        // On a client, null when nothing is stored for this moment: a follower that has never synced a
+        // permanent record does not know the master's mode, and RM.DEFAULT_MODE would be drawn as a
+        // definite "loop disabled" - see PersistenceLayer.getRunningModeActiveAtOrNull.
+        // On the master the default is not a guess. With nothing stored the loop really runs in
+        // RM.DEFAULT_MODE (Loop.runningMode() reads getRunningModeActiveAt), so show that mode.
+        val rmRecord =
+            if (config.AAPSCLIENT) persistenceLayer.getRunningModeActiveAtOrNull(now)
+            else persistenceLayer.getRunningModeActiveAt(now)
 
         // Store raw data only - ViewModel computes display text
-        _runningModeFlow.value = RunningModeDisplayData(
-            mode = rmRecord.mode,
-            timestamp = rmRecord.timestamp,
-            duration = rmRecord.duration,
-            recordId = rmRecord.id
-        )
+        _runningModeFlow.value = rmRecord?.let {
+            RunningModeDisplayData(
+                mode = it.mode,
+                timestamp = it.timestamp,
+                duration = it.duration,
+                recordId = it.id
+            )
+        }
     }
 
     // =========================================================================
@@ -967,11 +979,18 @@ class OverviewDataCacheImpl(
         val profile = profileFunction.getProfile() ?: return
         val endTime = graphEndTime(toTime)
 
+        // One read of the temporary targets for the whole range instead of one database query every
+        // 5 minutes. The rebuild runs on every new range and every loop run, so it showed up as steady
+        // database load. All running at the start, not only the last started one, so overlapping targets
+        // give the same line as the per-time query.
+        val temporaryTargets = (persistenceLayer.getTemporaryTargetsActiveAt(fromTime) +
+            persistenceLayer.getTemporaryTargetDataFromTime(fromTime, true)).distinctBy { it.id }
+
         val targets = mutableListOf<GraphDataPoint>()
         var lastTarget = -1.0
         var time = fromTime
         while (time < endTime) {
-            val tt = persistenceLayer.getTemporaryTargetActiveAt(time)
+            val tt = temporaryTargets.latestRunningAt(time) { it.duration }
             val value = if (tt != null) {
                 profileUtil.fromMgdlToUnits(tt.target())
             } else {
@@ -1027,6 +1046,10 @@ class OverviewDataCacheImpl(
         )
         var nextBoundary = 0
         var profile = profileFunction.getProfile(fromTime)
+        // The same for the temporary basals: one read for the whole range instead of one query per
+        // minute, about 1,500 for a 24 hour graph. The IOB calculator's basal cache is cleared on every
+        // BG reload, so the per-minute calls almost always went to the database, several times per BG.
+        val temporaryBasals = processedTbrEbData.getTempBasalsIncludingConvertedExtended(fromTime, roundUpToMinute(endTime))
 
         var time = fromTime
         while (time < endTime) {
@@ -1038,9 +1061,10 @@ class OverviewDataCacheImpl(
                 time += 60 * 1000L
                 continue
             }
-            val basalData = iobCobCalculator.getBasalData(profile, time)
-            val profileBasalValue = basalData.basal
-            val actualBasalValue = if (basalData.isTempBasalRunning) basalData.tempBasalAbsolute else profileBasalValue
+            // The full minute getBasalData used to look the values up at
+            val minute = roundUpToMinute(time)
+            val profileBasalValue = profile.getBasal(minute)
+            val actualBasalValue = temporaryBasals.at(minute)?.convertedToAbsolute(minute, profile) ?: profileBasalValue
 
             if (profileBasalValue != lastProfileBasal) {
                 profileBasal.add(GraphDataPoint(time, profileBasalValue))
@@ -1204,9 +1228,9 @@ class OverviewDataCacheImpl(
         _bgInfoFlow.value = null
         _tempTargetFlow.value = null
         _profileFlow.value = null
-        // _runningModeFlow intentionally not nulled: getRunningModeActiveAt() always returns
-        // a non-null value (DEFAULT_MODE fallback for empty table), so callers should use
-        // updateRunningModeFromDatabase() to refresh it rather than forcing a null state.
+        // _runningModeFlow intentionally not nulled here: updateRunningModeFromDatabase() decides it.
+        // On the master it is never null (DEFAULT_MODE fallback for an empty table); on a client null
+        // means "not known", and only the database read may say that.
         _tbrFlow.value = null
         // Secondary graph flows
         _iobGraphFlow.value = IobGraphData(emptyList(), emptyList())
@@ -1229,6 +1253,10 @@ class OverviewDataCacheImpl(
         _calcProgressFlow.value = 100
     }
 }
+
+/** Rounds [time] up to the next full minute, as `AutosensDataStore.roundUpTime` does for the IOB caches. */
+internal fun roundUpToMinute(time: Long): Long = if (time % 60_000L == 0L) time else (time / 60_000L + 1) * 60_000L
+
 /**
  * The times inside a graph window where the effective profile can change.
  *
