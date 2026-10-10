@@ -22,9 +22,11 @@ import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.concurrent.Volatile
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -377,18 +379,23 @@ fun rememberNowLine(minTimestamp: Long, nowTimestamp: Long, color: Color): NowLi
 }
 
 /**
- * Plain (non-Compose-state) holder for the latest visible x-range, written from
- * [VisibleRangeReporter.drawOverLayers] on every draw pass.
+ * Holder for the latest visible x-range, written from [VisibleRangeReporter.drawOverLayers] on
+ * every draw pass.
  *
  * Deliberately NOT a Compose `State`: writing Compose state synchronously from the draw phase
  * fights with Vico's own gesture-driven scroll/zoom mutations — the resulting invalidate-during-draw
- * starves pinch-zoom gesture recognition (observed: zoom became unresponsive). Callers must poll
- * [value] from a coroutine (e.g. a `LaunchedEffect` with a periodic `delay`) and only then write it
- * into real Compose state.
+ * starves pinch-zoom gesture recognition (observed: zoom became unresponsive). A [StateFlow] write
+ * invalidates nothing: it only schedules the collector, which runs after the draw pass and writes
+ * real Compose state there. Equal values are not emitted, so a redraw without scroll or zoom (or no
+ * draw at all, e.g. the app in background) wakes nobody. Do not replace this with a polling loop.
  */
 class VisibleRangeHolder {
-    @Volatile
-    var value: Pair<Double, Double>? = null
+    private val _value = MutableStateFlow<Pair<Double, Double>?>(null)
+    val value: StateFlow<Pair<Double, Double>?> = _value.asStateFlow()
+
+    fun report(range: Pair<Double, Double>) {
+        _value.value = range
+    }
 }
 
 /**
@@ -412,7 +419,7 @@ class VisibleRangeReporter(
 
             val visibleMinX = ranges.minX + xStep * (scroll - layerDimensions.startPadding) / xSpacing
             val visibleWidth = xStep * layerBounds.width / xSpacing
-            holder.value = visibleMinX to (visibleMinX + visibleWidth)
+            holder.report(visibleMinX to (visibleMinX + visibleWidth))
         }
     }
 
