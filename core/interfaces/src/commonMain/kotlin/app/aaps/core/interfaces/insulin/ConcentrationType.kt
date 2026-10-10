@@ -5,7 +5,10 @@ import app.aaps.core.keys.interfaces.TextRef
 
 enum class ConcentrationType(val value: Double, val label: TextRef) {
     UNKNOWN(-1.0, InterfacesStrings.unknown),
+    U5(0.05, InterfacesStrings.u5),
     U10(0.1, InterfacesStrings.u10),
+    U20(0.2, InterfacesStrings.u20),
+    U25(0.25, InterfacesStrings.u25),
     U40(0.4, InterfacesStrings.u40),
     U50(0.5, InterfacesStrings.u50),
     U100(1.0, InterfacesStrings.u100),

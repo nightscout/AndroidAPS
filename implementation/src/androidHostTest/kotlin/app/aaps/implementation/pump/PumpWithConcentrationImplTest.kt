@@ -28,6 +28,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
@@ -36,6 +40,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.stream.Stream
 
 class PumpWithConcentrationImplTest : TestBase() {
 
@@ -68,6 +73,140 @@ class PumpWithConcentrationImplTest : TestBase() {
 
     private fun setupU100() {
         whenever(profileFunction.runningICfg).thenReturn(MutableStateFlow(ICfg("Test", 0L, 0L, 1.0)))
+    }
+
+    // Real pump descriptions with mocked drivers: these verify the concentration boundary, not physical delivery.
+    companion object {
+        @JvmStatic
+        fun pumpConcentrations(): Stream<Arguments> =
+            listOf(PumpType.DANA_RS, PumpType.OMNIPOD_DASH, PumpType.ACCU_CHEK_INSIGHT).flatMap { type ->
+                listOf(0.05, 0.1, 0.2, 0.25, 0.4, 0.5, 1.0, 2.0).map { Arguments.of(type, it) }
+            }.stream()
+    }
+
+    private suspend fun setupPumpConcentration(type: PumpType, factor: Double): PumpDescription {
+        setupConcentration(factor)
+        return PumpDescription().fillFor(type).also { whenever(pump.pumpDescription).thenReturn(it) }
+    }
+
+    @ParameterizedTest
+    @MethodSource("pumpConcentrations")
+    fun `bolus is converted once and partial delivery is reported in IU`(type: PumpType, factor: Double) = runBlocking<Unit> {
+        setupPumpConcentration(type, factor)
+        val dbi = DetailedBolusInfo().apply { insulin = 2.0 * factor; bolusType = BS.Type.NORMAL }
+        whenever(pump.deliverTreatment(any())).thenReturn(driverDelivered(1.25))
+
+        val result = sut.deliverTreatment(dbi)
+
+        verify(pump).deliverTreatment(argThat { kotlin.math.abs(insulin - 2.0) < 1e-9 })
+        assertThat(result.bolusDelivered).isWithin(1e-9).of(1.25 * factor)
+    }
+
+    @ParameterizedTest
+    @MethodSource("pumpConcentrations")
+    fun `SMB floors to the native bolus step without rounding up`(type: PumpType, factor: Double) = runBlocking<Unit> {
+        setupPumpConcentration(type, factor)
+        // 0.077 cU -> 0.07 on Insight (0.01 step), 0.05 on Dana/DASH (0.05 step).
+        val expected = if (type == PumpType.ACCU_CHEK_INSIGHT) 0.07 else 0.05
+        val dbi = DetailedBolusInfo().apply { insulin = 0.077 * factor; bolusType = BS.Type.SMB }
+        whenever(pump.deliverTreatment(any())).thenReturn(driverDelivered(expected))
+
+        val result = sut.deliverTreatment(dbi)
+
+        verify(pump).deliverTreatment(argThat { kotlin.math.abs(insulin - expected) < 1e-9 })
+        assertThat(result.bolusDelivered).isWithin(1e-9).of(expected * factor)
+    }
+
+    @ParameterizedTest
+    @MethodSource("pumpConcentrations")
+    fun `sub step SMB never reaches the pump`(type: PumpType, factor: Double) = runBlocking<Unit> {
+        val description = setupPumpConcentration(type, factor)
+        val dbi = DetailedBolusInfo().apply { insulin = description.bolusStep * factor / 2; bolusType = BS.Type.SMB }
+        whenever(pumpEnactResult.success(any())).thenReturn(pumpEnactResult)
+        whenever(pumpEnactResult.enacted(any())).thenReturn(pumpEnactResult)
+        whenever(pumpEnactResult.bolusDelivered(any())).thenReturn(pumpEnactResult)
+
+        sut.deliverTreatment(dbi)
+
+        verify(pump, never()).deliverTreatment(any())
+        verify(pumpEnactResult).success(true)
+        verify(pumpEnactResult).enacted(false)
+        verify(pumpEnactResult).bolusDelivered(0.0)
+    }
+
+    @ParameterizedTest
+    @MethodSource("pumpConcentrations")
+    fun `bolus safety cap is applied in IU before pump conversion`(type: PumpType, factor: Double) = runBlocking<Unit> {
+        setupPumpConcentration(type, factor)
+        whenever(constraintsChecker.getMaxBolusAllowed()).thenReturn(ConstraintObject(1.5 * factor, aapsLogger))
+        val dbi = DetailedBolusInfo().apply { insulin = 2.0 * factor; bolusType = BS.Type.NORMAL }
+        whenever(pump.deliverTreatment(any())).thenReturn(driverDelivered(1.5))
+
+        assertThat(sut.deliverTreatment(dbi).bolusDelivered).isWithin(1e-9).of(1.5 * factor)
+        verify(pump).deliverTreatment(argThat { kotlin.math.abs(insulin - 1.5) < 1e-9 })
+    }
+
+    @ParameterizedTest
+    @MethodSource("pumpConcentrations")
+    fun `priming remains in pump units in both directions`(type: PumpType, factor: Double) = runBlocking<Unit> {
+        setupPumpConcentration(type, factor)
+        val dbi = DetailedBolusInfo().apply { insulin = 2.0; bolusType = BS.Type.PRIMING }
+        whenever(pump.deliverTreatment(any())).thenReturn(driverDelivered(2.0))
+
+        assertThat(sut.deliverTreatment(dbi).bolusDelivered).isEqualTo(2.0)
+        verify(pump).deliverTreatment(argThat { insulin == 2.0 })
+    }
+
+    @ParameterizedTest
+    @MethodSource("pumpConcentrations")
+    fun `extended bolus converts outgoing and returned doses`(type: PumpType, factor: Double) = runBlocking<Unit> {
+        setupPumpConcentration(type, factor)
+        whenever(pump.setExtendedBolus(any(), any())).thenReturn(driverDelivered(1.25))
+
+        assertThat(sut.setExtendedBolus(2.0 * factor, 60).bolusDelivered).isWithin(1e-9).of(1.25 * factor)
+        verify(pump).setExtendedBolus(eq(2.0), eq(60))
+    }
+
+    @ParameterizedTest
+    @MethodSource("pumpConcentrations")
+    fun `effective steps and limits scale without mutating the driver description`(type: PumpType, factor: Double) = runBlocking<Unit> {
+        val original = setupPumpConcentration(type, factor)
+        val bolusStep = original.bolusStep
+        val basalStep = original.basalStep
+        val result = sut.pumpDescription
+
+        assertThat(result.bolusStep).isWithin(1e-9).of(bolusStep * factor)
+        assertThat(result.extendedBolusStep).isWithin(1e-9).of(original.extendedBolusStep * factor)
+        assertThat(result.basalStep).isWithin(1e-9).of(basalStep * factor)
+        assertThat(result.basalMinimumRate).isWithin(1e-9).of(original.basalMinimumRate * factor)
+        assertThat(result.basalMaximumRate).isWithin(1e-9).of(original.basalMaximumRate * factor)
+        assertThat(result.maxReservoirReading).isEqualTo((original.maxReservoirReading * factor).toInt())
+        assertThat(original.bolusStep).isEqualTo(bolusStep)
+        assertThat(original.basalStep).isEqualTo(basalStep)
+    }
+
+    @ParameterizedTest
+    @CsvSource("0.05", "0.1", "0.2", "0.25", "0.4", "0.5", "1.0", "2.0")
+    fun `DASH absolute temp basal converts IU and floors to native step`(factor: Double) = runBlocking<Unit> {
+        setupPumpConcentration(PumpType.OMNIPOD_DASH, factor)
+        whenever(constraintsChecker.applyBasalConstraints(any(), eq(effectiveProfile))).thenReturn(ConstraintObject(0.077 * factor, aapsLogger))
+        whenever(pump.setTempBasalAbsolute(any(), any(), any(), any())).thenReturn(pumpEnactResult)
+
+        sut.setTempBasalAbsolute(0.077 * factor, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        verify(pump).setTempBasalAbsolute(eq(0.05), eq(30), eq(false), eq(PumpSync.TemporaryBasalType.NORMAL))
+    }
+
+    @ParameterizedTest
+    @MethodSource("pumpConcentrations")
+    fun `percentage temp basal is independent of concentration`(type: PumpType, factor: Double) = runBlocking<Unit> {
+        setupPumpConcentration(type, factor)
+        whenever(constraintsChecker.applyBasalPercentConstraints(any(), eq(effectiveProfile))).thenReturn(ConstraintObject(70, aapsLogger))
+        whenever(pump.setTempBasalPercent(any(), any(), any(), any())).thenReturn(pumpEnactResult)
+
+        sut.setTempBasalPercent(70, 30, false, PumpSync.TemporaryBasalType.NORMAL)
+
+        verify(pump).setTempBasalPercent(eq(70), eq(30), eq(false), eq(PumpSync.TemporaryBasalType.NORMAL))
     }
 
     // Nothing in force (pre-first-profile-switch): the identity, so the driver receives exactly the requested

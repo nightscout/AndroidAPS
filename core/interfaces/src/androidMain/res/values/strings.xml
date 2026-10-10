@@ -122,7 +122,10 @@
     <string name="insulin_peak_time">Peak Time [min]</string>
 
     <!-- Concentration -->
+    <string name="u5">U5</string>
     <string name="u10">U10</string>
+    <string name="u20">U20</string>
+    <string name="u25">U25</string>
     <string name="u40">U40</string>
     <string name="u50">U50</string>
     <string name="u100">U100</string>

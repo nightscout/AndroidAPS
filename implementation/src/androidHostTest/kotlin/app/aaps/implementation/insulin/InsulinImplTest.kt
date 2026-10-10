@@ -4,6 +4,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.iobCalc
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -19,6 +20,8 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.TestScope
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
@@ -55,6 +58,27 @@ class InsulinImplTest : TestBase() {
 
     // The EPS-driven refresh this class used to own now lives in ProfileFunctionImpl, together with the
     // collectResilient regression that guarded it — see ProfileFunctionImplTest.
+
+    @Test
+    fun `editor offers short acting concentrations in ascending order`() {
+        assertThat(sut.concentrationList()).containsExactly(
+            ConcentrationType.U5, ConcentrationType.U10, ConcentrationType.U20, ConcentrationType.U25,
+            ConcentrationType.U40, ConcentrationType.U50, ConcentrationType.U100, ConcentrationType.U200
+        ).inOrder()
+    }
+
+    @ParameterizedTest
+    @CsvSource("0.05,U5", "0.1,U10", "0.2,U20", "0.25,U25", "0.4,U40", "0.5,U50", "1.0,U100", "2.0,U200")
+    fun `stored concentrations retain their factor and display label`(factor: Double, label: String) {
+        whenever(preferences.get(StringNonKey.InsulinConfiguration)).thenReturn(
+            """{"insulin":[{"insulinLabel":"test","insulinEndTime":18000000,"insulinPeakTime":1800000,"concentration":$factor}]}"""
+        )
+        sut.loadSettings()
+
+        val restored = sut.insulins.single()
+        assertThat(restored.concentration).isEqualTo(factor)
+        assertThat(sut.buildSuffix(restored.peak, restored.dia, restored.concentration)).isEqualTo("30m 5h $label")
+    }
 
     @Test
     fun testIobCalcForTreatment() {
