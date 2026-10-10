@@ -106,6 +106,8 @@ class TidepoolUploader(
 
             val client = OkHttpClient.Builder()
                 .also {
+                    // First, so the body log below shows the headers as they are sent
+                    it.addInterceptor(ClientHeadersInterceptor(config))
                     if (l.findByName(LTag.TIDEPOOL.tag).enabled && (config.isEngineeringMode() || config.isDev()))
                         it.addInterceptor(httpLoggingInterceptor)
                     it.addInterceptor(InfoInterceptor(aapsLogger))
@@ -322,14 +324,14 @@ class TidepoolUploader(
         try {
             extendWakeLock(60000)
             session.iterations++
-            val chunk = uploadChunk.getNext(session)
+            val batches = uploadChunk.getNext(session)
             when {
-                chunk == null     -> {
+                batches == null   -> {
                     aapsLogger.error("Upload chunk is null, cannot proceed")
                     releaseWakeLock()
                 }
 
-                chunk.length == 2 -> {
+                batches.isEmpty() -> {
                     aapsLogger.debug(LTag.TIDEPOOL, "Empty dataset - marking as succeeded")
                     tidepoolRepository.addLog("No data to upload")
                     releaseWakeLock()
@@ -339,46 +341,12 @@ class TidepoolUploader(
                 }
 
                 else              -> {
-                    val body = chunk.toRequestBody("application/json".toMediaTypeOrNull())
-
                     tidepoolRepository.addLog("Uploading")
                     val service = session.service
                     val uploadId = session.datasetReply?.getUploadId()
                     if (service != null && uploadId != null) {
-                        // Ownership of the lock passes to the token callback and then to the upload callback,
-                        // and every one of their branches releases it, a throw included.
-                        withFreshToken(
-                            session,
-                            onFailure = {
-                                // FAILED makes the next upload log in again, which tells a network problem from a lost login
-                                authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "Upload FAILED - no valid token")
-                                releaseWakeLock()
-                                uploadMutex.unlock()
-                            }
-                        ) { token ->
-                            try {
-                                service.doUpload(token, uploadId, body).enqueue(
-                                    TidepoolCallback<UploadReplyMessage>(
-                                        aapsLogger, tidepoolRepository, session, "Data Upload $from",
-                                        {
-                                            uploadChunk.setLastEnd(session.end)
-                                            authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED, "Upload completed OK")
-                                            releaseWakeLock()
-                                            uploadMutex.unlock()
-                                            uploadNext()
-                                        }, {
-                                            authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "Upload FAILED")
-                                            releaseWakeLock()
-                                            uploadMutex.unlock()
-                                        })
-                                )
-                            } catch (e: Exception) {
-                                aapsLogger.error(LTag.TIDEPOOL, "Upload could not start", e)
-                                authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "Upload FAILED")
-                                releaseWakeLock()
-                                uploadMutex.unlock()
-                            }
-                        }
+                        // Ownership of the lock passes to uploadBatch, which releases it in every branch.
+                        uploadBatch(session, service, uploadId, batches, 0, from)
                         locked = false
                     }
                 }
@@ -387,6 +355,49 @@ class TidepoolUploader(
             // Release for every synchronous exit path (null/empty chunk, missing service, or a getNext throw).
             if (locked) uploadMutex.unlock()
         }
+    }
+
+    /**
+     * Send [batches] one after another, starting with [index]. `LastEnd` moves only after the last one, so
+     * when one fails the whole time window is sent again later; the deduplicator then replaces the records
+     * that arrived already, by their origin id, instead of adding them a second time.
+     *
+     * Owns the upload lock: every branch either releases it or passes it on to the next batch.
+     */
+    private fun uploadBatch(session: Session, service: TidepoolApiService, uploadId: String, batches: List<String>, index: Int, from: String?) {
+        if (batches.size > 1) tidepoolRepository.addLog("Uploading part ${index + 1} of ${batches.size}")
+        extendWakeLock(60000)
+        withFreshToken(
+            session,
+            // FAILED makes the next upload log in again, which tells a network problem from a lost login
+            onFailure = { uploadFailed("Upload FAILED - no valid token") }
+        ) { token ->
+            try {
+                service.doUpload(token, uploadId, batches[index].toRequestBody("application/json".toMediaTypeOrNull())).enqueue(
+                    TidepoolCallback<UploadReplyMessage>(
+                        aapsLogger, tidepoolRepository, session, "Data Upload $from",
+                        {
+                            if (index + 1 < batches.size) uploadBatch(session, service, uploadId, batches, index + 1, from)
+                            else {
+                                uploadChunk.setLastEnd(session.end)
+                                authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED, "Upload completed OK")
+                                releaseWakeLock()
+                                uploadMutex.unlock()
+                                uploadNext()
+                            }
+                        }, { uploadFailed("Upload FAILED") })
+                )
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.TIDEPOOL, "Upload could not start", e)
+                uploadFailed("Upload FAILED")
+            }
+        }
+    }
+
+    private fun uploadFailed(message: String) {
+        authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, message)
+        releaseWakeLock()
+        uploadMutex.unlock()
     }
 
     /**

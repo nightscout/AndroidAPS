@@ -123,6 +123,10 @@ class TidepoolUploaderTest {
         val deleted = mutableListOf<String>()
         val service: TidepoolApiService = mock()
 
+        /** Uploads received so far, and the number (1, 2, …) of the one that answers with an error. */
+        @Volatile var uploads = 0
+        var failUpload: Int? = null
+
         /** How a delete answers. The default is what Tidepool does: 200 with an empty body. */
         var deleteAnswer: (Call<DatasetReplyMessage>, Callback<DatasetReplyMessage>) -> Unit =
             { call, callback -> callback.onResponse(call, Response.success<DatasetReplyMessage>(null)) }
@@ -137,7 +141,11 @@ class TidepoolUploaderTest {
                 answerWith<List<DatasetReplyMessage>> { call, callback -> callback.onResponse(call, Response.success(replies)) }
             }
             whenever(service.doUpload(any(), any(), any())).thenAnswer {
-                answerWith<UploadReplyMessage> { call, callback -> callback.onResponse(call, Response.success(UploadReplyMessage())) }
+                val number = ++uploads
+                answerWith<UploadReplyMessage> { call, callback ->
+                    if (number == failUpload) callback.onResponse(call, Response.error(500, "down".toResponseBody("text/plain".toMediaTypeOrNull())))
+                    else callback.onResponse(call, Response.success(UploadReplyMessage()))
+                }
             }
             whenever(service.openDataSet(any(), any(), any())).thenAnswer {
                 dataSets.add(0, "new-1" to TidepoolUploader.DEVICE_NAME)
@@ -276,7 +284,7 @@ class TidepoolUploaderTest {
     fun `empty chunk is reported and nothing is sent`() {
         whenever(receiverDelegate.allowed).thenReturn(true)
         whenever(uploadChunk.getLastEnd()).thenReturn(now) // up to date, so no follow-up upload
-        runBlocking { whenever(uploadChunk.getNext(anyOrNull())).thenReturn("[]") }
+        runBlocking { whenever(uploadChunk.getNext(anyOrNull())).thenReturn(emptyList()) }
         startSessionWithUser()
 
         runBlocking { sut.doUpload("test") }
@@ -289,7 +297,7 @@ class TidepoolUploaderTest {
     fun `upload asks for a valid token and does not reuse the one from the session start`() {
         whenever(receiverDelegate.allowed).thenReturn(true)
         whenever(uploadChunk.getLastEnd()).thenReturn(now) // up to date, so no follow-up upload
-        runBlocking { whenever(uploadChunk.getNext(anyOrNull())).thenReturn("""[{"type":"cbg"}]""") }
+        runBlocking { whenever(uploadChunk.getNext(anyOrNull())).thenReturn(listOf("""[{"type":"cbg"}]""")) }
         val server = FakeTidepool("aaps-1" to TidepoolUploader.DEVICE_NAME)
         val session = startSessionAndWait(server) // the session started with "token-1"
         answerTokens { "fresh-$it" } // and AppAuth has refreshed it since
@@ -305,7 +313,7 @@ class TidepoolUploaderTest {
     fun `upload without a valid token fails and frees the upload lock`() {
         whenever(receiverDelegate.allowed).thenReturn(true)
         whenever(uploadChunk.getLastEnd()).thenReturn(now)
-        runBlocking { whenever(uploadChunk.getNext(anyOrNull())).thenReturn("""[{"type":"cbg"}]""") }
+        runBlocking { whenever(uploadChunk.getNext(anyOrNull())).thenReturn(listOf("""[{"type":"cbg"}]""")) }
         val server = FakeTidepool("aaps-1" to TidepoolUploader.DEVICE_NAME)
         startSessionAndWait(server)
         answerTokens { null }
@@ -318,6 +326,40 @@ class TidepoolUploaderTest {
         answerTokens { "fresh-$it" }
         runBlocking { sut.doUpload("test") }
         verify(server.service).doUpload(eq("fresh-1"), eq("aaps-1"), any())
+    }
+
+    @Test
+    fun `a window larger than one batch is sent in parts and LastEnd moves once at the end`() {
+        whenever(receiverDelegate.allowed).thenReturn(true)
+        whenever(uploadChunk.getLastEnd()).thenReturn(now)
+        runBlocking { whenever(uploadChunk.getNext(anyOrNull())).thenReturn(listOf("[1]", "[2]", "[3]")) }
+        val server = FakeTidepool("aaps-1" to TidepoolUploader.DEVICE_NAME)
+        startSessionAndWait(server)
+
+        runBlocking { sut.doUpload("test") }
+
+        verify(uploadChunk, timeout(2000)).setLastEnd(any())
+        assertThat(server.uploads).isEqualTo(3)
+        assertThat(statusMessages()).containsAtLeast("Uploading part 1 of 3", "Uploading part 2 of 3", "Uploading part 3 of 3")
+    }
+
+    @Test
+    fun `a failed part keeps LastEnd so the window is sent again, and frees the upload lock`() {
+        whenever(receiverDelegate.allowed).thenReturn(true)
+        whenever(uploadChunk.getLastEnd()).thenReturn(now)
+        runBlocking { whenever(uploadChunk.getNext(anyOrNull())).thenReturn(listOf("[1]", "[2]", "[3]")) }
+        val server = FakeTidepool("aaps-1" to TidepoolUploader.DEVICE_NAME)
+        server.failUpload = 2
+        startSessionAndWait(server)
+
+        runBlocking { sut.doUpload("test") }
+
+        verify(authFlowOut, timeout(2000)).updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "Upload FAILED")
+        assertThat(server.uploads).isEqualTo(2) // part 3 is not sent after part 2 failed
+        verify(uploadChunk, never()).setLastEnd(any())
+        // The lock is free again: the next trigger reads a new window instead of being skipped
+        runBlocking { sut.doUpload("test") }
+        runBlocking { verify(uploadChunk, timeout(2000).times(2)).getNext(anyOrNull()) }
     }
 
     @Test

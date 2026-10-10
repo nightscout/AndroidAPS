@@ -8,21 +8,18 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 const val SESSION_TOKEN_HEADER: String = "x-tidepool-session-token"
 
+/**
+ * The Tidepool calls AAPS makes. The client headers are added to every call by [ClientHeadersInterceptor].
+ * There is no call to close a dataset on purpose: a continuous dataset must stay open, and a closed one
+ * cannot be written to again.
+ */
 interface TidepoolApiService {
-
-    @Headers(
-        "User-Agent: AAPS- " + "1.0",
-        "X-Tidepool-Client-Name: aaps",
-        "X-Tidepool-Client-Version: 0.2.0"
-    )
 
     @DELETE("/v1/datasets/{dataSetId}")
     fun deleteDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
@@ -40,18 +37,9 @@ interface TidepoolApiService {
         @Query("size") size: Int
     ): Call<List<DatasetReplyMessage>>
 
-    @Suppress("unused")
-    @GET("/v1/datasets/{dataSetId}")
-    fun getDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
-
     @POST("/v1/users/{userId}/data_sets")
     fun openDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("userId") id: String, @Body body: RequestBody): Call<DatasetReplyMessage>
 
     @POST("/v1/datasets/{sessionId}/data")
     fun doUpload(@Header(SESSION_TOKEN_HEADER) token: String, @Path("sessionId") id: String, @Body body: RequestBody): Call<UploadReplyMessage>
-
-    @Suppress("unused")
-    @PUT("/v1/datasets/{sessionId}")
-    fun closeDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("sessionId") id: String, @Body body: RequestBody): Call<DatasetReplyMessage>
-
 }

@@ -58,35 +58,51 @@ class UploadChunk(
 
         // One of the origin types of the Tidepool data model: application, device, manual, service
         internal const val ORIGIN_TYPE_APPLICATION = "application"
+
+        // Tidepool asks to upload "in chunks of 1,000 records". The time window can hold more: a full
+        // sync sends up to 7 days, which is over 2000 CGM values alone.
+        internal const val MAX_RECORDS_PER_UPLOAD = 1000
     }
 
     private val maxUploadSize = T.days(7).msecs() // don't change this
 
-    suspend fun getNext(session: Session?): String? {
+    /**
+     * The records of the next time window, as JSON batches of at most [MAX_RECORDS_PER_UPLOAD] records.
+     * Empty when the window holds nothing. The caller sends all batches before it moves [getLastEnd].
+     */
+    suspend fun getNext(session: Session?): List<String>? {
         session ?: return null
 
         session.start = getLastEnd()
         // do not upload last 3h, TBR can be still running
         session.end = min(session.start + maxUploadSize, dateUtil.now() - T.hours(3).msecs())
 
-        val result = get(session.start, session.end)
-        if (result.length < 3) {
+        val batches = getBatches(session.start, session.end)
+        if (batches.isEmpty()) {
             aapsLogger.debug(LTag.TIDEPOOL, "No records in this time period, setting start to best end time")
             setLastEnd(session.end)
         }
-        return result
+        return batches
     }
 
-    suspend fun get(start: Long, end: Long): String {
+    /** The records between [start] and [end] as JSON batches of at most [MAX_RECORDS_PER_UPLOAD] records. */
+    internal suspend fun getBatches(start: Long, end: Long): List<String> =
+        records(start, end).orEmpty().chunked(MAX_RECORDS_PER_UPLOAD).map { GsonInstance.defaultGsonInstance().toJson(it) }
+
+    /** All records between [start] and [end] as one JSON array, or "" for a window that is not valid. */
+    suspend fun get(start: Long, end: Long): String =
+        records(start, end)?.let { GsonInstance.defaultGsonInstance().toJson(it) } ?: ""
+
+    private suspend fun records(start: Long, end: Long): List<BaseElement>? {
 
         aapsLogger.debug(LTag.TIDEPOOL, "Syncing data between: " + dateUtil.dateAndTimeString(start) + " -> " + dateUtil.dateAndTimeString(end))
         if (end <= start) {
             aapsLogger.debug(LTag.TIDEPOOL, "End is <= start: " + dateUtil.dateAndTimeString(start) + " " + dateUtil.dateAndTimeString(end))
-            return ""
+            return null
         }
         if (end - start > maxUploadSize) {
             aapsLogger.debug(LTag.TIDEPOOL, "More than max range - rejecting")
-            return ""
+            return null
         }
 
         val records = LinkedList<BaseElement>()
@@ -107,7 +123,7 @@ class UploadChunk(
             }
         }
 
-        return GsonInstance.defaultGsonInstance().toJson(records)
+        return records
     }
 
     fun getLastEnd(): Long {

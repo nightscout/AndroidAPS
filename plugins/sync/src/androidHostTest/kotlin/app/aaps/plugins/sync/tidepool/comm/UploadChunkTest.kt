@@ -95,6 +95,23 @@ class UploadChunkTest {
         assertThat(origin["type"].asString).isEqualTo("application")
     }
 
+    @Test
+    fun `a window with many records is split into batches of at most 1000`() = runTest {
+        // Tidepool asks for "chunks of 1,000 records"; a full sync window can hold far more
+        val boluses = (1..2500).map { BS(timestamp = it.toLong(), amount = 0.1, type = BS.Type.SMB, iCfg = iCfg) }
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(boluses)
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getRunningModesFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+
+        val batches = sut.getBatches(1, 5000)
+
+        assertThat(batches.map { JsonParser.parseString(it).asJsonArray.size() }).containsExactly(1000, 1000, 500).inOrder()
+    }
+
     private fun convertResultJsonToBolusElements(json: String): List<BolusElement> {
         val itemType = object : TypeToken<List<BolusElement>>() {}.type
         return GsonInstance.defaultGsonInstance().fromJson(json, itemType)
