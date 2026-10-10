@@ -117,7 +117,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     fun prepare() {
         whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
-        whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = false, connected = false)))
+        whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ConnectivityGate.ConnectivityStatus("", allowed = false, connected = false)))
         storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
         sut =
             NSClientV3Plugin(

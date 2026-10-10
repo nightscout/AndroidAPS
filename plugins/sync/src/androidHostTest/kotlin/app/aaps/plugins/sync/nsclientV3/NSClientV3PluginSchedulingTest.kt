@@ -52,7 +52,7 @@ class NSClientV3PluginSchedulingTest : TestBaseWithProfile() {
         whenever(nsLoadExecutor.idle).thenReturn(emptyFlow())
         whenever(nsConnection.connected).thenReturn(MutableStateFlow(false))
         whenever(receiverDelegate.connectivityStatusFlow)
-            .thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = true, connected = true)))
+            .thenReturn(MutableStateFlow(ConnectivityGate.ConnectivityStatus("", allowed = true, connected = true)))
         whenever(receiverDelegate.allowed).thenReturn(true)
         whenever(persistenceLayer.observeChanges(any<kotlin.reflect.KClass<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())

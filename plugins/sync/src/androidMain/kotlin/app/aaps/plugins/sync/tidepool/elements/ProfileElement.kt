@@ -32,7 +32,7 @@ class ProfileElement(ps: EPS, serialNumber: String, dateUtil: DateUtil, profileU
     internal var insulinSensitivities: IsfProfile = IsfProfile()
 
     @Expose
-    internal var deviceId: String? = TidepoolUploader.PUMP_TYPE + ":" + serialNumber
+    internal var deviceId: String? = TidepoolUploader.DEVICE_NAME + ":" + serialNumber
 
     @Expose
     internal var deviceSerialNumber: String = serialNumber

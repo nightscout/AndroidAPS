@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -47,7 +47,7 @@ class TidepoolUploaderAuthTest {
     private val preferences: Preferences = mock()
     private val uploadChunk: UploadChunk = mock()
     private val dateUtil: DateUtil = mock()
-    private val receiverDelegate: ReceiverDelegate = mock()
+    private val receiverDelegate: TidepoolReceiverDelegate = mock()
     private val config: Config = mock()
     private val l: L = mock()
     private val authFlowOut: AuthFlowOut = mock()
@@ -63,7 +63,7 @@ class TidepoolUploaderAuthTest {
         // Fixed time, so the two calls in the rate limit test fall into the same window
         whenever(dateUtil.now()).thenReturn(1_000_000L)
         sut = TidepoolUploader(
-            aapsLogger, rxBus, context, preferences, uploadChunk, dateUtil,
+            aapsLogger, TidepoolRepository(aapsLogger, rxBus), context, preferences, uploadChunk, dateUtil,
             receiverDelegate, config, l, authFlowOut, RateLimit(dateUtil)
         )
     }

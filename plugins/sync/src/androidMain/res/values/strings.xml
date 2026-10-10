@@ -79,6 +79,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">If enabled, uploads will go to test servers instead of the regular</string>
     <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
+    <string name="title_tidepool_use_ns_connection">Use Nightscout connection settings</string>
+    <string name="summary_tidepool_use_ns_connection">Turn off to set separate connection settings for Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Uploads data to Tidepool</string>
     <string name="upload_now">Upload now</string>

@@ -27,11 +27,16 @@ interface TidepoolApiService {
     @DELETE("/v1/datasets/{dataSetId}")
     fun deleteDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
 
+    /**
+     * List the user's datasets, newest first. Deleted datasets are not returned.
+     * A `null` [deviceId] is left out of the query, so datasets with any device id (or none) match.
+     */
     @GET("/v1/users/{userId}/data_sets")
-    fun getOpenDataSets(
+    fun getDataSets(
         @Header(SESSION_TOKEN_HEADER) token: String,
         @Path("userId") id: String,
         @Query("client.name") clientName: String,
+        @Query("deviceId") deviceId: String?,
         @Query("size") size: Int
     ): Call<List<DatasetReplyMessage>>
 

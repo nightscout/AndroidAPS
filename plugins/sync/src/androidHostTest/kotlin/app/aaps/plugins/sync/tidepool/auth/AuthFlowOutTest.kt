@@ -2,12 +2,11 @@ package app.aaps.plugins.sync.tidepool.auth
 
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import com.google.common.truth.Truth.assertThat
 import net.openid.appauth.AuthorizationException
@@ -41,6 +40,7 @@ class AuthFlowOutTest {
     private val cryptoUtil: CryptoUtil = mock()
     private val rxBus: RxBus = mock()
     private val context: Context = RuntimeEnvironment.getApplication()
+    private val tidepoolRepository = TidepoolRepository(aapsLogger, rxBus)
 
     private lateinit var sut: AuthFlowOut
 
@@ -49,14 +49,11 @@ class AuthFlowOutTest {
         // initAuthState() reads these; default to "no stored state".
         whenever(preferences.get(TidepoolStringNonKey.ServiceConfiguration)).thenReturn("")
         whenever(preferences.get(TidepoolStringNonKey.AuthState)).thenReturn("")
-        sut = AuthFlowOut(aapsLogger, preferences, context, cryptoUtil, rxBus)
+        sut = AuthFlowOut(aapsLogger, preferences, context, cryptoUtil, tidepoolRepository)
     }
 
-    private fun sentEvents(): List<Event> {
-        val captor = argumentCaptor<Event>()
-        verify(rxBus, atLeastOnce()).send(captor.capture())
-        return captor.allValues
-    }
+    /** What the Tidepool screen shows in its log */
+    private fun logLines(): List<String> = tidepoolRepository.logList.value.map { it.status }
 
     @Test
     fun `fresh state without a token reports NOT_LOGGED_IN`() {
@@ -70,19 +67,24 @@ class AuthFlowOutTest {
     }
 
     @Test
-    fun `updateConnectionStatus with a message emits a status event and a gui refresh`() {
+    fun `updateConnectionStatus with a message logs it and shows the new status`() {
         sut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.BLOCKED, "blocked!")
-        val events = sentEvents()
-        assertThat(events.filterIsInstance<EventTidepoolStatus>().map { it.status }).contains("blocked!")
-        assertThat(events.any { it is EventTidepoolUpdateGUI }).isTrue()
+        assertThat(logLines()).contains("blocked!")
+        assertThat(tidepoolRepository.connectionStatus.value).isEqualTo(AuthFlowOut.ConnectionStatus.BLOCKED)
     }
 
     @Test
-    fun `updateConnectionStatus without a message emits only a gui refresh`() {
+    fun `updateConnectionStatus without a message only shows the new status`() {
         sut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FETCHING_TOKEN)
-        val events = sentEvents()
-        assertThat(events.filterIsInstance<EventTidepoolStatus>()).isEmpty()
-        assertThat(events.any { it is EventTidepoolUpdateGUI }).isTrue()
+        assertThat(logLines()).isEmpty()
+        assertThat(tidepoolRepository.connectionStatus.value).isEqualTo(AuthFlowOut.ConnectionStatus.FETCHING_TOKEN)
+    }
+
+    @Test
+    fun `a reset to NONE shows the derived status`() {
+        sut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.NONE)
+        // No token was ever received, so NONE reads as NOT_LOGGED_IN
+        assertThat(tidepoolRepository.connectionStatus.value).isEqualTo(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN)
     }
 
     @Test
@@ -98,7 +100,7 @@ class AuthFlowOutTest {
         sut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED)
         sut.eraseAuthState("bye")
         verify(preferences).put(TidepoolStringNonKey.AuthState, "")
-        assertThat(sentEvents().filterIsInstance<EventTidepoolStatus>().map { it.status }).contains("bye")
+        assertThat(logLines()).contains("bye")
         assertThat(sut.connectionStatus).isEqualTo(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN)
     }
 
@@ -107,7 +109,7 @@ class AuthFlowOutTest {
         sut.clearAllSavedData()
         verify(preferences).put(TidepoolStringNonKey.ServiceConfiguration, "")
         verify(preferences).put(TidepoolStringNonKey.AuthState, "")
-        assertThat(sentEvents().filterIsInstance<EventTidepoolStatus>().map { it.status }).contains("Credentials cleared")
+        assertThat(logLines()).contains("Credentials cleared")
     }
 
     @Test
@@ -116,6 +118,19 @@ class AuthFlowOutTest {
         sut.initAuthState()
         verify(preferences).put(TidepoolStringNonKey.AuthState, "")
         verify(preferences).put(TidepoolStringNonKey.ServiceConfiguration, "")
+    }
+
+    @Test
+    fun `initAuthState does not log the tokens`() {
+        // Logs get shared ("Send logs"), and a refresh token in one gives access to the Tidepool data (#5206)
+        whenever(preferences.get(TidepoolStringNonKey.AuthState)).thenReturn("""{"refreshToken":"secret-refresh-token"}""")
+
+        sut.initAuthState()
+
+        val messages = argumentCaptor<String>()
+        verify(aapsLogger, atLeastOnce()).debug(eq(LTag.TIDEPOOL), messages.capture())
+        assertThat(messages.allValues.any { it.startsWith("Using auth state") }).isTrue()
+        assertThat(messages.allValues.none { it.contains("secret-refresh-token") }).isTrue()
     }
 
     // isTransientTokenError: tells a failed token refresh that can be retried (bad network) from one that

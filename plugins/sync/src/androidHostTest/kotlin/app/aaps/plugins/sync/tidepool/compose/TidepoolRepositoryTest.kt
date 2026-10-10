@@ -1,24 +1,32 @@
 package app.aaps.plugins.sync.tidepool.compose
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 
 @ExtendWith(MockitoExtension::class)
 class TidepoolRepositoryTest {
 
     @Mock lateinit var aapsLogger: AAPSLogger
+    @Mock lateinit var rxBus: RxBus
 
     private lateinit var sut: TidepoolRepository
 
     @BeforeEach
     fun setup() {
-        sut = TidepoolRepository(aapsLogger)
+        sut = TidepoolRepository(aapsLogger, rxBus)
     }
 
     @Test
@@ -50,6 +58,21 @@ class TidepoolRepositoryTest {
         assertThat(logs).hasSize(100)
         assertThat(logs.first().status).isEqualTo("log 150")
         assertThat(logs.last().status).isEqualTo("log 51")
+    }
+
+    @Test
+    fun `addLog passes the line to the setup wizard`() {
+        sut.addLog("Uploading")
+        verify(rxBus).send(EventSWSyncStatus("Uploading"))
+    }
+
+    @Test
+    fun `requestUpload reaches a collector`() = runTest(UnconfinedTestDispatcher()) {
+        val request = async { sut.uploadRequests.first() }
+
+        sut.requestUpload()
+
+        request.await() // only returns when the request arrived
     }
 
     @Test

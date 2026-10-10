@@ -9,21 +9,23 @@ import java.util.TimeZone
 
 class OpenDatasetRequestMessage(config: Config, dateUtil: DateUtil) : BaseMessage() {
 
+    // TidepoolUploader.startSession finds this dataset again by this id
     @Expose
-    var deviceId: String? = null
+    var deviceId: String = TidepoolUploader.DEVICE_NAME
 
     @Expose
     var time: String = dateUtil.toISOAsUTC(System.currentTimeMillis())
 
     @Expose
-    var timezoneOffset = (dateUtil.getTimeZoneOffsetMs() / T.mins(1).msecs()).toInt()
+    // With DST, like the offset of every uploaded record
+    var timezoneOffset = (dateUtil.getTimeZoneOffsetMsWithDST() / T.mins(1).msecs()).toInt()
 
     @Expose
     var type = "upload"
 
     //public String byUser;
     @Expose
-    var client = ClientInfo(config.APPLICATION_ID)
+    var client = ClientInfo(config.APPLICATION_ID, config.VERSION_NAME)
 
     @Expose
     var computerTime: String = dateUtil.toISONoZone(System.currentTimeMillis())
@@ -32,10 +34,10 @@ class OpenDatasetRequestMessage(config: Config, dateUtil: DateUtil) : BaseMessag
     var dataSetType = "continuous"
 
     @Expose
-    var deviceManufacturers = arrayOf(TidepoolUploader.PUMP_TYPE)
+    var deviceManufacturers = arrayOf(TidepoolUploader.DEVICE_NAME)
 
     @Expose
-    var deviceModel = TidepoolUploader.PUMP_TYPE
+    var deviceModel = TidepoolUploader.DEVICE_NAME
 
     @Expose
     var deviceTags = arrayOf("bgm", "cgm", "insulin-pump")
@@ -54,7 +56,7 @@ class OpenDatasetRequestMessage(config: Config, dateUtil: DateUtil) : BaseMessag
 
     inner class ClientInfo(
         @Expose val name: String,
-        @Expose val version: String = TidepoolUploader.VERSION
+        @Expose val version: String
     )
 
     inner class Deduplicator {

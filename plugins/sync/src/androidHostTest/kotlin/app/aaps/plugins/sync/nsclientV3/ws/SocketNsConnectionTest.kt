@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
+import app.aaps.plugins.sync.nsclientV3.ConnectivityGate
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
@@ -64,7 +65,7 @@ class SocketNsConnectionTest : TestBaseWithProfile() {
         // way to get a true out of it - the same construction the scheduling test uses.
         whenever(receiverDelegate.allowed).thenReturn(true)
         whenever(receiverDelegate.connectivityStatusFlow)
-            .thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = true, connected = true)))
+            .thenReturn(MutableStateFlow(ConnectivityGate.ConnectivityStatus("", allowed = true, connected = true)))
         whenever(persistenceLayer.observeChanges(any<kotlin.reflect.KClass<*>>())).thenReturn(emptyFlow())
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         val nsLoadExecutor = mock<NsLoadExecutor>()

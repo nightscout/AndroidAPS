@@ -12,9 +12,10 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 /**
- * Tests the JSON that opens a Tidepool dataset. Two values in it are load bearing:
- * `client.name` must be the application id, because [TidepoolUploader.startSession] looks up the open
- * dataset by that name to reuse it, and the deduplicator name must stay
+ * Tests the JSON that opens a Tidepool dataset. Some values in it are load bearing:
+ * `client.name` must be the application id and `deviceId` must be [TidepoolUploader.DEVICE_NAME],
+ * because [TidepoolUploader.startSession] looks up the open dataset by both to reuse it. The device
+ * names must never change, because Tidepool shows the device by them. The deduplicator name must stay
  * `org.tidepool.deduplicator.dataset.delete.origin`, because that is what lets a re-upload replace
  * older records instead of adding them a second time.
  */
@@ -34,16 +35,23 @@ class OpenDatasetRequestMessageTest {
         whenever(config.VERSION_NAME).thenReturn("3.3.0")
         whenever(dateUtil.toISOAsUTC(any())).thenReturn("2026-08-05T10:00:00.000Z")
         whenever(dateUtil.toISONoZone(any())).thenReturn("2026-08-05T12:00:00")
-        whenever(dateUtil.getTimeZoneOffsetMs()).thenReturn(7_200_000L) // +2 hours
+        // Summer time: +1 hour standard, +2 hours with DST. The dataset must carry the DST one.
+        whenever(dateUtil.getTimeZoneOffsetMs()).thenReturn(3_600_000L)
+        whenever(dateUtil.getTimeZoneOffsetMsWithDST()).thenReturn(7_200_000L)
 
         val json = bodyAsJson()
 
         assertThat(json["client"].asJsonObject["name"].asString).isEqualTo("info.nightscout.androidaps")
-        assertThat(json["client"].asJsonObject["version"].asString).isEqualTo(TidepoolUploader.VERSION)
+        // The app version, as Tidepool's own uploaders send it
+        assertThat(json["client"].asJsonObject["version"].asString).isEqualTo("3.3.0")
         assertThat(json["deduplicator"].asJsonObject["name"].asString).isEqualTo("org.tidepool.deduplicator.dataset.delete.origin")
         assertThat(json["dataSetType"].asString).isEqualTo("continuous")
         assertThat(json["type"].asString).isEqualTo("upload")
-        assertThat(json["deviceModel"].asString).isEqualTo(TidepoolUploader.PUMP_TYPE)
+        // Tidepool shows the device by these names, and startSession finds the dataset again by deviceId
+        assertThat(json["deviceId"].asString).isEqualTo("AAPS")
+        assertThat(json["deviceManufacturers"].asJsonArray.map { it.asString }).containsExactly("AAPS")
+        assertThat(json["deviceModel"].asString).isEqualTo("AAPS")
+        assertThat(json["deviceTags"].asJsonArray.map { it.asString }).containsExactly("bgm", "cgm", "insulin-pump")
         assertThat(json["version"].asString).isEqualTo("3.3.0")
         assertThat(json["timezoneOffset"].asInt).isEqualTo(120) // minutes
         assertThat(json["time"].asString).isEqualTo("2026-08-05T10:00:00.000Z")

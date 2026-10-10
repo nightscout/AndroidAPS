@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.JsonParser
 import kotlinx.coroutines.test.runTest
@@ -68,7 +69,7 @@ class UploadChunkBasalTest {
         whenever(dateUtil.toISONoZone(any())).thenAnswer { it.getArgument<Long>(0).toString() }
         whenever(dateUtil.getTimeZoneOffsetMinutes(any())).thenReturn(0)
         defaultProfile = profileWith(0 to 0.5)
-        sut = UploadChunk(preferences, rxBus, aapsLogger, profileFunction, profileUtil, activePlugin, persistenceLayer, dateUtil)
+        sut = UploadChunk(preferences, TidepoolRepository(aapsLogger, rxBus), aapsLogger, profileFunction, profileUtil, activePlugin, persistenceLayer, dateUtil, mock())
     }
 
     @AfterEach

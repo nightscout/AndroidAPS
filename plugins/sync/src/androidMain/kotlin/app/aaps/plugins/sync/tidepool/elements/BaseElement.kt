@@ -27,8 +27,22 @@ open class BaseElement(timestamp: Long, uuid: String, dateUtil: DateUtil) {
         origin = Origin(uuid)
     }
 
+    /**
+     * [id] is what the Tidepool deduplicator matches on, so it must stay stable for the same record.
+     * [name], [version] and [type] say which app sent it; `UploadChunk` fills them for every record.
+     */
     inner class Origin internal constructor(
         @field:Expose
         internal var id: String
-    )
+    ) {
+
+        @field:Expose
+        internal var name: String? = null
+
+        @field:Expose
+        internal var version: String? = null
+
+        @field:Expose
+        internal var type: String? = null
+    }
 }

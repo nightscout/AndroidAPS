@@ -2,17 +2,19 @@ package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.elements.BolusElement
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
 import com.google.common.truth.Truth.assertThat
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -27,7 +29,7 @@ import org.mockito.kotlin.whenever
 class UploadChunkTest {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var rxBus: RxBus
+    @Mock lateinit var tidepoolRepository: TidepoolRepository
     @Mock lateinit var aapsLogger: AAPSLogger
 
     @Suppress("unused")
@@ -40,6 +42,7 @@ class UploadChunkTest {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var config: Config
 
     @InjectMocks lateinit var sut: UploadChunk
 
@@ -69,6 +72,27 @@ class UploadChunkTest {
         assertThat(resultBolusElements[0].normal).isEqualTo(7.5)
         assertThat(resultBolusElements[1].subType).isEqualTo("automated")
         assertThat(resultBolusElements[1].normal).isEqualTo(0.5)
+    }
+
+    @Test
+    fun `every record says which app sent it`() = runTest {
+        whenever(config.APPLICATION_ID).thenReturn("info.nightscout.androidaps")
+        whenever(config.VERSION_NAME).thenReturn("4.0.0")
+        whenever(persistenceLayer.getBolusesFromTimeToTime(any(), any(), any())).thenReturn(listOf(BS(timestamp = 100, amount = 1.0, type = BS.Type.NORMAL, iCfg = iCfg)))
+        whenever(persistenceLayer.getCarbsFromTimeToTimeExpanded(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+        whenever(persistenceLayer.getRunningModesFromTimeToTime(any(), any(), any())).thenReturn(listOf())
+
+        val origin = JsonParser.parseString(sut.get(1, 500)).asJsonArray[0].asJsonObject["origin"].asJsonObject
+
+        // Tidepool asks for id, name and type, and recognises the app by name (as it does for Loop and Trio)
+        assertThat(origin["id"].asString).isNotEmpty()
+        assertThat(origin["name"].asString).isEqualTo("info.nightscout.androidaps")
+        assertThat(origin["version"].asString).isEqualTo("4.0.0")
+        assertThat(origin["type"].asString).isEqualTo("application")
     }
 
     private fun convertResultJsonToBolusElements(json: String): List<BolusElement> {

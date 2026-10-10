@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.tidepool.comm
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -10,10 +11,10 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
 import app.aaps.plugins.sync.tidepool.elements.BloodGlucoseElement
@@ -21,7 +22,6 @@ import app.aaps.plugins.sync.tidepool.elements.BolusElement
 import app.aaps.plugins.sync.tidepool.elements.ProfileElement
 import app.aaps.plugins.sync.tidepool.elements.SensorGlucoseElement
 import app.aaps.plugins.sync.tidepool.elements.WizardElement
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
 import dev.zacsweers.metro.AppScope
@@ -44,14 +44,21 @@ import kotlin.time.Instant
 @Inject
 class UploadChunk(
     private val preferences: Preferences,
-    private val rxBus: RxBus,
+    private val tidepoolRepository: TidepoolRepository,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val config: Config
 ) {
+
+    companion object {
+
+        // One of the origin types of the Tidepool data model: application, device, manual, service
+        internal const val ORIGIN_TYPE_APPLICATION = "application"
+    }
 
     private val maxUploadSize = T.days(7).msecs() // don't change this
 
@@ -90,6 +97,16 @@ class UploadChunk(
         records.addAll(getBgReadings(start, end))
         records.addAll(getProfiles(start, end))
 
+        // Tidepool asks for name and type next to the id, and it recognises the sending app by
+        // origin.name, as it does for Loop and Trio. The deduplicator uses only the id.
+        records.forEach { record ->
+            record.origin?.apply {
+                name = config.APPLICATION_ID
+                version = config.VERSION_NAME
+                type = ORIGIN_TYPE_APPLICATION
+            }
+        }
+
         return GsonInstance.defaultGsonInstance().toJson(records)
     }
 
@@ -102,7 +119,7 @@ class UploadChunk(
         if (time > getLastEnd()) {
             preferences.put(TidepoolLongNonKey.LastEnd, time)
             val friendlyEnd = dateUtil.dateAndTimeString(time)
-            rxBus.send(EventTidepoolStatus(("Marking uploaded data up to $friendlyEnd")))
+            tidepoolRepository.addLog("Marking uploaded data up to $friendlyEnd")
             aapsLogger.debug(LTag.TIDEPOOL, "Updating last end to: " + dateUtil.dateAndTimeString(time))
         } else {
             aapsLogger.debug(LTag.TIDEPOOL, "Cannot set last end to: " + dateUtil.dateAndTimeString(time) + " vs " + dateUtil.dateAndTimeString(getLastEnd()))
@@ -129,7 +146,7 @@ class UploadChunk(
         val readings = persistenceLayer.getTherapyEventDataFromToTime(start, end)
         val selection = BloodGlucoseElement.fromCareportalEvents(readings, dateUtil, profileUtil)
         if (selection.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))
+            tidepoolRepository.addLog("${selection.size} BGs selected for upload")
         return selection
 
     }
@@ -138,7 +155,7 @@ class UploadChunk(
         val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(start, end, true)
         val selection = SensorGlucoseElement.fromBgReadings(readings, dateUtil)
         if (selection.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${selection.size} CGMs selected for upload"))
+            tidepoolRepository.addLog("${selection.size} CGMs selected for upload")
         return selection
     }
 
@@ -262,7 +279,7 @@ class UploadChunk(
         }
 
         if (results.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${results.size} basal records selected for upload"))
+            tidepoolRepository.addLog("${results.size} basal records selected for upload")
         return results
     }
 
@@ -281,7 +298,7 @@ class UploadChunk(
             }
         }
         if (selection.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))
+            tidepoolRepository.addLog("${selection.size} ProfileSwitches selected for upload")
         return selection
     }
 

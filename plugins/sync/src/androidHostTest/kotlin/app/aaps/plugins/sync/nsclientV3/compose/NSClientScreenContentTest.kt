@@ -5,6 +5,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import app.aaps.core.interfaces.nsclient.NSClientLog
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.plugins.sync.SyncStringIds
 import org.junit.Before
 import org.junit.Rule
@@ -33,6 +34,9 @@ class NSClientScreenContentTest {
 
     @Before
     fun setUp() {
+        // What MainApp does at startup: a TextRef.Named is resolved through this registry, so
+        // without it every label renders as its raw name.
+        TextRefIdRegistry.register("sync") { name -> SyncStringIds.idOf(name) }
         queueLabel = RuntimeEnvironment.getApplication().getString(SyncStringIds.idOf("queue")!!)
         statusLabel = RuntimeEnvironment.getApplication().getString(SyncStringIds.idOf("status_label")!!)
     }

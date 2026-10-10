@@ -180,6 +180,9 @@ kotlin {
                 // The real org.json: isReturnDefaultValues makes the platform stub answer null
                 // rather than throwing, which NPEs the shared profile fixtures.
                 implementation(libs.org.json.android)
+                // The Robolectric and Compose tests are JUnit 4 (@RunWith, createComposeRule). Without the
+                // vintage engine the JUnit Platform skips them without any error.
+                runtimeOnly(libs.org.junit.vintage.engine)
                 runtimeOnly(libs.org.junit.platform.launcher)
             }
         }

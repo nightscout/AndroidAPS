@@ -8,11 +8,9 @@ import android.util.Base64
 import androidx.core.net.toUri
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.keys.TidepoolBooleanKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import dev.zacsweers.metro.AppScope
@@ -43,7 +41,7 @@ class AuthFlowOut(
     private val preferences: Preferences,
     private val context: Context,
     private val cryptoUtil: CryptoUtil,
-    private val rxBus: RxBus
+    private val tidepoolRepository: TidepoolRepository
 ) {
 
     companion object {
@@ -111,8 +109,9 @@ class AuthFlowOut(
     fun updateConnectionStatus(newStatus: ConnectionStatus? = null, message: String? = null) {
         aapsLogger.debug(LTag.TIDEPOOL, "updateConnectionStatus: $newStatus $message")
         newStatus?.let { connectionStatus = it }
-        message?.let { rxBus.send(EventTidepoolStatus(it)) }
-        rxBus.send(EventTidepoolUpdateGUI())
+        message?.let { tidepoolRepository.addLog(it) }
+        // The derived value, so a reset to NONE shows as NOT_LOGGED_IN or NO_SESSION
+        tidepoolRepository.updateConnectionStatus(connectionStatus)
     }
 
     fun saveAuthState() {
@@ -144,7 +143,8 @@ class AuthFlowOut(
             preferences.put(TidepoolStringNonKey.AuthState, "")
             preferences.put(TidepoolStringNonKey.ServiceConfiguration, "")
         }
-        aapsLogger.debug(LTag.TIDEPOOL, "Using auth state : ${authState.jsonSerializeString()}")
+        // Never log the serialized state: it holds the access and refresh tokens, and logs get shared (#5206)
+        aapsLogger.debug(LTag.TIDEPOOL, "Using auth state: authorized=${authState.isAuthorized} needsTokenRefresh=${authState.needsTokenRefresh}")
     }
 
     @Synchronized
@@ -156,13 +156,13 @@ class AuthFlowOut(
 
     fun doTidePoolInitialLogin(@Suppress("unused") from: String) {
         //aapsLogger.debug(LTag.TIDEPOOL, "doTidePoolInitialLogin $from")
-        rxBus.send(EventTidepoolStatus(("Opening login screen")))
+        tidepoolRepository.addLog("Opening login screen")
         AuthorizationServiceConfiguration.fetchFromIssuer(
             if (preferences.get(TidepoolBooleanKey.UseTestServers)) INTEGRATION_BASE_URL.toUri()
             else PRODUCTION_BASE_URL.toUri(),
             AuthorizationServiceConfiguration.RetrieveConfigurationCallback { serviceConfiguration, exception ->
                 if (exception != null || serviceConfiguration == null) {
-                    rxBus.send(EventTidepoolStatus(("Failed to fetch configuration $exception")))
+                    tidepoolRepository.addLog("Failed to fetch configuration $exception")
                     return@RetrieveConfigurationCallback
                 }
                 preferences.put(TidepoolStringNonKey.ServiceConfiguration, serviceConfiguration.toJsonString())
@@ -196,7 +196,7 @@ class AuthFlowOut(
                     )
                 } catch (e: ActivityNotFoundException) {
                     aapsLogger.error(LTag.TIDEPOOL, "No browser available for Tidepool login", e)
-                    rxBus.send(EventTidepoolStatus("No compatible browser installed. Please install Chrome or Firefox to log in to Tidepool."))
+                    tidepoolRepository.addLog("No compatible browser installed. Please install Chrome or Firefox to log in to Tidepool.")
                 }
             })
     }
