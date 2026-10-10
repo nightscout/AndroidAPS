@@ -2,6 +2,7 @@
 <resources>
     <!-- General preferences -->
     <!-- Overview preferences -->
+    <string name="pref_summary_use_bolus_advisor">Włącz doradcę bolusa, który pomaga w obliczaniu bolusów przy podwyższonej glikemii.</string>
     <!-- Pump preferences -->
     <!-- Alert preferences -->
     <!-- BG Source preferences -->
