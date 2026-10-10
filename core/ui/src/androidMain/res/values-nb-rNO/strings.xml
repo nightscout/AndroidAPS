@@ -386,6 +386,7 @@
     <string name="scene_editor_disabled">Deaktivert</string>
     <string name="scene_summary">%1$d handlinger, %2$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Ubestemt (manuell slutt)</string>
     <string name="scene_some_actions_failed">Noen handlinger mislyktes</string>
     <string name="scene_no_active">Ingen aktiv scene</string>
