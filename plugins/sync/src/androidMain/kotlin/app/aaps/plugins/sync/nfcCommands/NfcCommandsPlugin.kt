@@ -115,7 +115,6 @@ class NfcCommandsPlugin @Inject constructor(
         .icon(IcPluginNfc)
         .composeContent { NfcCommandsComposeContent(it as NfcCommandsPlugin) }
         .pluginName(CoreUiStrings.nfccommands)
-        .shortName(SyncStrings.nfccommands_shortname)
         .description(SyncStrings.description_nfc_communicator),
     ownPreferences = emptyList(),
     aapsLogger,

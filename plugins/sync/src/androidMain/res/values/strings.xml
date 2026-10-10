@@ -279,7 +279,6 @@
 
     <!-- NFC Commands -->
 
-    <string name="nfccommands_shortname">NFC</string>
     <string name="description_nfc_communicator">Trigger AAPS commands by scanning an NFC tag.</string>
     <string name="nfccommands_write_tag">Register NFC Tag</string>
     <string name="nfccommands_tag_written">NFC Tag written successfully</string>
