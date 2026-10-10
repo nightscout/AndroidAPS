@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import com.google.common.truth.Truth.assertThat
@@ -24,8 +23,7 @@ import java.util.concurrent.TimeUnit
 class TidepoolCallbackTest {
 
     private val aapsLogger: AAPSLogger = mock()
-    private val rxBus: RxBus = mock()
-    private val tidepoolRepository = TidepoolRepository(aapsLogger, rxBus)
+    private val tidepoolRepository = TidepoolRepository(aapsLogger)
     private val call: Call<AuthReplyMessage?> = mock()
     private val session = Session(SESSION_TOKEN_HEADER, null)
 
@@ -42,7 +40,7 @@ class TidepoolCallbackTest {
     private fun CountDownLatch.awaitResult() = await(5, TimeUnit.SECONDS)
 
     /** What the Tidepool screen shows in its log. The callback logs before it calls onFail. */
-    private fun statusMessages(): List<String> = tidepoolRepository.logList.value.map { it.status }
+    private fun statusMessages(): List<String> = tidepoolRepository.logList.value.map { it.action }
 
     @Test
     fun `successful reply fills the session and reports success`() {

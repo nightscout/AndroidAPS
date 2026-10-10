@@ -4,7 +4,6 @@ import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
@@ -42,7 +41,6 @@ import org.robolectric.annotation.Config as RobolectricConfig
 class TidepoolUploaderAuthTest {
 
     private val aapsLogger: AAPSLogger = mock()
-    private val rxBus: RxBus = mock()
     private val context: Context = mock()
     private val preferences: Preferences = mock()
     private val uploadChunk: UploadChunk = mock()
@@ -63,7 +61,7 @@ class TidepoolUploaderAuthTest {
         // Fixed time, so the two calls in the rate limit test fall into the same window
         whenever(dateUtil.now()).thenReturn(1_000_000L)
         sut = TidepoolUploader(
-            aapsLogger, TidepoolRepository(aapsLogger, rxBus), context, preferences, uploadChunk, dateUtil,
+            aapsLogger, TidepoolRepository(aapsLogger), context, preferences, uploadChunk, dateUtil,
             receiverDelegate, config, l, authFlowOut, RateLimit(dateUtil)
         )
     }

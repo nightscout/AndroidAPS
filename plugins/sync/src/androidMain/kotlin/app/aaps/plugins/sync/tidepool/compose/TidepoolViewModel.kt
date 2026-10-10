@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 @Immutable
 data class TidepoolUiState(
     val connectionStatus: String = "",
-    val logList: List<TidepoolLog> = emptyList()
+    val logList: List<SyncLogEntry> = emptyList()
 )
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())

@@ -3,7 +3,7 @@ package app.aaps.plugins.sync.nsclientV3.compose
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import app.aaps.core.interfaces.nsclient.NSClientLog
+import app.aaps.core.interfaces.sync.SyncLogEntry
 
 @Preview(showBackground = true)
 @Composable
@@ -16,9 +16,9 @@ internal fun NSClientScreenPreview() {
                 queue = "0",
                 paused = false,
                 logList = listOf(
-                    NSClientLog(action = "UPLOAD", logText = "Uploading treatments"),
-                    NSClientLog(action = "READ", logText = "Reading entries"),
-                    NSClientLog(action = "SYNC", logText = "Synchronization complete"),
+                    SyncLogEntry(action = "UPLOAD", text = "Uploading treatments"),
+                    SyncLogEntry(action = "READ", text = "Reading entries"),
+                    SyncLogEntry(action = "SYNC", text = "Synchronization complete"),
                 )
             )
         )

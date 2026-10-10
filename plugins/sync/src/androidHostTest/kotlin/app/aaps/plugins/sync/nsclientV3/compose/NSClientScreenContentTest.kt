@@ -4,7 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import app.aaps.core.interfaces.nsclient.NSClientLog
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.plugins.sync.SyncStringIds
 import org.junit.Before
@@ -61,7 +61,7 @@ class NSClientScreenContentTest {
                     uiState = NSClientUiState(
                         status = "Connected",
                         queue = "7",
-                        logList = listOf(NSClientLog(action = "UPLOAD", logText = "Uploading treatments"))
+                        logList = listOf(SyncLogEntry(action = "UPLOAD", text = "Uploading treatments"))
                     )
                 )
             }

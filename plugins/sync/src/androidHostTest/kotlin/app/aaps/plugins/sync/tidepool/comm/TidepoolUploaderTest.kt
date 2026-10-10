@@ -4,7 +4,6 @@ import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
@@ -55,8 +54,7 @@ import org.robolectric.annotation.Config as RobolectricConfig
 class TidepoolUploaderTest {
 
     private val aapsLogger: AAPSLogger = mock()
-    private val rxBus: RxBus = mock()
-    private val tidepoolRepository = TidepoolRepository(aapsLogger, rxBus)
+    private val tidepoolRepository = TidepoolRepository(aapsLogger)
     private val context: Context = RuntimeEnvironment.getApplication()
     private val preferences: Preferences = mock()
     private val uploadChunk: UploadChunk = mock()
@@ -86,7 +84,7 @@ class TidepoolUploaderTest {
     }
 
     /** What the Tidepool screen shows in its log */
-    private fun statusMessages(): List<String> = tidepoolRepository.logList.value.map { it.status }
+    private fun statusMessages(): List<String> = tidepoolRepository.logList.value.map { it.action }
 
     /** Getting a token is the first step of every login, so it shows that a login was started. */
     private fun verifyLoginStarted() =

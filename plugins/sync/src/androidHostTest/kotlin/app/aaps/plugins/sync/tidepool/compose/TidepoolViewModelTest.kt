@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tidepool.compose
 
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +24,7 @@ internal class TidepoolViewModelTest {
     @Mock private lateinit var authFlowOut: AuthFlowOut
 
     private val connectionStatusFlow = MutableStateFlow(AuthFlowOut.ConnectionStatus.NONE)
-    private val logListFlow = MutableStateFlow<List<TidepoolLog>>(emptyList())
+    private val logListFlow = MutableStateFlow<List<SyncLogEntry>>(emptyList())
 
     private lateinit var sut: TidepoolViewModel
 
@@ -55,10 +56,10 @@ internal class TidepoolViewModelTest {
 
     @Test
     fun `logList flow updates uiState`() {
-        val logs = listOf(TidepoolLog("uploading..."))
+        val logs = listOf(SyncLogEntry("uploading..."))
         logListFlow.value = logs
         assertThat(sut.uiState.value.logList).hasSize(1)
-        assertThat(sut.uiState.value.logList[0].status).isEqualTo("uploading...")
+        assertThat(sut.uiState.value.logList[0].action).isEqualTo("uploading...")
     }
 
     @Test
@@ -71,7 +72,7 @@ internal class TidepoolViewModelTest {
     @Test
     fun `status and log are tracked independently in uiState`() {
         connectionStatusFlow.value = AuthFlowOut.ConnectionStatus.FETCHING_TOKEN
-        logListFlow.value = listOf(TidepoolLog("a"), TidepoolLog("b"))
+        logListFlow.value = listOf(SyncLogEntry("a"), SyncLogEntry("b"))
 
         assertThat(sut.uiState.value.connectionStatus).isEqualTo("FETCHING_TOKEN")
         assertThat(sut.uiState.value.logList).hasSize(2)

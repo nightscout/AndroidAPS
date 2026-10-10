@@ -3,7 +3,6 @@ package app.aaps.plugins.sync.tidepool.auth
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
@@ -38,9 +37,8 @@ class AuthFlowOutTest {
     private val aapsLogger: AAPSLogger = mock()
     private val preferences: Preferences = mock()
     private val cryptoUtil: CryptoUtil = mock()
-    private val rxBus: RxBus = mock()
     private val context: Context = RuntimeEnvironment.getApplication()
-    private val tidepoolRepository = TidepoolRepository(aapsLogger, rxBus)
+    private val tidepoolRepository = TidepoolRepository(aapsLogger)
 
     private lateinit var sut: AuthFlowOut
 
@@ -53,7 +51,7 @@ class AuthFlowOutTest {
     }
 
     /** What the Tidepool screen shows in its log */
-    private fun logLines(): List<String> = tidepoolRepository.logList.value.map { it.status }
+    private fun logLines(): List<String> = tidepoolRepository.logList.value.map { it.action }
 
     @Test
     fun `fresh state without a token reports NOT_LOGGED_IN`() {

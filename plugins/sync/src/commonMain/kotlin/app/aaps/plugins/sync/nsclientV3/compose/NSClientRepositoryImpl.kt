@@ -2,10 +2,11 @@ package app.aaps.plugins.sync.nsclientV3.compose
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.nsclient.NSClientLog
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
+import app.aaps.core.interfaces.sync.SyncLogEntry
+import app.aaps.plugins.sync.log.SyncLogBuffer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -13,7 +14,6 @@ import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.JsonElement
 
 /**
@@ -30,13 +30,10 @@ import kotlinx.serialization.json.JsonElement
 @Inject
 class NSClientRepositoryImpl(
     private val rxBus: RxBus,
-    private val aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger
 ) : NSClientRepository {
 
-    companion object {
-
-        private const val MAX_LOG_ENTRIES = 100
-    }
+    private val log = SyncLogBuffer(aapsLogger, LTag.NSCLIENT)
 
     private val _queueSize = MutableStateFlow(-1L)
     override val queueSize: StateFlow<Long> = _queueSize.asStateFlow()
@@ -47,8 +44,7 @@ class NSClientRepositoryImpl(
     private val _urlUpdate = MutableStateFlow("")
     override val urlUpdate: StateFlow<String> = _urlUpdate.asStateFlow()
 
-    private val _logList = MutableStateFlow<List<NSClientLog>>(emptyList())
-    override val logList: StateFlow<List<NSClientLog>> = _logList.asStateFlow()
+    override val logList: StateFlow<List<SyncLogEntry>> = log.entries
 
     override fun updateQueueSize(size: Long) {
         _queueSize.value = size
@@ -63,15 +59,7 @@ class NSClientRepositoryImpl(
         _urlUpdate.value = url
     }
 
-    override fun addLog(action: String, logText: String?, json: JsonElement?) {
-        _logList.update { currentList ->
-            aapsLogger.debug(LTag.NSCLIENT, "$action $logText")
-            val newLog = NSClientLog(action = action, logText = logText, json = json)
-            listOf(newLog) + currentList.take(MAX_LOG_ENTRIES - 1)
-        }
-    }
+    override fun addLog(action: String, logText: String?, json: JsonElement?) = log.add(action, logText, json)
 
-    override fun clearLog() {
-        _logList.value = emptyList()
-    }
+    override fun clearLog() = log.clear()
 }

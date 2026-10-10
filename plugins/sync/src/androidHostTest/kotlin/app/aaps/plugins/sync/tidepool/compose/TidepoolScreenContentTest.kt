@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,7 +38,7 @@ class TidepoolScreenContentTest {
         setContent(
             TidepoolUiState(
                 connectionStatus = "SESSION_ESTABLISHED",
-                logList = listOf(TidepoolLog("Upload successful"), TidepoolLog("Starting upload"))
+                logList = listOf(SyncLogEntry("Upload successful"), SyncLogEntry("Starting upload"))
             )
         )
         compose.onNodeWithText("SESSION_ESTABLISHED").assertIsDisplayed()

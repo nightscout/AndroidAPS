@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.aaps.core.interfaces.nsclient.NSClientLog
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.keys.interfaces.Preferences
@@ -27,7 +27,7 @@ data class NSClientUiState(
     val status: String = "",
     val queue: String = "",
     val paused: Boolean = false,
-    val logList: List<NSClientLog> = emptyList()
+    val logList: List<SyncLogEntry> = emptyList()
 )
 
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())

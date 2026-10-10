@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
@@ -43,7 +43,6 @@ import java.util.TimeZone
 class UploadChunkBasalTest {
 
     @Mock lateinit var preferences: Preferences
-    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var profileUtil: ProfileUtil
@@ -69,7 +68,11 @@ class UploadChunkBasalTest {
         whenever(dateUtil.toISONoZone(any())).thenAnswer { it.getArgument<Long>(0).toString() }
         whenever(dateUtil.getTimeZoneOffsetMinutes(any())).thenReturn(0)
         defaultProfile = profileWith(0 to 0.5)
-        sut = UploadChunk(preferences, TidepoolRepository(aapsLogger, rxBus), aapsLogger, profileFunction, profileUtil, activePlugin, persistenceLayer, dateUtil, mock())
+        // Every record's deviceId is built from the pump serial
+        val pump: PumpWithConcentration = mock()
+        whenever(pump.serialNumber()).thenReturn("SN-1")
+        whenever(activePlugin.activePump).thenReturn(pump)
+        sut = UploadChunk(preferences, TidepoolRepository(aapsLogger), aapsLogger, profileFunction, profileUtil, activePlugin, persistenceLayer, dateUtil, mock())
     }
 
     @AfterEach
