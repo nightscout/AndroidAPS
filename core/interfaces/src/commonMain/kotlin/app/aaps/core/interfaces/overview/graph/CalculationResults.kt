@@ -148,8 +148,7 @@ data class CobGraphData(
  */
 data class ActivityGraphData(
     val activity: List<GraphDataPoint>,
-    val activityPrediction: List<GraphDataPoint>,
-    val maxActivity: Double = 0.0
+    val activityPrediction: List<GraphDataPoint>
 )
 
 /**
