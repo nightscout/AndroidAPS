@@ -24,6 +24,7 @@
     <string name="maxiobset">Maksimal IOB satt riktig (Ikke nødvendig i enkelmodus)</string>
     <string name="objectives_autosens_objective">Juster om nødvendig basal og forholdstall, og deretter aktiverer du Autosens</string>
     <string name="objectives_autosens_gate">1 uke med vellykket looping på dagtid med jevn registrering av karbohydrater. I enkelmodus er Autosens aktivert som standard.</string>
+    <string name="objectives_autosens_learned">Hvis Autosens-resultatet ikke svinger rundt 100 %, er profilen din sannsynligvis feil.</string>
     <string name="objectives_smb_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som SMB (Super Micro Bolus)</string>
     <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er å sette maxIOB til gjennomsnittlig måltidsbolus + 3x max daglig basaldose</string>
     <string name="objectives_smb_learned">Bruk av SMB er en målsetting. Oref1 algoritmen ble designet for å hjelpe deg med dine bolusdoseringer. Det anbefales å ikke gi full bolusdose for måltider, men bare en del av den, og la AAPS styre resten om nødvendig. På denne måten får du større fleksibilitet med hensyn på feilberegnede KH. Visste du at du kan angi en prosentandel for boluskalkulatoren som resulterer i redusert bolusstørrelse?</string>
@@ -36,6 +37,7 @@
     <string name="accomplished">Utført: %1$s</string>
     <string name="objectives_usage_objective">Lær hvordan du kontrollerer AAPS</string>
     <string name="objectives_usage_gate">Utfør forskjellige handlinger i AAPS</string>
+    <string name="objectives_usage_learned">Du har lært det grunnleggende om AAPS. De fleste kontrollene finnes på oversiktsskjermen. Flere handlinger finner du i menyene Behandlinger og Administrer nederst på skjermen, samt i sidemenyen.</string>
     <string name="objectives_useprofileswitch">Angi profil 90% for 10 min</string>
     <string name="objectives_usedisconnectpump">Simuler dusj. Koble fra pumpen i 1 time.</string>
     <string name="objectives_usereconnectpump">... og koble til igjen på samme måte</string>
@@ -43,6 +45,8 @@
     <string name="objectives_useloop">Vis innholdet i Loop plugin</string>
     <string name="objectives_usescale">Bruk scroll eller zoom på BS-diagrammet</string>
     <string name="objectives_exam_objective">Bevis kunnskapen din</string>
+    <string name="objectives_exam_gate">Gå gjennom spørsmålene. Hvert spørsmål har flere mulige svar, og mer enn ett svar kan være riktig. Merk av alle riktige svar, og velg BEKREFT.</string>
+    <string name="objectives_exam_learned_prerequisites">Du trenger ikke å være utvikler. For å fullføre målene trenger du Nightscout eller Tidepool, en kompatibel pumpe og en måte å bygge AAPS på (i en nettleser eller med Android Studio), både ved førstegangsinstallasjon og ved hver oppdatering.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS kan kjøres uten nett tilkobling.</string>
     <string name="objectives_exam_learned_basaltest">Profilen bør gjennomgås og oppdateres med jevne mellomrom. Bedre profil = bedre resultater.</string>
     <string name="objectives_exam_learned_dia">Insulinvarighet (DIA) i looping har en annen betydning (tid før alt insulin er absorbert) enn ved klassisk pumpebehandling (tid før det meste av insulinet er absorbert).</string>
@@ -56,12 +60,17 @@
     <string name="objectives_exam_learned_exercise2">Ved å sette høyere midlertidig mål minst 1 time før trening så vil det bidra til å redusere mengden med insulin i kroppen.</string>
     <string name="objectives_exam_learned_noisycgm">Hvis du ikke stoler på sensor-verdier bør du ikke bruke loop uten tilsyn.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS må vite at pumpen ikke er tilkoblet for å beregne IOB riktig.</string>
+    <string name="objectives_exam_learned_insulin">AAPS må vite hvilket insulin som er i pumpen, fordi dette påvirker beregningen av IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Sensitivitetsdeteksjon er en del av algoritmen som gir mulighet for å tilpasse insulindoseringen til ulike situasjoner.</string>
     <string name="objectives_exam_learned_objectives">Fremdriften din i Læringsmålene lagres sammen med andre innstillinger og det anbefales at den  sikkerhetskopieres regelmessig (når hvert mål bestås).</string>
     <string name="objectives_exam_learned_objectives2">Lagre sikkerhetskopi av dine eksporterte innstillinger og av APK-filen utenfor telefonen. Telefon kan mistes, skades osv. Et godt sted sted kan være i skyen som er tilgjengelig fra telefonen. I dette tilfellet kan du i løpet av noen få minutter gjenopprette AAPS på ny mobil. Det er god praksis og også lagre hovedpassordet på et trygt sted. Uten passordet er din sikkerhetskopiering ubrukelig. Det samme gjelder for dine signeringsnøkler lagret i din keystore (.ks fil) og passordene som ble brukt til å bygge AAPS. Resten er ikke viktig - det kan når som helst lastes ned fra Internett igjen.</string>
     <string name="objectives_exam_learned_wrongcarbs">Dersom du ga feil inndata til AAPS eller det ikke samsvarer med virkeligheten, finn en løsning umiddelbart. Dette kan føre til overdosering og hypo. AAPS bør alltid informeres best mulig om tilførte karbohydrater, insulin osv.</string>
+    <string name="objectives_exam_learned_iob">Hvis du vil vurdere hvor godt AAPS fungerer for deg, kan IOB-grafen gi deg mye nyttig informasjon.</string>
+    <string name="objectives_exam_learned_cob">COB-beregningen avhenger av forholdet mellom ISF og IK. Hvis du øker ISF eller reduserer IK, blir opptakstiden lengre. Et profilbytte med prosentvis endring justerer imidlertid begge verdiene samtidig, slik at opptakstiden ikke påvirkes.</string>
     <string name="objectives_exam_learned_breadgrams">Kun gram er tillatt for angivelse av karbohydrater.</string>
     <string name="objectives_exam_learned_ecarbs">E-karbohydrater er en erstatning for forlenget bolus i en pumpeverden.</string>
+    <string name="objectives_exam_learned_nsclient">Du kan følge med på AAPS eksternt med AAPSClient eller Nightscout. Når AAPSClient er paret med mastertelefonen, kan du også styre AAPS eksternt.</string>
+    <string name="objectives_exam_learned_concentration1">Bruk av U200-insulin med en profil på 50 % krever permanent konvertering ved eksterne boluser med insulinpenn. Alle standardrapporter fra AAPS eller Nightscout vil også bli feil og må konverteres til IE for helsepersonell.</string>
     <string name="objectives_exam_learned_concentration2">Ved å bytte fra U200 med en 50 %-profil til U200 med insulinkonsentrasjon-funksjonen må man lage en ny sterkere profil, deaktivere DynISF en uke og omstille seg for å tenke i Internasjonale Enheter.</string>
     <string name="objectives_exam_learned_concentration3">Insulinkonsentrasjon kan kun endres når insulin eller plaster/Pod skiftes. Men viktigst, spesielt for slange-pumper, må man aldri bruker pumpens brukergrensesnitt til å levere bolus direkte fra pumpen.</string>
     <string name="answerdisabledto">Besvarelser deaktivert til: %1$s</string>
@@ -74,6 +83,7 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Ikke koblet til Internett</string>
+    <string name="failedretrievetime">Kunne ikke hente klokkeslettet</string>
     <string name="requirementnotmet">Læringmålets krav er ikke oppfylt</string>
     <string name="what_i_ve_learned">Jeg har lært:</string>
     <string name="verify_master_password">Verifiser at du kjenner hovedpassordet</string>
@@ -83,6 +93,10 @@
     <string name="objectives_open_exam">Åpen eksamen</string>
     <string name="objectives_exam_question_progress">Spørsmål %1$d av %2$d</string>
     <string name="objectives_exam_reset">Tilbakestill</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Utført</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Pågår</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Ikke startet</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Låst</string>
     <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">riktig svar</string>
     <string name="objectives_exam_previous">Forrige</string>
     <string name="objectives_exam_next">Neste</string>
