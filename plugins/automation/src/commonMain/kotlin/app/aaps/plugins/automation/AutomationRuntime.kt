@@ -724,6 +724,8 @@ class AutomationRuntime(
             actionFactory.actionSendSMS(),
             actionFactory.actionSMBChange(),
             actionFactory.actionSmoothingChange(),
+            actionFactory.actionSMBMaxMinutesChange(),
+            actionFactory.actionUAMSMBMaxMinutesChange(),
             actionFactory.actionRunScene(),
             actionFactory.actionEnableScene(),
             actionFactory.actionDisableScene()
