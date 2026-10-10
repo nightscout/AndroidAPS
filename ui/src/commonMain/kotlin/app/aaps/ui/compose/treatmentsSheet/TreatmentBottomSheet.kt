@@ -1,0 +1,361 @@
+package app.aaps.ui.compose.treatmentsSheet
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import app.aaps.core.interfaces.navigation.ElementType
+import app.aaps.core.keys.interfaces.ElementVisibility
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.MasterOfflineBanner
+import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.consumeOverscroll
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.masterEditingEnabled
+import app.aaps.core.ui.compose.navigation.NavigationRequest
+import app.aaps.core.ui.compose.navigation.color
+import app.aaps.core.ui.compose.navigation.description
+import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.core.ui.compose.navigation.label
+import app.aaps.core.ui.compose.preference.PreferenceSheetContent
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.stringResource
+import app.aaps.core.ui.compose.stringResourceOrNull
+import app.aaps.ui.compose.main.QuickWizardItem
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TreatmentBottomSheet(
+    onDismiss: () -> Unit,
+    // Visibility flags
+    showCgm: Boolean,
+    showCalibration: Boolean,
+    showTreatment: Boolean,
+    showInsulin: Boolean,
+    showCarbs: Boolean,
+    showCalculator: Boolean,
+    isDexcomSource: Boolean,
+    showSettingsIcon: Boolean,
+    // QuickWizard
+    quickWizardItems: List<QuickWizardItem>,
+    // Callbacks
+    onNavigate: (NavigationRequest) -> Unit,
+    // For settings screen
+    treatmentButtonsDef: PreferenceSubScreenDef? = null,
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showSettings by remember { mutableStateOf(false) }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surface
+    ) {
+        if (showSettings && treatmentButtonsDef != null) {
+            TreatmentSettingsContent(
+                settingsDef = treatmentButtonsDef,
+                onBack = { showSettings = false }
+            )
+        } else {
+            TreatmentSelectionContent(
+                onDismiss = onDismiss,
+                onNavigate = onNavigate,
+                quickWizardItems = quickWizardItems,
+                showCgm = showCgm,
+                showCalibration = showCalibration,
+                showTreatment = showTreatment,
+                showInsulin = showInsulin,
+                showCarbs = showCarbs,
+                showCalculator = showCalculator,
+                isDexcomSource = isDexcomSource,
+                showSettingsIcon = showSettingsIcon,
+                onSettingsClick = { showSettings = true }
+            )
+        }
+    }
+}
+
+/**
+ * @see TreatmentBottomSheetPreview
+ */
+@Composable
+internal fun TreatmentSelectionContent(
+    onDismiss: () -> Unit,
+    onNavigate: (NavigationRequest) -> Unit,
+    quickWizardItems: List<QuickWizardItem>,
+    showCgm: Boolean,
+    showCalibration: Boolean,
+    showTreatment: Boolean,
+    showInsulin: Boolean,
+    showCarbs: Boolean,
+    showCalculator: Boolean,
+    isDexcomSource: Boolean,
+    showSettingsIcon: Boolean,
+    onSettingsClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .consumeOverscroll()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 24.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(CoreUiStrings.treatments),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.weight(1f)
+            )
+            if (showSettingsIcon) {
+                IconButton(
+                    onClick = onSettingsClick,
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(CoreUiStrings.settings),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+
+        // True on a master / reachable client; false when the client's master is unreachable or has control disabled.
+        // Drives the banner + disables the relayed treatment buttons (Insulin/Carbs/Wizard/Treatment/QuickWizard);
+        // local CGM / Calibration stay enabled.
+        val editingEnabled = masterEditingEnabled()
+        // Explains offline vs. control-disabled; renders nothing when editing is enabled.
+        MasterOfflineBanner(editingEnabled = editingEnabled)
+
+        val disabledAlpha = 0.38f
+
+        // QuickWizard entries
+        quickWizardItems.forEach { item ->
+            val itemEnabled = item.isEnabled && editingEnabled
+            val itemIcon = when (item.mode) {
+                1    -> IcBolus    // INSULIN
+                2    -> IcCarbs    // CARBS
+                else -> ElementType.QUICK_WIZARD.icon() // WIZARD
+            }
+            val itemColor = when (item.mode) {
+                1    -> ElementType.INSULIN.color()
+                2    -> ElementType.CARBS.color()
+                else -> ElementType.QUICK_WIZARD.color()
+            }
+            val supportingText = if (itemEnabled) item.detail
+            else item.disabledReason?.let { reason ->
+                if (item.detail != null) "${item.detail} — $reason" else reason
+            } ?: item.detail
+            ListItem(
+                headlineContent = {
+                    Text(
+                        text = item.buttonText,
+                        color = if (itemEnabled) itemColor
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha)
+                    )
+                },
+                supportingContent = supportingText?.let {
+                    {
+                        Text(
+                            text = it,
+                            color = if (itemEnabled) MaterialTheme.colorScheme.onSurfaceVariant
+                            else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = disabledAlpha)
+                        )
+                    }
+                },
+                leadingContent = {
+                    TonalIcon(
+                        icon = itemIcon,
+                        color = if (itemEnabled) itemColor
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
+                        enabled = itemEnabled
+                    )
+                },
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
+                modifier = if (itemEnabled) Modifier.clickable {
+                    onDismiss()
+                    onNavigate(NavigationRequest.QuickWizard(item.guid))
+                } else Modifier
+            )
+        }
+
+        // Divider between QuickWizard and other buttons
+        if (quickWizardItems.isNotEmpty()) {
+            HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+        }
+
+        // CGM
+        if (showCgm) {
+            val cgmType = if (isDexcomSource) ElementType.CGM_DEX else ElementType.CGM_XDRIP
+            TreatmentItem(
+                elementType = cgmType,
+                enabled = true,
+                disabledAlpha = disabledAlpha,
+                onDismiss = onDismiss,
+                onClick = { onNavigate(NavigationRequest.Element(cgmType)) }
+            )
+        }
+
+        // Calibration
+        if (showCalibration) {
+            TreatmentItem(
+                elementType = ElementType.CALIBRATION,
+                enabled = true,
+                disabledAlpha = disabledAlpha,
+                onDismiss = onDismiss,
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.CALIBRATION)) }
+            )
+        }
+
+        // Treatment
+        if (showTreatment) {
+            TreatmentItem(
+                elementType = ElementType.TREATMENT,
+                enabled = true,
+                disabledAlpha = disabledAlpha,
+                onDismiss = onDismiss,
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.TREATMENT)) }
+            )
+        }
+
+        // Insulin
+        if (showInsulin) {
+            TreatmentItem(
+                elementType = ElementType.INSULIN,
+                enabled = true,
+                disabledAlpha = disabledAlpha,
+                onDismiss = onDismiss,
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.INSULIN)) }
+            )
+        }
+
+        // Carbs
+        if (showCarbs) {
+            TreatmentItem(
+                elementType = ElementType.CARBS,
+                enabled = true,
+                disabledAlpha = disabledAlpha,
+                onDismiss = onDismiss,
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.CARBS)) }
+            )
+        }
+
+        // Calculator
+        if (showCalculator) {
+            TreatmentItem(
+                elementType = ElementType.BOLUS_WIZARD,
+                enabled = true,
+                disabledAlpha = disabledAlpha,
+                onDismiss = onDismiss,
+                onClick = { onNavigate(NavigationRequest.Element(ElementType.BOLUS_WIZARD)) }
+            )
+        }
+    }
+}
+
+@Composable
+internal fun TreatmentSettingsContent(
+    settingsDef: PreferenceSubScreenDef,
+    onBack: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .consumeOverscroll()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 24.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 24.dp, top = 12.dp, bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(CoreUiStrings.back)
+                )
+            }
+        }
+        PreferenceSheetContent(settingsDef = settingsDef)
+    }
+}
+
+@Composable
+private fun TreatmentItem(
+    elementType: ElementType,
+    enabled: Boolean,
+    disabledAlpha: Float,
+    onDismiss: () -> Unit,
+    onClick: () -> Unit
+) {
+    val color = elementType.color()
+    val desc = elementType.description()
+    // A relayed action (visible only to master/paired-client) is also DISABLED when the master is unreachable or
+    // has remote control off. Local items (CGM, Calibration) use the default ALWAYS visibility → stay enabled.
+    val effectiveEnabled = enabled &&
+        (masterEditingEnabled() || elementType.visibility != ElementVisibility.MASTER_OR_PAIRED_CLIENT)
+    ListItem(
+        headlineContent = {
+            Text(
+                text = (stringResourceOrNull(elementType.label()) ?: ""),
+                color = if (effectiveEnabled) color
+                else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha)
+            )
+        },
+        supportingContent = if (desc != null) {
+            {
+                Text(
+                    text = stringResource(desc),
+                    color = if (effectiveEnabled) MaterialTheme.colorScheme.onSurfaceVariant
+                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = disabledAlpha)
+                )
+            }
+        } else null,
+        leadingContent = {
+            TonalIcon(
+                icon = elementType.icon(),
+                color = if (effectiveEnabled) color
+                else MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
+                enabled = effectiveEnabled
+            )
+        },
+        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
+        modifier = if (effectiveEnabled) Modifier.clickable {
+            onDismiss()
+            onClick()
+        } else Modifier
+    )
+}

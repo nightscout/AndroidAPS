@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="alert_r7_description"><![CDATA[Cantitate: <b>%1$d%%</b>\nDurata: <b>%2$s h</b>]]></string>
-    <string name="alert_w31_description"><![CDATA[Conţinut rezervor: <b>%1$s U</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Conținut rezervor: <b>%1$s U</b>]]></string>
     <string name="alert_w32_description">Schimbați bateria.</string>
     <string name="alert_w33_description">Setați ora/data.</string>
     <string name="alert_w34_description">Contactați departamentul de suport Accu-Chek.</string>
@@ -14,10 +14,10 @@
     <string name="alert_m24_description">Schimbați setul de infuzie.</string>
     <string name="alert_m25_description">Contactați departamentul de suport Accu-Chek.</string>
     <string name="alert_m26_description">Schimbați cartușul.</string>
-    <string name="alert_m27_description">Reporniţi descărcarea datelor.</string>
-    <string name="alert_m28_description">Verificaţi starea pompei.</string>
-    <string name="alert_m29_description">Setaţi tipul de baterie.</string>
-    <string name="alert_m30_description">Setaţi tipul de rezervor.</string>
+    <string name="alert_m27_description">Reporniți descărcarea datelor.</string>
+    <string name="alert_m28_description">Verificați starea pompei.</string>
+    <string name="alert_m29_description">Setați tipul de baterie.</string>
+    <string name="alert_m30_description">Setați tipul de rezervor.</string>
     <string name="alert_e6_description">Schimbați bateria și rezervorul.</string>
     <string name="alert_e10_description">Schimbați rezervorul.</string>
     <string name="alert_e13_description">Schimbați limba.</string>

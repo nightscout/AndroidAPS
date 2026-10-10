@@ -5,6 +5,7 @@ import app.aaps.pump.insight.app_layer.Service
 import app.aaps.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage
 import app.aaps.pump.insight.app_layer.parameter_blocks.ParameterBlock
 import app.aaps.pump.insight.connection_service.InsightConnectionService
+import app.aaps.pump.insight.utils.ParameterBlockUtil.writeConfigurationBlock
 
 @SuppressWarnings("unchecked")
 object ParameterBlockUtil {
@@ -23,5 +24,20 @@ object ParameterBlockUtil {
         val writeMessage = WriteConfigurationBlockMessage()
         writeMessage.setParameterBlock(parameterBlock)
         connectionService.requestMessage(writeMessage).await()
+    }
+
+    /**
+     * Writes several blocks inside ONE write session, in the order given.
+     *
+     * Use this whenever the blocks belong together. Calling [writeConfigurationBlock] once per
+     * block opens and closes a session each time, so the pump commits them one by one and a lost
+     * connection can leave only some of them applied.
+     */
+    @Throws(Exception::class)
+    fun writeConfigurationBlocks(connectionService: InsightConnectionService, vararg parameterBlocks: ParameterBlock) {
+        val messages = parameterBlocks.map { parameterBlock ->
+            WriteConfigurationBlockMessage().apply { setParameterBlock(parameterBlock) }
+        }
+        connectionService.requestConfigurationWrites(messages).await()
     }
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Minimal placeholder layout referenced by widget_info.xml as initialLayout
+    and initialKeyguardLayout. Displayed briefly while Glance composes the
+    real widget content on first placement and on the lock screen. Intentionally
+    kept bare-bones: a black background so the transition to the Glance layout
+    is visually seamless.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black" />

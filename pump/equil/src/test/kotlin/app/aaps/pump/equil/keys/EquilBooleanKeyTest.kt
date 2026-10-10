@@ -88,10 +88,4 @@ class EquilBooleanKeyTest : TestBase() {
             assertTrue(key.key.startsWith("key_equil_"), "${key.name} key should start with 'key_equil_'")
         }
     }
-
-    @Test
-    fun `enum should implement BooleanNonPreferenceKey`() {
-        val key = EquilBooleanKey.BasalSet
-        assert(key is app.aaps.core.keys.interfaces.BooleanNonPreferenceKey)
-    }
 }

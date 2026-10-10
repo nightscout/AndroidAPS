@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Comando será executado agora</string>
+    <string name="basal_value_below_minimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Carboidratos</string>
+    <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Última conexão: %1$d min atrás</string>
+    <string name="short_status_last_bolus">Último bolus: %1$sU às %2$s</string>
+    <string name="short_status_battery">Bateria: %1$d%%</string>
+    <string name="short_status_not_initialized">Bomba não inicializada</string>
+    <!--    Permissions-->
+    <string name="permission_battery_title">Otimização da bateria</string>
+    <string name="permission_battery_description">O aplicativo precisa ser excluído da otimização da bateria para funcionar de forma confiável em segundo plano</string>
+    <string name="permission_directory_title">Diretório do AAPS</string>
+    <string name="permission_directory_description">Selecione um diretório para as configurações do aplicativo e os arquivos de log</string>
+    <string name="permission_notifications_title">Notificações</string>
+    <string name="permission_notifications_description">Necessário para mostrar alertas, alarmes e atualizações do status da bomba</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmes e lembretes</string>
+    <string name="permission_schedule_exact_alarm_description">Necessário para que os alarmes possam ativar a tela enquanto o AAPS estiver em segundo plano e para que os lembretes toquem no horário</string>
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Configurações exportadas com sucesso para o armazenamento na nuvem</string>
+    <string name="export_to_cloud_failed">Falha ao exportar para o armazenamento na nuvem</string>
+    <string name="csv_uploaded_to_cloud">CSV de entradas do usuário enviado com sucesso para o armazenamento na nuvem</string>
+    <string name="exported">Preferências exportadas</string>
+    <string name="exported_failed">Falha ao exportar preferências!</string>
+    <string name="filenotfound">Arquivo não encontrado</string>
+    <string name="ue_exported">Entradas do usuário exportadas</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado há %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">exportado em %1$s</string>
+    <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
+    <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas configurações podem estar ausentes ou inválidas - após a importação, por favor verifique e atualize suas preferências.</string>
+    <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
+    <string name="metadata_warning_old_export">As preferências importadas já têm %1$s dias de idade! Talvez você tenha preferências mais atualizadas ou escolha o arquivo errado? Lembre-se de exportar preferências regularmente!</string>
+    <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
+    <string name="metadata_warning_different_version">Preferências de diferentes versões secundárias da aplicação. Está OK se você está importando após a atualização, mas verifique após a importação se as preferências ainda estão corretas!</string>
+    <string name="metadata_urgent_different_version">Preferências de diferentes versões principais do aplicativo. Versões principais diferem significativamente e podem ter preferências incompatíveis! Certifique-se que depois de importar as preferências ainda estão corretas!</string>
+    <string name="prefdecrypt_settings_tampered">Arquivo de configurações adulterado</string>
+    <string name="prefdecrypt_settings_secure">Arquivo de configurações é seguro</string>
+    <string name="prefdecrypt_settings_unencrypted">A usar um formato de configurações não seguro e não encriptado</string>
+    <string name="prefdecrypt_wrong_json">Erro de formato JSON, campo necessário ausente (formato, conteúdo, metadados ou segurança)</string>
+    <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a senha inserida não pode desencriptar o arquivo</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Arquivo de verificação (hash) em falta, não é possível verificar a autenticidade de configurações!</string>
+    <string name="prefdecrypt_issue_modified">Arquivo foi modificado após exportação!</string>
+    <string name="prefdecrypt_issue_parsing">Erro desencriptação, a análise de preferências falhou!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Erro de desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o arquivo importado foi exportado com uma senha mestre diferente.</string>
+    <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de configurações é inválido!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
+    <string name="metadata_label_format">Formato do arquivo</string>
+    <string name="metadata_label_created_at">Criado em</string>
+    <string name="metadata_label_aaps_version">Versão AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
+    <string name="metadata_label_device_name">Exportando nome do paciente do dispositivo</string>
+    <string name="metadata_label_device_model">Exportando modelo do dispositivo</string>
+    <string name="metadata_label_encryption">Criptografia do arquivo</string>
+    <string name="metadata_format_new">Novo formato de encriptação</string>
+    <string name="metadata_format_other">Formato de exportação desconhecido</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Erro ao acessar o sistema de arquivos. Selecione corretamente o diretório do AAPS.</string>
+    <string name="backup_to_google_drive">Fazer backup no Google Drive</string>
+    <string name="csv_upload_failed">Falha ao enviar o CSV de entradas do usuário para o armazenamento na nuvem</string>
+    <string name="csv_upload_error">Ocorreu um erro ao enviar o CSV para a nuvem</string>
+    <string name="uploading_to_cloud">Enviando para a nuvem...</string>
+    <string name="cloud_directory_path">Diretório da nuvem: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Não foi possível atualizar o token de acesso do Google Drive</string>
+    <string name="google_drive_token_refresh_error">Erro ao atualizar o acesso ao Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">Falha no teste de conexão com o Google Drive</string>
+    <string name="google_drive_connect_error">Não foi possível conectar ao Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Falha ao listar pastas do Google Drive</string>
+    <string name="google_drive_list_folders_error">Erro ao listar pastas: %1$s</string>
+    <string name="google_drive_upload_no_id">Upload concluído, mas nenhum ID foi retornado</string>
+    <string name="google_drive_upload_verify_failed">Falha na verificação do upload</string>
+    <string name="google_drive_upload_failed">Falha no upload: %1$s</string>
+    <string name="google_drive_upload_error">Erro ao enviar arquivo: %1$s</string>
+    <string name="google_drive_folder_access_error">Não foi possível criar ou acessar a pasta de destino: %1$s</string>
+    <string name="google_drive_list_settings_failed">Falha ao listar arquivos de configurações</string>
+    <string name="google_drive_list_settings_error">Erro ao listar arquivos de configurações: %1$s</string>
+    <string name="google_drive_download_failed">Falha ao baixar arquivo</string>
+    <string name="google_drive_download_error">Erro ao baixar arquivo: %1$s</string>
+    <string name="google_drive_authorized">Google Drive autorizado</string>
+    <string name="google_drive_reauth_required">Limpe as configurações e autorize o Google Drive novamente</string>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme palette -->
+    <color name="colorPrimary">#3378C5</color>
+    <color name="colorPrimaryDark">#676767</color>
+    <color name="colorAccent">#40bbaa</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryTextColorDefault">#ffffff</color>
+
+    <!-- Drawable ic_widget_tt_manual.xml -->
+    <color name="inRange">#00FF00</color>
+    <color name="tempTargetConfirmation">#6BD16B</color>
+
+    <!-- Material 3 base palette (light) -->
+    <color name="aaps_theme_light_primary">#006493</color>
+    <color name="aaps_theme_light_onPrimary">#FFFFFF</color>
+    <color name="aaps_theme_light_secondary">#006A5F</color>
+    <color name="aaps_theme_light_onSecondary">#FFFFFF</color>
+    <color name="aaps_theme_light_error">#B3261E</color>
+    <color name="aaps_theme_light_onError">#FFFFFF</color>
+    <color name="aaps_theme_light_background">#FFFBFC</color>
+    <color name="aaps_theme_light_onBackground">#1D1B1E</color>
+    <color name="aaps_theme_light_surface">#FFFBFC</color>
+    <color name="aaps_theme_light_onSurface">#1D1B1E</color>
+    <color name="aaps_theme_dark_secondary">#17DECA</color>
+    <color name="aaps_theme_dark_surface">#0F0F0F</color>
+
+    <!-- Widget runtime has no dark mode; these are always read from the default colors.xml. -->
+    <color name="widget_inrange">#00FF00</color>
+    <color name="widget_low">#FF0000</color>
+    <color name="widget_high">#FFFF00</color>
+
+</resources>

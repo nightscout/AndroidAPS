@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">Komut şu anda çalıştırıldı</string>
+    <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
+    <!--       Stats -->
+    <string name="carbs_short" comment="max 6 characters">Karbonhidrat</string>
+    <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">Son bağl: %1$d dak. önce</string>
+    <string name="short_status_last_bolus">SonBolus: %1$sÜ @ %2$s</string>
+    <string name="short_status_temp_basal">Geçici: %1$s</string>
+    <string name="short_status_battery">Pil: %1$d%%</string>
+    <string name="short_status_not_initialized">Pompa başlatılamadı</string>
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported">Tercihler dışa aktarıldı</string>
+    <string name="exported_failed">Tercihler dışa aktarılamadı!</string>
+    <string name="filenotfound">Dosya bulunamadı</string>
+    <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
+    <string name="exported_at" comment="at placeholder we add export date">%1$s\'de dışa aktarıldı</string>
+    <string name="exported_less_than_hour_ago">bir süre önce dışa aktarıldı</string>
+    <string name="metadata_warning_different_flavour">Sizde: %2$s varken, farklı AAPS (%1$s) türeviyle tercihler oluşturuldu.\n\nBazı ayarlar eksik veya geçersiz olabilir - içe aktardıktan sonra lütfen tercihlerinizi kontrol edin ve güncelleyin.</string>
+    <string name="metadata_warning_different_device">Tercihler farklı bir cihazda oluşturuldu. Daha eski/farklı bir telefondan içe aktarıyorsanız sorun değil, ancak içe aktarılan tercihlerin doğru olduğundan emin olun!</string>
+    <string name="metadata_warning_old_export">İçe aktarılan tercihler zaten %1$s günlük! Belki daha güncel tercihleriniz var ya da yanlış dosyayı mı seçiyorsunuz? Tercihleri düzenli olarak dışa aktarmayı unutmayın!</string>
+    <string name="metadata_warning_date_format">Geçersiz tarih-saat biçimi!</string>
+    <string name="metadata_warning_different_version">Uygulamanın farklı alt sürümlerinden tercihler. Yükseltmeden sonra içe aktarıyorsanız sorun değil, ancak tercihlerin hala doğru olup olmadığını içe aktarmadan sonra kontrol edin!</string>
+    <string name="metadata_urgent_different_version">Uygulamanın farklı ana sürümünden tercihler. Ana sürümler önemli ölçüde farklılık gösterir ve uyumsuz tercihlere sahip olabilir! İçe aktardıktan sonra tercihlerin hala doğru olduğundan emin olun!</string>
+    <string name="prefdecrypt_settings_tampered">Ayarlar dosyası kurcalanmış</string>
+    <string name="prefdecrypt_settings_secure">Ayarlar dosyası güvenli</string>
+    <string name="prefdecrypt_settings_unencrypted">Güvenli olmayan, şifrelenmemiş ayar biçimi kullanma</string>
+    <string name="prefdecrypt_wrong_json">JSON biçim hatası, gerekli alan eksik (biçim, içerik, meta veri veya güvenlik)</string>
+    <string name="prefdecrypt_wrong_password">Şifre çözme hatası, verilen şifre dosyayı çözemiyor</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Dosya sağlama eksik, ayarların gerçekliğini doğrulayamıyor!</string>
+    <string name="prefdecrypt_issue_modified">Dosya dışa aktarıldıktan sonra değiştirildi!</string>
+    <string name="prefdecrypt_issue_parsing">Şifre çözme hatası, tercihler ayrıştırılamadı!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Şifre çözme hatası, sağlanan şifre geçersiz veya ayar dosyası değiştirildi! İçe aktarılan dosya farklı bir Ana parola ile dışa aktarılmış olabilir.</string>
+    <string name="prefdecrypt_issue_wrong_format">Şifreleme yapılandırması eksik, ayar formatı geçersiz!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
+    <string name="metadata_label_created_at">Oluşturulma tarihi</string>
+    <string name="metadata_label_aaps_version">AAPS Versiyonu</string>
+    <string name="metadata_label_aaps_flavour">Yapı Varyantı</string>
+    <string name="metadata_label_device_name">Cihaz hasta adını dışa aktarma</string>
+    <string name="metadata_label_device_model">Cihaz modelini dışa aktarma</string>
+    <string name="metadata_label_encryption">Dosya şifreleme</string>
+    <string name="metadata_format_new">Yeni şifrelenmiş format</string>
+    <string name="metadata_format_other">Bilinmeyen dışa aktarma formatı</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Dosya sistemine erişim hatası. Lütfen AAPS dizinini doğru seçin.</string>
+</resources>

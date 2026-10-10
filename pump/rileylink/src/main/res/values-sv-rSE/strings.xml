@@ -2,25 +2,11 @@
 <resources>
     <!-- PumpDeviceState -->
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Sök</string>
-    <string name="riley_link_ble_config_scan_stop">Stopp</string>
-    <string name="riley_link_ble_config_scan_selected">Vald</string>
-    <string name="riley_link_ble_config_scan_title">Riley Link-sökning</string>
     <string name="riley_link_ble_config_scan_scanning">Söker</string>
-    <string name="riley_link_ble_config_scan_finished">Sökning avslutad</string>
-    <string name="riley_link_ble_config_scan_error">Fel vid sökning: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Aldrig</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Vald Riley Link</string>
-    <string name="riley_link_ble_config_remove_riley_link">Ta bort</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Är du säker på att du vill ta bort din Riley Link?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Ta bort Riley Link</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Ingen Riley Link vald</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Inställningar</string>
-    <string name="rileylink_settings_tab2">Historik</string>
     <string name="rileylink_status">Riley Link Status</string>
     <string name="medtronic_pump_status">Pumpstatus</string>
-    <string name="title_activity_rileylink_settings">Inställningar för Riley Link</string>
     <string name="rileylink_title">Riley Link</string>
     <string name="rileylink_address">Adress:</string>
     <string name="rileylink_name">Namn:</string>
@@ -57,7 +43,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth avstängt</string>
     <string name="rileylink_error_no_bt_adapter">Ingen bluetoothadapter</string>
     <string name="rileylink_error_tuneup_failed">Frekvensjustering misslyckades</string>
-    <string name="rileylink_error_pump_unreachable">Pumpen kan inte nås</string>
     <string name="rileylink_error_pod_unreachable">Podden kan inte nås</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronicpump</string>
@@ -75,5 +60,4 @@
     </plurals>
     <string name="orange_use_scanning_level">Använd sökning</string>
     <string name="orange_use_scanning_level_summary">Gör en sökning innan du ansluter till OrangeLink. Det bör förbättra anslutningarna (kan även användas med andra RileyLink-kloner om det behövs)</string>
-    <string name="rileylink_configuration">Konfiguration av Riley Link</string>
 </resources>

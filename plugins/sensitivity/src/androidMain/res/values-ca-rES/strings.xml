@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_oref1">Sensibilitat Oref1</string>
+    <string name="sensitivity_aaps">Sensibilitat AAPS</string>
+    <string name="sensitivity_weighted_average">Sensibilitat: mitja ponderada</string>
+    <string name="description_sensitivity_aaps">Sensibilitat calculada com amb Oref0, però podent especificar un rang de temps en el passat. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració.</string>
+    <string name="description_sensitivity_oref1">Sensibilitat calculada amb dades de 8 o 24 hores en el passat (s\'agafa el cas més \"sensible\"). Els carbohidrats (els no absorbits), es desestimen un cop passat el temps indicat a la configuració. El plugin també calcula les UAM.</string>
+    <string name="description_sensitivity_weighted_average">Sensibilitat calculada com una mitja ponderada a partir de les desviacions. Les noves desviacions tenen un pes més gran. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració. Aquest algoritme és el més ràpid en seguir els canvis de sensibilitat.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM desactivat perquè es basa en el plugin de sensibilitat Oref1</string>
+    <string name="absorption_settings_title">Configuració absorció</string>
+</resources>

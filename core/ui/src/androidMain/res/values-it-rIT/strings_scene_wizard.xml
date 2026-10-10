@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Scegli un punto di partenza. I modelli di pre-riempimento delle azioni raccomandate per le situazioni comuni — puoi regolare tutto nei seguenti passaggi.</string>
+    <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Esercizio</string>
+    <string name="scene_wizard_exercise_desc">Aumentare l\'obiettivo, ridurre il profilo al 70%, disabilitare SMB per prevenire abbassamenti dovuti a esercizi.</string>
+    <string name="scene_wizard_info_exercise">Durante l\'attività fisica, i muscoli consumano glucosio più velocemente e la sensibilità all\'insulina aumenta. Aumentare il bersaglio temporaneo in anticipo dà l\'algoritmo un inizio — inizierà a ridurre la somministrazione di insulina precocemente, costruendo un buffer contro i bassi indotti dall\'esercizio. Si raccomanda anche di disabilitare SMB, poiché i boli di correzione durante l\'esercizio fisico possono causare cadute rapide. Per ottenere risultati ottimali, attiva questa scena 1–2 ore prima di iniziare a esercitarsi, quindi l\'algoritmo ha il tempo di abbassare l\'insulina a bordo.</string>
+    <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Giorno di malattia</string>
+    <string name="scene_wizard_sick_day_desc">Profilo più forte (150%) per gestire un aumento della resistenza all’insulina durante la malattia.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Malattia, febbre e ormoni da stress possono aumentare notevolmente la resistenza all\'insulina — a volte del 50% o più. Un profilo più forte (ad es. 150%) dice all\'algoritmo di fornire più insulina in tutti i calcoli — tassi basali, suggerimenti in bolo e fattori di correzione. È inoltre possibile aggiungere un obiettivo temporaneo o regolare la modalità in esecuzione nei seguenti passaggi. Monitorare attentamente e regolare come il vostro corpo si recupera.</string>
+    <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Giorno di Malattia — Vomito</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Profilo ridotto con LGS — opposto del giorno di malattia standard quando non è possibile assorbire il cibo.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Quando non riesce a tenere basso il cibo, l’approccio standard giornaliero di malattia dell’aumento dell’insulina può essere pericoloso. Vomito significa che i carboidrati non vengono assorbiti, quindi il glucosio nel sangue può calare piuttosto che aumentare. Un profilo ridotto (60%) riduce la somministrazione di insulina e la modalità LGS aggiunge una rete di sicurezza supplementare sospendendo l’insulina in caso di caduta di glucosio. Disabilitare SMB previene qualsiasi bolo in più. Monitorare frequentemente — controllare la glicemia ogni 1-2 ore e chetoni ogni 2-4 ore. Cerchi assistenza medica se il vomito persiste più di poche ore o chetoni superano 1,5 mmol/L.</string>
+    <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Sonno</string>
+    <string name="scene_wizard_sleep_desc">Obiettivo più stretto per un migliore controllo notturno.</string>
+    <string name="scene_wizard_info_sleep">Durante la notte molte persone sperimentano alti o bassi non rilevati. Un obiettivo leggermente più stretto durante il sonno permette all\'algoritmo di effettuare correzioni più fini per tutta la notte. Accoppialo con un profilo che riflette le tue esigenze basali notturne per ottenere i migliori risultati.</string>
+    <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Notte Post-Esercizio</string>
+    <string name="scene_wizard_post_exercise_night_desc">Profilo ridotto, obiettivo più alto, SMB off — protegge da ritardi notturni dopo l\'attività.</string>
+    <string name="scene_wizard_info_post_exercise_night">Dopo l\'attività fisica, i muscoli continuano a riempire i depositi di glicogeno per molte ore — la sensibilità all\'insulina può rimanere elevata per 24–48h, con il più alto rischio di ipoglicemia notturna 6–12h dopo l’esercizio. Un profilo ridotto abbassa la consegna basale per tutta la notte, un target temporaneo più alto dà all\'algoritmo un buffer di sicurezza, e disabilitare SMB impedisce all\'algoritmo di correggere troppo brevi aumenti. Attiva questa scena al momento di andare a dormire nei giorni che hai esercitato, specialmente dopo sessioni più lunghe o quando hai aggiunto nuove attività. Tieni i carboidrati veloci al comodino e prendi in considerazione la possibilità di impostare un allarme per un controllo notturno.</string>
+    <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Pre-pasto</string>
+    <string name="scene_wizard_pre_meal_desc">Abbassare obiettivo per evitare un picco post-pasto.</string>
+    <string name="scene_wizard_info_pre_meal">Impostare un target inferiore 30-60 minuti prima di mangiare dice all\'algoritmo di iniziare a infondere insulina a bordo prima che i carboidrati arrivino. Questo aiuta a limitare il picco post-pasto che si verifica quando il cibo fa effetto sul flusso sanguigno più velocemente dell’insulina. Meglio usarlo quando si sa che un pasto è a breve.</string>
+    <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alcool</string>
+    <string name="scene_wizard_alcohol_desc">La modalità LGS, profilo ridotto, SMB off — protegge da ipo alcoliche ritardate.</string>
+    <string name="scene_wizard_info_alcohol">L\'alcol è una delle situazioni più pericolose per le persone con diabete di tipo 1. Il fegato dà la priorità alla lavorazione dell’alcol rispetto al rilascio di glucosio, che può causare ipoglicemia ritardata 6–24 ore dopo — spesso durante la notte mentre dormi. La modalità LGS previene l\'impilamento di insulina riducendo la somministrazione solo quando il glucosio diminuisce. Un profilo ridotto e SMB disabilitato limitano ulteriormente l\'insulina a bordo. Controllare sempre la glicemia prima di andare a dormire e considerare di impostare un allarme per un controllo di mezzanotte.</string>
+    <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Guida</string>
+    <string name="scene_wizard_driving_desc">Obiettivo leggermente più alto per stare al sicuro al volante.</string>
+    <string name="scene_wizard_info_driving">La guida sicura richiede una glicemia stabile superiore a 5,0 mmol/L (90 mg/dL). In alcuni paesi, il controllo prima e durante i lunghi viaggi è un requisito legale. Un obiettivo leggermente più alto dà all\'algoritmo un buffer di sicurezza — funzionerà per mantenerti al di sopra del livello in cui la concentrazione e il tempo di reazione iniziano a diminuire. Se è in basso durante la guida, fermarsi immediatamente, trattare l’ipo e attendere almeno 45 minuti dopo che il glucosio ritorna alla normalità prima di continuare.</string>
+    <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Fare il bagno</string>
+    <string name="scene_wizard_bathing_desc">Scollegare pompa per doccia, nuoto, bagni o qualsiasi attività acquatica.</string>
+    <string name="scene_wizard_info_bathing">Quando si disconnette la pompa, la somministrazione di insulina si interrompe completamente — nessun bolo, nessun bolo, nessuna correzione. L\'algoritmo passa alla modalità disconnessa e smette di effettuare regolazioni. Questo è normale per brevi periodi come la doccia, il bagno o il nuoto. Quando la scena finisce, il microinfusore si ricollega e l\'algoritmo riprende automaticamente. Mantenere i collegamenti brevi — senza insulina basale, il glucosio nel sangue inizierà ad aumentare entro 1-2 ore.</string>
+    <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Fase luteale</string>
+    <string name="scene_wizard_luteal_phase_desc">Aumento del profilo per gestire la resistenza all’insulina pre-periodo.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Molte donne manifestano un aumento della resistenza all’insulina durante la fase luteale (circa 1-2 settimane prima del loro periodo). Ciò è causato dall’aumento dei livelli di progesterone che riducono la sensibilità all’insulina. L\'effetto varia enormemente tra gli individui — alcuni notano un aumento del 10-30% del fabbisogno di insulina, altri vedono un cambiamento minimo. Inizia con un aumento conservativo (115%) e regolalo in base ai tuoi modelli su diversi cicli. Tracciandolo in CarePortal aiuta a identificare il tuo ritmo personale.</string>
+    <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Meteo Caldo</string>
+    <string name="scene_wizard_hot_weather_desc">Profilo ridotto: il calore accelera l\'assorbimento di insulina.</string>
+    <string name="scene_wizard_info_hot_weather">Le alte temperature causano la dilatazione dei vasi sanguigni, che accelera l’assorbimento di insulina: la stessa dose colpisce più velocemente e più duramente. Ciò può portare a bassi imprevisti, soprattutto durante le attività all\'aria aperta. Una modesta riduzione del profilo (85%) compensa l\'assorbimento più veloce. Rimanere idratati, monitorare più frequentemente ed essere consapevoli che l’insulina conservata in una pompa o in una penna calda può degradare. Se si sta anche esercitando al caldo, considerare di combinare questo con la scena di esercizio per una protezione supplementare.</string>
+    <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Procedura Medica</string>
+    <string name="scene_wizard_medical_procedure_desc">Open loop con SMB off per chirurgia o procedure mediche.</string>
+    <string name="scene_wizard_info_medical_procedure">Durante l\'intervento chirurgico o le procedure mediche, l\'anestesia e gli ormoni dello stress rendono il glucosio ematico imprevedibile. La modalità loop aperta è consigliata perché l\'algoritmo non può prevedere in modo affidabile ciò che il tuo corpo farà in queste condizioni. Un obiettivo più elevato (150 mg/dL) fornisce un margine di sicurezza contro l’ipoglicemia intraoperativa. La disattivazione di SMB previene la somministrazione inaspettata di insulina durante la procedura. Informi sempre il personale medico che sta indossando una pompa per insulina e una CGM. Per procedure di durata superiore a 3 ore, il team può invece passare all’insulina per via endovenosa.</string>
+    <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Vuoto</string>
+    <string name="scene_wizard_blank_desc">Inizia da zero senza azioni pre-selezionate.</string>
+    <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Un interruttore di profilo cambia i tassi basali, il fattore di sensibilità all’insulina (ISF) e i rapporti tra insulina e carb (IC) tutti contemporaneamente. Puoi scalare tutto in percentuale — ad esempio, il 110% aumenta la consegna basale, i calcoli in bolo e i tassi di assorbimento del carb del 10%. È inoltre possibile passare a un profilo completamente diverso se si dispone di una configurazione per situazioni specifiche.</string>
+    <string name="scene_wizard_tt_info">Un obiettivo temporaneo dice all\'algoritmo di mirare ad un livello diverso di glucosio nel sangue per un periodo determinato. Con un obiettivo più alto, l\'algoritmo reagisce più lentamente all\'aumento del glucosio e mira a un valore complessivo più elevato — questo riduce la somministrazione di insulina e aiuta a prevenire i bassi durante l\'esercizio. Con un obiettivo più basso, l\'algoritmo risponde prima e fornisce più insulina — utile per anticipare un pasto. Scegli uno dei tuoi preset qui sotto — il valore di destinazione e la ragione sono già configurati lì.</string>
+    <string name="scene_wizard_smb_info">Super Micro Boli (SMB) lascia che l\'algoritmo eroghi insulina in anticipo come piccoli boli mentre temporaneamente ferma la somministrazione basale per compensare — efficacemente prendendo in prestito insulina dal futuro per una risposta più veloce. La disattivazione di SMB impedisce questo e limita l\'algoritmo a regolare solo le velocità basali. La risposta diventa più lenta e graduale, che è spesso preferita durante l\'esercizio fisico o il sonno.</string>
+    <string name="scene_wizard_loop_mode_info">La modalità in esecuzione determina quanta autonomia ha l\'algoritmo. In Closed Loop, regola automaticamente la somministrazione di insulina. LGS (Low Glucosio Suspend) riduce o interrompe l\'insulina solo quando il glucosio sta cadendo verso un basso — non aumenterà l\'erogazione. Open Loop calcola i suggerimenti ma aspetta che tu confermi ognuno di essi.</string>
+    <string name="scene_wizard_careportal_info">Un evento CarePortal è una voce di registro — non modifica la somministrazione di insulina o il comportamento dell\'algoritmo. Usalo per contrassegnare le attività, le situazioni o le note nella tua timeline di trattamento. Potete rivedere questi record in Trattamenti - CarePortal e in Nightscout, aiutando voi e il vostro medico a individuare i vostri dati.</string>
+    <string name="scene_wizard_duration_info">La durata controlla quanto questa scena rimane attiva. Quando scade il tempo, le azioni basate sulla durata (obiettivo temporaneo, interruttore del profilo, modalità di esecuzione) scadono da sole, mentre le modifiche persistenti (come l\'interruttore SMB) vengono automaticamente ripristinate ai valori precedenti. Impostare la durata a 0 rende la scena indefinita — tutte le azioni rimangono attive fino alla fine della scena manualmente.</string>
+    <string name="scene_wizard_name_info">Scegli un nome e un\'icona che rendono questa scena facile da riconoscere a colpo d\'occhio. Vedrete questi sul pulsante di attivazione e nel banner di scena attivo sulla vostra schermata di riepilogo.</string>
+    <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Includi %1$s nella scena</string>
+    <string name="scene_wizard_finish">Termina</string>
+    <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Segui scena</string>
+    <string name="scene_wizard_chain_info">Opzionalmente concatenare un\'altra scena per attivare automaticamente quando questa scade. Puoi anche saltare ad essa quando finisci presto. Il follow-up viene eseguito solo se l\'obiettivo è abilitato e il micro è disponibile; altrimenti riceverai una notifica.</string>
+    <string name="scene_chain_none">Nessuno</string>
+    <string name="scene_skip_to_format">Salta a %1$s</string>
+    <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Scena concatenata eliminata</string>
+    <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">Scena \"%1$s\" terminata</string>
+    <string name="scene_chained_format">Scena concatenata: %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s terminato — seguito saltato: %2$s</string>
+    <string name="scene_chain_skipped_deleted">la scena target è stata eliminata</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" è disabilitato</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d di azioni %4$d fallite</string>
+</resources>

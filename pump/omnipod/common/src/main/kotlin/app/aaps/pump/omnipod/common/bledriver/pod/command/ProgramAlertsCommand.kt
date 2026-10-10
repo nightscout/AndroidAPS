@@ -5,7 +5,6 @@ import app.aaps.pump.omnipod.common.bledriver.pod.command.base.NonceEnabledComma
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.builder.NonceEnabledCommandBuilder
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
 import java.nio.ByteBuffer
-import java.util.*
 
 class ProgramAlertsCommand private constructor(
     uniqueId: Int,

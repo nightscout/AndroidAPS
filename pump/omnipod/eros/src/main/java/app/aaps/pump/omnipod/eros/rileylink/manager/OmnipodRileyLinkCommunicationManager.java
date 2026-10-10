@@ -8,10 +8,6 @@ import org.joda.time.DateTime;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.plugin.ActivePlugin;
@@ -57,15 +53,17 @@ import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkTimeoutException;
 import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkUnexpectedException;
 import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkUnreachableException;
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager;
+import dev.zacsweers.metro.Provider;
 
 /**
  * Created by andy on 6/29/18.
  */
-@Singleton
+
 public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunicationManager<OmnipodPacket> {
 
-    // This empty constructor must be kept, otherwise dagger injection might break!
-    @Inject
+    /** Upper bound for {@code ackUntilQuiet}. A pod normally goes quiet after one or two ACKs. */
+    private static final long ACK_UNTIL_QUIET_MAX_MILLIS = 30_000L;
+
     public OmnipodRileyLinkCommunicationManager(
             AAPSLogger aapsLogger,
             Preferences preferences,
@@ -332,16 +330,25 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
     private void ackUntilQuiet(ErosPodStateManager podStateManager, Integer packetAddress, Integer messageAddress) {
         OmnipodPacket ack = createAckPacket(podStateManager, packetAddress, messageAddress);
         boolean quiet = false;
-        while (!quiet) try {
-            sendAndListen(ack, 300, 1, 0, 40);
-        } catch (RileyLinkCommunicationException ex) {
-            if (RileyLinkBLEError.Timeout.equals(ex.getErrorCode())) {
-                quiet = true;
-            } else {
+        // Only a Timeout means "quiet". Any other RileyLink error (Interrupted, NoResponse, ...) used to
+        // be logged and retried forever, which stalled the whole command queue (#5209). Bound it.
+        long giveUpAt = System.currentTimeMillis() + ACK_UNTIL_QUIET_MAX_MILLIS;
+        while (!quiet) {
+            if (System.currentTimeMillis() > giveUpAt) {
+                getAapsLogger().error(LTag.PUMPBTCOMM, "ackUntilQuiet: pod not quiet after " + ACK_UNTIL_QUIET_MAX_MILLIS + " ms, giving up");
+                break;
+            }
+            try {
+                sendAndListen(ack, 300, 1, 0, 40);
+            } catch (RileyLinkCommunicationException ex) {
+                if (RileyLinkBLEError.Timeout.equals(ex.getErrorCode())) {
+                    quiet = true;
+                } else {
+                    getAapsLogger().debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
+                }
+            } catch (OmnipodException ex) {
                 getAapsLogger().debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
             }
-        } catch (OmnipodException ex) {
-            getAapsLogger().debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
         }
 
         podStateManager.increasePacketNumber();

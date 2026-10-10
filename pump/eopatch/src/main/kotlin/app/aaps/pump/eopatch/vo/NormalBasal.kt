@@ -3,9 +3,9 @@ package app.aaps.pump.eopatch.vo
 import app.aaps.pump.eopatch.AppConstant
 import app.aaps.pump.eopatch.code.BasalStatus
 import app.aaps.pump.eopatch.core.util.FloatAdjusters
-import java.util.*
-import java.util.concurrent.TimeUnit
+import java.util.Calendar
 import kotlin.math.max
+import kotlin.time.Duration.Companion.minutes
 
 class NormalBasal : SegmentsEntity<BasalSegment>() {
 
@@ -23,7 +23,7 @@ class NormalBasal : SegmentsEntity<BasalSegment>() {
     val maxDoseUnitPerHour: Float
         get() {
             val max = list.stream().map { it.doseUnitPerHour }.mapToDouble { it.toDouble() }.max().orElse(0.0).toFloat()
-            return FloatAdjusters.ROUND2_INSULIN.apply(max)
+            return FloatAdjusters.ROUND2_INSULIN(max)
         }
 
     val doseUnitPerSegmentArray: FloatArray
@@ -33,9 +33,9 @@ class NormalBasal : SegmentsEntity<BasalSegment>() {
             eachSegmentItem { index, segment ->
                 val dose = segment.doseUnitPerHour / 2
                 if (index % 2 == 0) {
-                    doseArray[index] = FloatAdjusters.CEIL2_BASAL_RATE.apply(dose)
+                    doseArray[index] = FloatAdjusters.CEIL2_BASAL_RATE(dose)
                 } else {
-                    doseArray[index] = FloatAdjusters.FLOOR2_BASAL_RATE.apply(dose)
+                    doseArray[index] = FloatAdjusters.FLOOR2_BASAL_RATE(dose)
                 }
                 true
             }
@@ -47,7 +47,7 @@ class NormalBasal : SegmentsEntity<BasalSegment>() {
             val doseArray = FloatArray(AppConstant.SEGMENT_COUNT_MAX)
 
             eachSegmentItem { index, segment ->
-                doseArray[index] = FloatAdjusters.CEIL2_BASAL_RATE.apply(segment.doseUnitPerHour)
+                doseArray[index] = FloatAdjusters.CEIL2_BASAL_RATE(segment.doseUnitPerHour)
                 true
             }
             return doseArray
@@ -59,9 +59,9 @@ class NormalBasal : SegmentsEntity<BasalSegment>() {
             eachSegmentItem { index, segment ->
                 val dose = segment.doseUnitPerHour / 2
                 total += if (index % 2 == 0) {
-                    FloatAdjusters.CEIL2_BASAL_RATE.apply(dose)
+                    FloatAdjusters.CEIL2_BASAL_RATE(dose)
                 } else {
-                    FloatAdjusters.FLOOR2_BASAL_RATE.apply(dose)
+                    FloatAdjusters.FLOOR2_BASAL_RATE(dose)
                 }
                 true
             }
@@ -69,7 +69,7 @@ class NormalBasal : SegmentsEntity<BasalSegment>() {
         }
 
     val currentSegmentDoseUnitPerHour: Float
-        get() = FloatAdjusters.ROUND2_INSULIN.apply(getSegmentDoseUnitPerHourByIndex(currentSegmentIndex))
+        get() = FloatAdjusters.ROUND2_INSULIN(getSegmentDoseUnitPerHourByIndex(currentSegmentIndex))
 
     private val currentSegmentIndex: Int
         get() {
@@ -94,7 +94,7 @@ class NormalBasal : SegmentsEntity<BasalSegment>() {
     }
 
     fun getSegmentDoseUnitPerHour(time: Long): Float {
-        return FloatAdjusters.ROUND2_INSULIN.apply(getSegmentDoseUnitPerHourByIndex(getSegmentIndex(time)))
+        return FloatAdjusters.ROUND2_INSULIN(getSegmentDoseUnitPerHourByIndex(getSegmentIndex(time)))
     }
 
     private fun getSegmentDoseUnitPerHourByIndex(idx: Int): Float {
@@ -170,7 +170,7 @@ class NormalBasal : SegmentsEntity<BasalSegment>() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
 
-        curIndexTime = calendar.timeInMillis + TimeUnit.MINUTES.toMillis((segmentIndex * 30).toLong())
+        curIndexTime = calendar.timeInMillis + (segmentIndex * 30).toLong().minutes.inWholeMilliseconds
         return curIndexTime
     }
 

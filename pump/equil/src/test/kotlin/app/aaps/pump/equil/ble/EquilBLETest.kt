@@ -1,6 +1,5 @@
 package app.aaps.pump.equil.ble
 
-import android.content.Context
 import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -10,23 +9,23 @@ import org.mockito.Mock
 
 class EquilBLETest : TestBase() {
 
-    @Mock private lateinit var context: Context
+    @Mock private lateinit var bleTransport: EquilBleTransport
 
     @Test
     fun `isConnected should be false initially`() {
-        val equilBLE = EquilBLE(aapsLogger, context, rxBus)
+        val equilBLE = EquilBLE(aapsLogger, bleTransport, rxBus)
         assertFalse(equilBLE.isConnected)
     }
 
     @Test
     fun `connecting should be false initially`() {
-        val equilBLE = EquilBLE(aapsLogger, context, rxBus)
+        val equilBLE = EquilBLE(aapsLogger, bleTransport, rxBus)
         assertFalse(equilBLE.connecting)
     }
 
     @Test
     fun `macAddress should be null initially`() {
-        val equilBLE = EquilBLE(aapsLogger, context, rxBus)
+        val equilBLE = EquilBLE(aapsLogger, bleTransport, rxBus)
         assertNull(equilBLE.macAddress)
     }
 
@@ -57,7 +56,7 @@ class EquilBLETest : TestBase() {
 
     @Test
     fun `macAddress can be set`() {
-        val equilBLE = EquilBLE(aapsLogger, context, rxBus)
+        val equilBLE = EquilBLE(aapsLogger, bleTransport, rxBus)
         val testMac = "00:11:22:33:44:55"
         equilBLE.macAddress = testMac
         assertEquals(testMac, equilBLE.macAddress)
@@ -65,22 +64,22 @@ class EquilBLETest : TestBase() {
 
     @Test
     fun `isConnected can be set`() {
-        val equilBLE = EquilBLE(aapsLogger, context, rxBus)
+        val equilBLE = EquilBLE(aapsLogger, bleTransport, rxBus)
         equilBLE.isConnected = true
         assert(equilBLE.isConnected)
     }
 
     @Test
     fun `connecting can be set`() {
-        val equilBLE = EquilBLE(aapsLogger, context, rxBus)
+        val equilBLE = EquilBLE(aapsLogger, bleTransport, rxBus)
         equilBLE.connecting = true
         assert(equilBLE.connecting)
     }
 
     @Test
     fun `multiple EquilBLE instances should have independent state`() {
-        val ble1 = EquilBLE(aapsLogger, context, rxBus)
-        val ble2 = EquilBLE(aapsLogger, context, rxBus)
+        val ble1 = EquilBLE(aapsLogger, bleTransport, rxBus)
+        val ble2 = EquilBLE(aapsLogger, bleTransport, rxBus)
 
         ble1.isConnected = true
         ble2.isConnected = false
@@ -91,7 +90,7 @@ class EquilBLETest : TestBase() {
 
     @Test
     fun `macAddress can be changed`() {
-        val equilBLE = EquilBLE(aapsLogger, context, rxBus)
+        val equilBLE = EquilBLE(aapsLogger, bleTransport, rxBus)
         equilBLE.macAddress = "00:11:22:33:44:55"
         assertEquals("00:11:22:33:44:55", equilBLE.macAddress)
 
@@ -101,7 +100,7 @@ class EquilBLETest : TestBase() {
 
     @Test
     fun `isConnected state can toggle`() {
-        val equilBLE = EquilBLE(aapsLogger, context, rxBus)
+        val equilBLE = EquilBLE(aapsLogger, bleTransport, rxBus)
         assertFalse(equilBLE.isConnected)
 
         equilBLE.isConnected = true

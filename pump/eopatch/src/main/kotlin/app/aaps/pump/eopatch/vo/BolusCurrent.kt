@@ -67,8 +67,8 @@ class BolusCurrent : IPreference<BolusCurrent> {
         }
 
         fun update(injected: Int, remain: Int) {
-            this.injected = FloatAdjusters.FLOOR2_BOLUS.apply(injected * AppConstant.INSULIN_UNIT_P)
-            this.remain = FloatAdjusters.FLOOR2_BOLUS.apply(remain * AppConstant.INSULIN_UNIT_P)
+            this.injected = FloatAdjusters.FLOOR2_BOLUS(injected * AppConstant.INSULIN_UNIT_P)
+            this.remain = FloatAdjusters.FLOOR2_BOLUS(remain * AppConstant.INSULIN_UNIT_P)
         }
 
         fun updateTimeStamp(start: Long, end: Long) {
