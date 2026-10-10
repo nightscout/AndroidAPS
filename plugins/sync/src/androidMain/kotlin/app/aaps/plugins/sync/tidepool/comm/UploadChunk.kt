@@ -113,9 +113,13 @@ class UploadChunk(
         records.addAll(getBgReadings(start, end))
         records.addAll(getProfiles(start, end))
 
-        // Tidepool asks for name and type next to the id, and it recognises the sending app by
+        // One device for all records: Tidepool groups data by deviceId, and the pump settings used this id
+        // already. Before, only they had one, so Tidepool could not tie them to the rest of the data.
+        val deviceId = "${TidepoolUploader.DEVICE_NAME}:${activePlugin.activePump.serialNumber()}"
+        // Tidepool asks for name and type next to the origin id, and it recognises the sending app by
         // origin.name, as it does for Loop and Trio. The deduplicator uses only the id.
         records.forEach { record ->
+            record.deviceId = deviceId
             record.origin?.apply {
                 name = config.APPLICATION_ID
                 version = config.VERSION_NAME

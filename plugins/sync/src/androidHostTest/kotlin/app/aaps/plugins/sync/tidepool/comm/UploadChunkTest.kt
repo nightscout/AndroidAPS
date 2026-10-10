@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
@@ -17,6 +18,7 @@ import com.google.common.truth.Truth.assertThat
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -38,13 +40,20 @@ class UploadChunkTest {
     @Suppress("unused")
     @Mock lateinit var profileUtil: ProfileUtil
 
-    @Suppress("unused")
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config
+    @Mock lateinit var pump: PumpWithConcentration
 
     @InjectMocks lateinit var sut: UploadChunk
+
+    @BeforeEach
+    fun setup() {
+        // Every record's deviceId is built from the pump serial
+        whenever(pump.serialNumber()).thenReturn("SN-1")
+        whenever(activePlugin.activePump).thenReturn(pump)
+    }
 
     val iCfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
 
@@ -86,8 +95,11 @@ class UploadChunkTest {
         whenever(persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(any(), any(), any())).thenReturn(listOf())
         whenever(persistenceLayer.getRunningModesFromTimeToTime(any(), any(), any())).thenReturn(listOf())
 
-        val origin = JsonParser.parseString(sut.get(1, 500)).asJsonArray[0].asJsonObject["origin"].asJsonObject
+        val record = JsonParser.parseString(sut.get(1, 500)).asJsonArray[0].asJsonObject
+        val origin = record["origin"].asJsonObject
 
+        // One device for all records, the same id the pump settings use
+        assertThat(record["deviceId"].asString).isEqualTo("AAPS:SN-1")
         // Tidepool asks for id, name and type, and recognises the app by name (as it does for Loop and Trio)
         assertThat(origin["id"].asString).isNotEmpty()
         assertThat(origin["name"].asString).isEqualTo("info.nightscout.androidaps")

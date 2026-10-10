@@ -20,6 +20,10 @@ open class BaseElement(timestamp: Long, uuid: String, dateUtil: DateUtil) {
     @Expose
     var origin: Origin? = null
 
+    // The device that recorded it. Tidepool groups data by this id; `UploadChunk` fills it for every record.
+    @Expose
+    var deviceId: String? = null
+
     init {
         deviceTime = dateUtil.toISONoZone(timestamp)
         time = dateUtil.toISOAsUTC(timestamp)
