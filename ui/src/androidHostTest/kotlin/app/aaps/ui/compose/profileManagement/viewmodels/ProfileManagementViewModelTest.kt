@@ -3,6 +3,9 @@ package app.aaps.ui.compose.profileManagement.viewmodels
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.bolus.BatchAction
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -17,6 +20,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.singleBlock
 import app.aaps.core.objects.extensions.singleTargetBlock
@@ -323,5 +327,54 @@ internal class ProfileManagementViewModelTest {
         givenProfiles(3)
         assertThat(sut.commitReorder()).isNull()
         verify(profileRepository, never()).reorder(any())
+    }
+
+    // --- The batch an activation submits (issue #5239: the picked time was dropped here) ---
+
+    private fun actions(timestamp: Long, timeChanged: Boolean, withTT: Boolean = false, percentage: Int = 100, durationMinutes: Int = 0) =
+        sut.buildActivationActions(
+            profileName = "P0", durationMinutes = durationMinutes, percentage = percentage, timeshiftHours = 0,
+            withTT = withTT, notes = "", timestamp = timestamp, timeChanged = timeChanged, iCfg = null
+        )
+
+    @Test
+    fun `a picked time is carried in the profile switch action`() {
+        val picked = 1_700_000_000_000L
+        val ps = actions(timestamp = picked, timeChanged = true).filterIsInstance<BatchAction.ProfileSwitch>().single()
+        assertThat(ps.timestamp).isEqualTo(picked)
+    }
+
+    @Test
+    fun `an untouched time field leaves the stamping to the master`() {
+        // 0 = now. The screen always hands over a timestamp, so only timeChanged tells a real pick apart
+        // from the value the screen opened with.
+        val ps = actions(timestamp = 1_700_000_000_000L, timeChanged = false).filterIsInstance<BatchAction.ProfileSwitch>().single()
+        assertThat(ps.timestamp).isEqualTo(0L)
+    }
+
+    @Test
+    fun `an activity temp target starts together with a switch put in the future`() {
+        whenever(dateUtil.now()).thenReturn(1_700_000_000_000L)
+        // ttTargetMgdl is an extension over this one preference; empty means "use the built-in default".
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("")
+        val picked = 1_700_000_000_000L + T.mins(90).msecs()
+
+        val tt = actions(timestamp = picked, timeChanged = true, withTT = true, percentage = 80, durationMinutes = 60)
+            .filterIsInstance<BatchAction.TempTarget>().single()
+
+        assertThat(tt.startOffsetMinutes).isEqualTo(90)
+    }
+
+    @Test
+    fun `an activity temp target for a back-dated switch still starts now`() {
+        whenever(dateUtil.now()).thenReturn(1_700_000_000_000L)
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn("")
+        val picked = 1_700_000_000_000L - T.mins(90).msecs()
+
+        val tt = actions(timestamp = picked, timeChanged = true, withTT = true, percentage = 80, durationMinutes = 60)
+            .filterIsInstance<BatchAction.TempTarget>().single()
+
+        // A target in the past would be over before it is written, so the offset is never negative.
+        assertThat(tt.startOffsetMinutes).isEqualTo(0)
     }
 }

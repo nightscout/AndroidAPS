@@ -243,11 +243,12 @@ class ProfileFunctionImpl(
 
     override suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
-        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
+        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, timestamp: Long
     ): PS? {
-        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return null
+        val at = timestamp.takeIf { it > 0L } ?: dateUtil.now()
+        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(at) ?: return null
         val profileStore = profileRepository.profile.value ?: return null
-        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return null
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, at, profile.iCfg) ?: return null
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(
             rh.gs(CoreUiStrings.careportal_profileswitch),
             activePlugin.activePump,

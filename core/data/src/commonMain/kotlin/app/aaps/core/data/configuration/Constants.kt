@@ -30,6 +30,16 @@ object Constants {
     /** Duration the user can set for a timed action (profile switch, temp target, ...). [min] up to ~ 7 days */
     val ACTION_DURATION = 0.0..(7 * 24 * 60).toDouble()
 
+    /**
+     * How far from now a profile switch may be stamped, as an offset in [ms]. A negative offset
+     * back-dates a switch the user forgot to enter, a positive one starts it later.
+     *
+     * The check runs on the MASTER, against the master's own clock. A paired client sends its own
+     * time, so without this bound a client with a wrong clock could place a switch days away, where
+     * it would either never run or silently rewrite history.
+     */
+    val PROFILE_SWITCH_TIME_OFFSET = (-24L * 60 * 60 * 1000)..(24L * 60 * 60 * 1000)
+
     // Bolus wizard: how much of the calculated bolus may be delivered
     val WIZARD_PERCENTAGE_RANGE = 10.0..200.0
 

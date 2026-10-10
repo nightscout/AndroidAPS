@@ -124,7 +124,7 @@ import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.implementation.notifications.SnackbarNotificationFallback
 import app.aaps.implementation.plugin.PluginStore
-import app.aaps.implementation.profile.ProfileSwitchExpiryScheduler
+import app.aaps.implementation.profile.ProfileSwitchScheduler
 import app.aaps.implementation.profile.ProfileSwitchSilentGate
 import app.aaps.implementation.resources.ResourceHelperImpl
 import app.aaps.implementation.scenes.ActiveSceneManager
@@ -356,7 +356,7 @@ interface AppRootGraph : MetroViewModelMultibindings {
     val apsResult: APSResult
     val pumpEnactResult: PumpEnactResult
     val profileSwitchSilentGate: ProfileSwitchSilentGate
-    val profileSwitchExpiryScheduler: ProfileSwitchExpiryScheduler
+    val profileSwitchScheduler: ProfileSwitchScheduler
     val snackbarNotificationFallback: SnackbarNotificationFallback
     val runningConfiguration: RunningConfiguration
     val runningConfigurationKeys: RunningConfigurationKeys

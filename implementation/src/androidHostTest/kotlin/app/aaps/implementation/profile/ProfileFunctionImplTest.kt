@@ -2,6 +2,9 @@ package app.aaps.implementation.profile
 
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -19,6 +22,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -193,5 +198,42 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         // …and every returned wrapper points at that one shared EPS instance (the throwaway copies were dropped).
         val shared = (profiles.first() as ProfileSealed.EPS).value
         assertThat(profiles.all { (it as ProfileSealed.EPS).value === shared }).isTrue()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // The percentage-only overload (wear / CPP / automation), which had no time parameter at all.
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun aBackDatedPercentageSwitchResolvesTheBaseProfileAtThatTime() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(null)
+        val at = dateUtil.now() - T.hours(3).msecs()
+
+        createSut().createProfileSwitch(
+            durationInMinutes = 30, percentage = 80, timeShiftInHours = 0,
+            action = Action.PROFILE_SWITCH, source = Sources.Automation, listValues = emptyList(), timestamp = at
+        )
+
+        // The base the percentage applies to is the profile that really was running then, not the one now.
+        verify(persistenceLayer).getPermanentProfileSwitchActiveAt(at)
+    }
+
+    @Test
+    fun aPercentageSwitchWithoutATimeUsesNow() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getPermanentProfileSwitchActiveAt(anyLong())).thenReturn(null)
+
+        val before = dateUtil.now()
+        createSut().createProfileSwitch(
+            durationInMinutes = 30, percentage = 80, timeShiftInHours = 0,
+            action = Action.PROFILE_SWITCH, source = Sources.Automation, listValues = emptyList()
+        )
+        val after = dateUtil.now()
+
+        val at = argumentCaptor<Long>()
+        verify(persistenceLayer).getPermanentProfileSwitchActiveAt(at.capture())
+        assertThat(at.firstValue).isAtLeast(before)
+        assertThat(at.firstValue).isAtMost(after)
     }
 }

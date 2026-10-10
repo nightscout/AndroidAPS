@@ -102,11 +102,13 @@ interface ProfileFunction {
      * @param source Source for UserEntry logging
      * @param note Note for UserEntry logging
      * @param listValues Values for UserEntry logging
+     * @param timestamp         expected time, 0 = now. The base profile is the permanent one in force at that
+     *                          time, so a back-dated switch modifies the profile that really was running then.
      * @return true if profile switch is created
      */
     suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
-        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
+        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>, timestamp: Long = 0L
     ): PS?
 
     /**

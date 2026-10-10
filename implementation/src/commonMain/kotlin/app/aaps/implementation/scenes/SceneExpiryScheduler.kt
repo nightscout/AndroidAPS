@@ -14,7 +14,7 @@ package app.aaps.implementation.scenes
  * gets an exercise profile that never ends. So an implementation must survive the app being killed
  * between [schedule] and the deadline. A plain in-process timer does NOT satisfy this contract and
  * must not be used to implement it - unlike
- * [app.aaps.implementation.profile.ProfileSwitchExpiryScheduler], which can be lightweight because
+ * [app.aaps.implementation.profile.ProfileSwitchScheduler], which can be lightweight because
  * KeepAliveWorker is its backstop. Scene expiry has no backstop.
  *
  * Android satisfies it with WorkManager. There is deliberately no iOS implementation yet: iOS has no

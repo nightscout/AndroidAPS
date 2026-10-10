@@ -424,6 +424,13 @@ class WizardBolusExecutorImpl(
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Timeshift"))
             if (ps.durationMinutes.toDouble() !in Constants.ACTION_DURATION)
                 return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.valueoutofrange, "Profile-Duration"))
+            // Clock sanity bound, checked against the MASTER's clock. The time comes from a user picker, so it may
+            // legitimately be in the past (back-dating) or the future (a scheduled start), but only within a day:
+            // a paired client sends its own time, and a client with a wrong clock would otherwise place a switch
+            // where it either never runs or silently rewrites history. Refused, never clamped — moving the time the
+            // user picked without saying so would be worse than asking them to fix it.
+            if (ps.timestamp > 0L && (ps.timestamp - dateUtil.now()) !in Constants.PROFILE_SWITCH_TIME_OFFSET)
+                return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.profile_switch_time_too_far, T.msecs(Constants.PROFILE_SWITCH_TIME_OFFSET.last).hours().toInt()))
         }
         // Validate a running-mode change up-front: the master re-checks the mode is still a legal transition
         // (a client/watch list may be stale — TOCTOU), and the temporary modes require a positive duration.
@@ -817,6 +824,9 @@ class WizardBolusExecutorImpl(
      */
     private suspend fun applyProfileSwitch(ps: BatchAction.ProfileSwitch, source: Sources) {
         val psName = ps.profileName
+        // The time the user picked, bounded at prepare; 0 = now. A future time is stored as is and
+        // ProfileSwitchScheduler arms the start, so the switch is not applied before the user asked.
+        val at = ps.timestamp.takeIf { it > 0L } ?: dateUtil.now()
         if (psName != null) {
             val store = profileRepository.profile.value ?: return
             // Supplied by the caller that asked the user, else the insulin in force. prepare() refuses the
@@ -831,7 +841,7 @@ class WizardBolusExecutorImpl(
                 durationInMinutes = ps.durationMinutes,
                 percentage = ps.percentage,
                 timeShiftInHours = ps.timeShiftHours,
-                timestamp = dateUtil.now(),
+                timestamp = at,
                 action = Action.PROFILE_SWITCH,
                 source = source,
                 note = ps.notes,
@@ -839,7 +849,8 @@ class WizardBolusExecutorImpl(
                     ValueWithUnit.SimpleString(psName),
                     ValueWithUnit.Percent(ps.percentage),
                     ValueWithUnit.Hour(ps.timeShiftHours).takeIf { ps.timeShiftHours != 0 },
-                    ValueWithUnit.Minute(ps.durationMinutes).takeIf { ps.durationMinutes != 0 }
+                    ValueWithUnit.Minute(ps.durationMinutes).takeIf { ps.durationMinutes != 0 },
+                    ValueWithUnit.Timestamp(at).takeIf { ps.timestamp > 0L }
                 ),
                 iCfg = iCfg
             )
@@ -854,13 +865,15 @@ class WizardBolusExecutorImpl(
                 listValues = listOfNotNull(
                     ValueWithUnit.Percent(ps.percentage),
                     ValueWithUnit.Hour(ps.timeShiftHours).takeIf { ps.timeShiftHours != 0 },
-                    ValueWithUnit.Minute(ps.durationMinutes)
-                )
+                    ValueWithUnit.Minute(ps.durationMinutes),
+                    ValueWithUnit.Timestamp(at).takeIf { ps.timestamp > 0L }
+                ),
+                timestamp = ps.timestamp
             )
         }
     }
 
-    /** The PS line(s) for any batch (wear / client / phone) — target profile name + percentage + optional time-shift + duration. */
+    /** The PS line(s) for any batch (wear / client / phone) — target profile name + percentage + optional time-shift + duration + picked time. */
     private suspend fun buildPsLine(ps: BatchAction.ProfileSwitch): List<ConfirmationLine> {
         val out = mutableListOf<ConfirmationLine>()
         out += ConfirmationLine(ConfirmationRole.PRIMARY, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.profile), ps.profileName ?: profileFunction.getOriginalProfileName()))
@@ -869,6 +882,11 @@ class WizardBolusExecutorImpl(
             out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.timeshift_label), rh.gs(CoreUiStrings.value_with_unit, ps.timeShiftHours.toString(), rh.gs(InterfacesStrings.shorthour))))
         if (ps.durationMinutes > 0)
             out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.duration), formatMinutesAsDuration(ps.durationMinutes, rh)))
+        // Only when the user picked a time (0 = now): the switch then starts, or is recorded, at another moment
+        // than the confirmation itself, and that has to be visible before they confirm. Date and time, because
+        // the picked day can differ from today.
+        if (ps.timestamp > 0L)
+            out += ConfirmationLine(ConfirmationRole.NORMAL, rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.time), dateUtil.dateAndTimeString(ps.timestamp)))
         return out
     }
 
