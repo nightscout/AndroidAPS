@@ -34,6 +34,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
@@ -111,6 +112,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                     wizardBolusExecutor = wizardBolusExecutor
                 ),
             )
+        // The base class resolves the plugin name through the mocked rh when the plugin is enabled.
+        // Since dev made an unresolved TextRef throw instead of answering with its own name, this
+        // has to be stubbed or every test in this class dies in setup.
+        doReturn("NFC Commands").whenever(rh).gs(CoreUiStrings.nfccommands)
         plugin.setPluginEnabledBlocking(PluginType.SYNC, true)
 
         runTest {
@@ -570,14 +575,14 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         runtimeState.setWizardPreview(params.toString(), prepared)
         runTest { 
             whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
-            whenever(wizardBolusExecutor.confirm(eq(123L), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
+            whenever(wizardBolusExecutor.confirm(eq(123L), any(), any(), any(), any(), any())).thenReturn(WizardBolusExecutor.ConfirmResult.Delivered)
         }
         whenever(rh.gs(refNamed(SyncStrings.smscommunicator_bolus_delivered))).thenReturn("Bolus delivered")
 
         val result = execute(NfcCommandCode.BOLUS_WIZARD, params)
 
         assertThat(result.success).isTrue()
-        runTest { verify(wizardBolusExecutor).confirm(eq(123L), eq(Sources.NfcCommands), any(), any(), any()) }
+        runTest { verify(wizardBolusExecutor).confirm(eq(123L), eq(Sources.NfcCommands), any(), any(), any(), any()) }
     }
 
     @Test

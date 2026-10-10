@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -185,8 +186,8 @@ class NfcForegroundDispatchTest : TestBaseWithProfile() {
 
     @Test
     fun `observeWarning sends dialog when preference changes to true`() {
-        whenever(rh.gs(SyncStrings.nfc_foreground_priority_warning_title)).thenReturn("NFC Foreground Priority")
-        whenever(rh.gs(SyncStrings.nfc_foreground_priority_warning_message)).thenReturn("Warning message")
+        doReturn("NFC Foreground Priority").whenever(rh).gs(SyncStrings.nfc_foreground_priority_warning_title)
+        doReturn("Warning message").whenever(rh).gs(SyncStrings.nfc_foreground_priority_warning_message)
         val scope = unconfinedScope()
         val prefFlow = MutableStateFlow(false)
         whenever(preferences.observe(BooleanKey.NfcForegroundPriority)).thenReturn(prefFlow)

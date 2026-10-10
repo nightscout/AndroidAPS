@@ -6,6 +6,7 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import app.aaps.core.keys.interfaces.TextRef
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import java.nio.charset.StandardCharsets
@@ -13,6 +14,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -74,6 +76,10 @@ class NfcControlActivityTest : TestBaseWithProfile() {
                 wizardBolusExecutor = mock()
             ),
         )
+        // The base class resolves the plugin name through the mocked rh when the plugin is enabled.
+        // Since dev made an unresolved TextRef throw instead of answering with its own name, this
+        // has to be stubbed or every test in this class dies in setup.
+        doReturn("NFC Commands").whenever(rh).gs(CoreUiStrings.nfccommands)
         pluginUnderTest.setPluginEnabledBlocking(app.aaps.core.data.plugin.PluginType.SYNC, true)
         whenever(rh.gs(any<TextRef>())).thenReturn("Mock String")
         whenever(rh.gsNotLocalised(any<TextRef>())).thenReturn("Mock String")
