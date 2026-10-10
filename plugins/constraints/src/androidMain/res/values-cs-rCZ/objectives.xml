@@ -24,6 +24,7 @@
     <string name="maxiobset">Maximální IOB nastaven správně (není nutné v jednoduchém režimu)</string>
     <string name="objectives_autosens_objective">Upravit bazály a poměry, bude-li to potřeba, a povolit automatickou detekci citlivosti na inzulín</string>
     <string name="objectives_autosens_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
+    <string name="objectives_autosens_learned">Pokud váš výsledek autosens neosciluje kolem 100%, nastavení Vašeho profilu pravděpodobně špatné.</string>
     <string name="objectives_smb_objective">Povolit další funkce pro běžné používání jako SMB</string>
     <string name="objectives_smb_gate">Přečíst si dokumentaci a zvýšit maximání IOB, aby mohlo SMB fungovat. Pro začátek se dá použít velikost běžného bolusu + 3x maximální denní bazál</string>
     <string name="objectives_smb_learned">Použití SMB je vaším cílem. Oref1 algoritmus byl navržen tak, aby vám pomohl i s bolusy. Neměli byste na jídlo vydávat celý bolus, ale jen jeho část, a nechat AAPS v případě potřeby dát zbytek. Takto máte větší rezervu pro špatně spočítané sacharidy. Věděli jste, že můžete nastavit procento bolusové kalkulačky pro snížení velikosti bolusu?</string>
@@ -36,6 +37,7 @@
     <string name="accomplished">Splněno: %1$s</string>
     <string name="objectives_usage_objective">Naučte se, jak ovládat AAPS</string>
     <string name="objectives_usage_gate">Provádějte v AAPS různé akce</string>
+    <string name="objectives_usage_learned">Naučili jste se základy AAPS. Většina ovládacích prvků je na obrazovce Přehledu. Další akce jsou v nabídce Ošetření a Správa v dolní části obrazovky a v postranním menu.</string>
     <string name="objectives_useprofileswitch">Nastavte profil 90 % na 10 min</string>
     <string name="objectives_usedisconnectpump">Simulujte sprchování. Odpojte pumpu na 1 h</string>
     <string name="objectives_usereconnectpump">... a stejným způsobem ji znovu připojte</string>
@@ -43,6 +45,8 @@
     <string name="objectives_useloop">Zobrazte obsah modulu Smyčka</string>
     <string name="objectives_usescale">Použijte posouvání nebo přiblížení na grafu glykémie</string>
     <string name="objectives_exam_objective">Prokažte své znalosti</string>
+    <string name="objectives_exam_gate">Studium otázek. Každá otázka má několik možných odpovědí a více než jedna odpověď může být správně. Zkontrolujte všechny správné odpovědi a zvolte OVĚŘIT.</string>
+    <string name="objectives_exam_learned_prerequisites">Nemusíte být vývojář. Potřebujete Nightscout nebo Tidepool pro splnění cílů, kompatibilní pumpu, a způsob, jak vytvořit AAPS (v prohlížeči nebo s Androidem Studio) pro první instalaci a pro každou aktualizaci.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS lze spustit offline.</string>
     <string name="objectives_exam_learned_basaltest">Profil by měl být kontrolován a aktualizován. Lepší profil = lepší výsledky.</string>
     <string name="objectives_exam_learned_dia">DIA ve smyčce má jiný význam (čas, dokud není veškerý inzulin absorbován) než v klasické terapii pumpou (čas, dokud není většina inzulinu absorbována).</string>
@@ -56,12 +60,17 @@
     <string name="objectives_exam_learned_exercise2">Nastavení vyššího dočasného cíle alespoň 1 hodinu před cvičením pomáhá snížit také množství inzulínu v těle.</string>
     <string name="objectives_exam_learned_noisycgm">Pokud nemůžete důvěřovat hodnotám CGM, neměli byste používat smyčku bez dozoru.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS musí vědět, že pumpa není připojena pro správné počítání IOB.</string>
+    <string name="objectives_exam_learned_insulin">AAPS musí vědět, který inzulín je v pumpě, protože ovlivňuje výpočet IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Detekce citlivosti je součástí algoritmu umožňující přizpůsobit dávkování inzulinu různým situacím.</string>
     <string name="objectives_exam_learned_objectives">Váš pokrok v cílech je uložen spolu s dalšími nastaveními a měl by být zálohován.</string>
     <string name="objectives_exam_learned_objectives2">Vždy uchovejte exportovaná nastavení a vygenerovaný APK také mimo telefon. Telefon může být ztracen, poškozen atd. Dobrým místem může být libovolný cloud dostupný z telefonu. V tomto případě můžete obnovit AAPS na jiném zařízení během několika minut. Správnou praxí je i uložit hlavní heslo na bezpečném místě. Bez něj je Vaše záloha zbytečná. Totéž platí pro podepisovací klíče (soubor .jks) a hesla použitá pro sestavení AAPS. Zbytek není důležitý - může být kdykoliv znovu stažen z internetu.</string>
     <string name="objectives_exam_learned_wrongcarbs">Pokud jste nejaký údaj špatně zadali do AAPS nebo to neodpovídá realitě, vyřešte to. Může to vést k předávkování. AAPS by měl být vždy informován o sacharidech, inzulinu atd. jak nejlépe je to možné.</string>
+    <string name="objectives_exam_learned_iob">Pokud analyzujete, zda AAPS funguje dobře, sledování grafu IOB Vám můžete poskytnout hodně užitečných informací.</string>
+    <string name="objectives_exam_learned_cob">Výpočet COB závisí na vztahu mezi ISF a IC. Zvyšování ISF nebo zmenšování IC povede k delšímu období absorpce. Ale percentuální přepnutí profilu změní obě hodnoty současně a čas absorpce nebude ovlivněn.</string>
     <string name="objectives_exam_learned_breadgrams">Pro zadávání sacharidů jsou povoleny pouze gramy.</string>
     <string name="objectives_exam_learned_ecarbs">E-sacharidy je náhrada prodlouženého bolusu ve světě pump.</string>
+    <string name="objectives_exam_learned_nsclient">AAPS můžete sledovat dálkově s AAPSClient nebo Nightscout. Pokud je AAPSClient spárován s hlavním telefonem, můžete AAPS i dálkově ovládat.</string>
+    <string name="objectives_exam_learned_concentration1">Použití inzulínu U200 s profilem 50 % bude vyžadovat trvalý přepočet: pro externí bolusy pery a všechny standardní reporty poskytované AAPS nebo NS budou chybné a bude je nutné převést na IU pro zdravotnický tým.</string>
     <string name="objectives_exam_learned_concentration2">Přechod z U200 s profilem 50 % na U200 s funkcí koncentrace inzulínu bude vyžadovat vytvoření nového silnějšího profilu, vypnutí DynISF na jeden týden a natrénování mozku myslet v mezinárodních jednotkách.</string>
     <string name="objectives_exam_learned_concentration3">Koncentraci inzulínu lze změnit pouze při výměně inzulínu nebo patche. Ale především, zvláště u pump s hadičkou, nikdy nepoužívejte uživatelské rozhraní pumpy k podávání bolusů přímo z pumpy.</string>
     <string name="answerdisabledto">Odpovídání zakázáno do: %1$s</string>
@@ -74,6 +83,7 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Chybí připojení k internetu</string>
+    <string name="failedretrievetime">Nepodařilo se načíst čas</string>
     <string name="requirementnotmet">Požadavky cíle nejsou splněny</string>
     <string name="what_i_ve_learned">Co jsem se naučil:</string>
     <string name="verify_master_password">Ověřte, zda znáte hlavní heslo</string>
@@ -83,6 +93,10 @@
     <string name="objectives_open_exam">Otevřít zkoušku</string>
     <string name="objectives_exam_question_progress">Otázka %1$d z %2$d</string>
     <string name="objectives_exam_reset">Resetovat</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Hotovo</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">Probíhá</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Nezahájeno</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Uzamčeno</string>
     <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">správná odpověď</string>
     <string name="objectives_exam_previous">Předchozí</string>
     <string name="objectives_exam_next">Další</string>
