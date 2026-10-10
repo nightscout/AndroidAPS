@@ -72,7 +72,7 @@ class UploadChunkBasalTest {
         val pump: PumpWithConcentration = mock()
         whenever(pump.serialNumber()).thenReturn("SN-1")
         whenever(activePlugin.activePump).thenReturn(pump)
-        sut = UploadChunk(preferences, TidepoolRepository(aapsLogger), aapsLogger, profileFunction, profileUtil, activePlugin, persistenceLayer, dateUtil, mock())
+        sut = UploadChunk(preferences, TidepoolRepository(aapsLogger), aapsLogger, profileFunction, profileUtil, activePlugin, persistenceLayer, dateUtil, mock(), mock())
     }
 
     @AfterEach

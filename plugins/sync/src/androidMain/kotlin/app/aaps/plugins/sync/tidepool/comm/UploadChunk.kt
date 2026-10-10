@@ -12,9 +12,11 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
@@ -54,7 +56,8 @@ class UploadChunk(
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val config: Config
+    private val config: Config,
+    private val rh: TextResolver
 ) {
 
     companion object {
@@ -68,6 +71,9 @@ class UploadChunk(
 
         // A copy of a note closer than this to the original is the same note
         internal val NOTE_COPY_WINDOW = T.hours(1).msecs()
+
+        // The English text of the note AAPS writes on start (CoreUiStrings.androidaps_start)
+        private const val APP_START_NOTE_ENGLISH = "AAPS started"
 
         /** A note found in the database, before it is picked for upload */
         internal data class NoteCandidate(val timestamp: Long, val text: String, val source: String)
@@ -202,9 +208,14 @@ class UploadChunk(
         val carbsNotes = persistenceLayer.getCarbsFromTimeNotExpanded(from, true)
             .filter { it.timestamp <= to }
             .mapNotNull { carbs -> carbs.notes?.takeIf { it.isNotBlank() }?.let { NoteCandidate(carbs.timestamp, it, "carbs") } }
-        // Announcements are not notes the user wrote: AAPS creates them, for example from pump errors
+        // Not every event note is one the user wrote. AAPS creates announcements (for example from pump errors)
+        // and, on every start, a note "AAPS started - <phone>". These are found by their start text, the way
+        // the careportal "Remove AAPS started entries" does it; the English one covers notes synced in from
+        // a phone in another language.
+        val appStartTexts = listOf(rh.gs(CoreUiStrings.androidaps_start), APP_START_NOTE_ENGLISH)
         val eventNotes = persistenceLayer.getTherapyEventDataFromToTime(from, to)
             .filter { it.type != TE.Type.ANNOUNCEMENT }
+            .filterNot { event -> appStartTexts.any { event.note?.startsWith(it) == true } }
             .mapNotNull { event -> event.note?.takeIf { it.isNotBlank() }?.let { NoteCandidate(event.timestamp, it, "event") } }
         val selection = pickNotes(bolusNotes, carbsNotes, eventNotes)
             .filter { it.timestamp in start..end }

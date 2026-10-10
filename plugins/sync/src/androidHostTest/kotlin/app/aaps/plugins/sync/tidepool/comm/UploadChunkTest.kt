@@ -12,8 +12,10 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpWithConcentration
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.CoreUiStrings
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.elements.BolusElement
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
@@ -48,6 +50,7 @@ class UploadChunkTest {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config
     @Mock lateinit var pump: PumpWithConcentration
+    @Mock lateinit var rh: TextResolver
 
     @InjectMocks lateinit var sut: UploadChunk
 
@@ -56,6 +59,8 @@ class UploadChunkTest {
         // Every record's deviceId is built from the pump serial
         whenever(pump.serialNumber()).thenReturn("SN-1")
         whenever(activePlugin.activePump).thenReturn(pump)
+        // The note AAPS writes on start, in the phone's language (German here)
+        whenever(rh.gs(CoreUiStrings.androidaps_start)).thenReturn("AAPS gestartet")
     }
 
     val iCfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
@@ -143,7 +148,10 @@ class UploadChunkTest {
         whenever(persistenceLayer.getTherapyEventDataFromToTime(any(), any())).thenReturn(
             listOf(
                 TE(timestamp = 20 * minute, type = TE.Type.NOTE, note = "site sore", glucoseUnit = GlucoseUnit.MGDL),
-                TE(timestamp = 25 * minute, type = TE.Type.ANNOUNCEMENT, note = "Pump error", glucoseUnit = GlucoseUnit.MGDL)
+                TE(timestamp = 25 * minute, type = TE.Type.ANNOUNCEMENT, note = "Pump error", glucoseUnit = GlucoseUnit.MGDL),
+                // Written by AAPS on start, not by the user: in the phone's language and in English (synced from another phone)
+                TE(timestamp = 26 * minute, type = TE.Type.NOTE, note = "AAPS gestartet - Google Pixel 9a", glucoseUnit = GlucoseUnit.MGDL),
+                TE(timestamp = 27 * minute, type = TE.Type.NOTE, note = "AAPS started - Google sdk_gphone64", glucoseUnit = GlucoseUnit.MGDL)
             )
         )
         whenever(persistenceLayer.getBgReadingsDataFromTimeToTime(any(), any(), any())).thenReturn(listOf())
@@ -155,7 +163,7 @@ class UploadChunkTest {
             .map { it.asJsonObject }
             .filter { it["type"].asString == "reportedState" }
 
-        // The bolus note once (its carbs copy is dropped), the careportal note, and no announcement
+        // The bolus note once (its carbs copy is dropped), the careportal note, no announcement and no start notes
         assertThat(notes.map { it["notes"].asJsonArray.single().asString }).containsExactly("pizza", "site sore")
         assertThat(notes.all { it["deviceId"].asString == "AAPS:SN-1" }).isTrue()
     }
