@@ -178,6 +178,7 @@
     <string name="user_entry">Brukeroppføring</string>
     <string name="clone_label">Dupliser</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Glukosegraf. Nylige verdier %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Vis kontroller</string>
     <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Varsler: %1$d</string>
     <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">intet midlertidig mål, profilmål</string>
     <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">justert av loop</string>
@@ -318,4 +319,5 @@
     <string name="cal_precheck_no_pair">Ingen CGM-måling de siste 10 minuttene. Kontroller sensorforbindelsen.</string>
     <string name="cal_precheck_delta_too_high">Glukosen endrer seg for raskt (Δ %1$s %3$s per 5 min, grense %2$s). Vent til den er stabil.</string>
     <string name="cal_precheck_mark_sensor_change">Registrer sensorbytte</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>
