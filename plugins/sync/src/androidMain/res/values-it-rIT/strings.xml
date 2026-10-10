@@ -74,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Se abilitato, i caricamenti andranno sui server di test invece che su quelli regolari</string>
     <string name="title_tidepool_dev_servers">Usa server integrativi (test)</string>
+    <string name="title_tidepool_use_ns_connection">Usa le impostazioni di connessione Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Disattiva per impostare le impostazioni di connessione separate per Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Carica dati su Tidepool</string>
     <string name="upload_now">Carica adesso</string>
