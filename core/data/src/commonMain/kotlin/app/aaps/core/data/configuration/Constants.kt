@@ -40,6 +40,16 @@ object Constants {
      */
     val PROFILE_SWITCH_TIME_OFFSET = (-24L * 60 * 60 * 1000)..(24L * 60 * 60 * 1000)
 
+    /**
+     * How far from now a temp target may start, as an offset in [ms]. Same reasoning and the same window as
+     * [PROFILE_SWITCH_TIME_OFFSET], kept as its own value because the two are separate choices: a therapy
+     * setting that is wrong by a day is useless, but what counts as "too far" can differ per entity.
+     *
+     * A bound matters most here because a temp target outside its window is not visibly wrong: it is stored,
+     * never becomes active, and nothing tells the user. The target simply does not happen.
+     */
+    val TEMP_TARGET_TIME_OFFSET = (-24L * 60 * 60 * 1000)..(24L * 60 * 60 * 1000)
+
     // Bolus wizard: how much of the calculated bolus may be delivered
     val WIZARD_PERCENTAGE_RANGE = 10.0..200.0
 

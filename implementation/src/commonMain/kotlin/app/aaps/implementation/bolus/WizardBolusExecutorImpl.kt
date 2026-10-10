@@ -402,6 +402,11 @@ class WizardBolusExecutorImpl(
             recordOnly    -> Triple(bolus.insulin, bolus.carbs, TE.Type.CORRECTION_BOLUS)
             else          -> capFixed(bolus.insulin, bolus.carbs).let { (i, c, t) -> Triple(i, clampNegativeCarbs(c, bolus.carbsTimeOffsetMinutes), t) }
         }
+        // Clock sanity bound for a temp target's start, against the MASTER's clock and for the same reason as the
+        // profile switch below. It matters more here: a target outside the window is stored, never becomes active,
+        // and nothing says so, so the user believes they set a target that silently does not happen.
+        if (tt != null && T.mins(tt.startOffsetMinutes.toLong()).msecs() !in Constants.TEMP_TARGET_TIME_OFFSET)
+            return WizardBolusExecutor.PrepareResult.Error(rh.gs(CoreUiStrings.temp_target_time_too_far, T.msecs(Constants.TEMP_TARGET_TIME_OFFSET.last).hours().toInt()))
         // Validate a profile switch up-front (the master is the authority): no active profile, or a value out of the
         // CPP hard limits, fails the whole batch before parking — mirrors the old wear-local checks.
         if (ps != null) {
@@ -814,9 +819,22 @@ class WizardBolusExecutorImpl(
         return out
     }
 
-    /** The TT line(s) for any batch (wear / client / phone) — range + duration + a localized reason, or a cancel line. */
-    private fun buildTtLine(tt: BatchAction.TempTarget, standalone: Boolean = false): List<ConfirmationLine> =
-        buildTempTargetLines(localizeTtReason(tt.reason), tt.lowMgdl, tt.highMgdl, tt.durationMinutes, standalone)
+    /**
+     * The TT line(s) for any batch (wear / client / phone) — range + duration + a localized reason, or a cancel
+     * line, plus the start time when the user moved it off now. That last line is why this wraps
+     * [buildTempTargetLines] instead of extending it: the shared generator is also used where no offset exists.
+     */
+    private fun buildTtLine(tt: BatchAction.TempTarget, standalone: Boolean = false): List<ConfirmationLine> {
+        val out = buildTempTargetLines(localizeTtReason(tt.reason), tt.lowMgdl, tt.highMgdl, tt.durationMinutes, standalone).toMutableList()
+        // A target that starts at another moment than the confirmation has to say so before the user accepts it.
+        // Date and time, because the picked day can differ from today. A cancel always carries offset 0.
+        if (tt.startOffsetMinutes != 0)
+            out += ConfirmationLine(
+                ConfirmationRole.NORMAL,
+                rh.gs(InterfacesStrings.confirmation_line, rh.gs(CoreUiStrings.time), dateUtil.dateAndTimeString(dateUtil.now() + T.mins(tt.startOffsetMinutes.toLong()).msecs()))
+            )
+        return out
+    }
 
     /**
      * Apply a batch ProfileSwitch via the dialog-free domain path. `profileName` non-null → switch to that named

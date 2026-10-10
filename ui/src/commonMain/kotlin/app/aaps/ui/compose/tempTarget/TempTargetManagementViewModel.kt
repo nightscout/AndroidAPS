@@ -179,6 +179,12 @@ class TempTargetManagementViewModel(
                         editorName = initialPreset?.name ?: "",
                         editorTarget = targetInUserUnits,
                         editorDuration = initialDurationMs,
+                        // The activation time has to be set here, not left to selectPreset: this already assigns
+                        // selectedPreset, so the screen's later selectPreset(index) returns early on "same preset"
+                        // and never runs. Without this the state keeps its 0L default, the screen shows 1/1/70,
+                        // and a user who only changes the time gets a target stamped in 1970 that never runs.
+                        eventTime = dateUtil.now(),
+                        eventTimeChanged = false,
                         showNotesField = showNotes,
                         isLoading = false
                     )
