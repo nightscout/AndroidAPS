@@ -159,12 +159,13 @@ class PumpWithConcentrationImplTest : TestBase() {
 
     @ParameterizedTest
     @MethodSource("pumpConcentrations")
-    fun `extended bolus converts outgoing and returned doses`(type: PumpType, factor: Double) = runBlocking<Unit> {
+    fun `extended bolus floors outgoing dose and converts partial delivery back to IU`(type: PumpType, factor: Double) = runBlocking<Unit> {
         setupPumpConcentration(type, factor)
+        val expected = if (type == PumpType.ACCU_CHEK_INSIGHT) 2.07 else 2.05
         whenever(pump.setExtendedBolus(any(), any())).thenReturn(driverDelivered(1.25))
 
-        assertThat(sut.setExtendedBolus(2.0 * factor, 60).bolusDelivered).isWithin(1e-9).of(1.25 * factor)
-        verify(pump).setExtendedBolus(eq(2.0), eq(60))
+        assertThat(sut.setExtendedBolus(2.077 * factor, 60).bolusDelivered).isWithin(1e-9).of(1.25 * factor)
+        verify(pump).setExtendedBolus(argThat { kotlin.math.abs(this - expected) < 1e-9 }, eq(60))
     }
 
     @ParameterizedTest
@@ -177,6 +178,9 @@ class PumpWithConcentrationImplTest : TestBase() {
 
         assertThat(result.bolusStep).isWithin(1e-9).of(bolusStep * factor)
         assertThat(result.extendedBolusStep).isWithin(1e-9).of(original.extendedBolusStep * factor)
+        assertThat(result.extendedBolusMinAmount).isWithin(1e-9).of(original.extendedBolusMinAmount * factor)
+        assertThat(result.tempAbsoluteStep).isWithin(1e-9).of(original.tempAbsoluteStep * factor)
+        assertThat(result.maxTempAbsolute).isWithin(1e-9).of(original.maxTempAbsolute * factor)
         assertThat(result.basalStep).isWithin(1e-9).of(basalStep * factor)
         assertThat(result.basalMinimumRate).isWithin(1e-9).of(original.basalMinimumRate * factor)
         assertThat(result.basalMaximumRate).isWithin(1e-9).of(original.basalMaximumRate * factor)
