@@ -107,6 +107,7 @@
     <string name="scene_not_available">Vybraná scéna %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Vzdálené příkazy na podání inzulínu jsou v klientském režimu vypnuty</string>
     <string name="wear_phone_not_ready">Telefon se stále spouští nebo používá nastavení. Zkuste to znovu za chvíli.</string>
+    <string name="wear_control_disabled">Ovládání Wear je vypnuto v nastavení Wear v telefonu.</string>
     <string name="wear_action_tempt_unit_error">Různé jednotky používané na hodinkách a telefonu!</string>
     <string name="wear_action_tempt_min_bg_error">Minimální glykémie mimo rozsah!</string>
     <string name="wear_action_tempt_max_bg_error">Maximální glykémie mimo rozsah!</string>
