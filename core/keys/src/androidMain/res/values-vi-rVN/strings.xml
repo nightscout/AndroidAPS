@@ -43,13 +43,13 @@
     <string name="pref_title_aps_use_autosens">Sử dụng Autosens</string>
     <string name="pref_title_aps_use_smb">Kích hoạt SMB</string>
     <string name="pref_summary_aps_use_smb">Bật Super Micro Bolus. SMB cung cấp insulin ngay lập tức để đáp ứng khi đường huyết tăng.</string>
-    <string name="pref_title_aps_use_smb_with_high_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Bật SMB với mục tiêu tạm thời Cao</string>
     <string name="pref_summary_aps_use_smb_with_high_tt">Cho phép SMB khi mục tiêu tạm thời cao đang hoạt động.</string>
     <string name="pref_title_aps_use_smb_always">Luôn bật SMB</string>
     <string name="pref_summary_aps_use_smb_always">Bật SMB trong mọi điều kiện, bất kể bolus hoặc COB.</string>
     <string name="pref_title_aps_use_smb_with_cob">Kích hoạt SMB với COB</string>
     <string name="pref_summary_aps_use_smb_with_cob">Cho phép SMB khi đang có COB.</string>
-    <string name="pref_title_aps_use_smb_with_low_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Bật SMB với mục tiêu tạm thời Thấp</string>
     <string name="pref_summary_aps_use_smb_with_low_tt">Cho phép SMB khi mục tiêu tạm thời thấp đang hoạt động.</string>
     <string name="pref_title_aps_use_smb_after_carbs">Kích hoạt SMB sau Carbs</string>
     <string name="pref_summary_aps_use_smb_after_carbs">Cho phép SMB trong một khoảng thời gian sau khi nhập carbs.</string>

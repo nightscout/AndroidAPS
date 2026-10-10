@@ -191,6 +191,9 @@
     <string name="a11y_arrow_unknown">ukjent</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">øk %1$s med %2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Flytt opp</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Flytt ned</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Steg %1$d av %2$d</string>
     <string name="decrement">reduksjon</string>
     <string name="increment">økning</string>
     <string name="a11y_high">høyt</string>
@@ -367,7 +370,6 @@
     <string name="scene_action_careportal">Logg: %1$s</string>
     <string name="scene_management">Scener</string>
     <string name="scene_management_desc">Lage, endre og håndtere scener</string>
-    <string name="scene_action_count">%1$d handlinger</string>
     <string name="scene_start_from_template">Start fra mal</string>
     <string name="scene_editor_target">Mål</string>
     <string name="scene_editor_tt_preset">Forhåndsinnstilt mål</string>
@@ -383,6 +385,8 @@
     <string name="scene_editor_enabled">Aktivert</string>
     <string name="scene_editor_disabled">Deaktivert</string>
     <string name="scene_summary">%1$d handlinger, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Ubestemt (manuell slutt)</string>
     <string name="scene_some_actions_failed">Noen handlinger mislyktes</string>
     <string name="scene_no_active">Ingen aktiv scene</string>

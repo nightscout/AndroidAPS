@@ -27,6 +27,7 @@
     <string name="constraint_applied">应用约束！</string>
     <string name="tt_label">临时目标</string>
     <string name="pump_unreachable">泵无法连接</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">泵驱动无响应。‘%1$s’ 已运行 %2$d’ 分钟，且其他命令无法到达泵。请检查泵，然后重启 AAPS。</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -63,6 +64,9 @@
     <string name="configbuilder_switch_confirmation">这将禁用 %1$s 并启用 %2$s。</string>
     <string name="expand">展开</string>
     <string name="collapse">收起</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">已完成</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">展开</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">折叠</string>
     <string name="no_compose_preferences">此插件没有可用的首选项设置</string>
     <string name="confirm_password_hint">确认密码</string>
     <string name="confirm_pin_hint">确认 PIN</string>
@@ -116,6 +120,7 @@
     <string name="profile_switch_no_insulin">无法切换配置文件：没有正在使用的胰岛素，也未选择任何胰岛素。</string>
     <string name="profile_switch_select_insulin_hint">尚未使用任何胰岛素。请选择您正在使用的胰岛素，以便此次配置文件切换能够记录它。</string>
     <string name="insulin_activation_failed">胰岛素未切换。您之前的胰岛素仍在使用中。</string>
+    <string name="insulin_activation_failed_reason" comment="%1$s=localized failure reason, a complete sentence that already ends with its own full stop, so do not add one after the placeholder. Example: The insulin was not switched: The master is offline. Your previous insulin is still in use.">胰岛素未切换：%1$s 您之前的胰岛素仍在使用中。</string>
     <string name="insulin_activation_unconfirmed">胰岛素切换无法确认。请在输注前检查配置文件中哪种胰岛素处于活动状态。</string>
     <string name="fill_prime_failed_insulin_not_switched" comment="%1$s=the delivery error message from the failed prime. Shown as one message because the insulin switch was chained to the prime succeeding.">%1$s\n\n胰岛素也未切换。</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -173,6 +178,7 @@
     <string name="notconfigured">未配置</string>
     <string name="loop_suspended_by_dst">循环因夏令时DST而暂停</string>
     <string name="required">要</string>
+    <string name="a11y_arrow_triple_down">下降非常迅速</string>
     <string name="a11y_arrow_double_down">迅速下降</string>
     <string name="a11y_arrow_single_down">下降</string>
     <string name="a11y_arrow_forty_five_down">缓慢减少</string>
@@ -180,8 +186,14 @@
     <string name="a11y_arrow_forty_five_up">缓慢增长</string>
     <string name="a11y_arrow_single_up">上升</string>
     <string name="a11y_arrow_double_up">快速上升</string>
+    <string name="a11y_arrow_triple_up">上升非常迅速</string>
     <string name="a11y_arrow_none">无</string>
     <string name="a11y_arrow_unknown">未知</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">将%1$s 减少 %2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">将%1$s 增加 %2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">向上移</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">向下移</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">第 %1$d 步 共 %2$d 步 </string>
     <string name="decrement">减少</string>
     <string name="increment">增加</string>
     <string name="a11y_high">高</string>
@@ -341,6 +353,8 @@
     <string name="scene_active">已激活</string>
     <string name="scene_ended">情景已结束</string>
     <string name="scene_end_active">结束激活情景</string>
+    <string name="scene_skip_to_label" comment="Confirmation line shown above the name of the follow-up scene that will start instead">跳转到</string>
+    <string name="scene_end_follow_up_not_started" comment="%1$s=name of the follow-up scene. Shown when ending a scene without starting its follow-up">后续 %1$s 将不会启动</string>
     <string name="scene_confirm_activate">激活情景 \"%1$s\"？</string>
     <string name="scene_confirm_deactivate">结束情景 \"%1$s\" 并恢复更改？</string>
     <string name="scene_conflict_active_tt">当前启用的临时目标将被替换</string>
@@ -356,7 +370,6 @@
     <string name="scene_action_careportal">日志：%1$s</string>
     <string name="scene_management">情景</string>
     <string name="scene_management_desc">创建、编辑和管理情景</string>
-    <string name="scene_action_count">%1$d 个动作</string>
     <string name="scene_start_from_template">从模板开始</string>
     <string name="scene_editor_target">目标</string>
     <string name="scene_editor_tt_preset">临时目标预设</string>
@@ -372,6 +385,7 @@
     <string name="scene_editor_enabled">启用</string>
     <string name="scene_editor_disabled">禁用</string>
     <string name="scene_summary">%1$d 个动作，%2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">无限时长（手动结束）</string>
     <string name="scene_some_actions_failed">部分操作执行失败</string>
     <string name="scene_no_active">当前无生效情景</string>
@@ -407,6 +421,9 @@
     <string name="clientcontrol_fail_scene_disabled">该情景模式已禁用。</string>
     <string name="clientcontrol_fail_partial">部分操作无法应用。</string>
     <string name="clientcontrol_fail_execution">主机无法应用该操作。</string>
+    <string name="clientcontrol_fail_cancelled">命令在执行前已被取消。未向泵发送任何指令。</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">大剂量已取消。未输注任何胰岛素。\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">已取消</string>
     <string name="clientcontrol_fail_control_disabled">主机上的远程控制已关闭。</string>
     <string name="clientcontrol_fail_no_pending_bolus">准备的大剂量已过期或已被取代。请再次点击按钮。</string>
     <string name="clientcontrol_fail_bolus_compute">主机无法计算大剂量（缺少血糖值/配置文件，或泵未就绪）。</string>
@@ -437,6 +454,7 @@
     <string name="treatment_insulin_desc">手动执行推注</string>
     <string name="treatment_carbs_desc">仅记录碳水化合物</string>
     <string name="treatment_calculator_desc">计算推注剂量</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">胰岛素设置</string>
     <string name="manage_insulin_desc">管理并启用胰岛素配置</string>
     <string name="concentration_disable_blocked">如果系统中存在非 U100 胰岛素，则无法禁用浓度支持。请先移除所有非 U100 胰岛素配置，然后切换到 U100 胰岛素配置文件。</string>
     <string name="simple_mode_blocked_by_concentration">使用非 U100 胰岛素时无法启用简易模式。请先切换至 U100 胰岛素。</string>
@@ -458,6 +476,9 @@
     <string name="treatment_cannula_change_desc">记录导管/输注管路更换</string>
     <string name="treatment_fill_desc">充盈导管</string>
     <string name="temp_basal">临时基础率</string>
+    <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">高于配置文件</string>
+    <string name="tbr_state_below_profile" comment="Spoken state of the temp basal chip when the running rate is lower than the profile basal. Said after the chip name: Temp basal, below profile.">低于配置文件</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">无</string>
     <string name="user_entry">用户条目</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">手指</string>
@@ -686,6 +707,7 @@
     <string name="basal">基础率</string>
     <string name="basalpct">基础率 %</string>
     <string name="sensitivity">灵敏度</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">自动敏感度调整 已关闭</string>
     <string name="isf_for_carbs">计算器和碳水吸收的平均 ISF：%1$.1f</string>
     <string name="isf_profile">配置文件 ISF: %1$.1f</string>
     <string name="isf_variable">变量 ISF: %1$.1f</string>
@@ -723,6 +745,7 @@
     <string name="wizard_include_iob">包含 IOB</string>
     <string name="wizard_include_cob">包含 COB</string>
     <string name="wizard_calculation">计算</string>
+    <string name="no_action_selected">未选择任何操作，不会发生任何变化。</string>
     <string name="carbs_removal_cob_limit" comment="Shown under the carbs field when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (carbs on board)">最大移除：%1$d g（COB）</string>
     <string name="wizard_no_insulin_required">不需要胰岛素</string>
     <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
@@ -773,6 +796,7 @@
     <string name="initializing">初始化…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">警告</string>
+    <string name="critical" comment="Spoken severity of a status value that needs attention now, such as a cannula past its change day or a nearly empty reservoir. Said after the value: Cannula, 3 days, Critical.">严重</string>
     <string name="alert" comment="Generic alert dialog title">警告</string>
     <string name="retry" comment="Button label to retry a failed operation">重试</string>
     <string name="finish" comment="Button label to complete a wizard/setup flow">完成</string>
@@ -1020,11 +1044,18 @@
     <string name="import_wrong_password">密码错误</string>
     <string name="import_btn">导入</string>
     <string name="import_anyway_btn">仍然导入</string>
+    <string name="import_apply_title">应用导入的设置吗？</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">更改设置： %1$d。更改的插件将重新启动。</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">需更改的设置：%1$d。保留的泵设置：%2$d，因此您的泵可继续工作。</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">导入的设置未选择此手机上的任何泵。%1$s 现已激活——请检查您的泵设置。</string>
+    <string name="import_applying">正在应用设置…</string>
+    <string name="import_replace_pump_settings">同时替换泵设置</string>
+    <string name="import_replace_pump_settings_summary">保持关闭以保留此手机已配对的泵。在同一泵上恢复到新手机时，请将其开启。</string>
     <string name="import_apply_waiting">正在等待泵…</string>
     <string name="import_apply_pump_busy">泵仍在忙碌中，因此设置未应用。</string>
     <string name="import_apply_retry_question">现在重试吗？</string>

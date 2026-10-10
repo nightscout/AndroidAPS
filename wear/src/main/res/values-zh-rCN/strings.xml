@@ -97,6 +97,7 @@
     <string name="action_user_action_confirmation">请求用户操作</string>
     <string name="action_scene_confirmation">情景请求</string>
     <string name="scene_end">结束</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">跳过</string>
     <string name="action_treatment_confirmation">治疗请求</string>
     <string name="action_bolus_confirmation">大剂量请求</string>
     <string name="action_wizard_confirmation">计算请求</string>
@@ -317,6 +318,18 @@
     <string name="loop_status_target_range">范围</string>
     <string name="loop_status_target">目标</string>
     <string name="loop_status_adjusted_target">已调整目标</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">直到结束</string>
+    <string name="loop_status_scene_ended">已结束</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">后续</string>
+    <string name="loop_status_profile">配置文件</string>
+    <string name="loop_status_no_profile">未设置配置文件</string>
+    <string name="loop_status_profile_percentage">百分比</string>
+    <string name="loop_status_profile_timeshift">时间偏移</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">返回至</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">灵敏度</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">由当前激活的情景模式设定</string>
     <string name="loop_status">闭环状态</string>
     <string name="loop_status_refresh">刷新</string>
     <string name="confirm">确认</string>

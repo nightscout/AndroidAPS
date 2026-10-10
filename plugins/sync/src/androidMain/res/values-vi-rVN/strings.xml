@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Có nhiều kết nối ghép đôi khớp với mã PIN này. Hãy yêu cầu thiết bị chính tạo mã mới và thử lại.</string>
     <string name="pair_with_master_error_expired">Ghép đôi này đã hết hạn. Hãy tạo mã PIN mới trên thiết bị chính.</string>
     <string name="pair_with_master_error_network">Không thể kết nối đến Nightscout. Hãy kiểm tra kết nối và thử lại.</string>
+    <string name="pair_with_master_error_secret_store">Không thể lưu thông tin bảo mật ghép đôi nên quá trình ghép đôi đã bị hủy. Không có thay đổi nào được thực hiện. Hãy thử lại, nếu vẫn không thành công, hãy khởi động lại ứng dụng.</string>
     <string name="pair_with_master_retry">Thử lại</string>
     <string name="pair_with_master_already_paired_title">Đã được kích hoạt</string>
     <string name="pair_with_master_already_paired_master">Hiện đang được ghép đôi với thiết bị chính %1$s. Hãy hủy ghép đôi trước khi nhập mã PIN mới.</string>
@@ -106,6 +107,7 @@
     <string name="scene_not_available">Ngữ cảnh %1$s không còn khả dụng, vui lòng làm mới ô hiển thị của bạn</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Các lệnh insulin từ xa bị vô hiệu hóa ở chế độ client</string>
     <string name="wear_phone_not_ready">Điện thoại vẫn đang khởi động hoặc áp dụng cài đặt. Vui lòng thử lại sau một lát.</string>
+    <string name="wear_control_disabled">Tính năng điều khiển từ Wear đang bị tắt trong phần cài đặt Wear trên điện thoại.</string>
     <string name="wear_action_tempt_unit_error">Đồng hồ và điện thoại đang dùng đơn vị khác nhau!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG nằm ngoài phạm vi!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG nằm ngoài phạm vi!</string>
@@ -255,6 +257,8 @@
     <string name="sms_read_status_failed">Đọc trạng thái thất bại</string>
     <string name="sms_profile_switch_created">Đã tạo chuyển đổi cấu hình</string>
     <string name="sms_wrong_tbr_duration">Thời gian TBR phải là bội số của %1$d phút và lớn hơn 0.</string>
+    <string name="sms_tbr_percent_only">Bơm này chỉ nhận liều nền tạm thời theo phần trăm, không phải theo U/h.</string>
+    <string name="sms_tbr_absolute_only">Bơm này chỉ nhận liều nền tạm thời theo U/h, không phải theo phần trăm.</string>
     <string name="a11y_otp_qr_code">Mã QR để thiết lập mật khẩu dùng một lần</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Ứng dụng cần quyền SMS để điều khiển từ xa qua tin nhắn</string>

@@ -33,4 +33,5 @@
     <string name="current_master_password">当前主密码</string>
     <string name="master_password_not_set">未设置主密码</string>
     <string name="aaps_directory_not_selected">未选择 AAPS 目录</string>
+    <string name="aaps_directory_access_lost">对 AAPS 目录的访问权限已丢失，因此设置不再保存到手机。请重新选择该目录。</string>
 </resources>

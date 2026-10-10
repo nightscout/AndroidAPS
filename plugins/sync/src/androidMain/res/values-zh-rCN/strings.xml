@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">多个配对匹配了该 PIN 码。请让主机生成新的 PIN 码后重试。</string>
     <string name="pair_with_master_error_expired">此配对已过期。请在主机上生成新的 PIN 码。</string>
     <string name="pair_with_master_error_network">无法访问 Nightscout。请检查连接后重试。</string>
+    <string name="pair_with_master_error_secret_store">配对密钥无法存储，因此配对已取消。未做任何更改。请重试；若持续失败，请重启应用。</string>
     <string name="pair_with_master_retry">请重试</string>
     <string name="pair_with_master_already_paired_title">已配对</string>
     <string name="pair_with_master_already_paired_master">当前已与主机 %1$s 配对。请先取消配对再输入新 PIN 码。</string>
@@ -105,6 +106,8 @@
     <string name="user_action_not_available">所选用户动作 %1$s 已不可用，请刷新您的面板</string>
     <string name="scene_not_available">情景 %1$s 已失效，请刷新磁贴</string>
     <string name="wear_remote_insulin_not_allowed_in_client">客户端模式下已禁用远程胰岛素指令</string>
+    <string name="wear_phone_not_ready">手机仍在启动或应用设置中。请稍后重试。</string>
+    <string name="wear_control_disabled">手机上的 Wear 设置中已关闭 Wear 控制。</string>
     <string name="wear_action_tempt_unit_error">手表和手机上使用了不同的单位！</string>
     <string name="wear_action_tempt_min_bg_error">目标血糖最小值超出范围！</string>
     <string name="wear_action_tempt_max_bg_error">目标血糖最大值超出范围！</string>
@@ -117,6 +120,7 @@
     <string name="wear_custom_watchface_not_shown" comment="Dialog after a custom watchface was sent while the complications watchface is selected. %1$s=name of the sent custom watchface">手表当前显示的是小工具表盘。请选择自定义表盘，以便在手表上查看 %1$s。</string>
     <string name="wear_pushed_watchface_confirm_title">要在手表上更换表盘吗？</string>
     <string name="wear_pushed_watchface_confirm_message" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Complications watchface will replace the Custom watchface on the watch.">%1$s 将替换手表上的 %2$s。</string>
+    <string name="wear_pushed_watchface_confirm_message_from_complications" comment="%1$s=name of the watchface that will be installed, %2$s=name of the one installed now. Example: Custom watchface will replace the Complications watchface on the watch.">%1$s 将替换手表上的 %2$s。您在表盘编辑器中更改过的小工具将恢复为默认值。</string>
     <string name="wear_load_watchface">加载表盘</string>
     <string name="wear_infos_watchface">信息表盘</string>
     <string name="wear_export_watchface">导出模板</string>
@@ -253,6 +257,8 @@
     <string name="sms_read_status_failed">读取状态失败了</string>
     <string name="sms_profile_switch_created">配置文件切换已创建</string>
     <string name="sms_wrong_tbr_duration">临时基础率的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
+    <string name="sms_tbr_percent_only">此泵的临时基础率仅支持百分比，不支持 U/h。</string>
+    <string name="sms_tbr_absolute_only">此泵的临时基础率仅支持 U/h 单位，不支持百分比。</string>
     <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
     <string name="permission_sms_title">SMS短信</string>
     <string name="permission_sms_description">应用程序需要短信权限才能通过短信远程控制</string>

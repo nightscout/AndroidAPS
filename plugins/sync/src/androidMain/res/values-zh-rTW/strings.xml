@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">有多個配對符合該 PIN。請要求主裝置產生新的 PIN，然後重試。</string>
     <string name="pair_with_master_error_expired">此配對已到期。請在主裝置上產生新的 PIN。</string>
     <string name="pair_with_master_error_network">無法連線至 Nightscout。請檢查連線後再試一次。</string>
+    <string name="pair_with_master_error_secret_store">無法儲存配對金鑰，因此已取消配對。未變更任何設定。請再試一次；若仍然失敗，請重新啟動 App。</string>
     <string name="pair_with_master_retry">再試一次</string>
     <string name="pair_with_master_already_paired_title">已配對</string>
     <string name="pair_with_master_already_paired_master">目前已與主裝置 %1$s 配對。請先取消配對後再輸入新的 PIN。</string>
@@ -107,6 +108,7 @@
     <string name="scene_not_available">情境 %1$s 已無法使用，請重新整理您的圖塊</string>
     <string name="wear_remote_insulin_not_allowed_in_client">遠端胰島素指令在用戶端模式中已停用</string>
     <string name="wear_phone_not_ready">手機仍在啟動或套用設定中。請稍後再試。</string>
+    <string name="wear_control_disabled">已在手機的 Wear 設定中關閉 Wear 控制。</string>
     <string name="wear_action_tempt_unit_error">手錶和手機上使用了不同的單位！</string>
     <string name="wear_action_tempt_min_bg_error">最低血糖超出範圍！</string>
     <string name="wear_action_tempt_max_bg_error">最高血糖超出範圍！</string>
@@ -256,6 +258,8 @@
     <string name="sms_read_status_failed">讀取狀態失敗</string>
     <string name="sms_profile_switch_created">已建立設定檔切換</string>
     <string name="sms_wrong_tbr_duration">臨時基礎率的持續時間必須是 %1$d 分鐘的倍數，且大於 0。</string>
+    <string name="sms_tbr_percent_only">此幫浦僅能以百分比設定臨時基礎率，不能以 U/h。</string>
+    <string name="sms_tbr_absolute_only">此幫浦僅能以 U/h 設定臨時基礎率，不能以百分比。</string>
     <string name="a11y_otp_qr_code">用於設定一次性密碼的 QR Code</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">應用程式需要 SMS 權限，才能透過文字訊息進行遠端控制</string>

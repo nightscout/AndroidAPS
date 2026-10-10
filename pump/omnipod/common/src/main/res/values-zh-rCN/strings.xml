@@ -99,6 +99,8 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">微型大剂量SMB不确定时启用声音通知</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">常规大剂量不确定时启用声音通知</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">输注暂停时开启声音通知</string>
+    <string name="omnipod_dash_use_bonding">蓝牙配对</string>
+    <string name="omnipod_dash_use_bonding_summary">仅当 Pod 无法保持稳定连接时才尝试此操作。手机将显示配对请求，您必须接受。如果 Pod 连接正常，请保持关闭。在 Android 15 以下版本中无效。</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">没有活动的 Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">正在设置 (等待Pod 激活)</string>
@@ -109,9 +111,21 @@
     <string name="omnipod_common_pod_status_inactive">未启用</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod 故障: %1$03d %2$s</string>
     <!-- Omnipod - PDM Notification -->
+    <string name="omnipod_common_pdm_notification_label">PDM 通知</string>
+    <string name="omnipod_common_pdm_ref" comment="%1$s=PDM-style reference code, e.g. 17-01234-05606-020. Shown for support calls, kept in the same format the PDM itself would show.">参考: %1$s</string>
     <!-- Fault header/text shown as if the Dash PDM itself had shown it, so the user can report the fault
          to Insulet as if they had used a PDM. One header + one text per PDM-style fault category (see
          AlarmType.pdmFaultCategory / PdmFaultCategory). -->
+    <string name="omnipod_common_pdm_notification_header_reservoir_empty">储药器空了</string>
+    <string name="omnipod_common_pdm_notification_text_reservoir_empty">胰岛素输注已停止。请立即更换 Pod。</string>
+    <string name="omnipod_common_pdm_notification_header_auto_off">自动关闭</string>
+    <string name="omnipod_common_pdm_notification_text_auto_off">胰岛素输注已停止。您的 PDM 与 Pod 在过去 4 小时内未进行通信。若要恢复胰岛素输注，请立即更换 Pod。</string>
+    <string name="omnipod_common_pdm_notification_header_pod_expired">Pod 已过期</string>
+    <string name="omnipod_common_pdm_notification_text_pod_expired">胰岛素输注已停止。请立即更改Pod。</string>
+    <string name="omnipod_common_pdm_notification_header_occluded">检测到堵塞</string>
+    <string name="omnipod_common_pdm_notification_text_occluded">胰岛素输注已停止。请立即更换 Pod。检查您的血糖</string>
+    <string name="omnipod_common_pdm_notification_header_pod_error">Pod 错误</string>
+    <string name="omnipod_common_pdm_notification_text_pod_error">胰岛素输注已停止。请立即更换 Pod。</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_expiration">Pod 将很快过期</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod 将很快过期</string>

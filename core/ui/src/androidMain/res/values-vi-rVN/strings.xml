@@ -27,6 +27,7 @@
     <string name="constraint_applied">Đã áp dụng giới hạn!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Không thể kết nối với bơm</string>
+    <string name="pump_driver_not_responding" comment="%1$s=the pump command that is stuck, for example: Bolus: 1.00 U. %2$d=minutes">Trình điều khiển bơm không phản hồi. \"%1$s\" đã chạy trong %2$d phút và không có lệnh nào khác có thể kết nối với bơm. Hãy kiểm tra bơm, sau đó khởi động lại AAPS.</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
@@ -190,6 +191,9 @@
     <string name="a11y_arrow_unknown">không biết</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">giảm %1$s bởi %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">tăng %1$s bởi %2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">Chuyển lên</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">Chuyển xuống</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">Bước %1$d của %2$d</string>
     <string name="decrement">giảm dần</string>
     <string name="increment">tăng dần</string>
     <string name="a11y_high">cao</string>
@@ -366,7 +370,6 @@
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_management">Ngữ cảnh</string>
     <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các ngữ cảnh</string>
-    <string name="scene_action_count">%1$d hành động</string>
     <string name="scene_start_from_template">Bắt đầu từ mẫu</string>
     <string name="scene_editor_target">Mục tiêu</string>
     <string name="scene_editor_tt_preset">Thiết lập sẵn TT</string>
@@ -382,6 +385,7 @@
     <string name="scene_editor_enabled">Đã bật</string>
     <string name="scene_editor_disabled">Đã tắt</string>
     <string name="scene_summary">%1$d hành động, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">Không thời hạn (kết thúc thủ công)</string>
     <string name="scene_some_actions_failed">Một số hành động thất bại</string>
     <string name="scene_no_active">Không có ngữ cảnh nào đang hoạt động</string>
@@ -788,7 +792,7 @@
     <string name="connection_error">Lỗi kết nối bơm</string>
     <string name="reading_pump_history">Đang đọc lịch sử bơm</string>
     <string name="password_cleared">Đã xóa bỏ mật khẩu!</string>
-    <string name="pairing">Đang ghép đôi</string>
+    <string name="pairing">Ghép đôi</string>
     <string name="initializing">Đang khởi chạy…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Cảnh báo</string>

@@ -51,6 +51,7 @@
     <string name="pair_with_master_error_ambiguous_pin">Varios emparejamientos coinciden con ese PIN. Solicita al máster que genere uno nuevo e inténtalo de nuevo</string>
     <string name="pair_with_master_error_expired">Este emparejamiento ha caducado. Genera un PIN nuevo en el máster</string>
     <string name="pair_with_master_error_network">No se pudo conectar con Nightscout. Comprueba la conexión e inténtalo de nuevo</string>
+    <string name="pair_with_master_error_secret_store">No se ha podido almacenar el secreto de emparejamiento, por lo que se ha cancelado el emparejamiento. No se ha modificado nada. Vuelve a intentarlo y, si el fallo persiste, reinicia la aplicación</string>
     <string name="pair_with_master_retry">Inténtalo de nuevo</string>
     <string name="pair_with_master_already_paired_title">Ya está emparejado</string>
     <string name="pair_with_master_already_paired_master">Actualmente emparejado con el máster %1$s. Desempareja primero para introducir un nuevo PIN</string>
@@ -106,6 +107,7 @@
     <string name="scene_not_available">La escena %1$s ya no está disponible, por favor actualiza el mosaico</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Los comandos remotos de insulina están desactivados en el modo cliente</string>
     <string name="wear_phone_not_ready">El teléfono aún se está iniciando o aplicando la configuración. Inténtalo de nuevo en un momento</string>
+    <string name="wear_control_disabled">El control del reloj está desactivado en la configuración de Wear del teléfono</string>
     <string name="wear_action_tempt_unit_error">¡Diferentes unidades usadas en el reloj y en el teléfono!</string>
     <string name="wear_action_tempt_min_bg_error">¡Glucosa mínima fuera de rango!</string>
     <string name="wear_action_tempt_max_bg_error">¡Glucosa máxima fuera de rango!</string>
@@ -255,6 +257,8 @@
     <string name="sms_read_status_failed">Error al leer estado</string>
     <string name="sms_profile_switch_created">Cambio de perfil creado</string>
     <string name="sms_wrong_tbr_duration">La duración de la TBR debe ser un múltiplo de %1$d minutos y mayor que 0</string>
+    <string name="sms_tbr_percent_only">Esta bomba solo admite un bolo temporal en porcentaje, no en U/h</string>
+    <string name="sms_tbr_absolute_only">Esta bomba solo admite una tasa basal temporal en U/h, no en porcentaje</string>
     <string name="a11y_otp_qr_code">Código QR para configurar la contraseña de un solo uso</string>
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">La aplicación necesita permiso de SMS para el control remoto mediante mensajes de texto</string>

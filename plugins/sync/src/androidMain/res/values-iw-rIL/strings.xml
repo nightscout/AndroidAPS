@@ -51,6 +51,7 @@
     <string name="pump_status">סטטוס המשאבה</string>
     <string name="loop_status">סטטוס הלולאה</string>
     <string name="user_action_not_available">פעולת המשתמש %1$s אינה זמינה יותר, בבקשה רעננו את האריח</string>
+    <string name="wear_control_disabled">כיבוי השליטה מהשעון נעשה בהגדרות שעון wear בטלפון.</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
     <string name="wear_action_tempt_min_bg_error">ערך הסוכר המינימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>

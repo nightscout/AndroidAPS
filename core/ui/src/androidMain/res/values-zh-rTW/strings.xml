@@ -191,6 +191,9 @@
     <string name="a11y_arrow_unknown">未知</string>
     <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">將 %1$s 減少 %2$s</string>
     <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">將 %1$s 增加 %2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">上移</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">下移</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">第 %1$d 步，共 %2$d 步</string>
     <string name="decrement">減少</string>
     <string name="increment">增加</string>
     <string name="a11y_high">高</string>
@@ -367,7 +370,6 @@
     <string name="scene_action_careportal">記錄: %1$s</string>
     <string name="scene_management">情境</string>
     <string name="scene_management_desc">建立、編輯與管理場景</string>
-    <string name="scene_action_count">%1$d 個動作</string>
     <string name="scene_start_from_template">從範本開始</string>
     <string name="scene_editor_target">目標</string>
     <string name="scene_editor_tt_preset">臨時目標預設</string>
@@ -383,6 +385,7 @@
     <string name="scene_editor_enabled">啟用</string>
     <string name="scene_editor_disabled">停用</string>
     <string name="scene_summary">%1$d 個動作, %2$s</string>
+    <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
     <string name="scene_duration_indefinite">無限期（手動結束）</string>
     <string name="scene_some_actions_failed">部分動作失敗</string>
     <string name="scene_no_active">沒有作用中的場景</string>
