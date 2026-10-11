@@ -506,6 +506,9 @@ class EquilManager(
                 EquilState()
             }
         }
+        // The connection state is stored with the rest, but no BLE link survives an app restart. A stored
+        // CONNECTING made the queue wait for a connect that was never started, until its 2 min timeout.
+        loaded.bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED
 
         equilState = loaded
         syncOverviewFlows()

@@ -14,6 +14,7 @@ import app.aaps.pump.equil.ble.EquilBLE
 import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
+import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
 import app.aaps.pump.equil.keys.EquilStringKey
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
@@ -66,11 +67,30 @@ class EquilManagerStateTest {
             persisted = it.getArgument(1)
             Unit
         }
-        sut = EquilManager(
-            aapsLogger, rxBus, preferences, rh, pumpSync, equilBLE, equilHistoryRecordDao,
-            equilHistoryPumpDao, { mock<PumpEnactResult>() }, dateUtil, notificationManager,
-            ch, bolusProgressData, CoroutineScope(UnconfinedTestDispatcher())
-        )
+        sut = newManager()
+    }
+
+    /** A new instance reads only what preferences hold, like a new app process. */
+    private fun newManager() = EquilManager(
+        aapsLogger, rxBus, preferences, rh, pumpSync, equilBLE, equilHistoryRecordDao,
+        equilHistoryPumpDao, { mock<PumpEnactResult>() }, dateUtil, notificationManager,
+        ch, bolusProgressData, CoroutineScope(UnconfinedTestDispatcher())
+    )
+
+    @Test
+    fun `a stored CONNECTING is not loaded after an app restart`() {
+        sut.init()
+        sut.setActivationProgress(ActivationProgress.COMPLETED)
+        // The app is killed while a connect is running; the state was last stored as CONNECTING.
+        sut.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+        sut.storePodState()
+
+        val restarted = newManager()
+        restarted.init()
+
+        // CONNECTING made the queue wait 2 min for a connect that was never started.
+        assertThat(restarted.equilState?.bluetoothConnectionState).isEqualTo(BluetoothConnectionState.DISCONNECTED)
+        assertThat(restarted.isActivationCompleted()).isTrue()
     }
 
     @Test
