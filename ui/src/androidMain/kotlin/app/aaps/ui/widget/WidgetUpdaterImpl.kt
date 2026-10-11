@@ -4,6 +4,10 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.hardware.display.DisplayManager
+import android.os.Handler
+import android.os.Looper
+import android.view.Display
 import androidx.glance.appwidget.updateAll
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -15,6 +19,7 @@ import app.aaps.ui.widget.glance.GlucoseCircleGlanceWidget
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -24,8 +29,9 @@ import kotlinx.coroutines.launch
  * stateless — they resolve their dependencies from the Metro graph inside
  * `provideGlance`, so this class doesn't need to hold any state-loader refs.
  */
-// Deliberately NOT @SingleIn: the @Binds this replaces had no scope.
+// One instance: it holds the update that waits for a display to turn on, and the listener for that.
 @ContributesBinding(AppScope::class)
+@SingleIn(AppScope::class)
 @Inject
 class WidgetUpdaterImpl(
     private val context: Context,
@@ -35,7 +41,38 @@ class WidgetUpdaterImpl(
     private val scope: CoroutineScope
 ) : WidgetUpdater {
 
+    private val displayManager = context.getSystemService(DisplayManager::class.java)
+    private val gate = ScreenOffGate()
+
+    init {
+        displayManager.registerDisplayListener(
+            object : DisplayManager.DisplayListener {
+                override fun onDisplayChanged(displayId: Int) {
+                    if (isAnyDisplayOn() && gate.displayTurnedOn()) runUpdate("DisplayOn")
+                }
+
+                override fun onDisplayAdded(displayId: Int) {}
+                override fun onDisplayRemoved(displayId: Int) {}
+            },
+            Handler(Looper.getMainLooper())
+        )
+    }
+
+    /**
+     * Any display, not only the main one: a foldable can show widgets on its cover screen while the main
+     * screen is off (#4608). Doze is the always-on display, which shows no home screen widgets.
+     */
+    private fun isAnyDisplayOn(): Boolean = displayManager.displays.any { it.state !in NOT_SHOWING_WIDGETS }
+
     override fun update(from: String) {
+        if (!gate.request(isAnyDisplayOn())) {
+            aapsLogger.debug(LTag.WIDGET, "updateWidget $from held back, no display is on")
+            return
+        }
+        runUpdate(from)
+    }
+
+    private fun runUpdate(from: String) {
         scope.launch {
             aapsLogger.debug(LTag.WIDGET, "updateWidget $from")
             runCatching { AapsGlanceWidget().updateAll(context) }
@@ -64,5 +101,10 @@ class WidgetUpdaterImpl(
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
         }
         context.sendBroadcast(intent)
+    }
+
+    private companion object {
+
+        val NOT_SHOWING_WIDGETS = setOf(Display.STATE_OFF, Display.STATE_DOZE, Display.STATE_DOZE_SUSPEND)
     }
 }
