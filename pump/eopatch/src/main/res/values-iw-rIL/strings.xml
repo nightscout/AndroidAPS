@@ -8,9 +8,11 @@
     <string name="eopatch_ble_status">סטטוס BLE</string>
     <string name="eopatch_serial_number">מספר סידורי</string>
     <string name="eopatch_expiration_time">מועד תפוגה</string>
+    <string name="eopatch_not_activated">לא הופעל</string>
     <string name="eopatch_base_basal_rate">ערך בזאלי בסיסי</string>
     <string name="eopatch_temp_basal_rate">מינון בזאלי זמני</string>
     <string name="invalid_basal_rate">הבאזלי של הפרופיל קטן מ-0.05 U/hr. ל-EOPatch יש יחידת הזרקה מינימלית של 0.05U. נא לנסות שוב לאחר הגדרת פרופיל ליותר מיחידת ההזרקה המינימלית.</string>
+    <string name="no_profile_selected_try_again">לא נבחר פרופיל. נא לבחור פרופיל ולנסות שוב.</string>
     <string name="symbol_day">יום</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
