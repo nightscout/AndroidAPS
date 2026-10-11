@@ -533,6 +533,11 @@ class CommandQueueImplementation(
             // A replaced bolus was not delivered either. Its caller must hear that, or it saves its
             // carbs next to the carbs of the bolus that replaces it.
             removeAll(type, success = false, cancelled = true)
+            // A waiting SMB was calculated without this bolus, and this bolus without the SMB, so giving
+            // both would treat the same BG twice. Drop the SMB: after a failed SMB the loop runs again with
+            // temp basal only. It also keeps the SMB out of this bolus's progress dialog (#4546). An SMB
+            // that is already being delivered is not in the queue and is not touched.
+            if (type == CommandType.BOLUS) removeAll(CommandType.SMB_BOLUS, success = false, cancelled = true)
             // apply constraints
             detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
             val bolusGeneration = bolusProgressData.start(detailedBolusInfo.insulin, isSMB = detailedBolusInfo.bolusType === BS.Type.SMB, isPriming = detailedBolusInfo.bolusType == BS.Type.PRIMING)

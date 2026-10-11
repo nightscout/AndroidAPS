@@ -536,15 +536,65 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         smb.bolusType = BS.Type.SMB
         backgroundScope.launch { commandQueue.bolus(smb) }
         yield()
+        // A manual bolus drops a queued SMB, so start delivering the SMB first to have both
+        commandQueue.pickup()
         backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo()) }
         yield()
-        assertThat(commandQueue.size()).isEqualTo(2)
+        assertThat(commandQueue.size()).isEqualTo(1)
 
         // when
         commandQueue.cancelAllBoluses(null)
 
         // then
         assertThat(commandQueue.size()).isEqualTo(0)
+    }
+
+    /** #4546: the SMB did not count the manual bolus, and the manual bolus did not count the SMB. */
+    @Test
+    fun `a manual bolus drops a queued SMB`() = runTest {
+        var smbResult: PumpEnactResult? = null
+        val smb = DetailedBolusInfo().apply {
+            bolusType = BS.Type.SMB
+            lastKnownBolusTime = System.currentTimeMillis()
+        }
+        backgroundScope.launch { smbResult = commandQueue.bolus(smb) }
+        yield()
+        assertThat(commandQueue.size()).isEqualTo(1)
+
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        yield() // the manual bolus drops the SMB
+        yield() // the SMB caller resumes with its result
+
+        assertThat(commandQueue.size()).isEqualTo(1)
+        commandQueue.pickup()
+        assertThat(commandQueue.performing()?.commandType).isEqualTo(Command.CommandType.BOLUS)
+        assertThat(smbResult).isNotNull()
+        assertThat(smbResult!!.success).isFalse()
+        // Not a delivery failure: the loop runs again, and no bolus error alarm
+        assertThat(smbResult!!.cancelled).isTrue()
+        // The progress belongs to the manual bolus now
+        assertThat(bolusProgressData.state.value?.isSMB).isFalse()
+    }
+
+    /** An SMB that is being delivered is not in the queue. The manual bolus waits behind it. */
+    @Test
+    fun `a manual bolus does not drop an SMB that is being delivered`() = runTest {
+        var smbResult: PumpEnactResult? = null
+        val smb = DetailedBolusInfo().apply {
+            bolusType = BS.Type.SMB
+            lastKnownBolusTime = System.currentTimeMillis()
+        }
+        backgroundScope.launch { smbResult = commandQueue.bolus(smb) }
+        yield()
+        commandQueue.pickup()
+
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        yield()
+        yield()
+
+        assertThat(commandQueue.performing()?.commandType).isEqualTo(Command.CommandType.SMB_BOLUS)
+        assertThat(commandQueue.size()).isEqualTo(1)
+        assertThat(smbResult).isNull()
     }
 
     @Test
