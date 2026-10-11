@@ -20,6 +20,18 @@
     <string name="permission_schedule_exact_alarm_title">Alarmas y recordatorios</string>
     <string name="permission_schedule_exact_alarm_description">Necesario para que las alarmas puedan encender la pantalla mientras AAPS está en segundo plano y para que los recordatorios suenen a tiempo</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Alarmas de AAPS</string>
+    <string name="alarm_channel_standard">Alarma estándar</string>
+    <string name="alarm_channel_bolus_error">Error de bolo</string>
+    <string name="alarm_channel_error">Error general</string>
+    <string name="alarm_channel_urgent">Alarma urgente</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (omitir No molestar)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respeta No molestar)</string>
+    <string name="alarm_channel_silent_urgent">Alarma urgente (modo de volumen progresivo)</string>
+    <string name="alarm_channel_silent">Alarma (modo de volumen progresivo)</string>
+    <string name="alarm_channel_silent_description">Se usa cuando «Aumentar progresivamente el volumen de notificación» está activado. La pantalla de alarma reproduce el sonido</string>
+    <string name="ongoing_channel_name">Estado continuo</string>
+    <string name="notifications_channel_name">Notificaciones de AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
