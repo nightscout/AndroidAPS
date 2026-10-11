@@ -444,9 +444,10 @@ class EquilPumpPlugin(
     @VisibleForTesting
     internal fun playAlarm() {
         val state = equilManager.equilState
-        val battery = state?.battery ?: 100
+        // null = not known yet after a reservoir change. That is not a low battery.
+        val battery = state?.battery
         val insulin = state?.currentInsulin ?: 0
-        if (preferences.get(EquilBooleanPreferenceKey.EquilAlarmBattery)) {
+        if (battery != null && preferences.get(EquilBooleanPreferenceKey.EquilAlarmBattery)) {
             val text = rh.gs(R.string.equil_low_battery_level, battery)
             when {
                 battery < 5   -> alarmOnce(EquilBooleanKey.AlarmBattery5, NotificationId.EQUIL_LOW_BATTERY, text, NotificationLevel.IMPORTANT)

@@ -61,7 +61,7 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
     private val pumpState = EquilManager.EquilState().apply { runMode = RunMode.RUN }
 
     /** playAlarm runs on every pump data update; flags are kept in a map like real preferences. */
-    private fun prepareAlarms(insulin: Int, battery: Int = 100) {
+    private fun prepareAlarms(insulin: Int, battery: Int? = 100) {
         pumpState.currentInsulin = insulin
         pumpState.battery = battery
         whenever(equilManager.equilState).thenReturn(pumpState)
@@ -104,6 +104,15 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
         repeat(3) { equilPumpPlugin.playAlarm() }
 
         assertEquals(1, alarmsPosted(NotificationId.EQUIL_LOW_BATTERY))
+    }
+
+    @Test
+    fun `an unknown battery level after a reservoir change does not alarm`() {
+        prepareAlarms(insulin = 100, battery = null)
+
+        equilPumpPlugin.playAlarm()
+
+        assertEquals(0, alarmsPosted(NotificationId.EQUIL_LOW_BATTERY))
     }
 
     @Test

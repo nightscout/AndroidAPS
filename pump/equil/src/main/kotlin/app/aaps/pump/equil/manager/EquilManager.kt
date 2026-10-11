@@ -622,7 +622,8 @@ class EquilManager(
         storePodState()
     }
 
-    fun setBattery(battery: Int) {
+    /** null = not known, e.g. after a reservoir change, where the battery may have been swapped (#4477). */
+    fun setBattery(battery: Int?) {
         equilState?.battery = battery
         storePodState()
         batteryFlow.value = battery
@@ -721,7 +722,7 @@ class EquilManager(
         var lastDataTime: Long = 0
         var currentInsulin = 0
         var startInsulin = 0
-        var battery = 0
+        var battery: Int? = null
         var tempBasal: EquilTempBasalRecord? = null
         var bolusRecord: EquilBolusRecord? = null
         var runMode: RunMode? = null

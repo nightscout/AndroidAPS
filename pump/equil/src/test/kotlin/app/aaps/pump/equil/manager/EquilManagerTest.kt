@@ -160,6 +160,21 @@ class EquilManagerTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun `an unknown battery shows as null until the next reading (#4477)`() {
+        equilManager.clearPodState()
+        equilManager.setBattery(46)
+
+        equilManager.setBattery(null)
+        assertEquals(null, equilManager.equilState?.battery)
+        assertEquals(null, equilManager.batteryFlow.value)
+
+        // The next advertisement brings the level of the new battery.
+        equilManager.setBattery(95)
+        assertEquals(95, equilManager.equilState?.battery)
+        assertEquals(95, equilManager.batteryFlow.value)
+    }
+
+    @Test
     fun `the first mode after a fresh state records nothing`() = runTest {
         prepareRunMode(RunMode.RUN)
         equilManager.equilState?.runMode = null

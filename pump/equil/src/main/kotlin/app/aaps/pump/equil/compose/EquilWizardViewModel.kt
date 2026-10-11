@@ -943,6 +943,9 @@ class EquilWizardViewModel(
             if (r.success) {
                 equilPumpPlugin.resetData()
                 equilManager.setRunMode(RunMode.STOP)
+                // The battery can be swapped now. The pump sends the new level only in its advertisement,
+                // which is read at the next new connection, so show "unknown" until then, not the old level.
+                equilManager.setBattery(null)
                 equilManager.setActivationProgress(ActivationProgress.CANNULA_CHANGE)
                 moveStep(EquilWizardStep.ASSEMBLE)
             } else {
