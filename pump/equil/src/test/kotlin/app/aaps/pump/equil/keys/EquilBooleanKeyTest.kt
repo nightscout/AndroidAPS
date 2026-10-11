@@ -11,11 +11,21 @@ class EquilBooleanKeyTest : TestBase() {
     @Test
     fun `all enum values should be accessible`() {
         val allKeys = EquilBooleanKey.entries
-        assertEquals(4, allKeys.size)
+        assertEquals(7, allKeys.size)
         assert(allKeys.contains(EquilBooleanKey.BasalSet))
         assert(allKeys.contains(EquilBooleanKey.AlarmBattery10))
         assert(allKeys.contains(EquilBooleanKey.AlarmInsulin10))
         assert(allKeys.contains(EquilBooleanKey.AlarmInsulin5))
+        assert(allKeys.contains(EquilBooleanKey.AlarmInsulin2))
+        assert(allKeys.contains(EquilBooleanKey.AlarmInsulin0))
+        assert(allKeys.contains(EquilBooleanKey.AlarmBattery5))
+    }
+
+    @Test
+    fun `new alarm level flags have their own keys`() {
+        assertEquals("key_equil_alarm_insulin_2", EquilBooleanKey.AlarmInsulin2.key)
+        assertEquals("key_equil_alarm_insulin_0", EquilBooleanKey.AlarmInsulin0.key)
+        assertEquals("key_equil_alarm_battery_5", EquilBooleanKey.AlarmBattery5.key)
     }
 
     @Test
@@ -57,7 +67,7 @@ class EquilBooleanKeyTest : TestBase() {
     @Test
     fun `all keys should have unique key strings`() {
         val keys = EquilBooleanKey.entries.map { it.key }.toSet()
-        assertEquals(4, keys.size, "All key strings should be unique")
+        assertEquals(EquilBooleanKey.entries.size, keys.size, "All key strings should be unique")
     }
 
     @Test
@@ -80,6 +90,9 @@ class EquilBooleanKeyTest : TestBase() {
         assertEquals(1, EquilBooleanKey.AlarmBattery10.ordinal)
         assertEquals(2, EquilBooleanKey.AlarmInsulin10.ordinal)
         assertEquals(3, EquilBooleanKey.AlarmInsulin5.ordinal)
+        assertEquals(4, EquilBooleanKey.AlarmInsulin2.ordinal)
+        assertEquals(5, EquilBooleanKey.AlarmInsulin0.ordinal)
+        assertEquals(6, EquilBooleanKey.AlarmBattery5.ordinal)
     }
 
     @Test

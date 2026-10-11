@@ -2,11 +2,13 @@ package app.aaps.pump.equil
 
 import android.content.Context
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
+import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.di.PumpDriver
@@ -403,8 +405,11 @@ class EquilPumpPlugin(
 
     fun resetData() {
         preferences.put(EquilBooleanKey.AlarmBattery10, false)
+        preferences.put(EquilBooleanKey.AlarmBattery5, false)
         preferences.put(EquilBooleanKey.AlarmInsulin10, false)
         preferences.put(EquilBooleanKey.AlarmInsulin5, false)
+        preferences.put(EquilBooleanKey.AlarmInsulin2, false)
+        preferences.put(EquilBooleanKey.AlarmInsulin0, false)
         preferences.put(EquilBooleanKey.BasalSet, false)
     }
 
@@ -415,70 +420,44 @@ class EquilPumpPlugin(
         preferences.put(EquilStringKey.Password, "")
     }
 
-    private fun playAlarm() {
-        val battery = equilManager.equilState?.battery ?: 100
-        val insulin = equilManager.equilState?.currentInsulin ?: 0
-        val alarmBattery = preferences.get(EquilBooleanPreferenceKey.EquilAlarmBattery)
-        val alarmInsulin = preferences.get(EquilBooleanPreferenceKey.EquilAlarmInsulin)
-        if (battery <= 10 && alarmBattery) {
-            val alarmBattery10 = preferences.get(EquilBooleanKey.AlarmBattery10)
-            if (!alarmBattery10) {
-                notificationManager.post(
-                    NotificationId.EQUIL_LOW_BATTERY,
-                    rh.gs(R.string.equil_low_battery) + battery + "%",
-                    sound = AlarmSound.ALARM
-                )
-                preferences.put(EquilBooleanKey.AlarmBattery10, true)
-            } else {
-                if (battery < 5) {
-                    notificationManager.post(
-                        NotificationId.EQUIL_LOW_BATTERY,
-                        rh.gs(R.string.equil_low_battery) + battery + "%",
-                        NotificationLevel.IMPORTANT,
-                        sound = AlarmSound.ALARM
-                    )
-                }
-            }
-        }
-        if (equilManager.equilState?.runMode === RunMode.RUN && alarmInsulin && equilManager.isActivationCompleted()) {
+    /**
+     * Low battery and low insulin alarms.
+     *
+     * This runs on every Equil data update - several times per loop cycle. So each level alarms
+     * once and remembers that in its own flag until the next reservoir change ([resetData]).
+     * Issue #3837: the 2 U level had no flag and was posted again with sound on every update, so
+     * the alarm could not be snoozed. (Battery under 5 % had the same problem.)
+     */
+    @VisibleForTesting
+    internal fun playAlarm() {
+        val state = equilManager.equilState
+        val battery = state?.battery ?: 100
+        val insulin = state?.currentInsulin ?: 0
+        if (preferences.get(EquilBooleanPreferenceKey.EquilAlarmBattery)) {
+            val text = rh.gs(R.string.equil_low_battery_level, battery)
             when {
-                insulin in 6..10 -> {
-                    val alarmInsulin10 =
-                        preferences.get(EquilBooleanKey.AlarmInsulin10)
-                    if (!alarmInsulin10) {
-                        notificationManager.dismiss(NotificationId.EQUIL_ALARM_INSULIN)
-                        notificationManager.post(
-                            NotificationId.EQUIL_ALARM_INSULIN,
-                            rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                            sound = AlarmSound.ALARM
-                        )
-                        preferences.put(EquilBooleanKey.AlarmInsulin10, true)
-                    }
-                }
-
-                insulin in 3..5  -> {
-                    val alarmInsulin5 = preferences.get(EquilBooleanKey.AlarmInsulin5)
-                    if (!alarmInsulin5) {
-                        notificationManager.dismiss(NotificationId.EQUIL_ALARM_INSULIN)
-                        notificationManager.post(
-                            NotificationId.EQUIL_ALARM_INSULIN,
-                            rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                            sound = AlarmSound.ALARM
-                        )
-                        preferences.put(EquilBooleanKey.AlarmInsulin5, true)
-                    }
-                }
-
-                insulin <= 2     -> {
-                    notificationManager.dismiss(NotificationId.EQUIL_ALARM_INSULIN)
-                    notificationManager.post(
-                        NotificationId.EQUIL_ALARM_INSULIN,
-                        rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                        sound = AlarmSound.ALARM
-                    )
-                }
+                battery < 5   -> alarmOnce(EquilBooleanKey.AlarmBattery5, NotificationId.EQUIL_LOW_BATTERY, text, NotificationLevel.IMPORTANT)
+                battery <= 10 -> alarmOnce(EquilBooleanKey.AlarmBattery10, NotificationId.EQUIL_LOW_BATTERY, text)
             }
         }
+        if (state?.runMode === RunMode.RUN && preferences.get(EquilBooleanPreferenceKey.EquilAlarmInsulin) && equilManager.isActivationCompleted()) {
+            val text = rh.gs(R.string.equil_low_insulin_level, rh.gs(InterfacesStrings.format_insulin_units, insulin.toDouble()))
+            when {
+                // Empty: the pump has stopped delivering, so this gets its own alarm after the 2 U one.
+                insulin <= 0     -> alarmOnce(EquilBooleanKey.AlarmInsulin0, NotificationId.EQUIL_ALARM_INSULIN, rh.gs(R.string.equil_reservoir_empty))
+                insulin <= 2     -> alarmOnce(EquilBooleanKey.AlarmInsulin2, NotificationId.EQUIL_ALARM_INSULIN, text)
+                insulin in 3..5  -> alarmOnce(EquilBooleanKey.AlarmInsulin5, NotificationId.EQUIL_ALARM_INSULIN, text)
+                insulin in 6..10 -> alarmOnce(EquilBooleanKey.AlarmInsulin10, NotificationId.EQUIL_ALARM_INSULIN, text)
+            }
+        }
+    }
+
+    /** Posts the alarm unless [flag] says this level has already alarmed since the last reservoir change. */
+    private fun alarmOnce(flag: EquilBooleanKey, id: NotificationId, text: String, level: NotificationLevel = id.defaultLevel) {
+        if (preferences.get(flag)) return
+        // Posting the same id replaces the previous alarm, so no dismiss is needed first.
+        notificationManager.post(id, text, level, sound = AlarmSound.ALARM)
+        preferences.put(flag, true)
     }
 
     companion object {
