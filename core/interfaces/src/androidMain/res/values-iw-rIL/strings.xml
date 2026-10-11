@@ -145,6 +145,5 @@
     <string name="bolus_constraint_applied_warn">מגבלת בולוס יושמה: %1$.2f עד %2$.2f יח\'</string>
     <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
-    <string name="wizard_ecarbs">פחמימות משוערות %1$d גרם /%2$d שעות (+ %3$d דקות)</string>
     <string name="format_insulin_units">%1$.2f יח\'</string>
 </resources>
