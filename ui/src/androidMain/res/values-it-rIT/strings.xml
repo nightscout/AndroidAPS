@@ -165,6 +165,10 @@
     <string name="duration10h">10 ore</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Mancanti %1$d g</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% carboidrati immediati, senza carboidrati estesi</string>
     <string name="wizard_include_info">Tocca per includere/escludere dal calcolo:\n• BG — glucosio nel sangue (ON all\'inizio)\n• TT — obiettivo temporaneo (ON all\'inizio)\n• Tendenza — Tendenza glicemica (ultima condizione ricordata)\n• IOB — insulina a bordo (ON all\'inizio)\n• COB — carboidrati a bordo (ultimo stato ricordato)</string>
     <!-- Treatments -->
@@ -184,6 +188,7 @@
     <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s a %2$s</string>
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
     <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">lettura vecchia</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
     <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Grafico del glucosio. Valori recenti %1$s</string>
     <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Esegui</string>
     <string name="add_new_profile">Aggiungi nuovo profilo</string>
