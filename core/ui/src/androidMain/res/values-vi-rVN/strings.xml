@@ -767,7 +767,6 @@
     <string name="max_carbs_title">Lượng carb tối đa [g]</string>
     <string name="patient_type">Loại bệnh nhân</string>
     <!--    Protection-->
-    <string name="unlock_settings">Mở khóa cài đặt</string>
     <!--    Pumps -->
     <string name="battery_label">Pin</string>
     <string name="reservoir_label">Bình chứa</string>
