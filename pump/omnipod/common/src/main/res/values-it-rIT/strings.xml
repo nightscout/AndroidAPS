@@ -182,4 +182,5 @@
         <item quantity="one">Avviso pod: %1$s</item>
         <item quantity="other">Avvisi pod: %1$s</item>
     </plurals>
+    <string name="omnipod_common_overview_pod_hard_end_date">Fine Del Pod Hard</string>
 </resources>
