@@ -52,6 +52,14 @@
     <string name="carelevo_overview_connect_btn_label">הפעלת פאץ׳</string>
     <string name="carelevo_overview_pump_discard_btn_label">השלכת הפאץ׳</string>
     <string name="carelevo_overview_pump_suspend_btn_label">השהיית מתן אינסולין</string>
+    <string name="carelevo_overview_pump_resume_btn_label">חידוש מתן אינסולין</string>
+    <string name="patch_prepare_dialog_title_insulin_amount">בחרו את כמות המילוי.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range" comment="%1$d=minimum fill amount in units (e.g. 50), %2$d=maximum fill amount in units (e.g. 300)">טווח: %1$d–%2$d יח׳</string>
+    <string name="carelevo_insulin_refill_step2">2. חטאו את פקק הגומי של בקבוקון האינסולין באמצעות פד אלכוהול.</string>
+    <string name="carelevo_insulin_refill_step3">3. הסירו את מכסה ההגנה מהמחט של מזרק האינסולין במשיכה ישרה.</string>
+    <string name="carelevo_insulin_refill_step4">4. משכו את בוכנת המזרק לאחור ומלאו אותו בכ־2 מ״ל אוויר.</string>
+    <string name="carelevo_insulin_refill_step5">5. הכניסו את המזרק המלא באוויר לבקבוקון האינסולין והזריקו את האוויר לתוכו.</string>
+    <string name="carelevo_insulin_refill_step6">6. כשהמזרק עדיין בתוך הבקבוקון, הפכו את הבקבוקון והמזרק והשתמשו בלחץ כדי למלא את המזרק בכ־2 מ״ל אינסולין.</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
