@@ -760,7 +760,6 @@
     <string name="max_carbs_title">Maks. leistini angliavandeniai [g]</string>
     <string name="patient_type">Naudotojo tipas</string>
     <!--    Protection-->
-    <string name="unlock_settings">Atrakinti nustatymus</string>
     <!--    Pumps -->
     <string name="battery_label">Baterija</string>
     <string name="reservoir_label">Rezervuaras</string>
