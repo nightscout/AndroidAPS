@@ -54,10 +54,31 @@ interface LoopHub {
     /** Notifies the system that carbs were eaten and stores the value. */
     fun postCarbs(carbohydrates: Int)
 
+    // mod Bolus and temp target
+    /** Triggers a bolus. */
+    fun postBolus(bolus: Double)
+
+    /** Stores or cancels a temptarget. */
+    fun postTempTarget(target: Double, duration: Int)
+    // end mod
+
     /** Stores hear rate readings that a taken and averaged of the given interval. */
     fun storeHeartRate(
         samplingStart: Instant, samplingEnd: Instant,
         avgHeartRate: Int,
         device: String?
+    )
+
+    /** Stores steps count readings aggregated over multiple intervals. */
+    fun storeStepsCount(
+        samplingStart: Instant,
+        samplingEnd: Instant,
+        steps5min: Int,
+        steps10min: Int,
+        steps15min: Int,
+        steps30min: Int,
+        steps60min: Int,
+        steps180min: Int,
+        device: String?,
     )
 }
