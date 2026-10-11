@@ -74,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Bật tính năng này để tải dữ liệu lên máy chủ thử nghiệm thay vì máy chủ chính</string>
     <string name="title_tidepool_dev_servers">Dùng máy chủ thử nghiệm (Integration)</string>
+    <string name="title_tidepool_use_ns_connection">Sử dụng cài đặt kết nối Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Tắt tùy chọn này để thiết lập cài đặt kết nối riêng cho Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Tải dữ liệu lên Tidepool</string>
     <string name="upload_now">Tải bây giờ</string>
