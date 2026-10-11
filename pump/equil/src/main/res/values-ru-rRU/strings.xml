@@ -21,6 +21,7 @@
     <string name="equil_title_unpair_detach">Отсоединить помпу</string>
     <string name="equil_title_history_events">Журнал событий</string>
     <string name="equil_tone">Сигнал Оповещения</string>
+    <string name="equil_bolus_speed">Скорость ввода болюса</string>
     <string name="equil_tone_mode_mute">Отключить звук</string>
     <string name="equil_tone_mode_shake">Только вибрация</string>
     <string name="equil_tone_mode_tone">Только звук</string>
