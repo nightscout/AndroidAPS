@@ -25,6 +25,7 @@
     <string name="objectives_smb_gate">חובה לקרוא את הויקי ולהעלות את ערך האינסולין הפעיל המרבי (maxIOB) כדי להפעיל את ה- SMB כראוי. התחלה טובה תהיה maxIOB=בולוס ארוחה טיפוסי + 3 פעמים ערך הבזאלי המקסימלי ביממה</string>
     <string name="objectives_smb_learned">שימוש ב-SMB הוא המטרה שלכם. אלגוריתם Oref1 תוכנן לעזור גם עם הבולוסים שלכם. אתם לא צריכים להזריק בולוס מלא למזון שלכם אלא רק על חלק ממנו ולתת ל-AAPS לטפל בשאר במידת הצורך. כך קל יותר להכיל טעויות בספירת פחמימות. הידעתם שאפשר להגדיר אחוז מתוצאת מחשבון הבולוס כדי להקטין את גודל הבולוס?</string>
     <string name="objectives_auto_objective">הפעלת אוטומציה</string>
+    <string name="objectives_auto_gate">קראו את המסמכים על כיצד האוטומציה פועלת. הגדירו את הכללים הפשוטים הראשונים שלכם. במקום פעולה, תנו ל-AAPS להציג הודעה בלבד. כאשר אתם בטוחים שהאוטומציה מופעלת כראוי, החליפו את ההודעה בפעולה אמיתית. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">אוטומציה יכולה להיות משרת טוב אבל אדון רע. אל תשתמשו בהן יתר על המידה. אל תנסו להחליף את האלגוריתם הבסיסי. בדקו את התנאי של האוטומציה עם הודעה לפני השימוש.</string>
     <string name="objectives_bgavailableinns">נתוני הסוכר זמינים בנייטסקאוט או ב-Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">סטטוס המשאבה זמין בנייטסקאוט או ב-Tidepool</string>
@@ -53,13 +54,25 @@
     <string name="objectives_exam_learned_wrongcarbs">אם הזנתם נתונים שגויים ל-AAPS או שהוא לא תואם את המציאות, יש לפתור זאת בהקדם האפשרי. זה עלול להוביל למינון יתר. יש ליידע את AAPS תמיד בצורה הטובה ביותר לגבי פחמימות, אינסולין וכו\'.</string>
     <string name="objectives_exam_learned_breadgrams">הזנת פחמימות היא בגרמים בלבד.</string>
     <string name="objectives_exam_learned_ecarbs">פחמימות ממושכות הן תחליף לבולוס מושהה בעולם המשאבות.</string>
+    <string name="objectives_exam_learned_concentration3">ניתן לשנות את ריכוז האינסולין רק כאשר מחליפים את האינסולין או את הפוד. אבל חשוב מכל, במיוחד עבור משאבות צינור, לעולם אל תשתמשו בממשק המשתמש של המשאבה כדי לספק בולוסים ישירות מהמשאבה.</string>
     <string name="answerdisabledto">לא ניתן לענות עד: %1$s</string>
     <string name="wronganswer">תשובה שגויה!</string>
     <string name="unfinshed_button">הבא שלא נענה</string>
     <string name="requestcode">בקשת קוד: %1$s</string>
     <string name="objectives_hint">(סמנו את כל התשובות הנכונות)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">אין חיבור לאינטרנט</string>
     <string name="requirementnotmet">דרישות המשימה לא נענו</string>
     <string name="what_i_ve_learned">מה שלמדתי:</string>
     <string name="verify_master_password">וודאו שאתם יודעים וזוכרים את הסיסמה הראשית</string>
+    <string name="objectives_collapse">פחות</string>
+    <string name="objectives_expand">יותר</string>
+    <string name="objectives_exam_question_progress">שאלה %1$d מתוך %2$d</string>
+    <string name="objectives_exam_reset">איפוס</string>
+    <string name="objectives_exam_previous">הקודם</string>
+    <string name="objectives_exam_next">הבא</string>
+    <string name="objectives_show_hint">רמז</string>
 </resources>
