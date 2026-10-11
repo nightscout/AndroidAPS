@@ -74,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">若啟用，資料上傳將會發送至測試伺服器，而非一般的伺服器。</string>
     <string name="title_tidepool_dev_servers">使用集成（測試）伺服器</string>
+    <string name="title_tidepool_use_ns_connection">使用 Nightscout 連線設定</string>
+    <string name="summary_tidepool_use_ns_connection">關閉以設定 Tidepool 的獨立連線設定</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">將資料上傳到 Tidepool</string>
     <string name="upload_now">立即上傳</string>
