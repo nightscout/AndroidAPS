@@ -313,7 +313,8 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
         // Do not change the ID: Android keeps the user's channel settings by ID. The name shown is set
         // where the channel is created ("AAPS Open Loop").
-        const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AndroidAPS-OpenLoop"
+        const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP_OLD = "AndroidAPS-OpenLoop"
+        const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AndroidAPS-OpenLoop-v2"
         const val AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS = "bolus progress vibration"
         const val AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS_SILENT = "bolus progress silent"
     }

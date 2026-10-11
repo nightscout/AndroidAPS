@@ -41,11 +41,17 @@ class AndroidLoopNotifier(
     // `by lazy`, not in an init block: this class is built when the graph resolves, and reaching a
     // system service there breaks the plain-JVM graph tests. First use is always a real notification.
     private val channel: Unit by lazy {
+        // Since Android 8 only the channel decides the vibration, and an app cannot change it on an
+        // existing channel. The old channel did not vibrate, so this one has a new id (#5217).
+        notificationManager.deleteNotificationChannel(OLD_CHANNEL_ID)
         @SuppressLint("WrongConstant") val channel = NotificationChannel(
             CHANNEL_ID,
-            CHANNEL_ID,
+            rh.gs(R.string.loop_notification_channel_name),
             AndroidNotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            enableVibration(true)
+            vibrationPattern = VIBRATE_PATTERN
+        }
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -58,7 +64,6 @@ class AndroidLoopNotifier(
             .addAction(ignoreAction(R.string.ignore5m, "Ignore 5m", minutes = 5, requestCode = 1))
             .addAction(ignoreAction(R.string.ignore15m, "Ignore 15m", minutes = 15, requestCode = 2))
             .addAction(ignoreAction(R.string.ignore30m, "Ignore 30m", minutes = 30, requestCode = 3))
-            .setVibrate(VIBRATE_PATTERN)
         notificationManager.notify(Constants.NOTIFICATION_ID, builder.build())
     }
 
@@ -67,7 +72,6 @@ class AndroidLoopNotifier(
         val builder = baseBuilder(rh.gs(R.string.open_loop_new_suggestion), text)
         if (localOnly) builder.setLocalOnly(true)
         builder.setContentIntent(openTheApp())
-        builder.setVibrate(VIBRATE_PATTERN)
         notificationManager.notify(Constants.NOTIFICATION_ID, builder.build())
     }
 
@@ -106,7 +110,8 @@ class AndroidLoopNotifier(
 
     private companion object {
 
-        const val CHANNEL_ID = "AAPS-OpenLoop"
+        const val OLD_CHANNEL_ID = "AAPS-OpenLoop"
+        const val CHANNEL_ID = "AAPS-OpenLoop-v2"
         val VIBRATE_PATTERN = longArrayOf(1000, 1000, 1000, 1000, 1000)
     }
 }

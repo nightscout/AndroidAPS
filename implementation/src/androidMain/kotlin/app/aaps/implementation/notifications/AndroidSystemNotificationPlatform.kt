@@ -8,8 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.BitmapFactory
-import android.media.AudioManager
-import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -24,6 +22,7 @@ import app.aaps.core.interfaces.notifications.SystemNotificationPlatform
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.implementation.R
 import app.aaps.implementation.androidNotification.AlarmNotificationManager
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -146,7 +145,7 @@ class AndroidSystemNotificationPlatform(
         started = true
 
         notificationManager.createNotificationChannel(
-            NotificationChannel(NotificationManager.CHANNEL_ID, NotificationManager.CHANNEL_NAME, AndroidNotificationManager.IMPORTANCE_HIGH)
+            NotificationChannel(NotificationManager.CHANNEL_ID, context.getString(R.string.notifications_channel_name), AndroidNotificationManager.IMPORTANCE_HIGH)
         )
 
         val filter = IntentFilter(NotificationManager.DISMISS_ACTION)
@@ -169,12 +168,8 @@ class AndroidSystemNotificationPlatform(
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDeleteIntent(deleteIntent(n.instanceKey))
             .setContentIntent(notificationHolder().openAppIntent())
-        if (n.level == NotificationLevel.URGENT) {
-            builder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioManager.STREAM_ALARM)
-        } else {
-            builder.setVibrate(longArrayOf(0, 100, 50, 100, 50))
-        }
+        // No setVibrate or setSound here: since Android 8 the channel decides both, and these were
+        // ignored (#5217). Audible alarms go through AlarmNotificationManager.
         // Keyed by instanceKey, which the registry also cancels by. For everything that cannot appear
         // twice that is the same number as before (instanceKey == id.ordinal); for the few that can, it
         // is what stops a second one replacing the first in the tray.

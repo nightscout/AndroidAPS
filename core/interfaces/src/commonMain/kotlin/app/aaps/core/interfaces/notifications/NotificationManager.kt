@@ -74,9 +74,6 @@ interface NotificationManager {
          * by its ID. A new ID is a new channel with default settings, and the old one stays in the system.
          */
         const val CHANNEL_ID = "AndroidAPS-Overview"
-
-        /** The name shown in the system settings. Can change: Android renames the existing channel. */
-        const val CHANNEL_NAME = "AAPS-Overview"
         const val DISMISS_ACTION = "app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver"
     }
 }

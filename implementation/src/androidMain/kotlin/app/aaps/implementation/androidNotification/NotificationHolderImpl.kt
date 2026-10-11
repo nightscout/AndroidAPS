@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.implementation.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -63,7 +64,8 @@ class NotificationHolderImpl(
 
     override fun createNotificationChannel() {
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(channelID, channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
+        // Same id as before, so the user's settings stay. Android renames an existing channel.
+        val channel = NotificationChannel(channelID, context.getString(R.string.ongoing_channel_name), NotificationManager.IMPORTANCE_HIGH)
         mNotificationManager.createNotificationChannel(channel)
     }
 }
