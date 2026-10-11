@@ -71,9 +71,13 @@ import dev.zacsweers.metro.binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
@@ -138,21 +142,28 @@ class XdripPlugin(
     override val connected: Boolean = true
     override val status: String = ""
 
+    @OptIn(FlowPreview::class)
     override suspend fun onStart() {
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         // scope is Dispatchers.IO, which is what observeOn(aapsSchedulers.io) gave these before.
         rxBus.toFlow(EventAppExit::class)
             .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }
-        persistenceLayer.observeAnyChange()
+        val dbChanges = persistenceLayer.observeAnyChange()
             // HR/SC writes come from the watch; this plugin doesn't broadcast them — skip to avoid reconnect-flush storm.
             .filter { types -> types.any { it != HR::class && it != SC::class } }
-            .collectResilient(scope, aapsLogger, LTag.XDRIP) { types ->
-                sendStatusLine()
-                delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
-            }
-        rxBus.toFlow(EventAutosensCalculationFinished::class)
-            .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
+        dbChanges.collectResilient(scope, aapsLogger, LTag.XDRIP) { types ->
+            delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")
+        }
+        // One BG gives several database changes (BG, temp basal or SMB, device status, user entries, NS ids)
+        // and an autosens run. Each one built the status line again and woke xDrip+. Debounced, one burst
+        // gives one status line (#5248).
+        merge(
+            dbChanges.map { },
+            rxBus.toFlow(EventAutosensCalculationFinished::class).map { }
+        )
+            .debounce(STATUS_LINE_DEBOUNCE_MS)
+            .collectResilient(scope, aapsLogger, LTag.XDRIP) { sendStatusLine() }
         rxBus.toFlow(EventAppInitialized::class)
             .collectResilient(scope, aapsLogger, LTag.XDRIP, start = CoroutineStart.UNDISPATCHED) { sendStatusLine() }
         eventWorker = Executors.newSingleThreadScheduledExecutor()
@@ -419,4 +430,11 @@ class XdripPlugin(
         icon = pluginDescription.icon
     )
 
+    private companion object {
+
+        // Merges changes that come close together, like the writes after a BG and the autosens run that
+        // follows. A pump command takes longer, so one BG can still give two or three lines, not one per
+        // change. Short enough that the line still follows a treatment almost at once.
+        const val STATUS_LINE_DEBOUNCE_MS = 2_000L
+    }
 }
