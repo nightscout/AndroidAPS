@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel_action_with_details" comment="%1$s=the word Cancel, %2$s=the active item being cancelled (e.g. a running temp basal or extended bolus description). Example: 'Cancel 150% 30min'">%1$s %2$s</string>
+    <string name="no_temp_basal_running">אין בזאלי זמני פעיל</string>
     <string name="start_activity_tt">התחל ערך מטרה פ\' גופנית</string>
     <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
     <string name="start_hypo_tt">הפעלת היפו TT</string>
@@ -7,8 +9,29 @@
     <!--    Widget-->
     <string name="configure">הגדרת אטימות</string>
     <string name="widget_description">ווידג\'ט AAPS</string>
+    <string name="widget_bg_graph_description">גרף סוכר AAPS</string>
+    <string name="widget_glucose_circle_description">מעגל סוכר AAPS</string>
+    <string name="widget_compact_bg_description">AAPS גלוקוז + IOB + COB (קומפקטי)</string>
+    <string name="widget_small_description">AAPS קטן</string>
     <!--     Activities-->
     <string name="activity_monitor">מוניטור פעילות</string>
+    <string name="time_range">טווח זמן</string>
+    <string name="dexcom_tir">זמן בטווח דקסקום</string>
+    <string name="cgp_title">מחומש גלוקוז (CGP) — 14 ימים</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">היפו</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">היפר</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">ממוצע
+</string>
+    <string name="cgp_reference">אדם בריא</string>
+    <string name="cgp_patient">מטופל</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">סיכון נמוך מאוד</string>
+    <string name="cgp_pgr_low">סיכון נמוך</string>
+    <string name="cgp_pgr_moderate">סיכון בינוני</string>
+    <string name="cgp_pgr_high">סיכון גבוה</string>
+    <string name="cgp_pgr_extremely_high">סיכון גבוה מאוד</string>
     <string name="do_you_want_reset_stats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="do_you_want_recalculate_tdd_stats">האם ברצונכם לאפס את סטטיסטיקת המינונים היומיים הכוללים?</string>
     <string name="calculation_in_progress">מבצע חישוב</string>
@@ -20,20 +43,122 @@
     <string name="bg_sensor">חיישן</string>
     <!-- WizardDialog -->
     <!-- SiteRotationDialog -->
+    <string name="edit_site">עריכה</string>
+    <string name="record_site_location">מיקום האתר: %1$s</string>
+    <string name="record_site_arrow">כיוון האתר: %1$s</string>
+    <string name="record_site_note">הערה: %1$s</string>
+    <string name="delete_site_note">ההערה נמחקה</string>
     <!-- FillDialog -->
     <string name="fill_warning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
     <string name="record_pump_site_change">רשום החלפת אתר עירוי</string>
     <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
+    <string name="fill_prime_amount">כמות למילוי</string>
+    <string name="fill_pump_units_note">כמות המילוי מוצגת ביחידות המשאבה</string>
+    <string name="fill_insulin_change">החלפת אינסולין ל־%1$s (תוחל גם החלפת פרופיל)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">פעילות</string>
+    <string name="scene_cat_health">בריאות</string>
+    <string name="scene_cat_food">אוכל</string>
+    <string name="scene_cat_sleep">שינה</string>
+    <string name="scene_cat_dailylife">חיי יום־יום</string>
+    <string name="scene_cat_wellness">רווחה</string>
+    <string name="scene_cat_general">כללי</string>
+    <string name="aaps_tt_high_icon_label">ערך מטרה זמני</string>
+    <string name="aaps_tt_activity_icon_label">פעילות TT</string>
+    <string name="aaps_tt_eating_icon_label">אוכל בקרוב TT</string>
+    <string name="aaps_tt_hypo_icon_label">היפו TT</string>
+    <string name="aaps_tt_manual_icon_label">ערך מטרה זמני ידני</string>
+    <string name="aaps_profile_icon_label">פרופיל</string>
+    <string name="aaps_loop_icon_label">לולאה</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">בולוס</string>
+    <string name="aaps_carbs_icon_label">פחמימות</string>
+    <string name="aaps_tbr_icon_label">בזאלי זמני</string>
+    <string name="aaps_activity_icon_label">פעילות גופנית</string>
+    <string name="aaps_note_icon_label">הערה</string>
+    <string name="aaps_automation_icon_label">אוטומציה</string>
+    <string name="aaps_calibration_icon_label">כיול</string>
+    <string name="exercise_icon_label">ריצה</string>
+    <string name="fitness_icon_label">כושר</string>
+    <string name="swim_icon_label">שחיה</string>
+    <string name="hiking_icon_label">טיול</string>
+    <string name="bike_icon_label">אופניים</string>
+    <string name="skateboard_icon_label">סקייטבורד</string>
+    <string name="tennis_icon_label">טניס</string>
+    <string name="soccer_icon_label">כדורגל</string>
+    <string name="baseball_icon_label">רוגבי</string>
+    <string name="basketball_icon_label">כדוריד</string>
+    <string name="volleyball_icon_label">התעמלות</string>
+    <string name="golf_icon_label">גולף</string>
+    <string name="scubadiving_icon_label">צלילה</string>
+    <string name="rowing_icon_label">חתירה</string>
+    <string name="surfing_icon_label">גלישה</string>
+    <string name="hospital_icon_label">בית חולים</string>
+    <string name="medication_icon_label">תרופות</string>
+    <string name="monitor_heart_icon_label">ניטור</string>
+    <string name="thermostat_icon_label">טמפרטורה</string>
+    <string name="blood_type_icon_label">דם</string>
+    <string name="health_safety_icon_label">בריאות</string>
+    <string name="healing_icon_label">החלמה</string>
+    <string name="meal_icon_label">מסעדה</string>
+    <string name="cafe_icon_label">קפה</string>
+    <string name="lunch_icon_label">ארוחת צהריים</string>
+    <string name="bakery_icon_label">מאפייה</string>
+    <string name="sleep_icon_label">שינה</string>
+    <string name="night_icon_label">לילה</string>
+    <string name="nights_stay_icon_label">לינה</string>
+    <string name="hotel_icon_label">מלון</string>
+    <string name="seat_flat_icon_label">מנוחה</string>
+    <string name="work_icon_label">עבודה</string>
+    <string name="school_icon_label">לימודים</string>
+    <string name="home_icon_label">בית</string>
+    <string name="car_icon_label">נסיעה</string>
+    <string name="flight_icon_label">טיסה</string>
+    <string name="shopping_icon_label">קניות</string>
+    <string name="relax_icon_label">הרפיה</string>
+    <string name="spa_icon_label">ספא</string>
+    <string name="heart_icon_label">לב</string>
+    <string name="psychology_icon_label">נפש</string>
+    <string name="star_icon_label">כוכב</string>
+    <string name="speed_icon_label">מהירות</string>
+    <string name="alarm_icon_label">שעון מעורר</string>
+    <string name="event_icon_label">אירוע</string>
+    <string name="flag_icon_label">דגל</string>
+    <string name="bookmark_icon_label">סימנייה</string>
+    <string name="label_icon_label">תווית</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">חסר שם לאינסולין</string>
     <string name="insulin_name_exists">שם האינסולין %1$s כבר קיים. יש לבחור שם אחר</string>
+    <string name="insulin_external_update_title">הגדרת האינסולין שונתה</string>
+    <string name="insulin_external_update_message">הלקוח המצומד שינה את הגדרת האינסולין. לחצו על אישור כדי לטעון את השינויים ולבטל את העריכות שלא נשמרו, או על ביטול כדי להמשיך לערוך (השמירה הבאה שלכם תדרוס את השינויים שלהם).</string>
+    <string name="insulin_edit_target_gone">האינסולין הזה הוסר במקום אחר, ולכן לא ניתן היה לשמור את העריכה. הרשימה נטענה מחדש.</string>
+    <string name="insulin_activation_applied">חלה הפעלת האינסולין</string>
     <!-- Client→master round-trip pending dialog -->
+    <string name="clientcontrol_pending_working_title">מחיל…</string>
+    <string name="clientcontrol_pending_working_text">ממתין לאישור המכשיר הראשי…</string>
+    <string name="clientcontrol_pending_rejected_title">לא בוצע</string>
+    <string name="clientcontrol_pending_failed_format">%1$s לא ניתן לביצוע. \n
+%2$s</string>
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
+    <string name="clientcontrol_pending_partial_title">הוחל חלקית</string>
     <!-- %1$s = action label -->
+    <string name="clientcontrol_pending_partial_format">%1$s הוחל, אך לא ניתן היה לבצע חלק מהפעולות.\n
+בדקו את המצב הפעיל.</string>
+    <string name="clientcontrol_pending_unconfirmed_title">לא ניתן לאשר</string>
     <!-- %1$s = action label, %2$s = reason. Sent but unconfirmed → will reconcile via sync-back -->
+    <string name="clientcontrol_pending_unconfirmed_format">%1$s נשלח, אך לא התקבל אישור%2$s\n
+\nהפעולה תופיע כאן אם וכאשר המכשיר הראשי יחיל אותה.</string>
+    <string name="clientcontrol_pending_stop_waiting">הפסקת המתנה</string>
+    <string name="a11y_add_new_insulin">הוספת אינסולין חדש</string>
+    <string name="a11y_delete_current_insulin">מחיקת האינסולין הנוכחי</string>
+    <string name="load_peak_from">טעינת שיא מתוך</string>
+    <string name="cannot_delete_last_insulin">לא ניתן למחוק את האינסולין האחרון</string>
+    <string name="cannot_delete_active_insulin">לא ניתן למחוק את האינסולין הפעיל</string>
     <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
     <string name="percentage_label">אחוזים</string>
     <!-- LoopDialog -->
+    <string name="disconnectpump">ניתוק המשאבה</string>
     <string name="resume">חידוש</string>
     <string name="reconnect">חיבור משאבה מחדש</string>
     <string name="duration15m">15 דקות</string>
@@ -44,6 +169,13 @@
     <string name="duration10h">10 שעות</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">חסרים %1$d גר\'</string>
+    <string name="wizard_carbs_type_bread_desc">100% מהפחמימות מיידיות, ללא פחמימות ממושכות</string>
+    <string name="wizard_include_info">הקישו כדי לכלול/להחריג מהחישוב:\n
+• BG — סוכר בדם (מופעל בתחילה)\n
+• TT — ערך מטרה זמני (מופעל בתחילה)\n
+• Trend — מגמת סוכר (המצב האחרון נשמר)\n
+• IOB — אינסולין פעיל (מופעל בתחילה)\n
+• COB — פחמימות פעילות (המצב האחרון נשמר)\n</string>
     <!-- Treatments -->
     <string name="no_records_available">אין רישומים זמינים</string>
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
@@ -53,6 +185,9 @@
     <string name="careportal_remove_started_events">הסרת רשומות הפעלת AAPS</string>
     <string name="user_entry">קלט המשתמש</string>
     <string name="clone_label">שכפול</string>
+    <string name="add_new_profile">הוספת פרופיל חדש</string>
+    <string name="edit_label">עריכה</string>
+    <string name="activate_label">הפעלה</string>
     <string name="activate_profile">הפעלת פרופיל</string>
     <string name="remove_label">הסרה</string>
     <string name="active_profile_indicator">פעיל</string>
