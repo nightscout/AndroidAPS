@@ -260,6 +260,47 @@ class RunningModeReconcilerTest : TestBaseWithProfile() {
         verify(commandQueue, never()).tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())
     }
 
+    /** "Disconnect pump" ran out while the pump was suspended (e.g. a long battery change). */
+    private suspend fun resumeAfterDisconnectRanOut(tbrAfterResume: TB?) {
+        val sbpStart = now - T.mins(50).msecs()
+        val suspendedByPump = temporaryMode(RM.Mode.SUSPENDED_BY_PUMP, timestamp = sbpStart, durationMs = Long.MAX_VALUE / 2)
+        val disconnect = temporaryMode(RM.Mode.DISCONNECTED_PUMP, timestamp = now - T.mins(60).msecs(), durationMs = T.mins(30).msecs())
+        val working = workingMode(RM.Mode.CLOSED_LOOP)
+        val flow = MutableSharedFlow<List<RM>>(replay = 0)
+        whenever(persistenceLayer.observeChanges(eq(RM::class))).thenReturn(flow)
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(suspendedByPump)
+        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(null)
+
+        // Started while the pump was suspended, like after an app restart: the mode before is read from the DB.
+        reconciler.start()
+
+        whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(tbrAfterResume)
+        whenever(persistenceLayer.getRunningModeActiveAt(anyLong())).thenReturn(working)
+        whenever(persistenceLayer.getRunningModeActiveAt(eq(sbpStart - 1))).thenReturn(disconnect)
+        flow.emit(listOf(working))
+    }
+
+    @Test
+    fun `disconnect that ran out during the pump suspend gets its zero TBR cancelled`() = runTest {
+        // The zero TBR was set for the pump's step (up to 60 min) and would run on unseen.
+        val zeroTbr = TB(
+            timestamp = now - T.mins(60).msecs(), type = TB.Type.EMULATED_PUMP_SUSPEND,
+            isAbsolute = true, rate = 0.0, duration = T.mins(120).msecs()
+        )
+        resumeAfterDisconnectRanOut(tbrAfterResume = zeroTbr)
+
+        verify(commandQueue).cancelTempBasal(eq(true), any())
+        verify(commandQueue, never()).tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `disconnect that ran out during the pump suspend with no TBR left sends nothing`() = runTest {
+        resumeAfterDisconnectRanOut(tbrAfterResume = null)
+
+        verify(commandQueue, never()).cancelTempBasal(anyBoolean(), anyBoolean())
+        verify(commandQueue, never()).tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())
+    }
+
     @Test
     fun `pump runs again in a working mode sends nothing`() = runTest {
         val suspendedByPump = temporaryMode(RM.Mode.SUSPENDED_BY_PUMP, timestamp = now - T.mins(5).msecs(), durationMs = Long.MAX_VALUE / 2)

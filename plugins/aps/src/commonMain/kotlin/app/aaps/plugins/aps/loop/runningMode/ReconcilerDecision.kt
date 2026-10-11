@@ -19,8 +19,7 @@ import app.aaps.core.data.model.RM
  *                     to SuspendedNoTbr at the gate (cancel any active TBR on entry).
  *                     SUSPENDED_BY_USER is the temporary counterpart of DISABLED_LOOP.
  *  - PumpReported   — SUSPENDED_BY_PUMP: LoopPlugin.runningModePreCheck owns this; reconciler
- *                     stays out of its way, except on the way back into a zero-delivery mode (see
- *                     [decide]).
+ *                     stays out of its way.
  */
 object ReconcilerDecision {
 
@@ -34,15 +33,11 @@ object ReconcilerDecision {
         val prevBucket = bucketOf(prev)
         val nextBucket = bucketOf(next)
 
-        // Precheck owns SUSPENDED_BY_PUMP entry and exit.
+        // Precheck owns SUSPENDED_BY_PUMP entry and exit. On exit the reconciler does not pass
+        // SUSPENDED_BY_PUMP as prev but the mode that was active before the pump suspend, so leaving it is
+        // decided like any other change (see RunningModeReconciler.modeBeforePumpSuspend, #4486).
         if (nextBucket == Bucket.PumpReported) return Action.NoOp
-        // The pump runs again while the user's disconnect (or a super bolus) is still active. The zero
-        // TBR set when that mode started may be gone: a reservoir change or a suspend on the pump can
-        // clear it. Without this the pump gave profile basal while AAPS showed it disconnected (#4486).
-        // Observer de-duplicates if the pump is still zero.
-        if (prevBucket == Bucket.PumpReported) {
-            return if (nextBucket == Bucket.ZeroDelivery) Action.IssueZeroTbr(cancelExtendedBolus = true) else Action.NoOp
-        }
+        if (prevBucket == Bucket.PumpReported) return Action.NoOp
 
         // Entry to zero-delivery: ensure zero-TBR, cancel any extended bolus defensively.
         // Observer de-duplicates if pump already zero.
