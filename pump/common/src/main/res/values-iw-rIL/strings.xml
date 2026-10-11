@@ -11,6 +11,9 @@
     <string name="pump_status_suspended">מושהה</string>
     <string name="pump_status_executing_command">מבצע פקודה</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_pump_status">קבל את סטטוס הפוד</string>
+    <string name="pump_cmd_desc_get_history_params">קבל היסטוריה%s</string>
+    <string name="pump_cmd_desc_custom">פקודה מותאמת אישית</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">בזאלים</string>
     <string name="history_group_configuration">תצורות</string>
@@ -32,6 +35,7 @@
     <string name="time_last_3_hours">ב-3 השעות האחרונות</string>
     <string name="time_last_6_hours">ב-6 השעות האחרונות</string>
     <string name="time_last_12_hours">ב-12 השעות האחרונות</string>
+    <string name="time_last_24_hours">24 שעות אחרונות</string>
     <string name="time_last_2_days">ביומיים אחרונים</string>
     <string name="time_last_4_days">ב-4 הימים האחרונים</string>
     <string name="time_last_week">בשבוע שעבר</string>
