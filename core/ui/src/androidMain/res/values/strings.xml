@@ -799,7 +799,6 @@
     <string name="patient_type">Patient type</string>
 
     <!--    Protection-->
-    <string name="unlock_settings">Unlock settings</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>
