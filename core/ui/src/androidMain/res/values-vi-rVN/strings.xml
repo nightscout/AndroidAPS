@@ -220,6 +220,7 @@
     <string name="login">Đăng nhập</string>
     <string name="logout">Đăng xuất</string>
     <string name="prime_fill">Mồi/Nạp</string>
+    <string name="prime_not_available">Bơm này tự nạp insulin và mồi trong quá trình kích hoạt. Không thể thực hiện thao tác Nạp/Mồi từ AAPS.</string>
     <string name="site_rotation">Chuyển vị trí</string>
     <string name="edit_site">Sửa</string>
     <string name="select_arrow">Chọn Mũi tên</string>
@@ -386,6 +387,7 @@
     <string name="scene_editor_disabled">Đã tắt</string>
     <string name="scene_summary">%1$d hành động, %2$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Không thời hạn (kết thúc thủ công)</string>
     <string name="scene_some_actions_failed">Một số hành động thất bại</string>
     <string name="scene_no_active">Không có ngữ cảnh nào đang hoạt động</string>
