@@ -220,6 +220,7 @@
     <string name="login">Prihlásenie</string>
     <string name="logout">Odhlásiť sa</string>
     <string name="prime_fill">Plnenie/doplňovanie</string>
+    <string name="prime_not_available">Táto pumpa sa pri aktivácii plní a odvzdušňuje sama. Možnosť manuálneho plnenia priamo cez AAPS tu preto nefunguje.</string>
     <string name="site_rotation">Striedanie miest</string>
     <string name="edit_site">Upraviť</string>
     <string name="select_arrow">Zvoľ šípku</string>
@@ -386,6 +387,7 @@
     <string name="scene_editor_disabled">Zakázané</string>
     <string name="scene_summary">%1$d akcií, %2$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Neurčitý (manuálne ukončenie)</string>
     <string name="scene_some_actions_failed">Niektoré akcie zlyhali</string>
     <string name="scene_no_active">Žiadna aktívna scéna</string>
