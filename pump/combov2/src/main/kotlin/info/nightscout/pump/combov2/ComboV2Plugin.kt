@@ -971,6 +971,10 @@ class ComboV2Plugin(
         val pumpEnactResult = pumpEnactResultProvider()
         pumpEnactResult.success = false
 
+        // The last bolus known before this one. lastBolusFlow is not reset per bolus, so without
+        // this a bolus that failed before any insulin was given reported the previous bolus.
+        val lastBolusBefore = acquiredPump.lastBolusFlow.value
+
         if (isSuspended()) {
             aapsLogger.info(LTag.PUMP, "Cannot deliver bolus since the pump is suspended")
             pumpEnactResult.apply {
@@ -1055,7 +1059,7 @@ class ComboV2Plugin(
                 reportFinishedBolus(R.string.combov2_bolus_delivery_failed, detailedBolusInfo.id, pumpEnactResult, succeeded = false)
             } finally {
                 // The delivery was enacted if even a partial amount was infused.
-                acquiredPump.lastBolusFlow.value?.also {
+                acquiredPump.lastBolusFlow.value?.takeIf { it != lastBolusBefore }?.also {
                     pumpEnactResult.enacted = (it.bolusAmount > 0)
                     pumpEnactResult.bolusDelivered = it.bolusAmount.cctlBolusToIU()
                 } ?: run {

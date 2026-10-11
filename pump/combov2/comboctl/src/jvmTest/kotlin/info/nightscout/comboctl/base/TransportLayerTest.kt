@@ -485,4 +485,102 @@ class TransportLayerTest : TestBase() {
             assertEquals(1, numReceivedDataPackets)
         }
     }
+
+    @Test
+    fun repeatedReliableDataPacketIsAcknowledgedButNotPassedOn() {
+        // The Combo sends a reliable packet again when our ACK_RESPONSE came too late. The copy
+        // has the same sequence bit. It must be acknowledged again, but must not reach receive(),
+        // where it was taken as the answer to the next request (#4240). A new regular connection
+        // starts the sequence again, so a packet with the old bit is new there.
+
+        runBlockingWithWatchdog(40000) {
+            val testPumpStateStore = TestPumpStateStore()
+            val testBluetoothAddress = BluetoothAddress(byteArrayListOfInts(1, 2, 3, 4, 5, 6))
+            val testComboIO = TestComboIO()
+
+            val tpLayerIO = TransportLayer.IO(testPumpStateStore, testBluetoothAddress, testComboIO) {}
+
+            val testDecryptedCPKey =
+                byteArrayListOfInts(0x5a, 0x25, 0x0b, 0x75, 0xa9, 0x02, 0x21, 0xfa, 0xab, 0xbd, 0x36, 0x4d, 0x5c, 0xb8, 0x37, 0xd7)
+            val testDecryptedPCKey =
+                byteArrayListOfInts(0x2a, 0xb0, 0xf2, 0x67, 0xc2, 0x7d, 0xcf, 0xaa, 0x32, 0xb2, 0x48, 0x94, 0xe1, 0x6d, 0xe9, 0x5c)
+
+            testPumpStateStore.createPumpState(
+                testBluetoothAddress,
+                InvariantPumpData(
+                    clientPumpCipher = Cipher(testDecryptedCPKey.toByteArray()),
+                    pumpClientCipher = Cipher(testDecryptedPCKey.toByteArray()),
+                    keyResponseAddress = 0x10.toByte(),
+                    pumpID = "testPump"
+                ),
+                UtcOffset.ZERO, CurrentTbrState.NoTbrOngoing
+            )
+
+            fun connectionAccepted(nonce: Int) = TransportLayer.Packet(
+                command = TransportLayer.Command.REGULAR_CONNECTION_REQUEST_ACCEPTED,
+                version = 0x10.toByte(),
+                sequenceBit = false,
+                reliabilityBit = false,
+                address = 0x01.toByte(),
+                nonce = Nonce(byteArrayListOfInts(nonce, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+                payload = byteArrayListOfInts(0, 1, 2, 3)
+            )
+
+            fun reliableData(sequenceBit: Boolean, nonce: Int, payloadByte: Int) = TransportLayer.Packet(
+                command = TransportLayer.Command.DATA,
+                version = 0x10.toByte(),
+                sequenceBit = sequenceBit,
+                reliabilityBit = true,
+                address = 0x01.toByte(),
+                nonce = Nonce(byteArrayListOfInts(nonce, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+                payload = byteArrayListOfInts(payloadByte)
+            )
+
+            val answerA = reliableData(sequenceBit = false, nonce = 3, payloadByte = 0xA)
+            val answerB = reliableData(sequenceBit = true, nonce = 4, payloadByte = 0xB)
+            val answerC = reliableData(sequenceBit = false, nonce = 5, payloadByte = 0xC)
+            // Same sequence bit as answerC, but after a new regular connection.
+            val answerD = reliableData(sequenceBit = false, nonce = 7, payloadByte = 0xD)
+
+            val incomingPackets = listOf(
+                connectionAccepted(nonce = 2),
+                answerA,
+                answerA, // the repeated copy
+                answerB,
+                answerC,
+                connectionAccepted(nonce = 6),
+                answerD
+            )
+            incomingPackets.forEach { it.authenticate(Cipher(testDecryptedPCKey.toByteArray())) }
+
+            tpLayerIO.start(packetReceiverScope = this) { TransportLayer.IO.ReceiverBehavior.FORWARD_PACKET }
+            incomingPackets.forEach { testComboIO.feedIncomingData(it.toByteList()) }
+
+            val expectedPayloads = listOf(
+                byteArrayListOfInts(0, 1, 2, 3),
+                byteArrayListOfInts(0xA),
+                byteArrayListOfInts(0xB),
+                byteArrayListOfInts(0xC),
+                byteArrayListOfInts(0, 1, 2, 3),
+                byteArrayListOfInts(0xD)
+            )
+            for (expectedPayload in expectedPayloads)
+                assertEquals(expectedPayload, tpLayerIO.receive().payload)
+
+            // Nothing else may arrive: the copy of answerA was dropped.
+            assertFailsWith<WatchdogTimeoutException> {
+                coroutineScopeWithWatchdog(1000) {
+                    tpLayerIO.receive()
+                }
+            }
+
+            tpLayerIO.stop()
+
+            // Every reliable packet is acknowledged, the copy included: A, A, B, C, D.
+            val sentAcks = testComboIO.sentPacketData
+                .map { TransportLayer.Packet(it) }
+                .filter { it.command == TransportLayer.Command.ACK_RESPONSE }
+            assertEquals(listOf(false, false, true, false, false), sentAcks.map { it.sequenceBit })
+        }
+    }
 }

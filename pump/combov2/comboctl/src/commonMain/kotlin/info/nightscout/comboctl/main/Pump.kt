@@ -1667,6 +1667,8 @@ class Pump(
         logger(LogLevel.DEBUG) { "Waiting until bolus delivery is complete" }
 
         var bolusFinishedCompletely = false
+        // True once the history delta shows exactly the bolus that was asked for.
+        var bolusConfirmedInHistory = false
 
         try {
             // The Combo does not send immediate bolus delivery information on its own.
@@ -1843,6 +1845,7 @@ class Pump(
                             logger(LogLevel.ERROR) { "History delta contained unexpected additional bolus entries" }
                             throw UnaccountedBolusDetectedException()
                         }
+                        bolusConfirmedInHistory = true
                     }
                 }
             } finally {
@@ -1859,25 +1862,39 @@ class Pump(
                 // (hence the loop). In particular, a W1 low reservoir warning
                 // can show up if the delivered bolus brought the reservoir level
                 // below the low threshold. W1 is dismissible.
-                while (true) {
-                    try {
-                        pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
-                        // Not calling updateStatusImpl(), instead calling this directly.
-                        // That's because updateStatusImpl() calls executeCommand(),
-                        // and here, we already are running in a lambda that's run
-                        // by executeCommand().
-                        updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary = true)
-                        break
-                    } catch (e: AlertScreenException) {
-                        logger(LogLevel.DEBUG) { "Got alert screen after bolus" }
-                        // If this is a trivial, purely informative, dismissible
-                        // warning screen, this call dismisses it and also emits
-                        // an event if appropriate (like an event about a low
-                        // reservoir level). If this is a non-dismissible warning
-                        // screen or an error screen, this call itself throws
-                        // an AlertScreenException to propagate the alert further.
-                        handleAlertScreenContent(e.alertScreenContent)
+                try {
+                    while (true) {
+                        try {
+                            pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
+                            // Not calling updateStatusImpl(), instead calling this directly.
+                            // That's because updateStatusImpl() calls executeCommand(),
+                            // and here, we already are running in a lambda that's run
+                            // by executeCommand().
+                            updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary = true)
+                            break
+                        } catch (e: AlertScreenException) {
+                            logger(LogLevel.DEBUG) { "Got alert screen after bolus" }
+                            // If this is a trivial, purely informative, dismissible
+                            // warning screen, this call dismisses it and also emits
+                            // an event if appropriate (like an event about a low
+                            // reservoir level). If this is a non-dismissible warning
+                            // screen or an error screen, this call itself throws
+                            // an AlertScreenException to propagate the alert further.
+                            handleAlertScreenContent(e.alertScreenContent)
+                        }
                     }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: AlertScreenException) {
+                    throw e
+                } catch (e: Exception) {
+                    // The pump history already shows the bolus. If this status read failed, the
+                    // whole bolus used to fail, and AAPS reported "bolus failed" for insulin that
+                    // was given, so the user might give it again (#4240). Keep the bolus as
+                    // delivered; the next connection reads the status again.
+                    if (!bolusConfirmedInHistory)
+                        throw e
+                    logger(LogLevel.ERROR) { "Could not re-read the pump status after a confirmed bolus; not failing the bolus: $e" }
                 }
             }
         }
