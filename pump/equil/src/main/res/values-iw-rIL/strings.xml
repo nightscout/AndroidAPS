@@ -7,6 +7,10 @@
     <string name="equil_tone_mode_shake">רטט בלבד</string>
     <string name="equil_tone_mode_tone">צליל בלבד</string>
     <string name="equil_unbind_content">פעולה זו תפסיק את מתן האינסולין, תחזיר את בוכנת המשאבה לתחתית המכל ותבטל את הצימוד!</string>
+    <string name="equil_new_infusion_set_question">האם תרכיבו גם סט אינפוזיה חדש (בסיס ופרפרית)?</string>
+    <string name="equil_new_infusion_set_yes">כן סט אינפוזיה חדש</string>
+    <string name="equil_new_infusion_set_no">לא, רק מכל או סוללה</string>
+    <string name="equil_same_infusion_set_hint">הפרפרית לא תעבור תיחול ולא תירשם החלפת פרפרית.</string>
     <string name="equil_not_enough_insulin">אין מספיק אינסולין במכל</string>
     <string name="equil_pump_not_run">המשאבה לא פעילה</string>
     <string name="equil_pair">צמד</string>
