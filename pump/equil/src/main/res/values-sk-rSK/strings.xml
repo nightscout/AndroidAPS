@@ -40,8 +40,6 @@
     <string name="equil_error_set_temp_basal_failed_validation">Doba trvania TBR musí byť väčšia ako nula, a musí byť násobkom %1$s minút.</string>
     <string name="equil_basal_exceeds_max">Profilová bazálna dávka %1$s U/h prekračuje maximálnu bazálnu dávku pumpy %2$s U/h. Zvýšte nastavenie maximálnej bazálnej dávky a znova pripojte pumpu.</string>
     <string name="equil_not_enough_insulin">Nedostatok inzulínu v zásobníku</string>
-    <string name="equil_low_battery">Slabá batéria</string>
-    <string name="equil_low_insulin">Nedostatok inzulínu v zásobníku</string>
     <string name="equil_pump_not_run">Pumpa nefunguje</string>
     <string name="equil_pair">Párovať</string>
     <string name="equil_pair_error">Chyba párovania</string>
