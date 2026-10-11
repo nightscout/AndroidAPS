@@ -379,6 +379,10 @@ its own permission (it wipes the app). When asked:
 
 - Master runs the `full` flavor, a client runs an `aapsclient` flavor — build the needed APK(s) and
   `adb install -r` (keep data; **never uninstall/wipe** the setup). Find devices via `adb devices -l`.
+- **Never install a build that is older than the app on the device.** Update the branch first
+  (`git status -sb` must not say "behind"), and check that `DATABASE_VERSION` in
+  `database/impl/.../AppDatabase.kt` is not lower than the installed build's. A lower version is a
+  downgrade, and Room's destructive fallback then drops the whole database, even with `install -r`.
 - Drive the UI with **`uiautomator`** (dump hierarchy → tap by element `bounds`), not screenshots.
 - Verify behaviour from **`logcat`** (clear before the action, dump after, grep the relevant markers).
 - Use redirect-not-pipe for any gradle build/test so the real exit code shows (see caveat above).
