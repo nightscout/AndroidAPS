@@ -721,7 +721,6 @@
     <string name="max_carbs_title">Máximo de carbs permitidos [g]</string>
     <string name="patient_type">Tipo de paciente</string>
     <!--    Protection-->
-    <string name="unlock_settings">Definições de desbloqueio</string>
     <!--    Pumps -->
     <string name="battery_label">Bateria</string>
     <string name="reservoir_label">Reservatório</string>
