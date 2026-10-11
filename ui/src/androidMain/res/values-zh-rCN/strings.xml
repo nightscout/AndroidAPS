@@ -166,7 +166,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">缺少 %1$d 克</string>
     <string name="wizard_carbs_type_bread_desc">100% 即时碳水，无扩展碳水</string>
-    <string name="wizard_carbs_type_desc">碳水减少了 %1$d%%，添加了eCarbs %2$d%%，延迟了 %3$d 分钟，持续 %4$d 小时</string>
     <string name="wizard_include_info">轻触以在计算中包含/排除：\n•血糖—血糖（起始为开启）\n•临时目标—临时目标（起始为开启）\n•趋势—血糖趋势（会记住上次状态）\n•IOB—活性胰岛素（起始为开启）\n•COB—活性碳水化合物（会记住上次状态）</string>
     <!-- Treatments -->
     <string name="no_records_available">当前暂无记录</string>
