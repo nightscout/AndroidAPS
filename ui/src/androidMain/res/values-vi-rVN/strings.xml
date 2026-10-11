@@ -166,7 +166,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">Còn thiếu %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% carbs ngay, không kéo dài</string>
-    <string name="wizard_carbs_type_desc">Giảm %1$d%% carbs, thêm %2$d%% eCarbs, trễ %3$d phút, trong %4$dh</string>
     <string name="wizard_include_info">Chạm để tính hoặc bỏ không tính toán:\n• BG — đường huyết (mặc định bật)\n• TT — mục tiêu tạm thời (mặc định bật)\n• Trend — xu hướng BG (ghi nhớ lần trước)\n• IOB — insulin đang hoạt động (mặc định bật)\n• COB — carbs đang hoạt động (ghi nhớ lần trước)</string>
     <!-- Treatments -->
     <string name="no_records_available">Không có bản ghi nào</string>
