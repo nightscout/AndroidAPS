@@ -170,7 +170,6 @@ Check the active state.</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">缺少 %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% 立即碳水，無延長碳水</string>
-    <string name="wizard_carbs_type_desc">碳水減少 %1$d%%，並新增 eCarbs %2$d%%，延遲 %3$d 分鐘，持續 %4$d 小時</string>
     <string name="wizard_include_info">輕觸以在計算中納入/排除：\n• 血糖 — 血糖（起始為開啟）\n• 臨時目標 — 臨時目標（起始為開啟）\n• 趨勢 — 血糖趨勢（會記住上次狀態）\n• IOB — 活性胰島素（起始為開啟）\n• COB — 活性碳水化合物（會記住上次狀態）</string>
     <!-- Treatments -->
     <string name="no_records_available">無可用紀錄</string>
