@@ -88,6 +88,9 @@
     <string name="option_off">כבוי</string>
     <string name="danars_password_title">סיסמת משאבה (v1 בלבד)</string>
     <string name="danar_password_title">סיסמת משאבה</string>
+    <string name="bolus_speed_12">12 שניות/שבוע</string>
+    <string name="bolus_speed_30">30 שניות/שבוע</string>
+    <string name="bolus_speed_60">60 שניות/שבוע</string>
     <string name="selectedpump">בחרו משאבה</string>
     <string name="rs_loginsulinchange_title">רשום החלפת מכל</string>
     <string name="rs_loginsulinchange_summary">הוסף אירוע \"החלפת אינסולין\" לפורטל הטיפולים כשימצא בהיסטוריה</string>
@@ -97,4 +100,18 @@
     <string name="num1pin">1: (12 ספרות)</string>
     <string name="num2pin">2: (8 ספרות)</string>
     <string name="basal_bolus_step">צעד בזאלי\\בולוס</string>
+    <string name="connecting_to_pump">מתחבר למשאבה…</string>
+    <string name="pairing_successful">ההתאמה בוצעה בהצלחה!</string>
+    <string name="pairing_successful_message">המשאבה שלך מחוברת כעת ומוכנה לשימוש.</string>
+    <string name="cancel_pairing_title">לבטל את הצימוד?</string>
+    <string name="cancel_pairing_message">תהליך הצימוד יבוטל.</string>
+    <string name="done">בוצע</string>
+    <string name="open_bluetooth_settings">פתח הגדרות Bluetooth</string>
+    <string name="enter_pump_password">הזן את סיסמת המשאבה</string>
+    <string name="select_paired_device">בחר מכשיר משויך</string>
+    <string name="no_paired_devices">לא נמצאו מכשירי Dana מותאמים. התאם תחילה את המשאבה שלך בהגדרות Bluetooth של אנדרואיד.</string>
+    <string name="password_hint">סיסמה בת 4 ספרות (0–9999)</string>
+    <string name="connecting_verifying">מתחבר ומאמת סיסמה…</string>
+    <string name="password_ok">הסיסמה אומתה בהצלחה!</string>
+    <string name="password_wrong">סיסמה שגויה. חזור ותקן אותה.</string>
 </resources>
