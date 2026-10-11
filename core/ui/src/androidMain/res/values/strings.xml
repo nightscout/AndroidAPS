@@ -335,6 +335,7 @@
     <string name="careportal_note_message">Note : %1$s</string>
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercise : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Pump Site Change : %1$s</string>
     <string name="careportal_pump_site_change">Pump Site Change</string>
     <string name="cgm_sensor_insert">Sensor Insert</string>
     <string name="careportal_pump_site_management">Pump Sites</string>
