@@ -191,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">Tiến trình bolus của AAPS (im lặng)</string>
     <string name="bolus_progress_channel_description">Tiến trình bolus và hủy</string>
     <string name="bolus_progress_silent_channel_description">Tiến trình bolus và hủy với rung nhẹ hơn</string>
+    <string name="open_loop_channel_name">AAPS vòng lặp mở</string>
+    <string name="open_loop_channel_description">Thông báo yêu cầu vòng lặp mở</string>
     <string name="simple_ui_off">Tắt</string>
     <string name="simple_ui_charging">Khi đang sạc pin</string>
     <string name="simple_ui_always_on">Chế độ luôn bật</string>
