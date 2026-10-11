@@ -3,6 +3,8 @@ package app.aaps.pump.equil.manager
 import android.os.SystemClock
 import android.text.TextUtils
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -41,6 +43,7 @@ import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.events.EventEquilInsulinChanged
 import app.aaps.pump.equil.events.EventEquilModeChanged
+import app.aaps.pump.equil.events.EventEquilResumed
 import app.aaps.pump.equil.keys.EquilStringKey
 import app.aaps.pump.equil.manager.Utils.bytesToInt
 import app.aaps.pump.equil.manager.Utils.internalDecodeSpeedToUH
@@ -62,7 +65,12 @@ import com.google.gson.JsonSerializer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -86,10 +94,12 @@ class EquilManager(
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
-    private val bolusProgressData: BolusProgressData
+    private val bolusProgressData: BolusProgressData,
+    @ApplicationScope private val appScope: CoroutineScope
 ) {
 
     private val gsonInstance: Gson = createGson()
+    private val runModeSyncMutex = Mutex()
     var equilState: EquilState? = null
         private set
 
@@ -615,9 +625,47 @@ class EquilManager(
         batteryFlow.value = battery
     }
 
+    /**
+     * Stores the new run mode. When the pump stops delivering (SUSPEND or STOP), a 0 U/h
+     * PUMP_SUSPEND temp basal is recorded, so IOB does not count basal that was never given (#3830).
+     * When the pump runs again, that record is ended and [EventEquilResumed] is sent. The first mode
+     * after a fresh state is not a change, so nothing is recorded for it.
+     */
     fun setRunMode(runMode: RunMode) {
+        val previous = equilState?.runMode
         equilState?.runMode = runMode
         storePodState()
+        if (previous == null || previous.isStopped() == runMode.isStopped()) return
+        val time = dateUtil.now()
+        val serial = getSerialNumber()
+        // UNDISPATCHED takes the lock in the calling thread, so a quick suspend and resume are
+        // written in the same order as they happened.
+        appScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            runModeSyncMutex.withLock { syncRunMode(runMode.isStopped(), time, serial) }
+        }
+        if (!runMode.isStopped()) rxBus.send(EventEquilResumed())
+    }
+
+    private fun RunMode.isStopped() = this == RunMode.SUSPEND || this == RunMode.STOP
+
+    private suspend fun syncRunMode(stopped: Boolean, time: Long, serial: String) {
+        val suspendRunning = pumpSync.expectedPumpState().temporaryBasal?.type == PumpSync.TemporaryBasalType.PUMP_SUSPEND
+        if (stopped && !suspendRunning) {
+            aapsLogger.debug(LTag.PUMP, "Pump stopped delivery, recording 0 U/h PUMP_SUSPEND temp basal")
+            pumpSync.syncTemporaryBasalWithPumpId(
+                time,
+                PumpRate(0.0),
+                T.mins(4800).msecs(),
+                true,
+                PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                time,
+                PumpType.EQUIL,
+                serial
+            )
+        } else if (!stopped && suspendRunning) {
+            aapsLogger.debug(LTag.PUMP, "Pump runs again, ending PUMP_SUSPEND temp basal")
+            pumpSync.syncStopTemporaryBasalWithPumpId(time, time, PumpType.EQUIL, serial)
+        }
     }
 
     fun setFirmwareVersion(firmwareVersion: String) {

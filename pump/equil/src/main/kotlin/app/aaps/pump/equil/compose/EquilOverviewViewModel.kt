@@ -271,7 +271,7 @@ class EquilOverviewViewModel(
             _isModeChanging.value = false
             aapsLogger.debug(LTag.PUMPCOMM, "toggleMode result: ${r.success}")
             if (r.success) {
-                equilManager.equilState?.runMode = targetMode
+                equilManager.setRunMode(targetMode)
                 _refreshTrigger.value = System.currentTimeMillis()
             }
         }

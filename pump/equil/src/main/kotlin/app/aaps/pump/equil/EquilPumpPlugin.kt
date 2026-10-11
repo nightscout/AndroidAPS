@@ -55,6 +55,7 @@ import app.aaps.pump.equil.driver.definition.BasalSchedule
 import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
 import app.aaps.pump.equil.events.EventEquilAlarm
 import app.aaps.pump.equil.events.EventEquilDataChanged
+import app.aaps.pump.equil.events.EventEquilResumed
 import app.aaps.pump.equil.keys.EquilBooleanKey
 import app.aaps.pump.equil.keys.EquilBooleanPreferenceKey
 import app.aaps.pump.equil.keys.EquilIntPreferenceKey
@@ -76,6 +77,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
@@ -138,6 +140,17 @@ class EquilPumpPlugin(
 
         rxBus.toFlow(EventEquilDataChanged::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP) { playAlarm() }
+
+        // After a resume the pump runs again the temp basal it had before the suspend, but AAPS ended
+        // that temp basal at the suspend (#3830). Cancel it, so the pump and AAPS agree. The loop sets
+        // a new one on its next run. The resume command reports success before its last BLE writes are
+        // done, so wait a moment, or the cancel overlaps them and gets no answer.
+        rxBus.toFlow(EventEquilResumed::class)
+            .collectResilient(newScope, aapsLogger, LTag.PUMP) {
+                delay(EquilConst.EQUIL_BLE_NEXT_CMD)
+                aapsLogger.debug(LTag.PUMPCOMM, "Pump resumed, cancelling the old temp basal")
+                commandQueue.cancelTempBasal(enforceNew = true)
+            }
 
         rxBus.toFlow(EventEquilAlarm::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP) { eventEquilError ->

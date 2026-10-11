@@ -16,6 +16,8 @@ import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.keys.EquilStringKey
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -67,7 +69,7 @@ class EquilManagerStateTest {
         sut = EquilManager(
             aapsLogger, rxBus, preferences, rh, pumpSync, equilBLE, equilHistoryRecordDao,
             equilHistoryPumpDao, { mock<PumpEnactResult>() }, dateUtil, notificationManager,
-            ch, bolusProgressData
+            ch, bolusProgressData, CoroutineScope(UnconfinedTestDispatcher())
         )
     }
 
