@@ -60,6 +60,10 @@
     <string name="carelevo_insulin_refill_step4">4. משכו את בוכנת המזרק לאחור ומלאו אותו בכ־2 מ״ל אוויר.</string>
     <string name="carelevo_insulin_refill_step5">5. הכניסו את המזרק המלא באוויר לבקבוקון האינסולין והזריקו את האוויר לתוכו.</string>
     <string name="carelevo_insulin_refill_step6">6. כשהמזרק עדיין בתוך הבקבוקון, הפכו את הבקבוקון והמזרק והשתמשו בלחץ כדי למלא את המזרק בכ־2 מ״ל אינסולין.</string>
+    <string name="carelevo_patch_step_1">שלב 1.</string>
+    <string name="carelevo_patch_step_2">שלב 2.</string>
+    <string name="carelevo_patch_step_3">שלב 3.</string>
+    <string name="carelevo_patch_connect_step_1_title">הסרת מכסה המחט</string>
     <!-- Connection -->
     <!-- Profile -->
     <!-- Needle Insertion -->
