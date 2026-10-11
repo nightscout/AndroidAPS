@@ -450,8 +450,7 @@ class DataHandlerMobile(
         // Map loop mode
         val runningModeRecord = loop.runningModeRecord()
         val loopMode = runningModeRecord.mode.toLoopMode()
-        // End time of a temporary mode (suspend/disconnect/superbolus) so the watch can show remaining duration
-        val modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null
+        val modeEndTime = runningModeRecord.endTimeForWatch()
 
         // Build temp target info
         val tempTargetInfo = tempTarget?.let {
@@ -1598,7 +1597,7 @@ class DataHandlerMobile(
                 reservoir = reservoir,
                 reservoirLevel = reservoirLevel,
                 loopMode = runningModeRecord.mode.toLoopMode(),
-                modeEndTime = if (runningModeRecord.isTemporary()) runningModeRecord.timestamp + runningModeRecord.duration else null,
+                modeEndTime = runningModeRecord.endTimeForWatch(),
                 modeFromScene = runningModeRecord.id == activeSceneSync.getActiveState()?.scopedRecords?.rmId
             )
         )
@@ -1857,3 +1856,13 @@ class DataHandlerMobile(
     }
 
 }
+
+/**
+ * End time of a temporary mode (suspend / disconnect / superbolus) so the watch can show the
+ * remaining time, or null when there is none to show. A pump suspend has no end the user chose:
+ * `LoopPlugin.runningModePreCheck` stores Int.MAX_VALUE minutes, which the watch showed as
+ * "35791394 h". The Overview chip treats a duration of 30 days or more as open-ended and shows
+ * no time; the same rule here keeps phone and watch in agreement.
+ */
+internal fun RM.endTimeForWatch(): Long? =
+    if (isTemporary() && duration < T.days(30).msecs()) timestamp + duration else null
