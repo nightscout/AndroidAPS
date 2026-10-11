@@ -12,12 +12,12 @@ import android.media.AudioAttributes
 import android.net.Uri
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.AlarmIntent
 import app.aaps.core.interfaces.notifications.AlarmSound
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -53,6 +53,7 @@ class AlarmNotificationManager(
     private val preferences: Preferences,
     private val iconsProvider: IconsProvider,
     private val uiInteractionProvider: () -> UiInteraction,
+    private val notificationHolderProvider: () -> NotificationHolder,
     private val alarmSoundPlayer: AlarmSoundPlayer,
     private val rh: ResourceHelper
 ) {
@@ -235,15 +236,6 @@ class AlarmNotificationManager(
         }
     }
 
-    private fun openAppPendingIntent(): PendingIntent? {
-        val mainActivity = uiInteractionProvider().mainActivity
-        return TaskStackBuilder.create(context).run {
-            addParentStack(mainActivity.java)
-            addNextIntent(Intent(context, mainActivity.java))
-            getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-        }
-    }
-
     private fun channelIdForSound(sound: AlarmSound, overrideDnd: Boolean): String {
         val name = SOUND_NAMES[sound] ?: "error"
         val suffix = if (overrideDnd) "alarm" else "notify"
@@ -415,7 +407,7 @@ class AlarmNotificationManager(
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setOngoing(true)
             .setAutoCancel(false)
-            .setContentIntent(openAppPendingIntent())
+            .setContentIntent(notificationHolderProvider().openAppIntent())
 
         val systemId = SOUND_ID_OFFSET + notificationKey
         try {
