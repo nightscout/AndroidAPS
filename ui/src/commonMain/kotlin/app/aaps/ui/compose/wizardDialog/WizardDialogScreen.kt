@@ -35,7 +35,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,6 +80,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
+import app.aaps.core.ui.compose.ExpandableRowHeader
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.bottomBarSafeArea
@@ -729,53 +729,37 @@ internal fun WizardDialogContent(
                     // BG (collapsible, auto-expand when old/missing)
                     val bgExpandRequester = rememberBringIntoViewOnExpand(bgExpandedByUser)
                     Column(modifier = itemModifier.bringIntoViewRequester(bgExpandRequester)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(CoreUiStrings.wizard_bg_label) + ": ",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                if (uiState.hasBgData) {
-                                    val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
-                                    Text(
-                                        text = "${bgFormat.format(uiState.bg)} $unitsLabel",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    val ageText = "(${uiState.bgAgeMinutes} min)"
-                                    // Old is only the red colour on screen; a screen reader says it.
-                                    val ageSpoken = if (bgIsOld) listOf(ageText, stringResource(UiStrings.a11y_bg_old_reading)).joinToString(", ") else ageText
-                                    Text(
-                                        text = ageText,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = if (bgIsOld) MaterialTheme.colorScheme.error
-                                        else MaterialTheme.colorScheme.onSurfaceVariant,
-                                        modifier = Modifier.semantics { contentDescription = ageSpoken }
-                                    )
-                                } else {
-                                    Text(
-                                        text = stringResource(CoreUiStrings.not_available_full),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.error
-                                    )
-                                }
+                        ExpandableRowHeader(
+                            label = stringResource(CoreUiStrings.wizard_bg_label),
+                            expanded = bgExpanded,
+                            onExpand = {
+                                bgExpanded = true
+                                bgExpandedByUser = true
                             }
-                            if (!bgExpanded) {
-                                FilledTonalButton(onClick = {
-                                    bgExpanded = true
-                                    bgExpandedByUser = true
-                                }) {
-                                    Text(stringResource(CoreUiStrings.change))
-                                }
+                        ) {
+                            if (uiState.hasBgData) {
+                                val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
+                                Text(
+                                    text = "${bgFormat.format(uiState.bg)} $unitsLabel",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                val ageText = "(${uiState.bgAgeMinutes} min)"
+                                // Old is only the red colour on screen; a screen reader says it.
+                                val ageSpoken = if (bgIsOld) listOf(ageText, stringResource(UiStrings.a11y_bg_old_reading)).joinToString(", ") else ageText
+                                Text(
+                                    text = ageText,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = if (bgIsOld) MaterialTheme.colorScheme.error
+                                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.semantics { contentDescription = ageSpoken }
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(CoreUiStrings.not_available_full),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.error
+                                )
                             }
                         }
                         AnimatedVisibility(
@@ -798,32 +782,16 @@ internal fun WizardDialogContent(
                     // Percentage (collapsible)
                     val percentageExpandRequester = rememberBringIntoViewOnExpand(percentageExpanded)
                     Column(modifier = itemModifier.bringIntoViewRequester(percentageExpandRequester)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        ExpandableRowHeader(
+                            label = stringResource(CoreUiStrings.wizard_use_percentage),
+                            expanded = percentageExpanded,
+                            onExpand = { percentageExpanded = true }
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(CoreUiStrings.wizard_use_percentage) + ": ",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = "${uiState.percentage}%",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                            if (!percentageExpanded) {
-                                FilledTonalButton(onClick = { percentageExpanded = true }) {
-                                    Text(stringResource(CoreUiStrings.change))
-                                }
-                            }
+                            Text(
+                                text = "${uiState.percentage}%",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                         AnimatedVisibility(
                             visible = percentageExpanded,
@@ -849,32 +817,16 @@ internal fun WizardDialogContent(
                         val profileExpandRequester = rememberBringIntoViewOnExpand(profileExpanded)
 
                         Column(modifier = itemModifier.bringIntoViewRequester(profileExpandRequester)) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
+                            ExpandableRowHeader(
+                                label = stringResource(CoreUiStrings.profile),
+                                expanded = profileExpanded,
+                                onExpand = { profileExpanded = true }
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text(
-                                        text = stringResource(CoreUiStrings.profile) + ": ",
-                                        style = MaterialTheme.typography.labelLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                    Text(
-                                        text = currentProfile,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
-                                if (!profileExpanded) {
-                                    FilledTonalButton(onClick = { profileExpanded = true }) {
-                                        Text(stringResource(CoreUiStrings.change))
-                                    }
-                                }
+                                Text(
+                                    text = currentProfile,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             }
                             AnimatedVisibility(
                                 visible = profileExpanded,

@@ -2,7 +2,7 @@ package app.aaps.ui.compose.insulinDialog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,6 +49,7 @@ import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.InsulinSelector
@@ -431,10 +432,12 @@ private fun InsulinQuickAddButtons(
 
     val focusManager = LocalFocusManager.current
 
-    Row(
+    // A FlowRow, so that with a big font a button that does not fit moves to the next line
+    // instead of being squeezed until its text breaks.
+    FlowRow(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium, Alignment.CenterHorizontally),
+        itemVerticalAlignment = Alignment.CenterVertically
     ) {
         increments.forEach { amount ->
             val formatted = formatAmount(amount)

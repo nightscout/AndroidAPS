@@ -3,9 +3,7 @@ package app.aaps.core.ui.compose
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.CoreUiStrings
@@ -69,59 +65,41 @@ fun CarbTimeRow(
             .fillMaxWidth()
             .bringIntoViewRequester(expandRequester)
     ) {
-        // Header row: icon + label + value + Change/OK button
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+        ExpandableRowHeader(
+            label = stringResource(CoreUiStrings.wizard_carb_time),
+            expanded = expanded,
+            onExpand = { expanded = true }
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.weight(1f)
-            ) {
+            if (offsetMinutes == 0) {
                 Text(
-                    text = stringResource(CoreUiStrings.wizard_carb_time) + ": ",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = stringResource(CoreUiStrings.carb_time_now),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
-                if (offsetMinutes == 0) {
-                    Text(
-                        text = stringResource(CoreUiStrings.carb_time_now),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                } else {
-                    Column {
-                        if (resolvedTimeText != null) {
-                            Text(
-                                text = resolvedTimeText,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
+            } else {
+                Column {
+                    if (resolvedTimeText != null) {
                         Text(
-                            text = "(${formatOffset(offsetMinutes)})",
-                            style = MaterialTheme.typography.bodySmall,
+                            text = resolvedTimeText,
+                            style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
-                }
-                if (alarmChecked && offsetMinutes != 0) {
-                    Icon(
-                        imageVector = Icons.Outlined.Notifications,
-                        // The only sign that an alarm is set when the row is collapsed.
-                        contentDescription = stringResource(CoreUiStrings.wizard_set_alarm),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(16.dp)
+                    Text(
+                        text = "(${formatOffset(offsetMinutes)})",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
-
-            if (!expanded) {
-                FilledTonalButton(onClick = { expanded = true }) {
-                    Text(stringResource(CoreUiStrings.change))
-                }
+            if (alarmChecked && offsetMinutes != 0) {
+                Icon(
+                    imageVector = Icons.Outlined.Notifications,
+                    // The only sign that an alarm is set when the row is collapsed.
+                    contentDescription = stringResource(CoreUiStrings.wizard_set_alarm),
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(16.dp)
+                )
             }
         }
 
