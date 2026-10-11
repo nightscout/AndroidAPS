@@ -163,7 +163,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">%1$d g manquants</string>
     <string name="wizard_carbs_type_bread_desc">100 % de glucides immédiats, sans glucides étendus</string>
-    <string name="wizard_carbs_type_desc">Glucides réduits de %1$d%%, ajout d\'eGlucides %2$d%%, décalage %3$dmin, durée de %4$dh</string>
     <string name="wizard_include_info">Appuyer pour inclure/exclure du calcul :\n• Gly. — Glycémie (ON au début)\n• CT — Cible Temporaire (ON au début)\n• Tendance — Tendance Glycémique (dernier état rappelé)\n• IA — Insuline Active (ON au début)\n• Glucides Actifs (dernier état rappelé)</string>
     <!-- Treatments -->
     <string name="no_records_available">Aucun enregistrement disponible</string>
