@@ -232,9 +232,12 @@ class PersistentNotificationPlugin(
                 bgStatusChipText = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated)
                 val fromMgdlToUnits = profileUtil.fromMgdlToUnits(lastBG.recalculated)
                 metricValue = if (units == GlucoseUnit.MMOL) {
+                    // Always one decimal. The default minimum is 0, which showed 9.0 as "9" (#5240).
                     FixedFloat(
                         fromMgdlToUnits.round(1).toFloat(),
-                        null // unit
+                        null, // unit
+                        1, // min fraction digits
+                        1 // max fraction digits
                     )
                 } else {
                     FixedInt(
