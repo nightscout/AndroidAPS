@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">El comando se está ejecutando en este momento</string>
+    <string name="smb_being_delivered">Se está administrando un microbolo (SMB) en este momento. Inténtelo de nuevo cuando haya finalizado</string>
     <string name="basal_value_below_minimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Carbohidratos</string>
