@@ -24,6 +24,7 @@
     <string name="equil_title_unpair_detach">Løsne pumpen</string>
     <string name="equil_title_history_events">Historiske hendelser</string>
     <string name="equil_tone">Varseltone</string>
+    <string name="equil_bolus_speed">Bolushastighet</string>
     <string name="equil_tone_mode_mute">Demp lyd</string>
     <string name="equil_tone_mode_shake">Kun vibrering</string>
     <string name="equil_tone_mode_tone">Kun lyd</string>
@@ -47,6 +48,7 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Lavt batterinivå: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Det er ikke nok insulin igjen i reservoaret: %1$s</string>
     <string name="equil_reservoir_empty">Insulinreservoaret er tomt. Pumpen leverer ikke lenger insulin.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Pumpen stoppet under bolusen. Gitt: %1$s av %2$s</string>
     <string name="equil_pump_not_run">Pumpen kjører ikke</string>
     <string name="equil_pair">Paring</string>
     <string name="equil_pair_error">Paringsfeil</string>
