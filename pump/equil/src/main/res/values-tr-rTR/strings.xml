@@ -31,8 +31,6 @@
     <string name="equil_record_bolus">Bolus %1$s Ü</string>
     <string name="equil_error_set_temp_basal_failed_validation">GBO süresi sıfırdan büyük ve %1$s dakikanın katı olmalıdır.</string>
     <string name="equil_not_enough_insulin">Rezervuarda yeterli insülin kalmadı</string>
-    <string name="equil_low_battery">Düşük pil</string>
-    <string name="equil_low_insulin">Rezervuarda yeterli insülin kalmadı</string>
     <string name="equil_pump_not_run">Pompa çalışmıyor</string>
     <string name="equil_pair">Eşleştir</string>
     <string name="equil_pair_error">Eşleşme hatası</string>
