@@ -74,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Si se activa, las subidas irán a los servidores de prueba en lugar de a los servidores habituales</string>
     <string name="title_tidepool_dev_servers">Usar servidores de integración (prueba)</string>
+    <string name="title_tidepool_use_ns_connection">Usar la configuración de conexión de Nightscout</string>
+    <string name="summary_tidepool_use_ns_connection">Desactivar para establecer una configuración de conexión independiente para Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Carga datos a Tidepool</string>
     <string name="upload_now">Subir ahora</string>
