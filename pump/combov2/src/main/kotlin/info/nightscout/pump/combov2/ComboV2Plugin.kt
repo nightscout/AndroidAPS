@@ -2,6 +2,7 @@ package info.nightscout.pump.combov2
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -13,6 +14,7 @@ import app.aaps.core.interfaces.InterfacesStrings
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.constraints.PumpPluginConstraints
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -106,7 +108,6 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.joda.time.DateTime
 import java.util.Locale
-import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
@@ -119,6 +120,26 @@ import info.nightscout.comboctl.main.Pump as ComboCtlPump
 import info.nightscout.comboctl.main.PumpManager as ComboCtlPumpManager
 
 internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
+
+/**
+ * Caps an absolute temp basal [rate] at [maxTempPercent] of the pump's current [baseRate], both in
+ * pump units per hour. No cap while the base rate is unknown (0): a cap of 0 would turn every temp
+ * basal into 0 U/h.
+ */
+internal fun capToMaxTempPercent(rate: Double, baseRate: Double, maxTempPercent: Int): Double =
+    if (baseRate <= 0.0) rate else rate.coerceAtMost(baseRate * maxTempPercent / 100.0)
+
+/**
+ * Milliseconds from [now] until the next full hour, at least 1.
+ *
+ * Never 0: delay(0) returns at once, without suspending and without checking for a cancellation.
+ * The basal UI loop used to wait max(58 - minute, 0) minutes, so at minute 58 and 59 it spun until
+ * the hour turned, and a disconnect waited for it for up to a minute (#5261).
+ */
+internal fun millisUntilNextHour(now: DateTime): Long {
+    val millisIntoHour = now.minuteOfHour().get() * 60_000L + now.secondOfMinute().get() * 1000L + now.millisOfSecond().get()
+    return (60 * 60_000L - millisIntoHour).coerceAtLeast(1L)
+}
 
 @ContributesIntoMap(AppScope::class, binding = binding<PluginBase>())
 @PumpDriver
@@ -154,7 +175,7 @@ class ComboV2Plugin(
             .description(TextRef.AndroidRes(R.string.combov2_plugin_description)),
         ownPreferences = ComboIntKey.entries + ComboBooleanKey.entries + ComboStringNonKey.entries + ComboIntNonKey.entries + ComboLongNonKey.entries,
         aapsLogger, rh, preferences, commandQueue, notificationManager
-    ), Pump, PluginConstraints {
+    ), Pump, PluginConstraints, PumpPluginConstraints {
 
     // Coroutine scope and the associated job. All coroutines
     // that are started in this plugin are part of this scope.
@@ -187,8 +208,15 @@ class ComboV2Plugin(
     // to return false until either the user presses the Refresh button or the
     // pumpErrorTimeoutJob expires. That way, the loop won't run until then,
     // giving the user a chance to handle the error.
-    private var pumpErrorObserved = false
+    // Volatile: set by the pump coroutine, read by the queue, cleared by the timer and the UI.
+    @Volatile
+    @get:VisibleForTesting
+    internal var pumpErrorObserved = false
+        private set
     private var pumpErrorTimeoutJob: Job? = null
+
+    // A var only so that a test can make it short.
+    @VisibleForTesting internal var pumpErrorTimeoutMillis = PUMP_ERROR_TIMEOUT_INTERVAL_MSECS
 
     // Set to true if a disconnect request came in while the driver
     // was in the Connecting, CheckingPump, or ExecutingCommand
@@ -500,8 +528,10 @@ class ComboV2Plugin(
         }
 
         if (pumpErrorObserved) {
+            // No notification here. The queue tries to connect about once a second, and a post here
+            // replaced the card that names the error every time (#5263). notifyAboutComboAlert() posts
+            // the "cannot connect" hint once instead.
             aapsLogger.debug(LTag.PUMP, "Aborting connect attempt since the pumpErrorObserved flag is set")
-            notificationManager.post(NotificationId.COMBO_PUMP_ALARM, TextRef.AndroidRes(R.string.combov2_cannot_connect_pump_error_observed), level = NotificationLevel.NORMAL)
             return
         }
 
@@ -1355,7 +1385,19 @@ class ComboV2Plugin(
             aapsLogger.info(LTag.PUMP, "Clearing pumpErrorObserved flag")
             pumpErrorObserved = false
         }
+        notificationManager.dismiss(NotificationId.COMBO_PUMP_ERROR_LOCKOUT)
     }
+
+    /*** Delivery constraints ***/
+
+    /**
+     * The Combo has no absolute temp basal. setTempBasalAbsolute() turns the rate into a percent of
+     * the current hour's pump basal and cuts it to maxTempPercent without telling anyone. This tells
+     * the constraint chain about that limit, so the loop does not ask for more than the pump runs
+     * (#5262). It also lowers the max basal given to the APS algorithms to what the pump can run.
+     */
+    override fun applyBasalConstraints(absoluteRate: PumpRate): PumpRate =
+        PumpRate(capToMaxTempPercent(absoluteRate.cU, baseBasalRate.cU, _pumpDescription.maxTempPercent))
 
     /*** Loop constraints ***/
     // These restrict the function of the loop in case of an event
@@ -1737,19 +1779,12 @@ class ComboV2Plugin(
 
                     launch {
                         while (true) {
-                            updateBaseBasalRateUI()
-                            val currentMinute = DateTime().minuteOfHour().get()
-
-                            // Calculate how many minutes need to pass until we
-                            // reach the next hour and thus the next basal profile
-                            // factor becomes active. That way, the amount of UI
-                            // refreshes is minimized.
-                            // We cap the max waiting period to 58 minutes instead
-                            // of 60 to allow for a small tolerance range for cases
-                            // when this loop iterates exactly when the current hour
-                            // is about to turn.
-                            val minutesUntilNextFactor = max((58 - currentMinute), 0)
-                            delay(minutesUntilNextFactor * 60 * 1000L)
+                            // One "now" for the rate and the wait, so an hour that turns
+                            // between two reads cannot show the old rate for a whole hour.
+                            val now = DateTime()
+                            updateBaseBasalRateUI(now)
+                            // Wait until the next basal profile factor becomes active.
+                            delay(millisUntilNextHour(now))
                         }
                     }
                 }
@@ -1763,13 +1798,17 @@ class ComboV2Plugin(
     }
 
     private fun startPumpErrorTimeout() {
-        if (pumpErrorTimeoutJob != null)
+        // isActive, not != null: a timer that already ran stays in the field. With != null, a second
+        // error in the same session started no timer, so the pump stayed locked until the user
+        // pressed Refresh, and the loop did not run.
+        if (pumpErrorTimeoutJob?.isActive == true)
             return
 
         pumpErrorTimeoutJob = pumpCoroutineScope.launch {
-            delay(PUMP_ERROR_TIMEOUT_INTERVAL_MSECS)
+            delay(pumpErrorTimeoutMillis)
             aapsLogger.info(LTag.PUMP, "Clearing pumpErrorObserved flag after timeout was reached")
             pumpErrorObserved = false
+            notificationManager.dismiss(NotificationId.COMBO_PUMP_ERROR_LOCKOUT)
             commandQueue.readStatus(rh.gs(R.string.combov2_refresh_pump_status_after_error))
         }
     }
@@ -1779,8 +1818,8 @@ class ComboV2Plugin(
         pumpErrorTimeoutJob = null
     }
 
-    private fun updateBaseBasalRateUI() {
-        val currentHour = DateTime().hourOfDay().get()
+    private fun updateBaseBasalRateUI(now: DateTime = DateTime()) {
+        val currentHour = now.hourOfDay().get()
         // This sets value to null if no profile is set,
         // which keeps the base basal rate on the UI blank.
         _baseBasalRateUIFlow.value = activeBasalProfile?.get(currentHour)?.cctlBasalToIU()
@@ -2171,18 +2210,26 @@ class ComboV2Plugin(
             else                          -> rh.gs(R.string.combov2_unrecognized_alert)
         }
 
-    private fun notifyAboutComboAlert(alert: AlertScreenContent) {
-        if (alert is AlertScreenContent.Error) {
-            aapsLogger.info(LTag.PUMP, "Error screen observed - setting pumpErrorObserved flag")
-            pumpErrorObserved = true
-            startPumpErrorTimeout()
-        }
-
+    @VisibleForTesting
+    internal fun notifyAboutComboAlert(alert: AlertScreenContent) {
         notificationManager.post(
             NotificationId.COMBO_PUMP_ALARM,
             text = "${rh.gs(R.string.combov2_combo_alert)}: ${getAlertDescription(alert)}",
             level = if (alert is AlertScreenContent.Warning) NotificationLevel.NORMAL else NotificationLevel.IMPORTANT
         )
+
+        if (alert is AlertScreenContent.Error) {
+            aapsLogger.info(LTag.PUMP, "Error screen observed - setting pumpErrorObserved flag")
+            pumpErrorObserved = true
+            startPumpErrorTimeout()
+            // Once per error, on its own id, so the card above keeps naming the error. It goes away by
+            // itself when the flag is cleared (Refresh or timeout).
+            notificationManager.post(
+                NotificationId.COMBO_PUMP_ERROR_LOCKOUT,
+                TextRef.AndroidRes(R.string.combov2_cannot_connect_pump_error_observed),
+                validityCheck = { pumpErrorObserved }
+            )
+        }
     }
 
     private fun reportFinishedBolus(status: String, id: Long, pumpEnactResult: PumpEnactResult, succeeded: Boolean) {
