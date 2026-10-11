@@ -2,7 +2,9 @@
 <resources>
     <string name="dia_whatmeansdia">Čo je pravda o DIA?</string>
     <string name="dia_label_exam">Doba pôsobenia inzulínu (DIA)</string>
+    <string name="dia_profile">Hodnotu DIA by ste mali nastaviť v nastaveniach inzulínu (Spravovať → Nastavenia inzulínu), nie v profile.</string>
     <string name="dia_minimumis5h">Minimálna hodnota je 5 hodín.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">Pokiaľ ste spokojný s tým, že hodnota DIA použitá v pumpe pred AAPS dobre fungovala, nie je potrebné ju meniť, keď začínate s uzavretým okruhom.</string>
     <string name="dia_valuemustbedetermined">Mali by ste si pre seba určiť príslušnú hodnotu DIA.</string>
     <string name="hypott_label">Dočasný cieľ pri hypoglykémii</string>
@@ -26,6 +28,7 @@
     <string name="objectives_afterchange">Exportujte svoje nastavenia, po zmene ktoréhokoľvek z vašich nastavení.</string>
     <string name="objectives_afterinitialsetup">Exportujte svoje nastavenia po dokončení počiatočného nastavenia a nastavenia preferencií.</string>
     <string name="objectives2_maintenance">Exportujte vaše nastavenia lokálne pomocou menu údržby.</string>
+    <string name="objectives2_internalstorage">Váš súbor s nastaveniami je uložený v priečinku „preferences“ vo vnútri priečinka AAPS, ktorý ste vybrali v telefóne.</string>
     <string name="objectives2_cloud">Skopírujte súbor s vašimi nastaveniami do bezpečného umiestnenia mimo telefón (napr. pomocou cloudového disku, pripojením kábla k počítaču, E-mailom a pod.)</string>
     <string name="objectives2_easyrestore">Ak je váš telefón poškodený, alebo stratený, existujú jednoduché spôsoby, ako vzdialene obnoviť vaše nastavenia bez zálohovania.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/cs/latest/Maintenance/ExportImportSettings.html</string>
@@ -35,6 +38,7 @@
     <string name="noisycgm_nothing">Nerobte nič, AAPS sa s tým vysporiada.</string>
     <string name="noisycgm_pause">Deaktivujte uzavretý okruh, aby nedošlo k predávkovaniu, alebo poddávkovaniu.</string>
     <string name="noisycgm_replacesensor">Nahraďte trvalo zašumené, alebo nepresné senzory.</string>
+    <string name="noisycgm_checksmoothing">Uistite sa, že vaše glykémie sú vyhladené či už vašou aplikáciou CGM alebo vyhladzovacím pluginom v AAPS.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/cs/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Cvičenie a profily</string>
     <string name="exerciseprofile_whattodo">Ako môžete použiť profily, aby ste mohli najlepšie pomocou systému riešiť aeróbne cvičenie?</string>
@@ -42,6 +46,7 @@
     <string name="exerciseprofile_switchprofileabove100">Prepnite profil na viac ako 100 %.</string>
     <string name="exerciseprofile_leaveat100">Ponechajte profil nastavený na hodnotu 100%.</string>
     <string name="exerciseprofile_suspendloop">Pozastavte uzavretý okruh.</string>
+    <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">Cvičenie a dočasné ciele</string>
     <string name="exercise_whattodo">Ako môžete použiť dočasné ciele pre najlepšiu pomoc pri práci so systémom pri aeróbnom cvičení?</string>
     <string name="exercise_settt">Nastavte cieľovú hodnotu glykémie vo vhodnej dobe pred zahájením cvičenia.</string>
@@ -60,16 +65,20 @@
     <string name="prerequisites_what">Čo je nevyhnutné pre nastavenie a používanie AAPS?</string>
     <string name="prerequisites_build">Spôsob, ako zostaviť AAPS. Buď cez webový prehliadač, alebo počítač s nainštalovaným Android Studio.</string>
     <string name="prerequisites_pump">Kompatibilná inzulínová pumpa, pokiaľ plánujete spustenie uzavretého okruhu.</string>
+    <string name="prerequisites_nightscout">Nightscout alebo Tidepool pre záznamy o vašich dátach.</string>
     <string name="prerequisites_beanandroiddeveloper">Skúsenosti s programovaním, alebo úpravou kódu.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/ComponentOverview.html</string>
     <string name="prerequisites2_label">Požiadavky</string>
     <string name="prerequisites2_what">Čo je nevyhnutné pre nastavenie a používanie AAPS?</string>
+    <string name="prerequisites2_profile">Overené hodnoty pre váš profil (bazálne dávky, ISF, pomer I:C) a pre váš inzulín (DIA).</string>
     <string name="prerequisites2_device">Kompatibilné Android zariadenie (napr. mobilný telefón, Android hodinky, alebo tablet).</string>
     <string name="prerequisites2_internet">AAPS vyžaduje pripojenie k internetu pre spustenie uzavretého okruhu.</string>
     <string name="prerequisites2_supportedcgm">Podporované CGM a vhodná aplikácia pre prijímanie glykémií v telefóne/zariadení.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Aktualizujem AAPS</string>
+    <string name="update_git">Na zostavenie aplikácie pomocou Android Studia musíte mať v počítači nainštalovaný a nakonfigurovaný Git. Pri zostavení cez prehliadač Git nie je potrebný.</string>
     <string name="update_asap">Pokiaľ sú uvoľnené aktualizované verzie AAPS, staršie verzie môžu byť po určitej dobe vzdialene obmedzené.</string>
+    <string name="update_keys">Ak zostavujete aplikáciu pomocou Android Studia, uložte si umiestnenie súboru keystore a na aktualizácie použite rovnaký podpisový kľúč ako pri predchádzajúcej inštalácii.</string>
     <string name="update_askfriend">Ak máte problém s vytvorením apk, môžete nainstalovať apk, ktorý bol vytvorený priateľom.</string>
     <string name="update_hint1">https://wiki.aaps.app/cs/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Riešenie problémov</string>
@@ -77,11 +86,14 @@
     <string name="troubleshooting_fb">Môžete požiadať o radu vo Facebookovej skupine používateľov AAPS.</string>
     <string name="troubleshooting_wiki">Mali by ste si prečítať (a znovu prečítať) dokumentáciu k AAPS.</string>
     <string name="troubleshooting_discord">Môžete požiadať o radu, diskutovať o technických problémoch, chybách a požiadavkách na funkcie na Discorde AAPS.</string>
+    <string name="troubleshooting_github">Chyby a požiadavky na nové funkcie môžete nahlásiť na GitHube.</string>
     <string name="troubleshooting_yourendo">Mali by ste se spýtať svojho lekára/endokrinológa.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/cs/latest/GettingHelp/WhereCanIGetHelp.html</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
+    <string name="insulin_plugins">Nastavenia inzulínu</string>
+    <string name="insulin_ultrarapid">V nastaveniach inzulínu, ktorý z týchto inzulínov by mal používať ultra-rýchly vrchol 55 minút?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid ® /Humalog ®</string>
     <string name="insulin_humalog">Humalog®</string>
@@ -96,6 +108,8 @@
     <string name="sensitivity_hint2">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
     <string name="wrongcarbs_label">Chyby pri zadávaní sacharidov</string>
     <string name="wrongcarbs_whattodo">Čo by ste mali urobiť, pokiaľ ste chybne zadali sacharidy?</string>
+    <string name="wrongcarbs_treatmentstab">Odstrániť nesprávny záznam v Ošetreniach a zadať správnu novú hodnotu sacharidov.</string>
+    <string name="wrongcarbs_addinsulin">Podajte bolus pomocou menu Plnenie/Doplňovanie.</string>
     <string name="wrongcarbs_donothing">Nič nerobte – AAPS urobí vhodné úpravy.</string>
     <string name="wronginsulin_label">Chyby pri podávaní inzulínu</string>
     <string name="wronginsulin_whattodo">Čo by ste mali urobiť, pokiaľ ste dostali menej inzulínu, než ukazuje história pumpy, napr. v dôsledku oklúzie, vadnej kanyly, alebo zabudnutia na opätovné pripojenie pumpy po sprche?</string>
