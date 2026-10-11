@@ -24,6 +24,7 @@
     <string name="equil_title_unpair_detach">Odpojit pumpu</string>
     <string name="equil_title_history_events">Historie událostí</string>
     <string name="equil_tone">Typ výstrahy</string>
+    <string name="equil_bolus_speed">Rychlost bolusu</string>
     <string name="equil_tone_mode_mute">Ztlumit</string>
     <string name="equil_tone_mode_shake">Pouze vibrovat</string>
     <string name="equil_tone_mode_tone">Pouze zvuky</string>
