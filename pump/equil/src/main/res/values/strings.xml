@@ -39,6 +39,10 @@
 
     <string name="equil_change">Change pump</string>
     <string name="equil_change_content">Please detach the pump from the base plate.</string>
+    <string name="equil_new_infusion_set_question">Will you also put on a new infusion set (base plate and cannula)?</string>
+    <string name="equil_new_infusion_set_yes">Yes, new infusion set</string>
+    <string name="equil_new_infusion_set_no">No, only reservoir or battery</string>
+    <string name="equil_same_infusion_set_hint">The cannula will not be primed and no cannula change will be recorded.</string>
 
     <string name="equil_unpair_alert">Are you sure you want to relinquish control over %1$s?</string>
     <string name="equil_record_basal">Basal rate %1$s U/H</string>
