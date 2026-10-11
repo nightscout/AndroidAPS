@@ -447,7 +447,6 @@
     <string name="max_carbs_title">Max toegestane koolhydraten [g]</string>
     <string name="patient_type">Type patiënt</string>
     <!--    Protection-->
-    <string name="unlock_settings">Instellingen ontgrendelen</string>
     <!--    Pumps -->
     <string name="battery_label">Batterij</string>
     <string name="reservoir_label">Reservoir</string>
