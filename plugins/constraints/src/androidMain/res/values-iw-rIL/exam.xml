@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">מה נכון לגבי משך פעילות אינסולין (DIA)?</string>
     <string name="dia_label_exam">משך פעילות האינסולין (DIA)</string>
+    <string name="dia_profile">יש להגדיר את משך פעילות האינסולין בהגדרות האינסולין (ניהול ← הגדרות אינסולין) ולא בפרופיל.</string>
     <string name="dia_minimumis5h">הערך המינימלי הוא 5 שעות.</string>
     <string name="dia_meaningisequaltodiapump">אם ערך ה-DIA אותו קבעתם במשאבה לפני המעבר ל- AndroidAPS עבד היטב, אפשר להמשיך להשתמש באותו ערך עם הלולאה.</string>
     <string name="dia_valuemustbedetermined">עליכם לקבוע לעצמכם את ערך ה-DIA הרצוי.</string>
