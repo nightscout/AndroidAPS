@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Il comando sarà eseguito ora</string>
+    <string name="smb_being_delivered">Un SMB è in fase di consegna. Riprova quando è finito.</string>
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">CHO</string>
