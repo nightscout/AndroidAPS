@@ -14,6 +14,7 @@
     <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
     <string name="description_smb_dynamic_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם רגישות (ISF) דינאמית\\אוטומטית</string>
+    <string name="description_auto_isf">האלגוריתם ניסיוני, נועד למשתמשים מתקדמים עם ההרחבות השונות של רגישות אוטומטית</string>
     <string name="openapsma_last_run_label">ההפעלה האחרונה</string>
     <string name="openapsma_input_parameters_label">טוען פרמטרים</string>
     <string name="openapsma_glucose_status_label">מצב סוכר</string>
@@ -37,6 +38,7 @@
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
     <string name="hardlimit">מגבלה קשיחה</string>
     <!--    Autotune   -->
+    <string name="autotune_peak">שיא</string>
     <!--    Loop -->
     <string name="smb_frequency_exceeded">ניתן בולוס ב-3 הדקות האחרונות, מדלג על SMB</string>
     <string name="pump_not_initialized">משאבה לא מאותחלת!</string>
