@@ -17,6 +17,7 @@
     <string name="equil_title_dressing">Kartuşu değiştir</string>
     <string name="equil_title_history_events">Olay Geçmişi</string>
     <string name="equil_tone">Uyarı tonu</string>
+    <string name="equil_bolus_speed">Bolus hızı</string>
     <string name="equil_tone_mode_mute">Sessiz</string>
     <string name="equil_tone_mode_shake">Sadece titreşim</string>
     <string name="equil_tone_mode_tone">Sadece ses</string>
