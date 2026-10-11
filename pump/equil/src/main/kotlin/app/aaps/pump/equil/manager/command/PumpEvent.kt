@@ -38,6 +38,7 @@ object PumpEvent {
      * listed as "auto off" and raised false alarms (#5077).
      */
     private val errorResMap: Map<Triple<Int, Int, Int>, Int> = mapOf(
+        Triple(4, 1, 2) to R.string.equil_history_item2,
         Triple(4, 2, 2) to R.string.equil_history_item3,
         Triple(4, 3, 0) to R.string.equil_history_item4,
         Triple(4, 3, 2) to R.string.equil_history_item5,
@@ -46,8 +47,12 @@ object PumpEvent {
         Triple(5, 1, 2) to R.string.equil_history_item18,
     )
 
-    /** "Battery empty!": the pump stops delivering at this moment. */
-    fun isBatteryEmpty(port: Int, type: Int, level: Int): Boolean = port == 5 && type == 0 && level == 2
+    /**
+     * "Battery empty!" (5, 0, 2) or "Reservoir empty" (4, 1, 2): the pump stops all delivery, basal too,
+     * at this moment. After an empty reservoir it rewinds the piston at once.
+     */
+    fun stopsDelivery(port: Int, type: Int, level: Int): Boolean =
+        (port == 5 && type == 0 && level == 2) || (port == 4 && type == 1 && level == 2)
 
     fun getErrorString(rh: ResourceHelper, port: Int, type: Int, level: Int): String =
         errorResMap[Triple(port, type, level)]?.let { rh.gs(it) } ?: ""

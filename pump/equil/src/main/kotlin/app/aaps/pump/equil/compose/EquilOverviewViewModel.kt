@@ -5,6 +5,7 @@ import android.text.TextUtils
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -207,6 +208,15 @@ class EquilOverviewViewModel(
 
     private fun buildPrimaryActions(isPaired: Boolean): List<PumpAction> = buildList {
         if (isPaired && equilManager.isActivationCompleted()) {
+            // Reads the run mode and the pump history now, so a pump alarm shows without waiting for
+            // the next loop run.
+            add(
+                PumpAction(
+                    label = rh.gs(CoreUiR.string.refresh),
+                    icon = Icons.Filled.Refresh,
+                    category = ActionCategory.PRIMARY,
+                    onClick = { onRefreshClick() }
+                ))
             val runMode = equilManager.equilState?.runMode
             if (runMode == RunMode.RUN) {
                 add(
@@ -260,6 +270,10 @@ class EquilOverviewViewModel(
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.UNPAIR)) }
             ))
         }
+    }
+
+    private fun onRefreshClick() {
+        viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.user_request)) }
     }
 
     private fun toggleMode() {

@@ -2,8 +2,11 @@ package app.aaps.pump.equil.manager
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.ble.EquilBLE
 import app.aaps.pump.equil.data.RunMode
@@ -21,12 +24,14 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import java.util.Calendar
+import kotlin.math.abs
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.times
@@ -267,7 +272,7 @@ class EquilManagerTest : TestBaseWithProfile() {
             eq(empty), argThat<PumpRate> { cU == 0.0 }, durations.capture(), eq(true), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(empty), eq(PumpType.EQUIL), eq("7000F3")
         )
         assertEquals(listOf(4800 * minute, delivering - empty), durations.allValues)
-        assertEquals(null, equilManager.equilState?.batteryEmptyAt)
+        assertEquals(null, equilManager.equilState?.deliveryStoppedAt)
         assertEquals(emptyList<EventEquilAlarm>(), alarms)
     }
 
@@ -284,7 +289,91 @@ class EquilManagerTest : TestBaseWithProfile() {
         verify(pumpSync).syncTemporaryBasalWithPumpId(
             eq(empty), any(), eq(now - empty), any(), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(empty), any(), any()
         )
-        assertEquals(null, equilManager.equilState?.batteryEmptyAt)
+        assertEquals(null, equilManager.equilState?.deliveryStoppedAt)
+    }
+
+    // --- reservoir empty during a bolus (#3467), real records 1711-1717 of 2026-10-11 ---
+
+    private val bolusStart = now - 20 * minute
+    private val empty = bolusStart + 477_000 // 18:14:43 -> 18:22:40: the reservoir ran empty
+    private val bolusEnd = empty + 7_000     // the progress timer reached 100 % 7 s later
+
+    private fun readEmptyReservoirHistory() {
+        listOf(
+            historyRecord(1711, bolusStart, 4, 0, 0, rate = 320),
+            historyRecord(1712, bolusStart + 87_000, 4, 1, 1, rate = 320),  // reservoir low
+            historyRecord(1713, empty, 4, 11, 0, rate = 320),              // TBR end
+            historyRecord(1714, empty, 4, 1, 2),                           // reservoir empty
+            historyRecord(1715, empty, 4, 8, 0)                            // rewind
+        ).forEach { equilManager.decodeHistory(it) }
+    }
+
+    @Test
+    fun `an empty reservoir alarms and opens a 0 U per hour gap`() = runTest {
+        prepareHistory()
+        whenever(rh.gs(R.string.equil_history_item2)).thenReturn("Reservoir empty")
+        val alarms = collectAlarms()
+
+        readEmptyReservoirHistory()
+
+        assertEquals(listOf("Reservoir empty"), alarms.map { it.tips })
+        // The pump stops basal too: no delivery until the refill.
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
+            eq(empty), argThat<PumpRate> { cU == 0.0 }, eq(4800 * minute), eq(true), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(empty), eq(PumpType.EQUIL), eq("7000F3")
+        )
+        assertEquals(empty, equilManager.equilState?.deliveryStoppedAt)
+    }
+
+    @Test
+    fun `the gap ends where an already recorded suspend starts`() = runTest {
+        prepareHistory()
+        // The run mode read right after the bolus saw STOP 10 s after the empty moment and recorded a
+        // suspend from then (seen on the pump on 2026-10-11: 18:57:49 empty, 18:57:59 suspend).
+        val suspend = PumpSync.PumpState.TemporaryBasal(empty + 10_000, 4800 * minute, 0.0, true, PumpSync.TemporaryBasalType.PUMP_SUSPEND, 1L, 1L)
+        runBlocking { whenever(pumpSync.expectedPumpState()).thenReturn(PumpSync.PumpState(suspend, null, null, null, "7000F3")) }
+
+        readEmptyReservoirHistory()
+
+        // Only the 10 s before it, no second open record on top of it.
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
+            eq(empty), any(), eq(10_000L), any(), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(empty), any(), any()
+        )
+        assertEquals(null, equilManager.equilState?.deliveryStoppedAt)
+    }
+
+    @Test
+    fun `a bolus that ran into an empty reservoir records only what was given`() = runTest {
+        prepareHistory()
+        whenever(rh.gs(R.string.equil_history_item2)).thenReturn("Reservoir empty")
+        whenever(rh.gs(eq(R.string.equil_bolus_stopped), anyOrNull(), anyOrNull())).thenReturn("Bolus stopped")
+        val alarms = collectAlarms()
+        val bolus = DetailedBolusInfo().apply { insulin = 12.0; timestamp = bolusStart - 3000 }
+        val result = pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(12.0)
+        readEmptyReservoirHistory() // read right after the bolus
+
+        equilManager.correctBolusIfDeliveryStopped(result, bolus, bolusStart, bolusEnd)
+
+        // 477 s x 1.5 U/min = 11.925 U, rounded up to the 0.05 U step.
+        assertEquals(11.95, result.bolusDelivered, 0.0001)
+        verify(pumpSync).syncBolusWithPumpId(
+            eq(bolusEnd), argThat<PumpInsulin> { abs(cU - 11.95) < 0.0001 }, anyOrNull(), eq(bolus.timestamp), eq(PumpType.EQUIL), eq("7000F3")
+        )
+        assertEquals(listOf("Reservoir empty", "Bolus stopped"), alarms.map { it.tips })
+        // The progress dialog said "delivered successfully"; it now shows what was given.
+        verify(bolusProgressData).updateProgress(eq(99), eq(TextRef.Literal("Bolus stopped")), argThat<PumpInsulin> { abs(cU - 11.95) < 0.0001 })
+    }
+
+    @Test
+    fun `an empty reservoir from before the bolus does not change it`() = runTest {
+        prepareHistory()
+        val bolus = DetailedBolusInfo().apply { insulin = 2.0; timestamp = bolusStart }
+        val result = pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(2.0)
+        equilManager.decodeHistory(historyRecord(1714, bolusStart - 60 * minute, 4, 1, 2))
+
+        equilManager.correctBolusIfDeliveryStopped(result, bolus, bolusStart, bolusStart + 80_000)
+
+        assertEquals(2.0, result.bolusDelivered, 0.0001)
+        verify(pumpSync, never()).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any())
     }
 
     @Test

@@ -1,6 +1,7 @@
 package app.aaps.pump.equil.manager
 
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.di.ApplicationScope
@@ -17,6 +18,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
@@ -73,6 +75,7 @@ import org.joda.time.DateTimeZone
 import org.joda.time.format.ISODateTimeFormat
 import java.util.Calendar
 import java.util.Optional
+import kotlin.math.ceil
 import kotlin.math.min
 
 @SingleIn(AppScope::class)
@@ -258,10 +261,12 @@ class EquilManager(
         try {
             val command = CmdLargeBasalSet(detailedBolusInfo.insulin, aapsLogger, preferences, this)
             val equilHistoryRecord = addHistory(command)
+            lastDeliveryStoppedAt = null
             equilBLE.writeCmd(command)
             synchronized(command) {
                 command.waitMillis(command.timeOut.toLong())
             }
+            val bolusStart = System.currentTimeMillis()
             bolusProfile.stop = false
             val sleep = 2000
             val percent1 = (5f / detailedBolusInfo.insulin).toFloat()
@@ -286,9 +291,9 @@ class EquilManager(
                 result.comment = rh.gs(R.string.equil_command_connect_error)
             }
             result.bolusDelivered = percent / 100.0 * detailedBolusInfo.insulin
+            val currentTime = System.currentTimeMillis()
             if (result.success) {
                 command.resolvedResult = ResolvedResult.SUCCESS
-                val currentTime = System.currentTimeMillis()
                 pumpSync.syncBolusWithPumpId(
                     currentTime,
                     PumpInsulin(result.bolusDelivered),
@@ -301,11 +306,40 @@ class EquilManager(
                 setBolusRecord(equilBolusRecord)
             }
             updateHistory(equilHistoryRecord, command.resolvedResult)
-            loadEquilHistory()
+            // The pump closes the link about 10 s after the bolus command, so after a longer bolus there is
+            // no link left. Then connect again and read the run mode and history now: otherwise a pump alarm
+            // during the bolus (e.g. empty reservoir) was only seen at the next loop run (#3467).
+            if (equilBLE.isConnected) loadEquilHistory() else readModeAndHistory()
+            if (result.success) correctBolusIfDeliveryStopped(result, detailedBolusInfo, bolusStart, currentTime)
         } catch (ex: Exception) {
             result.success(false).enacted(false).comment(ex.message ?: "Exception")
         }
         return result
+    }
+
+    /**
+     * The progress above runs from a timer, so the full amount was recorded even if the reservoir ran
+     * empty during the bolus. The pump then stops and rewinds (#3467). If the history read right after
+     * the bolus has such a record, record only what was given until then: bolus speed x time. It is
+     * rounded up to the 0.05 U step, so AAPS never counts less insulin than was given.
+     */
+    @VisibleForTesting
+    internal suspend fun correctBolusIfDeliveryStopped(result: PumpEnactResult, detailedBolusInfo: DetailedBolusInfo, bolusStart: Long, bolusTime: Long) {
+        val stoppedAt = lastDeliveryStoppedAt ?: return
+        // Pump time has whole seconds and may be a little off; an older stop is not about this bolus.
+        if (stoppedAt < bolusStart - T.secs(10).msecs()) return
+        val requested = result.bolusDelivered
+        val units = (stoppedAt - bolusStart).coerceAtLeast(0) / 1000.0 * EquilConst.EQUIL_BOLUS_UNITS_PER_SECOND
+        val given = ceil(units * BOLUS_STEPS_PER_UNIT - 1e-9) / BOLUS_STEPS_PER_UNIT
+        if (given >= requested) return
+        aapsLogger.debug(LTag.PUMPCOMM, "Delivery stopped during the bolus: $given of $requested U")
+        result.bolusDelivered = given
+        pumpSync.syncBolusWithPumpId(bolusTime, PumpInsulin(given), detailedBolusInfo.bolusType, detailedBolusInfo.timestamp, PumpType.EQUIL, getSerialNumber())
+        setBolusRecord(EquilBolusRecord(given, BolusType.SMB, bolusTime))
+        val text = rh.gs(R.string.equil_bolus_stopped, ch.insulinAmountString(PumpInsulin(given)), ch.insulinAmountString(PumpInsulin(requested)))
+        // The progress dialog is still open and said "delivered successfully" at 100 %.
+        bolusProgressData.updateProgress((given / requested * 100).toInt(), TextRef.Literal(text), PumpInsulin(given))
+        rxBus.send(EventEquilAlarm(text))
     }
 
     fun stopBolus(bolusProfile: BolusProfile): PumpEnactResult {
@@ -637,14 +671,14 @@ class EquilManager(
         if (previous == null || previous.isStopped() == runMode.isStopped()) return
         val time = dateUtil.now()
         val serial = getSerialNumber()
-        // A battery-empty gap that is still open ends here at the latest: the pump delivers again.
-        val batteryEmptyAt = if (runMode.isStopped()) null else equilState?.batteryEmptyAt
-        if (batteryEmptyAt != null) {
-            equilState?.batteryEmptyAt = null
-            storePodState()
-        }
         launchPumpSync {
-            batteryEmptyAt?.let { syncBatteryEmptyRecord(it, time - it, serial) }
+            // A "delivery stopped" gap that is still open ends here at the latest: the pump delivers again.
+            val deliveryStoppedAt = if (runMode.isStopped()) null else equilState?.deliveryStoppedAt
+            if (deliveryStoppedAt != null) {
+                equilState?.deliveryStoppedAt = null
+                storePodState()
+                syncDeliveryStoppedRecord(deliveryStoppedAt, time - deliveryStoppedAt, serial)
+            }
             syncRunMode(runMode.isStopped(), time, serial)
         }
         if (!runMode.isStopped()) rxBus.send(EventEquilResumed())
@@ -737,8 +771,8 @@ class EquilManager(
         var bolusRecord: EquilBolusRecord? = null
         var runMode: RunMode? = null
 
-        /** Pump time of a "Battery empty!" record whose 0 U/h gap is not ended yet, see syncBatteryEmptyGap. */
-        var batteryEmptyAt: Long? = null
+        /** Pump time of a "battery/reservoir empty" record whose 0 U/h gap is not ended yet, see syncDeliveryStoppedGap. */
+        var deliveryStoppedAt: Long? = null
         var rate = 0f
         var historyIndex = 0
 
@@ -813,7 +847,7 @@ class EquilManager(
         val eventTime = calendar.timeInMillis
         val errorTips = getEquilError(port, type, level)
         if (errorTips.isNotEmpty()) raiseAlarm(errorTips, eventTime)
-        syncBatteryEmptyGap(port, type, level, rate, eventTime)
+        syncDeliveryStoppedGap(port, type, level, rate, eventTime)
         rxBus.send(EventEquilDataChanged())
     }
 
@@ -833,32 +867,51 @@ class EquilManager(
     }
 
     /**
-     * When the battery dies, the pump logs "Battery empty!" and stops delivering in the same second.
-     * AAPS cannot talk to it then, so it kept counting basal that was never given (#3830). The record
-     * is read once the pump has power again. Record a 0 U/h PUMP_SUSPEND temp basal from that moment
-     * until the first later record that shows delivery again (rate > 0), or until the next RUN.
-     * The start is the pump's own time, so the gap is never made longer than it was.
+     * Pump time of the last "battery empty" or "reservoir empty" record read, for the bolus check in
+     * [bolus]. Not stored: it only matters right after the bolus, in the same process.
      */
-    private fun syncBatteryEmptyGap(port: Int, type: Int, level: Int, rate: Int, eventTime: Long) {
-        val state = equilState ?: return
+    @Volatile private var lastDeliveryStoppedAt: Long? = null
+
+    /**
+     * When the battery dies or the reservoir runs empty, the pump logs it and stops all delivery in the
+     * same second, basal too. AAPS kept counting basal that was never given (#3830, #3467). Record a
+     * 0 U/h PUMP_SUSPEND temp basal from that moment until the first later record that shows delivery
+     * again (rate > 0), or until the next RUN. The start is the pump's own time, so the gap is never
+     * made longer than it was.
+     */
+    private fun syncDeliveryStoppedGap(port: Int, type: Int, level: Int, rate: Int, eventTime: Long) {
         val serial = getSerialNumber()
-        if (PumpEvent.isBatteryEmpty(port, type, level)) {
-            state.batteryEmptyAt = eventTime
-            storePodState()
-            launchPumpSync { syncBatteryEmptyRecord(eventTime, T.mins(4800).msecs(), serial) }
-            return
-        }
-        val start = state.batteryEmptyAt ?: return
-        if (rate > 0 && eventTime > start) {
-            state.batteryEmptyAt = null
-            storePodState()
-            launchPumpSync { syncBatteryEmptyRecord(start, eventTime - start, serial) }
+        val stops = PumpEvent.stopsDelivery(port, type, level)
+        if (stops) lastDeliveryStoppedAt = eventTime
+        // In the pumpSync lock, so records are handled one after the other, in pump order.
+        launchPumpSync {
+            val state = equilState ?: return@launchPumpSync
+            if (stops) {
+                // The run mode read before this history (STOP after an empty reservoir) may already have
+                // recorded a suspend a few seconds later. Then fill only the time before it, no overlap.
+                val suspend = pumpSync.expectedPumpState().temporaryBasal
+                    ?.takeIf { it.type == PumpSync.TemporaryBasalType.PUMP_SUSPEND && it.timestamp > eventTime }
+                if (suspend != null) {
+                    syncDeliveryStoppedRecord(eventTime, suspend.timestamp - eventTime, serial)
+                } else {
+                    state.deliveryStoppedAt = eventTime
+                    storePodState()
+                    syncDeliveryStoppedRecord(eventTime, T.mins(4800).msecs(), serial)
+                }
+                return@launchPumpSync
+            }
+            val start = state.deliveryStoppedAt ?: return@launchPumpSync
+            if (rate > 0 && eventTime > start) {
+                state.deliveryStoppedAt = null
+                storePodState()
+                syncDeliveryStoppedRecord(start, eventTime - start, serial)
+            }
         }
     }
 
     /** Same pump id for the open record and for its end, so the second call only sets the duration. */
-    private suspend fun syncBatteryEmptyRecord(start: Long, duration: Long, serial: String) {
-        aapsLogger.debug(LTag.PUMP, "Battery empty: 0 U/h PUMP_SUSPEND temp basal from ${dateUtil.dateAndTimeString(start)} for ${duration / 60000} min")
+    private suspend fun syncDeliveryStoppedRecord(start: Long, duration: Long, serial: String) {
+        aapsLogger.debug(LTag.PUMP, "Delivery stopped: 0 U/h PUMP_SUSPEND temp basal from ${dateUtil.dateAndTimeString(start)} for ${duration / 60000} min")
         pumpSync.syncTemporaryBasalWithPumpId(
             start,
             PumpRate(0.0),
@@ -897,6 +950,9 @@ class EquilManager(
 
         /** A pump alarm read later than this after it happened is shown without sound. */
         const val ALARM_SOUND_MAX_AGE_MINUTES = 30L
+
+        /** Bolus step 0.05 U. */
+        private const val BOLUS_STEPS_PER_UNIT = 20.0
 
         val OLD_PUMP_SERIAL_PREFIXES = setOf('0', '1', '3', 'A', 'D')
 

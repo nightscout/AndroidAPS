@@ -54,6 +54,7 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Low battery: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Not enough insulin left in the reservoir: %1$s</string>
     <string name="equil_reservoir_empty">The reservoir is empty. The pump does not deliver insulin any more.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">The pump stopped during the bolus. Given: %1$s of %2$s</string>
     <string name="equil_pump_not_run">Pump not running</string>
     <string name="equil_pair">Pair</string>
     <string name="equil_pair_error">Pair error</string>
