@@ -220,6 +220,7 @@
     <string name="login">Login</string>
     <string name="logout">Esci</string>
     <string name="prime_fill">Carica/Riempi</string>
+    <string name="prime_not_available">Questa pompa si riempie e si innesca durante l\'attivazione. Prima/Fill da AAPS non è disponibile.</string>
     <string name="site_rotation">Rotazione del Sito</string>
     <string name="edit_site">Modifica</string>
     <string name="select_arrow">Seleziona Freccia</string>
