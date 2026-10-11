@@ -40,8 +40,6 @@
     <string name="equil_error_set_temp_basal_failed_validation">La durée du DBT doit être supérieure à zéro et un multiple de %1$s minutes.</string>
     <string name="equil_basal_exceeds_max">Le débit de base du profil %1$s U/h dépasse le débit maximum de la pompe %2$s U/h. Augmentez le réglage Basal max et reconnectez la pompe.</string>
     <string name="equil_not_enough_insulin">Pas assez d\'insuline dans le réservoir</string>
-    <string name="equil_low_battery">Batterie faible</string>
-    <string name="equil_low_insulin">Pas assez d\'insuline dans le réservoir</string>
     <string name="equil_pump_not_run">Pompe arrêtée</string>
     <string name="equil_pair">Appairer</string>
     <string name="equil_pair_error">Erreur d\'appairage</string>
