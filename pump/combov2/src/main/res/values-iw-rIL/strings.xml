@@ -34,6 +34,8 @@
 3. נסו לצמד שוב</string>
     <string name="combov2_enter_pin">הזינו קוד PIN</string>
     <string name="combov2_cancel_pairing">ביטול צימוד</string>
+    <string name="combov2_confirm_cancel_pairing_message">בטוחים שברצונכם לבטל את הצימוד?</string>
+    <string name="combov2_confirm_unpair_message">בטוחים שברצונכם לנתק את חיבור המשאבה?</string>
     <string name="combov2_pin_hint">קוד בן 10 ספרות</string>
     <string name="combov2_pairing_finished_successfully">הצימוד עם Combo הושלם</string>
     <string name="combov2_pairing_cancelled">הצימוד עם Combo בוטל ע\"י המשתמש</string>
@@ -82,6 +84,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (נותרה פחות מדקה אחת)</string>
     <string name="combov2_load_tdds_cancelled">טעינת המינונים היומיים בוטלה</string>
     <string name="combov2_retrieving_tdds_failed">טעינת המינונים היומיים נכשלה</string>
+    <string name="combov2_battery_empty">ריק</string>
+    <string name="combov2_battery_low">נמוך</string>
+    <string name="combov2_battery_full">מלא</string>
     <string name="combov2_battery_low_warning">סוללת המשאבה חלשה</string>
     <string name="combov2_reservoir_low_warning">רמת מכל נמוכה</string>
     <string name="combov2_setting_tbr_succeeded">הגדרת הבזאלי הזמני הצליחה</string>
