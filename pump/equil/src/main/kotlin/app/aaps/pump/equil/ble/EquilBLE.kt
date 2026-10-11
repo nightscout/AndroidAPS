@@ -276,17 +276,25 @@ class EquilBLE(
         preCmd = baseCmd
     }
 
-    fun readHistory(baseCmd: CmdHistoryGet) {
+    /**
+     * Sends a history request on the open link.
+     *
+     * @return false when there is no open link, so nothing was sent and no answer will come. The
+     * caller must not wait for one then. The pump closes the link about 10 s after a command, so
+     * this is the normal case after a bolus. It used to notify the command instead, but that
+     * happened before the caller started to wait, so the caller waited its full 22 s timeout.
+     */
+    fun readHistory(baseCmd: CmdHistoryGet): Boolean {
         if (isConnected && preCmd != null) {
             baseCmd.runCode = preCmd!!.runCode
             baseCmd.runPwd = preCmd!!.runPwd
             this.baseCmd = baseCmd
             nextCmd2()
             preCmd = baseCmd
-        } else {
-            aapsLogger.debug(LTag.PUMPCOMM, "readHistory error")
-            synchronized(baseCmd) { baseCmd.notifyAll() }
+            return true
         }
+        aapsLogger.debug(LTag.PUMPCOMM, "readHistory: no open link, history not requested")
+        return false
     }
 
     private var equilResponse: EquilResponse? = null

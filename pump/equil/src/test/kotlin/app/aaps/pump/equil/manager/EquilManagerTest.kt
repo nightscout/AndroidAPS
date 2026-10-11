@@ -8,9 +8,12 @@ import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class EquilManagerTest : TestBaseWithProfile() {
@@ -54,6 +57,20 @@ class EquilManagerTest : TestBaseWithProfile() {
         assertEquals("Error 1", equilManager.getEquilError(4, 2, 2))
         assertEquals("Error 2", equilManager.getEquilError(4, 3, 0))
         assertEquals("Error 3", equilManager.getEquilError(4, 3, 2))
+    }
+
+    // The pump closes the link about 10 s after a command, so after every bolus the history request
+    // finds no open link. It used to wait its full 22 s timeout for an answer that could not come.
+    @Test
+    fun `loadEquilHistory returns at once when there is no open link`() {
+        whenever(equilBLE.readHistory(any())).thenReturn(false)
+
+        val start = System.currentTimeMillis()
+        val result = equilManager.loadEquilHistory(1574)
+
+        assertEquals(-1, result)
+        assertTrue(System.currentTimeMillis() - start < 5_000, "must not wait for the 22 s timeout")
+        verify(equilBLE).readHistory(any())
     }
 
     @Test
