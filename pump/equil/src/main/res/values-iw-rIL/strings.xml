@@ -3,6 +3,15 @@
     <!--  start  -->
     <!-- equil - Commands -->
     <!--    推杆回退-->
+    <string name="equil_history_group_basal">בזאלי</string>
+    <string name="equil_history_group_configuration">הגדרות</string>
+    <string name="equil_tab_action">היסטוריית פעולות</string>
+    <string name="equil_none">ללא</string>
+    <string name="equil_history_item1">כמות האינסולין במכל נמוכה</string>
     <string name="equil_common_wizard_exit_confirmation_text">עוד לא סיימתם את כל השלבים. אתם בטוחים שברצונכם לצאת?</string>
+    <string name="equil_support_error">גרסת הקושחה ישנה מדי ואינה נתמכת</string>
+    <string name="equil_password_tips">אפשר להגדיר סיסמה לצימוד עם משאבת Equil גרסה v5.3 אותה סיסמה תשמש גם לביטול הצימוד בעתיד, לכן חשוב לזכור אותה. הסיסמה חייבת להכיל 4 תווים מתוך: ABCDEF0123456789.</string>
+    <string name="equil_set_pair_password">הגדרת סיסמת צימוד</string>
+    <string name="equil_pair_password_title">הזנת סיסמה עבור %1$s</string>
     <string name="equil_replace_reservoir">המכל ריק. נא להחליפו</string>
 </resources>
