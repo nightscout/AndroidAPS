@@ -5,6 +5,7 @@
     <!--       Stats -->
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported">Configuració exportada</string>
