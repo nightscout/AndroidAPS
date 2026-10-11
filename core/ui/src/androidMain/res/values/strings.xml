@@ -221,6 +221,7 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="prime_fill">Prime/Fill</string>
+    <string name="prime_not_available">This pump fills and primes itself during activation. Prime/Fill from AAPS is not available.</string>
     <string name="site_rotation">Site Rotation</string>
     <string name="edit_site">Edit</string>
     <string name="select_arrow">Select Arrow</string>

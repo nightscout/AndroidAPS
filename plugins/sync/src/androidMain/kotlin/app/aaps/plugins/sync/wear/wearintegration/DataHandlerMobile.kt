@@ -619,6 +619,18 @@ class DataHandlerMobile(
     }
 
     /**
+     * A patch pump fills and primes in its own activation wizard. Say so before the watch asks to confirm
+     * a prime; `deliverFillBolus` refuses it anyway.
+     */
+    private fun rejectIfPrimeNotAvailable(): Boolean {
+        if (!activePlugin.activePump.pumpDescription.isRefillingCapable) {
+            sendError(rh.gs(CoreUiStrings.prime_not_available))
+            return true
+        }
+        return false
+    }
+
+    /**
      * The phone cannot act on this yet, and the watch is told so instead of being left waiting.
      *
      * [app.aaps.core.interfaces.configuration.Config.appInitialized] is false in two situations, and the
@@ -967,6 +979,7 @@ class DataHandlerMobile(
 
     private suspend fun handleFillPresetPreCheck(command: EventData.ActionFillPresetPreCheck) {
         if (rejectIfAapsClient()) return
+        if (rejectIfPrimeNotAvailable()) return
         runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let {
             sendError(it)
             return
@@ -990,6 +1003,7 @@ class DataHandlerMobile(
 
     private suspend fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         if (rejectIfAapsClient()) return
+        if (rejectIfPrimeNotAvailable()) return
         runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)?.let {
             sendError(it)
             return

@@ -3,6 +3,7 @@ package app.aaps.ui.compose.fillDialog
 import androidx.lifecycle.SavedStateHandle
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.ui.ConfirmationRole
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardBolusExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
@@ -48,6 +49,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -91,17 +93,21 @@ internal class FillDialogViewModelTest {
         whenever(activePlugin.activePump).thenReturn(pump)
         whenever(pump.pumpDescription).thenReturn(pumpDescription)
         whenever(pumpDescription.bolusStep).thenReturn(0.1)
+        // A tube pump unless a test says otherwise: it can be primed from this dialog.
+        whenever(pumpDescription.isRefillingCapable).thenReturn(true)
         whenever(maxBolusConstraint.value()).thenReturn(10.0)
         whenever(constraintChecker.getMaxBolusAllowed()).thenReturn(maxBolusConstraint)
         whenever(insulinManager.insulins).thenReturn(arrayListOf<ICfg>())
         // observeConcentrationEnabled() builds a flow from preferences.observe(key) in init (collection deferred).
         whenever(preferences.observe(BooleanKey.GeneralInsulinConcentration)).thenReturn(MutableStateFlow(false))
-        sut = FillDialogViewModel(
-            SavedStateHandle(), constraintChecker, activePlugin, persistenceLayer, preferences, config,
-            decimalFormatter, rh, dateUtil, translator, aapsLogger, ch, insulinManager, profileFunction,
-            wizardBolusExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
-        )
+        sut = buildSut()
     }
+
+    private fun buildSut() = FillDialogViewModel(
+        SavedStateHandle(), constraintChecker, activePlugin, persistenceLayer, preferences, config,
+        decimalFormatter, rh, dateUtil, translator, aapsLogger, ch, insulinManager, profileFunction,
+        wizardBolusExecutor, batchExecutor, rxBus, CoroutineScope(UnconfinedTestDispatcher())
+    )
 
     @AfterEach
     fun tearDown() = Dispatchers.resetMain()
@@ -216,6 +222,52 @@ internal class FillDialogViewModelTest {
         // Nothing was promised, so the message must not claim an insulin switch was skipped.
         assertThat(seen).contains("pump error")
         assertThat(seen).doesNotContain("PRIME_FAILED_AND_NOT_SWITCHED")
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // A pump that fills and primes itself (patch pump)
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * A patch pump primes in its own activation wizard and its cannula is already in the body. A prime from
+     * here would be insulin outside IOB, so the dialog offers none and never sends one - even if an amount
+     * somehow got into the state.
+     */
+    @Test
+    fun `a pump that primes itself gets no prime, only the site change`() = runTest {
+        whenever(pumpDescription.isRefillingCapable).thenReturn(false)
+        sut = buildSut()
+        val constrained: Constraint<Double> = mock()
+        whenever(constrained.value()).thenReturn(0.3)
+        whenever(constraintChecker.applyBolusConstraints(any())).thenReturn(constrained)
+        whenever(batchExecutor.prepare(any(), any(), any())).thenReturn(ActionProgress.Applied)
+
+        sut.updateInsulin(0.3)
+        sut.updateSiteChange(true)
+        val lines = sut.buildConfirmationSummary()
+        sut.confirmAndSave()
+
+        assertThat(sut.uiState.value.primeAvailable).isFalse()
+        assertThat(sut.uiState.value.hasPrime).isFalse()
+        // No prime amount line and no prime warning in the confirmation.
+        assertThat(lines.map { it.role }).doesNotContain(ConfirmationRole.BOLUS)
+        assertThat(lines.map { it.role }).doesNotContain(ConfirmationRole.WARNING)
+        verify(wizardBolusExecutor, never()).deliverFillBolus(any(), anyOrNull(), any(), any(), any())
+        // The site change is still recorded.
+        verify(batchExecutor).prepare(any(), any(), any())
+    }
+
+    @Test
+    fun `on a pump that primes itself an amount alone is not an action`() {
+        whenever(pumpDescription.isRefillingCapable).thenReturn(false)
+        sut = buildSut()
+        val constrained: Constraint<Double> = mock()
+        whenever(constrained.value()).thenReturn(0.3)
+        whenever(constraintChecker.applyBolusConstraints(any())).thenReturn(constrained)
+
+        sut.updateInsulin(0.3)
+
+        assertThat(sut.uiState.value.hasAction).isFalse()
     }
 
     @Test
