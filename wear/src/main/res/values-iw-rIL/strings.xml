@@ -2,6 +2,13 @@
 <resources>
     <string name="label_watchface_circle">AAPS (עיגול)</string>
     <string name="label_watchface_digital_style">AAPS (דיגיטלי)</string>
+    <string name="label_watchface_custom">AAPS (בהתאמה אישית)</string>
+    <string name="label_watchface_custom_ambient" comment="Name of the data source that draws the Custom watch face without seconds, for the always-on display. Shown in the watch's complication list.">AAPS (מותאם אישית) תמיד־פעיל</string>
+    <string name="label_actions_tile">פעולות</string>
+    <string name="label_temp_target_tile">יעד זמני</string>
+    <string name="label_quick_wizard_tile">אשף מהיר</string>
+    <string name="label_user_action_tile">פעולת משתמש</string>
+    <string name="label_scene_tile">סצינות</string>
     <string name="msg_warning_sync">לא התקבלו נתונים מאז %1$s! בדקו אם AAPS בטלפון שולח נתונים לשעון</string>
     <string name="msg_warning_old">נתוני AAPS מלפני %1$s! בדקו את החיישן, הגדרות xDrip, NS, AAPS או אחר!</string>
     <string name="pref_vibrate_on_bolus">רטט במתן בולוס</string>
@@ -80,26 +87,46 @@
     <string name="menu_install_watchface">התקן פני שעון</string>
     <string name="menu_installing_watchface">מתקין את תצוגת השעון…</string>
     <string name="watchface_installed_active">עיצוב השעון הותקן והוגדר כפעיל</string>
+    <string name="watchface_installed_select">עיצוב השעון הותקן, יש לבחור אותו מתפריט עיצוב השעון</string>
+    <string name="watchface_install_failed">התקנת עיצוב השעון נכשלה</string>
     <string name="menu_none">ללא</string>
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>
     <string name="action_tempt_confirmation">התבקש ערך מטרה זמני</string>
     <string name="action_quick_wizard_confirmation">התבקש אשף מהיר</string>
     <string name="action_user_action_confirmation">נחוצה פעולת משתמש</string>
+    <string name="action_scene_confirmation">סיטואציה מבוקשת</string>
+    <string name="scene_end">סיום</string>
+    <string name="scene_skip" comment="Scene tile button: end the active scene and start its follow-up scene. The follow-up's name is shown under it.">לדלג</string>
     <string name="action_treatment_confirmation">התבקש טיפול</string>
     <string name="action_bolus_confirmation">התבקש בולוס</string>
     <string name="action_wizard_confirmation">התבקש חישוב</string>
     <string name="action_fill_confirmation">התבקש מילוי</string>
     <string name="action_ecarb_confirmation">נדרשו פחמימות</string>
     <string name="action_profile_switch_confirmation">התבקשה החלפת פרופיל</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">יעד[%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">נמוך [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">גבוה [%s]</string>
     <string name="action_carbs">פחמימות</string>
+    <string name="action_carbs_gram">פחמימות [גר׳]</string>
+    <string name="carbs_removal_cob_limit" comment="Shown under the carbs input when removing carbs (a negative value). %1$d = grams of carbs currently on board, the maximum removable. Example: Max removal: 30 g (COB)">הסרה מרבית: %1$d גר׳ (COB)</string>
     <string name="action_ecarbs">פחמימות ממושכות</string>
+    <string name="action_percentage">אחוזים\n[%]</string>
+    <string name="action_start_minutes">התחלה\n[דקות]</string>
+    <string name="action_duration_hours">משך\n[שעות]</string>
+    <string name="action_duration_hours_format">%1$d שעות</string>
+    <string name="action_duration_hours_minutes_format">%1$d שעות %2$d דקות</string>
+    <string name="action_minutes_format">%1$d דקות</string>
+    <string name="ecarbs_start_format">%1$d דקות</string>
+    <string name="action_confirm_timeshift">היסט זמן: %1$s</string>
     <string name="action_insulin">אינסולין</string>
+    <string name="action_insulin_units">אינסולין [יח\']</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
     <string name="action_preset_2">הגדרה מראש 2</string>
     <string name="action_preset_3">הגדרה מראש 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
+    <string name="action_timeshift_hours">היסט זמן\n[שעות]</string>
     <string name="bolus_progress">התקדמות הבולוס</string>
     <string name="press_to_cancel">לחצו לביטול</string>
     <string name="cancel_bolus">ביטול בולוס</string>
@@ -134,6 +161,21 @@
     <string name="pref_simplify_ui">פשט את הממשק</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
+    <string name="pref_complication_1">סיבוך 1</string>
+    <string name="pref_complication_2">סיבוך 2</string>
+    <string name="pref_complication_3">סיבוך 3</string>
+    <string name="pref_complication_4">סיבוך 4</string>
+    <string name="pref_complication_5">סיבוך 5</string>
+    <string name="complication_summary_none">הקישו לבחירת מקור נתונים</string>
+    <string name="pref_complication_type_priority">עדיפות סוג הסיבוך</string>
+    <string name="pref_complication_type_priority_all">ברירת מחדל לכל המיקומים</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">שינוי כאן יוחל בפעם הבאה שתבחרו מקור נתונים. בחירה חוזרת באותו מקור אינה מספיקה: בחרו תחילה מקור נתונים אחר, ואז בחרו את הרצוי.</string>
+    <string name="complication_type_priority_value">ערך או מד</string>
+    <string name="complication_type_priority_text">טקסט</string>
+    <string name="complication_type_priority_icon">סמל</string>
+    <string name="complication_type_priority_use_default">שימוש בברירת המחדל</string>
+    <string name="cwf_complication_layout">פריסת סיבוכים</string>
+    <string name="cwf_complication_layout_description">המיקום והגודל של הסיבוכים, כפי שנלקחו מפני השעון המותאמים אישית שנטענו.</string>
     <string name="pref_switch_external">החלף נתונים חיצוניים בפני השעון</string>
     <string name="custom_pref_show_seconds">הצג שניות</string>
     <string name="digitalstyle_pref_your_style">הסגנון שלך</string>
