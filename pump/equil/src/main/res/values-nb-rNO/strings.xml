@@ -25,6 +25,11 @@
     <string name="equil_title_history_events">Historiske hendelser</string>
     <string name="equil_tone">Varseltone</string>
     <string name="equil_bolus_speed">Bolushastighet</string>
+    <string name="equil_bolus_speed_summary">En raskere bolus kan føre til flere okklusjonsalarmer.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 E/min (standard)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 E/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 E/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 E/min</string>
     <string name="equil_tone_mode_mute">Demp lyd</string>
     <string name="equil_tone_mode_shake">Kun vibrering</string>
     <string name="equil_tone_mode_tone">Kun lyd</string>
