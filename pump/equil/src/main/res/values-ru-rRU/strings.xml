@@ -36,8 +36,6 @@
     <string name="equil_record_bolus">Bolus%1$s ед</string>
     <string name="equil_error_set_temp_basal_failed_validation">Продолжительность TBR должна быть больше нуля и кратной %1$s минутам.</string>
     <string name="equil_not_enough_insulin">В резервуаре недостаточно инсулина</string>
-    <string name="equil_low_battery">Низкий заряд батареи</string>
-    <string name="equil_low_insulin">В резервуаре недостаточно инсулина</string>
     <string name="equil_pump_not_run">Помпа не запущена</string>
     <string name="equil_pair">Выполнить сопряжение</string>
     <string name="equil_pair_error">Ошибка сопряжения</string>
