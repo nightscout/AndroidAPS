@@ -167,23 +167,41 @@ class MainViewModel(
      */
     val masterOrPairedClient: StateFlow<Boolean> = nsClient.masterOrPairedClientFlow
 
+    // Ticker for time-based progress updates (every 30 seconds). Cold flow — only runs while the
+    // toolbar items or the chipStateFlow it feeds have subscribers (both are WhileSubscribed below).
+    // Declared before its first use: property initializers run in order.
+    private val progressTicker = flow {
+        while (true) {
+            emit(dateUtil.now())
+            delay(30_000L)
+        }
+    }
+
     /** Toolbar items as a separate StateFlow to avoid unnecessary recompositions of the main UI */
     private val _quickLaunchItems = MutableStateFlow<List<ResolvedQuickLaunchItem>>(emptyList())
 
     /**
-     * Public toolbar items. Two layered gates: (1) mode VISIBILITY — actions whose backing element isn't visible
+     * Public toolbar items. Three layered gates: (1) mode VISIBILITY — actions whose backing element isn't visible
      * now (e.g. MASTER_OR_PAIRED_CLIENT on an unpaired client) are HIDDEN, the same ElementVisibility gate the
      * QuickLaunch config + search use, so a pre-pinned bolus/carbs/scene drops off an unpaired client's toolbar;
-     * (2) reachability — scene-action items DISABLE (not hide) while WS is down on AAPSCLIENT. The resolver only
-     * sees local catalog state, so both checks layer on here.
+     * (2) time — a QuickWizard entry outside its time window or in its cool-down is HIDDEN, like its overview
+     * button; (3) reachability — scene-action items DISABLE (not hide) while WS is down on AAPSCLIENT. The resolver
+     * only sees local catalog state, so these checks layer on here.
      */
     val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>> =
-        combine(_quickLaunchItems, masterReachable, masterOrPairedClient) { items, reachable, _ ->
+        combine(
+            _quickLaunchItems, masterReachable, masterOrPairedClient,
+            // Re-check the QuickWizard time window every tick, and at once when an entry is used or edited
+            // (its cool-down starts on use).
+            progressTicker, quickWizard.changes
+        ) { items, reachable, _, _, _ ->
             items
                 // (1) Hide mode-gated actions. masterOrPairedClient is combined in only to re-emit on a pairing
                 // flip; the predicate reads the current state through visibilityContext.
                 .filter { it.action.elementType?.visibility?.isVisible(visibilityContext) ?: true }
-                // (2) Scene actions disable while the master is transiently unreachable.
+                // (2) Hide QuickWizard entries that are not active now.
+                .filter { quickLaunchResolver.isShownNow(it.action) }
+                // (3) Scene actions disable while the master is transiently unreachable.
                 .map { item ->
                     if (!reachable && item.action is QuickLaunchAction.SceneAction) item.copy(enabled = false) else item
                 }
@@ -195,15 +213,6 @@ class MainViewModel(
 
     val versionName: String get() = config.VERSION_NAME
     val calcProgressFlow: StateFlow<Int> = overviewDataCache.calcProgressFlow
-
-    // Ticker for time-based progress updates (every 30 seconds). Cold flow — only runs while
-    // the chipStateFlow it feeds has subscribers (via uiState's WhileSubscribed below).
-    private val progressTicker = flow {
-        while (true) {
-            emit(dateUtil.now())
-            delay(30_000L)
-        }
-    }
 
     // Flow-derived chip state: ticker + cache flows + expiry detection. Cold.
     private val chipStateFlow: Flow<ChipState> = combine(

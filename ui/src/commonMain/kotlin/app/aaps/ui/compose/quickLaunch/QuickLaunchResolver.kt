@@ -126,6 +126,17 @@ class QuickLaunchResolver(
         else                                   -> action.elementType?.let { elementAvailability.isAvailable(it) } ?: true
     }
 
+    /**
+     * Whether a valid action is shown on the toolbar right now. A QuickWizard entry follows the same
+     * rule as its overview button ([app.aaps.core.objects.wizard.QuickWizardEntry.isActive]): its time
+     * window, the phone as device, and the cool-down after use. This changes during the day, so the
+     * entry is only hidden here, never removed from the saved toolbar like an [isValid] failure.
+     */
+    fun isShownNow(action: QuickLaunchAction): Boolean = when (action) {
+        is QuickLaunchAction.QuickWizardAction -> quickWizard.get(action.guid)?.isActive() == true
+        else                                   -> true
+    }
+
     fun resolveLabel(action: QuickLaunchAction): String = when (action) {
         is QuickLaunchAction.QuickWizardAction -> quickWizard.get(action.guid)?.buttonText() ?: "?"
         is QuickLaunchAction.AutomationAction  -> automation.findEventById(action.automationId)?.title ?: "?"

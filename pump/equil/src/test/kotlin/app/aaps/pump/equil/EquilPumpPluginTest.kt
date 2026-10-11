@@ -272,4 +272,13 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
     fun `pumpDescription should have correct pump type`() {
         assertEquals(PumpType.EQUIL, equilPumpPlugin.pumpDescription.pumpType)
     }
+
+    @Test
+    fun `pumpDescription should not offer fill or battery change`() {
+        // The Equil wizard fills the reservoir and fits the charged battery itself, so the generic
+        // Prime/Fill and Pump battery change actions must stay hidden.
+        assertFalse(equilPumpPlugin.pumpDescription.isRefillingCapable)
+        assertFalse(equilPumpPlugin.pumpDescription.isBatteryReplaceable)
+        assertTrue(equilPumpPlugin.pumpDescription.isPatchPump)
+    }
 }
