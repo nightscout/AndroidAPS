@@ -15,7 +15,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
+import app.aaps.core.interfaces.resources.TextRefIdRegistry
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.ui.UiStringIds
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -28,6 +30,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import app.aaps.core.interfaces.R as InterfacesR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.ui.R as UiR
 
 /** Robolectric composable test for [WizardDialogContent]. */
 @RunWith(RobolectricTestRunner::class)
@@ -47,8 +50,13 @@ class WizardDialogContentTest {
     /** Screen reader name of the plus button of the BG input. It exists only while the BG input is open. */
     private lateinit var bgPlusButton: String
 
+    /** Result extras for 71% and a +1 U correction, built from the same templates as the screen. */
+    private lateinit var percentageAndCorrection: String
+
     @Before
     fun setUp() {
+        // The app registers this at start. Without it every UiStrings text shows its key name.
+        TextRefIdRegistry.register("ui") { name -> UiStringIds.idOf(name) }
         val ctx: Context = RuntimeEnvironment.getApplication()
         closeLabel = ctx.getString(CoreUiR.string.close)
         calculationTitle = ctx.getString(CoreUiR.string.wizard_calculation)
@@ -58,6 +66,14 @@ class WizardDialogContentTest {
             CoreUiR.string.a11y_plus_button_description,
             ctx.getString(CoreUiR.string.wizard_bg_label),
             ctx.getString(CoreUiR.string.value_with_unit, "1", UNITS)
+        )
+        percentageAndCorrection = ctx.getString(
+            CoreUiR.string.value_in_parentheses,
+            ctx.getString(
+                UiR.string.wizard_percentage_and_correction,
+                ctx.getString(CoreUiR.string.format_percent, 71),
+                ctx.getString(CoreUiR.string.format_insulin_units_signed, 1.0)
+            )
         )
     }
 
@@ -91,6 +107,13 @@ class WizardDialogContentTest {
         setWizard(uiState = { loaded(hasBgData = false) })
         compose.mainClock.advanceTimeBy(2_000)
         compose.onNodeWithText(calculationTitle).assertIsDisplayed()
+    }
+
+    /** Percentage and correction are one text from the templates, not "(", values and ")" side by side. */
+    @Test
+    fun resultShowsPercentageAndCorrectionInOneText() {
+        setWizard(uiState = { loaded().copy(hasResult = true, totalInsulin = 2.0, percentage = 71, directCorrection = 1.0) })
+        compose.onNodeWithText(percentageAndCorrection).assertIsDisplayed()
     }
 
     @Test

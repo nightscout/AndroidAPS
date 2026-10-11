@@ -441,7 +441,7 @@ private fun InsulinQuickAddButtons(
     ) {
         increments.forEach { amount ->
             val formatted = formatAmount(amount)
-            val label = if (amount > 0) "+$formatted" else formatted
+            val label = if (amount > 0) stringResource(CoreUiStrings.value_with_plus_sign, formatted) else formatted
             FilledTonalButton(onClick = {
                 focusManager.clearFocus()
                 onAddInsulin(amount)

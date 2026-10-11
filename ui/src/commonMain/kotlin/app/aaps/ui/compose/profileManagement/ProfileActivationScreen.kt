@@ -301,7 +301,7 @@ fun ProfileActivationScreen(
                             onExpand = { timeshiftExpanded = true }
                         ) {
                             Text(
-                                text = "${timeshift.toInt()}h",
+                                text = stringResource(CoreUiStrings.format_hours_only, timeshift.toInt()),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = if (timeshift.toInt() != 0) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onSurface

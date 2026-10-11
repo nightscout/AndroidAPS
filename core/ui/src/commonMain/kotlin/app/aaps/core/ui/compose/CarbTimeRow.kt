@@ -86,7 +86,7 @@ fun CarbTimeRow(
                         )
                     }
                     Text(
-                        text = "(${formatOffset(offsetMinutes)})",
+                        text = stringResource(CoreUiStrings.value_in_parentheses, formatOffset(offsetMinutes)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -159,7 +159,7 @@ fun CarbTimeRow(
 private fun formatOffset(minutes: Int): String {
     return when {
         minutes == 0 -> stringResource(CoreUiStrings.carb_time_now)
-        minutes > 0  -> "+${formatMinutesAsDuration(minutes)}"
-        else         -> "-${formatMinutesAsDuration(-minutes)}"
+        minutes > 0  -> stringResource(CoreUiStrings.value_with_plus_sign, formatMinutesAsDuration(minutes))
+        else         -> stringResource(CoreUiStrings.value_with_minus_sign, formatMinutesAsDuration(-minutes))
     }
 }

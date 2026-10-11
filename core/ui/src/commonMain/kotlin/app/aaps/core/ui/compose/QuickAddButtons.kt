@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import app.aaps.core.ui.CoreUiStrings
 
 /**
  * @see QuickAddButtonsPreview
@@ -38,7 +39,7 @@ fun QuickAddButtons(
                 focusManager.clearFocus()
                 onAddCarbs(amount)
             }) {
-                Text("+$amount")
+                Text(stringResource(CoreUiStrings.value_with_plus_sign, amount.toString()))
             }
         }
     }

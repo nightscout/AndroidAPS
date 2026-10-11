@@ -65,9 +65,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -363,24 +367,29 @@ internal fun WizardDialogContent(
                                         color = ElementType.CARBS.color()
                                     )
                                 }
-                                val hasExtra = uiState.percentage != 100 || uiState.directCorrection != 0.0
-                                if (hasExtra) {
-                                    Text("(", fontWeight = FontWeight.Bold)
-                                    if (uiState.percentage != 100) {
-                                        Text(
-                                            text = stringResource(CoreUiStrings.format_percent, uiState.percentage),
-                                            fontWeight = FontWeight.Bold,
-                                            color = ElementType.CARBS.color()
-                                        )
+                                val hasPercentage = uiState.percentage != 100
+                                val hasCorrection = uiState.directCorrection != 0.0
+                                if (hasPercentage || hasCorrection) {
+                                    val percentageText = stringResource(CoreUiStrings.format_percent, uiState.percentage)
+                                    val correctionText = stringResource(CoreUiStrings.format_insulin_units_signed, uiState.directCorrection)
+                                    val extras = when {
+                                        hasPercentage && hasCorrection -> stringResource(UiStrings.wizard_percentage_and_correction, percentageText, correctionText)
+                                        hasPercentage                  -> percentageText
+                                        else                           -> correctionText
                                     }
-                                    if (uiState.directCorrection != 0.0) {
-                                        Text(
-                                            text = stringResource(CoreUiStrings.format_insulin_units_signed, uiState.directCorrection),
-                                            fontWeight = FontWeight.Bold,
-                                            color = ElementType.INSULIN.color()
-                                        )
-                                    }
-                                    Text(")", fontWeight = FontWeight.Bold)
+                                    val extrasText = stringResource(CoreUiStrings.value_in_parentheses, extras)
+                                    val percentageColor = ElementType.CARBS.color()
+                                    val correctionColor = ElementType.INSULIN.color()
+                                    // One text from the templates, so a translator controls the brackets and
+                                    // the order. Only the two values get their own colour.
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            append(extrasText)
+                                            if (hasPercentage) colorPart(extrasText, percentageText, percentageColor)
+                                            if (hasCorrection) colorPart(extrasText, correctionText, correctionColor)
+                                        },
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                             } else if (uiState.hasResult && uiState.carbsEquivalent > 0) {
                                 Text(
@@ -512,7 +521,7 @@ internal fun WizardDialogContent(
                                 // BG
                                 if (uiState.useBg && uiState.bg > 0) {
                                     CalcRow(
-                                        label = stringResource(CoreUiStrings.wizard_bg_label) + " (ISF: ${decimalFormatter.to1Decimal(uiState.isf)})",
+                                        label = stringResource(UiStrings.wizard_calc_with_isf, stringResource(CoreUiStrings.wizard_bg_label), decimalFormatter.to1Decimal(uiState.isf)),
                                         value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromBG)
                                     )
                                 }
@@ -528,7 +537,7 @@ internal fun WizardDialogContent(
                                 // COB
                                 if (uiState.useCOB) {
                                     CalcRow(
-                                        label = stringResource(CoreUiStrings.cob) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        label = stringResource(UiStrings.wizard_calc_with_ic, stringResource(CoreUiStrings.cob), decimalFormatter.to1Decimal(uiState.ic)),
                                         value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCOB)
                                     )
                                 }
@@ -536,7 +545,12 @@ internal fun WizardDialogContent(
                                 // Carbs
                                 if (uiState.eCarbs > 0) {
                                     CalcRow(
-                                        label = stringResource(InterfacesStrings.carbs) + " ${uiState.effectiveCarbs}g (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        label = stringResource(
+                                            UiStrings.wizard_calc_carbs_with_ic,
+                                            stringResource(InterfacesStrings.carbs),
+                                            stringResource(InterfacesStrings.format_carbs, uiState.effectiveCarbs),
+                                            decimalFormatter.to1Decimal(uiState.ic)
+                                        ),
                                         value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCarbs)
                                     )
                                     CalcRow(
@@ -545,7 +559,7 @@ internal fun WizardDialogContent(
                                     )
                                 } else {
                                     CalcRow(
-                                        label = stringResource(InterfacesStrings.carbs) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        label = stringResource(UiStrings.wizard_calc_with_ic, stringResource(InterfacesStrings.carbs), decimalFormatter.to1Decimal(uiState.ic)),
                                         value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCarbs)
                                     )
                                 }
@@ -740,13 +754,13 @@ internal fun WizardDialogContent(
                             if (uiState.hasBgData) {
                                 val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
                                 Text(
-                                    text = "${bgFormat.format(uiState.bg)} $unitsLabel",
+                                    text = stringResource(CoreUiStrings.value_with_unit, bgFormat.format(uiState.bg), unitsLabel),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
-                                val ageText = "(${uiState.bgAgeMinutes} min)"
+                                val ageText = stringResource(CoreUiStrings.value_in_parentheses, stringResource(CoreUiStrings.format_mins, uiState.bgAgeMinutes))
                                 // Old is only the red colour on screen; a screen reader says it.
-                                val ageSpoken = if (bgIsOld) listOf(ageText, stringResource(UiStrings.a11y_bg_old_reading)).joinToString(", ") else ageText
+                                val ageSpoken = if (bgIsOld) stringResource(UiStrings.a11y_bg_age_old, ageText, stringResource(UiStrings.a11y_bg_old_reading)) else ageText
                                 Text(
                                     text = ageText,
                                     style = MaterialTheme.typography.bodySmall,
@@ -788,7 +802,7 @@ internal fun WizardDialogContent(
                             onExpand = { percentageExpanded = true }
                         ) {
                             Text(
-                                text = "${uiState.percentage}%",
+                                text = stringResource(CoreUiStrings.format_percent, uiState.percentage),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -858,6 +872,12 @@ internal fun WizardDialogContent(
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
+}
+
+/** Colours the place where [part] is in [text]. Does nothing when it is not there. */
+private fun AnnotatedString.Builder.colorPart(text: String, part: String, color: Color) {
+    val start = text.indexOf(part)
+    if (start >= 0) addStyle(SpanStyle(color = color), start, start + part.length)
 }
 
 @Composable
