@@ -19,6 +19,7 @@
     <string name="permission_notifications_description">Kreves for å vise varsler, alarmer og oppdateringer om pumpestatus</string>
     <string name="permission_schedule_exact_alarm_title">Alarmer og påminnelser</string>
     <string name="permission_schedule_exact_alarm_description">Nødvendig for at alarmer skal kunne vekke skjermen mens AAPS kjører i bakgrunnen, og for at påminnelser skal varsle til rett tid</string>
+    <!--    Notification channels, shown in the Android settings-->
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0E (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">E%1$d</string>
