@@ -15,6 +15,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -77,6 +80,19 @@ fun OmnipodComposeHost(
             setToolbarConfig(ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction))
         }
     }
+
+    // System back on a sub-screen (pod history, credential import) returns to the plugin page, the
+    // same as the toolbar arrow. Without this handler the event reaches the app NavHost, which pops
+    // the whole plugin page. The wizard has its own handler in WizardScreen, so it is not covered here.
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = showExtraContent || showCredentialImport,
+        onBackCompleted = {
+            showExtraContent = false
+            showCredentialImport = false
+            wizardActivationType = null
+        }
+    )
 
     LaunchedEffect(overviewEvents) {
         overviewEvents.collect { event ->
