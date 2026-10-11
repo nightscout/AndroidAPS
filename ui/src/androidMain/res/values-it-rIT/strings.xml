@@ -10,6 +10,7 @@
     <string name="configure">Configura opacità</string>
     <string name="widget_description">AAPS widget</string>
     <string name="widget_bg_graph_description">Grafico di glicemia AAPS</string>
+    <string name="widget_glucose_circle_description">AAPS cerchio glucosio</string>
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (compatto)</string>
     <string name="widget_small_description">AAPS Small</string>
     <!--     Activities-->
@@ -165,7 +166,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">Mancanti %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% carboidrati immediati, senza carboidrati estesi</string>
-    <string name="wizard_carbs_type_desc">Carboidrati ridotti di %1$d%%, aggiunto eCarbs %2$d%% ritardato %3$dmin per %4$dh</string>
     <string name="wizard_include_info">Tocca per includere/escludere dal calcolo:\n• BG — glucosio nel sangue (ON all\'inizio)\n• TT — obiettivo temporaneo (ON all\'inizio)\n• Tendenza — Tendenza glicemica (ultima condizione ricordata)\n• IOB — insulina a bordo (ON all\'inizio)\n• COB — carboidrati a bordo (ultimo stato ricordato)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nessun record disponibile</string>
@@ -177,6 +177,7 @@
     <string name="user_entry">Voce utente</string>
     <string name="clone_label">Clona</string>
     <string name="a11y_bg_graph_summary" comment="Screen-reader description of the glucose graph, which is drawn and so cannot be read otherwise. %1$s=the recent glucose values newest first, already joined and carrying their unit, %2$s=insulin on board with its label, %3$s=carbs on board with its label. Example: Glucose graph. Recent values 7.2, 7.0, 6.8. IOB: 1.20 U. COB: 45 g">Grafico del glucosio. Valori recenti %1$s. %2$s. %3$s</string>
+    <string name="a11y_show_controls" comment="Screen-reader name of the invisible area that brings back the top bar, menu and toolbar on a short screen, where they hide by themselves.">Visualizza controlli</string>
     <string name="a11y_notifications" comment="Screen-reader name of the notification button on the main screen. %1$d=number of notifications. Example: Notifications: 3">Notifica: %1$d</string>
     <string name="a11y_tt_none" comment="Screen-reader state of the temp target chip when no temp target is running; the chip then shows the profile target.">nessun target temporaneo, obiettivo del profilo</string>
     <string name="a11y_tt_adjusted" comment="Screen-reader state of the temp target chip when the loop has changed the target; on screen this is only a colour.">regolato dal loop</string>
@@ -317,4 +318,5 @@
     <string name="cal_precheck_no_pair">Nessuna lettura CGM negli ultimi 10 minuti. Controllare la connessione del sensore.</string>
     <string name="cal_precheck_delta_too_high">Il glucosio sta cambiando troppo velocemente (Δ %1$s %3$s per 5 minuti, limite %2$s). Attendi stabilità.</string>
     <string name="cal_precheck_mark_sensor_change">Registra cambio sensore</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>
