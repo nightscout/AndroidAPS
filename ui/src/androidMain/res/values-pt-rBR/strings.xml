@@ -151,7 +151,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">Precisando de %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% de carboidratos imediatos, sem carboidratos estendidos</string>
-    <string name="wizard_carbs_type_desc">Carboidratos reduzidos em %1$d%%; eCarbs adicionados: %2$d%%, com atraso de %3$d min por %4$d h</string>
     <string name="wizard_include_info">Toque para incluir/excluir do cálculo:\n• BG — glicemia (ATIVADO no início)\n• TT — alvo temporário (ATIVADO no início)\n• Tendência — tendência da glicemia (último estado lembrado)\n• IOB — insulina ativa (ATIVADO no início)\n• COB — carboidratos ativos (último estado lembrado)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nenhum registro disponível</string>
