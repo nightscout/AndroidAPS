@@ -162,7 +162,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">Не хватает %1$d г</string>
     <string name="wizard_carbs_type_bread_desc">100% быстрых углеводов, без медленных углеводов</string>
-    <string name="wizard_carbs_type_desc">Углеводы уменьшены на %1$d%%, добавленные eCarbs %2$d%% отложены на %3$d мин из %4$d ч</string>
     <string name="wizard_include_info">Нажмите для включения/исключения из расчета:\n• ГК — гликемия (ВКЛ при запуске)\n• ВЦ — временная цель (ВКЛ при запуске)\n• Тренд — тренд гликемии (запомнено последнее состояние)\n• IOB — активный инсулин (ВКЛ при запуске)\n• COB — активные углеводы (запомнено последнее состояние)</string>
     <!-- Treatments -->
     <string name="no_records_available">Нет доступных записей</string>
