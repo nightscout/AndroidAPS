@@ -165,7 +165,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">Trūksta %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100 % greitai pasisavinamų angliavandenių, be ištęstų angliavandenių</string>
-    <string name="wizard_carbs_type_desc">Angliavandeniai sumažinti %1$d%%, pridėta %2$d%% i-AV, atidėtų %3$dmin ir paskirstytų per %4$dh</string>
     <string name="wizard_include_info">Paspauskite, kad įtrauktumėte į skaičiavimą arba pašalintumėte iš jo:\n• KG — kraujo gliukozė (pradžioje ĮJUNGTA)\n• LT — laikinas tikslas (pradžioje ĮJUNGTA)\n• Tendencija — KG tendencija (įsimenama paskutinė būsena)\n• AIO — aktyvus insulinas organizme (pradžioje ĮJUNGTA)\n• AAO — aktyvūs angliavandeniai organizme (įsimenama paskutinė būsena)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
