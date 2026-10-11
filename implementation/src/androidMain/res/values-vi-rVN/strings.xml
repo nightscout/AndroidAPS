@@ -20,6 +20,18 @@
     <string name="permission_schedule_exact_alarm_title">Chuông báo và lời nhắc</string>
     <string name="permission_schedule_exact_alarm_description">Bắt buộc để chuông báo có thể bật màn hình khi AAPS đang chạy nền và để lời nhắc phát đúng giờ</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Cảnh báo AAPS</string>
+    <string name="alarm_channel_standard">Cảnh báo tiêu chuẩn</string>
+    <string name="alarm_channel_bolus_error">Lỗi Bolus</string>
+    <string name="alarm_channel_error">Lỗi chung</string>
+    <string name="alarm_channel_urgent">Cảnh báo khẩn cấp</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (bỏ qua chế độ Không làm phiền)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (tuân theo chế độ Không làm phiền)</string>
+    <string name="alarm_channel_silent_urgent">Cảnh báo khẩn cấp (tăng dần âm lượng)</string>
+    <string name="alarm_channel_silent">Cảnh báo (tăng dần âm lượng)</string>
+    <string name="alarm_channel_silent_description">Được sử dụng khi bật tùy chọn “Thông báo tăng dần âm lượng”. Âm thanh sẽ phát trên màn hình cảnh báo.</string>
+    <string name="ongoing_channel_name">Trạng thái đang diễn ra</string>
+    <string name="notifications_channel_name">Thông báo AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
     <string name="insulin_concentration">U%1$d</string>
