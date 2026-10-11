@@ -66,6 +66,7 @@ import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdDevicesGet
 import app.aaps.pump.equil.manager.command.CmdSettingSet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
+import app.aaps.pump.equil.manager.customCommands.CmdCancelStaleTempBasal
 import app.aaps.pump.equil.manager.customCommands.CmdModeAndHistoryGet
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -80,6 +81,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import kotlin.math.max
@@ -141,14 +143,15 @@ class EquilPumpPlugin(
             .collectResilient(newScope, aapsLogger, LTag.PUMP) { playAlarm() }
 
         // After a resume the pump runs again the temp basal it had before the suspend, but AAPS ended
-        // that temp basal at the suspend (#3830). Cancel it, so the pump and AAPS agree. The loop sets
-        // a new one on its next run. The resume command reports success before its last BLE writes are
-        // done, so wait a moment, or the cancel overlaps them and gets no answer.
+        // that temp basal at the suspend (#3830). Cancel it, so the pump and AAPS agree; the loop sets
+        // a new one on its next run. A custom command, not a plain cancel: see cancelStaleTempBasal.
+        // The resume command reports success before its last BLE writes are done, so wait a moment,
+        // or the cancel overlaps them and gets no answer.
         rxBus.toFlow(EventEquilResumed::class)
             .collectResilient(newScope, aapsLogger, LTag.PUMP) {
                 delay(EquilConst.EQUIL_BLE_NEXT_CMD)
                 aapsLogger.debug(LTag.PUMPCOMM, "Pump resumed, cancelling the old temp basal")
-                commandQueue.cancelTempBasal(enforceNew = true)
+                commandQueue.customCommand(CmdCancelStaleTempBasal())
             }
 
         rxBus.toFlow(EventEquilAlarm::class)
@@ -362,7 +365,25 @@ class EquilPumpPlugin(
 
         if (customCommand is BaseCmd) pumpEnactResult = equilManager.executeCmd(customCommand)
         else if (customCommand is CmdModeAndHistoryGet) pumpEnactResult = equilManager.readModeAndHistory()
+        else if (customCommand is CmdCancelStaleTempBasal) pumpEnactResult = runBlocking { cancelStaleTempBasal() }
         return pumpEnactResult
+    }
+
+    /**
+     * After a resume the pump runs again the temp basal it had before the suspend, but AAPS ended that
+     * temp basal at the suspend (#3830). Cancel it - but only if AAPS has no temp basal running now. A
+     * running mode like "Disconnect pump" sets its zero temp basal again right after the resume, and a
+     * plain cancel queued after it would take it away again: the pump then gave basal while AAPS showed
+     * it disconnected (#4486). Run in the queue, so the check sees the result of a temp basal queued first.
+     */
+    private suspend fun cancelStaleTempBasal(): PumpEnactResult {
+        // A PUMP_SUSPEND record still running is the one this resume ends; it is not a new temp basal.
+        val setAgain = pumpSync.expectedPumpState().temporaryBasal?.takeIf { it.type != PumpSync.TemporaryBasalType.PUMP_SUSPEND }
+        if (setAgain != null) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Pump resumed: a temp basal is set again already, not cancelling it")
+            return pumpEnactResultProvider().success(true).enacted(false)
+        }
+        return cancelTempBasal(enforceNew = true)
     }
 
     override suspend fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
