@@ -407,7 +407,6 @@
     <string name="max_carbs_title">מקסימום פחמימות מותר [גר\']</string>
     <string name="patient_type">סוג המטופל\\ת</string>
     <!--    Protection-->
-    <string name="unlock_settings">שחרור נעילת הגדרות</string>
     <!--    Pumps -->
     <string name="battery_label">סוללה</string>
     <string name="reservoir_label">מכל</string>
