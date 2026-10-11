@@ -8,6 +8,13 @@ import io.reactivex.rxjava3.core.Completable
  */
 interface O5BleManager : OmnipodBleManager {
 
+    /**
+     * True while the activation wizard runs a step (pairing, prime, cannula insertion). The wizard
+     * talks to the pod outside the command queue, so the queue must not use or close the BLE link
+     * during this time (see Dash #5219). Only the wizard sets it, and it must clear it in a `finally`.
+     */
+    var isActivationRunning: Boolean
+
     /** Sends the O5-only AID setup command batch (see [app.aaps.pump.omnipod.common
      *  .bledriver.pod.command.aid.O5AidSetupCommands]) over the already-established
      *  session. Must be called after [pairNewPod] completes and before any other

@@ -413,9 +413,12 @@ class O5PumpPlugin @Inject constructor(
         podStateManager.activationProgress == ActivationProgress.COMPLETED && podStateManager.isPodRunning
     override fun isSuspended(): Boolean = podStateManager.deliverySuspended
 
+    // The progress alone does not cover pairing: it is still NOT_STARTED until the first step is done,
+    // and the queue then ran and disconnected in the middle of the pairing (Dash #5219).
     override fun isBusy(): Boolean =
-        podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
-            podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
+        bleManager.isActivationRunning ||
+            (podStateManager.activationProgress != ActivationProgress.NOT_STARTED &&
+                podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED))
 
     override fun isConnected(): Boolean =
         podStateManager.ltk == null ||
@@ -454,6 +457,11 @@ class O5PumpPlugin @Inject constructor(
 
     override fun disconnect(reason: String) {
         aapsLogger.info(LTag.PUMP, "O5 disconnect reason=$reason")
+        if (bleManager.isActivationRunning) {
+            // The activation uses the BLE link outside the queue. Closing it here breaks the pairing (Dash #5219).
+            aapsLogger.info(LTag.PUMP, "O5 disconnect ignored, pod activation is running")
+            return
+        }
         stopConnecting?.countDown()
         bleManager.disconnect(false)
     }

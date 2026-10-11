@@ -23,17 +23,25 @@ import app.aaps.pump.omnipod.omnipod5.bledriver.comm.O5BleManager
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlarmType
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import app.aaps.pump.omnipod.omnipod5.history.O5History
+import app.aaps.shared.tests.rx.TestAapsSchedulers
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Answers
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -41,9 +49,9 @@ import org.mockito.kotlin.whenever
  * Mirrors [app.aaps.pump.omnipod.dash.ui.wizard.compose.DashOmnipodWizardViewModelTest]'s
  * pattern for O5's concrete [O5OmnipodWizardViewModel] - covers the synchronous,
  * pure wizard-navigation and selection logic inherited from
- * [OmnipodWizardViewModel] plus the O5-specific overrides. `doInitializePod()`/
- * `doInsertCannula()`/`doDeactivatePod()` are RxJava-heavy BLE flows deliberately not
- * exercised here, same scoping choice Dash's own test makes.
+ * [OmnipodWizardViewModel] plus the O5-specific overrides. The BLE steps of
+ * `doInitializePod()`/`doInsertCannula()` are not exercised here, only that they mark the
+ * activation as running for the queue and clear it again on failure.
  *
  * The VM's `init{}` launches a coroutine via `viewModelScope`. A `StandardTestDispatcher`
  * as Main defers that coroutine (no `advanceUntilIdle()` here), so construction stays
@@ -64,9 +72,12 @@ internal class O5OmnipodWizardViewModelTest {
     @Mock private lateinit var profileFunction: ProfileFunction
     @Mock private lateinit var profileRepository: ProfileRepository
     @Mock private lateinit var persistenceLayer: PersistenceLayer
-    private val pumpEnactResultProvider: () -> PumpEnactResult = { mock() }
+    private val enactResult: PumpEnactResult = mock<PumpEnactResult>(defaultAnswer = Answers.RETURNS_SELF).also {
+        whenever(it.comment).thenReturn("error")
+    }
+    private val pumpEnactResultProvider: () -> PumpEnactResult = { enactResult }
     @Mock private lateinit var logger: AAPSLogger
-    @Mock private lateinit var aapsSchedulers: AapsSchedulers
+    private val aapsSchedulers: AapsSchedulers = TestAapsSchedulers()
 
     private lateinit var sut: O5OmnipodWizardViewModel
 
@@ -205,5 +216,60 @@ internal class O5OmnipodWizardViewModelTest {
         assertThat(sut.siteArrow.value).isEqualTo(TE.Arrow.UP)
         assertThat(sut.getSelectedSiteLocation()).isEqualTo(TE.Location.SIDE_RIGHT_UPPER_ARM)
         assertThat(sut.getSelectedSiteArrow()).isEqualTo(TE.Arrow.UP)
+    }
+
+    /**
+     * The wizard talks to the pod outside the command queue. [O5BleManager.isActivationRunning] is
+     * what keeps the queue away from the BLE link meanwhile (Dash #5219), so it must be set before
+     * pairing starts and cleared on every way out, or the queue stays blocked for ever.
+     */
+    @Test
+    fun initializePod_marksActivationRunningDuringPairing_andClearsItWhenPairingFails() {
+        whenever(podStateManager.ltk).thenReturn(null)
+        whenever(bleManager.pairNewPod()).thenReturn(Observable.error(IllegalStateException("pairing failed")))
+
+        runStep(OmnipodWizardStep.INITIALIZE_POD)
+
+        inOrder(bleManager) {
+            verify(bleManager).isActivationRunning = true
+            verify(bleManager).pairNewPod()
+            verify(bleManager).isActivationRunning = false
+        }
+    }
+
+    @Test
+    fun initializePod_clearsActivationRunningWhenPairingThrows() {
+        whenever(podStateManager.ltk).thenReturn(null)
+        whenever(bleManager.pairNewPod()).doAnswer { throw IllegalStateException("no adapter") }
+
+        runStep(OmnipodWizardStep.INITIALIZE_POD)
+
+        inOrder(bleManager) {
+            verify(bleManager).isActivationRunning = true
+            verify(bleManager).isActivationRunning = false
+        }
+    }
+
+    @Test
+    fun insertCannula_marksActivationRunning_andClearsItWhenItFails() {
+        // No profile, so part 2 fails at its first line.
+        runBlocking { whenever(pumpSync.expectedPumpState()).doAnswer { throw IllegalStateException("No profile set") } }
+
+        runStep(OmnipodWizardStep.INSERT_CANNULA)
+
+        inOrder(bleManager) {
+            verify(bleManager).isActivationRunning = true
+            verify(bleManager).isActivationRunning = false
+        }
+    }
+
+    /** Runs the wizard action of [step] the way the UI does, and waits until it has finished. */
+    private fun runStep(step: OmnipodWizardStep) {
+        sut.moveToStep(step)
+        sut.executeAction()
+        runBlocking {
+            withTimeout(5_000) { sut.actionState.first { it !is ActionState.Executing } }
+        }
+        assertThat(sut.actionState.value).isInstanceOf(ActionState.Error::class.java)
     }
 }

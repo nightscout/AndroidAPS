@@ -75,6 +75,7 @@ class O5BleManagerImpl @Inject constructor(
                 ?: throw FailedToConnectException("Missing podId, activate the O5 pod first")
             return Ids.forController(Id.fromLong(controllerId), Id.fromLong(podId))
         }
+    @Volatile override var isActivationRunning: Boolean = false
     override val releaseBusyBeforeCompletion = true
     override val connectionName = "O5 pod"
 

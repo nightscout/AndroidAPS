@@ -111,10 +111,41 @@ class O5PumpPluginTest : TestBaseWithProfile() {
 
 
     @Test
-    fun `isBusy is false when activation has not started - pairing must never be blocked`() {
+    fun `isBusy is false when no activation is running or started`() {
         whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+        whenever(bleManager.isActivationRunning).thenReturn(false)
 
         assertThat(plugin.isBusy()).isFalse()
+    }
+
+    /**
+     * Pairing runs while the progress is still NOT_STARTED. If the pump was not busy then, the queue
+     * ran its commands and disconnected the pod in the middle of the pairing (Dash #5219).
+     */
+    @Test
+    fun `isBusy is true while an activation step is running, even before any progress`() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+        whenever(bleManager.isActivationRunning).thenReturn(true)
+
+        assertThat(plugin.isBusy()).isTrue()
+    }
+
+    @Test
+    fun `disconnect does not close the link while an activation step is running`() {
+        whenever(bleManager.isActivationRunning).thenReturn(true)
+
+        plugin.disconnect("Queue empty")
+
+        verify(bleManager, never()).disconnect(any<Boolean>())
+    }
+
+    @Test
+    fun `disconnect closes the link when no activation is running`() {
+        whenever(bleManager.isActivationRunning).thenReturn(false)
+
+        plugin.disconnect("Queue empty")
+
+        verify(bleManager).disconnect(false)
     }
 
     @Test

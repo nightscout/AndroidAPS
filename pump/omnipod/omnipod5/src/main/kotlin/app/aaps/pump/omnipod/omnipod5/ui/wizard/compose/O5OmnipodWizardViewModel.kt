@@ -138,6 +138,7 @@ class O5OmnipodWizardViewModel @Inject constructor(
 
 
     override fun doInitializePod(): Single<PumpEnactResult> = rxSingle(Dispatchers.IO) {
+        bleManager.isActivationRunning = true
         try {
             if (podStateManager.ltk == null) {
                 bleManager.pairNewPod().ignoreElements().await()
@@ -258,10 +259,13 @@ class O5OmnipodWizardViewModel @Inject constructor(
         } catch (throwable: Throwable) {
             logger.error(LTag.PUMP, "Error in O5 Pod activation part 1", throwable)
             pumpEnactResultProvider().success(false).comment(I8n.textFromException(throwable, rh))
+        } finally {
+            bleManager.isActivationRunning = false
         }
     }
 
     override fun doInsertCannula(): Single<PumpEnactResult> = rxSingle(Dispatchers.IO) {
+        bleManager.isActivationRunning = true
         try {
             val profile = pumpSync.expectedPumpState().profile ?: throw IllegalStateException("No profile set")
             val basalProgram = mapProfileToBasalProgram(profile, PumpType.OMNIPOD_5)
@@ -355,6 +359,8 @@ class O5OmnipodWizardViewModel @Inject constructor(
         } catch (throwable: Throwable) {
             logger.error(LTag.PUMP, "Error in O5 Pod activation part 2", throwable)
             pumpEnactResultProvider().success(false).comment(I8n.textFromException(throwable, rh))
+        } finally {
+            bleManager.isActivationRunning = false
         }
     }
 
