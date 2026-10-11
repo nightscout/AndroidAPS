@@ -31,8 +31,6 @@
     <string name="equil_record_bolus">Bolus %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">Czas trwania TBR musi być większy od zera i być wielokrotnością %1$s minut.</string>
     <string name="equil_not_enough_insulin">Pozostało za mało insuliny w zbiorniku</string>
-    <string name="equil_low_battery">Słaba bateria</string>
-    <string name="equil_low_insulin">Pozostało za mało insuliny w zbiorniku</string>
     <string name="equil_pump_not_run">Pompa nie jest uruchomiona</string>
     <string name="equil_pair">Paruj</string>
     <string name="equil_pair_error">Błąd parowania</string>
