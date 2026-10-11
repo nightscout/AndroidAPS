@@ -8,6 +8,9 @@
     <string name="cwf_comment_freetext3">טקסט חופשי 3</string>
     <string name="cwf_comment_freetext4">טקסט חופשי 4</string>
     <string name="cwf_comment_patient_name_ext">שם המטופל\\ת (מ-AAPSClient או AAPSClient2)</string>
+    <string name="cwf_comment_basalRate_ext">בזאלי (מ-AAPSClient או AAPSClient2)</string>
+    <string name="cwf_comment_bgi_ext">ערך הסוכר (מ-AAPSClient או AAPSClient2)</string>
+    <string name="cwf_comment_loop_ext">סטטוס לולאה ולפני (מ-AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_timestamp_ext">דקות מאז קבלת נתוני סוכר (מ-AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_sgv_ext">ערך הסוכר (מ-AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_patient_name">שם המטופל\\ת</string>
@@ -17,6 +20,7 @@
     <string name="cwf_comment_cob2">ערך הפחמימות הפעילות</string>
     <string name="cwf_comment_delta">הדלתא (שינוי) של רמת הסוכר בדם, טווח קצר</string>
     <string name="cwf_comment_avg_delta">הדלתא (שינוי) הממוצע בטווח של 15 דק\' של רמת הסוכר בדם</string>
+    <string name="cwf_comment_temp_target">יעד זמני או יעד זמני נמוך - יעד זמני גבוה</string>
     <string name="cwf_comment_uploader_battery">סוללת הטלפון (%)</string>
     <string name="cwf_comment_rig_battery">סוללת לופ גלובאלי (%)</string>
     <string name="cwf_comment_basalRate">מינון בזאלי</string>
