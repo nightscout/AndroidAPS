@@ -768,7 +768,6 @@
     <string name="max_carbs_title">Maks tillatt karbohydrater [g]</string>
     <string name="patient_type">Pasienttype</string>
     <!--    Protection-->
-    <string name="unlock_settings">Lås opp innstillinger</string>
     <!--    Pumps -->
     <string name="battery_label">Batteri</string>
     <string name="reservoir_label">Reservoar</string>
