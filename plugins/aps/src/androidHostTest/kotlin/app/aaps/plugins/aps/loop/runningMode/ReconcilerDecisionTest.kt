@@ -234,10 +234,20 @@ class ReconcilerDecisionTest : TestBase() {
     }
 
     @Test
-    fun `suspended by pump to anything is no-op`() {
-        RM.Mode.entries.forEach { next ->
+    fun `suspended by pump to anything but zero delivery is no-op`() {
+        (RM.Mode.entries - zeroDelivery.toSet()).forEach { next ->
             assertThat(ReconcilerDecision.decide(RM.Mode.SUSPENDED_BY_PUMP, next))
                 .isEqualTo(ReconcilerDecision.Action.NoOp)
+        }
+    }
+
+    @Test
+    fun `suspended by pump back to a disconnect sets the zero TBR again`() {
+        // #4486: a reservoir change during "Disconnect pump" cleared the zero TBR on the pump, and
+        // nothing set it again - the pump gave profile basal while AAPS showed it disconnected.
+        zeroDelivery.forEach { next ->
+            assertThat(ReconcilerDecision.decide(RM.Mode.SUSPENDED_BY_PUMP, next))
+                .isEqualTo(ReconcilerDecision.Action.IssueZeroTbr(cancelExtendedBolus = true))
         }
     }
 
