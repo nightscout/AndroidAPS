@@ -180,6 +180,8 @@
     <string name="bolus_progress_silent_channel_name">Progresso bolo AAPS silenzioso</string>
     <string name="bolus_progress_channel_description">Progresso e cancellazione bolo</string>
     <string name="bolus_progress_silent_channel_description">Progresso e cancellazione bolo con meno vibrazioni</string>
+    <string name="open_loop_channel_name">AAPS Open Loop</string>
+    <string name="open_loop_channel_description">Notifica richiesta Loop aperto</string>
     <string name="simple_ui_off">Off</string>
     <string name="simple_ui_charging">Durante la ricarica</string>
     <string name="simple_ui_always_on">Modalità Always On</string>
