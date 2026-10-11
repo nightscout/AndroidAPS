@@ -78,6 +78,7 @@ class EquilEmulatorBleTransport(
 
     override var scanAddress: String? = null
     override var onGattError133: (() -> Unit)? = null
+    override var onDescriptorWriteFailed: (() -> Unit)? = null
 
     // --- BleTransport ---
 

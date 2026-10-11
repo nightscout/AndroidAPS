@@ -54,6 +54,7 @@ class EquilBleTransportImpl(
 
     override var scanAddress: String? = null
     override var onGattError133: (() -> Unit)? = null
+    override var onDescriptorWriteFailed: (() -> Unit)? = null
 
     @Suppress("deprecation", "OVERRIDE_DEPRECATION")
     private val gattCallback = object : BluetoothGattCallback() {
@@ -103,6 +104,8 @@ class EquilBleTransportImpl(
             aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWrite received: $status")
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 listener?.onDescriptorWritten()
+            } else {
+                onDescriptorWriteFailed?.invoke()
             }
         }
     }

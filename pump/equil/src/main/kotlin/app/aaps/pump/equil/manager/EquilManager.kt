@@ -393,17 +393,17 @@ class EquilManager(
         if (equilHistoryRecord.type != null) {
             val id = equilHistoryRecordDao.insert(equilHistoryRecord)
             equilHistoryRecord.id = id
-            aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord is {}", id)
+            aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord is $id")
         }
         return equilHistoryRecord
     }
 
     fun updateHistory(equilHistoryRecord: EquilHistoryRecord, result: ResolvedResult) {
-        aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord2 is {} {}", equilHistoryRecord.id, result)
+        aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord2 is ${equilHistoryRecord.id} $result")
         equilHistoryRecord.resolvedAt = System.currentTimeMillis()
         equilHistoryRecord.resolvedStatus = result
         val status = equilHistoryRecordDao.update(equilHistoryRecord)
-        aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord3== is {} {} status {}", equilHistoryRecord.id, equilHistoryRecord.resolvedStatus, status)
+        aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord3== is ${equilHistoryRecord.id} ${equilHistoryRecord.resolvedStatus} status $status")
     }
 
     fun readModeAndHistory(): PumpEnactResult {
@@ -468,7 +468,7 @@ class EquilManager(
                 command.resolvedResult = ResolvedResult.SUCCESS
             }
             updateHistory(equilHistoryRecord, command.resolvedResult)
-            aapsLogger.debug(LTag.PUMPCOMM, "executeCmd result {}", command.resolvedResult)
+            aapsLogger.debug(LTag.PUMPCOMM, "executeCmd result ${command.resolvedResult}")
             result.success = command.cmdSuccess
             result.enacted(command.enacted)
         } catch (ex: Exception) {
@@ -527,14 +527,14 @@ class EquilManager(
 
     fun storePodState() {
         val podState = gsonInstance.toJson(this.equilState)
-        aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: {}", podState)
+        aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: $podState")
         storePodState(podState)
     }
 
     fun clearPodState() {
         this.equilState = EquilState()
         val podState = gsonInstance.toJson(equilState)
-        aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: {}", podState)
+        aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: $podState")
         storePodState(podState)
         syncOverviewFlows()
     }
@@ -617,7 +617,7 @@ class EquilManager(
     }
 
     fun setStartInsulin(startInsulin: Int) {
-        aapsLogger.debug(LTag.PUMPCOMM, "startInsulin {}", startInsulin)
+        aapsLogger.debug(LTag.PUMPCOMM, "startInsulin $startInsulin")
         equilState?.startInsulin = startInsulin
         storePodState()
     }
@@ -785,6 +785,9 @@ class EquilManager(
         equilHistoryPump.rate = rate
         equilHistoryPump.largeRate = largeRate
         equilHistoryPump.timestamp = System.currentTimeMillis()
+        // The pump time has whole seconds only, and several events often share one second. Adding the
+        // event index as milliseconds keeps their timestamps different. The index is the absolute history
+        // index, so the stored time is late by index ms (about 2 s at index 1700, at most 65 s).
         equilHistoryPump.eventTimestamp = (calendar.getTimeInMillis() + index)
         equilHistoryPump.port = port
         equilHistoryPump.type = type
@@ -793,18 +796,12 @@ class EquilManager(
         equilHistoryPump.eventIndex = index
         equilHistoryPump.serialNumber = getSerialNumber()
         val id = equilHistoryPumpDao.insert(equilHistoryPump)
-        aapsLogger.debug(LTag.PUMPCOMM, "decodeHistory insert id {}", id)
+        aapsLogger.debug(LTag.PUMPCOMM, "decodeHistory insert id $id")
         rxBus.send(EventEquilDataChanged())
     }
 
     fun decodeData(data: ByteArray, saveData: Boolean) {
-        var year = data[11].toInt() and 0xFF
-        year += 2000
-        val month = data[12].toInt() and 0xff
-        val day = data[13].toInt() and 0xff
-        val hour = data[14].toInt() and 0xff
-        val min = data[15].toInt() and 0xff
-        val second = data[16].toInt() and 0xff
+        // data[11..16] = pump date and time (year - 2000, month, day, hour, minute, second), not used here
         val battery = data[17].toInt() and 0xff
         val insulin = data[18].toInt() and 0xff
         val rate1 = bytesToInt(data[20], data[19])
@@ -812,10 +809,11 @@ class EquilManager(
         //val largeRate = bytesToInt(data[22], data[21]).toFloat()
         val historyIndex = bytesToInt(data[24], data[23])
         val currentIndex = getHistoryIndex()
+        // Same order as port, type, level of a history record (see decodeHistory)
         val port = data[25].toInt() and 0xff
-        val level = data[26].toInt() and 0xff
-        val parm = data[27].toInt() and 0xff
-        val errorTips = getEquilError(port, level, parm)
+        val type = data[26].toInt() and 0xff
+        val level = data[27].toInt() and 0xff
+        val errorTips = getEquilError(port, type, level)
         if (!TextUtils.isEmpty(errorTips) && currentIndex != historyIndex) {
             notificationManager.post(NotificationId.PUMP_ERROR, errorTips, sound = AlarmSound.ALARM)
             if (saveData) {
@@ -831,20 +829,8 @@ class EquilManager(
         if (!TextUtils.isEmpty(errorTips)) {
             rxBus.send(EventEquilAlarm(errorTips))
         }
-        aapsLogger.debug(
-            LTag.PUMPCOMM, "decodeData historyIndex {} errorTips {} port:{} level:{} " +
-                "parm:{}",
-            historyIndex,
-            errorTips, port, level, parm
-        )
+        aapsLogger.debug(LTag.PUMPCOMM, "decodeData historyIndex $historyIndex errorTips '$errorTips' port:$port type:$type level:$level")
         setHistoryIndex(historyIndex)
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, year)
-        calendar.set(Calendar.MONTH, month - 1)
-        calendar.set(Calendar.DAY_OF_MONTH, day)
-        calendar.set(Calendar.HOUR_OF_DAY, hour)
-        calendar.set(Calendar.MINUTE, min)
-        calendar.set(Calendar.SECOND, second)
         setLastDataTime(System.currentTimeMillis())
         setCurrentInsulin(insulin)
         setBattery(battery)
