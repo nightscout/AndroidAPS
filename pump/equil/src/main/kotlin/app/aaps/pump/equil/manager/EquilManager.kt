@@ -1,16 +1,12 @@
 package app.aaps.pump.equil.manager
 
 import android.os.SystemClock
-import android.text.TextUtils
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.AlarmSound
-import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -92,7 +88,6 @@ class EquilManager(
     private val equilHistoryPumpDao: EquilHistoryPumpDao,
     private val pumpEnactResultProvider: () -> PumpEnactResult,
     private val dateUtil: DateUtil,
-    private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
     private val bolusProgressData: BolusProgressData,
     @ApplicationScope private val appScope: CoroutineScope
@@ -642,12 +637,27 @@ class EquilManager(
         if (previous == null || previous.isStopped() == runMode.isStopped()) return
         val time = dateUtil.now()
         val serial = getSerialNumber()
-        // UNDISPATCHED takes the lock in the calling thread, so a quick suspend and resume are
-        // written in the same order as they happened.
-        appScope.launch(start = CoroutineStart.UNDISPATCHED) {
-            runModeSyncMutex.withLock { syncRunMode(runMode.isStopped(), time, serial) }
+        // A battery-empty gap that is still open ends here at the latest: the pump delivers again.
+        val batteryEmptyAt = if (runMode.isStopped()) null else equilState?.batteryEmptyAt
+        if (batteryEmptyAt != null) {
+            equilState?.batteryEmptyAt = null
+            storePodState()
+        }
+        launchPumpSync {
+            batteryEmptyAt?.let { syncBatteryEmptyRecord(it, time - it, serial) }
+            syncRunMode(runMode.isStopped(), time, serial)
         }
         if (!runMode.isStopped()) rxBus.send(EventEquilResumed())
+    }
+
+    /**
+     * Writes to pumpSync in the order the pump events happened. UNDISPATCHED takes the lock in the
+     * calling thread, so a quick suspend and resume are not written the other way round.
+     */
+    private fun launchPumpSync(block: suspend () -> Unit) {
+        appScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            runModeSyncMutex.withLock { block() }
+        }
     }
 
     private fun RunMode.isStopped() = this == RunMode.SUSPEND || this == RunMode.STOP
@@ -726,6 +736,9 @@ class EquilManager(
         var tempBasal: EquilTempBasalRecord? = null
         var bolusRecord: EquilBolusRecord? = null
         var runMode: RunMode? = null
+
+        /** Pump time of a "Battery empty!" record whose 0 U/h gap is not ended yet, see syncBatteryEmptyGap. */
+        var batteryEmptyAt: Long? = null
         var rate = 0f
         var historyIndex = 0
 
@@ -797,10 +810,68 @@ class EquilManager(
         equilHistoryPump.serialNumber = getSerialNumber()
         val id = equilHistoryPumpDao.insert(equilHistoryPump)
         aapsLogger.debug(LTag.PUMPCOMM, "decodeHistory insert id $id")
+        val eventTime = calendar.timeInMillis
+        val errorTips = getEquilError(port, type, level)
+        if (errorTips.isNotEmpty()) raiseAlarm(errorTips, eventTime)
+        syncBatteryEmptyGap(port, type, level, rate, eventTime)
         rxBus.send(EventEquilDataChanged())
     }
 
-    fun decodeData(data: ByteArray, saveData: Boolean) {
+    /**
+     * Pump alarms come from the pump history: every record is read once, in order, after a connection.
+     * The advertisement is caught only some of the time, and it showed the same alarm again on every
+     * connection (#5077). An alarm that is only read late does not sound as if it had just happened.
+     */
+    private fun raiseAlarm(text: String, eventTime: Long) {
+        val record = EquilHistoryRecord(EquilHistoryRecord.EventType.EQUIL_ALARM, eventTime, getSerialNumber())
+        record.resolvedAt = System.currentTimeMillis()
+        record.resolvedStatus = ResolvedResult.SUCCESS
+        record.note = text
+        equilHistoryRecordDao.insert(record)
+        val recent = dateUtil.now() - eventTime < T.mins(ALARM_SOUND_MAX_AGE_MINUTES).msecs()
+        rxBus.send(EventEquilAlarm(text, sound = recent))
+    }
+
+    /**
+     * When the battery dies, the pump logs "Battery empty!" and stops delivering in the same second.
+     * AAPS cannot talk to it then, so it kept counting basal that was never given (#3830). The record
+     * is read once the pump has power again. Record a 0 U/h PUMP_SUSPEND temp basal from that moment
+     * until the first later record that shows delivery again (rate > 0), or until the next RUN.
+     * The start is the pump's own time, so the gap is never made longer than it was.
+     */
+    private fun syncBatteryEmptyGap(port: Int, type: Int, level: Int, rate: Int, eventTime: Long) {
+        val state = equilState ?: return
+        val serial = getSerialNumber()
+        if (PumpEvent.isBatteryEmpty(port, type, level)) {
+            state.batteryEmptyAt = eventTime
+            storePodState()
+            launchPumpSync { syncBatteryEmptyRecord(eventTime, T.mins(4800).msecs(), serial) }
+            return
+        }
+        val start = state.batteryEmptyAt ?: return
+        if (rate > 0 && eventTime > start) {
+            state.batteryEmptyAt = null
+            storePodState()
+            launchPumpSync { syncBatteryEmptyRecord(start, eventTime - start, serial) }
+        }
+    }
+
+    /** Same pump id for the open record and for its end, so the second call only sets the duration. */
+    private suspend fun syncBatteryEmptyRecord(start: Long, duration: Long, serial: String) {
+        aapsLogger.debug(LTag.PUMP, "Battery empty: 0 U/h PUMP_SUSPEND temp basal from ${dateUtil.dateAndTimeString(start)} for ${duration / 60000} min")
+        pumpSync.syncTemporaryBasalWithPumpId(
+            start,
+            PumpRate(0.0),
+            duration,
+            true,
+            PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+            start,
+            PumpType.EQUIL,
+            serial
+        )
+    }
+
+    fun decodeData(data: ByteArray) {
         // data[11..16] = pump date and time (year - 2000, month, day, hour, minute, second), not used here
         val battery = data[17].toInt() and 0xff
         val insulin = data[18].toInt() and 0xff
@@ -808,28 +879,12 @@ class EquilManager(
         val rate = internalDecodeSpeedToUH(rate1)
         //val largeRate = bytesToInt(data[22], data[21]).toFloat()
         val historyIndex = bytesToInt(data[24], data[23])
-        val currentIndex = getHistoryIndex()
-        // Same order as port, type, level of a history record (see decodeHistory)
+        // data[25..27] = port, type, level of the newest history event. Alarms are not raised from here
+        // but from the history record itself (see raiseAlarm), so each one only once.
         val port = data[25].toInt() and 0xff
         val type = data[26].toInt() and 0xff
         val level = data[27].toInt() and 0xff
-        val errorTips = getEquilError(port, type, level)
-        if (!TextUtils.isEmpty(errorTips) && currentIndex != historyIndex) {
-            notificationManager.post(NotificationId.PUMP_ERROR, errorTips, sound = AlarmSound.ALARM)
-            if (saveData) {
-                val time = System.currentTimeMillis()
-                val equilHistoryRecord = EquilHistoryRecord(EquilHistoryRecord.EventType.EQUIL_ALARM, time, getSerialNumber())
-                equilHistoryRecord.resolvedAt = System.currentTimeMillis()
-                equilHistoryRecord.resolvedStatus = ResolvedResult.SUCCESS
-                equilHistoryRecord.note = errorTips
-                equilHistoryRecordDao.insert(equilHistoryRecord)
-            }
-
-        }
-        if (!TextUtils.isEmpty(errorTips)) {
-            rxBus.send(EventEquilAlarm(errorTips))
-        }
-        aapsLogger.debug(LTag.PUMPCOMM, "decodeData historyIndex $historyIndex errorTips '$errorTips' port:$port type:$type level:$level")
+        aapsLogger.debug(LTag.PUMPCOMM, "decodeData historyIndex $historyIndex newest event port:$port type:$type level:$level")
         setHistoryIndex(historyIndex)
         setLastDataTime(System.currentTimeMillis())
         setCurrentInsulin(insulin)
@@ -839,6 +894,9 @@ class EquilManager(
     }
 
     companion object {
+
+        /** A pump alarm read later than this after it happened is shown without sound. */
+        const val ALARM_SOUND_MAX_AGE_MINUTES = 30L
 
         val OLD_PUMP_SERIAL_PREFIXES = setOf('0', '1', '3', 'A', 'D')
 

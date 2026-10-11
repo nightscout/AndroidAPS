@@ -2,7 +2,6 @@ package app.aaps.pump.equil.manager
 
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
@@ -51,7 +50,6 @@ class EquilManagerStateTest {
     @Mock lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
     @Mock lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var ch: ConcentrationHelper
     @Mock lateinit var bolusProgressData: BolusProgressData
 
@@ -73,7 +71,7 @@ class EquilManagerStateTest {
     /** A new instance reads only what preferences hold, like a new app process. */
     private fun newManager() = EquilManager(
         aapsLogger, rxBus, preferences, rh, pumpSync, equilBLE, equilHistoryRecordDao,
-        equilHistoryPumpDao, { mock<PumpEnactResult>() }, dateUtil, notificationManager,
+        equilHistoryPumpDao, { mock<PumpEnactResult>() }, dateUtil,
         ch, bolusProgressData, CoroutineScope(UnconfinedTestDispatcher())
     )
 

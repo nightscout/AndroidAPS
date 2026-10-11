@@ -374,7 +374,7 @@ class EquilBLE(
             bleTransport.scanner.scannedDevices.collect { device ->
                 device.scanRecordBytes?.let { bytes ->
                     bleHandler.post {
-                        equilManager?.decodeData(bytes, autoScan)
+                        equilManager?.decodeData(bytes)
                     }
                 }
                 stopScan()
