@@ -331,7 +331,8 @@ class EquilManager(
         try {
             aapsLogger.debug(LTag.PUMPCOMM, "loadHistory start: ")
             val historyGet = CmdHistoryGet(index, aapsLogger, preferences, dateUtil, this)
-            equilBLE.readHistory(historyGet)
+            // Nothing was sent, so no answer will come: do not wait the full timeout for it.
+            if (!equilBLE.readHistory(historyGet)) return -1
             synchronized(historyGet) {
                 historyGet.waitMillis(historyGet.timeOut.toLong())
             }

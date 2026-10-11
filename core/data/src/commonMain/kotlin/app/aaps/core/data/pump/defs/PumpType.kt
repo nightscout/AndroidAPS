@@ -515,7 +515,7 @@ enum class PumpType(
         baseBasalMaxValue = 3.0,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
-        pumpCapability = PumpCapability.DiaconnCapabilities,
+        pumpCapability = PumpCapability.EquilCapabilities,
         isPatchPump = true,
         maxReservoirReading = 200,
         source = Source.EQuil,

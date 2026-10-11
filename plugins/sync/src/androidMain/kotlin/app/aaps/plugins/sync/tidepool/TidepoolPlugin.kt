@@ -12,29 +12,24 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.collectResilient
-import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcPluginTidepool
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.SyncStrings
-import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.plugins.sync.tidepool.comm.TidepoolReceiverDelegate
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk
 import app.aaps.plugins.sync.tidepool.compose.TidepoolComposeContent
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolBooleanKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
+import app.aaps.plugins.sync.tidepool.keys.TidepoolStringKey
 import app.aaps.plugins.sync.tidepool.keys.TidepoolStringNonKey
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import dev.zacsweers.metro.AppScope
@@ -60,11 +55,10 @@ class TidepoolPlugin(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
-    private val rxBus: RxBus,
     private val tidepoolUploader: TidepoolUploader,
     private val uploadChunk: UploadChunk,
     private val rateLimit: RateLimit,
-    private val receiverDelegate: ReceiverDelegate,
+    private val receiverDelegate: TidepoolReceiverDelegate,
     private val authFlowOut: AuthFlowOut,
     private val tidepoolRepository: TidepoolRepository,
     private val dateUtil: DateUtil,
@@ -83,14 +77,14 @@ class TidepoolPlugin(
                     authFlowOut.clearAllSavedData()
                     tidepoolUploader.resetInstance()
                 },
-                onUploadNow = { rxBus.send(EventTidepoolDoUpload()) },
+                onUploadNow = { tidepoolRepository.requestUpload() },
                 onFullSync = { preferences.put(TidepoolLongNonKey.LastEnd, 0) },
                 onPurge = { tidepoolUploader.purge() },
                 onClearLog = { tidepoolRepository.clearLog() }
             )
         }
         .description(SyncStrings.description_tidepool),
-    ownPreferences = TidepoolBooleanKey.entries + TidepoolLongNonKey.entries + TidepoolStringNonKey.entries,
+    ownPreferences = TidepoolBooleanKey.entries + TidepoolStringKey.entries + TidepoolLongNonKey.entries + TidepoolStringNonKey.entries,
     aapsLogger, rh, preferences, notificationManager
 ) {
 
@@ -104,20 +98,12 @@ class TidepoolPlugin(
         receiverDelegate.connectivityStatusFlow
             .drop(1) // skip initial value
             .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { ev ->
-                rxBus.send(EventTidepoolStatus("● CONNECTIVITY ${ev.blockingReason}"))
+                tidepoolRepository.addLog("● CONNECTIVITY ${ev.blockingReason}")
                 tidepoolUploader.resetInstance()
                 if (isAllowed) doUpload("CONNECTIVITY")
             }
-        // scope is Dispatchers.IO, matching the scheduler these subscriptions used before.
-        rxBus.toFlow(EventTidepoolDoUpload::class)
-            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL, start = CoroutineStart.UNDISPATCHED) { doUpload(EventTidepoolDoUpload::class.simpleName) }
-        rxBus.toFlow(EventTidepoolStatus::class)
-            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL, start = CoroutineStart.UNDISPATCHED) { event ->
-                tidepoolRepository.addLog(event.status)
-                tidepoolRepository.updateConnectionStatus(authFlowOut.connectionStatus)
-                // Pass to setup wizard
-                rxBus.send(EventSWSyncStatus(event.status))
-            }
+        tidepoolRepository.uploadRequests
+            .collectResilient(scope, aapsLogger, LTag.TIDEPOOL, start = CoroutineStart.UNDISPATCHED) { doUpload("Upload now") }
         persistenceLayer.observeChanges(GV::class)
             .collectResilient(scope, aapsLogger, LTag.TIDEPOOL) { gvList ->
                 gvList.maxByOrNull { it.timestamp }?.let { gv ->
@@ -162,7 +148,7 @@ class TidepoolPlugin(
             aapsLogger.debug(LTag.TIDEPOOL, "doUpload $from: Blocked by connectivity settings")
             // Send status event so user knows why upload is blocked (rate limited to avoid spam)
             if (rateLimit.rateLimit("tidepool-connectivity-blocked-notification", T.mins(5).secs().toInt())) {
-                rxBus.send(EventTidepoolStatus("Upload blocked by connectivity settings (check WiFi/cellular/battery restrictions)"))
+                tidepoolRepository.addLog("Upload blocked by connectivity settings (check WiFi/cellular/battery restrictions)")
             }
             // Don't change auth state - just skip this upload attempt
             // When connectivity is restored, next doUpload() will proceed normally
@@ -218,13 +204,15 @@ class TidepoolPlugin(
             PreferenceSubScreenDef(
                 key = "tidepool_connection_options",
                 title = SyncStrings.connection_settings_title,
+                // The own keys show only when the switch is off (negativeDependency)
                 items = listOf(
-                    BooleanKey.NsClientUseCellular,
-                    BooleanKey.NsClientUseRoaming,
-                    BooleanKey.NsClientUseWifi,
-                    StringKey.NsClientWifiSsids,
-                    BooleanKey.NsClientUseOnBattery,
-                    BooleanKey.NsClientUseOnCharging
+                    TidepoolBooleanKey.UseNsConnectionSettings,
+                    TidepoolBooleanKey.UseCellular,
+                    TidepoolBooleanKey.UseRoaming,
+                    TidepoolBooleanKey.UseWifi,
+                    TidepoolStringKey.WifiSsids,
+                    TidepoolBooleanKey.UseOnBattery,
+                    TidepoolBooleanKey.UseOnCharging
                 )
             ),
             PreferenceSubScreenDef(

@@ -195,7 +195,7 @@ internal class LoadStatusWorkerTest : TestBaseWithProfile() {
 
         assertIs<ListenableWorker.Result.Failure>(result)
         val logs = nsClientMvvmRepository.logList.value
-        assertThat(logs.any { it.action == "◄ ERROR" && it.logText == errorMessage }).isTrue()
+        assertThat(logs.any { it.action == "◄ ERROR" && it.text == errorMessage }).isTrue()
     }
 
     @Test

@@ -115,6 +115,17 @@ internal class EquilWizardViewModelTest {
     }
 
     @Test
+    fun `the new infusion set answer starts unanswered and follows the user`() {
+        assertThat(sut.newInfusionSet.value).isNull()
+
+        sut.selectNewInfusionSet(false)
+        assertThat(sut.newInfusionSet.value).isFalse()
+
+        sut.selectNewInfusionSet(true)
+        assertThat(sut.newInfusionSet.value).isTrue()
+    }
+
+    @Test
     fun `selectInsulin updates the selected insulin`() {
         val iCfg: ICfg = mock()
 

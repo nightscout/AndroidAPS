@@ -353,7 +353,6 @@
     <string name="max_carbs_title">Maximalt tillåtna kolhydrater [g]</string>
     <string name="patient_type">Patienttyp</string>
     <!--    Protection-->
-    <string name="unlock_settings">Lås upp inställningar</string>
     <!--    Pumps -->
     <string name="battery_label">Batterinivå</string>
     <string name="reservoir_label">Reservoar</string>

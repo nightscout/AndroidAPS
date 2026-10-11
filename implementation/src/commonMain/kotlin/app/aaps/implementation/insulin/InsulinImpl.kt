@@ -118,6 +118,7 @@ class InsulinImpl(
 
     override fun concentrationList(): List<ConcentrationType> = listOf(
         ConcentrationType.U10,
+        ConcentrationType.U20,
         ConcentrationType.U50,
         ConcentrationType.U100,
         ConcentrationType.U200

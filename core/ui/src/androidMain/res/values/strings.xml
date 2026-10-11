@@ -221,6 +221,7 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="prime_fill">Prime/Fill</string>
+    <string name="prime_not_available">This pump fills and primes itself during activation. Prime/Fill from AAPS is not available.</string>
     <string name="site_rotation">Site Rotation</string>
     <string name="edit_site">Edit</string>
     <string name="select_arrow">Select Arrow</string>
@@ -396,6 +397,7 @@
     <string name="scene_editor_disabled">Disabled</string>
     <string name="scene_summary">%1$d actions, %2$s</string>
     <string name="scene_summary_with_chain" comment="%1$s=scene summary, %2$s=name of the scene that starts when this one ends. Example: 3 actions, 2 hours → Cooldown">%1$s → %2$s</string>
+    <string name="quicklaunch_tt_description" comment="Temp target preset on a QuickLaunch button. %1$s=target with unit, %2$s=duration. Example: 5.0 mmol/L, 45 min">%1$s, %2$s</string>
     <string name="scene_duration_indefinite">Indefinite (manual end)</string>
     <string name="scene_some_actions_failed">Some actions failed</string>
     <string name="scene_no_active">No active scene</string>
@@ -798,7 +800,6 @@
     <string name="patient_type">Patient type</string>
 
     <!--    Protection-->
-    <string name="unlock_settings">Unlock settings</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>

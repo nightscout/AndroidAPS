@@ -494,7 +494,7 @@ class BLEComm(
             danaPump.ignoreUserPassword = false
             // Grab pairing key from preferences if exists
             val pairingKey = preferences.get(DanaStringComposedKey.ParingKey, danaRSPlugin.mDeviceName)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Using stored pairing key: $pairingKey")
+            aapsLogger.debug(LTag.PUMPBTCOMM, if (pairingKey.isNotEmpty()) "Using stored pairing key" else "No stored pairing key")
             if (pairingKey.isNotEmpty()) {
                 sendPasskeyCheck(pairingKey)
             } else {
@@ -512,11 +512,11 @@ class BLEComm(
             preferences.put(DanaStringComposedKey.V3RandomSyncKey, danaRSPlugin.mDeviceName, value = String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
 
             if (danaPump.hwModel == 0x05) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
+                aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 (OK)" + " " + secret(decryptedBuffer))
                 // Dana RS Pump
                 sendV3PairingInformation()
             } else if (danaPump.hwModel == 0x06) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 EASY (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
+                aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 EASY (OK)" + " " + secret(decryptedBuffer))
                 // Dana RS Easy
                 sendEasyMenuCheck()
             }
@@ -540,7 +540,7 @@ class BLEComm(
 
             aapsLogger.debug(
                 LTag.PUMPBTCOMM,
-                "<<<<< ENCRYPTION__PUMP_CHECK BLE5 (OK) model=0x%02X protocol=0x%02X %s".format(danaPump.hwModel, danaPump.protocol, DanaRSPacket.toHexString(decryptedBuffer))
+                "<<<<< ENCRYPTION__PUMP_CHECK BLE5 (OK) model=0x%02X protocol=0x%02X %s".format(danaPump.hwModel, danaPump.protocol, secret(decryptedBuffer))
             )
             when (danaPump.hwModel) {
                 // Dana-i BLE5 and Dana-i2 use the same key setup
@@ -595,7 +595,7 @@ class BLEComm(
     private fun sendPasskeyCheck(pairingKey: String) {
         val encodedPairingKey = DanaRSPacket.hexToBytes(pairingKey)
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY, encodedPairingKey, null)
-        aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__CHECK_PASSKEY" + " " + DanaRSPacket.toHexString(bytes))
+        aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__CHECK_PASSKEY" + " " + secret(bytes))
         bleTransport.gatt.writeCharacteristic(bytes)
     }
 
@@ -645,7 +645,7 @@ class BLEComm(
 
     // 2nd packet response
     private fun processEncryptionResponse(decryptedBuffer: ByteArray) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__TIME_INFORMATION " + DanaRSPacket.toHexString(decryptedBuffer))
+        aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__TIME_INFORMATION " + secret(decryptedBuffer))
         if (encryption == EncryptionType.ENCRYPTION_BLE5) {
             isConnected = true
             isConnecting = false
@@ -676,7 +676,7 @@ class BLEComm(
             var pass: Int = (decryptedBuffer[size - 1].toInt() and 0x000000FF shl 8) + (decryptedBuffer[size - 2].toInt() and 0x000000FF)
             pass = pass xor 3463
             danaPump.rsPassword = String.format("%04X", pass)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaPump.rsPassword)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password received")
             if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
                 notificationManager.post(NotificationId.WRONG_PUMP_PASSWORD, TextRef.AndroidRes(R.string.wrongpumppassword))
@@ -732,14 +732,21 @@ class BLEComm(
 
     // 2nd or 3rd packet v1 response
     private fun processPairingRequest2(decryptedBuffer: ByteArray) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PASSKEY_RETURN " + DanaRSPacket.toHexString(decryptedBuffer))
+        aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PASSKEY_RETURN " + secret(decryptedBuffer))
         // Paring is successful, sending time info
         sendTimeInfo()
         val pairingKey = byteArrayOf(decryptedBuffer[2], decryptedBuffer[3])
         // store pairing key to preferences
         preferences.put(DanaStringComposedKey.ParingKey, danaRSPlugin.mDeviceName, value = DanaRSPacket.bytesToHex(pairingKey))
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Got pairing key: " + DanaRSPacket.bytesToHex(pairingKey))
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Got pairing key")
     }
+
+    /**
+     * Stands in for a handshake packet that holds the pump password or pairing key material. The debug log is
+     * what "Send logs" shares for support, and those bytes let anyone near the pump pose as this phone
+     * (#5205). The length is still logged, which is what matters when a handshake fails.
+     */
+    private fun secret(packet: ByteArray): String = "(${packet.size} bytes, not logged: holds pairing data)"
 
     // 3rd packet Easy menu pump
     private fun sendEasyMenuCheck() {

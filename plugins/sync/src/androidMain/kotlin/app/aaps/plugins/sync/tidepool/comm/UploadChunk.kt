@@ -2,7 +2,9 @@ package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -10,18 +12,20 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.resources.TextResolver
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
+import app.aaps.core.ui.CoreUiStrings
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
 import app.aaps.plugins.sync.tidepool.elements.BloodGlucoseElement
 import app.aaps.plugins.sync.tidepool.elements.BolusElement
+import app.aaps.plugins.sync.tidepool.elements.NoteElement
 import app.aaps.plugins.sync.tidepool.elements.ProfileElement
 import app.aaps.plugins.sync.tidepool.elements.SensorGlucoseElement
 import app.aaps.plugins.sync.tidepool.elements.WizardElement
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.keys.TidepoolLongNonKey
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
 import dev.zacsweers.metro.AppScope
@@ -36,6 +40,7 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import java.util.LinkedList
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.Instant
@@ -44,53 +49,116 @@ import kotlin.time.Instant
 @Inject
 class UploadChunk(
     private val preferences: Preferences,
-    private val rxBus: RxBus,
+    private val tidepoolRepository: TidepoolRepository,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val config: Config,
+    private val rh: TextResolver
 ) {
+
+    companion object {
+
+        // One of the origin types of the Tidepool data model: application, device, manual, service
+        internal const val ORIGIN_TYPE_APPLICATION = "application"
+
+        // Tidepool asks to upload "in chunks of 1,000 records". The time window can hold more: a full
+        // sync sends up to 7 days, which is over 2000 CGM values alone.
+        internal const val MAX_RECORDS_PER_UPLOAD = 1000
+
+        // A copy of a note closer than this to the original is the same note
+        internal val NOTE_COPY_WINDOW = T.hours(1).msecs()
+
+        // The English text of the note AAPS writes on start (CoreUiStrings.androidaps_start)
+        private const val APP_START_NOTE_ENGLISH = "AAPS started"
+
+        /** A note found in the database, before it is picked for upload */
+        internal data class NoteCandidate(val timestamp: Long, val text: String, val source: String)
+
+        /**
+         * One Tidepool note per note the user wrote. The bolus wizard writes the same text to the bolus, to the
+         * carbs (at a later time when the carbs are delayed) and sometimes to a careportal event. So the bolus
+         * note is always kept, a carbs note only when no bolus note with the same text is within
+         * [NOTE_COPY_WINDOW], and an event note only when no bolus or carbs note with the same text is.
+         */
+        internal fun pickNotes(bolus: List<NoteCandidate>, carbs: List<NoteCandidate>, events: List<NoteCandidate>): List<NoteCandidate> {
+            fun List<NoteCandidate>.hasCopyOf(note: NoteCandidate) =
+                any { it.text.trim() == note.text.trim() && abs(it.timestamp - note.timestamp) <= NOTE_COPY_WINDOW }
+
+            val keptCarbs = carbs.filterNot { bolus.hasCopyOf(it) }
+            val keptEvents = events.filterNot { bolus.hasCopyOf(it) || keptCarbs.hasCopyOf(it) || carbs.hasCopyOf(it) }
+            return bolus + keptCarbs + keptEvents
+        }
+    }
 
     private val maxUploadSize = T.days(7).msecs() // don't change this
 
-    suspend fun getNext(session: Session?): String? {
+    /**
+     * The records of the next time window, as JSON batches of at most [MAX_RECORDS_PER_UPLOAD] records.
+     * Empty when the window holds nothing. The caller sends all batches before it moves [getLastEnd].
+     */
+    suspend fun getNext(session: Session?): List<String>? {
         session ?: return null
 
         session.start = getLastEnd()
         // do not upload last 3h, TBR can be still running
         session.end = min(session.start + maxUploadSize, dateUtil.now() - T.hours(3).msecs())
 
-        val result = get(session.start, session.end)
-        if (result.length < 3) {
+        val batches = getBatches(session.start, session.end)
+        if (batches.isEmpty()) {
             aapsLogger.debug(LTag.TIDEPOOL, "No records in this time period, setting start to best end time")
             setLastEnd(session.end)
         }
-        return result
+        return batches
     }
 
-    suspend fun get(start: Long, end: Long): String {
+    /** The records between [start] and [end] as JSON batches of at most [MAX_RECORDS_PER_UPLOAD] records. */
+    internal suspend fun getBatches(start: Long, end: Long): List<String> =
+        records(start, end).orEmpty().chunked(MAX_RECORDS_PER_UPLOAD).map { GsonInstance.defaultGsonInstance().toJson(it) }
+
+    /** All records between [start] and [end] as one JSON array, or "" for a window that is not valid. */
+    suspend fun get(start: Long, end: Long): String =
+        records(start, end)?.let { GsonInstance.defaultGsonInstance().toJson(it) } ?: ""
+
+    private suspend fun records(start: Long, end: Long): List<BaseElement>? {
 
         aapsLogger.debug(LTag.TIDEPOOL, "Syncing data between: " + dateUtil.dateAndTimeString(start) + " -> " + dateUtil.dateAndTimeString(end))
         if (end <= start) {
             aapsLogger.debug(LTag.TIDEPOOL, "End is <= start: " + dateUtil.dateAndTimeString(start) + " " + dateUtil.dateAndTimeString(end))
-            return ""
+            return null
         }
         if (end - start > maxUploadSize) {
             aapsLogger.debug(LTag.TIDEPOOL, "More than max range - rejecting")
-            return ""
+            return null
         }
 
         val records = LinkedList<BaseElement>()
 
         records.addAll(getTreatments(start, end))
+        records.addAll(getNotes(start, end))
         records.addAll(getBloodTests(start, end))
         records.addAll(getBasals(start, end))
         records.addAll(getBgReadings(start, end))
         records.addAll(getProfiles(start, end))
 
-        return GsonInstance.defaultGsonInstance().toJson(records)
+        // One device for all records: Tidepool groups data by deviceId, and the pump settings used this id
+        // already. Before, only they had one, so Tidepool could not tie them to the rest of the data.
+        val deviceId = "${TidepoolUploader.DEVICE_NAME}:${activePlugin.activePump.serialNumber()}"
+        // Tidepool asks for name and type next to the origin id, and it recognises the sending app by
+        // origin.name, as it does for Loop and Trio. The deduplicator uses only the id.
+        records.forEach { record ->
+            record.deviceId = deviceId
+            record.origin?.apply {
+                name = config.APPLICATION_ID
+                version = config.VERSION_NAME
+                type = ORIGIN_TYPE_APPLICATION
+            }
+        }
+
+        return records
     }
 
     fun getLastEnd(): Long {
@@ -102,7 +170,7 @@ class UploadChunk(
         if (time > getLastEnd()) {
             preferences.put(TidepoolLongNonKey.LastEnd, time)
             val friendlyEnd = dateUtil.dateAndTimeString(time)
-            rxBus.send(EventTidepoolStatus(("Marking uploaded data up to $friendlyEnd")))
+            tidepoolRepository.addLog("Marking uploaded data up to $friendlyEnd")
             aapsLogger.debug(LTag.TIDEPOOL, "Updating last end to: " + dateUtil.dateAndTimeString(time))
         } else {
             aapsLogger.debug(LTag.TIDEPOOL, "Cannot set last end to: " + dateUtil.dateAndTimeString(time) + " vs " + dateUtil.dateAndTimeString(getLastEnd()))
@@ -125,11 +193,43 @@ class UploadChunk(
         return result
     }
 
+    /**
+     * The notes the user wrote between [start] and [end], one Tidepool note each (#2834).
+     *
+     * The sources are read one hour wider than the window, so a note just outside it still counts when
+     * [pickNotes] looks for copies of the same note.
+     */
+    private suspend fun getNotes(start: Long, end: Long): List<NoteElement> {
+        val from = start - NOTE_COPY_WINDOW
+        val to = end + NOTE_COPY_WINDOW
+        val bolusNotes = persistenceLayer.getBolusesFromTimeToTime(from, to, true)
+            .mapNotNull { bolus -> bolus.notes?.takeIf { it.isNotBlank() }?.let { NoteCandidate(bolus.timestamp, it, "bolus") } }
+        // Not expanded: an extended carbs entry is split into many, and every part carries the same note
+        val carbsNotes = persistenceLayer.getCarbsFromTimeNotExpanded(from, true)
+            .filter { it.timestamp <= to }
+            .mapNotNull { carbs -> carbs.notes?.takeIf { it.isNotBlank() }?.let { NoteCandidate(carbs.timestamp, it, "carbs") } }
+        // Not every event note is one the user wrote. AAPS creates announcements (for example from pump errors)
+        // and, on every start, a note "AAPS started - <phone>". These are found by their start text, the way
+        // the careportal "Remove AAPS started entries" does it; the English one covers notes synced in from
+        // a phone in another language.
+        val appStartTexts = listOf(rh.gs(CoreUiStrings.androidaps_start), APP_START_NOTE_ENGLISH)
+        val eventNotes = persistenceLayer.getTherapyEventDataFromToTime(from, to)
+            .filter { it.type != TE.Type.ANNOUNCEMENT }
+            .filterNot { event -> appStartTexts.any { event.note?.startsWith(it) == true } }
+            .mapNotNull { event -> event.note?.takeIf { it.isNotBlank() }?.let { NoteCandidate(event.timestamp, it, "event") } }
+        val selection = pickNotes(bolusNotes, carbsNotes, eventNotes)
+            .filter { it.timestamp in start..end }
+            .map { NoteElement(it.timestamp, it.text, it.source, dateUtil) }
+        if (selection.isNotEmpty())
+            tidepoolRepository.addLog("${selection.size} notes selected for upload")
+        return selection
+    }
+
     private suspend fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
         val readings = persistenceLayer.getTherapyEventDataFromToTime(start, end)
         val selection = BloodGlucoseElement.fromCareportalEvents(readings, dateUtil, profileUtil)
         if (selection.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))
+            tidepoolRepository.addLog("${selection.size} BGs selected for upload")
         return selection
 
     }
@@ -138,7 +238,7 @@ class UploadChunk(
         val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(start, end, true)
         val selection = SensorGlucoseElement.fromBgReadings(readings, dateUtil)
         if (selection.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${selection.size} CGMs selected for upload"))
+            tidepoolRepository.addLog("${selection.size} CGMs selected for upload")
         return selection
     }
 
@@ -262,7 +362,7 @@ class UploadChunk(
         }
 
         if (results.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${results.size} basal records selected for upload"))
+            tidepoolRepository.addLog("${results.size} basal records selected for upload")
         return results
     }
 
@@ -281,7 +381,7 @@ class UploadChunk(
             }
         }
         if (selection.isNotEmpty())
-            rxBus.send(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))
+            tidepoolRepository.addLog("${selection.size} ProfileSwitches selected for upload")
         return selection
     }
 

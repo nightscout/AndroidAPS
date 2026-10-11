@@ -155,6 +155,7 @@ class QuickLaunchConfigScreenTest {
     fun aQuickWizardEntryIsOfferedUnderItsOwnHeading() {
         val entry: QuickWizardEntry = mock()
         whenever(entry.guid()).thenReturn("qw-1")
+        whenever(entry.forDevice(QuickWizardEntry.DEVICE_PHONE)).thenReturn(true)
         whenever(viewModels.quickWizard.list()).thenReturn(arrayListOf(entry))
         viewModels.labelOf = { action ->
             if (action is QuickLaunchAction.QuickWizardAction) "Breakfast" else action.typeId
@@ -166,6 +167,34 @@ class QuickLaunchConfigScreenTest {
 
         compose.onNodeWithText(quickWizardHeader).assertIsDisplayed()
         compose.onNodeWithText("Breakfast").assertIsDisplayed()
+    }
+
+    @Test
+    fun aWatchOnlyQuickWizardEntryIsNotOffered() {
+        // The toolbar is on the phone, so a watch-only entry would never show there.
+        val entry: QuickWizardEntry = mock()
+        whenever(entry.guid()).thenReturn("qw-watch")
+        whenever(entry.forDevice(QuickWizardEntry.DEVICE_PHONE)).thenReturn(false)
+        whenever(viewModels.quickWizard.list()).thenReturn(arrayListOf(entry))
+
+        // Checked on the state: the section is below the fold, so "not on screen" proves nothing.
+        val viewModel = viewModels.build().also { it.loadState() }
+
+        assertThat(viewModel.uiState.value.availableQuickWizardItems).isEmpty()
+    }
+
+    @Test
+    fun anActionTheSetupDoesNotSupportIsNotOffered() {
+        // Prime/Fill on a patch pump: the resolver says it is not valid, so it must not be offered.
+        // Checked on the state, not on screen: the list is lazy, so a row below the fold would not
+        // exist on screen either and the test could not fail.
+        whenever(viewModels.resolver.isValid(QuickLaunchAction.Fill)).thenReturn(false)
+
+        val viewModel = viewModels.build().also { it.loadState() }
+
+        val offered = viewModel.uiState.value.availableStaticItems.map { it.action }
+        assertThat(offered).doesNotContain(QuickLaunchAction.Fill)
+        assertThat(offered).contains(QuickLaunchAction.BatteryChange)
     }
 
     // ---------------------------------------------------------------------------------------------

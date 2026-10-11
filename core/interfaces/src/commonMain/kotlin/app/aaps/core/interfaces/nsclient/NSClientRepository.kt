@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.nsclient
 
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.JsonElement
 
@@ -24,7 +25,7 @@ interface NSClientRepository {
     val urlUpdate: StateFlow<String>
 
     /** Log entries displayed in the UI, newest first */
-    val logList: StateFlow<List<NSClientLog>>
+    val logList: StateFlow<List<SyncLogEntry>>
 
     /** Update the queue size */
     fun updateQueueSize(size: Long)

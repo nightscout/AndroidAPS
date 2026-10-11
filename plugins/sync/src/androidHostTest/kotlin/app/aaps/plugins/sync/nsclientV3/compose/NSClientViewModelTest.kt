@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
-import app.aaps.core.interfaces.nsclient.NSClientLog
+import app.aaps.core.interfaces.sync.SyncLogEntry
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
@@ -28,7 +28,7 @@ internal class NSClientViewModelTest {
     private val queueSizeFlow = MutableStateFlow(Long.MIN_VALUE)
     private val statusFlow = MutableStateFlow("")
     private val urlFlow = MutableStateFlow("")
-    private val logListFlow = MutableStateFlow<List<NSClientLog>>(emptyList())
+    private val logListFlow = MutableStateFlow<List<SyncLogEntry>>(emptyList())
 
     private lateinit var sut: NSClientViewModel
 
@@ -88,7 +88,7 @@ internal class NSClientViewModelTest {
 
     @Test
     fun `logList flow updates uiState`() {
-        val logs = listOf(NSClientLog("action", "text"))
+        val logs = listOf(SyncLogEntry("action", "text"))
         logListFlow.value = logs
         assertThat(sut.uiState.value.logList).hasSize(1)
         assertThat(sut.uiState.value.logList[0].action).isEqualTo("action")

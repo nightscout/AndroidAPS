@@ -160,12 +160,12 @@ class ProfileElementTest {
     }
 
     @Test
-    fun `deviceId and deviceSerialNumber derive from serialNumber argument`() {
+    fun `deviceSerialNumber comes from the serialNumber argument`() {
         val sut = ProfileElement(buildEps(), serialNumber, dateUtil, profileUtil)
         val o = json(sut)
         assertThat(o.get("deviceSerialNumber").asString).isEqualTo(serialNumber)
-        assertThat(o.get("deviceId").asString).endsWith(serialNumber)
-        assertThat(o.get("deviceId").asString).contains(":$serialNumber")
+        // deviceId is set by UploadChunk for every record, see UploadChunkTest
+        assertThat(o.has("deviceId")).isFalse()
     }
 
     @Test

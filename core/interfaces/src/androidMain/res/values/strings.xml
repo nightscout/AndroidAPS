@@ -123,6 +123,7 @@
 
     <!-- Concentration -->
     <string name="u10">U10</string>
+    <string name="u20">U20</string>
     <string name="u40">U40</string>
     <string name="u50">U50</string>
     <string name="u100">U100</string>

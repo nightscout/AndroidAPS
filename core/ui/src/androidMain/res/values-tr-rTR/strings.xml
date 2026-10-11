@@ -424,7 +424,6 @@
     <string name="max_carbs_title">Maks izin verilen karbonhidrat [g]</string>
     <string name="patient_type">Hasta tipi</string>
     <!--    Protection-->
-    <string name="unlock_settings">Kilit açma ayarları</string>
     <!--    Pumps -->
     <string name="battery_label">Pil</string>
     <string name="reservoir_label">Rezervuar</string>

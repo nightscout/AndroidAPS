@@ -67,6 +67,7 @@ class QuickLaunchConfigViewModelFixture(private val screen: AapsScreenFixture) {
         whenever(activePlugin.getPluginsList()).thenReturn(arrayListOf())
         whenever(profileRepository.profiles).thenReturn(MutableStateFlow(emptyList()))
         whenever(sceneStore.getScenes()).thenReturn(emptyList())
+        whenever(resolver.isValid(any())).thenReturn(true)
         whenever(resolver.resolveItem(any())).thenAnswer { invocation ->
             val action = invocation.getArgument<QuickLaunchAction>(0)
             ResolvedQuickLaunchItem(

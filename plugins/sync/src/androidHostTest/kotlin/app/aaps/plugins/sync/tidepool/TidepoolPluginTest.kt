@@ -3,15 +3,16 @@ package app.aaps.plugins.sync.tidepool
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate
-import app.aaps.plugins.sync.nsclientV3.ReceiverDelegate.ConnectivityStatus
+import app.aaps.plugins.sync.nsclientV3.ConnectivityGate.ConnectivityStatus
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
+import app.aaps.plugins.sync.tidepool.comm.TidepoolReceiverDelegate
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
@@ -32,7 +33,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var tidepoolUploader: TidepoolUploader
     @Mock lateinit var uploadChunk: UploadChunk
-    @Mock lateinit var receiverDelegate: ReceiverDelegate
+    @Mock lateinit var receiverDelegate: TidepoolReceiverDelegate
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var authFlowOut: AuthFlowOut
     @Mock lateinit var tidepoolRepository: TidepoolRepository
@@ -48,8 +49,9 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         rateLimit = RateLimit(dateUtil)
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(connectivityFlow)
         whenever(persistenceLayer.observeChanges(anyOrNull<KClass<*>>())).thenReturn(emptyFlow())
+        whenever(tidepoolRepository.uploadRequests).thenReturn(MutableSharedFlow())
         tidepoolPlugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, rxBus, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer,
+            aapsLogger, rh, preferences, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer,
             mock()
         )
     }
@@ -91,11 +93,11 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         whenever(authFlowOut.connectionStatus).thenReturn(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN)
 
         val realUploader = TidepoolUploader(
-            aapsLogger, rxBus, context, preferences, uploadChunk,
+            aapsLogger, tidepoolRepository, context, preferences, uploadChunk,
             dateUtil, receiverDelegate, config, l, authFlowOut, rateLimit
         )
         val plugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, rxBus,
+            aapsLogger, rh, preferences,
             realUploader, uploadChunk, rateLimit,
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer, mock()
         )
@@ -115,11 +117,11 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         whenever(authFlowOut.connectionStatus).thenReturn(AuthFlowOut.ConnectionStatus.NOT_LOGGED_IN)
 
         val realUploader = TidepoolUploader(
-            aapsLogger, rxBus, context, preferences, uploadChunk,
+            aapsLogger, tidepoolRepository, context, preferences, uploadChunk,
             dateUtil, receiverDelegate, config, l, authFlowOut, rateLimit
         )
         val plugin = TidepoolPlugin(
-            aapsLogger, rh, preferences, rxBus,
+            aapsLogger, rh, preferences,
             realUploader, uploadChunk, rateLimit,
             receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer, mock()
         )

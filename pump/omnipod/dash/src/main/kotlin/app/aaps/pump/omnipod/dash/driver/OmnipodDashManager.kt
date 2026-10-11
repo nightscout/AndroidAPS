@@ -13,6 +13,13 @@ import java.util.concurrent.CountDownLatch
 
 interface OmnipodDashManager {
 
+    /**
+     * True from the moment [activatePodPart1] or [activatePodPart2] is subscribed until it completes,
+     * fails or is disposed. The activation talks to the pod outside the command queue, so the queue
+     * must not use or close the BLE link during this time.
+     */
+    val isActivationRunning: Boolean
+
     fun activatePodPart1(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent>
 
     fun activatePodPart2(basalProgram: BasalProgram, userConfiguredExpirationReminderHours: Long?, userConfiguredExpirationAlarmHours: Long?): Observable<PodEvent>

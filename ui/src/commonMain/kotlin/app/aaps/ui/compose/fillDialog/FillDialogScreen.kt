@@ -207,7 +207,8 @@ fun FillDialogScreen(
         onNotesChange = viewModel::updateNotes,
         onDateClick = { showDatePicker = true },
         onTimeClick = { showTimePicker = true },
-        onSettingsClick = if (uiState.simpleMode) null else {
+        // The settings edit the prime presets, so they go with the prime.
+        onSettingsClick = if (uiState.simpleMode || !uiState.primeAvailable) null else {
             { showButtonSettings = true }
         },
         onNavigateBack = onNavigateBack,
@@ -360,7 +361,9 @@ internal fun FillDialogContent(
                     // Prime/fill amount + presets. On an AAPSCLIENT the prime can't be delivered remotely (it's a
                     // physical at-the-pump action), so the input is shown but DISABLED (grayed); only the logging
                     // actions (site / cartridge / insulin-type change) work on a client. showBolus = !AAPSCLIENT.
-                    Column(modifier = itemModifier) {
+                    // A patch pump primes in its own activation wizard, and its cannula is already in the body: a
+                    // prime from here would be insulin outside IOB, so the section is not shown at all there.
+                    if (uiState.primeAvailable) Column(modifier = itemModifier) {
                         NumberInputRow(
                             labelRef = UiStrings.fill_prime_amount,
                             value = uiState.insulin,
