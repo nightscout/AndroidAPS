@@ -1,24 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">מצב פשוט</string>
+    <string name="pref_title_insulin_concentration">תמיכה בריכוזי אינסולין</string>
+    <string name="pref_summary_insulin_concentration">הפעל תמיכה בריכוזי אינסולין שונים (U50, U200 וכו\')</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">השאר את המסך דולק</string>
+    <string name="pref_summary_keep_screen_on">מנע מ-אנדרואיד לכבות את המסך. הוא יצרוך הרבה אנרגיה כאשר אינו מחובר לשקע חשמל.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">מנגנון ניטור בלוטות׳</string>
     <!-- Alert preferences -->
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">העלאת נתוני סוכר ל־Nightscout</string>
     <!-- APS preferences -->
+    <string name="pref_summary_aps_use_smb">הפעל סופר מיקרו בולוס. SMB מספק אינסולין באופן מיידי בתגובה לעליית סוכר בדם.</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">כאשר מזוהה רגישות מוגברת, העלה את ערך מטרת הסוכר.</string>
+    <string name="pref_summary_aps_resistance_lowers_target">כאשר מזוהה עמידות לאינסולין, הורד את ערך מטרת הסוכר.</string>
+    <string name="pref_summary_aps_always_use_short_deltas">השתמש תמיד בדלתא הממוצעת הקצרה במקום בדלתא הפשוטה לחישובי שינוי בסוכר.</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">אפשר ל־Autosens להתאים גם את ערך מטרת הסוכר, בנוסף לבזאלי ול־ISF.</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">ערכי מטרה זמניים נמוכים יפחיתו את הרגישות לאינסולין.</string>
+    <string name="pref_title_aps_use_autoisf_weights">הפעלת AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">הפעל התאמות ISF מבוססות משקלים של AutoISF.</string>
+    <string name="pref_title_aps_smb_on_even_target">הפעלת SMB גם בערך מטרה רגיל</string>
+    <string name="pref_summary_aps_smb_on_even_target">אפשרות חלופית להפעלת SMB תמיד, בהתאם לערך מטרת הגלוקוז.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">הפעלת דיווח קריסות באמצעות Fabric</string>
+    <string name="pref_title_maintenance_enable_export_automation">הפעלת ייצוא אוטומטי של הגדרות</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">החלפת פרופיל אוטומטית</string>
+    <string name="pref_summary_autotune_auto_switch_profile">החלף אוטומטית לפרופיל שנוצר על ידי Autotune לאחר סיום החישוב.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">סיווג UAM כבזאלי</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">התייחס לארוחות שלא הוכרזו כצורך באינסולין בזאלי לצורך חישובי Autotune.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">כוונון עקומת האינסולין</string>
+    <string name="pref_title_autotune_circadian_ic_isf">שימוש ב־IC/ISF לפי השעון הביולוגי</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">החל שונות יממתית על IC ו־ISF בחישובי Autotune.</string>
+    <string name="pref_title_autotune_additional_log">רישום נוסף ליומן</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">אפשר פקודות מרחוק באמצעות SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">דיווח ב־SMS כאשר המשאבה אינה זמינה</string>
+    <string name="pref_summary_sms_report_pump_unreachable">שלח הודעת SMS כאשר המשאבה הופכת ללא זמינה.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">העלאת מצב המשאבה ל־Nightscout</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">העלאת נתונים ל־Nightscout</string>
+    <string name="pref_summary_ns_upload_data">העלה טיפולים, בזאלי זמני ונתונים נוספים ל־Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">קבלת נתוני CGM מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_cgm">קבל קריאות CGM מ־Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">קבלת מאגר פרופילים מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_profile_store">קבל עדכונים למאגר הפרופילים מ־Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">קבלת ערכי מטרה זמניים מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_temp_target">קבל שינויים בערכי מטרה זמניים מ־Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">קבלת החלפות פרופיל מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_profile_switch">קבל אירועי החלפת פרופיל מ־Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">קבלת אינסולין מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_insulin">קבל טיפולי אינסולין מ־Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">קבלת פחמימות מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_carbs">קבל רשומות פחמימות מ־Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">קבלת אירועי טיפול מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_therapy_event">קבל אירועי טיפול מ־Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">קבלת מצב פעולה מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_running_mode">קבל שינויים במצב הפעולה מ־Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">קבלת TBR/EB מ־Nightscout</string>
+    <string name="pref_summary_ns_receive_tbr_eb">קבל קצבי בזאלי זמני ובולוסים ממושכים מ־Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">התראות Nightscout</string>
+    <string name="pref_title_ns_notifications_from_announcements">הכרזות Nightscout</string>
+    <string name="pref_title_ns_use_cellular">שימוש בנתונים סלולריים</string>
+    <string name="pref_title_ns_use_roaming">שימוש בנדידה</string>
+    <string name="pref_title_ns_use_wifi">שימוש ב־Wi‑Fi</string>
+    <string name="pref_title_ns_use_on_battery">סנכרון בזמן שימוש בסוללה</string>
+    <string name="pref_title_ns_use_on_charging">סנכרון בזמן טעינה</string>
+    <string name="pref_title_ns_log_app_start">רישום אירוע הפעלת האפליקציה</string>
+    <string name="pref_title_ns_create_announcements_from_errors">יצירת הכרזות משגיאות</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">יצירת הכרזות מדרישות לפחמימות</string>
+    <string name="pref_title_ns_slow_sync">שימוש בסנכרון איטי</string>
+    <string name="pref_title_ns_use_ws">שימוש ב־WebSockets</string>
+    <string name="pref_summary_ns_use_ws">השתמש ב־WebSockets לתקשורת בזמן אמת עם Nightscout.</string>
+    <string name="pref_title_ns_allow_client_control">אפשר שליטה ממכשיר לקוח</string>
+    <string name="pref_summary_ns_allow_client_control">אפשר למכשירי לקוח מצומדים לשלוח פקודות חתומות, כגון הפעלה או עצירה של תרחישים, דרך Nightscout.</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Wi‑Fi בלבד</string>
+    <string name="pref_title_openhumans_charging_only">רק בזמן טעינה</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">שליחת מצב ל־xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">שליחת IOB מפורט</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">שלח מידע מפורט על IOB ל־xDrip+ להצגה בתצוגות שעון.</string>
+    <string name="pref_title_xdrip_send_bgi">הצגת BGI</string>
+    <string name="pref_summary_xdrip_send_bgi">הצג את השפעת הסוכר בדם (BGI) בשורת המצב של xDrip+</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">שליטה באמצעות Wear</string>
+    <string name="pref_summary_wear_control">שליטה ב־AAPS משעון Android Wear.</string>
+    <string name="pref_title_wear_wizard_bg">כלול BG באשף</string>
+    <string name="pref_title_wear_wizard_tt">כלול ערך מטרה זמני באשף</string>
+    <string name="pref_title_wear_wizard_trend">כלול מגמה באשף</string>
+    <string name="pref_title_wear_wizard_cob">כלול COB באשף</string>
+    <string name="pref_title_wear_wizard_iob">כלול IOB באשף</string>
+    <string name="pref_title_wear_custom_watchface_authorization">אישור תצוגות שעון מותאמות אישית</string>
+    <string name="pref_title_wear_pushed_watchface">תצוגת שעון מותקנת בשעון</string>
+    <string name="wear_pushed_watchface_wfs" comment="Entry of a list setting: the built-in watchface made of AAPS complications">תצוגת שעון עם סיבוכים</string>
+    <string name="wear_pushed_watchface_cwf" comment="Entry of a list setting: the watchface loaded from a custom watchface zip file">תצוגת שעון מותאמת אישית</string>
+    <string name="pref_title_wear_notify_on_smb">התראה בעת מתן SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">שלח התראה לשעון כאשר ניתן SMB.</string>
+    <string name="pref_title_wear_broadcast_data">שידור נתונים לשעון</string>
+    <string name="pref_summary_wear_broadcast_data">שדר נתוני AAPS לאפליקציות שעון של צד שלישי באמצעות Intent.</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">ניהול סבב אתרי משאבה</string>
+    <string name="pref_title_site_rotation_manage_cgm">ניהול סבב אתרי CGM</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">תוספת פחמימות בלחצן 1</string>
+    <string name="pref_title_carbs_button_increment_2">תוספת פחמימות בלחצן 2</string>
+    <string name="pref_title_carbs_button_increment_3">תוספת פחמימות בלחצן 3</string>
     <string name="carb_increment_button_message">מספר פחמימות להוספה כאשר לוחצים על הלחצן</string>
+    <string name="pref_title_cage_warning">סף אזהרה לגיל הקנולה</string>
+    <string name="pref_title_cage_critical">סף קריטי לגיל הקנולה</string>
+    <string name="pref_title_iage_warning">סף אזהרה לגיל האינסולין</string>
+    <string name="pref_title_iage_critical">סף קריטי לגיל האינסולין</string>
+    <string name="pref_title_sage_warning">סף אזהרה לגיל החיישן</string>
+    <string name="pref_title_sage_critical">סף קריטי לגיל החיישן</string>
+    <string name="pref_title_sbat_warning">סף אזהרה לרמת סוללת החיישן</string>
+    <string name="pref_title_sbat_critical">סף קריטי לרמת סוללת החיישן</string>
+    <string name="pref_title_bage_warning">סף אזהרה לגיל סוללת המשאבה</string>
+    <string name="pref_title_bage_critical">סף קריטי לגיל סוללת המשאבה</string>
+    <string name="pref_title_res_warning">סף אזהרה לרמת המכל</string>
+    <string name="pref_title_res_critical">סף קריטי לרמת המכל</string>
+    <string name="pref_title_batt_warning">סף אזהרה לרמת סוללת המשאבה</string>
+    <string name="pref_title_batt_critical">סף קריטי לרמת סוללת המשאבה</string>
+    <string name="pref_title_bolus_percentage">אחוז הבולוס</string>
+    <string name="deliverpartofboluswizard">החל ערך זה על תיקון BG ופחמימות בתוצאת אשף הבולוס</string>
+    <string name="pref_title_reset_bolus_percentage_time">זמן איפוס אחוז הבולוס</string>
     <string name="deliver_part_of_boluswizard_reset_time">הוזרק 100% מהבולוס, אם ערך הסוכר בדם ישן </string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">זמן תפוגת ההגנה</string>
+    <string name="pref_title_protection_type_application">רמה 0: הגנה על האפליקציה</string>
+    <string name="pref_summary_protection_type_application">בעת הפעלת האפליקציה ובחזרה אליה. בלתי תלוי ברמות האחרות</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <string name="biometric">זיהוי ביומטרי</string>
     <string name="custom_password">סיסמא מותאמת אישית</string>
@@ -40,31 +153,103 @@
     <!-- IntKey: BG Source preferences -->
     <!-- IntKey: NS Client preferences -->
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">פרופיל משתמש לסבב אתרים</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">גבר</string>
+    <string name="site_rotation_profile_woman">אישה</string>
+    <string name="site_rotation_profile_child">ילד</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">יחידות</string>
     <!-- Formatted unit strings with value only -->
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_language">שפה</string>
+    <string name="lang_default">ברירת המחדל של המערכת</string>
+    <string name="lang_en">אנגלית</string>
+    <string name="lang_af">אפריקאנס</string>
+    <string name="lang_bg">בולגרית</string>
+    <string name="lang_cs">צ׳כית</string>
+    <string name="lang_de">גרמנית</string>
+    <string name="lang_dk">דנית</string>
+    <string name="lang_fr">צרפתית</string>
+    <string name="lang_nl">הולנדית</string>
+    <string name="lang_es">ספרדית</string>
+    <string name="lang_el">יוונית</string>
+    <string name="lang_ga">אירית</string>
+    <string name="lang_it">איטלקית</string>
+    <string name="lang_ko">קוריאנית</string>
+    <string name="lang_lt">ליטאית</string>
+    <string name="lang_nb">נורווגית</string>
+    <string name="lang_pl">פולנית</string>
+    <string name="lang_pt">פורטוגזית</string>
+    <string name="lang_pt_br">פורטוגזית (ברזיל)</string>
+    <string name="lang_ro">רומנית</string>
+    <string name="lang_ru">רוסית</string>
+    <string name="lang_sk">סלובקית</string>
+    <string name="lang_sv">שוודית</string>
+    <string name="lang_tr">טורקית</string>
+    <string name="lang_zh_tw">סינית מסורתית</string>
+    <string name="lang_zh_cn">סינית מפושטת</string>
+    <string name="pref_title_patient_name">שם</string>
+    <string name="pref_summary_patient_name">שם לזיהוי מופע AAPS זה (מוצג בדוחות ובסנכרון)</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">תיקיית AAPS</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">סיסמה ראשית</string>
+    <string name="pref_title_settings_password">סיסמת הגדרות</string>
+    <string name="pref_title_settings_pin">קוד PIN להגדרות</string>
+    <string name="pref_title_application_password">סיסמת האפליקציה</string>
+    <string name="pref_title_application_pin">קוד PIN לאפליקציה</string>
+    <string name="pref_title_bolus_password">סיסמת בולוס</string>
+    <string name="pref_title_bolus_pin">קוד PIN לבולוס</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">בחרו ערכת נושא כהה, בהירה או בהתאם להגדרת המערכת</string>
+    <string name="pref_title_app_color_scheme">ערכת הצבעים של האפליקציה</string>
+    <string name="pref_dark_theme">ערכת נושא כהה</string>
+    <string name="pref_light_theme">ערכת נושא בהירה</string>
+    <string name="pref_follow_system_theme">שימוש בערכת הנושא של המכשיר</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">גיל המטופל</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">כתובת דוא״ל לנמען</string>
+    <string name="pref_title_identification">זיהוי לדוחות קריסה</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">שירות מיקום</string>
+    <string name="automation_location_passive">שימוש במיקום פסיבי</string>
+    <string name="automation_location_network">שימוש במיקום מבוסס רשת</string>
+    <string name="automation_location_gps">שימוש במיקום GPS</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_otp_pin">תוספת PIN חובה בסוף האסימון</string>
     <string name="smscommunicator_otp_pin_summary">ספרות נוספות שיש לשנן ולהדביק בסוף כל אחת מהסיסמאות החד פעמיות</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">סוג משאבה</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">כתובת Nightscout</string>
+    <string name="ns_client_url_summary">הזינו את כתובת Nightscout שלכם (לדוגמה: https://yoursitename.yourplatform.dom)</string>
     <string name="ns_client_secret_title">סיסמת נייטסקאוט (API SECRET)</string>
+    <string name="ns_client_secret_summary">הזינו את סוד ה־API של Nightscout (לפחות 12 תווים)</string>
     <string name="nsclient_token_title">אסימון גישה של נייטסקאוט</string>
+    <string name="nsclient_token_summary">הזינו את אסימון הגישה של Nightscout (לפחות 17 תווים)</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">רשתות SSID מורשות (מופרדות בנקודה־פסיק)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">תוספת אינסולין בלחצן 1</string>
+    <string name="pref_title_insulin_button_increment_2">תוספת אינסולין בלחצן 2</string>
+    <string name="pref_title_insulin_button_increment_3">תוספת אינסולין בלחצן 3</string>
     <string name="insulin_increment_button_message">כמות האינסולין להוספה כאשר לוחצים על הלחצן</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">לחצן מילוי 1</string>
+    <string name="pref_title_fill_button_2">לחצן מילוי 2</string>
+    <string name="pref_title_fill_button_3">לחצן מילוי 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">בולוס מרבי</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">קצב בזאלי מרבי</string>
     <string name="openapsma_max_basal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
+    <string name="pref_title_smb_max_iob">IOB מרבי עבור SMB</string>
+    <string name="openapssmb_max_iob_summary">ערך זה נקרא Max IOB בהקשר של OpenAPS.\nOpenAPS לא יוסיף אינסולין נוסף אם ה־IOB הנוכחי גבוה מערך זה. הערך מושפע גם מסוג המטופל.</string>
+    <string name="pref_title_ama_max_iob">IOB מרבי עבור AMA</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">ערך ברירת מחדל: 2\n מעכב בולוס מופעל אחרי שאתם מזריקים בולוס ארוחה, כך שהלולאה לא תפצה ע\"י בזאלי זמני נמוך אחרי הארוחה. הדוגמה כאן וברירת המחדל היא 2; כך שהגדרה של משך פעילות אינסולין של 3 שעות משמעה שהעיכוב יחלוף בהדרגה בתוך 1.5 שעות (3 ש\' לחלק ל-2).</string>
@@ -76,6 +261,8 @@
     <string name="openapsama_smb_delivery_ratio_summary">ערך ברירת מחדל: 0.5 זוהי מגבלת בטיחות נוספת של OpenAPS המגדירה איזה חלק מסך האינסולין הנדרש יכול להינתן כ-SMB. מגבלה זו נועדה למנוע כפילות הזרקת SMB הנגרמת מפקודות מהמטפל המרוחק בנוסף למכשיר הראשי. יש להגדיל ערך ניסיוני זה בהדרגה ובזהירות.</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">ערך ברירת מחדל: 0.5 זהו הקצה הנמוך של יחס שמתגבר באופן ליניארי ולא ערך קבוע כפי שמצוין לעיל.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">סימון סוכר נמוך</string>
+    <string name="pref_title_high_mark">סימון סוכר גבוה</string>
     <!-- UnitDoubleKey: APS preferences -->
     <string name="lgs_threshold_summary">ערך הסוכר שמתחתיו מושעה הזרקת אינסולין. ערך ברירת המחדל משתמש במודל מטרה סטנדרטי. המשתמש יכול להגדיר ערך בין 60 ל-100 מג\"\\ד\"ל. ערכים מתחת ל-65 מביאים לשימוש במודל ברירת המחדל</string>
     <!-- IntentKey preferences -->
