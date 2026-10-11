@@ -98,6 +98,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonObject
@@ -1403,8 +1404,9 @@ class ComboV2Plugin(
     private val _previousPairingAttemptFailedFlow = MutableStateFlow(false)
     val previousPairingAttemptFailedFlow = _previousPairingAttemptFailedFlow.asStateFlow()
 
-    private var pairingJob: Job? = null
-    private var pairingPINChannel: Channel<PairingPIN>? = null
+    // Set on the UI thread, cleared by the pairing coroutine.
+    @Volatile private var pairingJob: Job? = null
+    @Volatile private var pairingPINChannel: Channel<PairingPIN>? = null
 
     fun startPairing() {
         val discoveryDuration = preferences.get(ComboIntKey.DiscoveryDuration)
@@ -1417,8 +1419,15 @@ class ComboV2Plugin(
         // Update the log level here in case the user changed it.
         updateComboCtlLogLevel()
 
+        // A cancelled attempt may still be busy in the background: its cleanup unpairs the
+        // Bluetooth device and deletes the pump state. Let it finish first, so that it cannot
+        // undo this new attempt.
+        val previousJob = pairingJob
+
         pairingJob = pumpCoroutineScope.async {
             try {
+                previousJob?.cancelAndJoin()
+
                 // Do the pairing attempt within runWithPermissionCheck()
                 // since pairing requires Bluetooth permissions.
                 val pairingResult = runWithPermissionCheck(
@@ -1466,19 +1475,26 @@ class ComboV2Plugin(
                 // this readStatus() call automatically.
                 commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_paired))
             } finally {
-                pairingJob = null
-                pairingPINChannel?.close()
-                pairingPINChannel = null
+                // Clear only what belongs to this attempt. A newer attempt may have replaced it.
+                if (pairingJob === coroutineContext.job) pairingJob = null
+                newPINChannel.close()
+                if (pairingPINChannel === newPINChannel) pairingPINChannel = null
             }
         }
     }
 
+    /**
+     * Cancels an ongoing pairing attempt.
+     *
+     * Returns at once and does not wait until the attempt has ended. That can take seconds (the
+     * Bluetooth cleanup), and the caller is the UI thread: waiting there froze the app (ANR). The
+     * pairing progress flow reports the cancellation, and [startPairing] waits for the old attempt.
+     */
     fun cancelPairing() {
-        runBlocking {
-            aapsLogger.debug(LTag.PUMP, "Cancelling pairing")
-            pairingJob?.cancelAndJoin()
-            aapsLogger.debug(LTag.PUMP, "Pairing cancelled")
-        }
+        val job = pairingJob ?: return
+        aapsLogger.debug(LTag.PUMP, "Cancelling pairing")
+        job.cancel()
+        job.invokeOnCompletion { aapsLogger.debug(LTag.PUMP, "Pairing cancelled") }
     }
 
     suspend fun providePairingPIN(pairingPIN: PairingPIN) {
