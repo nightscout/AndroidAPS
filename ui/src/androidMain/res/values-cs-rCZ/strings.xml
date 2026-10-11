@@ -166,7 +166,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">Chybí %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100 % okamžité sacharidy, žádné prodloužené sacharidy</string>
-    <string name="wizard_carbs_type_desc">Sacharidy snížené o %1$d %%, přidané eSACH %2$d %% zpožděné o %3$d min po dobu %4$d h</string>
     <string name="wizard_include_info">Klepnutím zahrnete/vyloučíte z výpočtu:\n Gly – glykémie (na začátku ZAPNUTO)\n TT – dočasný cíl (na začátku ZAPNUTO)\n Trend – trend glykémie (poslední stav zapamatován)\n IOB – insulin on board (na začátku ZAPNUTO)\n COB – sacharidy on board (poslední stav zapamatován)</string>
     <!-- Treatments -->
     <string name="no_records_available">Nejsou k dispozici žádné záznamy</string>
