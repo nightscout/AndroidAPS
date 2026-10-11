@@ -147,6 +147,5 @@
     <string name="bolus_constraint_applied_warn">Este aplicată limitarea bolusului %1$.2f U la %2$.2f U</string>
     <string name="bolus_recorded_only">Bolusul doar va fi înregistrat (nu va fi administrat de pompă)</string>
     <string name="advisoralarm">Executați alarma când este timpul să mâncați</string>
-    <string name="wizard_ecarbs">carbohidrați extinși %1$dg / %2$dh (+%3$dmin)</string>
     <string name="format_insulin_units">%1$.2f U</string>
 </resources>
