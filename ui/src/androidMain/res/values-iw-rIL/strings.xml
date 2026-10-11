@@ -26,6 +26,7 @@
     <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
     <!-- Scene -->
     <!-- Insulin Management -->
+    <string name="insulin_name_exists">שם האינסולין %1$s כבר קיים. יש לבחור שם אחר</string>
     <!-- Client→master round-trip pending dialog -->
     <!-- Partial success (e.g. a scene chained but some of the target\'s actions failed) — not a rejection -->
     <!-- %1$s = action label -->
@@ -53,11 +54,26 @@
     <string name="user_entry">קלט המשתמש</string>
     <string name="clone_label">שכפול</string>
     <string name="activate_profile">הפעלת פרופיל</string>
+    <string name="remove_label">הסרה</string>
+    <string name="active_profile_indicator">פעיל</string>
+    <string name="confirm_remove_profile">להסיר את הפרופיל \"%1$s\"?</string>
+    <string name="confirm_clone_profile">לשכפל את הפרופיל \"%1$s\"?</string>
+    <string name="profile_no_longer_exists">רשימת הפרופילים השתנתה בינתיים — נא לנסות שוב</string>
+    <string name="tbr_type_flag_extended">וגם</string>
+    <string name="tbr_type_flag_suspended">ש\'</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">סוג פרופיל</string>
+    <string name="profile_parameters">פרמטרים של הפרופיל</string>
+    <string name="active_profile">פרופיל פעיל</string>
+    <string name="available_profiles">פרופילים זמינים</string>
     <string name="profile_switches">החלפות פרופיל</string>
     <string name="basal_pct_from_tdd_label">% של הבזאלי</string>
     <string name="selected_profile">נבחר:</string>
+    <string name="comparation">השוואה</string>
+    <string name="profile_tab_1">פרופיל 1</string>
+    <string name="profile_tab_2">פרופיל 2</string>
     <string name="motol_default_profile">פרופיל ברירת מחדל</string>
     <string name="current_profile">פרופיל נוכחי</string>
     <string name="available_profile">פרופיל זמין</string>
@@ -67,16 +83,101 @@
     <string name="dpv_default_profile">פרופיל ברירת מחדל DPV</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
+    <string name="overview_edit_quickwizard_button_text">טקסט הכפתור</string>
+    <string name="quick_wizard_mode_wizard">אשף</string>
+    <string name="quick_wizard_mode_insulin">אינסולין</string>
+    <string name="quick_wizard_mode_carbs">פחמימות</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">אינסולין פעיל חיובי בלבד</string>
+    <string name="overview_edit_quickwizard_superbolus">סופר בולוס</string>
     <!--    History browser-->
+    <string name="history_now">עכשיו</string>
+    <string name="a11y_history_previous_window">החלון הקודם</string>
+    <string name="a11y_history_next_window">החלון הבא</string>
+    <string name="additional_ecarbs">הוסף פחמימות ממושכות</string>
+    <string name="calculator_options">אפשרויות מחשבון</string>
+    <string name="use_bg">שימוש ב־BG</string>
+    <string name="use_cob">שימוש ב־COB</string>
+    <string name="use_iob">שימוש ב־IOB</string>
+    <string name="use_trend">שימוש במגמה</string>
+    <string name="trend_all">הכול</string>
+    <string name="trend_positive_only">חיובי בלבד</string>
+    <string name="trend_negative_only">שלילי בלבד</string>
+    <string name="use_temp_target">שימוש בערך מטרה זמני</string>
+    <string name="use_alarm">השתמש בהתרעה</string>
+    <string name="device_selection">בחירת מכשיר</string>
+    <string name="show_on_phone">הצג בטלפון</string>
+    <string name="show_on_watch">הצג בשעון</string>
+    <string name="ecarbs_additional">פחמימות נוספות</string>
+    <string name="valid_from_to">טווח זמן תקף</string>
+    <string name="carb_time">זמן הפחמימות</string>
+    <string name="save_changes_question">לשמור את השינויים ברשומה זו?</string>
+    <string name="wizard_no_insulin_required">לא נדרש אינסולין</string>
+    <string name="carbs_constraint_violation">כמות הפחמימות הוגבלה על ידי מגבלות הבטיחות</string>
+    <string name="insulin_constraint_violation">כמות האינסולין הוגבלה על ידי מגבלות הבטיחות</string>
     <string name="confirm_treatment">אשר טיפול</string>
     <string name="recalculate">חשב מחדש</string>
     <!--    Widget-->
     <string name="use_black_color">השתמש בצבע שחור</string>
     <string name="widget_configuration">תצורת ווידג\'ט</string>
+    <string name="until_changed">עד שישתנה</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">נדרשות הרשאות</string>
+    <string name="permission_sheet_subtitle">נדרשות הרשאות מסוימות כדי שהאפליקציה תפעל כראוי</string>
+    <string name="permission_grant">מתן הרשאה</string>
+    <string name="permission_change">שינוי</string>
+    <string name="permission_denied_go_to_settings">ההרשאה נדחתה לצמיתות. אנא הפעל אותה בהגדרות האפליקציה.</string>
+    <string name="permission_open_settings">הגדרות</string>
+    <string name="permission_directory_picker_error">לא ניתן לפתוח את בוחר התיקיות. בדרך כלל מדובר בבעיה ב־Android או ב־Family Link.</string>
+    <string name="permission_nav_label">הרשאות</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">היסט מחזור</string>
+    <string name="raw_tdd">TDD גולמי</string>
+    <string name="cleaned_tdd">TDD מתוקן</string>
+    <string name="cleaned_tdd_explanation">TDD בניכוי אינסולין שניתן עבור פחמימות.</string>
+    <string name="cycle_lines_legend">מחזורים נפרדים</string>
+    <string name="cycles_found">נמצאו %1$d מחזורים (%2$d ימים)</string>
+    <string name="cycle_day1_date">יום 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">מתבצע חישוב… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">אין מספיק נתונים (נדרשים לפחות 56 ימים עבור 2 מחזורים)</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>גם וגם</item>
+        <item>חיובי בלבד</item>
+        <item>שלילי בלבד</item>
+    </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">פעולות שנבחרו</string>
+    <string name="quick_launch_no_dynamic_items">אין פריטים זמינים</string>
+    <string name="quick_launch_category_treatment">טיפול</string>
+    <string name="quick_launch_category_care">פורטל הטיפולים</string>
+    <string name="quick_launch_category_profile">פרופיל</string>
+    <string name="quick_launch_category_temp_target">ערכי מטרה זמניים מוגדרים מראש</string>
+    <string name="quick_launch_category_quick_wizard">אשף מהיר</string>
+    <string name="quick_launch_category_automation">אוטומציה</string>
+    <string name="quick_launch_all_selected">כל הפריטים נבחרו</string>
+    <string name="quick_launch_no_quick_wizard">הוסיפו רשומות לאשף המהיר כדי להשתמש בהן כאן</string>
+    <string name="quick_launch_no_automation">צרו פעולות אוטומציה של משתמש כדי להשתמש בהן כאן</string>
+    <string name="quick_launch_no_tt_presets">הוסיפו ערכי מטרה זמניים מוגדרים מראש כדי להשתמש בהם כאן</string>
+    <string name="quick_launch_no_profiles">צרו פרופילים ב־Local Profile כדי להשתמש בהם כאן</string>
+    <string name="quick_launch_edit_profile_preset">עריכת הגדרת פרופיל</string>
+    <string name="quick_launch_profile_permanent">קבוע</string>
+    <string name="select_arrow">בחירת חץ</string>
+    <string name="loop_accept_nav_label">לולאה</string>
+    <string name="loop_accept_set_basal_question">לאשר בזאלי זמני חדש:</string>
+    <string name="loop_accept_perform">לבצע</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">מושבת</string>
+    <string name="widget_rm_suspended">מושהה</string>
+    <string name="widget_rm_resume">חידוש</string>
     <!-- Calibration entry rejection reasons -->
+    <string name="cal_reject_delta_too_high">הכיול לא נשמר: רמת הסוכר משתנה מהר מדי (הפרש%1$s %3$s ב-5 דקות, גבול %2$s). נסו שוב כשהסוכר יתייצב.</string>
+    <string name="cal_reject_no_pair">הכיול לא נשמר: לא נמצאה קריאת חיישן ב-10 הדקות האחרונות.</string>
+    <string name="cal_reject_warmup">הכיול לא נשמר: החיישן עדיין נמצא בזמן החימום.</string>
+    <string name="cal_reject_no_session">הכיול לא נשמר: לא רשום חיישן פעיל. יש לרשום חיישן פעיל תחילה.</string>
     <!-- Calibration preflight messages shown in the dialog before submit -->
+    <string name="cal_precheck_warmup">החיישן בחימום. הכיול יהיה זמין ב-%1$s.</string>
+    <string name="cal_precheck_no_session">לא רשום חיישן פעיל.</string>
+    <string name="cal_precheck_no_pair">לא נרשמו נתוני חיישן ב-10 הדקות האחרונות. נא לוודא את חיבור החיישן.</string>
+    <string name="cal_precheck_delta_too_high">רמת הסוכר מתנה מהר מדי (הפרש %1$s %3$s ב-5 דקות, גבול %2$s). נא להמתין להתייצבות הסוכר.</string>
+    <string name="cal_precheck_mark_sensor_change">רשום החלפת חיישן</string>
 </resources>
