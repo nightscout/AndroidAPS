@@ -187,6 +187,7 @@ class WizardDialogViewModel(
 
         _uiState.update {
             WizardDialogUiState(
+                initialized = true,
                 // User inputs
                 bg = currentBg,
                 carbs = initialCarbs ?: 0,

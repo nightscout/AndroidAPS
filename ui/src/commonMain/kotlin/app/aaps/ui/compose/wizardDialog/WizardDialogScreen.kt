@@ -83,7 +83,6 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
-import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -102,6 +101,7 @@ import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.components.RecordOnlyBanner
 import kotlinx.coroutines.launch
 
 @Composable
@@ -244,26 +244,29 @@ internal fun WizardDialogContent(
 
     Scaffold(
         topBar = {
-            AapsTopAppBar(
-                title = { Text((stringResourceOrNull(ElementType.BOLUS_WIZARD.label()) ?: "")) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiStrings.close)
-                        )
+            Column {
+                AapsTopAppBar(
+                    title = { Text((stringResourceOrNull(ElementType.BOLUS_WIZARD.label()) ?: "")) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(CoreUiStrings.close)
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onSettingsClick) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(CoreUiStrings.settings),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
-                },
-                actions = {
-                    IconButton(onClick = onSettingsClick) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(CoreUiStrings.settings),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            )
+                )
+                if (uiState.forcedRecordOnly) RecordOnlyBanner()
+            }
         },
         bottomBar = {
             // The button shows only the amounts, so a screen reader would say just "2.5 U" and never
@@ -317,11 +320,6 @@ internal fun WizardDialogContent(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // --- Forced-record-only warning ---
-            if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(InterfacesStrings.bolus_recorded_only))
-            }
-
             // --- Calculation Card (expandable, at top) ---
             val calculationExpandRequester = rememberBringIntoViewOnExpand(uiState.calculationExpanded)
             Card(
@@ -609,9 +607,14 @@ internal fun WizardDialogContent(
 
             val bgIsOld = !uiState.hasBgData || uiState.bgAgeMinutes > 9
             var bgExpanded by rememberSaveable { mutableStateOf(false) }
-            LaunchedEffect(bgIsOld) {
-                if (bgIsOld) bgExpanded = true
+            // Wait for the real values. The first frames show the default state, which has no BG, so
+            // without this check the BG input opened every time and stayed open for a fresh BG too.
+            LaunchedEffect(uiState.initialized, bgIsOld) {
+                if (uiState.initialized && bgIsOld) bgExpanded = true
             }
+            // Scroll to the BG input only when the user opened it. When it opens by itself (old BG),
+            // a scroll would move the top of the screen away before the user has read it.
+            var bgExpandedByUser by remember { mutableStateOf(false) }
             var percentageExpanded by rememberSaveable { mutableStateOf(false) }
 
             Card(
@@ -724,7 +727,7 @@ internal fun WizardDialogContent(
                         modifier = itemModifier
                     )
                     // BG (collapsible, auto-expand when old/missing)
-                    val bgExpandRequester = rememberBringIntoViewOnExpand(bgExpanded)
+                    val bgExpandRequester = rememberBringIntoViewOnExpand(bgExpandedByUser)
                     Column(modifier = itemModifier.bringIntoViewRequester(bgExpandRequester)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -767,7 +770,10 @@ internal fun WizardDialogContent(
                                 }
                             }
                             if (!bgExpanded) {
-                                FilledTonalButton(onClick = { bgExpanded = true }) {
+                                FilledTonalButton(onClick = {
+                                    bgExpanded = true
+                                    bgExpandedByUser = true
+                                }) {
                                     Text(stringResource(CoreUiStrings.change))
                                 }
                             }

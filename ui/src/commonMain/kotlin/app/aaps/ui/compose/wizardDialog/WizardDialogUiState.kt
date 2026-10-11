@@ -17,6 +17,12 @@ enum class CarbsType(
 
 @Immutable
 data class WizardDialogUiState(
+    /**
+     * False until the ViewModel has loaded the real values. The screen is drawn from the defaults
+     * below before that, and they say "no BG", so nothing should be decided from them.
+     */
+    val initialized: Boolean = false,
+
     // User inputs
     val bg: Double = 0.0,
     val carbs: Int = 0,
@@ -34,7 +40,6 @@ data class WizardDialogUiState(
     val useIOB: Boolean = true,
     val useCOB: Boolean = false,
     val alarmChecked: Boolean = false,
-    val advancedExpanded: Boolean = false,
     val calculationExpanded: Boolean = false,
 
     // Config (set once in init)

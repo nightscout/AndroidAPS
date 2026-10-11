@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.insulinDialog
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -40,7 +38,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -57,7 +54,6 @@ import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.InsulinSelector
 import app.aaps.core.ui.compose.LabeledSwitch
 import app.aaps.core.ui.compose.NumberInputRow
-import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -72,6 +68,7 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.EventDatePicker
 import app.aaps.ui.compose.EventTimePicker
 import app.aaps.ui.compose.components.DialogStatusBar
+import app.aaps.ui.compose.components.RecordOnlyBanner
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
@@ -228,28 +225,33 @@ internal fun InsulinDialogContent(
 
     Scaffold(
         topBar = {
-            AapsTopAppBar(
-                title = { Text((stringResourceOrNull(ElementType.INSULIN.label()) ?: "")) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiStrings.close)
-                        )
-                    }
-                },
-                actions = {
-                    if (onSettingsClick != null) {
-                        IconButton(onClick = onSettingsClick) {
+            Column {
+                AapsTopAppBar(
+                    title = { Text((stringResourceOrNull(ElementType.INSULIN.label()) ?: "")) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
                             Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(CoreUiStrings.settings),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(CoreUiStrings.close)
                             )
                         }
+                    },
+                    actions = {
+                        if (onSettingsClick != null) {
+                            IconButton(onClick = onSettingsClick) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = stringResource(CoreUiStrings.settings),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
-                }
-            )
+                )
+                // Same as the treatment dialog. Here it was only a red label, so a screen reader user
+                // was never told that this insulin will be recorded and NOT given by the pump.
+                if (uiState.forcedRecordOnly) RecordOnlyBanner()
+            }
         },
         bottomBar = {
             // One text for both the visible label and the screen reader, so the two cannot drift apart.
@@ -281,12 +283,6 @@ internal fun InsulinDialogContent(
             }
         }
     ) { paddingValues ->
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(4.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -299,13 +295,6 @@ internal fun InsulinDialogContent(
         ) {
             // --- Status Bar ---
             DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
-
-            // --- Forced-record-only warning ---
-            // Same as the treatment dialog. Here it was only a red label, so a screen reader user
-            // was never told that this insulin will be recorded and NOT given by the pump.
-            if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(InterfacesStrings.bolus_recorded_only))
-            }
 
             // --- Card 1: Switches ---
             Card(
