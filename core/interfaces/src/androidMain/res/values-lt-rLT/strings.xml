@@ -157,6 +157,5 @@
     <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Įspėti apie laiką valgyti</string>
-    <string name="wizard_ecarbs">iAV %1$d g / %2$d val. (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f V</string>
 </resources>
