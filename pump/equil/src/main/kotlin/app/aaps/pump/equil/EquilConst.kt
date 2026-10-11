@@ -6,8 +6,11 @@ object EquilConst {
     const val EQUIL_BLE_WRITE_TIME_OUT: Long = 20
     const val EQUIL_BLE_NEXT_CMD: Long = 500
 
-    /** Bolus speed of the pump: 0.05 U per 2 s, 1.5 U/min. Measured: 12 U in 477 s. */
-    const val EQUIL_BOLUS_UNITS_PER_SECOND = 0.025
+    /**
+     * Standard bolus duration: 40 s per unit = 1.5 U/min. The user can choose a faster one
+     * (EquilIntPreferenceKey.EquilBolusSpeed). Measured on a real pump: 12 U in 477 s.
+     */
+    const val EQUIL_BOLUS_SECONDS_PER_UNIT_STANDARD = 40
 
     /** How long the scan for the pump's advertisement may run when the pump address is known. */
     const val EQUIL_ADVERT_SCAN_TIME_OUT: Long = 30000

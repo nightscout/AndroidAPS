@@ -482,7 +482,8 @@ class EquilPumpPlugin(
         items = listOf(
             EquilBooleanPreferenceKey.EquilAlarmBattery,
             EquilBooleanPreferenceKey.EquilAlarmInsulin,
-            EquilIntPreferenceKey.EquilTone
+            EquilIntPreferenceKey.EquilTone,
+            EquilIntPreferenceKey.EquilBolusSpeed
         ),
         icon = pluginDescription.icon
     )

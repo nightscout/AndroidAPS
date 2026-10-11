@@ -48,11 +48,12 @@ object PumpEvent {
     )
 
     /**
-     * "Battery empty!" (5, 0, 2) or "Reservoir empty" (4, 1, 2): the pump stops all delivery, basal too,
-     * at this moment. After an empty reservoir it rewinds the piston at once.
+     * "Battery empty!" (5, 0, 2), "Reservoir empty" (4, 1, 2) or "Abnormal infusion stopped" (5, 1, 2):
+     * the pump stops all delivery, basal too, at this moment. After the last two it rewinds the piston
+     * at once and needs a reservoir change. A bolus that was too fast for the pump ended like that (#5142).
      */
     fun stopsDelivery(port: Int, type: Int, level: Int): Boolean =
-        (port == 5 && type == 0 && level == 2) || (port == 4 && type == 1 && level == 2)
+        (port == 5 && type == 0 && level == 2) || (port == 4 && type == 1 && level == 2) || (port == 5 && type == 1 && level == 2)
 
     fun getErrorString(rh: ResourceHelper, port: Int, type: Int, level: Int): String =
         errorResMap[Triple(port, type, level)]?.let { rh.gs(it) } ?: ""

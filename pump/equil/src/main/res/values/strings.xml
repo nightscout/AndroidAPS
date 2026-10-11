@@ -26,6 +26,12 @@
     <string name="equil_title_unpair_detach">Detach pump</string>
     <string name="equil_title_history_events">History events</string>
     <string name="equil_tone">Alert tone</string>
+    <string name="equil_bolus_speed">Bolus speed</string>
+    <string name="equil_bolus_speed_summary">A faster bolus may give more occlusion alarms.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1.5 U/min (standard)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/min</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/min</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/min</string>
     <string name="equil_tone_mode_mute">Mute</string>
     <string name="equil_tone_mode_shake">Vibrate only</string>
     <string name="equil_tone_mode_tone">Tone only</string>

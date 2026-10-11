@@ -351,7 +351,7 @@ class EquilManagerTest : TestBaseWithProfile() {
         val result = pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(12.0)
         readEmptyReservoirHistory() // read right after the bolus
 
-        equilManager.correctBolusIfDeliveryStopped(result, bolus, bolusStart, bolusEnd)
+        equilManager.correctBolusIfDeliveryStopped(result, bolus, bolusStart, bolusEnd, 12.0 / 480)
 
         // 477 s x 1.5 U/min = 11.925 U, rounded up to the 0.05 U step.
         assertEquals(11.95, result.bolusDelivered, 0.0001)
@@ -370,10 +370,35 @@ class EquilManagerTest : TestBaseWithProfile() {
         val result = pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(2.0)
         equilManager.decodeHistory(historyRecord(1714, bolusStart - 60 * minute, 4, 1, 2))
 
-        equilManager.correctBolusIfDeliveryStopped(result, bolus, bolusStart, bolusStart + 80_000)
+        equilManager.correctBolusIfDeliveryStopped(result, bolus, bolusStart, bolusStart + 80_000, 2.0 / 80)
 
         assertEquals(2.0, result.bolusDelivered, 0.0001)
         verify(pumpSync, never()).syncBolusWithPumpId(any(), any(), anyOrNull(), any(), any(), any())
+    }
+
+    @Test
+    fun `a bolus the pump stopped as abnormal records what was given (real records 1741-1743)`() = runTest {
+        prepareHistory()
+        whenever(rh.gs(R.string.equil_history_item18)).thenReturn("Abnormal infusion stopped")
+        whenever(rh.gs(eq(R.string.equil_bolus_stopped), anyOrNull(), anyOrNull())).thenReturn("Bolus stopped")
+        val alarms = collectAlarms()
+        // 1 U sent with 2 s (30 U/min): the pump stopped it in the same second and rewound.
+        val bolus = DetailedBolusInfo().apply { insulin = 1.0; timestamp = bolusStart }
+        val result = pumpEnactResultProvider().success(true).enacted(true).bolusDelivered(1.0)
+        listOf(
+            historyRecord(1741, bolusStart, 4, 11, 0),     // TBR end
+            historyRecord(1742, bolusStart, 5, 1, 2),      // abnormal infusion stopped
+            historyRecord(1743, bolusStart, 4, 8, 0)       // rewind
+        ).forEach { equilManager.decodeHistory(it) }
+
+        equilManager.correctBolusIfDeliveryStopped(result, bolus, bolusStart, bolusStart + 40_000, 1.0 / 2)
+
+        // Nothing was given; it used to be recorded as 1 U. The pump also stopped basal.
+        assertEquals(0.0, result.bolusDelivered, 0.0001)
+        assertEquals(listOf("Abnormal infusion stopped", "Bolus stopped"), alarms.map { it.tips })
+        verify(pumpSync).syncTemporaryBasalWithPumpId(
+            eq(bolusStart), any(), eq(4800 * minute), any(), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(bolusStart), any(), any()
+        )
     }
 
     @Test
