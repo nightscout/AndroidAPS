@@ -737,6 +737,7 @@
     <string name="wizard_carb_time">Tempo Carbo</string>
     <string name="carb_time_now">Adesso</string>
     <string name="change">Cambiare</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Concedi</string>
     <string name="set">Imposta</string>
     <string name="wizard_set_alarm">Imposta allarme</string>
