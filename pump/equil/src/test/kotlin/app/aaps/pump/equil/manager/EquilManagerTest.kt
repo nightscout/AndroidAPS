@@ -1,5 +1,6 @@
 package app.aaps.pump.equil.manager
 
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -245,11 +246,14 @@ class EquilManagerTest : TestBaseWithProfile() {
         // The rewinds used to raise "auto off" twice per reservoir change.
         assertEquals(emptyList<EventEquilAlarm>(), alarms)
         verify(pumpSync, never()).syncTemporaryBasalWithPumpId(any(), any(), any(), any(), any(), any(), any(), any())
+        // Nothing for the careportal either: a reservoir change is recorded by the wizard.
+        verify(pumpSync, never()).insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any())
     }
 
     @Test
     fun `a dead battery gets a 0 U per hour gap until delivery starts again (real records 1561-1568)`() = runTest {
         prepareHistory()
+        whenever(rh.gs(R.string.equil_history_item16)).thenReturn("Battery empty!")
         val alarms = collectAlarms()
         val empty = now - 300 * minute
         val powerOn = now - 10 * minute
@@ -274,6 +278,9 @@ class EquilManagerTest : TestBaseWithProfile() {
         assertEquals(listOf(4800 * minute, delivering - empty), durations.allValues)
         assertEquals(null, equilManager.equilState?.deliveryStoppedAt)
         assertEquals(emptyList<EventEquilAlarm>(), alarms)
+        // No alarm (the pump was dead), but the careportal shows when and why it stopped (#4132).
+        verify(pumpSync).insertTherapyEventIfNewWithTimestamp(eq(empty), eq(TE.Type.ANNOUNCEMENT), eq("Battery empty!"), anyOrNull(), eq(PumpType.EQUIL), eq("7000F3"))
+        verify(pumpSync, times(1)).insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -322,6 +329,9 @@ class EquilManagerTest : TestBaseWithProfile() {
             eq(empty), argThat<PumpRate> { cU == 0.0 }, eq(4800 * minute), eq(true), eq(PumpSync.TemporaryBasalType.PUMP_SUSPEND), eq(empty), eq(PumpType.EQUIL), eq("7000F3")
         )
         assertEquals(empty, equilManager.equilState?.deliveryStoppedAt)
+        // In the careportal at the pump's time; "reservoir low" (4, 1, 1) is not recorded.
+        verify(pumpSync).insertTherapyEventIfNewWithTimestamp(eq(empty), eq(TE.Type.ANNOUNCEMENT), eq("Reservoir empty"), anyOrNull(), eq(PumpType.EQUIL), eq("7000F3"))
+        verify(pumpSync, times(1)).insertTherapyEventIfNewWithTimestamp(any(), any(), anyOrNull(), anyOrNull(), any(), any())
     }
 
     @Test

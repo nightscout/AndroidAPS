@@ -2,6 +2,7 @@ package app.aaps.pump.equil.manager
 
 import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.di.ApplicationScope
@@ -854,6 +855,7 @@ class EquilManager(
         val errorTips = getEquilError(port, type, level)
         if (errorTips.isNotEmpty()) raiseAlarm(errorTips, eventTime)
         syncDeliveryStoppedGap(port, type, level, rate, eventTime)
+        recordInCareportal(port, type, level, errorTips, eventTime)
         rxBus.send(EventEquilDataChanged())
     }
 
@@ -870,6 +872,23 @@ class EquilManager(
         equilHistoryRecordDao.insert(record)
         val recent = dateUtil.now() - eventTime < T.mins(ALARM_SOUND_MAX_AGE_MINUTES).msecs()
         rxBus.send(EventEquilAlarm(text, sound = recent))
+    }
+
+    /**
+     * Pump alarms and events that stop delivery are also written to the careportal as an announcement,
+     * at the pump's own time, so the user can see later when and why the pump stopped (#4132). Battery
+     * empty is not an alarm (the pump is dead then), but it is recorded. Reading the same record again
+     * does not create a second entry: the event is only inserted if none exists at that time.
+     */
+    private fun recordInCareportal(port: Int, type: Int, level: Int, errorTips: String, eventTime: Long) {
+        val note = errorTips.ifEmpty {
+            if (PumpEvent.stopsDelivery(port, type, level)) PumpEvent.getEventStringRes(port, type, level)?.let { rh.gs(it) } ?: "" else ""
+        }
+        if (note.isEmpty()) return
+        val serial = getSerialNumber()
+        launchPumpSync {
+            pumpSync.insertTherapyEventIfNewWithTimestamp(eventTime, TE.Type.ANNOUNCEMENT, note, null, PumpType.EQUIL, serial)
+        }
     }
 
     /**
