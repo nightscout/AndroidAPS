@@ -764,7 +764,6 @@
     <string name="max_carbs_title">Max CHO consentiti [g]</string>
     <string name="patient_type">Tipo paziente</string>
     <!--    Protection-->
-    <string name="unlock_settings">Impostazioni sblocco</string>
     <!--    Pumps -->
     <string name="battery_label">Batteria</string>
     <string name="reservoir_label">Serbatoio</string>

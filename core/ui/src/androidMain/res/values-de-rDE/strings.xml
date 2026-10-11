@@ -363,7 +363,6 @@
     <string name="max_carbs_title">Max erlaubte KH [g]</string>
     <string name="patient_type">Patiententyp</string>
     <!--    Protection-->
-    <string name="unlock_settings">Einstellungen freischalten</string>
     <!--    Pumps -->
     <string name="battery_label">Batterie</string>
     <string name="reservoir_label">Reservoir</string>
