@@ -40,8 +40,6 @@
     <string name="equil_error_set_temp_basal_failed_validation">Midlertidig basalvarighet må være større enn null og et multiplum av %1$s minutter.</string>
     <string name="equil_basal_exceeds_max">Profilens basalrate på %1$s U/t overskrider pumpens maksimale basalrate på %2$s U/t. Øk maksimal basalrate i innstillingene og koble til pumpen på nytt.</string>
     <string name="equil_not_enough_insulin">Ikke nok insulin igjen i reservoaret</string>
-    <string name="equil_low_battery">Lavt batterinivå</string>
-    <string name="equil_low_insulin">Ikke nok insulin igjen i reservoaret</string>
     <string name="equil_pump_not_run">Pumpen kjører ikke</string>
     <string name="equil_pair">Paring</string>
     <string name="equil_pair_error">Paringsfeil</string>
