@@ -163,7 +163,6 @@
     <!-- WizardDialog -->
     <string name="missing_carbs">Нужни %1$d гр</string>
     <string name="wizard_carbs_type_bread_desc">100% въглехидрати веднага, без удължени въглехидрати</string>
-    <string name="wizard_carbs_type_desc">Въглехидрати намалени с %1$d%%, удължени %2$d%% след %3$dмин с продължителност %4$dч</string>
     <string name="wizard_include_info">Натиснетете за да включите/изключите от изчисленията:\n• КЗ — кръвна захар (ВКЛ в началото)\n• TT — временна цел (ВКЛ в началото)\n• Посока — промяната в КЗ (запазен последен избор)\n• IOB — действащ инсулии (ВКЛ в началото)\n• COB — въглехидрати (запазане последен избор)</string>
     <!-- Treatments -->
     <string name="no_records_available">Няма налични записи</string>
