@@ -20,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Ograniczenie bolusa przedłużonego do %1$.1f U z powodu %2$s</string>
     <string name="limitingcarbs">Ograniczam węglow. do %1$d g z uwagi na %2$s</string>
+    <string name="safety">Bezpieczeństwo terapii</string>
     <string name="pumpisnottempbasalcapable">Pompa nie jest zdolna do wykonywania dawek bazowych tymczasowych</string>
     <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
     <string name="closed_loop_disabled_with_eb">Zamknięta pętla wyłączona, ponieważ działa Extended Bolus (bolus przedłużony)</string>
