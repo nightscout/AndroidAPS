@@ -11,7 +11,22 @@
     <string name="pump_status_suspended">מושהה</string>
     <string name="pump_status_executing_command">מבצע פקודה</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">קבלת הגדרות</string>
+    <string name="pump_cmd_desc_get_firmware">קבלת קושחת המשאבה</string>
+    <string name="pump_cmd_desc_get_basal_profile">קבלת פרופיל בזאלי</string>
+    <string name="pump_cmd_desc_set_basal_profile">הגדרת פרופיל בזאלי</string>
+    <string name="pump_cmd_desc_get_tbr">קבלת בזאלי זמני</string>
+    <string name="pump_cmd_desc_cancel_tbr">ביטול בזאלי זמני</string>
+    <string name="pump_cmd_desc_set_tbr">הגדרת בזאלי זמני</string>
+    <string name="pump_cmd_desc_set_bolus">הגדרת בולוס</string>
+    <string name="pump_cmd_desc_get_bolus">קבלת בולוס</string>
+    <string name="pump_cmd_desc_cancel_bolus">ביטול בולוס</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">קבלת כמות האינסולין שנותרה</string>
+    <string name="pump_cmd_desc_get_battery_status">קבלת מצב הסוללה</string>
+    <string name="pump_cmd_desc_get_time">קבלת השעה</string>
+    <string name="pump_cmd_desc_set_time">הגדרת השעה</string>
     <string name="pump_cmd_desc_get_pump_status">קבל את סטטוס הפוד</string>
+    <string name="pump_cmd_desc_get_history">קבלת היסטוריה</string>
     <string name="pump_cmd_desc_get_history_params">קבל היסטוריה%s</string>
     <string name="pump_cmd_desc_custom">פקודה מותאמת אישית</string>
     <!-- PumpCommon - History Group -->
