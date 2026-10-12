@@ -40,7 +40,7 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_loop">Pętla</string>
     <string name="configbuilder_general">Ogólne</string>
-    <string name="protection">Zabezpieczenia</string>
+    <string name="protection">Ochrona aplikacji</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Eksportuj wpisy użytkownika do Excel-a (csv)</string>
@@ -80,7 +80,7 @@
     <string name="ic_long_label">Współczynnik insulina/węglowodany (I:C)</string>
     <string name="isf_long_label">Współczynnik wrażliwosci na insulinę (ISF)</string>
     <string name="basal_long_label">Dawka bazowa</string>
-    <string name="target_long_label">Docelowa Glikemia</string>
+    <string name="target_long_label">Cel glikemii</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="virtualpump_resultok">OK</string>
@@ -137,7 +137,7 @@
     <string name="percentage_label">Procent</string>
     <string name="timeshift_label">Zmiana czasu</string>
     <string name="confirm_remove_multiple_items">Czy na pewno chcesz usunąć %1$d pozycji</string>
-    <string name="overview_treatment_label">Terapia</string>
+    <string name="overview_treatment_label">Bolus i węglowodany</string>
     <string name="copytolocalprofile">Utworzyć nowy profil na bazie wybranego profilu?</string>
     <string name="bolus_iob_label">IOB z bolusów</string>
     <string name="treatments_wizard_basaliob_label">IOB z bazy</string>
@@ -191,6 +191,7 @@
     <string name="reason">Powód</string>
     <string name="nochangerequested">Zmiana nie wymagana</string>
     <!--    Insulin / Concentration-->
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Zostanie aktywowana</string>
     <!--       Stats -->
     <string name="average">Średnio</string>
     <string name="below" comment="below &quot;in range&quot;">Poniżej</string>
@@ -240,13 +241,14 @@
     <string name="careportal_temporarytargetvalue">Wartość celu tymczasowego</string>
     <string name="careportal_temporarytargetcancel">Odrzuć Cel tymczasowy</string>
     <string name="boluswizard">Kalkulator bolusa</string>
+    <string name="treatment_desc">Podaj bolus i zapisz węglowodany razem</string>
     <string name="user_entry">Wpis użytkownika</string>
     <string name="glucosetype_finger">Palec</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Ręczne</string>
     <string name="eatingsoon">Wkrótce posiłek</string>
     <string name="hypo">Hipo</string>
-    <string name="activity">Ćwiczenia</string>
+    <string name="activity">Aktywność</string>
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="automation">Automatyzacja</string>
     <string name="settingsexport">Eksport ustawień</string>
@@ -298,6 +300,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">Zalecane podanie %1$d g węglowodanów w przeciągu %2$d minut</string>
     <string name="basalrate">Baza</string>
+    <string name="tdd">Dawka Dobowa Insuliny</string>
     <!--    Ntp-->
     <string name="timedetection">Wykrywanie czasu</string>
     <!-- User Entry -->
@@ -621,11 +624,12 @@
     <string name="resettodefaults">Przywróć ustawienia domyślne</string>
     <!--    Maintenance-->
     <string name="maintenance">Konserwacja</string>
-    <string name="description_maintenance">Dostarcza kilka funkcji używanych do konserwacji (np. wysyłanie logów, kasowanie logów).</string>
+    <string name="description_maintenance">Utwórz i przywróć kopie zapasowe ustawień, ustaw i prześlij diagnostykę, zarządzaj bazą danych</string>
     <string name="delete_logs">Usuń logi</string>
     <string name="aaps_directory">katalog AAPS</string>
     <string name="import_setting">Importuj ustawienia</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Odszyfruj i sprawdź</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
