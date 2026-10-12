@@ -24,6 +24,12 @@
     <string name="equil_title_unpair_detach">Tháo bơm</string>
     <string name="equil_title_history_events">Lịch sử sự kiện</string>
     <string name="equil_tone">Âm cảnh báo</string>
+    <string name="equil_bolus_speed">Tốc độ liều Bolus</string>
+    <string name="equil_bolus_speed_summary">Tốc độ liều bolus càng nhanh, nguy cơ xuất hiện cảnh báo tắc nghẽn càng cao.</string>
+    <string name="equil_bolus_speed_1_5" comment="Bolus speed choice: 1.5 units of insulin per minute">1,5 U/phút (tiêu chuẩn)</string>
+    <string name="equil_bolus_speed_3" comment="Bolus speed choice: 3 units of insulin per minute">3 U/phút</string>
+    <string name="equil_bolus_speed_6" comment="Bolus speed choice: 6 units of insulin per minute">6 U/phút</string>
+    <string name="equil_bolus_speed_12" comment="Bolus speed choice: 12 units of insulin per minute">12 U/phút</string>
     <string name="equil_tone_mode_mute">Im lặng</string>
     <string name="equil_tone_mode_shake">Chỉ rung</string>
     <string name="equil_tone_mode_tone">Chỉ âm báo</string>
@@ -47,6 +53,7 @@
     <string name="equil_low_battery_level" comment="%1$d=pump battery level in percent. Example: Low battery: 8%">Pin yếu: %1$d%%</string>
     <string name="equil_low_insulin_level" comment="%1$s=insulin left in the reservoir, with unit. Example: Not enough insulin left in the reservoir: 2.00 U">Lượng insulin còn lại trong bình chứa không đủ: %1$s</string>
     <string name="equil_reservoir_empty">Bình chứa đã hết insulin. Bơm không thể tiếp tục phân phối insulin.</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">Bơm đã dừng trong khi thực hiện bolus. Đã phân phối: %1$s trên tổng %2$s</string>
     <string name="equil_pump_not_run">Bơm không chạy</string>
     <string name="equil_pair">Ghép đôi</string>
     <string name="equil_pair_error">Lỗi ghép đôi</string>
