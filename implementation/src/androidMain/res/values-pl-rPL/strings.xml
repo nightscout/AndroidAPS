@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Polecenie jest teraz wykonywane</string>
+    <string name="smb_being_delivered">SMB jest właśnie podawany. Spróbuj ponownie, gdy zakończy się podawanie.</string>
     <string name="basal_value_below_minimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Węglowodany</string>
@@ -11,13 +12,45 @@
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="short_status_not_initialized">Pompa nie zainicjal.</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Optymalizacja baterii</string>
+    <string name="permission_battery_description">Aplikacja musi zostać wyłączona z optymalizacji baterii, aby niezawodnie działać w tle.</string>
+    <string name="permission_directory_title">Katalog AAPS</string>
+    <string name="permission_directory_description">Wybierz katalog dla ustawień aplikacji i plików dziennika</string>
+    <string name="permission_notifications_title">Powiadomienia</string>
+    <string name="permission_notifications_description">Wymagane do wyświetlania powiadomień, alarmów oraz aktualizacji statusu pompy</string>
+    <string name="permission_schedule_exact_alarm_title">Alarmy i przypomnienia</string>
+    <string name="permission_schedule_exact_alarm_description">Wymagane, aby alarmy mogły wybudzić ekran, gdy AAPS działa w tle, oraz aby przypomnienia dzwoniły o czasie.</string>
     <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">Alarmy AAPS</string>
+    <string name="alarm_channel_standard">Standardowy alarm</string>
+    <string name="alarm_channel_bolus_error">Błąd bolusa</string>
+    <string name="alarm_channel_error">Błąd ogólny</string>
+    <string name="alarm_channel_urgent">Pilny alarm</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (ignoruje tryb Nie przeszkadzać)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (uwzględnia tryb Nie przeszkadzać)</string>
+    <string name="alarm_channel_silent_urgent">Pilny alarm (tryb narastania głośności)</string>
+    <string name="alarm_channel_silent">Alarm (tryb narastania głośności)</string>
+    <string name="alarm_channel_silent_description">Używane, gdy opcja „Stopniowo zwiększaj głośność powiadomień” jest włączona. Ekran alarmu odtwarza dźwięk.</string>
+    <string name="ongoing_channel_name">Bieżący status</string>
+    <string name="notifications_channel_name">Powiadomienia AAPS</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Pomyślnie wyeksportowano ustawienia do chmury.</string>
+    <string name="export_to_cloud_failed">Nie udało się wyeksportować do chmury</string>
+    <string name="csv_uploaded_to_cloud">Plik CSV z wpisami użytkownika został pomyślnie przesłany do chmury</string>
     <string name="exported">Ustawienia wyeksportowane</string>
     <string name="exported_failed">Eksport ustawień nie powiódł się!</string>
     <string name="filenotfound">Nie znaleziono pliku</string>
     <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">wyeksportowano %1$s temu</string>
     <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
     <string name="exported_less_than_hour_ago">wyeksportowano mniej niż godzinę temu</string>
     <string name="metadata_warning_different_flavour">Ustawienia zostały utworzone z innym wariantem AAPS (%1$s) gdy masz %2$s.\n\nNiektóre ustawienia mogą być brakujące lub nieprawidłowe - po zaimportowaniu proszę sprawdzić i zaktualizować swoje ustawienia.</string>
@@ -37,6 +70,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Błąd deszyfrowania, podane hasło jest niepoprawne lub plik ustawień został zmodyfikowany! Może się zdarzyć, że zaimportowany plik został wyeksportowany z innym hasłem głównym.</string>
     <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>
+    <string name="metadata_label_format">Format pliku</string>
     <string name="metadata_label_created_at">Utworzono</string>
     <string name="metadata_label_aaps_version">Wersja AAPS</string>
     <string name="metadata_label_aaps_flavour">Wariant kompilacji</string>
@@ -46,4 +80,27 @@
     <string name="metadata_format_new">Nowy zaszyfrowany format</string>
     <string name="metadata_format_other">Nieznany format eksportu</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Błąd dostępu do systemu plików. Wybierz prawidłowo katalog AAPS.</string>
+    <string name="storage_google_drive">Dysk Google</string>
+    <string name="backup_to_google_drive">Kopia zapasowa na Dysku Google</string>
+    <string name="csv_upload_failed">Nie udało się przesłać wpisów użytkownika (CSV) do chmury.</string>
+    <string name="csv_upload_error">Wystąpił błąd podczas przesyłania CSV do chmury.</string>
+    <string name="uploading_to_cloud">Wysyłanie do chmury...</string>
+    <string name="cloud_directory_path">Katalog w chmurze: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Nie można odświeżyć tokena dostępu Dysku Google</string>
+    <string name="google_drive_token_refresh_error">Nie można odświeżyć tokena dostępu Dysku Google: %1$s</string>
+    <string name="google_drive_connection_test_failed">Test połączenia z Dyskiem Google nie powiódł się.</string>
+    <string name="google_drive_connect_error">Nie można połączyć się z Dyskiem Google: %1$s</string>
+    <string name="google_drive_list_folders_failed">Nie udało się wyświetlić listy folderów Dysku Google</string>
+    <string name="google_drive_list_folders_error">Błąd podczas wyświetlania folderów: %1$s</string>
+    <string name="google_drive_upload_no_id">Przesyłanie zakończyło się sukcesem, ale nie zwrócono identyfikatora.</string>
+    <string name="google_drive_upload_verify_failed">Weryfikacja przesyłania nie powiodła się</string>
+    <string name="google_drive_upload_failed">Przesyłanie nie powiodło się: %1$s.</string>
+    <string name="google_drive_upload_error">Błąd przesyłania pliku: %1$s</string>
+    <string name="google_drive_folder_access_error">Nie można utworzyć ani uzyskać dostępu do folderu docelowego: %1$s</string>
+    <string name="google_drive_list_settings_failed">Nie udało się wyświetlić listy plików ustawień.</string>
+    <string name="google_drive_list_settings_error">Błąd podczas pobierania listy plików ustawień: %1$s</string>
+    <string name="google_drive_download_failed">Nie udało się pobrać pliku</string>
+    <string name="google_drive_download_error">Błąd podczas pobierania pliku: %1$s</string>
+    <string name="google_drive_authorized">Autoryzowano Dysk Google</string>
+    <string name="google_drive_reauth_required">Wyczyść ustawienia i ponownie autoryzuj Dysk Google.</string>
 </resources>
