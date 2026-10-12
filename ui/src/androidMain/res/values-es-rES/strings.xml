@@ -14,8 +14,6 @@
     <string name="widget_compact_bg_description">AAPS Glucosa + IOB + COB (compacta)</string>
     <string name="widget_small_description">AAPS pequeño</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitor de actividad</string>
-    <string name="time_range">Rango de tiempo</string>
     <string name="dexcom_tir">TIR de Dexcom</string>
     <string name="cgp_title">Pentágono de glucosa (CGP) — 14 días</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -31,7 +29,6 @@
     <string name="cgp_pgr_moderate">Riesgo moderado</string>
     <string name="cgp_pgr_high">Riesgo alto</string>
     <string name="cgp_pgr_extremely_high">Riesgo extremadamente alto</string>
-    <string name="do_you_want_reset_stats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="do_you_want_recalculate_tdd_stats">¿Quieres recalcular las estadísticas de TDD?</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
     <string name="age">Edad</string>
