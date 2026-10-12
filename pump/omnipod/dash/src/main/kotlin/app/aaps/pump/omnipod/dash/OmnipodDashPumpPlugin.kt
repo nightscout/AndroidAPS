@@ -75,9 +75,9 @@ import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguratio
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
-import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.dash.history.data.BolusRecord
-import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.ui.compose.OmnipodDashComposeContent
 import app.aaps.pump.omnipod.dash.util.Constants
@@ -1482,7 +1482,7 @@ class OmnipodDashPumpPlugin(
                     record as BolusRecord
 
                     podStateManager.createLastBolus(
-                        record.amout,
+                        record.amount,
                         command.historyId,
                         record.bolusType
                     )
