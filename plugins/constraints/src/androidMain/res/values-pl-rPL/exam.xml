@@ -3,7 +3,6 @@
     <string name="dia_whatmeansdia">Co jest prawdą w przypadku DIA?</string>
     <string name="dia_label_exam">Czas działania insuliny (DIA)</string>
     <string name="dia_minimumis5h">Minimalna dopuszczalna wartość to 5 godzin.</string>
-    <string name="dia_meaningisequaltodiapump">Jeśli jesteś zadowolony z wartości DIA, która była użyta w twojej pompie przed wdrożeniem AAPS, nie ma potrzeby jej zmiany gdy zaczniesz używać pętli.</string>
     <string name="dia_valuemustbedetermined">Powinieneś określić dla siebie odpowiednią wartość DIA.</string>
     <string name="hypott_label">Cel tymczasowy dla Hipo</string>
     <string name="hypott_whenhypott">Jaki jest główny powód ustawienia celu tymczasowego Hipo?</string>
@@ -105,7 +104,6 @@
     <string name="cob_label">Aktywne węglowodany (COB)</string>
     <string name="cob_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/CobCalculation.html</string>
     <string name="iob_value">Na wartość IOB mają wpływ wykonane tymczasowe dawki bazowe.</string>
-    <string name="iob_hightemp">Wysoka tymczasowa dawka bazowa nie zostanie podana, gdy twóje poziom cukru we krwi jest poniżej poziomu docelowego.</string>
     <string name="iob_negiob">Negatywne IOB utrzymujące się przez znaczny okres czasu bez wysiłku fizycznego sugeruje, że Twój profil jest zbyt silny i mniej insuliny jest wymagane w Twoich ustawieniach.</string>
     <string name="iob_posiob">Pozytywne IOB utrzymujące się przez znaczny okres czasu sugeruje insulinooporność lub niezapowiedziany (niewprowadzony do AAPS) posiłek.</string>
     <string name="breadgrams_label">Wprowadzanie węglowodanów i bolusów</string>
