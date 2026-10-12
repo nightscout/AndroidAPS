@@ -11,13 +11,21 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Napełnij nowego Poda ilością insuliny przewidzianą na 3 dni.\n\nNasłuchuj dwóch sygnałów dźwiękowych z Poda podczas procesu napełniania. Wskazują one, że minimalna ilość 80U została napełniona. Upewnij się, że ampułkostrzykawka jest całkowicie pusta, nawet po odsłuchaniu dwóch sygnałów dźwiękowych.\n\nPo napełnieniu Poda, proszę naciśnij <b>Dalej</b>.\n\n<b>Uwaga:</b> nie usuwaj w tym czasie osłonki igły Poda.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Próba sparowania z nowym Pod i wpełnienia go.\n\nPo pomyślnym zakończeniu procesu inicjalizacji, naciśnij przycisk <b>Dalej</b>.</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Nie udało się połączyć</string>
+    <string name="omnipod_dash_found_too_many_pods">Znaleziono zbyt wiele Podów</string>
+    <string name="omnipod_dash_scan_failed">Skanowanie nie powiodło się</string>
     <string name="omnipod_dash_generic_error">Ogólny błąd: %1$s</string>
+    <string name="omnipod_dash_connection_lost">Utracono połączenie</string>
     <string name="omnipod_dash_failed_to_send">Nie udało się wysłać polecenia</string>
     <string name="omnipod_dash_command_not_sent">Polecenie nie wysłane</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Polecenie nie odebrane przez poda</string>
     <string name="omnipod_dash_unknown">Nieznany stan polecenia</string>
     <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minut</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_common_history_bolus_value_labeled" comment="%1$s=already formatted bolus amount with unit (see omnipod_common_history_bolus_value), %2$s=bolus type label. Example: 0.05 U (Basal correction)">%1$s (%2$s)</string>
+    <string name="omnipod_common_bolus_type_smb">SMB</string>
+    <string name="omnipod_common_bolus_type_basal_correction">Korekta bazowa</string>
+    <string name="omnipod_common_bolus_type_priming">Napełnianie</string>
     <string name="omnipod_common_alert_delivery_suspended">Podawanie insuliny zawieszone</string>
     <string name="omnipod_common_history_total_delivered">Razem dostarczono: %1$.2f U</string>
     <string name="omnipod_dash_bolus_already_in_progress">Inny bolus jest dostarczany</string>
