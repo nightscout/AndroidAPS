@@ -2,7 +2,10 @@
 <resources>
     <string name="dia_whatmeansdia">Co jest prawdą w przypadku DIA?</string>
     <string name="dia_label_exam">Czas działania insuliny (DIA)</string>
+    <string name="dia_profile">Wartość DIA powinna być ustawiona w ustawieniach insuliny (Zarządzaj → Ustawienia insuliny), a nie w profilu.</string>
     <string name="dia_minimumis5h">Minimalna dopuszczalna wartość to 5 godzin.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
+    <string name="dia_meaningisequaltodiapump">Jeśli jesteś zadowolony z wartości DIA, która była użyta w Twojej pompie przed wdrożeniem AAPS, nie ma potrzeby jej zmiany gdy zaczniesz używać pętli.</string>
     <string name="dia_valuemustbedetermined">Powinieneś określić dla siebie odpowiednią wartość DIA.</string>
     <string name="hypott_label">Cel tymczasowy dla Hipo</string>
     <string name="hypott_whenhypott">Jaki jest główny powód ustawienia celu tymczasowego Hipo?</string>
@@ -25,6 +28,7 @@
     <string name="objectives_afterchange">Wyeksportuj ustawienia po zmianie każdego z ustawień.</string>
     <string name="objectives_afterinitialsetup">Wyeksportuj ustawienia po zakończeniu początkowej konfiguracji i ustawieniu preferencji.</string>
     <string name="objectives2_maintenance">Wyeksportuj ustawienia lokalnie, korzystając z menu konserwacji.</string>
+    <string name="objectives2_internalstorage">Plik z ustawieniami jest zapisany w folderze \"preferences\" wewnątrz folderu AAPS, który wybrano w telefonie.</string>
     <string name="objectives2_cloud">Skopiuj plik preferencji w bezpieczne miejsce poza telefonem (np. Korzystając z dysku w chmurze, podłączając kabel do komputera, e-mail itp.)</string>
     <string name="objectives2_easyrestore">Jeśli Twój telefon zostanie uszkodzony lub zgubiony, zastosowanie łatwe sposoby na zdalne odzyskanie ustawień bez kopii zapasowej.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Maintenance/ExportImportSettings.html</string>
@@ -34,6 +38,7 @@
     <string name="noisycgm_nothing">Nic nie rób - AAPS sobie z tym poradzi.</string>
     <string name="noisycgm_pause">Wyłącz pętlę zamkniętą, aby uniknąć możliwego przedawkowania lub niedoszacowania.</string>
     <string name="noisycgm_replacesensor">Wymieniaj stale zaszumione lub niewłaściwie wskazujące sensory.</string>
+    <string name="noisycgm_checksmoothing">Upewnij się, że dane glukozy są wygładzone, albo przez aplikację CGM, albo przez wtyczkę wygładzania w AAPS.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Ćwiczenia fizyczne i profile</string>
     <string name="exerciseprofile_whattodo">Jak wykorzystać profile, aby najlepiej pomóc systemowi radzić sobie z ćwiczeniami aerobowymi?</string>
@@ -41,6 +46,7 @@
     <string name="exerciseprofile_switchprofileabove100">Wykonaj zmianę profilu na powyżej 100%.</string>
     <string name="exerciseprofile_leaveat100">Pozostaw profil ustawiony na 100%.</string>
     <string name="exerciseprofile_suspendloop">Wstrzymaj pętle.</string>
+    <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/ProfileSwitch-ProfilePercentage.html</string>
     <string name="exercise_label">Ćwiczenie fizyczne i cele tymczasowe</string>
     <string name="exercise_whattodo">Jak wykorzystać cele tymczasowe, aby jak najlepiej pomóc systemowi radzić sobie z ćwiczeniami aerobowymi?</string>
     <string name="exercise_settt">Ustaw cel poziomu glukozy we krwi \"ćwiczenia\" w odpowiednim czasie przed rozpoczęciem ćwiczeń fizycznych.</string>
@@ -59,16 +65,20 @@
     <string name="prerequisites_what">Co jest niezbędne do ustawienia i używania AAPS?</string>
     <string name="prerequisites_build">Możliwość zbudowania AAPS. Albo przez przeglądarkę lub na komputerze z zainstalowanym Android Studio.</string>
     <string name="prerequisites_pump">Kompatybilna pompa insulinowa, jeśli planujesz uruchomienie pętli zamkniętej.</string>
+    <string name="prerequisites_nightscout">Nightscout lub Tidepool, aby prowadzić zapis swoich danych.</string>
     <string name="prerequisites_beanandroiddeveloper">Doświadczenie w programowaniu lub edycji kodu.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="prerequisites2_label">Wymagania wstępne</string>
     <string name="prerequisites2_what">Co jest niezbędne do ustawienia i używania AAPS?</string>
+    <string name="prerequisites2_profile">Sprawdzone wartości dla Twojego profilu (dawki bazowe, ISF, stosunek I:C) oraz dla Twojej insuliny (DIA).</string>
     <string name="prerequisites2_device">Kompatybilne urządzenie z systemem Android (np. telefon komórkowy, zegarek z pełnym systemem Android lub tablet).</string>
     <string name="prerequisites2_internet">AAPS wymaga połączenia internetowego do działania w trybie zamkniętej pętli.</string>
     <string name="prerequisites2_supportedcgm">Wspierany CGM i odpowiednia aplikacja, aby otrzymywać wartości glukozy we krwi na telefonie/urządzeniu.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Aktualizowanie AAPS</string>
+    <string name="update_git">Aby zbudować aplikację w Android Studio, musisz mieć zainstalowany i skonfigurowany Git na swoim komputerze. Wersja budowana w przeglądarce nie wymaga Gita.</string>
     <string name="update_asap">Po pewnym czasie od premiery najnowszej wersji AAPS wcześniejsze wersje mogą zostać zdalnie ograniczone.</string>
+    <string name="update_keys">Jeśli budujesz aplikację w Android Studio, powinieneś zapisać i zanotować lokalizację swojego keystore oraz używać tego samego klucza podpisu do aktualizacji, co przy poprzedniej instalacji.</string>
     <string name="update_askfriend">Jeśli masz trudności z budową apk, możesz zainstalować apk zbudowany przez znajomego.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Rozwiązywanie problemów</string>
@@ -76,11 +86,13 @@
     <string name="troubleshooting_fb">Możesz poprosić o poradę na grupach użytkowników AAPS na Facebooku.</string>
     <string name="troubleshooting_wiki">Powinieneś przeczytać (i ponownie przeczytać) dokumentację AAPS.</string>
     <string name="troubleshooting_discord">Możesz poprosić o poradę, omówić problemy techniczne i sugerować nowe funkcjonalności na Discordzie AAPS.</string>
+    <string name="troubleshooting_github">Możesz zgłaszać problemy, takie jak błędy i prośby o nowe funkcje, na GitHubie.</string>
     <string name="troubleshooting_yourendo">Należy zwrócić się do diabetologa lub lekarza endokrynologa.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/en/latest/GettingHelp/WhereCanIGetHelp.html</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
+    <string name="insulin_plugins">Ustawienia insuliny</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid ® /Novolog ®</string>
     <string name="insulin_humalog">Humalog®</string>
