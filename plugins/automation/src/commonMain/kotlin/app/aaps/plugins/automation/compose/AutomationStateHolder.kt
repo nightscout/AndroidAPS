@@ -114,7 +114,13 @@ class AutomationStateHolder(
         _eventDirty.value = workingEvent.toJSON() != snap
     }
 
-    fun onWorkingEventChanged() = recomputeEventDirty()
+    // An action editor changed one of its fields in place. Rebuild the edit state as well: the action's
+    // card shows its description, icon and valid flag, and without this it kept the old ones, for
+    // example "Note" after the Careportal type was changed.
+    fun onWorkingEventChanged() {
+        recomputeEventDirty()
+        refreshEditState()
+    }
 
     // ---- Navigation / Edit ----
     fun openNew() {
