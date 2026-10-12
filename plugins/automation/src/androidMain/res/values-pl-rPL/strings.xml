@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatyzacja</string>
+    <string name="automation_category_time">Czas i harmonogram</string>
+    <string name="automation_category_glucose">Glikemia i leczenie</string>
+    <string name="automation_category_sensors">Czujniki i łączność</string>
+    <string name="automation_category_loop">Pętla i insulina</string>
     <string name="automation_missing_task_name">Proszę wpisać nazwę zadania.</string>
     <string name="automation_missing_trigger">Proszę podać przynajmniej jedno wywołanie.</string>
     <string name="automation_missing_action">Proszę podać przynajmniej jedną akcję.</string>
