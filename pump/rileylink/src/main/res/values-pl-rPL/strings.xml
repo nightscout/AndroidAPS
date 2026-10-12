@@ -8,6 +8,7 @@
     <string name="pump_status_error_comm">Błąd komunikacji</string>
     <string name="pump_status_timeout_comm">Przekroczony limit czasu połączenia</string>
     <string name="pump_status_invalid_config">Nieprawidłowa konfiguracja</string>
+    <string name="medtronic_pump_encoding_title">Kodowanie Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">Lokalne kodowanie 4b6b (w oprogramowaniu)</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Sprzętowe kodowanie 4b6b (w RileyLink)</string>
     <string name="medtronic_pump_frequency_us_ca">USA i Kanada (916 MHz)</string>
@@ -75,4 +76,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Użyj skanowania</string>
     <string name="orange_use_scanning_level_summary">Skanuj przed połączeniem z OrangeLink, to powinno poprawić jakość połączeń (w razie potrzeby można używać z innymi klonami RileyLink)</string>
+    <string name="rileylink_pair">Sparuj RileyLink</string>
+    <string name="rileylink_pair_success">Pomyślnie sparowano RileyLink</string>
+    <string name="rileylink_config_reset">Konfiguracja RileyLink zresetowana</string>
 </resources>
