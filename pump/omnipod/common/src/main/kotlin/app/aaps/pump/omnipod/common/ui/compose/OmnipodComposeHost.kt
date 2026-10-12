@@ -91,9 +91,10 @@ fun OmnipodComposeHost(
     // The wizard has its own handler in WizardScreen, so it is not covered here.
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
-        isBackEnabled = showExtraContent,
+        isBackEnabled = showExtraContent || showCredentialImport,
         onBackCompleted = {
             showExtraContent = false
+            showCredentialImport = false
             wizardActivationType = null
         }
     )
