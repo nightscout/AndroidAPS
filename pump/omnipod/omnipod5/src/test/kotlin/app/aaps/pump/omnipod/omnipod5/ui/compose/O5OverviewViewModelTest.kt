@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
+import java.time.Duration
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.R as CommonR
 
@@ -75,6 +76,8 @@ internal class O5OverviewViewModelTest {
     @Test
     fun preActivation_buildsPlaceholderRows_criticalPodStatus_andOffersActivate() {
         whenever(rh.gs(CommonR.string.omnipod_common_overview_pod_status)).thenReturn("Pod status")
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date)).thenReturn("Pod expires")
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date)).thenReturn("Pod hard end")
         whenever(rh.gs(CommonR.string.omnipod_common_pod_management_button_activate_pod)).thenReturn("Activate pod")
         whenever(rh.gs(CoreUiR.string.refresh)).thenReturn("Refresh")
 
@@ -87,10 +90,32 @@ internal class O5OverviewViewModelTest {
         val podStatusRow = state.infoRows.filterIsInstance<PumpInfoRow>().first { it.label == "Pod status" }
         assertThat(podStatusRow.level).isEqualTo(StatusLevel.CRITICAL)
 
+        val podExpiresIndex = state.infoRows.indexOfFirst { it is PumpInfoRow && it.label == "Pod expires" }
+        val podHardEndRow = state.infoRows.filterIsInstance<PumpInfoRow>().first { it.label == "Pod hard end" }
+        assertThat(podHardEndRow.value).isEqualTo("-")
+        assertThat(state.infoRows.indexOf(podHardEndRow)).isEqualTo(podExpiresIndex + 1)
+
         val refresh = state.primaryActions.first { it.label == "Refresh" }
         assertThat(refresh.enabled).isFalse()
         val activate = state.managementActions.first { it.label == "Activate pod" }
         assertThat(activate.visible).isTrue()
+    }
+
+    @Test
+    fun activePod_hardEndIsEightHoursAfterExpiry() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.podLifeInHours).thenReturn(16.toShort())
+        whenever(podStateManager.minutesSinceActivation).thenReturn(0.toShort())
+        whenever(podStateManager.lastStatusResponseReceived).thenReturn(System.currentTimeMillis())
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date)).thenReturn("Pod expires")
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date)).thenReturn("Pod hard end")
+        whenever(dateUtil.dateAndTimeString(any())).thenAnswer { invocation -> invocation.getArgument<Long>(0).toString() }
+
+        val rows = createViewModel().uiState.value.infoRows.filterIsInstance<PumpInfoRow>()
+        val expiryValue = rows.first { it.label == "Pod expires" }.value.toLong()
+        val hardEndValue = rows.first { it.label == "Pod hard end" }.value.toLong()
+
+        assertThat(hardEndValue - expiryValue).isEqualTo(Duration.ofHours(8).toMillis())
     }
 
     @Test
