@@ -4,12 +4,15 @@
     <string name="confirmation">אישור</string>
     <!--    Events-->
     <string name="bolus_delivering">מזריק %1$.2f יח\'</string>
+    <string name="bolus_delivered_so_far">הוזרקו %1$.2f יח\' מתוך %2$.2f יח\'</string>
     <string name="bolus_delivered_successfully">%1$.2f יח\' הוזרקו בהצלחה</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">מנהל התקן המשאבה שונה.</string>
     <!--    DateUtil-->
     <string name="minago">לפני %1$d</string>
     <string name="secago">לפני%1$d ימים</string>
+    <string name="min_plus">(+%1$d דק\')</string>
+    <string name="sec_plus">(+%1$d שנ\')</string>
     <string name="minago_long">לפני %1$d דקות</string>
     <string name="hoursago">לפני %1$.1f שעות</string>
     <string name="days_ago">לפני %1$.1f ימים</string>
@@ -87,6 +90,11 @@
     <string name="pref_show_week_number">הצג מספר שבוע</string>
     <string name="pref_show_date">הצג תאריך</string>
     <string name="pref_show_seconds">הצג שניות</string>
+    <string name="pref_show_complication1">הצג סיבוך 1</string>
+    <string name="pref_show_complication2">הצג סיבוך 2</string>
+    <string name="pref_show_complication3">הצג סיבוך 3</string>
+    <string name="pref_show_complication4">הצג סיבוך 4</string>
+    <string name="pref_show_complication5">הצג סיבוך 5</string>
     <string name="default_custom_watchface_comment">ברירת המחדל של פני השעון, ניתן ללחוץ על כפתור ייצוא פני שעון כדי ליצור תבנית</string>
     <string name="default_custom_watchface_external_comment">תצוגת השעון המוגדרת כברירת מחדל, כולל תצוגות חיצוניות עבור עוקבים. ניתן ללחוץ על לחצן \'ייצוא תצוגת השעון\' כדי ליצור דגם</string>
     <string name="wear_default_watchface">ברירת מחדל פני שעון</string>
@@ -109,6 +117,7 @@
     <string name="insulin_peak_time">זמן שיא [min]</string>
     <!-- Concentration -->
     <string name="u10">U10יח\'</string>
+    <string name="u20">U20</string>
     <string name="u40">U40יח\'</string>
     <string name="u50">U50יח\'</string>
     <string name="u100">U100יח\'</string>
@@ -130,6 +139,7 @@
     <string name="maximumbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
     <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
     <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
+    <string name="mins">%1$d דקות</string>
     <string name="record">הקלטה</string>
     <string name="bolus">בולוס</string>
     <string name="uel_extended_carbs">פחמימות מורכבות</string>
@@ -145,5 +155,8 @@
     <string name="bolus_constraint_applied_warn">מגבלת בולוס יושמה: %1$.2f עד %2$.2f יח\'</string>
     <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">פחמ\' ממושכות %1$d גר\' / %2$d שעות (+%3$d דקות)</string>
     <string name="format_insulin_units">%1$.2f יח\'</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">התוסף %1$s לא הצליח לפעול וייתכן שלא יתפקד. נא להפעיל מחדש את AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">אירעה שגיאה בתוסף %1$s וחלק ממנו הפסיק לפעול. נא להפעיל מחדש את AAPS.</string>
 </resources>
