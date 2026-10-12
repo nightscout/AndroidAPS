@@ -81,15 +81,14 @@ fun OmnipodComposeHost(
         }
     }
 
-    // System back on a sub-screen (pod history, credential import) returns to the plugin page, the
-    // same as the toolbar arrow. Without this handler the event reaches the app NavHost, which pops
-    // the whole plugin page. The wizard has its own handler in WizardScreen, so it is not covered here.
+    // System back on a sub-screen (pod history) returns to the plugin page, the same as the toolbar
+    // arrow. Without this handler the event reaches the app NavHost, which pops the whole plugin page.
+    // The wizard has its own handler in WizardScreen, so it is not covered here.
     NavigationBackHandler(
         state = rememberNavigationEventState(NavigationEventInfo.None),
-        isBackEnabled = showExtraContent || showCredentialImport,
+        isBackEnabled = showExtraContent,
         onBackCompleted = {
             showExtraContent = false
-            showCredentialImport = false
             wizardActivationType = null
         }
     )
