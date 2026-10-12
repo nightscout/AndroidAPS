@@ -14,8 +14,6 @@
     <string name="widget_compact_bg_description">AAPS גלוקוז + IOB + COB (קומפקטי)</string>
     <string name="widget_small_description">AAPS קטן</string>
     <!--     Activities-->
-    <string name="activity_monitor">מוניטור פעילות</string>
-    <string name="time_range">טווח זמן</string>
     <string name="dexcom_tir">זמן בטווח דקסקום</string>
     <string name="cgp_title">מחומש גלוקוז (CGP) — 14 ימים</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -32,7 +30,6 @@
     <string name="cgp_pgr_moderate">סיכון בינוני</string>
     <string name="cgp_pgr_high">סיכון גבוה</string>
     <string name="cgp_pgr_extremely_high">סיכון גבוה מאוד</string>
-    <string name="do_you_want_reset_stats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="do_you_want_recalculate_tdd_stats">האם ברצונכם לאפס את סטטיסטיקת המינונים היומיים הכוללים?</string>
     <string name="calculation_in_progress">מבצע חישוב</string>
     <string name="age">גיל</string>
