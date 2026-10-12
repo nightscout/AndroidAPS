@@ -14,8 +14,6 @@
     <string name="widget_compact_bg_description">AAPS GLY + IOB + COB (kompaktné)</string>
     <string name="widget_small_description">AAPS Malé</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitor aktivity</string>
-    <string name="time_range">Časový rozsah</string>
     <string name="dexcom_tir">Čas v rozsahu Dexcom</string>
     <string name="cgp_title">Glucose Pentagon (CGP) - 14 dní</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -31,7 +29,6 @@
     <string name="cgp_pgr_moderate">Mierne riziko</string>
     <string name="cgp_pgr_high">Vysoké riziko</string>
     <string name="cgp_pgr_extremely_high">Extrémne vysoké riziko</string>
-    <string name="do_you_want_reset_stats">Chcete resetovať štatistiky aktivity?</string>
     <string name="do_you_want_recalculate_tdd_stats">Chcete prepočítať štatistiky CDD?</string>
     <string name="calculation_in_progress">Prebieha výpočet</string>
     <string name="age">Vek</string>
