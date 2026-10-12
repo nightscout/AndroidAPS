@@ -67,8 +67,16 @@ fun SelectInsulin(
         }
     }
 
+    // The header shows the selected insulin. Call it active only when it is: another insulin means a switch.
+    val headerLabel = selectedInsulin?.insulinLabel ?: activeInsulinLabel
+    val headerCaption = when (headerLabel) {
+        null               -> CoreUiStrings.select_insulin
+        activeInsulinLabel -> CoreUiStrings.current_insulin
+        else               -> CoreUiStrings.insulin_will_be_activated
+    }
+
     Column {
-        // Show current insulin with a Change button
+        // Show the selected insulin with a Change button
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -78,12 +86,12 @@ fun SelectInsulin(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(CoreUiStrings.current_insulin),
+                    text = stringResource(headerCaption),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = selectedInsulin?.insulinLabel ?: activeInsulinLabel ?: "",
+                    text = headerLabel ?: "",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )

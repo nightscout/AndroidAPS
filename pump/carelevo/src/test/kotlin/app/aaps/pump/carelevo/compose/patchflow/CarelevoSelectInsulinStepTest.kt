@@ -115,6 +115,17 @@ class CarelevoSelectInsulinStepTest {
     }
 
     @Test
+    fun headerSaysWillBeActivated_whenTheSelectedInsulinIsNotTheActiveOne() {
+        seedThreeInsulins()
+        selectedInsulin.value = novoRapid
+        render()
+
+        // The header names the picked insulin, which is not active yet. Only the Fiasp row says "Currently active".
+        compose.onNodeWithText(app.getString(CoreUiR.string.insulin_will_be_activated)).performScrollTo().assertIsDisplayed()
+        compose.onAllNodesWithText(currentInsulinLabel).assertCountEquals(1)
+    }
+
+    @Test
     fun listsInsulinsOfSelectedConcentration_andFiltersOthersOut() {
         seedThreeInsulins()
         render()
@@ -160,6 +171,7 @@ class CarelevoSelectInsulinStepTest {
         activeInsulinLabel.value = null
         render()
 
+        compose.onNodeWithText(app.getString(CoreUiR.string.select_insulin)).assertIsDisplayed()
         compose.onNodeWithText(nextLabel).assertIsDisplayed().assertIsNotEnabled()
 
         compose.onNodeWithText(nextLabel).performClick()
