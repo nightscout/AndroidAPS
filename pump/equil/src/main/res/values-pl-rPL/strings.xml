@@ -41,7 +41,7 @@
     <string name="equil_firmware_version">Wersja firmware\'u </string>
     <string name="equil_shutdown_be">Equil wyłączy się automatycznie</string>
     <string name="equil_shutdown">Auto wyłączenie Equila</string>
-    <string name="equil_common_history_tbr_value">Dawka：%1$.2f U, Czas trwania：%2$d min</string>
+    <string name="equil_common_history_tbr_value">Dawka:  %1$.2f U/h,  czas trwania:  %2$d min</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Ustaw bolus</string>
