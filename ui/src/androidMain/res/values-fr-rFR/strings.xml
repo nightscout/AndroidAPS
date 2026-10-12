@@ -13,8 +13,6 @@
     <string name="widget_compact_bg_description">AAPS Gly + IA + GA (compact)</string>
     <string name="widget_small_description">AAPS petit</string>
     <!--     Activities-->
-    <string name="activity_monitor">Moniteur d\'activité</string>
-    <string name="time_range">Plage horaire</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Pentagone glucose (CGP) – 14 jours</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -30,7 +28,6 @@
     <string name="cgp_pgr_moderate">Risque modéré</string>
     <string name="cgp_pgr_high">Risque élevé</string>
     <string name="cgp_pgr_extremely_high">Risque extrêmement élevé</string>
-    <string name="do_you_want_reset_stats">Voulez-vous réinitialiser les statistiques d\'activité ?</string>
     <string name="do_you_want_recalculate_tdd_stats">Voulez-vous recalculer les statistiques de DTQ ?</string>
     <string name="calculation_in_progress">Calcul en cours</string>
     <string name="age">Âge </string>
