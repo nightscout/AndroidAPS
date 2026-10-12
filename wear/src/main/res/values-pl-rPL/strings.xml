@@ -169,6 +169,13 @@
     <string name="complication_summary_none">Dotknij, aby wybrać źródło danych</string>
     <string name="pref_complication_type_priority">Priorytet typu komplikacji</string>
     <string name="pref_complication_type_priority_all">Domyślnie dla wszystkich slotów</string>
+    <string name="pref_complication_type_priority_warning" comment="Shown at the top of the complication type priority screen. Explains that a change only takes effect when the data source actually changes, so re-picking the same one does nothing.">Zmiana tutaj zastosuje się przy następnym wyborze źródła danych. Ponowny wybór tego samego nie wystarczy: najpierw wybierz inne źródło danych, a następnie to, które chcesz.</string>
+    <string name="complication_type_priority_value">Wartość lub wskaźnik</string>
+    <string name="complication_type_priority_text">Tekst</string>
+    <string name="complication_type_priority_icon">Ikona</string>
+    <string name="complication_type_priority_use_default">Użyj domyślnego</string>
+    <string name="cwf_complication_layout">Układ komplikacji</string>
+    <string name="cwf_complication_layout_description">Położenie i rozmiar komplikacji, pobrane z załadowanej własnej tarczy zegarka.</string>
     <string name="pref_include_external">Uwzględnij zewnętrzne widoki w szablonie</string>
     <string name="pref_switch_external">Przełącz dane zewnętrzne na tarczy</string>
     <string name="custom_pref_show_seconds">Pokaż sekundy</string>
@@ -184,6 +191,8 @@
     <string name="bolus_progress_silent_channel_name">Postęp bolusa AAPS (Cichszy)</string>
     <string name="bolus_progress_channel_description">Informacja o postępie w podawaniu / anulowaniu bolusa</string>
     <string name="bolus_progress_silent_channel_description">Informacja o postępie w podawaniu / anulowaniu bolusa - zmniejsza ilość wibracji</string>
+    <string name="open_loop_channel_name">AAPS otwarta pętla</string>
+    <string name="open_loop_channel_description">Powiadomienie o żądaniu otwartej pętli</string>
     <string name="simple_ui_off">Wyłącz</string>
     <string name="simple_ui_charging">Podczas ładowania</string>
     <string name="simple_ui_always_on">Tryb Always On</string>
@@ -209,8 +218,10 @@
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="error">Błąd</string>
     <string name="pref_heartRateSampling">Tętno</string>
     <string name="pref_heartRateSmoothing">Wygładzanie tętna</string>
     <string name="pref_stepsSampling">Włącz liczbę kroków</string>
@@ -222,6 +233,12 @@
     <string name="tile_action_2">Akcja 2</string>
     <string name="tile_action_3">Akcja 3</string>
     <string name="tile_action_4">Akcja 4</string>
+    <string name="tile_scene_1">Scena 1</string>
+    <string name="tile_scene_2">Scena 2</string>
+    <string name="tile_scene_3">Scena 3</string>
+    <string name="tile_scene_4">Scena 4</string>
+    <string name="tile_scene_auto">Automatyczna</string>
+    <string name="tile_scene_unavailable">Niedostępna</string>
     <string name="datalayer_notification_title">Usługa podtrzymania warstwy danych</string>
     <string name="datalayer_notification_text">AAPS działa na pierwszym planie. Aby ukryć powiadomienia, przejdź do opcji Dewelopera, powiadomienia aplikacji, Dozwolone aplikacje na zegarek, wybierz AAPS, wyłącz powiadomienia dotyczące kanału \"Usługa podtrzymania warstwy danych\".</string>
     <string name="on">WŁ</string>
@@ -229,25 +246,53 @@
     <string name="complication_full_status">Pełny status</string>
     <string name="complication_full_status_flipped">Pełny status (odwrócony)</string>
     <string name="complication_blood_glucose">Glikemia</string>
+    <string name="complication_blood_glucose_large">Glikemia (duża)</string>
     <string name="complication_blood_glucose_ext1">Glikemia Ext1</string>
     <string name="complication_blood_glucose_ext2">Glikemia Ext2</string>
+    <string name="complication_bg_graph">Wykres BG</string>
+    <string name="complication_cwf_image">Własna tarcza</string>
+    <string name="complication_cwf_ambient_bg">Własna tarcza zegarka: glukoza w trybie ambient</string>
+    <string name="complication_cwf_ambient_status">Własna tarcza zegarka - status ambient</string>
+    <string name="complication_cwf_ambient_cob_iob" comment="%1$s=carbs on board, unit included, for example 12g. %2$s=insulin on board, unit included, for example 1.19U. Shown on one line in ambient mode.">%1$s   %2$s</string>
+    <string name="complication_cwf_lower">Tło własnej tarczy</string>
+    <string name="complication_cwf_upper">Zegar własnej tarczy</string>
     <string name="complication_br_cob_iob">Baza, CoB i IoB</string>
     <string name="complication_br_cob_iob_ext1">Baza, CoB i IoB Ext1</string>
     <string name="complication_br_cob_iob_ext2">Baza, CoB i IoB Ext2</string>
     <string name="complication_br_iob">BR i IoB</string>
     <string name="complication_br">Dawka bazowa</string>
     <string name="complication_br_tt">BR i Cel</string>
+    <string name="complication_target">Cel</string>
     <string name="complication_cob_iob">CoB i; IoB</string>
     <string name="complication_cob_icon">Ikona CoB</string>
     <string name="complication_cob_detailed">Szczegółowe CoB</string>
     <string name="complication_iob_icon">Ikona IoB</string>
     <string name="complication_iob_detailed">Szczegółowa IoB</string>
     <string name="complication_uploader_phone_battery">Bateria uploadera/telefonu</string>
+    <string name="running_mode_resume">Wznów pętlę</string>
+    <string name="running_mode_reconnect">Połącz ponownie pompę</string>
+    <string name="label_running_mode_title">Tryb pracy</string>
+    <string name="label_bg_graph_tile">Wykres glikemii</string>
+    <string name="tile_tap_action">Akcja po dotknięciu</string>
+    <string name="tile_graph_time_range">Zakres czasu</string>
+    <string name="tile_tap_bg_graph">Wykres BG</string>
+    <string name="tile_tap_main_menu">Menu główne</string>
+    <string name="tile_tap_loop_status">Status pętli</string>
+    <string name="action_running_mode_selected">Żądanie zmiany trybu pracy wysłane</string>
+    <string name="title_activity_disconnect_pump">Odłącz pompę</string>
+    <string name="title_activity_suspend_loop">Zawieś pętlę</string>
+    <string name="wizard_carbs_short" comment="%1$d=grams. Example: 30 g">%1$d g</string>
     <string name="insulin_unit_short">U</string>
+    <string name="quick_wizard_tile_carbs" comment="QuickWizard tile sub-label, carbs amount. %1$d=grams. Example: 30 g">%1$d g</string>
+    <string name="quick_wizard_tile_insulin" comment="QuickWizard tile sub-label, fixed insulin amount. %1$.2f=units. Example: 1.50 U">%1$.2f U</string>
     <string name="wizard_confirmation_sent">Wysłano</string>
+    <string name="contacting_master">Łączenie z telefonem pacjenta…</string>
+    <string name="contacting_master_unknown">Stan nieznany - sprawdź telefon</string>
     <string name="tile_settings">Ustawienia kafelka</string>
     <string name="loop_status_error">Nie udało się odświeżyć statusu</string>
+    <string name="loop_status_duration_until" comment="%1$s=formatted duration e.g. 2 h 5 min, %2$s=end time. Example: 2 h 5 min (14:35)">%1$s (%2$s)</string>
     <string name="loop_status_tbr_rate">%1$.2f U/h (%2$d%%)</string>
+    <string name="loop_status_duration_remaining" comment="%1$s=formatted duration e.g. 2 h 5 min. Example: 2 h 5 min remaining">pozostało %1$s</string>
     <string name="loop_status_tbr_continues">Baza tymczasowa jest kontynuowana</string>
     <string name="loop_status_tbr_cancel">Ustawianie zwykłej bazy</string>
     <string name="loop_status_smb">%1$.2f U</string>
@@ -257,6 +302,8 @@
     <string name="loop_status_lgs">Zawieszenie przy niskiej glikemii</string>
     <string name="loop_status_disabled">Pętla wyłączona</string>
     <string name="loop_status_suspended">Pętla wstrzymana</string>
+    <string name="loop_status_pump_suspended">Pompa zawieszona</string>
+    <string name="loop_status_dst_suspended">Zawieszona przez czas letni</string>
     <string name="loop_status_disconnected">Pompa odłączona</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Nieznany</string>
@@ -272,5 +319,39 @@
     <string name="loop_status_temp_target">Cel tymczasowy</string>
     <string name="loop_status_target_range">Zakres</string>
     <string name="loop_status_target">Cel</string>
+    <string name="loop_status_adjusted_target">Skorygowany cel</string>
+    <string name="loop_status_scene_until_ended" comment="Shown under a scene that has no end time and runs until the user ends it">Do zakończenia</string>
+    <string name="loop_status_scene_ended">Zakończona</string>
+    <string name="loop_status_scene_follow_up" comment="Row label; the value is the name of the scene that starts when the active one ends">Następna</string>
+    <string name="loop_status_profile">Profil</string>
+    <string name="loop_status_no_profile">Brak ustawionego profilu</string>
+    <string name="loop_status_profile_percentage">Procent</string>
+    <string name="loop_status_profile_timeshift">Przesunięcie czasu</string>
+    <string name="loop_status_profile_returns_to" comment="Row label; the value is the name of the profile that is in force again when the temporary profile switch ends">Powrót do</string>
+    <string name="loop_status_profile_percentage_value" comment="%1$d=percentage. Example: 120%">%1$d%%</string>
+    <string name="loop_status_profile_timeshift_value" comment="%1$d=whole hours, shown with its sign. Example: +2h or -1h">%1$+dh</string>
+    <string name="loop_status_sensitivity">Wrażliwość</string>
+    <string name="loop_status_set_by_scene" comment="Content description of the small scene icon shown beside a temp target or profile switch that the active scene made">Ustawione przez aktywną scenę</string>
     <string name="loop_status">Status pętli</string>
+    <string name="loop_status_refresh">Odśwież</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="request">Żądanie</string>
+    <string name="constraint_applied">Zastosowano ograniczenie!</string>
+    <string name="wizard_total_insulin">Całkowita insulina</string>
+    <string name="wizard_calculation">Obliczenie</string>
+    <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
+    <string name="wizard_result_bg">BG</string>
+    <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
+    <string name="wizard_result_trend">Trend 15\'</string>
+    <string name="wizard_result_iob">IOB</string>
+    <string name="wizard_result_new_iob">Nowe IOB: %1$s U</string>
+    <string name="wizard_result_cob">COB (%1$.1f g)</string>
+    <string name="wizard_result_carbs">Węgle (%1$d g)</string>
+    <string name="wizard_result_subtotal">Suma częściowa</string>
+    <string name="wizard_result_correction">Korekta</string>
+    <string name="wizard_result_total">Razem</string>
+    <string name="wizard_insulin_format">%1$s U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
+    <string name="wizard_carbs_with_time" comment="%1$d=grams, %2$s=signed minute offset e.g. +20 or -5. Example: 30 g (+20 min)">%1$d g (%2$s min)</string>
+    <string name="wizard_result_ecarbs" comment="%1$d=grams, %2$d=duration hours, %3$d=delay minutes. Example: 16 g / 2 h (+90 min)">%1$d g / %2$d h (+%3$d min)</string>
 </resources>
