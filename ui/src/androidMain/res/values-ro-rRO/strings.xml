@@ -13,8 +13,6 @@
     <string name="widget_compact_bg_description">AAPS Glicemie + IOB + COB (compact)</string>
     <string name="widget_small_description">AAPS mic</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitor activitate</string>
-    <string name="time_range">Interval de timp</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Pentagon glicemie (CGP) - 14 zile</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -30,7 +28,6 @@
     <string name="cgp_pgr_moderate">Risc moderat</string>
     <string name="cgp_pgr_high">Risc ridicat</string>
     <string name="cgp_pgr_extremely_high">Risc extrem de ridicat</string>
-    <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
     <string name="do_you_want_recalculate_tdd_stats">Doriți să recalculați statisticile DZT?</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
     <string name="age">Vechime</string>
