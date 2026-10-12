@@ -125,7 +125,9 @@ fun TempBasalScreen(
                 TreatmentLazyColumn(
                     items = uiState.tempBasals,
                     getTimestamp = { it.timestamp },
-                    getItemKey = { it.id },
+                    // A converted extended bolus carries the extended bolus id, which can be the same
+                    // number as the id of a real temp basal. The prefix keeps the two kinds apart.
+                    getItemKey = { if (it.type == TB.Type.FAKE_EXTENDED) "eb_${it.id}" else "tb_${it.id}" },
                     rh = viewModel.rh,
                     itemContent = { tb ->
                         TempBasalItem(

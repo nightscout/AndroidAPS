@@ -94,7 +94,10 @@ class TempBasalViewModel(
 
                     val convertedExtendedBoluses = extendedBolusList.mapNotNull { eb ->
                         profileFunction.getProfile(eb.timestamp)?.let { profile ->
-                            eb.toTemporaryBasal(profile)
+                            // The converted row is built here and has no id of its own, so every one was 0
+                            // and two of them crashed the list with a duplicate key. Give it the extended
+                            // bolus id; TempBasalScreen keys these rows apart from real temp basals.
+                            eb.toTemporaryBasal(profile).copy(id = eb.id)
                         }
                     }
 
