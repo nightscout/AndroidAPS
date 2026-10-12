@@ -12,16 +12,40 @@
     <string name="pref_title_show_insulin_button">הצגת לחצן האינסולין</string>
     <string name="pref_title_show_carbs_button">הצגת לחצן הפחמימות</string>
     <string name="pref_title_show_cgm_button">הצגת לחצן חיישן</string>
+    <string name="pref_summary_show_cgm_button">פותח את xDrip+ או את אפליקציית Dexcom (ניתן לחזור ל־AAPS באמצעות לחצן החזרה).</string>
+    <string name="pref_title_show_calibration_button">הצג לחצן כיול</string>
+    <string name="pref_summary_show_calibration_button">שולח כיולים לאפליקציית xDrip+ (אנא ודאו ש\"קבל טיפולים\" מופעל בהגדרות xDrip+ תחת \"הגדרות לשיתוף פעולה בין אפליקציות\").</string>
+    <string name="pref_title_show_notes_in_dialogs">הצגת הערות בתיבות דו־שיח</string>
+    <string name="pref_title_use_bolus_advisor">השתמש ביועץ הבולוס</string>
+    <string name="pref_summary_use_bolus_advisor">הפעל את יועץ הבולוס המסייע בחישובי בולוס במהלך גליקמיה גבוהה יותר.</string>
+    <string name="pref_title_use_bolus_reminder">השתמש בתזכורת בולוס</string>
+    <string name="pref_summary_use_bolus_reminder">אפשר התראות תזכורת בולוס כדי לעזור לעקוב אחר מתן האינסולין.</string>
     <string name="pref_title_use_super_bolus">השתמש בסופר בולוס</string>
+    <string name="pref_summary_use_super_bolus">הפעלת תכונת סופר־בולוס, השואלת אינסולין מהבזאלי לצורך מתן מיידי.</string>
     <!-- Pump preferences -->
     <string name="pref_title_bt_watchdog">מנגנון ניטור בלוטות׳</string>
+    <string name="pref_summary_bt_watchdog">מכבה את הבלוטות\' של הטלפון לשנייה אחת אם לא ניתן להתחבר למשאבה. פעולה זו עשויה לעזור בחלק מהטלפונים שבהם מערכת הבלוטות\' קופאת.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">התראה אם לא התקבלו נתוני סוכר בדם</string>
+    <string name="pref_title_alert_pump_unreachable">התראה כאשר המשאבה אינה זמינה</string>
+    <string name="pref_title_alert_carbs_required">התראה כאשר נדרשות פחמימות</string>
+    <string name="pref_title_alert_urgent_as_android_notification">הפעל התראות דחופות כהתראות אנדרואיד</string>
+    <string name="pref_title_alert_increase_volume">הגברת  עוצמת הקול של ההתראות באופן הדרגתי</string>
+    <string name="pref_title_alert_override_dnd">עקיפת מצב \'נא לא להפריע\'</string>
+    <string name="pref_summary_alert_override_dnd">כשאפשרות זו מופעלת, התראות AAPS נשמעות גם אם הטלפון מושתק או במצב נא לא להפריע. כאשר היא מושבתת, התראות נשארות שקטות במצבים אלה.</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">העלאת נתוני סוכר ל־Nightscout</string>
+    <string name="pref_title_bg_source_create_sensor_change">רישום החלפת חיישן</string>
     <string name="pref_summary_bg_source_create_sensor_change">צור אירוע טיפול להחלפת חיישן בעת ​​הכנסת החיישן.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">אפשר רגישות דינמית</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">יש להשתמש ב-DynamicISF לכוונון הרגישות במקום ב-Autosens.</string>
+    <string name="pref_title_aps_use_autosens">השתמש ב-Autosens</string>
+    <string name="pref_title_aps_use_smb">הפעל SMB</string>
     <string name="pref_summary_aps_use_smb">הפעל סופר מיקרו בולוס. SMB מספק אינסולין באופן מיידי בתגובה לעליית סוכר בדם.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">אפשר SMB עם ערך מטרה זמני גבוה</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">אפשר SMB כאשר ערך מטרה זמני גבוה פעיל.</string>
+    <string name="pref_title_aps_use_smb_always">אפשר SMB תמיד</string>
     <string name="pref_summary_aps_use_smb_with_cob">אפשר SMB כאשר קיימות פחמימות פעילות.</string>
     <string name="pref_summary_aps_sensitivity_raises_target">כאשר מזוהה רגישות מוגברת, העלה את ערך מטרת הסוכר.</string>
     <string name="pref_summary_aps_resistance_lowers_target">כאשר מזוהה עמידות לאינסולין, הורד את ערך מטרת הסוכר.</string>
@@ -141,14 +165,21 @@
     <string name="pref_title_protection_timeout">זמן תפוגת ההגנה</string>
     <string name="pref_title_protection_type_application">רמה 0: הגנה על האפליקציה</string>
     <string name="pref_summary_protection_type_application">בעת הפעלת האפליקציה ובחזרה אליה. בלתי תלוי ברמות האחרות</string>
+    <string name="pref_title_protection_type_settings">רמה 2: הגנה על הגדרות</string>
+    <string name="pref_summary_protection_type_settings">עריכת פרופילים והעדפות</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">ללא הגנה</string>
     <string name="biometric">זיהוי ביומטרי</string>
+    <string name="master_password">סיסמה ראשית</string>
     <string name="custom_password">סיסמא מותאמת אישית</string>
     <string name="custom_pin">PIN מותאם אישית</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">כמות הפחמימות המרבית המותרת</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">שינוי מינימלי במצב לולאה פתוחה</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">מרווח SMB</string>
     <string name="uam_smb_max_minutes">מקס\' דקות של SMB UAM</string>
     <string name="carbs_req_threshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
     <string name="dyn_isf_adjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. קבעו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
@@ -267,6 +298,13 @@
     <string name="absorption_max_time_summary">מספר השעות בהן צפוי שכל הפחמימות מארוחה ייספגו</string>
     <string name="openapsama_autosens_min_summary">ערך ברירת מחדל: 0.7\nבצד השני של מגבלות הבטיחות של Autosens, ערך זה מגביל את יכולתו של autosens להוריד את הערכים הבזאליים ועד כמה יכול להעלות את יחס התיקון ואת ערכי מטרת הסוכר בדם.</string>
     <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלת המכפיל של Autosens (ובקרוב Autotune) שמגדירה 20% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
+    <string name="pref_title_autoisf_max">AutoISF מרבי</string>
+    <string name="openapsama_autoISF_max_summary">בדומה ל־autosens_max, ערך זה מגדיר עד כמה ISF יכול להתחזק.\n\nערך ברירת המחדל 1.0 למעשה מבטל השפעה זו.\n\nאזהרה: יש לנקוט זהירות רבה בעת שימוש בערכים מעל 2.5</string>
+    <string name="pref_title_bg_accel_weight">משקל ISF להאצת שינוי הסוכר</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">זהו המשקל שמוחל כאשר השינוי ברמת הסוכר מאיץ, והוא מחזק את ISF ולכן עשוי להגדיל את מתן האינסולין.\n\nערך ברירת המחדל 0.0 למעשה מבטל השפעה זו.</string>
+    <string name="pref_title_bg_brake_weight">משקל ISF להאטת שינוי הסוכר</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">זהו המשקל שמוחל כאשר השינוי ברמת הסוכר מאט, והוא מחליש את ISF ולכן עשוי להפחית את מתן האינסולין.\n\nערך ברירת המחדל 0.0 למעשה מבטל השפעה זו.</string>
+    <string name="pref_title_low_bg_weight">משקל לטווח גלוקוז נמוך</string>
     <string name="openapsama_smb_delivery_ratio_summary">ערך ברירת מחדל: 0.5 זוהי מגבלת בטיחות נוספת של OpenAPS המגדירה איזה חלק מסך האינסולין הנדרש יכול להינתן כ-SMB. מגבלה זו נועדה למנוע כפילות הזרקת SMB הנגרמת מפקודות מהמטפל המרוחק בנוסף למכשיר הראשי. יש להגדיל ערך ניסיוני זה בהדרגה ובזהירות.</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">ערך ברירת מחדל: 0.5 זהו הקצה הנמוך של יחס שמתגבר באופן ליניארי ולא ערך קבוע כפי שמצוין לעיל.</string>
     <!-- UnitDoubleKey: Overview preferences -->
