@@ -13,8 +13,6 @@
     <string name="widget_compact_bg_description">AAPS ГК + IOB + COB (компактный)</string>
     <string name="widget_small_description">AAPS Маленький</string>
     <!--     Activities-->
-    <string name="activity_monitor">Монитор активности</string>
-    <string name="time_range">Диапазон времени</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Пятиугольник глюкозы (CGP) — 14 дней</string>
     <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Гипо</string>
@@ -27,7 +25,6 @@
     <string name="cgp_pgr_moderate">Средний риск</string>
     <string name="cgp_pgr_high">Высокий риск</string>
     <string name="cgp_pgr_extremely_high">Крайне высокий риск</string>
-    <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
     <string name="do_you_want_recalculate_tdd_stats">Хотите пересчитать статистику TDD?</string>
     <string name="calculation_in_progress">Идет подсчет</string>
     <string name="age">Возраст</string>
