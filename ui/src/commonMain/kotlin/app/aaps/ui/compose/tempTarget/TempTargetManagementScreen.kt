@@ -33,7 +33,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -503,23 +502,6 @@ fun TempTargetManagementScreen(
                         }
                     }
 
-                    // Mini FAB for Cancel (only visible when TT is active). Hidden on a client whose master is
-                    // unreachable — canceling a TT is a master/NS action that couldn't be delivered.
-                    if (editingEnabled && uiState.activeTT != null && !isReorderMode) {
-                        SmallFloatingActionButton(
-                            onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp, bottom = 88.dp),
-                            containerColor = MaterialTheme.colorScheme.error
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Close,
-                                contentDescription = stringResource(CoreUiStrings.cancel)
-                            )
-                        }
-                    }
-
                     // Floating Toolbar with FAB (M3 style) — both are absolutely positioned over the
                     // cards, so they are hidden while sorting rather than left floating over the sort controls.
                     if (!isReorderMode) Row(
@@ -572,6 +554,23 @@ fun TempTargetManagementScreen(
                                         )
                                     }
                                 }
+                            }
+                        }
+
+                        // Cancel the active TT, next to Activate where the user looks for actions. It used to be
+                        // a small red × floating above this row, which landed beside the time field and read as
+                        // "clear this field". Same master-reachable rule as Activate: cancelling is a master/NS
+                        // action that couldn't be delivered.
+                        if (editingEnabled && uiState.activeTT != null) {
+                            AapsFab(
+                                onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = stringResource(CoreUiStrings.clientcontrol_action_cancel_temp_target)
+                                )
                             }
                         }
 

@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.unit.height
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.ui.compose.ScreenMode
@@ -64,6 +66,7 @@ class TempTargetManagementScreenTest {
     private lateinit var removeLabel: String
     private lateinit var activateLabel: String
     private lateinit var cancelLabel: String
+    private lateinit var cancelTargetLabel: String
     private lateinit var saveLabel: String
     private lateinit var reorderLabel: String
     private lateinit var okLabel: String
@@ -85,6 +88,7 @@ class TempTargetManagementScreenTest {
         removeLabel = context.getString(app.aaps.ui.R.string.remove_label)
         activateLabel = context.getString(app.aaps.ui.R.string.activate_label)
         cancelLabel = context.getString(app.aaps.core.ui.R.string.cancel)
+        cancelTargetLabel = context.getString(app.aaps.core.ui.R.string.clientcontrol_action_cancel_temp_target)
         saveLabel = context.getString(app.aaps.core.ui.R.string.save)
         reorderLabel = context.getString(app.aaps.core.ui.R.string.reorder)
         okLabel = context.getString(app.aaps.core.ui.R.string.ok)
@@ -224,14 +228,28 @@ class TempTargetManagementScreenTest {
     fun theCancelButtonIsOnlyThereWhileATargetIsRunning() {
         setScreen(viewModels.build(presets = builtIns))
 
-        compose.onNodeWithContentDescription(cancelLabel).assertDoesNotExist()
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertDoesNotExist()
     }
 
     @Test
     fun aRunningTargetCanBeCancelled() {
         setScreen(viewModels.build(presets = builtIns, activeTT = activeTt()))
 
-        compose.onNodeWithContentDescription(cancelLabel).assertIsDisplayed()
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertIsDisplayed()
+    }
+
+    @Test
+    fun theCancelButtonSitsNextToActivate() {
+        // Users missed it when it floated beside the time field (4.0 beta). Both are full FABs in the
+        // same row, so the cancel button is as big as Activate and stands left of it.
+        setScreen(viewModels.build(presets = builtIns, activeTT = activeTt()))
+
+        // A FAB merges its icon's description into its own node, so these are the FAB bounds.
+        val cancel = compose.onNodeWithContentDescription(cancelTargetLabel).getBoundsInRoot()
+        val activate = compose.onNodeWithContentDescription(activateLabel).getBoundsInRoot()
+        assertThat(cancel.height).isEqualTo(activate.height)
+        assertThat(cancel.top).isEqualTo(activate.top)
+        assertThat(cancel.right).isLessThan(activate.left)
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -247,7 +265,7 @@ class TempTargetManagementScreenTest {
         compose.onNodeWithText(offlineBanner).assertIsDisplayed()
         // Activate and Cancel both go to the master, so neither may be offered.
         compose.onNodeWithContentDescription(activateLabel).assertDoesNotExist()
-        compose.onNodeWithContentDescription(cancelLabel).assertDoesNotExist()
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertDoesNotExist()
         // The editor is hidden too: nothing typed there could be saved or activated.
         compose.onNodeWithText(presetSettings).assertDoesNotExist()
         // Offline forces play mode, so the edit toolbar is gone as well.
@@ -263,7 +281,7 @@ class TempTargetManagementScreenTest {
 
         compose.onNodeWithText(offlineBanner).assertDoesNotExist()
         compose.onNodeWithContentDescription(activateLabel).assertIsDisplayed()
-        compose.onNodeWithContentDescription(cancelLabel).assertIsDisplayed()
+        compose.onNodeWithContentDescription(cancelTargetLabel).assertIsDisplayed()
         compose.onNodeWithText(presetSettings).assertIsDisplayed()
     }
 
