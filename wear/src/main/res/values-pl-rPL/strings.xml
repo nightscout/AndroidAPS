@@ -19,8 +19,8 @@
     <string name="pref_show_delta">Pokaż Deltę</string>
     <string name="pref_show_detailed_delta">Pokaż szczegółowo Deltę</string>
     <string name="pref_show_avgdelta">Pokaż Śr. Deltę</string>
-    <string name="pref_show_phone_battery">Pokaż Baterię Telefonu</string>
-    <string name="pref_show_rig_battery">Pokaż Baterię Zestawu</string>
+    <string name="pref_show_phone_battery">Pokaż baterię telefonu</string>
+    <string name="pref_show_rig_battery">Pokaż baterię zestawu</string>
     <string name="pref_show_basal_rate">Pokaż Bazę</string>
     <string name="pref_show_temp_target">Pokaż Cel Tymczasowy</string>
     <string name="pref_show_reservoir_level">Pokaż poziom zbiornika</string>
