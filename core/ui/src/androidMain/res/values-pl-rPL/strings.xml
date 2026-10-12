@@ -377,7 +377,7 @@
     <string name="uel_reset_aps_results">RESET WYNIKÓW APS</string>
     <string name="uel_cleanup_databases">WYCZYŚĆ BAZY DANYCH</string>
     <string name="uel_export_databases">EKSPORT BAZ DANYCH</string>
-    <string name="uel_import_databases">IMPORT BAZ DANCH</string>
+    <string name="uel_import_databases">IMPORT BAZ DANYCH</string>
     <string name="uel_otp_export">EXPORT OTP</string>
     <string name="uel_otp_reset">RESET OTP</string>
     <string name="uel_stop_sms">STOP SMS</string>
