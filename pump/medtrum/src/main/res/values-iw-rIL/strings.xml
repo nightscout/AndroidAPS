@@ -2,9 +2,11 @@
 <resources>
     <!-- MedtrumPump -->
     <string name="medtrum_pump_description">תמיכה במשאבת Medtrum Nano ו-Medtrum 300U</string>
+    <string name="pump_warning">אזהרת משאבה: %1$s </string>
     <string name="pump_sync_error">חלה שגיאה בזמן סינכרון ההיסטוריה מהמשאבה, רשומה דולגה. בדקו ב-\"טיפולים\" האם הבולוסים סונכרנו כיאות. אשרו את ההתראה ואם השגיאה חוזרת על עצמה, החליפו את המשאבה.</string>
     <!-- overview fragment -->
     <string name="active_bolus_label">בולוס פעיל</string>
+    <string name="patch_no_label">מספר המשאבה המדויק</string>
     <!-- Alarm strings -->
     <!-- Status strings -->
     <string name="status_stopped">נעצר</string>
@@ -12,9 +14,18 @@
     <string name="retry">נסה שנית</string>
     <string name="step_prepare_patch_connect">חיבור ומילוי</string>
     <string name="step_prime">תיחול</string>
+    <string name="step_activate">מפעיל...</string>
     <string name="can_export_settings">ניתן לייצא את ההגדרות כדי להיות מסוגלים לשחזר את הפעלת המשאבה הנוכחית מאוחר יותר.</string>
     <string name="press_OK_to_return">לחץ <b>OK</b> לחזרה למסך המרכזי.</string>
     <!-- settings-->
+    <string name="alarm_setting_vibrate_beep">רטט וצפצוף</string>
+    <string name="alarm_setting_beep">צפצוף</string>
+    <string name="pump_warning_notification_summary">הצג התראה על אזהרות משאבה שאינן קריטיות: סוללה חלשה, מיכל נמוך (20 יחידות) ותוקף פג בקרוב. מומלץ להשאיר מופעל כאשר אזעקות המשאבה מוגדרות לשקט.</string>
+    <string name="pump_warning_expiry_hour_title">אזהרת תפוגת משאבה [שעות]</string>
+    <string name="pump_warning_expiry_hour_summary">הצג התראה בשעה שצוינה לאחר ההפעלה.</string>
+    <string name="patch_expiration_summary">כאשר יופעל, הפוד יהיה בתוקף למשך 3 ימים, עם תקופת חסד של 8 שעות לאחר מכן.</string>
+    <string name="hourly_max_insulin_title">אינסולין מקסימלי לשעה [יחידות]</string>
+    <string name="daily_max_insulin_title">מקסימום אינסולין יומי [יחידות]</string>
     <string name="scan_on_connection_error_title">סריקה בשגיאת חיבור</string>
     <string name="scan_on_connection_error_summary">אזהרה: הפעילו רק אם נתקלתם בבעיות תקשורת. אם הפונקציה מופעלת, מנהל ההתקן יסרוק שוב את המשאבה לפני שינסה להתחבר אליה מחדש. ודאו שיש לכם הרשאת מיקום שמוגדרת ל\"אפשר תמיד\" </string>
     <!-- treatment state-->
