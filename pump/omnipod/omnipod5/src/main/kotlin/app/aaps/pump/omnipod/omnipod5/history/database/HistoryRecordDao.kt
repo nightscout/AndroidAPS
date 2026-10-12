@@ -5,8 +5,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Delete
-import app.aaps.pump.omnipod.omnipod5.history.data.InitialResult
-import app.aaps.pump.omnipod.omnipod5.history.data.ResolvedResult
+import app.aaps.pump.omnipod.common.history.data.InitialResult
+import app.aaps.pump.omnipod.common.history.data.ResolvedResult
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,11 +47,13 @@ import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.pump.common.defs.PumpHistoryEntryGroup
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.omnipod5.R
-import app.aaps.pump.omnipod.omnipod5.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.omnipod5.history.data.BolusRecord
-import app.aaps.pump.omnipod.omnipod5.history.data.BolusType
-import app.aaps.pump.omnipod.omnipod5.history.data.HistoryRecord
-import app.aaps.pump.omnipod.omnipod5.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
+import app.aaps.pump.omnipod.common.history.data.HistoryRecord
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
+import app.aaps.core.ui.R as CoreUiR
+import app.aaps.pump.omnipod.common.R as OmnipodCommonR
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -65,12 +66,12 @@ fun O5PodHistoryScreen(
         Scaffold(
             topBar = {
                 AapsTopAppBar(
-                    title = { Text(stringResource(app.aaps.pump.omnipod.common.R.string.omnipod_common_pod_management_button_pod_history)) },
+                    title = { Text(stringResource(OmnipodCommonR.string.omnipod_common_pod_management_button_pod_history)) },
                     navigationIcon = {
                         IconButton(onClick = onBack) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.back)
+                                contentDescription = stringResource(CoreUiR.string.back)
                             )
                         }
                     }
@@ -176,7 +177,7 @@ private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: 
     return when (val value = record.record) {
         is TempBasalRecord -> rh.gs(R.string.omnipod_o5_history_tbr_value, value.rate, value.duration)
         is BolusRecord -> when (value.bolusType) {
-            BolusType.BASAL_DRIFT_COMPENSATION ->
+            BolusType.BASAL_CORRECTION ->
                 rh.gs(R.string.omnipod_o5_history_basal_drift_compensation_bolus_value, value.amount)
             else -> rh.gs(R.string.omnipod_o5_history_bolus_value, value.amount)
         }

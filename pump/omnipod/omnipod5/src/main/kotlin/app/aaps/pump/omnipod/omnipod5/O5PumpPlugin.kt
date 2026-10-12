@@ -84,11 +84,11 @@ import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.basalDrift
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.basalDelivered
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.util.buildO5ExpirationAlerts
 import app.aaps.pump.omnipod.omnipod5.history.O5History
-import app.aaps.pump.omnipod.omnipod5.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.omnipod5.history.data.BolusRecord
-import app.aaps.pump.omnipod.omnipod5.history.data.BolusType
-import app.aaps.pump.omnipod.omnipod5.history.data.InitialResult
-import app.aaps.pump.omnipod.omnipod5.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
+import app.aaps.pump.omnipod.common.history.data.InitialResult
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
 import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
 import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
@@ -1542,7 +1542,7 @@ class O5PumpPlugin @Inject constructor(
                 commandType = OmnipodCommandType.SET_BOLUS,
                 date = startedAt,
                 initialResult = InitialResult.NOT_SENT,
-                bolusRecord = BolusRecord(requestedInsulinAmount, BolusType.BASAL_DRIFT_COMPENSATION)
+                bolusRecord = BolusRecord(requestedInsulinAmount, BolusType.BASAL_CORRECTION)
             ).blockingGet()
             val pendingDose = O5PodStateManager.PendingDoseCommand(
                 type = O5PodStateManager.PendingDoseType.BOLUS,

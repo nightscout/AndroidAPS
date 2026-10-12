@@ -1,12 +1,12 @@
 package app.aaps.pump.omnipod.omnipod5.history
 
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
-import app.aaps.pump.omnipod.omnipod5.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.omnipod5.history.data.BolusRecord
-import app.aaps.pump.omnipod.omnipod5.history.data.HistoryRecord
-import app.aaps.pump.omnipod.omnipod5.history.data.InitialResult
-import app.aaps.pump.omnipod.omnipod5.history.data.ResolvedResult
-import app.aaps.pump.omnipod.omnipod5.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.history.data.HistoryRecord
+import app.aaps.pump.omnipod.common.history.data.InitialResult
+import app.aaps.pump.omnipod.common.history.data.ResolvedResult
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.omnipod5.history.database.HistoryRecordDao
 import app.aaps.pump.omnipod.omnipod5.history.database.HistoryRecordEntity
 import dev.zacsweers.metro.Inject

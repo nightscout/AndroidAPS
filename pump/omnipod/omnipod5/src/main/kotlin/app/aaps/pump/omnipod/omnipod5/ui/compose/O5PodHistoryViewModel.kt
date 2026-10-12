@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.pump.omnipod.omnipod5.history.O5History
-import app.aaps.pump.omnipod.omnipod5.history.data.HistoryRecord
+import app.aaps.pump.omnipod.common.history.data.HistoryRecord
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
