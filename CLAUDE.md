@@ -201,9 +201,10 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
     - Remove unused functions, parameters, and extensions
     - Delete deprecated code and escape hatches
     - Compile frequently to verify nothing breaks
-- **Remove dead code when you find it**, in the same change, including unreferenced resources (delete
-  those from every locale). Do not ship a generator, an interface or a registration that nothing uses
-  yet - add it when the thing that consumes it lands.
+- **Remove dead code when you find it**, in the same change, including unreferenced resources. For
+  strings, delete them from the English `values/strings.xml` only (see the strings rule below). Do not
+  ship a generator, an interface or a registration that nothing uses yet - add it when the thing that
+  consumes it lands.
     - **But check first whether the dead code is hiding a bug.** A private function with no callers,
       or a parameter that is always the default, can mean a caller was lost rather than that the code
       is obsolete. `TriggerBTDevice.devicesPaired()` looked like dead code and was in fact a
@@ -229,7 +230,9 @@ reported `NO-SOURCE`. That was wrong by the time anyone read it, and it caused w
   imports, API changes, type changes, new files) could cause errors.
 - Avoid duplication while writing new code and resources. Prefer moving to another module. Elaborate
   if you think, it's necessary
-- When resource strings are affected, change only english version. Ignore translations
+- **Strings: touch the English `values/strings.xml` only.** This applies when you add, change or
+  remove a string, also when you delete an unused one. Never edit the translated `values-xx/strings.xml`
+  files: translations come from Crowdin (`crowdin.yml`) and are updated from there.
 - **Never manipulate localized strings programmatically** - Using patterns like
   `.replace(",", ".")`,
   `.removeSuffix(":")`, or stripping characters from resource strings breaks localization. Different
