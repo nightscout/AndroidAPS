@@ -57,6 +57,19 @@
     <string name="result">Rezultat</string>
     <string name="settings">Ustawienia</string>
     <string name="open_plugin">Otwórz wtyczkę</string>
+    <string name="configbuilder_pick_one_hint">Wybierz jeden. Tylko jeden może być aktywny naraz. </string>
+    <string name="configbuilder_pick_many_hint">Wybierz wszystkie, które pasują.</string>
+    <string name="configbuilder_no_selection_warning">Żadna wtyczka nie jest wybrana w tej kategorii.</string>
+    <string name="configbuilder_switch_confirmation_title">Zmienić wtyczkę?</string>
+    <string name="configbuilder_switch_confirmation">To wyłączy %1$s i włączy %2$s.</string>
+    <string name="expand">Rozwiń</string>
+    <string name="collapse">Zwiń</string>
+    <string name="state_completed" comment="Spoken state of a checklist task that is finished, said after the task name. The only other sign of it is a tick icon, so a screen reader needs this to tell done from still to do.">Ukończono</string>
+    <string name="state_expanded" comment="Spoken STATE of a section that is currently open, said after its name: Pump settings, expanded. Not the Expand button, which is the action - this is an adjective, and some languages word the two differently.">Rozwinięte</string>
+    <string name="state_collapsed" comment="Spoken STATE of a section that is currently closed, said after its name: Pump settings, collapsed. Not the Collapse button, which is the action - this is an adjective, and some languages word the two differently.">Zwinięte</string>
+    <string name="no_compose_preferences">Brak dostępnych ustawień dla tej wtyczki.</string>
+    <string name="confirm_password_hint">Potwierdź hasło</string>
+    <string name="confirm_pin_hint">Potwierdź PIN</string>
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Wskaźniki stanu</string>
     <string name="configbuilder_insulin">Insulina</string>
@@ -414,10 +427,60 @@
     <string name="clientcontrol_fail_site_entry_not_found">Wpis miejsca wkłucia już nie istnieje.</string>
     <string name="clientcontrol_fail_scene_disabled">Scena jest wyłączona.</string>
     <string name="clientcontrol_fail_partial">Niektóre działania nie zostały zastosowane.</string>
+    <string name="clientcontrol_fail_execution">Telefon pacjenta nie mógł tego zastosować.</string>
+    <string name="clientcontrol_fail_cancelled">Polecenie zostało anulowane przed wykonaniem. Nic nie zostało wysłane do pompy.</string>
+    <string name="bolus_cancelled_no_insulin" comment="%1$s=why the command was dropped, e.g. the settings import message. Shown when a bolus was removed from the queue before it reached the pump.">Bolus anulowany. Nie podano insuliny.\n%1$s</string>
+    <string name="command_cancelled_title" comment="Dialog title when a command was dropped before it reached the pump. Used instead of an error title, because nothing failed.">Anulowano</string>
+    <string name="clientcontrol_fail_control_disabled">Zdalne sterowanie jest wyłączone na telefonie pacjenta.</string>
+    <string name="clientcontrol_fail_no_pending_bolus">Przygotowany wcześniej bolus wygasł lub został zastąpiony nowszym. Naciśnij przycisk ponownie.</string>
+    <string name="clientcontrol_fail_bolus_compute">Telefon pacjenta nie mógł obliczyć bolusa (brak glukozy / profilu lub pompa nie jest gotowa).</string>
+    <string name="clientcontrol_fail_internal">Coś poszło nie tak.</string>
+    <string name="clientcontrol_fail_unknown">Polecenie nie powiodło się.</string>
+    <string name="clientcontrol_unconfirmed_wear">Stan nieznany - sprawdź telefon lub Nightscout przed podaniem kolejnego bolusa.</string>
+    <string name="clientcontrol_bolus_progress_stalled_title">Utracono połączenie - status dostarczenia nieznany</string>
+    <string name="clientcontrol_bolus_progress_stalled_body">Ten telefon przestał otrzymywać aktualizacje z telefonu pacjenta. Bolus może nadal być podawany lub mógł się już zakończyć. Zamknięcie tego okna tylko je ukrywa - nie zatrzymuje pompy. Sprawdź na telefonie pacjenta, ile insuliny faktycznie zostało podane.</string>
+    <string name="scene_revert_tt">Anuluj cel tymczasowy</string>
+    <string name="scene_revert_profile">Cofnij zmianę profilu</string>
+    <string name="scene_revert_smb_on">Ponownie włącz SMB</string>
+    <string name="scene_revert_smb_off">Wyłącz SMB</string>
+    <string name="scene_revert_loop_mode">Anuluj aktywne nadpisanie trybu</string>
+    <string name="scene_careportal_no_revert">Wpisy z portalu opieki nie zostaną cofnięte.</string>
+    <string name="careportal_sickness">Choroba</string>
+    <string name="careportal_stress">Stres</string>
+    <string name="careportal_pre_period">Przed miesiączką</string>
+    <string name="careportal_alcohol">Alkohol</string>
+    <string name="careportal_cortisone">Kortyzon</string>
+    <string name="careportal_feeling_low">Czuję niedocukrzenie</string>
+    <string name="careportal_feeling_high">Czuję wysoki cuker</string>
+    <string name="careportal_falling_asleep">Zasypianie</string>
+    <string name="careportal_waking_up">Pobudka</string>
     <string name="careportal_temporarytargetvalue">Wartość celu tymczasowego</string>
     <string name="careportal_temporarytargetcancel">Odrzuć Cel tymczasowy</string>
     <string name="boluswizard">Kalkulator bolusa</string>
     <string name="treatment_desc">Podaj bolus i zapisz węglowodany razem</string>
+    <string name="treatment_insulin_desc">Podaj bolus ręcznie</string>
+    <string name="treatment_carbs_desc">Zapisz węglowodany bez insuliny</string>
+    <string name="treatment_calculator_desc">Oblicz bolus</string>
+    <string name="insulin_management" comment="Name of the screen for editing insulin types (DIA, peak). Must NOT translate to the same word as overview_insulin_label, which names the bolus action - both can sit next to each other on the quick launch toolbar, and one of them delivers insulin.">Ustawienia insuliny</string>
+    <string name="manage_insulin_desc">Zarządzaj konfiguracjami insulin i aktywuj je</string>
+    <string name="concentration_disable_blocked">Nie można wyłączyć obsługi stężenia insuliny, dopóki istnieją insuliny inne niż U100. Usuń wszystkie konfiguracje insulin innych niż U100 i najpierw przełącz się na profil U100.</string>
+    <string name="simple_mode_blocked_by_concentration">Nie można włączyć trybu uproszczonego podczas używania insuliny innej niż U100. Najpierw przełącz się na insulinę U100.</string>
+    <string name="manage_profile_desc">Zarządzaj i aktywuj profile</string>
+    <string name="manage_temp_target_desc">Zarządzaj i ustawiaj tymczasowe cele</string>
+    <string name="manage_temp_basal_desc">Rozpocznij tymczasową dawkę bazową</string>
+    <string name="manage_extended_bolus_desc">Rozpocznij podawanie bolusa przedłużonego</string>
+    <string name="manage_site_rotation_desc">Śledź i zmieniaj miejsca wkłucia</string>
+    <string name="manage_quickwizard_desc">Zarządzaj presetami kalkulatora bolusa</string>
+    <string name="treatment_note_desc">Dodaj notatkę do swojego dziennika.</string>
+    <string name="treatment_question_desc">Zapisz pytanie dla swojego zespołu opieki</string>
+    <string name="treatment_cgm_desc">Otwórz aplikację CGM</string>
+    <string name="treatment_calibration_desc">Kalibruj sensor CGM</string>
+    <string name="treatment_bg_check_desc">Zapisz pomiar glikemii</string>
+    <string name="treatment_exercise_desc">Zapisz ćwiczenia fizyczne</string>
+    <string name="treatment_announcement_desc">Opublikuj ogłoszenie</string>
+    <string name="treatment_sensor_insert_desc">Odnotuj założenie sensora CGM</string>
+    <string name="treatment_battery_change_desc">Odnotuj wymianę baterii pompy</string>
+    <string name="treatment_cannula_change_desc">Odnotuj zmianę kaniuli/zestawu infuzyjnego</string>
     <string name="treatment_fill_desc">Napełnij dren i wypełnij kaniulę</string>
     <string name="temp_basal">Tymczasowa dawka bazowa</string>
     <string name="tbr_state_above_profile" comment="Spoken state of the temp basal chip when the running rate is higher than the profile basal. Said after the chip name: Temp basal, above profile.">Powyżej profilu</string>
@@ -938,29 +1001,79 @@
     <string name="basal_short">BAS</string>
     <string name="target_short">CEL</string>
     <string name="profile_name">Nazwa profilu:</string>
+    <string name="edit_profile_name">Edytuj nazwę profilu</string>
     <string name="units_colon">Jednostki:</string>
+    <string name="unsaved_changes">Niezapisane zmiany</string>
+    <string name="unsaved_changes_message">Masz niezapisane zmiany. Co chcesz zrobić?</string>
     <string name="discard">Odrzuć</string>
     <string name="ic_dynamic_label_warning">Twój algorytm potrafi dostarczyć dynamiczne obliczenia IC. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych lub wyłącznie jako wartości referencyjne</string>
     <string name="isf_dynamic_label_warning">Twój algorytm potrafi dostarczyć dynamiczne obliczenia ISF. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych lub wyłącznie jako wartości referencyjne</string>
+    <string name="add_time_block">Dodaj przedział czasowy</string>
+    <string name="remove_entry">Usuń pozycję</string>
+    <string name="target_low_label">Dolny</string>
+    <string name="target_high_label">Górny</string>
     <!--    Search-->
+    <string name="search">Szukaj</string>
+    <string name="clear">Wyczyść</string>
+    <string name="search_category_categories">Kategorie ustawień</string>
+    <string name="search_category_preferences">Ustawienia</string>
+    <string name="search_category_dialogs">Dialogi</string>
+    <string name="search_category_plugins">Wtyczki</string>
+    <string name="search_category_wiki">Dokumentacja</string>
+    <string name="wiki_search_offline">Wyszukiwanie w dokumentacji wymaga połączenia z internetem</string>
+    <string name="no_search_results">Nie znaleziono wyników</string>
+    <string name="search_plugin_disabled">Wtyczka %1$s wyłączona</string>
     <!--    Food Management -->
+    <string name="food_management">Żywność</string>
+    <string name="food_deleted">Usunięto produkt</string>
+    <string name="edit_food">Edytuj produkt</string>
+    <string name="add_food">Dodaj produkt</string>
+    <string name="name">Nazwa</string>
     <string name="category">Kategoria</string>
     <string name="subcategory">Podkategoria</string>
+    <string name="portion">Wielkość porcji</string>
+    <string name="unit_label">Jednostka</string>
+    <string name="undo">Cofnij zmianę</string>
+    <string name="no_data">Brak danych</string>
+    <string name="manage_food_desc">Zarządzaj wpisami w bazie produktów spożywczych</string>
+    <string name="label_carbs_g">Węglowodany (g)</string>
+    <string name="label_fat_g">Tłuszcz (g)</string>
+    <string name="label_protein_g">Białko (g)</string>
+    <string name="label_energy_kj">Energia (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Ustawienia logowania</string>
     <string name="resettodefaults">Przywróć ustawienia domyślne</string>
     <!--    Maintenance-->
     <string name="maintenance">Konserwacja</string>
     <string name="description_maintenance">Utwórz i przywróć kopie zapasowe ustawień, ustaw i prześlij diagnostykę, zarządzaj bazą danych</string>
+    <string name="log_files">Pliki logów</string>
     <string name="delete_logs">Usuń logi</string>
+    <string name="logs_deleted">Logi usunięte</string>
     <string name="aaps_directory">katalog AAPS</string>
     <string name="import_setting">Importuj ustawienia</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Odszyfruj i sprawdź</string>
+    <string name="import_decrypt">Odszyfruj</string>
+    <string name="import_master_password">Hasło główne</string>
+    <string name="import_decryption_password">Hasło do odszyfrowania</string>
+    <string name="import_different_password_hint">Plik został zaszyfrowany innym hasłem</string>
+    <string name="import_wrong_password">Nieprawidłowe hasło</string>
+    <string name="import_btn">Importuj</string>
+    <string name="import_anyway_btn">Importuj mimo to</string>
+    <string name="import_apply_title">Zastosować zaimportowane ustawienia?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
       and this screen is shared with iOS and desktop - Android <plurals> are read with rh.gq(), which
       only exists on Android. A label and a number agree with any quantity in any language.
     -->
+    <string name="import_apply_message" comment="%1$d=how many settings change. Example: Settings to change: 34.">Ustawienia do zmiany: %1$d. Zmienione wtyczki zostaną uruchomione ponownie.</string>
+    <string name="import_apply_message_pump_kept" comment="%1$d=how many settings change, %2$d=how many pump settings are left untouched. Example: Settings to change: 34. Pump settings kept: 6.">Ustawienia do zmiany: %1$d. Zachowano ustawienia pompy: %2$d, więc pompa nadal będzie działać.</string>
+    <string name="import_pump_fell_back" comment="%1$s=name of the pump driver now active, e.g. Virtual pump. Shown when an import left no pump selected.">Zaimportowane ustawienia nie wskazywały żadnej pompy dostępnej na tym telefonie. Aktywna jest teraz %1$s - sprawdź ustawienia pompy.</string>
+    <string name="import_applying">Stosowanie ustawień…</string>
+    <string name="import_replace_pump_settings">Także zastąp ustawienia pompy</string>
+    <string name="import_replace_pump_settings_summary">Pozostaw wyłączone, aby zachować pompę, z którą ten telefon jest sparowany. Włącz, gdy przywracasz ustawienia na nowy telefon z tą samą pompą.</string>
+    <string name="import_apply_waiting">Oczekiwanie na pompę…</string>
+    <string name="import_apply_pump_busy">Pompa jest nadal zajęta, więc ustawienia nie zostały zastosowane.</string>
     <string name="import_apply_retry_question">Spróbować ponownie teraz?</string>
     <string name="import_applied_title">Ustawienia zastosowane</string>
     <string name="import_applied_message">Zaimportowane ustawienia są teraz w użyciu.</string>
