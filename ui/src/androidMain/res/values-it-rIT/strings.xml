@@ -14,8 +14,6 @@
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (compatto)</string>
     <string name="widget_small_description">AAPS Small</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitor attività</string>
-    <string name="time_range">Intervallo di tempo</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Glucosio Pentagon (CGP) — 14 giorni</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -31,7 +29,6 @@
     <string name="cgp_pgr_moderate">Rischio moderato</string>
     <string name="cgp_pgr_high">Rischio alto</string>
     <string name="cgp_pgr_extremely_high">Rischio estremamente elevato</string>
-    <string name="do_you_want_reset_stats">Vuoi resettare le statistiche sull\'attività?</string>
     <string name="do_you_want_recalculate_tdd_stats">Vuoi ricalcolare le statistiche TDD?</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
     <string name="age">Età</string>
