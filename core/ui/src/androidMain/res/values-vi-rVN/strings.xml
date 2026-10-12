@@ -111,6 +111,9 @@
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d phút</string>
     <string name="value_with_unit" comment="A numeric value followed by its unit, when no dedicated value template exists. %1$s = value, %2$s = unit. Example: 120 mg/dl">%1$s %2$s</string>
+    <string name="value_in_parentheses" comment="A value shown in brackets after another value. %1$s = the value with its unit. Example: (4 min)">(%1$s)</string>
+    <string name="value_with_plus_sign" comment="A value that is added, or a time later than now. %1$s = the value with its unit. Example: +15 min">+%1$s</string>
+    <string name="value_with_minus_sign" comment="A time earlier than now. %1$s = the value with its unit. Example: -15 min">-%1$s</string>
     <string name="objectives">Mục tiêu học tập</string>
     <string name="please_wait">Vui lòng chờ…</string>
     <string name="stop">Dừng lại</string>
@@ -322,6 +325,7 @@
     <string name="careportal_note_message">Ghi chú : %1$s</string>
     <string name="careportal_question_message">Câu hỏi: %1$s</string>
     <string name="careportal_exercise_message">Bài tập luyện : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Thay đổi vị trí truyền insulin: %1$s</string>
     <string name="careportal_pump_site_change">Thay vị trí bơm</string>
     <string name="cgm_sensor_insert">Gắn cảm biến</string>
     <string name="careportal_pump_site_management">Vị trí tiêm</string>
@@ -737,6 +741,7 @@
     <string name="wizard_carb_time">Thời gian ăn</string>
     <string name="carb_time_now">Bây giờ</string>
     <string name="change">Thay đổi</string>
+    <string name="label_with_colon" comment="A field name shown before its value, which follows on the same line. %1$s = field name. Example: Carb time:">%1$s:</string>
     <string name="grant">Cấp quyền</string>
     <string name="set">Cài đặt</string>
     <string name="wizard_set_alarm">Đặt báo thức</string>
