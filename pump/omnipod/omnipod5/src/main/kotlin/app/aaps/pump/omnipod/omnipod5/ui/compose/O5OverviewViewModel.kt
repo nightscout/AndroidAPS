@@ -43,7 +43,6 @@ import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.common.queue.command.CommandSilenceAlerts
-import app.aaps.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodOverviewEvent
 import dev.zacsweers.metro.AppScope
@@ -279,13 +278,6 @@ class O5OverviewViewModel @Inject constructor(
                 enabled = queueEmpty,
                 visible = podRunning && (podStateManager.deliverySuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class)),
                 onClick = { runCustomCommandWithErrorDialog(CommandResumeDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_resume_delivery)) }
-            ),
-            PumpAction(
-                label = rh.gs(CommonR.string.omnipod_common_overview_button_suspend_delivery),
-                icon = Icons.Filled.Pause,
-                enabled = queueEmpty,
-                visible = podRunning && !podStateManager.deliverySuspended,
-                onClick = { runCustomCommandWithErrorDialog(CommandSuspendDelivery(), rh.gs(CommonR.string.omnipod_common_error_failed_to_suspend_delivery)) }
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_overview_button_set_time),

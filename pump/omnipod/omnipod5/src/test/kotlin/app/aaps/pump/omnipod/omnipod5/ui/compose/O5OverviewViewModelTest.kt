@@ -13,6 +13,7 @@ import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.PumpInfoRow
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodStatus
+import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
 import app.aaps.pump.omnipod.omnipod5.bledriver.pod.state.O5PodStateManager
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -33,12 +34,10 @@ import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.R as CommonR
 
 /**
- * Mirrors [app.aaps.pump.omnipod.dash.ui.compose.DashOverviewViewModelTest]'s pattern for
+ * Mirrors `DashOverviewViewModelTest`'s pattern for
  * O5's [O5OverviewViewModel] - covers [app.aaps.core.ui.compose.pump.PumpOverviewUiState]
- * assembly (the initial value produced by `buildUiState()`). Both tests keep the pod in the
- * pre-activation ("not initialized", `activationProgress = NOT_STARTED`) state, the
- * least stub-heavy branch of `buildInfoRows()`: it emits placeholder rows and never
- * dereferences the pod's optional dosing fields.
+ * assembly (the initial value produced by `buildUiState()`), including action visibility
+ * before activation and while delivery is running or suspended.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class O5OverviewViewModelTest {
@@ -143,8 +142,61 @@ internal class O5OverviewViewModelTest {
 
         val resume = state.primaryActions.first { it.label == "Resume" }
         assertThat(resume.visible).isTrue()
-        val suspend = state.primaryActions.first { it.label == "Suspend" }
-        assertThat(suspend.visible).isFalse()
+        assertThat(resume.enabled).isTrue()
+        assertThat(state.primaryActions.none { it.label == "Suspend" }).isTrue()
+    }
+
+    @Test
+    fun runningActivePod_offersNeitherSuspendNorResume() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.podStatus).thenReturn(PodStatus.RUNNING_ABOVE_MIN_VOLUME)
+        whenever(podStateManager.deliverySuspended).thenReturn(false)
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_button_resume_delivery)).thenReturn("Resume")
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_button_suspend_delivery)).thenReturn("Suspend")
+
+        val state = createViewModel().uiState.value
+
+        assertThat(state.primaryActions.first { it.label == "Resume" }.visible).isFalse()
+        assertThat(state.primaryActions.none { it.label == "Suspend" }).isTrue()
+    }
+
+    @Test
+    fun suspendedActivePod_busyQueue_disablesResume() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.podStatus).thenReturn(PodStatus.RUNNING_ABOVE_MIN_VOLUME)
+        whenever(podStateManager.deliverySuspended).thenReturn(true)
+        whenever(commandQueue.size()).thenReturn(1)
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_button_resume_delivery)).thenReturn("Resume")
+
+        val resume = createViewModel().uiState.value.primaryActions.first { it.label == "Resume" }
+
+        assertThat(resume.visible).isTrue()
+        assertThat(resume.enabled).isFalse()
+    }
+
+    @Test
+    fun activePod_resumeQueued_keepsResumeVisible() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
+        whenever(podStateManager.podStatus).thenReturn(PodStatus.RUNNING_ABOVE_MIN_VOLUME)
+        whenever(podStateManager.deliverySuspended).thenReturn(false)
+        whenever(commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class)).thenReturn(true)
+        whenever(commandQueue.size()).thenReturn(1)
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_button_resume_delivery)).thenReturn("Resume")
+
+        val resume = createViewModel().uiState.value.primaryActions.first { it.label == "Resume" }
+
+        assertThat(resume.visible).isTrue()
+        assertThat(resume.enabled).isFalse()
+    }
+
+    @Test
+    fun preActivation_suspendedState_doesNotOfferResume() {
+        whenever(podStateManager.deliverySuspended).thenReturn(true)
+        whenever(rh.gs(CommonR.string.omnipod_common_overview_button_resume_delivery)).thenReturn("Resume")
+
+        val resume = createViewModel().uiState.value.primaryActions.first { it.label == "Resume" }
+
+        assertThat(resume.visible).isFalse()
     }
 
     @Test
