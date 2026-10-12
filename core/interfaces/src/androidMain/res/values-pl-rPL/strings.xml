@@ -77,14 +77,14 @@
     <string name="pref_show_avgdelta">Pokaż Śr. Deltę</string>
     <string name="pref_show_tempTarget">Pokaż cel tymczasowy</string>
     <string name="pref_show_reservoir_level">Pokaż poziom zbiornika</string>
-    <string name="pref_show_phone_battery">Pokaż Baterię Telefonu</string>
-    <string name="pref_show_rig_battery">Pokaż Baterię Zestawu</string>
+    <string name="pref_show_phone_battery">Pokaż baterię telefonu</string>
+    <string name="pref_show_rig_battery">Pokaż baterię zestawu</string>
     <string name="pref_show_basal_rate">Pokaż Dawkę Bazową</string>
     <string name="pref_show_loop_status">Pokaż Status Pętli</string>
     <string name="pref_show_bg">Pokaż glikemię</string>
     <string name="pref_show_bgi">Pokaż BGI</string>
     <string name="pref_show_direction_arrow">Pokaż Strzałkę Trendu</string>
-    <string name="pref_show_ago">Pokaż Aktualność</string>
+    <string name="pref_show_ago">Pokaż czas od odczytu</string>
     <string name="pref_show_week_number">Pokaż numer tygodnia</string>
     <string name="pref_show_date">Pokaż Datę</string>
     <string name="pref_show_seconds">Pokazuj Sekundy</string>
