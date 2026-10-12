@@ -208,6 +208,9 @@ class MedtrumService : MetroService(), MedtrumBleCallback {
 
     override fun onDestroy() {
         super.onDestroy()
+        // The transport is one instance for the whole app and lives longer than this service. Without
+        // this it kept the destroyed service as its callback (a leak) and could still call into it.
+        bleTransport.setMedtrumCallback(null)
         scope.cancel()
     }
 

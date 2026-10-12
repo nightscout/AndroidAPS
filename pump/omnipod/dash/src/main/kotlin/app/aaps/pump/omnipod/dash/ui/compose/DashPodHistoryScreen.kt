@@ -45,12 +45,12 @@ import app.aaps.pump.common.defs.PumpHistoryEntryGroup
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.BolusType
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.dash.R
-import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.dash.history.data.BolusRecord
-import app.aaps.pump.omnipod.dash.history.data.HistoryRecord
-import app.aaps.pump.omnipod.dash.history.data.InitialResult
-import app.aaps.pump.omnipod.dash.history.data.ResolvedResult
-import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.history.data.HistoryRecord
+import app.aaps.pump.omnipod.common.history.data.InitialResult
+import app.aaps.pump.omnipod.common.history.data.ResolvedResult
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
@@ -227,7 +227,7 @@ private fun formatValue(record: HistoryRecord, rh: ResourceHelper, profileUtil: 
         OmnipodCommandType.SET_BOLUS           -> {
             val bolus = record.record as? BolusRecord
             bolus?.let {
-                val amount = rh.gs(R.string.omnipod_common_history_bolus_value, it.amout)
+                val amount = rh.gs(R.string.omnipod_common_history_bolus_value, it.amount)
                 when (it.bolusType) {
                     BolusType.DEFAULT          -> amount
                     BolusType.SMB              -> rh.gs(R.string.omnipod_common_history_bolus_value_labeled, amount, rh.gs(R.string.omnipod_common_bolus_type_smb))
