@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.dash.history.data
+package app.aaps.pump.omnipod.common.history.data
 
 enum class InitialResult {
     NOT_SENT, FAILURE_SENDING, SENT
