@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatyzacja</string>
+    <string name="automation_enabled">Włączona</string>
+    <string name="automation_read_only">Tylko do odczytu</string>
+    <string name="automation_new_rule">Nowa reguła</string>
+    <string name="automation_empty_desc">Utwórz regułę, aby automatyzować działania na podstawie wyzwalaczy.</string>
+    <string name="automation_edit_rule">Edytuj regułę</string>
+    <string name="automation_discard_title">Odrzucić zmiany?</string>
+    <string name="automation_discard_message">Reguła jest niekompletna i nie może zostać zapisana. Odrzucić zmiany?</string>
+    <string name="automation_discard_confirm">Odrzuć</string>
     <string name="automation_category_time">Czas i harmonogram</string>
     <string name="automation_category_glucose">Glikemia i leczenie</string>
+    <string name="automation_category_device">Stan urządzenia</string>
     <string name="automation_category_sensors">Czujniki i łączność</string>
+    <string name="automation_category_other">Inne</string>
+    <string name="automation_choose_trigger">Dodaj wyzwalacz</string>
+    <string name="automation_add_group">Grupa</string>
+    <string name="automation_choose_action">Dodaj akcję</string>
+    <string name="automation_category_targets">Cele</string>
+    <string name="automation_category_profile">Profil</string>
     <string name="automation_category_loop">Pętla i insulina</string>
+    <string name="automation_category_alerts">Alarmy</string>
+    <string name="automation_category_system">System</string>
+    <string name="automation_category_scenes">Sceny</string>
     <string name="automation_missing_task_name">Proszę wpisać nazwę zadania.</string>
     <string name="automation_missing_trigger">Proszę podać przynajmniej jedno wywołanie.</string>
     <string name="automation_missing_action">Proszę podać przynajmniej jedną akcję.</string>
