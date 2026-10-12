@@ -166,6 +166,9 @@
     <string name="duration10h">10 שעות</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">חסרים %1$d גר\'</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% מהפחמימות מיידיות, ללא פחמימות ממושכות</string>
     <string name="wizard_include_info">הקישו כדי לכלול/להחריג מהחישוב:\n
 • BG — סוכר בדם (מופעל בתחילה)\n
@@ -182,6 +185,11 @@
     <string name="careportal_remove_started_events">הסרת רשומות הפעלת AAPS</string>
     <string name="user_entry">קלט המשתמש</string>
     <string name="clone_label">שכפול</string>
+    <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">דלתא %1$s</string>
+    <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">קריאה ישנה</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
+    <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">גרף סוכר. ערכים אחרונים %1$s</string>
+    <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">בצע</string>
     <string name="add_new_profile">הוספת פרופיל חדש</string>
     <string name="edit_label">עריכה</string>
     <string name="activate_label">הפעלה</string>
@@ -278,6 +286,8 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">פעולות שנבחרו</string>
+    <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">הוסף %1$s</string>
+    <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">הסר %1$s</string>
     <string name="quick_launch_no_dynamic_items">אין פריטים זמינים</string>
     <string name="quick_launch_category_treatment">טיפול</string>
     <string name="quick_launch_category_care">פורטל הטיפולים</string>
@@ -312,4 +322,5 @@
     <string name="cal_precheck_no_pair">לא נרשמו נתוני חיישן ב-10 הדקות האחרונות. נא לוודא את חיבור החיישן.</string>
     <string name="cal_precheck_delta_too_high">רמת הסוכר מתנה מהר מדי (הפרש %1$s %3$s ב-5 דקות, גבול %2$s). נא להמתין להתייצבות הסוכר.</string>
     <string name="cal_precheck_mark_sensor_change">רשום החלפת חיישן</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 </resources>
