@@ -44,6 +44,7 @@
     <string name="equil_error_set_temp_basal_failed_validation">臨時基礎速率的持續時間必須大於零且為%1$s分鐘的倍數。</string>
     <string name="equil_basal_exceeds_max">設定檔基礎率 %1$s U/h 超過了幫浦的最大基礎率 %2$s U/h。請提高最大基礎率設定，並重新連線幫浦。</string>
     <string name="equil_not_enough_insulin">儲液盒中的胰島素不足</string>
+    <string name="equil_bolus_stopped" comment="%1$s=insulin given, with unit, %2$s=insulin asked for, with unit. Example: The pump stopped during the bolus. Given: 11.95 U of 12.00 U">胰島素幫浦在輸注追加劑量期間停止運作。已輸注：%1$s，預計輸注：%2$s</string>
     <string name="equil_pump_not_run">幫浦未運行</string>
     <string name="equil_pair">配對</string>
     <string name="equil_pair_error">配對錯誤</string>
