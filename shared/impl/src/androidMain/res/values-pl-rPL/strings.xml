@@ -3,6 +3,7 @@
     <string name="cwf_comment_background">Obraz w tle</string>
     <string name="cwf_comment_chart">Wykresy (glikemia, baza, prognozy...)</string>
     <string name="cwf_comment_cover_chart">Obraz przed wykresem i za polami tekstowymi</string>
+    <string name="cwf_comment_complication">Miejsce na komplikację</string>
     <string name="cwf_comment_freetext1">Wolne pole tekstowe 1</string>
     <string name="cwf_comment_freetext2">Wolne pole tekstowe 2</string>
     <string name="cwf_comment_freetext3">Wolne pole tekstowe 3</string>
@@ -37,6 +38,7 @@
     <string name="cwf_comment_basalRate">Wartości bazy</string>
     <string name="cwf_comment_bgi">Wartość BGI</string>
     <string name="cwf_comment_status">Synteza statusu</string>
+    <string name="cwf_comment_time">Czas (HH:MM lub HH:MM:SS)</string>
     <string name="cwf_comment_hour">Godzina (HH)</string>
     <string name="cwf_comment_minute">Minuta (MM)</string>
     <string name="cwf_comment_second">Sekunda (SS)</string>
