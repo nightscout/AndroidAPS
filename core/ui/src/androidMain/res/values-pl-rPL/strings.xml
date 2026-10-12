@@ -622,7 +622,6 @@
     <!--    Maintenance-->
     <string name="maintenance">Konserwacja</string>
     <string name="description_maintenance">Dostarcza kilka funkcji używanych do konserwacji (np. wysyłanie logów, kasowanie logów).</string>
-    <string name="log_files">Log files</string>
     <string name="delete_logs">Usuń logi</string>
     <string name="aaps_directory">katalog AAPS</string>
     <string name="import_setting">Importuj ustawienia</string>
