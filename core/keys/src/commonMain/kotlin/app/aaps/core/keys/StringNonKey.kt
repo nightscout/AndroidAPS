@@ -70,6 +70,8 @@ enum class StringNonKey(
     QuickLaunchActions(key = "quick_launch_actions", defaultValue = "[{\"type\":\"wizard\"},{\"type\":\"quick_launch_config\"}]"),
     InsulinConfiguration("insulin_configuration", "{}", sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     ComposeGraphConfig("compose_graphconfig", ""),
+    /** Values hidden in the pop-up when holding the BG graph, for example "cob,basal". Empty = all shown. */
+    GraphInspectHidden("graph_inspect_hidden", ""),
 
     // Synthetic mirror of the active plugin per single-select category (value = plugin pluginId, defaults to
     // javaClass.simpleName). Bidirectional for APS/SENSITIVITY/SMOOTHING/CALIBRATION (a client may switch the

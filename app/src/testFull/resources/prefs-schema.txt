@@ -205,6 +205,7 @@ google_drive_folder_id|StringNonKey|true
 google_drive_refresh_token|StringNonKey|true
 google_drive_storage_type|StringNonKey|true
 gradually_increase_notification_volume|BooleanKey|true
+graph_inspect_hidden|StringNonKey|true
 half_basal_exercise_target|IntKey|true
 high_mark|UnitDoubleKey|true
 high_temptarget_raises_sensitivity|BooleanKey|true
