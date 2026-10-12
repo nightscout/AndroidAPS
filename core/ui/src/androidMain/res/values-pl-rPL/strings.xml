@@ -40,7 +40,7 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_loop">Pętla</string>
     <string name="configbuilder_general">Ogólne</string>
-    <string name="protection">Z ochroną</string>
+    <string name="protection">Zabezpieczenia</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Eksportuj wpisy użytkownika do Excel-a (csv)</string>
