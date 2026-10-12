@@ -14,8 +14,6 @@
     <string name="widget_compact_bg_description">AAPS 血糖 + IOB+COB（紧凑）</string>
     <string name="widget_small_description">AAPS 小</string>
     <!--     Activities-->
-    <string name="activity_monitor">活动监视器</string>
-    <string name="time_range">时间范围</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">血糖五边形（CGP）- 14天</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -31,7 +29,6 @@
     <string name="cgp_pgr_moderate">中等风险</string>
     <string name="cgp_pgr_high">高风险</string>
     <string name="cgp_pgr_extremely_high">极高风险</string>
-    <string name="do_you_want_reset_stats">您想要重置所有的统计信息吗？</string>
     <string name="do_you_want_recalculate_tdd_stats">您想重新计算 TDD每日总剂量统计数据吗？</string>
     <string name="calculation_in_progress">正在进行计算</string>
     <string name="age">年龄</string>
