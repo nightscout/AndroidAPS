@@ -557,23 +557,6 @@ fun TempTargetManagementScreen(
                             }
                         }
 
-                        // Cancel the active TT, next to Activate where the user looks for actions. It used to be
-                        // a small red × floating above this row, which landed beside the time field and read as
-                        // "clear this field". Same master-reachable rule as Activate: cancelling is a master/NS
-                        // action that couldn't be delivered.
-                        if (editingEnabled && uiState.activeTT != null) {
-                            AapsFab(
-                                onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
-                                containerColor = MaterialTheme.colorScheme.errorContainer,
-                                contentColor = MaterialTheme.colorScheme.onErrorContainer
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Close,
-                                    contentDescription = stringResource(CoreUiStrings.clientcontrol_action_cancel_temp_target)
-                                )
-                            }
-                        }
-
                         // FAB for primary action (Activate). Hidden on a client whose master is unreachable —
                         // activating a TT is a master/remote action that couldn't be delivered.
                         if (editingEnabled) {
@@ -583,6 +566,23 @@ fun TempTargetManagementScreen(
                                 Icon(
                                     imageVector = Icons.Filled.PlayArrow,
                                     contentDescription = stringResource(UiStrings.activate_label)
+                                )
+                            }
+                        }
+
+                        // Cancel the active TT, right of Activate where the user looks for actions (play, then
+                        // stop). It used to be a small red × floating above this row, which landed beside the
+                        // time field and read as "clear this field". Same master-reachable rule as Activate:
+                        // cancelling is a master/NS action that couldn't be delivered.
+                        if (editingEnabled && uiState.activeTT != null) {
+                            AapsFab(
+                                onClick = { viewModel.cancelActive(onSuccess = onNavigateBack) },
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = stringResource(CoreUiStrings.clientcontrol_action_cancel_temp_target)
                                 )
                             }
                         }

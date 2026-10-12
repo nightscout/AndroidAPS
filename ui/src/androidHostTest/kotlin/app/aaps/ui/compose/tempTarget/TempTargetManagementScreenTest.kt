@@ -241,7 +241,7 @@ class TempTargetManagementScreenTest {
     @Test
     fun theCancelButtonSitsNextToActivate() {
         // Users missed it when it floated beside the time field (4.0 beta). Both are full FABs in the
-        // same row, so the cancel button is as big as Activate and stands left of it.
+        // same row, so the cancel button is as big as Activate and stands right of it (play, then stop).
         setScreen(viewModels.build(presets = builtIns, activeTT = activeTt()))
 
         // A FAB merges its icon's description into its own node, so these are the FAB bounds.
@@ -249,7 +249,7 @@ class TempTargetManagementScreenTest {
         val activate = compose.onNodeWithContentDescription(activateLabel).getBoundsInRoot()
         assertThat(cancel.height).isEqualTo(activate.height)
         assertThat(cancel.top).isEqualTo(activate.top)
-        assertThat(cancel.right).isLessThan(activate.left)
+        assertThat(cancel.left).isGreaterThan(activate.right)
     }
 
     // ---------------------------------------------------------------------------------------------
