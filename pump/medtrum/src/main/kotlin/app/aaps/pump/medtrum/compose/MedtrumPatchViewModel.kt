@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -489,7 +490,7 @@ class MedtrumPatchViewModel(
         if (_availableInsulins.value.isNotEmpty()) return
         viewModelScope.launch {
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val current = insulins.find { it.insulinLabel == activeLabel } ?: insulins.firstOrNull()
             _availableInsulins.value = insulins
             _selectedInsulin.value = current
@@ -661,7 +662,7 @@ class MedtrumPatchViewModel(
             // Recompute from the currently active profile instead of trusting the cached value,
             // which is captured during initializePatchStep — before PROFILE_GATE selection has
             // produced an EffectiveProfileSwitch — and is not refreshed across activation sessions.
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = insulinManager.insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             if (selected.insulinLabel == activeLabel) return@launch
             profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Medtrum)
         }

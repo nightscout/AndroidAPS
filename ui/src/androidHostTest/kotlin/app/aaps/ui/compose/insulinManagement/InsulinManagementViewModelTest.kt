@@ -40,6 +40,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -239,6 +240,24 @@ internal class InsulinManagementViewModelTest {
         assertThat(sut.deleteCurrentInsulin()).isTrue()
 
         verify(insulinManager).removeInsulin("B 75m 5h")
+    }
+
+    // --- The running profile keeps the label it was made with; the list rebuilds its labels at start ---
+
+    @Test
+    fun `running insulin with an old label marks the entry with the same curve as active`() {
+        val running = mock<EffectiveProfile>()
+        whenever(running.iCfg).thenReturn(ICfg(insulinLabel = "Rapid", peak = 75, dia = 5.0, concentration = 1.0))
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(running) }
+        val lyumjev = ICfg(insulinLabel = "Lyumjev 45m 5h", peak = 45, dia = 5.0, concentration = 1.0).also { it.insulinNickname = "Lyumjev" }
+        whenever(insulinManager.insulins).thenReturn(arrayListOf(lyumjev, icfg(1.0, "Rapid")))
+        whenever(insulinManager.insulinIndex(anyOrNull())).thenReturn(1)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(sut.uiState.value.activeInsulinLabel).isEqualTo("Rapid 75m 5h")
+        // and the active card still cannot be deleted
+        assertThat(sut.deleteCurrentInsulin()).isFalse()
+        verify(insulinManager, never()).removeInsulin(any())
     }
 
     private fun icfg(concentration: Double, nickname: String = "Rapid"): ICfg =

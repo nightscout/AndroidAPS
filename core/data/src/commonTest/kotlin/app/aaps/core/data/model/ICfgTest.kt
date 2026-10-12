@@ -86,4 +86,56 @@ class ICfgTest {
         assertFalse(ICfg(insulinLabel = "", insulinEndTime = 0, insulinPeakTime = 4_500_000, concentration = 1.0).isUsable)
         assertFalse(ICfg(insulinLabel = "", insulinEndTime = 18_000_000, insulinPeakTime = 0, concentration = 1.0).isUsable)
     }
+
+    // The insulin list rebuilds every label at start, and a profile switch keeps the label it was made with.
+    // Matching by label added one copy of the running insulin to the list at every start.
+    @Test
+    fun `same curve ignores the label`() {
+        val inList = ICfg(insulinLabel = "Novorapid 75m 8h U100", peak = 75, dia = 8.0, concentration = 1.0)
+        val running = ICfg(insulinLabel = "Novorapid", peak = 75, dia = 8.0, concentration = 1.0)
+
+        assertTrue(inList.hasSameCurve(running))
+        assertFalse(inList.isEqual(running))
+    }
+
+    @Test
+    fun `a different DIA or peak or concentration is not the same curve`() {
+        val base = ICfg(insulinLabel = "x", peak = 75, dia = 8.0, concentration = 1.0)
+
+        assertFalse(base.hasSameCurve(ICfg(insulinLabel = "x", peak = 75, dia = 7.0, concentration = 1.0)))
+        assertFalse(base.hasSameCurve(ICfg(insulinLabel = "x", peak = 55, dia = 8.0, concentration = 1.0)))
+        assertFalse(base.hasSameCurve(ICfg(insulinLabel = "x", peak = 75, dia = 8.0, concentration = 2.0)))
+        assertFalse(base.hasSameCurve(null))
+    }
+
+    @Test
+    fun `indexOfInsulin prefers the entry with the same label`() {
+        val list = listOf(
+            ICfg(insulinLabel = "Fiasp 75m 8h U100", peak = 75, dia = 8.0, concentration = 1.0),
+            ICfg(insulinLabel = "Novorapid 75m 8h U100", peak = 75, dia = 8.0, concentration = 1.0)
+        )
+
+        assertEquals(1, list.indexOfInsulin(ICfg(insulinLabel = "Novorapid 75m 8h U100", peak = 75, dia = 8.0, concentration = 1.0)))
+    }
+
+    @Test
+    fun `indexOfInsulin falls back to the first entry with the same curve`() {
+        val list = listOf(
+            ICfg(insulinLabel = "Lyumjev 45m 7h U100", peak = 45, dia = 7.0, concentration = 1.0),
+            ICfg(insulinLabel = "Novorapid 75m 8h U100", peak = 75, dia = 8.0, concentration = 1.0)
+        )
+
+        assertEquals(1, list.indexOfInsulin(ICfg(insulinLabel = "Novorapid", peak = 75, dia = 8.0, concentration = 1.0)))
+        assertEquals(-1, list.indexOfInsulin(ICfg(insulinLabel = "Novorapid", peak = 75, dia = 9.0, concentration = 1.0)))
+        assertEquals(-1, list.indexOfInsulin(null))
+    }
+
+    @Test
+    fun `labelOfInsulin gives the label from the list and keeps its own label when nothing matches`() {
+        val list = listOf(ICfg(insulinLabel = "Novorapid 75m 8h U100", peak = 75, dia = 8.0, concentration = 1.0))
+
+        assertEquals("Novorapid 75m 8h U100", list.labelOfInsulin(ICfg(insulinLabel = "Novorapid", peak = 75, dia = 8.0, concentration = 1.0)))
+        assertEquals("Novorapid", list.labelOfInsulin(ICfg(insulinLabel = "Novorapid", peak = 75, dia = 9.0, concentration = 1.0)))
+        assertEquals(null, list.labelOfInsulin(null))
+    }
 }

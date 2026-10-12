@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -145,10 +146,8 @@ abstract class OmnipodWizardViewModel(
 
     protected fun initializeWizard() {
         viewModelScope.launch {
-            loadInsulins(
-                insulinManager.insulins.map { it.deepClone() },
-                profileFunction.getProfile()?.iCfg?.insulinLabel
-            )
+            val insulins = insulinManager.insulins.map { it.deepClone() }
+            loadInsulins(insulins, insulins.labelOfInsulin(profileFunction.getProfile()?.iCfg))
             _siteRotationEntries.value = persistenceLayer.getTherapyEventDataFromTime(
                 System.currentTimeMillis() - T.days(45).msecs(),
                 false

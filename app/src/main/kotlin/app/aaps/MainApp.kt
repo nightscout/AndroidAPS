@@ -737,7 +737,10 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             }
         }
 
-        if (!localInsulinManager.insulinAlreadyExists(runningICfg))
+        // Runs at every start, so it must match by curve, not by label. The running profile keeps the label it
+        // was made with, and the list rebuilds every label at start. A label match failed every time for a
+        // profile with an older label, and added one more copy of the same insulin at each start.
+        if (!localInsulinManager.insulinWithSameCurveExists(runningICfg))
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)
 
         // The DIA these keys carry is now in the insulin list, so the old copies can go. This is the

@@ -49,6 +49,17 @@ data class ICfg(
     }
 
     /**
+     * Same insulin action (DIA, peak, concentration), whatever the name. Use this to ask "is this insulin
+     * in the list", because a name can change while the insulin stays the same: the list rebuilds every
+     * label at start, and a profile switch keeps the label it was made with.
+     */
+    fun hasSameCurve(iCfg: ICfg?): Boolean =
+        iCfg != null &&
+            insulinEndTime == iCfg.insulinEndTime &&
+            insulinPeakTime == iCfg.insulinPeakTime &&
+            concentration == iCfg.concentration
+
+    /**
      * DIA (insulinEndTime) in hours rounded to 1 decimal place
      */
     val dia: Double
@@ -133,3 +144,19 @@ data class ICfg(
         private const val MIN_PEAK_MINUTES = 1.0  // just keeps tp > 0; real peaks (incl. sub-MIN_PEAK like 30 min) pass through
     }
 }
+
+/**
+ * Index of the list entry for [iCfg], or -1. An entry with the same label and curve wins. If there is none,
+ * the first entry with the same curve is taken, so an insulin still matches after its label has changed
+ * (see [ICfg.hasSameCurve]).
+ */
+fun List<ICfg>.indexOfInsulin(iCfg: ICfg?): Int =
+    indexOfFirst { it.isEqual(iCfg) }.takeIf { it >= 0 } ?: indexOfFirst { it.hasSameCurve(iCfg) }
+
+/**
+ * Label of the list entry for [iCfg] (see [indexOfInsulin]), or the label of [iCfg] itself when no entry has
+ * the same curve. Use it to find or mark the running insulin in the list. The running insulin keeps the label
+ * it was made with, which the list may no longer have (an older name, or an insulin renamed since).
+ */
+fun List<ICfg>.labelOfInsulin(iCfg: ICfg?): String? =
+    getOrNull(indexOfInsulin(iCfg))?.insulinLabel ?: iCfg?.insulinLabel
