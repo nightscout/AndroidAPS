@@ -158,34 +158,84 @@
     <!-- IntKey: Overview preferences -->
     <string name="pref_title_carbs_button_increment_1">Przycisk węglowodanów – przyrost 1</string>
     <string name="pref_title_carbs_button_increment_2">Przycisk węglowodanów – przyrost 2</string>
+    <string name="pref_title_carbs_button_increment_3">Przycisk węglowodanów – przyrost 3</string>
     <string name="carb_increment_button_message">Liczba węglowodanów do dodania po wciśnięciu przycisku</string>
+    <string name="pref_title_cage_warning">Próg ostrzeżenia o wieku kaniuli</string>
+    <string name="pref_title_cage_critical">Próg krytycznego wieku kaniuli</string>
+    <string name="pref_title_iage_warning">Próg ostrzeżenia o wieku insuliny</string>
+    <string name="pref_title_iage_critical">Próg krytycznego wieku insuliny</string>
+    <string name="pref_title_sage_warning">Próg ostrzeżenia o wieku sensora</string>
+    <string name="pref_title_sage_critical">Próg krytycznego wieku sensora</string>
+    <string name="pref_title_sbat_warning">Próg ostrzeżenia baterii czujnika</string>
+    <string name="pref_title_sbat_critical">Próg krytycznego poziomu baterii sensora</string>
+    <string name="pref_title_bage_warning">Próg ostrzeżenia o wieku baterii pompy</string>
+    <string name="pref_title_bage_critical">Próg krytycznego wieku baterii pompy</string>
+    <string name="pref_title_res_warning">Próg ostrzeżenia o poziomie zbiornika</string>
+    <string name="pref_title_res_critical">Próg krytycznego poziomu zbiornika</string>
+    <string name="pref_title_batt_warning">Próg ostrzeżenia o poziomie baterii pompy</string>
+    <string name="pref_title_batt_critical">Próg krytycznego poziomu baterii pompy</string>
+    <string name="pref_title_bolus_percentage">Procent bolusa</string>
+    <string name="deliverpartofboluswizard">Zastosuj tę wartość do korekty glikemii i węglowodanów w obliczeniach kalkulatora bolusa.</string>
+    <string name="pref_title_reset_bolus_percentage_time">Czas resetu procentu bolusa</string>
     <string name="deliver_part_of_boluswizard_reset_time">Dostarcz pełen bolus (100%), jeśli glikemia jest starsza niż</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Czas do ponownego zablokowania</string>
+    <string name="pref_title_protection_type_application">Poziom 0: Ochrona aplikacji</string>
+    <string name="pref_summary_protection_type_application">Uruchomienie aplikacji i powrót do aplikacji. Niezależne od innych poziomów</string>
+    <string name="pref_title_protection_type_bolus">Poziom 1: Ochrona bolusu</string>
+    <string name="pref_summary_protection_type_bolus">Leczenie, aktywacja profilu. Wymaga poziomu 2.</string>
+    <string name="pref_title_protection_type_settings">Poziom 2: Ochrona ustawień</string>
+    <string name="pref_summary_protection_type_settings">Edycja profili, ustawień</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Bez ochrony</string>
     <string name="biometric">Biometryczne</string>
     <string name="master_password">Hasło główne</string>
     <string name="custom_password">Hasło użytkownika</string>
     <string name="custom_pin">Własny PIN</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Maksymalna ilość węglowodanów</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Minimalna zmiana w trybie otwartej pętli</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otwarta pętla wyświetli żądanie zmiany tylko w przypadku, gdy obliczona zmiana będzie większa (procentowo) niż to ustawienie. Wartość domyślna to 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Interwał SMB</string>
+    <string name="pref_title_smb_max_minutes">Maks. minut bazy dostarczone jako SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">UAM: maks. minut bazy dostarczone jako SMB</string>
     <string name="uam_smb_max_minutes">Maksymalna liczba minut UAM SMB</string>
+    <string name="pref_title_carbs_request_threshold">Próg sugestii dosłodzenia</string>
     <string name="carbs_req_threshold_summary">Minimalna ilość węglowodanów, w gramach, niezbędna dla pokazania sugestii dosłodzenia. Sugestie dosłodzenia poniżej tej wartości będą ignorowane - powiadomienie nie będzie pokazywane.</string>
+    <string name="pref_title_half_basal_exercise_target">Połowa bazy przy celu na ćwiczenia</string>
     <string name="half_basal_exercise_target_summary">Ustaw liczbę, np. 160, co oznacza, że jeśli cel tymczasowy wynosi 160 mg/dl, i ustawiono opcję, że wysoki cel tymczasowy zwiększa czułość, to uruchom 50%% bazy na tym poziomie (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">Procent progu IOB</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procent maxIOB powyżej którego SMB są wyłączone.\nDomyślna wartość: 100%\nPrzy wartości 100% ta funkcja jest wyłączona.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Współczynnik korygujący DynamicISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Współczynnik korygujący dla dynamicznego ISF. Ustaw więcej niż 100% dla bardziej agresywnych dawek korekcyjnych i mniej niż 100% dla mniej agresywnych korekt.</string>
+    <string name="pref_title_autosens_period">Przedział czasu Autosens</string>
     <string name="openapsama_autosens_period_summary">Ilość minionych godzin brana pod uwagę do określenia wrażliwości \"sensitivity\" (wyklucza się czas wchłaniania węglowodanów)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Liczba plików dziennika do wysłania</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Próg nieaktualnych danych</string>
+    <string name="pref_title_pump_unreachable_threshold">Próg niedostępności pompy</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Domyślna liczba dni Autotune</string>
     <string name="autotune_default_tune_days_summary">Domyślna liczba dni do przetworzenia przez Autotune (do 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Minimalny odstęp między zdalnymi bolusami (min)</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Interwał losowej glikemii</string>
+    <string name="pref_title_random_bg_randomize">Losuj glikemię</string>
+    <string name="pref_summary_random_bg_randomize">Dodaj szum, losowe przesunięcia znaczników czasu, losowe strzałki trendu i sporadycznie losowe węglowodany. Wyłącz, aby uzyskać czystą, deterministyczną falę sinusoidalną ze strzałką trendu wyliczaną z nachylenia sinusoidy.</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Próg alarmu nieaktualnych danych</string>
+    <string name="pref_title_urgent_alarm_stale_data">Próg pilnego alarmu dotyczącego nieaktualnych danych</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Profil ciała do rotacji miejsc wkłucia</string>
     <!-- Body-type choices for the site-rotation user profile (man / woman / child body silhouette) -->
+    <string name="site_rotation_profile_man">Mężczyzna</string>
+    <string name="site_rotation_profile_woman">Kobieta</string>
+    <string name="site_rotation_profile_child">Dziecko</string>
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Jednostki</string>
     <!-- Formatted unit strings with value only -->
