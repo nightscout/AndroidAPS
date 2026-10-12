@@ -192,6 +192,11 @@
     <string name="a11y_arrow_triple_up">עלייה מהירה מאוד</string>
     <string name="a11y_arrow_none">ללא</string>
     <string name="a11y_arrow_unknown">לא ידוע</string>
+    <string name="a11y_min_button_description" comment="Screen-reader label for the minus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: decrement Carbs by 5">הפחתת %1$s ב־%2$s</string>
+    <string name="a11y_plus_button_description" comment="Screen-reader label for the plus button of a number field. %1$s = the field label, %2$s = the step it changes by. Example: increment Carbs by 5">הגדלת %1$s ב־%2$s</string>
+    <string name="a11y_move_up" comment="Screen-reader action to move an item one place up in a list that is otherwise reordered by dragging.">הזזה למעלה</string>
+    <string name="a11y_move_down" comment="Screen-reader action to move an item one place down in a list that is otherwise reordered by dragging.">הזזה למטה</string>
+    <string name="a11y_wizard_step" comment="Screen-reader text for the step dots of a pump pairing or activation wizard, said again on every new step. %1$d=current step, %2$d=number of steps. Example: Step 3 of 7">שלב %1$d מתוך %2$d</string>
     <string name="decrement">הפחתה</string>
     <string name="increment">תוספת</string>
     <string name="a11y_high">גבוה</string>
@@ -211,12 +216,14 @@
     <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
+    <string name="wear_wizard_settings">הגדרות אשף Wear</string>
     <string name="bolus_iob_label">בולוס פעיל</string>
     <string name="treatments_wizard_basaliob_label">בזאלי פעיל</string>
     <string name="invalid">לא חוקי</string>
     <string name="login">התחברות</string>
     <string name="logout">התנתקות</string>
     <string name="prime_fill">תיחול\\מילוי</string>
+    <string name="prime_not_available">משאבה זו מתמלאת ומתחלת את עצמה במהלך ההפעלה. תיחול או מילוי באמצעות AAPS אינם זמינים.</string>
     <string name="site_rotation">סבב אתרי עירוי</string>
     <string name="edit_site">עריכה</string>
     <string name="select_arrow">בחירת חץ</string>
@@ -468,6 +475,7 @@
     <string name="treatment_cannula_change_desc">רישום החלפת קנולה/ערכת עירוי</string>
     <string name="treatment_fill_desc">תיחול ומילוי הקנולה</string>
     <string name="temp_basal">בזאלי זמני</string>
+    <string name="tbr_state_none" comment="Spoken state of the temp basal chip when no temp basal is running, or the running one equals the profile basal.">ללא</string>
     <string name="user_entry">קלט המשתמש</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">אצבע</string>
@@ -696,6 +704,7 @@
     <string name="basal">בזאלי</string>
     <string name="basalpct">בזאלי %</string>
     <string name="sensitivity">רגישות</string>
+    <string name="autosens_state_off" comment="Spoken state of the sensitivity chip when autosens is switched off. The chip still shows a percentage, so without this a screen reader cannot tell that the figure is not being applied. Said after the chip name: Sensitivity, autosens off, 112%.">Autosens כבוי</string>
     <string name="isf_for_carbs">ISF ממוצע למחשבון ולספיגת פחמימות: %1$.1f</string>
     <string name="isf_profile">ISF של הפרופיל: %1$.1f</string>
     <string name="isf_variable">ISF משתנה: %1$.1f</string>
@@ -1008,16 +1017,26 @@
     <string name="subcategory">תת קטגוריה</string>
     <string name="portion">מנה</string>
     <string name="unit_label">יחידה</string>
+    <string name="label_carbs_g">פחמימות (גר\')</string>
+    <string name="label_fat_g">שומן (גר\')</string>
+    <string name="label_protein_g">חלבון (גר\')</string>
+    <string name="label_energy_kj">אנרגיה (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">הגדרות יומן</string>
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <!--    Maintenance-->
     <string name="maintenance">תחזוקה</string>
     <string name="description_maintenance">מספק מספר פונקציות של תחזוקה (כגון משלוח יומן, מחיקת יומן).</string>
     <string name="log_files">קבצי יומן</string>
     <string name="delete_logs">מחק רישומים</string>
+    <string name="logs_deleted">יומני הרישום נמחקו</string>
     <string name="aaps_directory">תיקיית AAPS</string>
     <string name="import_setting">ייבוא הגדרות</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">פענוח &amp;ובדיקה</string>
+    <string name="import_decrypt">פענח</string>
+    <string name="import_master_password">סיסמה ראשית</string>
+    <string name="import_decryption_password">סיסמת פענוח</string>
     <string name="import_apply_title">להחיל הגדרות מיובאות?</string>
     <!--
       Worded as labelled counts rather than "%1$d settings will change", because the count can be 1
