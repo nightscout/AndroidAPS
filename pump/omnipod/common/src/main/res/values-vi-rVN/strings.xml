@@ -67,6 +67,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Hủy kích hoạt Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Nhấn <b>Tiếp theo</b> để hủy kích hoạt Pod.\n\n<b>Lưu ý:</b> Thao tác này sẽ tạm dừng toàn bộ việc truyền insulin và hủy kích hoạt Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">Pod sau khi bị hủy kích hoạt sẽ không thể sử dụng lại. Bạn có muốn hủy kích hoạt Pod này ngay bây giờ không?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Đang hủy kích hoạt Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Đang hủy kích hoạt Pod.\n\nKhi quá trình hủy kích hoạt hoàn tất thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Đã hủy kích hoạt Pod</string>
