@@ -1,17 +1,14 @@
 package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
+import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import com.google.common.truth.Truth.assertThat
 import okhttp3.Headers.Companion.headersOf
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 import retrofit2.Call
 import retrofit2.Response
 import java.io.IOException
@@ -26,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class TidepoolCallbackTest {
 
     private val aapsLogger: AAPSLogger = mock()
-    private val rxBus: RxBus = mock()
+    private val tidepoolRepository = TidepoolRepository(aapsLogger)
     private val call: Call<AuthReplyMessage?> = mock()
     private val session = Session(SESSION_TOKEN_HEADER, null)
 
@@ -34,7 +31,7 @@ class TidepoolCallbackTest {
     private val failed = CountDownLatch(1)
 
     private val sut = TidepoolCallback<AuthReplyMessage?>(
-        aapsLogger, rxBus, session, "Test call",
+        aapsLogger, tidepoolRepository, session, "Test call",
         onSuccess = { succeeded.countDown() },
         onFail = { failed.countDown() }
     )
@@ -42,11 +39,8 @@ class TidepoolCallbackTest {
     // The callback does its work on Dispatchers.IO, so every test waits for the result.
     private fun CountDownLatch.awaitResult() = await(5, TimeUnit.SECONDS)
 
-    private fun statusMessages(): List<String> {
-        val captor = argumentCaptor<EventTidepoolStatus>()
-        verify(rxBus).send(captor.capture())
-        return captor.allValues.map { it.status }
-    }
+    /** What the Tidepool screen shows in its log. The callback logs before it calls onFail. */
+    private fun statusMessages(): List<String> = tidepoolRepository.logList.value.map { it.action }
 
     @Test
     fun `successful reply fills the session and reports success`() {

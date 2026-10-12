@@ -172,6 +172,7 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
     // dropped and the whole window shares the first one.
     @Test
     fun secondsInOneWindowShareASingleCanonicalEps() = runTest {
+        whenever(config.appInitialized).thenReturn(true)
         whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
         // Fresh instance per call (same id), mirroring fromDb()'s deep copy.
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenAnswer { effectiveProfileSwitch.copy() }
@@ -193,5 +194,54 @@ class ProfileFunctionImplTest : TestBaseWithProfile() {
         // …and every returned wrapper points at that one shared EPS instance (the throwaway copies were dropped).
         val shared = (profiles.first() as ProfileSealed.EPS).value
         assertThat(profiles.all { (it as ProfileSealed.EPS).value === shared }).isTrue()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Nothing before app init
+    //
+    // Until init completes activePlugin.activeAPS is null, and ProfileSealed takes the APS when it is
+    // built, so a profile from that time keeps aps = null for good. It reached a wizard calculation after
+    // init through the per-second cache and crashed on "APS not defined".
+    // ---------------------------------------------------------------------------------------------
+
+    @Test
+    fun noProfileIsHandedOutOrCachedBeforeAppInit() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch)
+        whenever(config.appInitialized).thenReturn(false)
+        val sut = createSut()
+        advanceUntilIdle()
+
+        assertThat(sut.getProfile()).isNull()
+        assertThat(sut.cache).isEmpty()
+
+        whenever(config.appInitialized).thenReturn(true)
+        assertThat(sut.getProfile()).isNotNull()
+    }
+
+    // The pump needs the insulin concentration during start up: PumpWithConcentrationImpl falls back to 1.0
+    // without it. So the mirror must not wait for app init.
+    @Test
+    fun theInsulinMirrorIsFilledBeforeAppInit() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch.copy(iCfg = someICfg))
+        whenever(config.appInitialized).thenReturn(false)
+
+        val sut = createSut()
+        advanceUntilIdle()
+
+        assertThat(sut.runningICfg.value).isEqualTo(someICfg)
+    }
+
+    // The data migrations in MainApp run before app init. With no answer here they would stamp old records
+    // with a substitute insulin instead of the running one.
+    @Test
+    fun theRunningInsulinIsKnownBeforeAppInit() = runTest {
+        whenever(persistenceLayer.observeChanges(EPS::class)).thenReturn(emptyFlow())
+        whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch.copy(iCfg = someICfg))
+        whenever(persistenceLayer.getProfileSwitchActiveAt(anyLong())).thenReturn(null)
+        whenever(config.appInitialized).thenReturn(false)
+
+        assertThat(createSut().getRunningOrRequestedICfg()).isEqualTo(someICfg)
     }
 }

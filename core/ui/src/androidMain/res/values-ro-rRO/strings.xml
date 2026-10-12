@@ -738,7 +738,6 @@
     <string name="max_carbs_title">Carbohidrați admiși maxim [g]</string>
     <string name="patient_type">Tip de pacient</string>
     <!--    Protection-->
-    <string name="unlock_settings">Deblocați setările</string>
     <!--    Pumps -->
     <string name="battery_label">Baterie</string>
     <string name="reservoir_label">Rezervor</string>

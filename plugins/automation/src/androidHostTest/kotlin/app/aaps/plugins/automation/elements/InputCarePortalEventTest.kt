@@ -8,7 +8,7 @@ class InputCarePortalEventTest : TriggerTestBase() {
 
     @Test
     fun labelsTest() {
-        assertThat(InputCarePortalMenu.EventType.labels(text)).hasSize(4)
+        assertThat(InputCarePortalMenu.EventType.labels(text)).hasSize(5)
     }
 
     @Test

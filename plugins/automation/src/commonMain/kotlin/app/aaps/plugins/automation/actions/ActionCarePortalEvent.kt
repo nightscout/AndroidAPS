@@ -16,6 +16,7 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
+import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.utils.lenientInt
@@ -47,17 +48,19 @@ class ActionCarePortalEvent(
     override fun shortDescription(): String = rh.gs(cpEvent.value.stringResWithValue, note.value)
 
     override fun composeIcon() = when (cpEvent.value) {
-        InputCarePortalMenu.EventType.NOTE         -> IcNote
-        InputCarePortalMenu.EventType.EXERCISE     -> IcActivity
-        InputCarePortalMenu.EventType.QUESTION     -> IcQuestion
-        InputCarePortalMenu.EventType.ANNOUNCEMENT -> IcAnnouncement
+        InputCarePortalMenu.EventType.NOTE           -> IcNote
+        InputCarePortalMenu.EventType.EXERCISE       -> IcActivity
+        InputCarePortalMenu.EventType.QUESTION       -> IcQuestion
+        InputCarePortalMenu.EventType.ANNOUNCEMENT   -> IcAnnouncement
+        InputCarePortalMenu.EventType.CANNULA_CHANGE -> IcCannulaChange
     }
 
     override fun elementType() = when (cpEvent.value) {
-        InputCarePortalMenu.EventType.NOTE         -> ElementType.NOTE
-        InputCarePortalMenu.EventType.EXERCISE     -> ElementType.EXERCISE
-        InputCarePortalMenu.EventType.QUESTION     -> ElementType.QUESTION
-        InputCarePortalMenu.EventType.ANNOUNCEMENT -> ElementType.ANNOUNCEMENT
+        InputCarePortalMenu.EventType.NOTE           -> ElementType.NOTE
+        InputCarePortalMenu.EventType.EXERCISE       -> ElementType.EXERCISE
+        InputCarePortalMenu.EventType.QUESTION       -> ElementType.QUESTION
+        InputCarePortalMenu.EventType.ANNOUNCEMENT   -> ElementType.ANNOUNCEMENT
+        InputCarePortalMenu.EventType.CANNULA_CHANGE -> ElementType.CANNULA_CHANGE
     }
 
     override suspend fun doAction(): PumpEnactResult {

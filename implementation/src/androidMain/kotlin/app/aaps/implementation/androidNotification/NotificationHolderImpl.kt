@@ -8,11 +8,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.implementation.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -37,11 +37,21 @@ class NotificationHolderImpl(
         }
         get() = _notification ?: placeholderNotification()
 
-    override fun openAppIntent(): PendingIntent? = TaskStackBuilder.create(context).run {
-        addParentStack(uiInteraction.mainActivity.java)
-        addNextIntent(Intent(context, uiInteraction.mainActivity.java))
-        getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-    }
+    /**
+     * The same intent the launcher icon sends, so a tap brings a minimized AAPS back as it is.
+     * It used to be built with `TaskStackBuilder`, which adds `FLAG_ACTIVITY_CLEAR_TASK`: every tap
+     * destroyed the running task and the overview was built and calculated again from zero.
+     */
+    override fun openAppIntent(): PendingIntent? =
+        PendingIntent.getActivity(
+            context,
+            0,
+            Intent(context, uiInteraction.mainActivity.java)
+                .setAction(Intent.ACTION_MAIN)
+                .addCategory(Intent.CATEGORY_LAUNCHER)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
     private fun placeholderNotification(): Notification {
 
@@ -63,7 +73,8 @@ class NotificationHolderImpl(
 
     override fun createNotificationChannel() {
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(channelID, channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
+        // Same id as before, so the user's settings stay. Android renames an existing channel.
+        val channel = NotificationChannel(channelID, context.getString(R.string.ongoing_channel_name), NotificationManager.IMPORTANCE_HIGH)
         mNotificationManager.createNotificationChannel(channel)
     }
 }

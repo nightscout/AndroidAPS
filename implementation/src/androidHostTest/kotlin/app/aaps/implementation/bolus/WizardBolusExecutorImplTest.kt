@@ -1230,4 +1230,39 @@ class WizardBolusExecutorImplTest : TestBaseWithProfile() {
 
         verify(persistenceLayer, never()).insertOrUpdateBolusCalculatorResult(any())
     }
+
+    @Test
+    fun deliverFillBolus_onTubePump_deliversAPrimingBolus() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        whenever(commandQueue.bolus(anyOrNull())).thenReturn(pumpEnactResultProvider().success(true))
+        var succeeded = false
+
+        create().deliverFillBolus(0.5, null, Sources.FillDialog, onError = { }, onSuccess = { succeeded = true })
+
+        val dbiCaptor = argumentCaptor<DetailedBolusInfo>()
+        verify(commandQueue).bolus(dbiCaptor.capture())
+        assertThat(dbiCaptor.firstValue.bolusType).isEqualTo(BS.Type.PRIMING)
+        assertThat(dbiCaptor.firstValue.insulin).isEqualTo(0.5)
+        assertThat(succeeded).isTrue()
+    }
+
+    /**
+     * A patch pump primes in its own activation wizard and its cannula is already in the body. A PRIMING bolus
+     * adds no IOB, so a prime here would be insulin the loop does not know about. The shared path refuses it,
+     * whoever asks: the Fill dialog, the watch or a client.
+     */
+    @Test
+    fun deliverFillBolus_onPumpThatPrimesItself_refusesAndSendsNothing() = runTest {
+        whenever(runningModeGuard.rejectionMessage(any())).thenReturn(null)
+        testPumpPlugin.pumpDescription.isRefillingCapable = false
+        var failure: WizardBolusExecutor.Failure? = null
+        var succeeded = false
+
+        create().deliverFillBolus(0.5, null, Sources.Wear, onError = { failure = it }, onSuccess = { succeeded = true })
+
+        assertThat(failure?.comment).isEqualTo(baseText.gs(CoreUiStrings.prime_not_available))
+        assertThat(succeeded).isFalse()
+        verify(commandQueue, never()).bolus(anyOrNull())
+        verify(uel, never()).log(any<Action>(), any(), anyOrNull(), any<List<ValueWithUnit>>())
+    }
 }

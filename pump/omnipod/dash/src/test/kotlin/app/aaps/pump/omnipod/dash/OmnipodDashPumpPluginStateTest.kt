@@ -25,7 +25,10 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 /**
@@ -38,17 +41,19 @@ import org.mockito.kotlin.whenever
 class OmnipodDashPumpPluginStateTest {
 
     private lateinit var podStateManager: OmnipodDashPodStateManager
+    private lateinit var omnipodManager: OmnipodDashManager
     private lateinit var sut: OmnipodDashPumpPlugin
 
     @BeforeEach
     fun setUp() {
         podStateManager = mock()
+        omnipodManager = mock()
         sut = OmnipodDashPumpPlugin(
             aapsLogger = mock<AAPSLogger>(),
             rh = mock<ResourceHelper>(),
             preferences = mock<Preferences>(),
             commandQueue = mock<CommandQueue>(),
-            omnipodManager = mock<OmnipodDashManager>(),
+            omnipodManager = omnipodManager,
             podStateManager = podStateManager,
             history = mock<DashHistory>(),
             pumpSync = mock<PumpSync>(),
@@ -111,7 +116,7 @@ class OmnipodDashPumpPluginStateTest {
     @Test
     fun `an alarming pod reports a zero base rate even with a program loaded`() {
         val program = mock<BasalProgram>()
-        whenever(program.rateAt(org.mockito.kotlin.any())).thenReturn(1.25)
+        whenever(program.rateAt(any())).thenReturn(1.25)
         whenever(podStateManager.basalProgram).thenReturn(program)
         whenever(podStateManager.alarmType).thenReturn(mock())
 
@@ -121,7 +126,7 @@ class OmnipodDashPumpPluginStateTest {
     @Test
     fun `a healthy pod reports the rate its program gives for now`() {
         val program = mock<BasalProgram>()
-        whenever(program.rateAt(org.mockito.kotlin.any())).thenReturn(1.25)
+        whenever(program.rateAt(any())).thenReturn(1.25)
         whenever(podStateManager.basalProgram).thenReturn(program)
         whenever(podStateManager.alarmType).thenReturn(null)
 
@@ -166,6 +171,36 @@ class OmnipodDashPumpPluginStateTest {
 
         whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.COMPLETED)
         assertThat(sut.isBusy()).isFalse()
+    }
+
+    /**
+     * Pairing runs while the progress is still NOT_STARTED. If the pump was not busy then, the queue
+     * ran its commands and disconnected the pod in the middle of the pairing (#5219).
+     */
+    @Test
+    fun `the pump is busy while an activation step is running, even before any progress`() {
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.NOT_STARTED)
+        whenever(omnipodManager.isActivationRunning).thenReturn(true)
+
+        assertThat(sut.isBusy()).isTrue()
+    }
+
+    @Test
+    fun `disconnect does not close the link while an activation step is running`() {
+        whenever(omnipodManager.isActivationRunning).thenReturn(true)
+
+        sut.disconnect("Queue empty")
+
+        verify(omnipodManager, never()).disconnect(any<Boolean>())
+    }
+
+    @Test
+    fun `disconnect closes the link when no activation is running`() {
+        whenever(omnipodManager.isActivationRunning).thenReturn(false)
+
+        sut.disconnect("Queue empty")
+
+        verify(omnipodManager).disconnect(false)
     }
 
     /**

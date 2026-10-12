@@ -5,6 +5,7 @@ import android.text.TextUtils
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -171,7 +172,7 @@ class EquilOverviewViewModel(
             )
         )
         add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
-        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = "${state.battery}%"))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = state.battery?.let { rh.gs(CoreUiR.string.format_percent, it) } ?: "-"))
         add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = ch.insulinAmountString(PumpInsulin(state.currentInsulin.toDouble()))))
         add(
             PumpInfoRow(
@@ -207,6 +208,15 @@ class EquilOverviewViewModel(
 
     private fun buildPrimaryActions(isPaired: Boolean): List<PumpAction> = buildList {
         if (isPaired && equilManager.isActivationCompleted()) {
+            // Reads the run mode and the pump history now, so a pump alarm shows without waiting for
+            // the next loop run.
+            add(
+                PumpAction(
+                    label = rh.gs(CoreUiR.string.refresh),
+                    icon = Icons.Filled.Refresh,
+                    category = ActionCategory.PRIMARY,
+                    onClick = { onRefreshClick() }
+                ))
             val runMode = equilManager.equilState?.runMode
             if (runMode == RunMode.RUN) {
                 add(
@@ -262,6 +272,10 @@ class EquilOverviewViewModel(
         }
     }
 
+    private fun onRefreshClick() {
+        viewModelScope.launch { commandQueue.readStatus(rh.gs(CoreUiR.string.user_request)) }
+    }
+
     private fun toggleMode() {
         val runMode = equilManager.equilState?.runMode ?: return
         val targetMode = if (runMode == RunMode.RUN) RunMode.SUSPEND else RunMode.RUN
@@ -271,7 +285,7 @@ class EquilOverviewViewModel(
             _isModeChanging.value = false
             aapsLogger.debug(LTag.PUMPCOMM, "toggleMode result: ${r.success}")
             if (r.success) {
-                equilManager.equilState?.runMode = targetMode
+                equilManager.setRunMode(targetMode)
                 _refreshTrigger.value = System.currentTimeMillis()
             }
         }

@@ -2,15 +2,12 @@ package app.aaps.plugins.aps.loop
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
 import android.content.Context
-import android.content.Intent
 import androidx.core.app.NotificationCompat
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.CarbSuggestionActions
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.plugins.aps.R
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -31,7 +28,7 @@ import android.app.NotificationManager as AndroidNotificationManager
 class AndroidLoopNotifier(
     private val context: Context,
     private val rh: ResourceHelper,
-    private val uiInteraction: UiInteraction,
+    private val notificationHolder: NotificationHolder,
     private val carbSuggestionActions: CarbSuggestionActions
 ) : LoopNotifier {
 
@@ -41,11 +38,17 @@ class AndroidLoopNotifier(
     // `by lazy`, not in an init block: this class is built when the graph resolves, and reaching a
     // system service there breaks the plain-JVM graph tests. First use is always a real notification.
     private val channel: Unit by lazy {
+        // Since Android 8 only the channel decides the vibration, and an app cannot change it on an
+        // existing channel. The old channel did not vibrate, so this one has a new id (#5217).
+        notificationManager.deleteNotificationChannel(OLD_CHANNEL_ID)
         @SuppressLint("WrongConstant") val channel = NotificationChannel(
             CHANNEL_ID,
-            CHANNEL_ID,
+            rh.gs(R.string.loop_notification_channel_name),
             AndroidNotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            enableVibration(true)
+            vibrationPattern = VIBRATE_PATTERN
+        }
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -58,7 +61,6 @@ class AndroidLoopNotifier(
             .addAction(ignoreAction(R.string.ignore5m, "Ignore 5m", minutes = 5, requestCode = 1))
             .addAction(ignoreAction(R.string.ignore15m, "Ignore 15m", minutes = 15, requestCode = 2))
             .addAction(ignoreAction(R.string.ignore30m, "Ignore 30m", minutes = 30, requestCode = 3))
-            .setVibrate(VIBRATE_PATTERN)
         notificationManager.notify(Constants.NOTIFICATION_ID, builder.build())
     }
 
@@ -66,8 +68,7 @@ class AndroidLoopNotifier(
         channel
         val builder = baseBuilder(rh.gs(R.string.open_loop_new_suggestion), text)
         if (localOnly) builder.setLocalOnly(true)
-        builder.setContentIntent(openTheApp())
-        builder.setVibrate(VIBRATE_PATTERN)
+        builder.setContentIntent(notificationHolder.openAppIntent())
         notificationManager.notify(Constants.NOTIFICATION_ID, builder.build())
     }
 
@@ -92,21 +93,10 @@ class AndroidLoopNotifier(
             carbSuggestionActions.ignoreFor(minutes = minutes, requestCode = requestCode)
         )
 
-    /**
-     * An artificial back stack, so navigating back out of the opened screen leaves the app rather than
-     * landing somewhere the user never navigated to.
-     */
-    private fun openTheApp(): PendingIntent {
-        val resultIntent = Intent(context, uiInteraction.mainActivity.java)
-        val stackBuilder = TaskStackBuilder.create(context)
-        stackBuilder.addParentStack(uiInteraction.mainActivity.java)
-        stackBuilder.addNextIntent(resultIntent)
-        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-    }
-
     private companion object {
 
-        const val CHANNEL_ID = "AAPS-OpenLoop"
+        const val OLD_CHANNEL_ID = "AAPS-OpenLoop"
+        const val CHANNEL_ID = "AAPS-OpenLoop-v2"
         val VIBRATE_PATTERN = longArrayOf(1000, 1000, 1000, 1000, 1000)
     }
 }

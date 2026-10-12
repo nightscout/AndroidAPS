@@ -17,8 +17,6 @@
     <string name="widget_small_description">AAPS Small</string>
 
     <!--     Activities-->
-    <string name="activity_monitor">Activity monitor</string>
-    <string name="time_range">Time range</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Glucose Pentagon (CGP) — 14 days</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -34,7 +32,6 @@
     <string name="cgp_pgr_moderate">Moderate risk</string>
     <string name="cgp_pgr_high">High risk</string>
     <string name="cgp_pgr_extremely_high">Extremely high risk</string>
-    <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
     <string name="do_you_want_recalculate_tdd_stats">Do you want to recalculate TDD stats?</string>
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="age">Age</string>
@@ -179,8 +176,12 @@
 
     <!-- WizardDialog -->
     <string name="missing_carbs">Missing %1$d g</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% immediate carbs, no extended carbs</string>
-    <string name="wizard_carbs_type_desc">Carbs reduced by %1$d%%, added eCarbs %2$d%% delayed %3$dmin for %4$dh</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Carbs reduced by %1$d%%, added eCarbs %2$d%% delayed %3$d min for %4$d h</string>
     <string name="wizard_include_info">Tap to include/exclude from calculation:\n• BG — blood glucose (ON at start)\n• TT — temp target (ON at start)\n• Trend — BG trend (last state remembered)\n• IOB — insulin on board (ON at start)\n• COB — carbs on board (last state remembered)</string>
 
     <!-- Treatments -->
@@ -200,6 +201,7 @@
     <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s at %2$s</string>
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">delta %1$s</string>
     <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">old reading</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
     <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Glucose graph. Recent values %1$s</string>
     <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Execute</string>
     <string name="add_new_profile">Add new profile</string>
@@ -345,5 +347,6 @@
     <string name="cal_precheck_no_pair">No CGM reading in the last 10 minutes. Check sensor connection.</string>
     <string name="cal_precheck_delta_too_high">Glucose is changing too fast (Δ %1$s %3$s per 5 min, limit %2$s). Wait for stability.</string>
     <string name="cal_precheck_mark_sensor_change">Mark sensor change</string>
+    <string name="graph_therapy_event_bg_with_note" comment="Shown when the user taps a BG check in the overview graph. %1$s = glucose with its unit, %2$s = the note the user wrote. Example: 6.1 mmol/L, before lunch">%1$s, %2$s</string>
 
 </resources>

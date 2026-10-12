@@ -60,6 +60,11 @@ fun interface ElementVisibility {
         }
 
         /**
+         * Visible only when the pump can be filled and primed from AAPS (not on patch pumps)
+         */
+        val REFILLING_CAPABLE = ElementVisibility { it.isRefillingCapable }
+
+        /**
          * Visible only when BG source supports advanced filtering (for certain SMB options)
          */
         val ADVANCED_FILTERING = ElementVisibility { it.advancedFilteringSupported }

@@ -45,7 +45,7 @@ import app.aaps.ui.UiStrings
 import app.aaps.ui.compose.stats.viewmodels.StatsViewModel
 
 /**
- * Composable screen displaying statistics including TDD, TIR, Dexcom TIR, and Activity Monitor.
+ * Composable screen displaying statistics including TDD, TIR and Dexcom TIR.
  * Uses pure Material3 design with Cards and standard typography.
  *
  * @param viewModel ViewModel containing all statistics state and business logic
@@ -245,62 +245,6 @@ fun StatsScreen(
                 }
             }
 
-            // Activity Section - Android only, see StatsViewModel.showActivityStats
-            if (viewModel.showActivityStats) AapsCard(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { viewModel.toggleActivityExpanded() }
-                            // A heading, so a screen reader can jump between the sections of this screen.
-                            .semantics { heading() }
-                            .padding(bottom = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(UiStrings.activity_monitor),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        if (state.activityExpanded && !state.activityLoading) {
-                            FilledTonalButton(onClick = { viewModel.showResetActivityDialog() }) {
-                                Text(text = stringResource(CoreUiStrings.reset))
-                            }
-                        }
-                        Icon(
-                            imageVector = if (state.activityExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    AnimatedVisibility(visible = state.activityExpanded) {
-                        Crossfade(
-                            targetState = state.activityLoading,
-                            label = stringResource(CoreUiStrings.loading)
-                        ) { isLoading ->
-                            if (isLoading) {
-                                LoadingSection(
-                                    title = stringResource(UiStrings.activity_monitor),
-                                    message = stringResource(UiStrings.calculation_in_progress)
-                                )
-                            } else {
-                                state.activityStatsData?.let { data ->
-                                    ActivityStatsCompose(
-                                        activityStats = data,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
             // TDD Cycle Pattern Section
             AapsCard(
                 modifier = Modifier.fillMaxWidth()
@@ -403,14 +347,6 @@ fun StatsScreen(
             message = stringResource(UiStrings.do_you_want_recalculate_tdd_stats),
             onConfirm = { viewModel.confirmRecalculateTdd() },
             onDismiss = { viewModel.dismissRecalculateDialog() }
-        )
-    }
-
-    if (state.showResetActivityDialog) {
-        OkCancelDialog(
-            message = stringResource(UiStrings.do_you_want_reset_stats),
-            onConfirm = { viewModel.confirmResetActivityStats() },
-            onDismiss = { viewModel.dismissResetActivityDialog() }
         )
     }
 }

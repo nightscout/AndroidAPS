@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Command is executed right now</string>
+    <string name="smb_being_delivered">An SMB is being delivered right now. Try again when it has finished.</string>
     <string name="basal_value_below_minimum">Basal value below minimum. Profile not set!</string>
 
     <!--       Stats -->
@@ -22,6 +23,20 @@
     <string name="permission_notifications_description">Required to show alerts, alarms, and pump status updates</string>
     <string name="permission_schedule_exact_alarm_title">Alarms and reminders</string>
     <string name="permission_schedule_exact_alarm_description">Required so alarms can wake the screen while AAPS is in the background, and so reminders ring on time</string>
+
+    <!--    Notification channels, shown in the Android settings-->
+    <string name="alarm_channel_group">AAPS alarms</string>
+    <string name="alarm_channel_standard">Standard alarm</string>
+    <string name="alarm_channel_bolus_error">Bolus error</string>
+    <string name="alarm_channel_error">General error</string>
+    <string name="alarm_channel_urgent">Urgent alarm</string>
+    <string name="alarm_channel_override_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (override Do Not Disturb)">%1$s (override Do Not Disturb)</string>
+    <string name="alarm_channel_respects_dnd" comment="%1$s=alarm channel name. Example: Urgent alarm (respects Do Not Disturb)">%1$s (respects Do Not Disturb)</string>
+    <string name="alarm_channel_silent_urgent">Urgent alarm (volume-ramp mode)</string>
+    <string name="alarm_channel_silent">Alarm (volume-ramp mode)</string>
+    <string name="alarm_channel_silent_description">Used when \'Gradually increase notification volume\' is on. The alarm screen plays the sound.</string>
+    <string name="ongoing_channel_name">Ongoing status</string>
+    <string name="notifications_channel_name">AAPS notifications</string>
 
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>

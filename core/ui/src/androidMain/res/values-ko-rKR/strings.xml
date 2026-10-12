@@ -399,7 +399,6 @@
     <string name="max_carbs_title">최대 허용 탄수화물 [g]</string>
     <string name="patient_type">환자 유형</string>
     <!--    Protection-->
-    <string name="unlock_settings">설정 잠금해제</string>
     <!--    Pumps -->
     <string name="battery_label">배터리</string>
     <string name="reservoir_label">인슐린 잔량</string>

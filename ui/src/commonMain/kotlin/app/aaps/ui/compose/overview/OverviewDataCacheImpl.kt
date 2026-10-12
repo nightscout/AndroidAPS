@@ -93,6 +93,7 @@ import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.CoreUiStrings
+import app.aaps.ui.UiStrings
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CoroutineScope
@@ -142,6 +143,24 @@ private const val WARN_BATTERY_PERCENT = 30.0
 private const val URGENT_BATTERY_PERCENT = 20.0
 private const val WARN_BATTERY_VOLTAGE = 1.35
 private const val URGENT_BATTERY_VOLTAGE = 1.3
+
+/**
+ * What a tap on a therapy event in the graph shows.
+ *
+ * A BG check is only an icon in the treatment belt, so its position does not show the value the way
+ * the old BG graph did. The value goes in the label, before the note, so a long note that is cut at
+ * the end of the one-line label cannot hide it.
+ */
+internal fun therapyEventLabel(te: TE, typeName: String, profileUtil: ProfileUtil, rh: TextResolver): String {
+    val note = te.note?.takeIf { it.isNotBlank() }
+    val bg = te.glucose?.let { profileUtil.fromMgdlToStringWithUnits(profileUtil.convertToMgdl(it, te.glucoseUnit)) }
+    return when {
+        bg != null && note != null -> rh.gs(UiStrings.graph_therapy_event_bg_with_note, bg, note)
+        bg != null                 -> bg
+        note != null               -> note
+        else                       -> typeName
+    }
+}
 
 @OptIn(FlowPreview::class)
 @AssistedInject
@@ -907,11 +926,10 @@ class OverviewDataCacheImpl(
                     te.duration > 0                          -> TherapyEventType.GENERAL_WITH_DURATION
                     else                                     -> TherapyEventType.GENERAL
                 }
-                val teLabel = if (!te.note.isNullOrBlank()) te.note!! else translator.translate(te.type)
                 TherapyEventGraphPoint(
                     timestamp = te.timestamp,
                     eventType = teType,
-                    label = teLabel,
+                    label = therapyEventLabel(te, translator.translate(te.type), profileUtil, rh),
                     duration = te.duration
                 )
             }

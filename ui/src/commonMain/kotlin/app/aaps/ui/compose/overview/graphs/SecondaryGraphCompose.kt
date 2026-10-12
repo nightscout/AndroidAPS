@@ -10,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -52,9 +51,7 @@ import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.debounce
 
 /**
  * CartesianChartModelProducer.update() skips notifying receivers (and thus skips recomputing axis
@@ -136,7 +133,6 @@ internal class ClampedVerticalAxisItemPlacer(
  * - Simple line series (AbsIOB, BGI, Sensitivity, VarSens, DevSlope, HR, Steps): Colored line with gradient fill
  * - Deviations: Per-type colored step lines with gradient fill (POSITIVE/NEGATIVE/EQUAL/UAM/CSF)
  */
-@OptIn(FlowPreview::class)
 @Composable
 fun SecondaryGraphCompose(
     viewModel: GraphViewModel,
@@ -389,33 +385,26 @@ fun SecondaryGraphCompose(
     // Visible-window bounds (same x-unit as processed* points — minutes from minTimestamp) for
     // windowing the Y-axis scale to only the currently scrolled/zoomed portion of this graph's
     // own chart, instead of the full loaded time range.
-    // The reporter writes into a plain (non-Compose-state) holder on every draw pass — see
-    // VisibleRangeHolder — so we poll it here rather than observing it directly, keeping Compose
-    // state writes off the draw path.
+    // The reporter writes into a StateFlow holder (not Compose state) on every draw pass — see
+    // VisibleRangeHolder — and we collect it here, keeping Compose state writes off the draw path.
     // Computed here (before the model-rebuild LaunchedEffect below) so visibleMinX/visibleMaxX can
     // be included in that effect's keys — Vico only reliably re-applies axis ranges via a real
     // modelProducer.runTransaction, not merely by swapping the CartesianLayerRangeProvider instance.
     val visibleRangeHolder = remember { VisibleRangeHolder() }
     val visibleRangeReporter = rememberVisibleRangeReporter(visibleRangeHolder)
 
-    var rawVisibleRange by remember { mutableStateOf<Pair<Double, Double>?>(null) }
     var visibleRange by remember { mutableStateOf<Pair<Double, Double>?>(null) }
 
+    // Runs only when the range changes. The delay limits updates to 20 per second during
+    // scroll/zoom (each one rebuilds the model); the StateFlow keeps the latest value meanwhile.
     LaunchedEffect(visibleRangeHolder) {
-        while (true) {
+        visibleRangeHolder.value.collect {
+            visibleRange = it
             delay(50)
-            val current = visibleRangeHolder.value
-            if (current != rawVisibleRange) rawVisibleRange = current
         }
     }
 
-    LaunchedEffect(Unit) {
-        snapshotFlow { rawVisibleRange }
-            .debounce(30)
-            .collect { visibleRange = it }
-    }
-
-    // Expose this graph's own (already debounced) visible window upward — used by BgGraphCompose
+    // Expose this graph's own (already throttled) visible window upward — used by BgGraphCompose
     // to window its own axis from this graph's synced scroll/zoom instead of attaching its own
     // decoration (that was tried and found to break BG's own pinch-zoom gesture handling).
     val currentOnVisibleRangeChanged by rememberUpdatedState(onVisibleRangeChanged)

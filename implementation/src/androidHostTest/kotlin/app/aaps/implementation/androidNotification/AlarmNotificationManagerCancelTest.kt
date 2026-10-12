@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.AlarmSoundPlayer
+import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -38,6 +39,7 @@ class AlarmNotificationManagerCancelTest {
             preferences = mock<Preferences>(),
             iconsProvider = mock<IconsProvider>(),
             uiInteractionProvider = { mock<UiInteraction>() },
+            notificationHolderProvider = { mock<NotificationHolder>() },
             alarmSoundPlayer = alarmSoundPlayer,
             rh = mock<ResourceHelper>()
         )

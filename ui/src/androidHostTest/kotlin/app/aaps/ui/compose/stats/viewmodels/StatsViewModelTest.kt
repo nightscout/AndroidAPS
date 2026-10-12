@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.stats.viewmodels
 
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -9,9 +8,7 @@ import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.ui.activityMonitor.ActivityMonitor
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class StatsViewModelTest {
@@ -31,14 +27,12 @@ internal class StatsViewModelTest {
     @Mock private lateinit var tddCalculator: TddCalculator
     @Mock private lateinit var tirCalculator: TirCalculator
     @Mock private lateinit var dexcomTirCalculator: DexcomTirCalculator
-    @Mock private lateinit var activityMonitor: ActivityMonitor
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     @Mock private lateinit var rh: ResourceHelper
     @Mock private lateinit var uel: UserEntryLogger
     @Mock private lateinit var dateUtil: DateUtil
     @Mock private lateinit var profileUtil: ProfileUtil
     @Mock private lateinit var preferences: Preferences
-    @Mock private lateinit var config: Config
 
     private lateinit var sut: StatsViewModel
 
@@ -50,11 +44,9 @@ internal class StatsViewModelTest {
         // default state. init only reads preferences.get(...) which return primitives (default false/0 on
         // unstubbed mocks) -> tddCycleExpanded is false, so loadCyclePatternData() is never invoked.
         Dispatchers.setMain(StandardTestDispatcher())
-        // Android, so the activity monitor card is drawn and loadAllStats behaves as it always did.
-        whenever(config.platform).thenReturn(AppPlatform.Android)
         sut = StatsViewModel(
-            tddCalculator, tirCalculator, dexcomTirCalculator, activityMonitor, persistenceLayer,
-            rh, uel, dateUtil, profileUtil, preferences, config
+            tddCalculator, tirCalculator, dexcomTirCalculator, persistenceLayer,
+            rh, uel, dateUtil, profileUtil, preferences
         )
     }
 
@@ -62,10 +54,9 @@ internal class StatsViewModelTest {
     fun tearDown() = Dispatchers.resetMain()
 
     @Test
-    fun `default uiState has dialogs hidden and zero cycle offset`() {
+    fun `default uiState has dialog hidden and zero cycle offset`() {
         val state = sut.uiState.value
         assertThat(state.showRecalculateDialog).isFalse()
-        assertThat(state.showResetActivityDialog).isFalse()
         assertThat(state.tddCycleOffset).isEqualTo(0)
     }
 
@@ -93,25 +84,10 @@ internal class StatsViewModelTest {
     }
 
     @Test
-    fun `toggleActivityExpanded flips the expanded flag`() {
-        val initial = sut.uiState.value.activityExpanded
-        sut.toggleActivityExpanded()
-        assertThat(sut.uiState.value.activityExpanded).isEqualTo(!initial)
-    }
-
-    @Test
     fun `recalculate dialog is shown then dismissed`() {
         sut.showRecalculateDialog()
         assertThat(sut.uiState.value.showRecalculateDialog).isTrue()
         sut.dismissRecalculateDialog()
         assertThat(sut.uiState.value.showRecalculateDialog).isFalse()
-    }
-
-    @Test
-    fun `reset activity dialog is shown then dismissed`() {
-        sut.showResetActivityDialog()
-        assertThat(sut.uiState.value.showResetActivityDialog).isTrue()
-        sut.dismissResetActivityDialog()
-        assertThat(sut.uiState.value.showResetActivityDialog).isFalse()
     }
 }

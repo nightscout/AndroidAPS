@@ -147,7 +147,8 @@ class ContributedBindingsTest {
         val root = testRoot()
         assertThat(root.pumpSync).isNotSameInstanceAs(root.pumpSync)
         assertThat(root.pumpWithConcentration).isNotSameInstanceAs(root.pumpWithConcentration)
-        assertThat(root.widgetUpdater).isNotSameInstanceAs(root.widgetUpdater)
+        // widgetUpdater is not here any more: #5246 made it one instance on purpose, because it holds
+        // the update that waits for a display to turn on. GraphScopeStabilityTest pins it.
         // Result objects: a fresh one per call is the point.
         assertThat(root.apsResult).isNotSameInstanceAs(root.apsResult)
         assertThat(root.pumpEnactResult).isNotSameInstanceAs(root.pumpEnactResult)

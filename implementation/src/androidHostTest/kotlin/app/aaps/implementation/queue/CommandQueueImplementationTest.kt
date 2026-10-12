@@ -534,17 +534,71 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val smb = DetailedBolusInfo()
         smb.lastKnownBolusTime = System.currentTimeMillis()
         smb.bolusType = BS.Type.SMB
+        // A manual bolus drops a queued SMB, so the two are never queued together: one at a time
         backgroundScope.launch { commandQueue.bolus(smb) }
         yield()
+        assertThat(commandQueue.size()).isEqualTo(1)
+        commandQueue.cancelAllBoluses(null)
+        assertThat(commandQueue.size()).isEqualTo(0)
+
         backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo()) }
         yield()
-        assertThat(commandQueue.size()).isEqualTo(2)
-
-        // when
+        assertThat(commandQueue.size()).isEqualTo(1)
         commandQueue.cancelAllBoluses(null)
-
-        // then
         assertThat(commandQueue.size()).isEqualTo(0)
+    }
+
+    /** #4546: the SMB did not count the manual bolus, and the manual bolus did not count the SMB. */
+    @Test
+    fun `a manual bolus drops a queued SMB`() = runTest {
+        var smbResult: PumpEnactResult? = null
+        val smb = DetailedBolusInfo().apply {
+            bolusType = BS.Type.SMB
+            lastKnownBolusTime = System.currentTimeMillis()
+        }
+        backgroundScope.launch { smbResult = commandQueue.bolus(smb) }
+        yield()
+        assertThat(commandQueue.size()).isEqualTo(1)
+
+        backgroundScope.launch { commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0 }) }
+        yield() // the manual bolus drops the SMB
+        yield() // the SMB caller resumes with its result
+
+        assertThat(commandQueue.size()).isEqualTo(1)
+        commandQueue.pickup()
+        assertThat(commandQueue.performing()?.commandType).isEqualTo(Command.CommandType.BOLUS)
+        assertThat(smbResult).isNotNull()
+        assertThat(smbResult!!.success).isFalse()
+        // Not a delivery failure: the loop runs again, and no bolus error alarm
+        assertThat(smbResult!!.cancelled).isTrue()
+        // The progress belongs to the manual bolus now
+        assertThat(bolusProgressData.state.value?.isSMB).isFalse()
+    }
+
+    /**
+     * #4546: an SMB that is being delivered cannot be dropped. Queued behind it, the manual bolus would share
+     * the progress state with the SMB, so it is refused and the SMB is left alone.
+     */
+    @Test
+    fun `a manual bolus is refused while an SMB is being delivered`() = runTest {
+        var smbResult: PumpEnactResult? = null
+        val smb = DetailedBolusInfo().apply {
+            bolusType = BS.Type.SMB
+            lastKnownBolusTime = System.currentTimeMillis()
+        }
+        backgroundScope.launch { smbResult = commandQueue.bolus(smb) }
+        yield()
+        commandQueue.pickup()
+
+        val manual = commandQueue.bolus(DetailedBolusInfo().apply { insulin = 1.0 })
+
+        assertThat(manual.success).isFalse()
+        // No insulin was given: the user is told, but it is not a delivery error alarm
+        assertThat(manual.cancelled).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(0)
+        assertThat(commandQueue.performing()?.commandType).isEqualTo(Command.CommandType.SMB_BOLUS)
+        assertThat(smbResult).isNull()
+        assertThat(bolusProgressData.state.value?.isSMB).isTrue()
     }
 
     @Test

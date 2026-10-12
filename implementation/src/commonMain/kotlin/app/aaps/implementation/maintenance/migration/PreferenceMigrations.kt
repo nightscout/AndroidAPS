@@ -18,7 +18,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.ProfileComposedBooleanKey
 import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.StringKey
@@ -109,7 +108,6 @@ class PreferenceMigrations(
         dynamicIsfRetired(sp)
         dynIsfAdjust(sp)
         smsOtpPassword(sp)
-        activityMonitor(sp)
         widgetUseBlack(sp)
         objectives(sp)
         configBuilder(sp)
@@ -118,6 +116,7 @@ class PreferenceMigrations(
         tidepool(sp)
         apsMode(sp)
         tempTargetPresets(sp)
+        activityMonitorRetired(sp)
     }
 
     /**
@@ -267,20 +266,6 @@ class PreferenceMigrations(
     private fun smsOtpPassword(sp: KeyValueStore) {
         val name = StringKey.SmsOtpPassword.key
         if (sp.contains(name) && sp.getString(name, "").length > 10) sp.putString(name, "")
-    }
-
-    /** `Monitor_<activity>_total` and friends become `Monitor_total_<activity>`. */
-    private fun activityMonitor(sp: KeyValueStore) {
-        sp.getAll().forEach { (name, value) ->
-            if (!name.startsWith("Monitor")) return@forEach
-            val destination = when {
-                name.endsWith("total")   -> LongComposedKey.ActivityMonitorTotal
-                name.endsWith("resumed") -> LongComposedKey.ActivityMonitorResumed
-                name.endsWith("start")   -> LongComposedKey.ActivityMonitorStart
-                else                     -> return@forEach
-            }
-            moveLong(sp, name, value, name.split("_").getOrNull(1), destination.key)
-        }
     }
 
     /**
@@ -441,6 +426,24 @@ class PreferenceMigrations(
         sp.remove("aps_mode")
     }
 
+    /**
+     * The activity monitor was removed, so its counters are dead keys.
+     *
+     * It counted the time spent in each Android activity. With one Compose activity for the whole app
+     * it measured nothing. Both spellings go: the legacy `Monitor_<activity>_total` and the
+     * `Monitor_total_<activity>` that a rename in this list used to turn it into. The expanded flag of
+     * its card on the statistics screen goes as well.
+     */
+    private fun activityMonitorRetired(sp: KeyValueStore) {
+        sp.getAll().keys
+            .filter { name ->
+                name.startsWith("Monitor_") &&
+                    MONITOR_COUNTERS.any { name.startsWith("Monitor_${it}_") || name.endsWith("_$it") }
+            }
+            .forEach(sp::remove)
+        if (sp.contains("stats_activity_expanded")) sp.remove("stats_activity_expanded")
+    }
+
     /** Moves a legacy name holding a whole number to [destinationPrefix] + [argument]. */
     private fun moveLong(sp: KeyValueStore, name: String, value: Any?, argument: String?, destinationPrefix: String) {
         if (argument == null) return skip(name, "the name does not say what it belongs to")
@@ -484,6 +487,9 @@ class PreferenceMigrations(
         )
 
         val TEMP_TARGET_PRESETS = StringNonKey.TempTargetPresets.key
+
+        /** The three counters the activity monitor kept for each activity. */
+        val MONITOR_COUNTERS = listOf("start", "resumed", "total")
 
         /** The insulin curves that used to be selected through the Config Builder. */
         val INSULIN_PLUGINS = listOf(

@@ -123,6 +123,7 @@
 
     <!-- Concentration -->
     <string name="u10">U10</string>
+    <string name="u20">U20</string>
     <string name="u40">U40</string>
     <string name="u50">U50</string>
     <string name="u100">U100</string>
@@ -161,7 +162,7 @@
     <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
-    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Plugin %1$s failed to start and may not work. Please restart AAPS.</string>
     <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Plugin %1$s hit an error and part of it has stopped. Please restart AAPS.</string>

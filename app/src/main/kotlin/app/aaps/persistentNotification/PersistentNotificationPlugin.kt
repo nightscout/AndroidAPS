@@ -232,9 +232,12 @@ class PersistentNotificationPlugin(
                 bgStatusChipText = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated)
                 val fromMgdlToUnits = profileUtil.fromMgdlToUnits(lastBG.recalculated)
                 metricValue = if (units == GlucoseUnit.MMOL) {
+                    // Always one decimal. The default minimum is 0, which showed 9.0 as "9" (#5240).
                     FixedFloat(
                         fromMgdlToUnits.round(1).toFloat(),
-                        null // unit
+                        null, // unit
+                        1, // min fraction digits
+                        1 // max fraction digits
                     )
                 } else {
                     FixedInt(
@@ -283,55 +286,58 @@ class PersistentNotificationPlugin(
             }
             line3 = profileName
             /// For Android Auto
-            val msgReadIntent = Intent()
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                .setAction(READ_ACTION)
-                .putExtra(CONVERSATION_ID, notificationHolder.notificationID)
-                .setPackage(PACKAGE)
-            val msgReadPendingIntent = PendingIntent.getBroadcast(
-                context,
-                notificationHolder.notificationID,
-                msgReadIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-            val msgReplyIntent = Intent()
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                .setAction(REPLY_ACTION)
-                .putExtra(CONVERSATION_ID, notificationHolder.notificationID)
-                .setPackage(PACKAGE)
-            val msgReplyPendingIntent = PendingIntent.getBroadcast(
-                context,
-                notificationHolder.notificationID,
-                msgReplyIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-            // Build a RemoteInput for receiving voice input from devices
-            val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
-            // Build Android Auto message: IOB • COB • Target • Profile
-            var aaTarget = ""
-            val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
-            if (tempTarget != null) {
-                aaTarget = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) +
-                    " " + dateUtil.untilString(tempTarget.end, rh)
-            } else {
-                profileFunction.getProfile()?.let { profile ->
-                    val adjustedTarget = profile.apsAdjustedTargetMgdl(loop, config, processedDeviceStatusData)
-                    aaTarget = if (adjustedTarget != null) {
-                        profileUtil.toTargetRangeString(adjustedTarget, adjustedTarget, GlucoseUnit.MGDL, units)
-                    } else {
-                        profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+            // Only the Auto pass uses this. The phone pass built it every time and threw it away (#5246).
+            if (includeAuto) {
+                val msgReadIntent = Intent()
+                    .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                    .setAction(READ_ACTION)
+                    .putExtra(CONVERSATION_ID, notificationHolder.notificationID)
+                    .setPackage(PACKAGE)
+                val msgReadPendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    notificationHolder.notificationID,
+                    msgReadIntent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+                val msgReplyIntent = Intent()
+                    .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                    .setAction(REPLY_ACTION)
+                    .putExtra(CONVERSATION_ID, notificationHolder.notificationID)
+                    .setPackage(PACKAGE)
+                val msgReplyPendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    notificationHolder.notificationID,
+                    msgReplyIntent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+                // Build a RemoteInput for receiving voice input from devices
+                val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
+                // Build Android Auto message: IOB • COB • Target • Profile
+                var aaTarget = ""
+                val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+                if (tempTarget != null) {
+                    aaTarget = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) +
+                        " " + dateUtil.untilString(tempTarget.end, rh)
+                } else {
+                    profileFunction.getProfile()?.let { profile ->
+                        val adjustedTarget = profile.apsAdjustedTargetMgdl(loop, config, processedDeviceStatusData)
+                        aaTarget = if (adjustedTarget != null) {
+                            profileUtil.toTargetRangeString(adjustedTarget, adjustedTarget, GlucoseUnit.MGDL, units)
+                        } else {
+                            profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+                        }
                     }
                 }
+                val aaMsg = decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname) +
+                    " • " + cobInfo.generateCOBString(decimalFormatter) +
+                    " • " + aaTarget +
+                    " • " + profileName
+                unreadConversationBuilder = NotificationCompat.CarExtender.UnreadConversation.Builder(rh.gs(config.appName))
+                    .setLatestTimestamp(System.currentTimeMillis())
+                    .setReadPendingIntent(msgReadPendingIntent)
+                    .setReplyAction(msgReplyPendingIntent, remoteInput)
+                unreadConversationBuilder.addMessage(aaMsg)
             }
-            val aaMsg = decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname) +
-                " • " + cobInfo.generateCOBString(decimalFormatter) +
-                " • " + aaTarget +
-                " • " + profileName
-            unreadConversationBuilder = NotificationCompat.CarExtender.UnreadConversation.Builder(rh.gs(config.appName))
-                .setLatestTimestamp(System.currentTimeMillis())
-                .setReadPendingIntent(msgReadPendingIntent)
-                .setReplyAction(msgReplyPendingIntent, remoteInput)
-            unreadConversationBuilder.addMessage(aaMsg)
             /// End Android Auto
         } else {
             line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)

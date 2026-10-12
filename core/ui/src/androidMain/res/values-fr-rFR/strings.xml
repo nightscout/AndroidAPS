@@ -741,7 +741,6 @@
     <string name="max_carbs_title">Glucides maximum autorisés [g]</string>
     <string name="patient_type">Type de patient</string>
     <!--    Protection-->
-    <string name="unlock_settings">Déverrouiller les paramètres</string>
     <!--    Pumps -->
     <string name="battery_label">Pile</string>
     <string name="reservoir_label">Réservoir</string>

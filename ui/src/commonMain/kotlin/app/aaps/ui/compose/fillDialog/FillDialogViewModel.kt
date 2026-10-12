@@ -142,6 +142,7 @@ class FillDialogViewModel(
                 activeInsulinLabel = null,
                 pumpUnitsWarning = pumpUnitsWarningFor(availableInsulins.firstOrNull()),
                 showBolus = !config.AAPSCLIENT,
+                primeAvailable = activePlugin.activePump.pumpDescription.isRefillingCapable,
                 siteRotationEnabled = preferences.get(BooleanKey.SiteRotationManagePump),
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode),
@@ -263,7 +264,7 @@ class FillDialogViewModel(
         val bolusStep = state.bolusStep
 
         return confirmationLines {
-            if (state.insulinAfterConstraints > 0) {
+            if (state.hasPrime) {
                 line(ConfirmationRole.WARNING, rh.gs(UiStrings.fill_warning))
                 line(ConfirmationRole.NORMAL, "")
                 val bolusValue =
@@ -327,7 +328,7 @@ class FillDialogViewModel(
         }
 
         val doProfileSwitch = state.insulinChanged
-        val hasPrimeBolus = state.insulinAfterConstraints > 0
+        val hasPrimeBolus = state.hasPrime
 
         // All work runs on appScope, not viewModelScope: the dialog navigates back the moment
         // confirm is tapped, which cancels viewModelScope. The prime bolus is also launched

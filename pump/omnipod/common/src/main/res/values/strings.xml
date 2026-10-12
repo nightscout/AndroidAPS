@@ -73,6 +73,7 @@
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deactivate Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Press <b>Next</b> to deactivate the Pod.\n\n<b>Note:</b> This will suspend all insulin delivery and deactivate the Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_confirmation">A deactivated Pod can not be used again. Deactivate this Pod now?</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deactivating Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deactivating the Pod.\n\nWhen deactivation has completed successfully, you can press <b>Next</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod Deactivated</string>

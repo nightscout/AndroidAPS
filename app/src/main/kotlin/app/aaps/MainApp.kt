@@ -35,7 +35,6 @@ import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.di.DatabaseConfig
@@ -118,7 +117,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
 
     private val pluginStore get() = metroGraphs.pluginStore
     private val aapsLogger get() = metroGraphs.aapsLogger
-    private val activityMonitor get() = metroGraphs.activityMonitor
     private val versionCheckersUtils get() = metroGraphs.versionCheckerUtils
     private val sp get() = metroGraphs.sp
     private val preferences get() = metroGraphs.preferences
@@ -345,7 +343,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             gitRemote = null
             commitHash = null
         }
-        registerActivityLifecycleCallbacks(activityMonitor)
         aapsLogger.debug("Version: " + config.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + config.BUILD_VERSION)
         aapsLogger.debug("Remote: " + config.REMOTE)
@@ -714,7 +711,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         val runningICfg = if (profileNameToDia.isEmpty())
             profileFunction.getRunningOrRequestedICfg() ?: substituteICfgForMigration()
         else {
-            val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
+            // The record, not profileFunction.getProfile(): this runs before app init completes, and no
+            // profile is handed out until then. ProfileSealed.EPS.profileName is this same field.
+            val dia = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.originalProfileName?.let { profileName ->
                 profileNameToDia[profileName]
             }
             val insulinEndTime = ((dia ?: hardLimits.diaRange().endInclusive) * 3600 * 1000).toLong()
@@ -864,7 +863,6 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         handler.removeCallbacksAndMessages(null)
         handler.looper.quitSafely()
         unregisterReceivers()
-        unregisterActivityLifecycleCallbacks(activityMonitor)
         uiInteraction.stopAlarm("onTerminate")
         super.onTerminate()
     }

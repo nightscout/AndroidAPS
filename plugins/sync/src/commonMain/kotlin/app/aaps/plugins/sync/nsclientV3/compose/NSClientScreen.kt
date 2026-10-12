@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3.compose
 
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,11 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -33,20 +28,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.CoreUiStrings
@@ -54,24 +39,7 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.plugins.sync.SyncStrings
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlin.time.Instant
-
-private val jsonPrettyPrint = Json { prettyPrint = true }
-
-// Only used by Compose previews, where there is no DateUtil. Hand-padded because String.format is
-// JVM only.
-private fun previewTime(millis: Long): String =
-    Instant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.currentSystemDefault()).let {
-        "${it.hour.toString().padStart(2, '0')}:${it.minute.toString().padStart(2, '0')}:${it.second.toString().padStart(2, '0')}"
-    }
-
-private const val JSON_EXPANDED = "json_expanded"
-
-private const val JSON_COLLAPSED = "json_collapsed"
+import app.aaps.plugins.sync.log.SyncLogList
 
 @Composable
 fun NSClientScreen(
@@ -192,147 +160,14 @@ fun NSClientScreenContent(
 
         HorizontalDivider()
 
-        // Logs
-        val listState = rememberLazyListState()
-
-        // Auto-scroll to top when new log arrives
-        LaunchedEffect(uiState.logList.firstOrNull()?.date) {
-            if (uiState.logList.isNotEmpty()) {
-                listState.scrollToItem(0)
-            }
-        }
-
-        LazyColumn(
-            state = listState,
+        SyncLogList(
+            entries = uiState.logList,
+            dateUtil = dateUtil,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)
-        ) {
-            items(
-                items = uiState.logList,
-                key = { it.id }
-            ) { log ->
-                var isJsonExpanded by remember { mutableStateOf(false) }
-                var isOverflowing by remember(log) { mutableStateOf(false) }
-
-                if (isOverflowing) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = buildAnnotatedString {
-                                append(dateUtil?.timeStringWithSeconds(log.date) ?: previewTime(log.date))
-                                append(" ")
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(log.action)
-                                }
-                            },
-                            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface)
-                        )
-
-                        val bodyText = buildAnnotatedString {
-                            append(log.logText ?: "")
-                            append(" ")
-                            log.json?.let { json ->
-                                if (isJsonExpanded) {
-                                    pushStringAnnotation(JSON_EXPANDED, annotation = JSON_EXPANDED)
-                                    withStyle(style = SpanStyle(fontFamily = FontFamily.Monospace)) {
-                                        append("\n" + jsonPrettyPrint.encodeToString(JsonElement.serializer(), json))
-                                    }
-                                    pop()
-                                } else {
-                                    pushStringAnnotation(JSON_COLLAPSED, annotation = JSON_COLLAPSED)
-                                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline)) {
-                                        append("{...}")
-                                    }
-                                    pop()
-                                }
-                            }
-                        }
-                        ClickableAnnotatedText(
-                            text = bodyText,
-                            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface),
-                            modifier = Modifier.padding(start = AapsSpacing.extraLarge),
-                            onClick = { offset ->
-                                if (bodyText.getStringAnnotations(JSON_COLLAPSED, offset, offset).any()) {
-                                    isJsonExpanded = true
-                                } else if (bodyText.getStringAnnotations(JSON_EXPANDED, offset, offset).any()) {
-                                    isJsonExpanded = false
-                                    isOverflowing = false
-                                }
-                            }
-                        )
-                    }
-                } else {
-                    val fullText = buildAnnotatedString {
-                        dateUtil?.let { append(it.timeStringWithSeconds(log.date)) }
-                            ?: append(log.date.toString())
-                        append(" ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(log.action)
-                        }
-                        append(" ")
-                        append(log.logText ?: "")
-                        append(" ")
-                        log.json?.let {
-                            pushStringAnnotation(JSON_COLLAPSED, annotation = JSON_COLLAPSED)
-                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline)) {
-                                append("{...}")
-                            }
-                            pop()
-                        }
-                    }
-                    ClickableAnnotatedText(
-                        text = fullText,
-                        style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface),
-                        modifier = Modifier.fillMaxWidth(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Clip,
-                        onTextLayout = { textLayoutResult ->
-                            if (textLayoutResult.hasVisualOverflow) {
-                                isOverflowing = true
-                            }
-                        },
-                        onClick = { offset ->
-                            if (fullText.getStringAnnotations(JSON_COLLAPSED, offset, offset).any()) {
-                                isJsonExpanded = true
-                                isOverflowing = true
-                            }
-                        }
-                    )
-                }
-            }
-        }
+                .weight(1f)
+        )
     }
-}
-
-@Composable
-private fun ClickableAnnotatedText(
-    text: AnnotatedString,
-    style: TextStyle,
-    modifier: Modifier = Modifier,
-    maxLines: Int = Int.MAX_VALUE,
-    overflow: TextOverflow = TextOverflow.Clip,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-    onClick: (Int) -> Unit
-) {
-    var layoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
-
-    BasicText(
-        text = text,
-        style = style,
-        maxLines = maxLines,
-        overflow = overflow,
-        modifier = modifier
-            .pointerInput(Unit) {
-                detectTapGestures { position ->
-                    layoutResult?.let { layout ->
-                        val offset = layout.getOffsetForPosition(position)
-                        onClick(offset)
-                    }
-                }
-            },
-        onTextLayout = { layoutResult = it; onTextLayout?.invoke(it) }
-    )
 }
 
 @Composable

@@ -8,6 +8,8 @@ import app.aaps.pump.equil.R
 @Composable
 internal fun AttachStepPreview() {
     AttachStepContent(
+        isLoading = false,
+        errorMessage = null,
         imageRes = R.drawable.equil_animation_wizard_attach,
         onNext = {},
         onCancel = {}

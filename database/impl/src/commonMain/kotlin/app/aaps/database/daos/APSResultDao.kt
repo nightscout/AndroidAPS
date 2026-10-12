@@ -28,4 +28,21 @@ internal interface APSResultDao : TraceableDao<APSResult> {
 
     @Query("SELECT * FROM $TABLE_APS_RESULTS WHERE timestamp >= :start AND timestamp <= :end ORDER BY timestamp ASC")
     suspend fun getApsResults(start: Long, end: Long): List<APSResult>
+
+    /**
+     * Only the time and the variable sensitivity of each result, for the graph.
+     *
+     * The value is a field of `resultJson`, and SQLite reads it there. Loading whole rows and decoding
+     * them in Kotlin decodes all seven JSON columns of about 288 rows on every calculation. In a desktop
+     * benchmark that was about 29 times slower (#5248). `json_extract` gives NULL when the field is
+     * missing and when it is `NaN`.
+     */
+    @Query("SELECT timestamp, json_extract(resultJson, '\$.variable_sens') AS variableSens FROM $TABLE_APS_RESULTS WHERE timestamp >= :start AND timestamp <= :end ORDER BY timestamp ASC")
+    suspend fun getVariableSens(start: Long, end: Long): List<ApsResultVariableSens>
 }
+
+/** One row of [APSResultDao.getVariableSens]. [variableSens] is in mg/dL, null when the result has no value. */
+data class ApsResultVariableSens(
+    val timestamp: Long,
+    val variableSens: Double?
+)
