@@ -5,11 +5,12 @@ import app.aaps.core.interfaces.pump.ble.BleTransport
 /**
  * Equil-specific extension of [BleTransport].
  *
- * Adds fields needed by [EquilBLE] that aren't part of the generic BLE interface:
+ * Adds fields needed by `EquilBLE` that aren't part of the generic BLE interface:
  * - [scanAddress]: MAC filter for scanning
  * - [onGattError133]: callback for GATT error 133 (bond issue)
+ * - [onDescriptorWriteFailed]: callback when notifications could not be enabled
  *
- * Implemented by [EquilBleTransportImpl] (production) and
+ * Implemented by `EquilBleTransportImpl` (production) and
  * EquilEmulatorBleTransport in :pump:equil-emulator (testing).
  */
 interface EquilBleTransport : BleTransport {
@@ -19,4 +20,10 @@ interface EquilBleTransport : BleTransport {
 
     /** Called when GATT error 133 occurs, before onConnectionStateChanged(false). */
     var onGattError133: (() -> Unit)?
+
+    /**
+     * Called when the write that enables notifications fails. No answer from the pump can arrive
+     * then, so a waiting command must fail at once instead of waiting for its timeout.
+     */
+    var onDescriptorWriteFailed: (() -> Unit)?
 }

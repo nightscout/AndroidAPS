@@ -59,6 +59,19 @@ class EquilBLE(
             aapsLogger.debug(LTag.PUMPCOMM, "error133 ")
             baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
         }
+        bleTransport.onDescriptorWriteFailed = { linkSetupFailed("enabling notifications failed") }
+    }
+
+    /**
+     * The link is up, but services or notifications could not be set up, so no answer from the pump
+     * can arrive. Fail the waiting command at once and close the link, so the next connect starts
+     * clean. Before, the command waited for its full timeout.
+     */
+    private fun linkSetupFailed(reason: String) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Link setup failed: $reason")
+        baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
+        bleConnectErrorForResult()
+        disconnect()
     }
 
     // --- BleTransportListener ---
@@ -89,7 +102,7 @@ class EquilBLE(
 
     override fun onServicesDiscovered(success: Boolean) {
         if (!success) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onServicesDiscovered failed")
+            linkSetupFailed("service discovery failed")
             return
         }
         bleTransport.gatt.enableNotifications()
@@ -236,7 +249,7 @@ class EquilBLE(
     }
 
     fun writeCmd(baseCmd: BaseCmd) {
-        aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd)
+        aapsLogger.debug(LTag.PUMPCOMM, "writeCmd $baseCmd")
         this.baseCmd = baseCmd
         val mac: String = when (baseCmd) {
             is CmdPair -> baseCmd.address
@@ -351,12 +364,17 @@ class EquilBLE(
 
         bleTransport.scanAddress = macAddress
         updateCmdStatus(ResolvedResult.NOT_FOUNT)
+        // With a known address the connection does not need the scan, it only reads the advertisement
+        // (battery, reservoir, history index). Stop it after a while, or with the pump out of range the
+        // most power hungry scan mode runs until the queue gives up. A scan that has to find the pump
+        // (autoScan) keeps running; the connect timeout of the command ends it.
+        if (!autoScan) handler.sendEmptyMessageDelayed(TIME_OUT_WHAT, EquilConst.EQUIL_ADVERT_SCAN_TIME_OUT)
 
         scanJob = scope.launch {
             bleTransport.scanner.scannedDevices.collect { device ->
                 device.scanRecordBytes?.let { bytes ->
                     bleHandler.post {
-                        equilManager?.decodeData(bytes, autoScan)
+                        equilManager?.decodeData(bytes)
                     }
                 }
                 stopScan()

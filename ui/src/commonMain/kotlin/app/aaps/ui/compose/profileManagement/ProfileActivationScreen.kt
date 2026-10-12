@@ -55,6 +55,7 @@ import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
+import app.aaps.core.ui.compose.ExpandableRowHeader
 import app.aaps.core.ui.compose.InsulinSelector
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.NumberInputRow
@@ -294,33 +295,17 @@ fun ProfileActivationScreen(
                     var timeshiftExpanded by rememberSaveable { mutableStateOf(false) }
                     val timeshiftExpandRequester = rememberBringIntoViewOnExpand(timeshiftExpanded)
                     Column(modifier = itemModifier.bringIntoViewRequester(timeshiftExpandRequester)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        ExpandableRowHeader(
+                            label = stringResource(CoreUiStrings.timeshift_label),
+                            expanded = timeshiftExpanded,
+                            onExpand = { timeshiftExpanded = true }
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(CoreUiStrings.timeshift_label) + ": ",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = "${timeshift.toInt()}h",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = if (timeshift.toInt() != 0) MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                            if (!timeshiftExpanded) {
-                                FilledTonalButton(onClick = { timeshiftExpanded = true }) {
-                                    Text(stringResource(CoreUiStrings.change))
-                                }
-                            }
+                            Text(
+                                text = stringResource(CoreUiStrings.format_hours_only, timeshift.toInt()),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = if (timeshift.toInt() != 0) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onSurface
+                            )
                         }
                         AnimatedVisibility(
                             visible = timeshiftExpanded,

@@ -1653,6 +1653,23 @@ interface PersistenceLayer {
     suspend fun getApsResults(start: Long, end: Long): List<APSResult>
 
     /**
+     * Get the variable sensitivity of every APSResult in an interval, oldest first
+     *
+     * Reads only the time and the value, not the whole result, so it is cheap enough to run on every
+     * calculation. Results without a value, or with NaN, are left out.
+     *
+     * @param start from
+     * @param end to
+     * @return list of values in mg/dL
+     */
+    suspend fun getVariableSensitivities(start: Long, end: Long): List<VariableSensitivity>
+
+    data class VariableSensitivity(
+        val timestamp: Long,
+        val valueMgdl: Double
+    )
+
+    /**
      * Insert or update ApsResult record
      *
      * @param apsResult record

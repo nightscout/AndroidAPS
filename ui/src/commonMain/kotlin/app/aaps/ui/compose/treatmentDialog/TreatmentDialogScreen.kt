@@ -45,7 +45,6 @@ import app.aaps.core.interfaces.navigation.ElementType
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
-import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.dialogs.ElementConfirmationDialog
 import app.aaps.core.ui.compose.metroViewModel
@@ -53,6 +52,7 @@ import app.aaps.core.ui.compose.navigation.label
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.compose.components.DialogStatusBar
+import app.aaps.ui.compose.components.RecordOnlyBanner
 import app.aaps.ui.compose.overview.chips.CobUiState
 import app.aaps.ui.compose.overview.chips.IobUiState
 import app.aaps.ui.compose.overview.graphs.BgInfoUiState
@@ -151,18 +151,21 @@ internal fun TreatmentDialogContent(
     val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
-            AapsTopAppBar(
-                title = { Text((stringResourceOrNull(ElementType.TREATMENT.label()) ?: "")) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiStrings.close)
-                        )
-                    }
-                },
-                actions = {}
-            )
+            Column {
+                AapsTopAppBar(
+                    title = { Text((stringResourceOrNull(ElementType.TREATMENT.label()) ?: "")) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(CoreUiStrings.close)
+                            )
+                        }
+                    },
+                    actions = {}
+                )
+                if (uiState.forcedRecordOnly) RecordOnlyBanner()
+            }
         },
         bottomBar = {
             val hasAction = uiState.insulin > 0.0 || uiState.carbs > 0
@@ -219,11 +222,6 @@ internal fun TreatmentDialogContent(
         ) {
             // --- Status Bar ---
             DialogStatusBar(bgInfo = bgInfo, iob = iob, cob = cob)
-
-            // --- Forced-record-only warning ---
-            if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(InterfacesStrings.bolus_recorded_only))
-            }
 
             // --- Single Card: Insulin + Carbs ---
             Card(

@@ -2,7 +2,6 @@ package app.aaps.pump.equil.manager
 
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
@@ -14,8 +13,11 @@ import app.aaps.pump.equil.ble.EquilBLE
 import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
+import app.aaps.pump.equil.driver.definition.BluetoothConnectionState
 import app.aaps.pump.equil.keys.EquilStringKey
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -48,7 +50,6 @@ class EquilManagerStateTest {
     @Mock lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
     @Mock lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var ch: ConcentrationHelper
     @Mock lateinit var bolusProgressData: BolusProgressData
 
@@ -64,11 +65,30 @@ class EquilManagerStateTest {
             persisted = it.getArgument(1)
             Unit
         }
-        sut = EquilManager(
-            aapsLogger, rxBus, preferences, rh, pumpSync, equilBLE, equilHistoryRecordDao,
-            equilHistoryPumpDao, { mock<PumpEnactResult>() }, dateUtil, notificationManager,
-            ch, bolusProgressData
-        )
+        sut = newManager()
+    }
+
+    /** A new instance reads only what preferences hold, like a new app process. */
+    private fun newManager() = EquilManager(
+        aapsLogger, rxBus, preferences, rh, pumpSync, equilBLE, equilHistoryRecordDao,
+        equilHistoryPumpDao, { mock<PumpEnactResult>() }, dateUtil,
+        ch, bolusProgressData, CoroutineScope(UnconfinedTestDispatcher())
+    )
+
+    @Test
+    fun `a stored CONNECTING is not loaded after an app restart`() {
+        sut.init()
+        sut.setActivationProgress(ActivationProgress.COMPLETED)
+        // The app is killed while a connect is running; the state was last stored as CONNECTING.
+        sut.equilState?.bluetoothConnectionState = BluetoothConnectionState.CONNECTING
+        sut.storePodState()
+
+        val restarted = newManager()
+        restarted.init()
+
+        // CONNECTING made the queue wait 2 min for a connect that was never started.
+        assertThat(restarted.equilState?.bluetoothConnectionState).isEqualTo(BluetoothConnectionState.DISCONNECTED)
+        assertThat(restarted.isActivationCompleted()).isTrue()
     }
 
     @Test

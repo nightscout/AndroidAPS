@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Command is executed right now</string>
+    <string name="smb_being_delivered">An SMB is being delivered right now. Try again when it has finished.</string>
     <string name="basal_value_below_minimum">Basal value below minimum. Profile not set!</string>
 
     <!--       Stats -->

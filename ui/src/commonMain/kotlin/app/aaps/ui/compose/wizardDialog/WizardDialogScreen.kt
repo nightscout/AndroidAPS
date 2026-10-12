@@ -35,7 +35,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -66,9 +65,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -81,9 +84,9 @@ import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
+import app.aaps.core.ui.compose.ExpandableRowHeader
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.QuickAddButtons
-import app.aaps.core.ui.compose.banner.WarningBanner
 import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.consumeOverscroll
@@ -102,6 +105,7 @@ import app.aaps.core.ui.compose.rememberBringIntoViewOnExpand
 import app.aaps.core.ui.compose.stringResource
 import app.aaps.core.ui.compose.stringResourceOrNull
 import app.aaps.ui.UiStrings
+import app.aaps.ui.compose.components.RecordOnlyBanner
 import kotlinx.coroutines.launch
 
 @Composable
@@ -244,26 +248,29 @@ internal fun WizardDialogContent(
 
     Scaffold(
         topBar = {
-            AapsTopAppBar(
-                title = { Text((stringResourceOrNull(ElementType.BOLUS_WIZARD.label()) ?: "")) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(CoreUiStrings.close)
-                        )
+            Column {
+                AapsTopAppBar(
+                    title = { Text((stringResourceOrNull(ElementType.BOLUS_WIZARD.label()) ?: "")) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(CoreUiStrings.close)
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onSettingsClick) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(CoreUiStrings.settings),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
-                },
-                actions = {
-                    IconButton(onClick = onSettingsClick) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(CoreUiStrings.settings),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            )
+                )
+                if (uiState.forcedRecordOnly) RecordOnlyBanner()
+            }
         },
         bottomBar = {
             // The button shows only the amounts, so a screen reader would say just "2.5 U" and never
@@ -317,11 +324,6 @@ internal fun WizardDialogContent(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // --- Forced-record-only warning ---
-            if (uiState.forcedRecordOnly) {
-                WarningBanner(message = stringResource(InterfacesStrings.bolus_recorded_only))
-            }
-
             // --- Calculation Card (expandable, at top) ---
             val calculationExpandRequester = rememberBringIntoViewOnExpand(uiState.calculationExpanded)
             Card(
@@ -365,24 +367,29 @@ internal fun WizardDialogContent(
                                         color = ElementType.CARBS.color()
                                     )
                                 }
-                                val hasExtra = uiState.percentage != 100 || uiState.directCorrection != 0.0
-                                if (hasExtra) {
-                                    Text("(", fontWeight = FontWeight.Bold)
-                                    if (uiState.percentage != 100) {
-                                        Text(
-                                            text = stringResource(CoreUiStrings.format_percent, uiState.percentage),
-                                            fontWeight = FontWeight.Bold,
-                                            color = ElementType.CARBS.color()
-                                        )
+                                val hasPercentage = uiState.percentage != 100
+                                val hasCorrection = uiState.directCorrection != 0.0
+                                if (hasPercentage || hasCorrection) {
+                                    val percentageText = stringResource(CoreUiStrings.format_percent, uiState.percentage)
+                                    val correctionText = stringResource(CoreUiStrings.format_insulin_units_signed, uiState.directCorrection)
+                                    val extras = when {
+                                        hasPercentage && hasCorrection -> stringResource(UiStrings.wizard_percentage_and_correction, percentageText, correctionText)
+                                        hasPercentage                  -> percentageText
+                                        else                           -> correctionText
                                     }
-                                    if (uiState.directCorrection != 0.0) {
-                                        Text(
-                                            text = stringResource(CoreUiStrings.format_insulin_units_signed, uiState.directCorrection),
-                                            fontWeight = FontWeight.Bold,
-                                            color = ElementType.INSULIN.color()
-                                        )
-                                    }
-                                    Text(")", fontWeight = FontWeight.Bold)
+                                    val extrasText = stringResource(CoreUiStrings.value_in_parentheses, extras)
+                                    val percentageColor = ElementType.CARBS.color()
+                                    val correctionColor = ElementType.INSULIN.color()
+                                    // One text from the templates, so a translator controls the brackets and
+                                    // the order. Only the two values get their own colour.
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            append(extrasText)
+                                            if (hasPercentage) colorPart(extrasText, percentageText, percentageColor)
+                                            if (hasCorrection) colorPart(extrasText, correctionText, correctionColor)
+                                        },
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                             } else if (uiState.hasResult && uiState.carbsEquivalent > 0) {
                                 Text(
@@ -514,7 +521,7 @@ internal fun WizardDialogContent(
                                 // BG
                                 if (uiState.useBg && uiState.bg > 0) {
                                     CalcRow(
-                                        label = stringResource(CoreUiStrings.wizard_bg_label) + " (ISF: ${decimalFormatter.to1Decimal(uiState.isf)})",
+                                        label = stringResource(UiStrings.wizard_calc_with_isf, stringResource(CoreUiStrings.wizard_bg_label), decimalFormatter.to1Decimal(uiState.isf)),
                                         value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromBG)
                                     )
                                 }
@@ -530,7 +537,7 @@ internal fun WizardDialogContent(
                                 // COB
                                 if (uiState.useCOB) {
                                     CalcRow(
-                                        label = stringResource(CoreUiStrings.cob) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        label = stringResource(UiStrings.wizard_calc_with_ic, stringResource(CoreUiStrings.cob), decimalFormatter.to1Decimal(uiState.ic)),
                                         value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCOB)
                                     )
                                 }
@@ -538,7 +545,12 @@ internal fun WizardDialogContent(
                                 // Carbs
                                 if (uiState.eCarbs > 0) {
                                     CalcRow(
-                                        label = stringResource(InterfacesStrings.carbs) + " ${uiState.effectiveCarbs}g (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        label = stringResource(
+                                            UiStrings.wizard_calc_carbs_with_ic,
+                                            stringResource(InterfacesStrings.carbs),
+                                            stringResource(InterfacesStrings.format_carbs, uiState.effectiveCarbs),
+                                            decimalFormatter.to1Decimal(uiState.ic)
+                                        ),
                                         value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCarbs)
                                     )
                                     CalcRow(
@@ -547,7 +559,7 @@ internal fun WizardDialogContent(
                                     )
                                 } else {
                                     CalcRow(
-                                        label = stringResource(InterfacesStrings.carbs) + " (IC: ${decimalFormatter.to1Decimal(uiState.ic)})",
+                                        label = stringResource(UiStrings.wizard_calc_with_ic, stringResource(InterfacesStrings.carbs), decimalFormatter.to1Decimal(uiState.ic)),
                                         value = stringResource(InterfacesStrings.format_insulin_units, uiState.insulinFromCarbs)
                                     )
                                 }
@@ -609,9 +621,14 @@ internal fun WizardDialogContent(
 
             val bgIsOld = !uiState.hasBgData || uiState.bgAgeMinutes > 9
             var bgExpanded by rememberSaveable { mutableStateOf(false) }
-            LaunchedEffect(bgIsOld) {
-                if (bgIsOld) bgExpanded = true
+            // Wait for the real values. The first frames show the default state, which has no BG, so
+            // without this check the BG input opened every time and stayed open for a fresh BG too.
+            LaunchedEffect(uiState.initialized, bgIsOld) {
+                if (uiState.initialized && bgIsOld) bgExpanded = true
             }
+            // Scroll to the BG input only when the user opened it. When it opens by itself (old BG),
+            // a scroll would move the top of the screen away before the user has read it.
+            var bgExpandedByUser by remember { mutableStateOf(false) }
             var percentageExpanded by rememberSaveable { mutableStateOf(false) }
 
             Card(
@@ -724,52 +741,39 @@ internal fun WizardDialogContent(
                         modifier = itemModifier
                     )
                     // BG (collapsible, auto-expand when old/missing)
-                    val bgExpandRequester = rememberBringIntoViewOnExpand(bgExpanded)
+                    val bgExpandRequester = rememberBringIntoViewOnExpand(bgExpandedByUser)
                     Column(modifier = itemModifier.bringIntoViewRequester(bgExpandRequester)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(CoreUiStrings.wizard_bg_label) + ": ",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                if (uiState.hasBgData) {
-                                    val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
-                                    Text(
-                                        text = "${bgFormat.format(uiState.bg)} $unitsLabel",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    val ageText = "(${uiState.bgAgeMinutes} min)"
-                                    // Old is only the red colour on screen; a screen reader says it.
-                                    val ageSpoken = if (bgIsOld) listOf(ageText, stringResource(UiStrings.a11y_bg_old_reading)).joinToString(", ") else ageText
-                                    Text(
-                                        text = ageText,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = if (bgIsOld) MaterialTheme.colorScheme.error
-                                        else MaterialTheme.colorScheme.onSurfaceVariant,
-                                        modifier = Modifier.semantics { contentDescription = ageSpoken }
-                                    )
-                                } else {
-                                    Text(
-                                        text = stringResource(CoreUiStrings.not_available_full),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.error
-                                    )
-                                }
+                        ExpandableRowHeader(
+                            label = stringResource(CoreUiStrings.wizard_bg_label),
+                            expanded = bgExpanded,
+                            onExpand = {
+                                bgExpanded = true
+                                bgExpandedByUser = true
                             }
-                            if (!bgExpanded) {
-                                FilledTonalButton(onClick = { bgExpanded = true }) {
-                                    Text(stringResource(CoreUiStrings.change))
-                                }
+                        ) {
+                            if (uiState.hasBgData) {
+                                val bgFormat = if (uiState.isMgdl) NumberFormat.INTEGER else NumberFormat.DECIMAL_1
+                                Text(
+                                    text = stringResource(CoreUiStrings.value_with_unit, bgFormat.format(uiState.bg), unitsLabel),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                val ageText = stringResource(CoreUiStrings.value_in_parentheses, stringResource(CoreUiStrings.format_mins, uiState.bgAgeMinutes))
+                                // Old is only the red colour on screen; a screen reader says it.
+                                val ageSpoken = if (bgIsOld) stringResource(UiStrings.a11y_bg_age_old, ageText, stringResource(UiStrings.a11y_bg_old_reading)) else ageText
+                                Text(
+                                    text = ageText,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = if (bgIsOld) MaterialTheme.colorScheme.error
+                                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.semantics { contentDescription = ageSpoken }
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(CoreUiStrings.not_available_full),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.error
+                                )
                             }
                         }
                         AnimatedVisibility(
@@ -792,32 +796,16 @@ internal fun WizardDialogContent(
                     // Percentage (collapsible)
                     val percentageExpandRequester = rememberBringIntoViewOnExpand(percentageExpanded)
                     Column(modifier = itemModifier.bringIntoViewRequester(percentageExpandRequester)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        ExpandableRowHeader(
+                            label = stringResource(CoreUiStrings.wizard_use_percentage),
+                            expanded = percentageExpanded,
+                            onExpand = { percentageExpanded = true }
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(CoreUiStrings.wizard_use_percentage) + ": ",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = "${uiState.percentage}%",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                            if (!percentageExpanded) {
-                                FilledTonalButton(onClick = { percentageExpanded = true }) {
-                                    Text(stringResource(CoreUiStrings.change))
-                                }
-                            }
+                            Text(
+                                text = stringResource(CoreUiStrings.format_percent, uiState.percentage),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                         AnimatedVisibility(
                             visible = percentageExpanded,
@@ -843,32 +831,16 @@ internal fun WizardDialogContent(
                         val profileExpandRequester = rememberBringIntoViewOnExpand(profileExpanded)
 
                         Column(modifier = itemModifier.bringIntoViewRequester(profileExpandRequester)) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
+                            ExpandableRowHeader(
+                                label = stringResource(CoreUiStrings.profile),
+                                expanded = profileExpanded,
+                                onExpand = { profileExpanded = true }
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text(
-                                        text = stringResource(CoreUiStrings.profile) + ": ",
-                                        style = MaterialTheme.typography.labelLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                    Text(
-                                        text = currentProfile,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
-                                if (!profileExpanded) {
-                                    FilledTonalButton(onClick = { profileExpanded = true }) {
-                                        Text(stringResource(CoreUiStrings.change))
-                                    }
-                                }
+                                Text(
+                                    text = currentProfile,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             }
                             AnimatedVisibility(
                                 visible = profileExpanded,
@@ -900,6 +872,12 @@ internal fun WizardDialogContent(
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
+}
+
+/** Colours the place where [part] is in [text]. Does nothing when it is not there. */
+private fun AnnotatedString.Builder.colorPart(text: String, part: String, color: Color) {
+    val start = text.indexOf(part)
+    if (start >= 0) addStyle(SpanStyle(color = color), start, start + part.length)
 }
 
 @Composable

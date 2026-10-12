@@ -362,11 +362,9 @@ class PumpIO(
             try {
                 _connectionState.value = ConnectionState.CONNECTING
 
-                // Connecting to Bluetooth may block, so run it in
-                // a coroutine with an IO dispatcher.
-                withContext(bluetoothDevice.ioDispatcher) {
-                    bluetoothDevice.connect()
-                }
+                // Connecting to Bluetooth may block. This runs it with an
+                // IO dispatcher, and lets a cancellation stop it.
+                connectBTDeviceStoppableByCancel()
 
                 _connectionState.value = ConnectionState.CONNECTED
 
@@ -2105,6 +2103,27 @@ class PumpIO(
         } catch (t: Throwable) {
             _connectionState.value = ConnectionState.FAILED
             throw t
+        }
+    }
+
+    /**
+     * Connects the Bluetooth device in a way that a cancellation can stop.
+     *
+     * [BluetoothDevice.connect] blocks its thread, and cancelling a coroutine does not stop a
+     * blocked thread. So a cancelled pairing kept trying to connect until all connect attempts
+     * had failed, which took up to half a minute. Here the connect runs as a child, and this
+     * coroutine only waits for it. The wait ends at once on a cancellation, and then
+     * [BluetoothDevice.disconnect] is called. That closes the socket, so the blocked connect
+     * fails right away and does not try again.
+     */
+    private suspend fun connectBTDeviceStoppableByCancel() = coroutineScope {
+        val connecting = async(bluetoothDevice.ioDispatcher) { bluetoothDevice.connect() }
+        try {
+            connecting.await()
+        } catch (e: CancellationException) {
+            logger(LogLevel.DEBUG) { "Cancelled while connecting - disconnecting to stop the connect attempt" }
+            disconnectBTDeviceAndCatchExceptions()
+            throw e
         }
     }
 

@@ -40,7 +40,6 @@ enum class BooleanNonKey(
     StatsTddExpanded("stats_tdd_expanded", true, exportable = false),
     StatsTirExpanded("stats_tir_expanded", true, exportable = false),
     StatsDexcomTirExpanded("stats_dexcom_tir_expanded", true, exportable = false),
-    StatsActivityExpanded("stats_activity_expanded", true, exportable = false),
     StatsTddCycleExpanded("stats_tdd_cycle_expanded", false, exportable = false),
 
     // Set (committed) right before a startup VACUUM and cleared after it finishes. If it is still

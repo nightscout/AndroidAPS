@@ -25,6 +25,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -33,6 +34,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import app.aaps.core.ui.R as CoreUiR
 
@@ -96,6 +98,8 @@ internal class EquilOverviewViewModelTest {
         whenever(rh.gs(R.string.equil_common_overview_button_suspend_delivery)).thenReturn("Suspend")
         whenever(rh.gs(CoreUiR.string.last_connection_label)).thenReturn("Last connection")
         whenever(rh.gs(CoreUiR.string.battery_label)).thenReturn("Battery")
+        whenever(rh.gs(CoreUiR.string.refresh)).thenReturn("Refresh")
+        whenever(rh.gs(CoreUiR.string.user_request)).thenReturn("User request")
     }
 
     @AfterEach
@@ -109,10 +113,11 @@ internal class EquilOverviewViewModelTest {
     )
 
     @Test
-    fun nullEquilState_hasNoInfoRows_noPrimaryActions() {
+    fun nullEquilState_hasNoInfoRows_onlyRefresh() {
         // isPaired = !TextUtils.isEmpty(devName); TextUtils.isEmpty returns false under the plain-JVM
         // mockable android.jar, so isPaired is effectively always true here — the not-paired branch
         // isn't reachable without Robolectric. With a null equilState the paired path yields no rows.
+        // Activation is mocked as completed, so only Refresh is offered (no run mode to suspend/resume).
         whenever(equilManager.equilState).thenReturn(null)
 
         val state = createViewModel().uiState.value
@@ -120,7 +125,7 @@ internal class EquilOverviewViewModelTest {
         assertThat(state.infoRows).isEmpty()
         assertThat(state.statusBanner).isNull()
         assertThat(state.queueStatus).isNull()
-        assertThat(state.primaryActions).isEmpty()
+        assertThat(state.primaryActions.map { it.label }).containsExactly("Refresh")
         assertThat(state.managementActions.map { it.label }).containsExactly("Dressing", "History", "Unbind")
     }
 
@@ -152,7 +157,18 @@ internal class EquilOverviewViewModelTest {
 
         // paired -> management offers Dressing / History / Unbind (not Pair)
         assertThat(state.managementActions.map { it.label }).containsExactly("Dressing", "History", "Unbind")
-        // suspended -> primary action offers Resume
-        assertThat(state.primaryActions.map { it.label }).containsExactly("Resume")
+        // suspended -> primary actions offer Refresh and Resume
+        assertThat(state.primaryActions.map { it.label }).containsExactly("Refresh", "Resume").inOrder()
+    }
+
+    @Test
+    fun refresh_readsPumpStatus() = runTest {
+        whenever(equilManager.equilState).thenReturn(EquilManager.EquilState().apply { runMode = RunMode.RUN })
+        val refresh = createViewModel().uiState.value.primaryActions.first { it.label == "Refresh" }
+
+        refresh.onClick()
+
+        // A pump alarm is then read from the history now, not at the next loop run.
+        verify(commandQueue).readStatus("User request")
     }
 }

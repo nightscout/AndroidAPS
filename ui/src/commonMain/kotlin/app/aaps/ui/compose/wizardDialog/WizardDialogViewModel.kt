@@ -187,6 +187,7 @@ class WizardDialogViewModel(
 
         _uiState.update {
             WizardDialogUiState(
+                initialized = true,
                 // User inputs
                 bg = currentBg,
                 carbs = initialCarbs ?: 0,
@@ -448,8 +449,8 @@ class WizardDialogViewModel(
 
         // Format trend detail: signed 45-min BG projection
         val trendDetail = if (state.useTrend) {
-            val signedTrendValue = (if (w.data.trend > 0) "+" else "") +
-                profileUtil.fromMgdlToStringInUnits(w.data.trend * 3, state.units)
+            val trendValue = profileUtil.fromMgdlToStringInUnits(w.data.trend * 3, state.units)
+            val signedTrendValue = if (w.data.trend > 0) rh.gs(CoreUiStrings.value_with_plus_sign, trendValue) else trendValue
             rh.gs(CoreUiStrings.wizard_trend_detail, signedTrendValue, profileUtil.unitLabel)
         } else ""
 
