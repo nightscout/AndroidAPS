@@ -35,7 +35,6 @@ import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.TextRef
-import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.MetroViewModelFactoryOwner
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.di.DatabaseConfig
@@ -712,7 +711,9 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
         val runningICfg = if (profileNameToDia.isEmpty())
             profileFunction.getRunningOrRequestedICfg() ?: substituteICfgForMigration()
         else {
-            val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
+            // The record, not profileFunction.getProfile(): this runs before app init completes, and no
+            // profile is handed out until then. ProfileSealed.EPS.profileName is this same field.
+            val dia = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())?.originalProfileName?.let { profileName ->
                 profileNameToDia[profileName]
             }
             val insulinEndTime = ((dia ?: hardLimits.diaRange().endInclusive) * 3600 * 1000).toLong()

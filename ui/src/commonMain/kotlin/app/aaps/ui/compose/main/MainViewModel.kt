@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.clientcontrol.ActionProgress
 import app.aaps.core.interfaces.clientcontrol.isNotDeliveryError
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.appInitializedFlow
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -222,7 +223,9 @@ class MainViewModel(
         overviewDataCache.tbrFlow,
         // Re-emit the latest tick whenever QuickWizard entries change (local edit or synced from the
         // main phone) so the carousel rebuilds. changes is a StateFlow (initial 0) → never blocks.
-        combine(progressTicker, quickWizard.changes) { now, _ -> now }
+        // Also when app init completes: the QuickWizard items are built only after that, and must not
+        // wait for the next tick to appear.
+        combine(progressTicker, quickWizard.changes, config.appInitializedFlow) { now, _, _ -> now }
     ) { ttData, profileData, rmData, tbrData, now ->
         buildChipState(ttData, profileData, rmData, tbrData, now)
     }
@@ -378,6 +381,11 @@ class MainViewModel(
     private suspend fun computeQuickWizardItems(runningMode: RM.Mode?): List<QuickWizardItem> {
         val activeEntries = quickWizard.list().filter { it.isActive() }
         if (activeEntries.isEmpty()) return emptyList()
+        // Read and calculate nothing before app init completes; chipStateFlow rebuilds as soon as it has.
+        // Until then activePlugin.activeAPS is null, and a profile read now keeps that null: ProfileSealed
+        // takes the APS when it is built. Checking just before doCalc() was not enough, because the profile
+        // was read before that check, and it reached ProfileSealed's "APS not defined" guard (crash at start).
+        if (!config.appInitialized) return emptyList()
 
         val lastBG = iobCobCalculator.ads.lastBg()
         val profile = profileFunction.getProfile()
@@ -443,10 +451,7 @@ class MainViewModel(
         val guid = entry.guid()
 
         val globalReason = when {
-            // Before app init completes, activePlugin.activeAPS is still null, so the profile's `aps` is
-            // null and doCalc() would hit ProfileSealed's "APS not defined" guard (early-boot crash).
-            // Mirror the appInitialized gate the bolus path already has (WizardBolusExecutorImpl).
-            !config.appInitialized                   -> rh.gs(CoreUiStrings.initializing)
+            // App init is checked in computeQuickWizardItems, before the profile is read.
             lastBG == null                           -> rh.gs(CoreUiStrings.wizard_no_actual_bg)
             profile == null                          -> rh.gs(CoreUiStrings.noprofile)
             !pump.isInitialized()                    -> rh.gs(CoreUiStrings.pump_not_initialized_profile_not_set)

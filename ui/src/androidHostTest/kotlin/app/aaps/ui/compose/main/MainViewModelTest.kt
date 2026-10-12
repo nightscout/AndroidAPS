@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bolus.BatchExecutor
 import app.aaps.core.interfaces.bolus.WizardExecutor
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.InitProgress
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -120,6 +121,8 @@ internal class MainViewModelTest {
         whenever(overviewDataCache.runningModeFlow).thenReturn(MutableStateFlow<RunningModeDisplayData?>(null))
         whenever(overviewDataCache.tbrFlow).thenReturn(MutableStateFlow<TbrDisplayData?>(null))
         whenever(quickWizard.changes).thenReturn(MutableStateFlow(0))
+        // App init, also folded into chipStateFlow: the QuickWizard items are built once it completes.
+        whenever(config.initProgressFlow).thenReturn(MutableStateFlow(InitProgress(done = true)))
 
         // Active scene state and the scene catalog, read as fields (activeSceneState, sceneExpired.map,
         // activeSceneChainTargetName's combine).

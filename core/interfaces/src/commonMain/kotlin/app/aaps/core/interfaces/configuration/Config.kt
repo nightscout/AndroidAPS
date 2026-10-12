@@ -2,9 +2,12 @@ package app.aaps.core.interfaces.configuration
 
 import app.aaps.core.keys.interfaces.AppPlatform
 import app.aaps.core.keys.interfaces.TextRef
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeoutOrNull
 
 /**
@@ -203,6 +206,16 @@ suspend fun Config.awaitInitialized(timeoutMs: Long = 30_000L): Boolean {
         initProgressFlow.first { it.done && !it.reconfiguring }
     } != null
 }
+
+/**
+ * [Config.appInitialized] as a flow: the current value first, then every change.
+ *
+ * For work that must not run before init completes and must run as soon as it has. Checking
+ * [Config.appInitialized] once is not enough for that: the work is skipped, and then waits for some
+ * other trigger to come along.
+ */
+val Config.appInitializedFlow: Flow<Boolean>
+    get() = initProgressFlow.map { it.done && !it.reconfiguring }.distinctUntilChanged()
 
 /**
  * Run [block] with plugin state marked as being rebuilt, and always unmark it afterwards.
