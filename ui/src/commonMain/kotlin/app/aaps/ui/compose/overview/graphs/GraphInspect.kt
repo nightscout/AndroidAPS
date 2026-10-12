@@ -1,34 +1,27 @@
 package app.aaps.ui.compose.overview.graphs
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
@@ -44,14 +37,12 @@ import app.aaps.core.interfaces.overview.graph.BolusGraphPoint
 import app.aaps.core.interfaces.overview.graph.BolusType
 import app.aaps.core.interfaces.overview.graph.CarbsGraphPoint
 import app.aaps.core.interfaces.overview.graph.GraphDataPoint
-import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
 import app.aaps.core.ui.compose.LocalProfileUtil
-import app.aaps.core.ui.compose.TonalIcon
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.navigation.color
@@ -60,19 +51,19 @@ import app.aaps.core.ui.compose.stringResource
 import app.aaps.ui.UiStrings
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.Axis
+import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerVisibilityListener
 import com.patrykandpatrick.vico.compose.cartesian.marker.Interaction
 import com.patrykandpatrick.vico.compose.common.Fill
-import com.patrykandpatrick.vico.compose.common.component.LineComponent
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
 // =========================================================================
 // Press and hold on the BG graph: a line and a dot on the reading under the finger, and a pill with
-// the values at that time. Inspired by Trio and TrioFollower.
+// the values at that time; a dashed line at that time in every graph. Inspired by Trio and TrioFollower.
 // =========================================================================
 
 /** How far a reading or a value may be from the finger's time and still count, in ms. */
@@ -80,24 +71,6 @@ private const val INSPECT_MATCH_MS = 5 * 60_000L
 
 /** A bolus or carb entry belongs to a reading when it is within half a reading interval of it, in ms. */
 private const val INSPECT_TREATMENT_MS = 150_000L
-
-/** The values that can be shown in the pill. Time and glucose are always shown. [id] is what is stored. */
-enum class InspectItem(val id: String, val label: TextRef) {
-
-    IOB("iob", CoreUiStrings.iob),
-    COB("cob", CoreUiStrings.cob),
-    BASAL("basal", CoreUiStrings.basal),
-    TREATMENTS("treatments", UiStrings.graph_inspect_treatments);
-
-    companion object {
-
-        /** Stored form: the ids of the hidden items, separated by commas. Empty = everything shown. */
-        fun hiddenFromString(text: String): Set<InspectItem> =
-            text.split(",").mapNotNull { id -> entries.find { it.id == id.trim() } }.toSet()
-
-        fun hiddenToString(hidden: Set<InspectItem>): String = entries.filter { it in hidden }.joinToString(",") { it.id }
-    }
-}
 
 /**
  * Shared state between Vico (marker, controller, listener) and the compose side (pill, touch layer).
@@ -115,6 +88,9 @@ class GraphInspectState {
 
     /** The graph x of the reading the line and dot are drawn at. */
     var shownX by mutableStateOf<Double?>(null)
+
+    /** Where the inspect line is drawn in every graph: at the reading, while the finger is down. */
+    val lineX: Double? get() = if (fingerDown) shownX else null
     var dotValue by mutableStateOf<Double?>(null)
     var dotColor by mutableStateOf(Color.Unspecified)
 
@@ -152,16 +128,14 @@ class GraphInspectState {
 }
 
 /**
- * Draws a vertical line through the graph at the chosen reading, and a dot on the reading.
+ * Draws a dot on the chosen reading (the line through all graphs is [InspectLine]).
  * Vico places the marker at its own nearest point (which may be a basal or prediction point), so the
  * position is moved to the reading the pill shows.
  */
 class GraphInspectMarker(
-    private val state: GraphInspectState,
-    lineColor: Color
+    private val state: GraphInspectState
 ) : CartesianMarker {
 
-    private val line = LineComponent(fill = Fill(lineColor), thickness = 1.dp)
     private val dotCenter = ShapeComponent(fill = Fill(Color.White), shape = CircleShape)
 
     override fun drawOverLayers(context: CartesianDrawingContext, targets: List<CartesianMarker.Target>) {
@@ -170,7 +144,6 @@ class GraphInspectMarker(
         with(context) {
             val canvasX = target.canvasX + ((x - target.x) / ranges.xStep).toFloat() * layerDimensions.xSpacing
             if (canvasX < layerBounds.left || canvasX > layerBounds.right) return
-            line.drawVertical(context, canvasX, layerBounds.top, layerBounds.bottom)
             val value = state.dotValue ?: return
             val yRange = ranges.getYRange(Axis.Position.Vertical.Start)
             val canvasY = layerBounds.bottom - ((value - yRange.minY) / yRange.length).toFloat() * layerBounds.height
@@ -181,6 +154,49 @@ class GraphInspectMarker(
             dotCenter.draw(context, canvasX - inner, canvasY - inner, canvasX + inner, canvasY + inner)
         }
     }
+}
+
+/**
+ * The vertical line at the inspected reading, drawn in every graph so they all point at the same time.
+ * Drawn like [NowLine] (dashed, same thickness), and moved with the finger through [GraphInspectState.lineX].
+ */
+class InspectLine(
+    private val state: GraphInspectState,
+    private val color: Color,
+    private val strokeWidthPx: Float = 2f,
+    private val dashLengthPx: Float = 6f,
+    private val gapLengthPx: Float = 4f
+) : Decoration {
+
+    override fun drawOverLayers(context: CartesianDrawingContext) {
+        val x = state.lineX ?: return
+        with(context) {
+            val xStep = ranges.xStep
+            if (xStep == 0.0) return
+            // Same x to canvas transform as NowLine
+            val canvasX = layerBounds.left +
+                layerDimensions.startPadding +
+                layerDimensions.xSpacing * ((x - ranges.minX) / xStep).toFloat() -
+                scroll
+            if (canvasX < layerBounds.left || canvasX > layerBounds.right) return
+            with(mutableDrawScope) {
+                drawLine(
+                    color = this@InspectLine.color,
+                    start = Offset(canvasX, layerBounds.top),
+                    end = Offset(canvasX, layerBounds.bottom),
+                    strokeWidth = strokeWidthPx,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashLengthPx, gapLengthPx), 0f)
+                )
+            }
+        }
+    }
+}
+
+/** The [InspectLine] for one graph, or null when [state] is null. Colored like the "now" line, a bit lighter. */
+@Composable
+fun rememberInspectLine(state: GraphInspectState?): InspectLine? {
+    val color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+    return remember(state, color) { state?.let { InspectLine(it, color) } }
 }
 
 /**
@@ -235,6 +251,9 @@ fun inspectDataAt(
     )
 }
 
+/** COB in whole grams for the pill, or null to leave it out: no carbs on board is not worth a place. */
+internal fun shownCob(cob: Double?): Int? = cob?.roundToInt()?.takeIf { it > 0 }
+
 private fun <T> List<T>.nearest(timestamp: Long, time: (T) -> Long): T? =
     minByOrNull { abs(time(it) - timestamp) }?.takeIf { abs(time(it) - timestamp) <= INSPECT_MATCH_MS }
 
@@ -247,13 +266,12 @@ internal fun BgRange.inspectColor(): Color = when (this) {
 }
 
 /**
- * The pill with the values at the inspected time. [onEdit] opens the switches for what is shown.
+ * The pill with the values at the inspected time: time, glucose, IOB, COB (left out at 0 g), basal
+ * rate, and any bolus, SMB or carbs at that reading.
  */
 @Composable
 fun GraphInspectPill(
     data: InspectData,
-    hidden: Set<InspectItem>,
-    onEdit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
@@ -267,7 +285,7 @@ fun GraphInspectPill(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = AapsSpacing.large, end = AapsSpacing.extraSmall)
+            modifier = Modifier.padding(horizontal = AapsSpacing.large)
         ) {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
@@ -279,30 +297,20 @@ fun GraphInspectPill(
                     val text = if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(bg.value) else decimalFormatter.to1Decimal(bg.value)
                     PillText(text, bg.range.inspectColor())
                 }
-                if (InspectItem.IOB !in hidden) data.iob?.let {
+                data.iob?.let {
                     PillItem(ElementType.INSULIN.icon(), stringResource(InterfacesStrings.format_insulin_units, it), ElementType.INSULIN.color())
                 }
-                if (InspectItem.COB !in hidden) data.cob?.let {
-                    PillItem(ElementType.COB.icon(), stringResource(InterfacesStrings.format_carbs, it.roundToInt()), ElementType.COB.color())
+                shownCob(data.cob)?.let {
+                    PillItem(ElementType.COB.icon(), stringResource(InterfacesStrings.format_carbs, it), ElementType.COB.color())
                 }
-                if (InspectItem.BASAL !in hidden) data.basal?.let {
+                data.basal?.let {
                     PillItem(ElementType.TEMP_BASAL.icon(), stringResource(CoreUiStrings.pump_base_basal_rate, it), ElementType.TEMP_BASAL.color())
                 }
-                if (InspectItem.TREATMENTS !in hidden) {
-                    data.boluses.forEach { bolus ->
-                        val text = if (bolus.bolusType == BolusType.SMB) stringResource(UiStrings.graph_inspect_smb, bolus.label) else bolus.label
-                        PillItem(IcBolus, text, ElementType.INSULIN.color())
-                    }
-                    data.carbs.forEach { carbs -> PillItem(IcCarbs, carbs.label, ElementType.CARBS.color()) }
+                data.boluses.forEach { bolus ->
+                    val text = if (bolus.bolusType == BolusType.SMB) stringResource(UiStrings.graph_inspect_smb, bolus.label) else bolus.label
+                    PillItem(IcBolus, text, ElementType.INSULIN.color())
                 }
-            }
-            IconButton(onClick = onEdit, modifier = Modifier.size(32.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.Edit,
-                    contentDescription = stringResource(CoreUiStrings.switch_to_edit),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                    modifier = Modifier.size(16.dp)
-                )
+                data.carbs.forEach { carbs -> PillItem(IcCarbs, carbs.label, ElementType.CARBS.color()) }
             }
         }
     }
@@ -318,49 +326,5 @@ private fun PillItem(icon: ImageVector, text: String, color: Color) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)) {
         Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(14.dp))
         PillText(text, color)
-    }
-}
-
-/** Bottom sheet with one switch per value that the pill can show. */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun GraphInspectItemsSheet(
-    hidden: Set<InspectItem>,
-    onChange: (Set<InspectItem>) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surface
-    ) {
-        Column(modifier = Modifier.padding(bottom = AapsSpacing.xxLarge)) {
-            Text(
-                text = stringResource(UiStrings.graph_inspect_items_title),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = AapsSpacing.xxLarge, vertical = AapsSpacing.large)
-            )
-            InspectItem.entries.forEach { item ->
-                val type = when (item) {
-                    InspectItem.IOB        -> ElementType.INSULIN
-                    InspectItem.COB        -> ElementType.COB
-                    InspectItem.BASAL      -> ElementType.TEMP_BASAL
-                    InspectItem.TREATMENTS -> ElementType.TREATMENT
-                }
-                ListItem(
-                    headlineContent = { Text(stringResource(item.label)) },
-                    leadingContent = { TonalIcon(icon = type.icon(), color = type.color()) },
-                    trailingContent = {
-                        Switch(
-                            checked = item !in hidden,
-                            onCheckedChange = { shown -> onChange(if (shown) hidden - item else hidden + item) }
-                        )
-                    },
-                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
-                )
-            }
-        }
     }
 }

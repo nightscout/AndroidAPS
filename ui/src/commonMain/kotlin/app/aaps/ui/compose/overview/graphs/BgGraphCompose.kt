@@ -577,10 +577,10 @@ fun BgGraphCompose(
         )
     }
 
-    val inspectLineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-    val inspectMarker = remember(inspect, inspectLineColor) { inspect?.let { GraphInspectMarker(it, inspectLineColor) } }
+    val inspectMarker = remember(inspect) { inspect?.let { GraphInspectMarker(it) } }
+    val inspectLine = rememberInspectLine(inspect)
 
-    val decorations = remember(inRangeBox, nowLine) { listOf(inRangeBox, nowLine) }
+    val decorations = remember(inRangeBox, nowLine, inspectLine) { listOfNotNull(inRangeBox, nowLine, inspectLine) }
 
     // =========================================================================
     // Range providers — hoisted out of rememberCartesianChart so keys are re-evaluated on recomposition

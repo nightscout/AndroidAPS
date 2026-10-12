@@ -39,7 +39,6 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.VisibilityContext
 import app.aaps.ui.compose.manageSheet.FakePumpPlugin
@@ -140,8 +139,6 @@ internal class OverviewViewModelFixture(private val screen: AapsScreenFixture) {
         whenever(screen.preferences.get(UnitDoubleKey.OverviewLowMark)).thenReturn(72.0)
         whenever(screen.preferences.observe(UnitDoubleKey.OverviewHighMark)).thenReturn(MutableStateFlow(180.0))
         whenever(screen.preferences.observe(UnitDoubleKey.OverviewLowMark)).thenReturn(MutableStateFlow(72.0))
-        // The BG graph reads which values its press-and-hold pop-up shows
-        whenever(screen.preferences.observe(StringNonKey.GraphInspectHidden)).thenReturn(MutableStateFlow(""))
         whenever(graphConfigRepository.graphConfigFlow).thenReturn(MutableStateFlow(GraphConfig()))
 
         // ----- ChipsViewModel: the three chip flows evaluate as soon as a composable collects them,

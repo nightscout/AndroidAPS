@@ -96,6 +96,8 @@ fun TreatmentBeltGraphCompose(
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
     nowTimestamp: Long,
+    /** While holding the BG graph, a line at the inspected time. Null turns it off. */
+    inspect: GraphInspectState? = null,
     modifier: Modifier = Modifier
 ) {
     val dateUtil = LocalDateUtil.current
@@ -476,7 +478,8 @@ fun TreatmentBeltGraphCompose(
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
-    val beltDecorations = remember(nowLine) { listOf(nowLine) }
+    val inspectLine = rememberInspectLine(inspect)
+    val beltDecorations = remember(nowLine, inspectLine) { listOfNotNull(nowLine, inspectLine) }
 
     val rangeProvider = remember(maxX) {
         CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)

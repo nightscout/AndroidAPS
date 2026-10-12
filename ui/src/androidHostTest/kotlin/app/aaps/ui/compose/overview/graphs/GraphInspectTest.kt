@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.overview.graph.GraphDataPoint
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
-/** The values shown when holding the BG graph, and the stored form of the switches. */
+/** The values shown when holding the BG graph. */
 class GraphInspectTest {
 
     private val minute = 60_000L
@@ -83,14 +83,12 @@ class GraphInspectTest {
     }
 
     @Test
-    fun `hidden items survive a round trip and unknown ids are dropped`() {
-        val hidden = setOf(InspectItem.COB, InspectItem.BASAL)
-
-        val text = InspectItem.hiddenToString(hidden)
-
-        assertThat(text).isEqualTo("cob,basal")
-        assertThat(InspectItem.hiddenFromString(text)).isEqualTo(hidden)
-        assertThat(InspectItem.hiddenFromString("")).isEmpty()
-        assertThat(InspectItem.hiddenFromString("iob,unknown")).containsExactly(InspectItem.IOB)
+    fun `COB is left out of the pill when it is 0 g`() {
+        assertThat(shownCob(null)).isNull()
+        assertThat(shownCob(0.0)).isNull()
+        // Rounds to 0 g, so it would read "0 g"
+        assertThat(shownCob(0.4)).isNull()
+        assertThat(shownCob(0.6)).isEqualTo(1)
+        assertThat(shownCob(23.7)).isEqualTo(24)
     }
 }

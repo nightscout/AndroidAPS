@@ -56,12 +56,10 @@ import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.SecondaryGraph
 import app.aaps.core.interfaces.overview.graph.SeriesType
-import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.TextRef
 import app.aaps.core.ui.CoreUiStrings
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalDecimalFormatter
-import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.rowAction
@@ -367,6 +365,9 @@ fun GraphsSection(
     }
 
 
+    // Shared by all graphs: the BG graph sets it on press and hold, every graph draws the line from it
+    val inspect = remember { GraphInspectState() }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -375,6 +376,7 @@ fun GraphsSection(
         // Treatment Belt Graph - running mode background + therapy events
         TreatmentBeltGraphCompose(
             viewModel = graphViewModel,
+            inspect = inspect,
             scrollState = beltScrollState,
             zoomState = beltZoomState,
             derivedTimeRange = derivedTimeRange,
@@ -414,13 +416,8 @@ fun GraphsSection(
             else                                   -> stringResource(UiStrings.a11y_bg_graph_summary_values_only, recentValues)
         }
 
-        // Press and hold on the BG graph: a line and a dot on the reading, and a pill with the values
-        // at that time. The pill stays 2 s after the finger is lifted, so its pencil can be tapped.
-        val inspect = remember { GraphInspectState() }
-        val preferences = LocalPreferences.current
-        val inspectHiddenText by preferences.observe(StringNonKey.GraphInspectHidden).collectAsStateWithLifecycle()
-        val inspectHidden = remember(inspectHiddenText) { InspectItem.hiddenFromString(inspectHiddenText) }
-        var editingInspect by remember { mutableStateOf(false) }
+        // Press and hold on the BG graph: a dot on the reading, a line at that time in every graph,
+        // and a pill with the values. The pill stays 2 s after the finger is lifted.
         var inspectData by remember { mutableStateOf<InspectData?>(null) }
         val iobGraph by graphViewModel.iobGraphFlow.collectAsStateWithLifecycle()
         val cobGraph by graphViewModel.cobGraphFlow.collectAsStateWithLifecycle()
@@ -450,8 +447,8 @@ fun GraphsSection(
         LaunchedEffect(inspectData?.timestamp) {
             if (inspect.fingerDown && inspectData != null) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         }
-        LaunchedEffect(inspect.fingerDown, editingInspect, inspectData) {
-            if (!inspect.fingerDown && !editingInspect && inspectData != null) {
+        LaunchedEffect(inspect.fingerDown, inspectData) {
+            if (!inspect.fingerDown && inspectData != null) {
                 delay(INSPECT_LINGER_MS)
                 inspectData = null
             }
@@ -494,20 +491,11 @@ fun GraphsSection(
             inspectData?.let { data ->
                 GraphInspectPill(
                     data = data,
-                    hidden = inspectHidden,
-                    onEdit = { editingInspect = true },
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = 2.dp, start = 36.dp, end = 36.dp)
                 )
             }
-        }
-        if (editingInspect) {
-            GraphInspectItemsSheet(
-                hidden = inspectHidden,
-                onChange = { preferences.put(StringNonKey.GraphInspectHidden, InspectItem.hiddenToString(it)) },
-                onDismiss = { editingInspect = false }
-            )
         }
         if (editingBgOverlays) {
             GraphSeriesBottomSheet(
@@ -538,6 +526,7 @@ fun GraphsSection(
                 nowTimestamp = nowTimestamp,
                 activityOverlay = SeriesType.ACTIVITY in graphConfig.iobOverlays,
                 onVisibleRangeChanged = { iobVisibleRange = it },
+                inspect = inspect,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(graphConfig.iobHeight.dp)
@@ -585,6 +574,7 @@ fun GraphsSection(
             Box(modifier = Modifier.offset(y = (-8).dp)) {
                 SecondaryGraphCompose(
                     viewModel = graphViewModel,
+                    inspect = inspect,
                     seriesTypes = secondary.series,
                     scrollState = secScrollStates[i],
                     zoomState = secZoomStates[i],

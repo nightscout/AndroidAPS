@@ -311,8 +311,6 @@
     <string name="a11y_quick_launch_add" comment="Screen-reader label of the button that adds an action to the QuickLaunch bar. %1$s=the action name. Example: Add Bolus wizard">Add %1$s</string>
     <string name="a11y_quick_launch_remove" comment="Screen-reader label of the button that removes an action from the QuickLaunch bar. %1$s=the action name. Example: Remove Bolus wizard">Remove %1$s</string>
     <string name="quick_launch_no_dynamic_items">No items available</string>
-    <string name="graph_inspect_items_title">Shown when you hold the BG graph</string>
-    <string name="graph_inspect_treatments">Bolus, SMB and carbs</string>
     <string name="graph_inspect_smb" comment="A super micro bolus in the BG graph pop-up. %1$s=amount with unit. Example: SMB 0.40 U">SMB %1$s</string>
     <string name="quick_launch_category_treatment">Treatment</string>
     <string name="quick_launch_category_care">Care Portal</string>
