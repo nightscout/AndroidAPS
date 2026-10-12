@@ -26,16 +26,32 @@
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
     <string name="setupwizard_sensitivity_description">Wtyczka wrażliwości używana jest w celu określenia wrażliwości i kalkulacji COB. Więcej informacji na:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Są posortowane od najstarszego do najnowszego. Nowszy algorytm jest zazwyczaj bardziej zaawansowany. Nie zapomnij przeczytać dokumentacji OpenAPS i skonfigurować go przed użyciem.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Proszę skonfigurować RileyLink poniżej. Po wybraniu RileyLink, możliwe będzie kontynuowanie konfiguracji, gdy status RileyLink będzie \"Połączony\". To może zająć minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po skonfigurowaniu pompy.\n</string>
     <string name="startobjective">Rozpocznij swoje pierwsze Zadanie</string>
+    <string name="open_objectives">Otwórz Zadania</string>
+    <string name="setupwizard_permissions">Uprawnienia</string>
+    <string name="setupwizard_profile_info">Utwórz profil z wartościami bazowymi, IC, ISF i celami. Później możesz dodać kolejne profile.</string>
+    <string name="setupwizard_permissions_info">AAPS potrzebuje dostępu do pamięci i uprawnień, aby działać poprawnie. Przyznaj wymagane uprawnienia poniżej.</string>
     <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
+    <string name="setupwizard_client_control_title">Kontrola z urządzenia opiekuna</string>
+    <string name="setupwizard_client_control_info">Sparuj urządzenia opiekuna, aby mogły wysyłać podpisane polecenia do urządzenia pacjenta przez Nightscout. To nowy, zalecany sposób zdalnego sterowania AAPS.</string>
+    <string name="setupwizard_ns_receive_info">Przyjmowanie leczenia i danych bezpośrednio z Nightscout (mniej bezpieczny sposób) jest obecnie domyślnie wyłączone. Otwórz ustawienia poniżej tylko wtedy, gdy nadal ich potrzebujesz. Jest to potrzebne, jeśli musisz wprowadzać dane przez NS lub aplikacje zewnętrzne.</string>
+    <string name="setupwizard_open_ns_receive_settings">Przyjmowanie danych z Nightscout</string>
+    <string name="setupwizard_pair_with_master_info">Sparuj to urządzenie opiekuna z telefonem pacjenta (z AAPS-em), aby mogło wysyłać polecenia przez bezpieczny kanał.</string>
+    <string name="setupwizard_pairing_ws_warning">Parowanie wymaga połączenia z Nightscout przez WebSocket. Wróć do poprzedniego kroku i najpierw je włącz.</string>
+    <string name="setupwizard_pairing_status_master">Sparowane urządzenia opiekuna: %1$d</string>
+    <string name="setupwizard_pairing_status_master_none">Brak sparowanych klientów</string>
+    <string name="setupwizard_pairing_status_client_paired">Sparowano z telefonem pacjenta</string>
+    <string name="setupwizard_pairing_status_client_not_paired">Jeszcze nie sparowano</string>
     <string name="readstatus">Odczyt stanu</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Którą pompę chcesz użyć do AAPS?</string>
     <string name="configbuilder_aps_description">Który algorytm APS powinien dokonywać korekcji terapii?</string>
+    <string name="configbuilder_sync_description">Wtyczki przesyłania danych, synchronizacji i komunikacji.</string>
     <string name="configbuilder_bgsource_description">Skąd AAPS powinien czerpać dane?</string>
     <string name="configbuilder_sensitivity_description">Który algorytm wrażliwości powinien być używany?</string>
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>
@@ -50,6 +66,9 @@
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Ładowanie…</string>
+    <string name="warning_wrong_directory_selected">Wybrano nieprawidłowy katalog</string>
+    <string name="warning_wrong_directory_message">Wybrano podkatalog „%1$s” zamiast głównego katalogu AAPS. Proszę wybrać nadrzędny katalog AAPS. Aplikacja automatycznie utworzy podkatalogi i będzie nimi zarządzać.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
