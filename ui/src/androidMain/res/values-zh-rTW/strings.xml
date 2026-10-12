@@ -14,8 +14,6 @@
     <string name="widget_compact_bg_description">AAPS 血糖 + IOB + COB （精簡）</string>
     <string name="widget_small_description">AAPS 小型</string>
     <!--     Activities-->
-    <string name="activity_monitor">活動監視器</string>
-    <string name="time_range">時間範圍</string>
     <string name="dexcom_tir">Dexcom 目標範圍內</string>
     <string name="cgp_title">血糖五邊形 (CGP) — 14 天</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -31,7 +29,6 @@
     <string name="cgp_pgr_moderate">中等風險</string>
     <string name="cgp_pgr_high">高風險</string>
     <string name="cgp_pgr_extremely_high">極高風險</string>
-    <string name="do_you_want_reset_stats">您要重置活動統計嗎？</string>
     <string name="do_you_want_recalculate_tdd_stats">您要重新計算每日總劑量統計嗎？</string>
     <string name="calculation_in_progress">計算中</string>
     <string name="age">年齡</string>
