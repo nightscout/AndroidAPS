@@ -49,7 +49,7 @@
     <string name="delete_site_note">Notat slettet</string>
     <!-- FillDialog -->
     <string name="fill_warning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
-    <string name="record_pump_site_change">Logg bytte av slangesett</string>
+    <string name="record_pump_site_change">Logg bytte av pumpested</string>
     <string name="record_insulin_cartridge_change">Logg bytte av insulinampull</string>
     <string name="fill_prime_amount">Prime-mengde</string>
     <string name="fill_pump_units_note">Prime-mengden er i pumpeenheter</string>
@@ -170,6 +170,7 @@
     <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IK: %2$s)</string>
     <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IK: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% karbo umiddelbart, ingen forlenget karbo</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Karbo redusert med %1$d%%, lagt til eKarbo %2$d%% forsinket med %3$d min over %4$d t</string>
     <string name="wizard_include_info">Trykk for å inkludere/ekskludere fra beregning:\n• BS — blodsukker (på ved start)\n• TT — midl. mål (på ved start)\n• Trend — BS-trend (siste huskede tilstand)\n• IOB — insulin ombord (på ved start)\n• COB — karbo ombord (siste huskede tilstand)</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen registreringer tilgjengelig</string>
