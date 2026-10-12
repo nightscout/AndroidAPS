@@ -10,7 +10,7 @@
     <!--     Activities-->
     <string name="do_you_want_recalculate_tdd_stats">Czy chcesz ponownie przeliczyć statystyki DDI?</string>
     <string name="calculation_in_progress">Trwa obliczanie</string>
-    <string name="age">Czas</string>
+    <string name="age">Wiek</string>
     <string name="weight_label">Waga</string>
     <string name="glucose_type">Typ glukozy</string>
     <string name="bg_other">Inne</string>
