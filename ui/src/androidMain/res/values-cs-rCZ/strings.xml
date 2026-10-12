@@ -14,8 +14,6 @@
     <string name="widget_compact_bg_description">AAPS gly + IOB + COB (kompaktní)</string>
     <string name="widget_small_description">AAPS malé</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitor aktivity</string>
-    <string name="time_range">Časové rozmezí</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Glukózový pentagon (CGP) – 14 dní</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -31,7 +29,6 @@
     <string name="cgp_pgr_moderate">Střední riziko</string>
     <string name="cgp_pgr_high">Vysoké riziko</string>
     <string name="cgp_pgr_extremely_high">Extrémně vysoké riziko</string>
-    <string name="do_you_want_reset_stats">Chcete resetovat statistiky aktivity?</string>
     <string name="do_you_want_recalculate_tdd_stats">Chcete přepočítat statistiky CDD?</string>
     <string name="calculation_in_progress">Probíhá výpočet</string>
     <string name="age">Věk</string>
