@@ -24,6 +24,7 @@
     <string name="maxiobset">Maksymalne IOB ustawione poprawnie (nie jest to wymagane w trybie prostym)</string>
     <string name="objectives_autosens_objective">Dostosuj bazę i wartości parametrów jeśli jest to potrzebne, i wtedy uruchom funkcję autosens</string>
     <string name="objectives_autosens_gate">1 tydzień sukcesu w działaniu pętli w ciągu dnia z regularnym wprowadzaniem spożywanych węglowodanów</string>
+    <string name="objectives_autosens_learned">Jeśli wynik Autosens nie oscyluje wokół 100%, twój profil jest prawdopodobnie błędny.</string>
     <string name="objectives_smb_objective">Włączanie dodatkowych funkcji do użytku, jak SMB (Super Mikro Bolusy)</string>
     <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest maxIOB = średni bolus doposiłkowy + 3 x maks. spośród dziennych dawek bazowych</string>
     <string name="objectives_smb_learned">Używanie SMB jest Twoim celem. Algorytm Oref1 został zaprojektowany, aby pomóc Ci również w bolusach. Nie należy podawać pełnego bolusa do jedzenia, ale tylko jego część, a w razie potrzeby pozostawić resztę AAPS. W ten sposób masz więcej miejsca na błędnie obliczone węglowodany. Czy wiesz, że można w kalkulatorze ustawić procent wyniku bolusa, aby zmniejszyć rozmiar bolusa?</string>
@@ -36,27 +37,42 @@
     <string name="accomplished">Ukończone: %1$s</string>
     <string name="objectives_usage_objective">Dowiedz się, jak kontrolować AAPS</string>
     <string name="objectives_usage_gate">Wykonaj różne działania w AAPS</string>
+    <string name="objectives_usage_learned">Poznałeś podstawy AAPS. Większość elementów sterujących znajduje się na głównym ekranie. Więcej działań dostępnych jest w menu Leczenie i Zarządzaj na dole ekranu oraz w menu bocznym.</string>
+    <string name="objectives_useprofileswitch">Ustaw profil 90% na 10 min</string>
+    <string name="objectives_usedisconnectpump">Zasymuluj prysznic. Odłącz pompę na 1 h</string>
     <string name="objectives_usereconnectpump">... i połącz się ponownie w ten sam sposób</string>
+    <string name="objectives_usetemptarget">Utwórz własny cel tymczasowy trwający 10 min</string>
     <string name="objectives_useloop">Wyświetl zawartość wtyczki Pętla (Loop)</string>
+    <string name="objectives_usescale">Użyj scrollowania lub powiększania na wykresie glikemii</string>
     <string name="objectives_exam_objective">Sprawdź swoją wiedzę</string>
+    <string name="objectives_exam_gate">Przestudiuj pytania. Każde pytanie ma kilka możliwych odpowiedzi i więcej niż jedna może być poprawna. Zaznacz wszystkie poprawne odpowiedzi i wybierz \"Weryfikuj\".</string>
+    <string name="objectives_exam_learned_prerequisites">Nie musisz być programistą. Potrzebujesz Nightscout lub Tidepool, aby zaliczyć Cele, kompatybilną pompę oraz sposób na zbudowanie AAPS (w przeglądarce internetowej lub w Android Studio) przy pierwszej instalacji i przy każdej aktualizacji.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS może być uruchomiony offline.</string>
     <string name="objectives_exam_learned_basaltest">Profil powinien zostać zweryfikowany i zaktualizowany. Lepszy profil = lepsze wyniki.</string>
     <string name="objectives_exam_learned_dia">DIA w pętli ma inne znaczenie (czas do wchłonięcia całej insuliny) niż w klasycznej terapii pompą (czas do wchłonięcia większości insuliny).</string>
     <string name="objectives_exam_learned_isf">Nauczyłeś się znaczenia wartości ISF i jej wpływu na ilość insuliny użytej do korekty glikemii.</string>
     <string name="objectives_exam_learned_ic">Nauczyłeś się znaczenia wartości IC i jej wpływu na ilość insuliny potrzebną do pokrycia węglowodanów.</string>
     <string name="objectives_exam_learned_hypott">Cel tymczasowy Hipo jest używany tylko aby zapobiec nadmiernej korekcie po hipoglikemii, kiedy zazwyczaj występuje nagromadzony ujemny wskaźnik IOB. Należy rozważyć dodatkowe działania, aby zapobiec takiej sytuacji w przyszłości.</string>
+    <string name="objectives_exam_learned_profileswitch">Używanie procentów nie wpływa na cele glikemii, ale baza, ISF i IC są dostosowywane, aby podawać więcej insuliny (powyżej 100%) lub mniej insuliny (poniżej 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Używając zmiany czasu (systemu timeshift) w przełączniku profilu, możesz dostosować profil okołodobowy do nieprawidłowości takich jak spóźniona pobudka.</string>
     <string name="objectives_exam_learned_profileswitch4">Edycja profilu nie jest wystarczająca aby dokonać zmiany. Nadal musisz przełączyć się na ten profil aby zastosować zmiany.</string>
     <string name="objectives_exam_learned_exercise">Należy zmniejszyć ilość insuliny w organizmie na co najmniej 1 godzinę przed rozpoczęciem wysiłku fizycznego, wybierając profil i ustawiając mnożnik poniżej 100%.</string>
     <string name="objectives_exam_learned_exercise2">Ustawienie wyższego celu tymczasowego na co najmniej 1 godzinę przed wysiłkiem również pomaga zmniejszyć ilość insuliny w organizmie.</string>
     <string name="objectives_exam_learned_noisycgm">Gdy nie możesz ufać wartościom CGM nie powinieneś używać pętli bez nadzoru.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS musi wiedzieć, że pompa nie jest podłączona, aby poprawnie wyliczać IOB.</string>
+    <string name="objectives_exam_learned_insulin">AAPS musi wiedzieć, jaka insulina znajduje się w pompie, ponieważ wpływa to na obliczenia IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Wykrywanie wrażliwości jest częścią algorytmu, który umożliwia dostosowanie dawkowania insuliny do różnych sytuacji.</string>
     <string name="objectives_exam_learned_objectives">Postęp w rozwiązywaniu Zadań jest przechowywany wraz z innymi ustawieniami - należy wykonywać regularne kopie zapasowe.</string>
     <string name="objectives_exam_learned_objectives2">Zawsze zachowuj wyeksportowane ustawienia i wygenerowany plik APK, również poza telefonem. Telefon może zostać utracony, uszkodzony itp. Dobrym miejscem na kopię zapasową może być dowolna chmura plików dostępna z telefonu. W tym przypadku można przywrócić AAPS na innym urządzeniu w ciągu kilku minut. Dobrą praktyką jest również przechowywanie hasła głównego w bezpiecznym miejscu (np.: managerze haseł). Bez hasła głównego Twoja kopia zapasowa jest bezużyteczna. To samo dotyczy pliku z kluczami podpisu (plik .jks) i hasła do niego - użytych do budowania AAPS. Reszta nie jest ważna - może być w dowolnym momencie ponownie pobrana z Internetu.</string>
     <string name="objectives_exam_learned_wrongcarbs">Jeśli wprowadziłeś nieprawidłowe dane do AAPS lub dane nie odpowiadają rzeczywistości - skoryguj niezgodność tak szybko jak to tylko możliwe. Inaczej może dojść do przedawkowania. AAPS należy zawsze sumiennie i zgodnie ze sztuką informować o węglowodanach, insulinie itp.</string>
+    <string name="objectives_exam_learned_iob">Jeśli chcesz sprawdzić, czy AAPS dobrze działa w Twoim przypadku, obserwowanie wykresu IOB może dostarczyć Ci wielu przydatnych informacji.</string>
+    <string name="objectives_exam_learned_cob">Obliczenie COB zależy od relacji między ISF a IC. Zwiększenie ISF lub zmniejszenie IC wydłuża czas wchłaniania. Ale przełączenie profilu ze zmianą procentową zmienia obie wartości jednocześnie i czas wchłaniania nie ulega zmianie.</string>
     <string name="objectives_exam_learned_breadgrams">Do wprowadzania węglowodanów dopuszcza się tylko gramy.</string>
     <string name="objectives_exam_learned_ecarbs">e-Węgle (e-Carbs) są zamiennikiem występującego w niektórych pompach bolusa przedłużonego.</string>
+    <string name="objectives_exam_learned_nsclient">Możesz śledzić AAPS zdalnie za pomocą AAPSClient lub Nightscout. Gdy AAPSClient jest sparowany z telefonem pacjenta, możesz także zdalnie sterować AAPS.</string>
+    <string name="objectives_exam_learned_concentration1">Używanie insuliny U200 z profilem 50% będzie wymagało trwałej konwersji: dla bolusów zewnętrznych z penami oraz wszystkich standardowych raportów generowanych przez AAPS lub NS, które staną się błędne i będą musiały zostać przeliczone na IU dla zespołu medycznego.</string>
+    <string name="objectives_exam_learned_concentration2">Przejście z U200 z profilem 50% na U200 z funkcją koncentracji insuliny będzie wymagało utworzenia nowego, silniejszego profilu, wyłączenia DynISF na tydzień oraz wypracowania sobie nawyku myślenia w jednostkach międzynarodowych.</string>
+    <string name="objectives_exam_learned_concentration3">Stężenie insuliny można zmienić tylko podczas wymiany insuliny lub Patcha. Ale przede wszystkim, zwłaszcza w przypadku pomp z drenem, nigdy nie używaj interfejsu użytkownika pompy do podawania bolusów bezpośrednio z pompy.</string>
     <string name="answerdisabledto">Odpowiadanie wyłączone do: %1$s</string>
     <string name="wronganswer">Odpowiedź nieprawidłowa!</string>
     <string name="unfinshed_button">Następny niedokończony</string>
@@ -67,7 +83,23 @@
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Brak połączenia z Internetem</string>
+    <string name="failedretrievetime">Nie udało się zsynchronizować czasu</string>
     <string name="requirementnotmet">Wymagania celu nie zostały spełnione</string>
     <string name="what_i_ve_learned">Czego się nauczyłem:</string>
     <string name="verify_master_password">Sprawdź, czy znasz hasło główne</string>
+    <string name="objectives_collapse">Mniej</string>
+    <string name="objectives_expand">Więcej</string>
+    <string name="objectives_no_learned">Brak zarejestrowanych lekcji dla tego celu.</string>
+    <string name="objectives_open_exam">Otwórz egzamin</string>
+    <string name="objectives_exam_question_progress">Pytanie %1$d z %2$d</string>
+    <string name="objectives_exam_reset">Wyczyść</string>
+    <string name="objectives_state_done" comment="Screen-reader state of an objective in the list; on screen it is a filled circle with a tick.">Ukończono</string>
+    <string name="objectives_state_in_progress" comment="Screen-reader state of the objective that is started but not done; on screen only a coloured circle.">W trakcie</string>
+    <string name="objectives_state_not_started" comment="Screen-reader state of an objective that can be started; on screen only a grey circle.">Nierozpoczęte</string>
+    <string name="objectives_state_locked" comment="Screen-reader state of an objective that cannot be started until the ones before it are done.">Zablokowane</string>
+    <string name="objectives_exam_correct_answer" comment="Screen-reader state of an exam answer after the answers are checked. On screen the correct answers are only shown in another colour.">poprawna odpowiedź</string>
+    <string name="objectives_exam_previous">Poprzednie</string>
+    <string name="objectives_exam_next">Następne</string>
+    <string name="objectives_exam_next_unanswered">Następne bez odpowiedzi</string>
+    <string name="objectives_show_hint">Podpowiedź</string>
 </resources>
