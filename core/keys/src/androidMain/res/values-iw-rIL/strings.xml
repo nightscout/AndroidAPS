@@ -7,6 +7,11 @@
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">השאר את המסך דולק</string>
     <string name="pref_summary_keep_screen_on">מנע מ-אנדרואיד לכבות את המסך. הוא יצרוך הרבה אנרגיה כאשר אינו מחובר לשקע חשמל.</string>
+    <string name="pref_title_show_treatment_button">הצגת לחצן הטיפול</string>
+    <string name="pref_title_show_wizard_button">הצגת לחצן האשף</string>
+    <string name="pref_title_show_insulin_button">הצגת לחצן האינסולין</string>
+    <string name="pref_title_show_carbs_button">הצגת לחצן הפחמימות</string>
+    <string name="pref_title_show_cgm_button">הצגת לחצן חיישן</string>
     <string name="pref_title_use_super_bolus">השתמש בסופר בולוס</string>
     <!-- Pump preferences -->
     <string name="pref_title_bt_watchdog">מנגנון ניטור בלוטות׳</string>
