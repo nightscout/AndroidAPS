@@ -17,8 +17,6 @@
     <string name="widget_small_description">AAPS Small</string>
 
     <!--     Activities-->
-    <string name="activity_monitor">Activity monitor</string>
-    <string name="time_range">Time range</string>
     <string name="dexcom_tir">Dexcom TIR</string>
     <string name="cgp_title">Glucose Pentagon (CGP) — 14 days</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -34,7 +32,6 @@
     <string name="cgp_pgr_moderate">Moderate risk</string>
     <string name="cgp_pgr_high">High risk</string>
     <string name="cgp_pgr_extremely_high">Extremely high risk</string>
-    <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
     <string name="do_you_want_recalculate_tdd_stats">Do you want to recalculate TDD stats?</string>
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="age">Age</string>
