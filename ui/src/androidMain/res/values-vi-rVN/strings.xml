@@ -14,8 +14,6 @@
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (thu gọn)</string>
     <string name="widget_small_description">AAPS thu gọn</string>
     <!--     Activities-->
-    <string name="activity_monitor">Theo dõi hoạt động</string>
-    <string name="time_range">Khoảng thời gian</string>
     <string name="dexcom_tir">Phạm vi mục tiêu của Dexcom</string>
     <string name="cgp_title">Ngũ giác đường huyết (CGP) — 14 ngày</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
@@ -31,7 +29,6 @@
     <string name="cgp_pgr_moderate">Rủi ro vừa phải</string>
     <string name="cgp_pgr_high">Rủi ro cao</string>
     <string name="cgp_pgr_extremely_high">Rủi ro cực cao</string>
-    <string name="do_you_want_reset_stats">Bạn có muốn đặt lại thống kê hoạt động không?</string>
     <string name="do_you_want_recalculate_tdd_stats">Bạn có muốn tính toán lại thống kê TDD không?</string>
     <string name="calculation_in_progress">Đang tiến hành tính toán</string>
     <string name="age">Đã dùng</string>
@@ -165,7 +162,12 @@
     <string name="duration10h">10 giờ</string>
     <!-- WizardDialog -->
     <string name="missing_carbs">Còn thiếu %1$d g</string>
+    <string name="wizard_percentage_and_correction" comment="Bolus wizard result, shown after the amounts when both are changed. %1$s=percentage, %2$s=correction with its sign and unit. Example: 71% +1.00 U">%1$s %2$s</string>
+    <string name="wizard_calc_with_isf" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin sensitivity factor used. Example: BG (ISF: 3.0)">%1$s (ISF: %2$s)</string>
+    <string name="wizard_calc_with_ic" comment="Line of the bolus wizard calculation. %1$s=what the insulin is for, %2$s=insulin to carb ratio used. Example: COB (IC: 10.0)">%1$s (IC: %2$s)</string>
+    <string name="wizard_calc_carbs_with_ic" comment="Line of the bolus wizard calculation for the carbs eaten now. %1$s=Carbs, %2$s=amount with unit, %3$s=insulin to carb ratio used. Example: Carbs 20 g (IC: 10.0)">%1$s %2$s (IC: %3$s)</string>
     <string name="wizard_carbs_type_bread_desc">100% carbs ngay, không kéo dài</string>
+    <string name="wizard_carbs_type_desc" comment="What the cake or pizza carb type does. %1$d=percent the carbs are reduced by, %2$d=percent added as eCarbs, %3$d=minutes until the eCarbs start, %4$d=hours they are spread over. Example: Carbs reduced by 10%, added eCarbs 20% delayed 60 min for 2 h">Đã giảm carbs %1$d%%, thêm eCarbs %2$d%% với độ trễ %3$d phút trong %4$d giờ</string>
     <string name="wizard_include_info">Chạm để tính hoặc bỏ không tính toán:\n• BG — đường huyết (mặc định bật)\n• TT — mục tiêu tạm thời (mặc định bật)\n• Trend — xu hướng BG (ghi nhớ lần trước)\n• IOB — insulin đang hoạt động (mặc định bật)\n• COB — carbs đang hoạt động (ghi nhớ lần trước)</string>
     <!-- Treatments -->
     <string name="no_records_available">Không có bản ghi nào</string>
@@ -184,6 +186,7 @@
     <string name="a11y_profile_entry" comment="Screen-reader name of one value field in the profile editor. %1$s=the list it belongs to, with its unit (e.g. Basal [U/h]), %2$s=the start time of that entry. Example: Basal [U/h] at 08:00">%1$s lúc %2$s</string>
     <string name="a11y_bg_delta" comment="Screen-reader text for the change since the previous glucose reading. %1$s=the change with its sign and unit. Example: delta +0.3">độ lệch %1$s</string>
     <string name="a11y_bg_old_reading" comment="Screen-reader word added to a glucose reading that is too old to trust. On screen the value is struck through.">giá trị đọc cũ</string>
+    <string name="a11y_bg_age_old" comment="Screen-reader text for the age of a glucose reading that is too old to trust. %1$s=the age, %2$s=a11y_bg_old_reading. Example: (12 min), old reading">%1$s, %2$s</string>
     <string name="a11y_bg_graph_summary_values_only" comment="Same as a11y_bg_graph_summary but for the history browser, where insulin and carbs on board are current values and would be wrong beside a past day. %1$s=the glucose values newest first, already joined and carrying their unit.">Biểu đồ đường huyết. Các giá trị gần đây %1$s</string>
     <string name="execute_label" comment="Button that runs the selected quick wizard, which delivers its bolus.">Thực hiện</string>
     <string name="add_new_profile">Thêm cấu hình mới</string>
