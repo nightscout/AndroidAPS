@@ -37,7 +37,6 @@
     <string name="cwf_comment_basalRate">Wartości bazy</string>
     <string name="cwf_comment_bgi">Wartość BGI</string>
     <string name="cwf_comment_status">Synteza statusu</string>
-    <string name="cwf_comment_time">Czas (HH:MM or HH:MM:SS)</string>
     <string name="cwf_comment_hour">Godzina (HH)</string>
     <string name="cwf_comment_minute">Minuta (MM)</string>
     <string name="cwf_comment_second">Sekunda (SS)</string>
