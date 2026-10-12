@@ -74,6 +74,8 @@
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Pokud je tato možnost povolena, data budou nahrávána na testovací servery, nikoli na běžné</string>
     <string name="title_tidepool_dev_servers">Používat testovací servery</string>
+    <string name="title_tidepool_use_ns_connection">Použít nastavení připojení k Nightscoutu</string>
+    <string name="summary_tidepool_use_ns_connection">Vypněte, chcete-li vytvořit samostatné nastavení připojení pro Tidepool</string>
     <string name="tidepool">Tidepool</string>
     <string name="description_tidepool">Nahrávání dat do Tidepoolu</string>
     <string name="upload_now">Nahrát nyní</string>
