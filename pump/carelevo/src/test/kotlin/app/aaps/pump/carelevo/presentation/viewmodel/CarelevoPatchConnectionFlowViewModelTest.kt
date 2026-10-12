@@ -194,8 +194,9 @@ class CarelevoPatchConnectionFlowViewModelTest {
         whenever(profileFunction.getRequestedProfile()).thenReturn(requested)
         whenever(preferences.get(BooleanKey.SiteRotationManagePump)).thenReturn(siteRotation)
         whenever(insulinManager.insulins).thenReturn(ArrayList(insulins))
-        val effective: EffectiveProfile? =
-            activeLabel?.let { label -> mock { on { iCfg } doReturn ICfg(label, 55, 6.0, 1.0) } }
+        // The running insulin is a copy of its list entry, as after a real switch. The VM finds the entry by curve too.
+        val running = activeLabel?.let { label -> insulins.firstOrNull { it.insulinLabel == label }?.deepClone() ?: ICfg(label, 55, 6.0, 1.0) }
+        val effective: EffectiveProfile? = running?.let { runningICfg -> mock { on { iCfg } doReturn runningICfg } }
         whenever(profileFunction.getProfile()).thenReturn(effective)
     }
 
@@ -369,6 +370,25 @@ class CarelevoPatchConnectionFlowViewModelTest {
         assertThat(sut.availableInsulins.value.map { it.insulinLabel }).containsExactly("Fiasp", "Lyumjev").inOrder()
         assertThat(sut.selectedInsulin.value?.insulinLabel).isEqualTo("Lyumjev")
         assertThat(sut.activeInsulinLabel.value).isEqualTo("Lyumjev")
+    }
+
+    // A running insulin from an older version can have a label the list no longer has. Matching it by label
+    // selected the first insulin in the list, and continuing then switched the user to that insulin.
+    @Test
+    fun `a running insulin with an old label selects the entry with the same curve and does not switch`() = runTest(testDispatcher) {
+        val lyumjevInList = ICfg(insulinLabel = "Lyumjev 45m 5h U100", peak = 45, dia = 5.0, concentration = 1.0)
+        stubWorkflow(insulins = listOf(fiasp, lyumjevInList), activeLabel = null)
+        val effective = mock<EffectiveProfile> { on { iCfg } doReturn lyumjev }
+        whenever(profileFunction.getProfile()).thenReturn(effective)
+
+        sut.initWorkflow(CarelevoScreenType.CONNECTION_FLOW_START)
+        advanceUntilIdle()
+        sut.advanceFromInsulin()
+        advanceUntilIdle()
+
+        assertThat(sut.selectedInsulin.value?.insulinLabel).isEqualTo("Lyumjev 45m 5h U100")
+        assertThat(sut.activeInsulinLabel.value).isEqualTo("Lyumjev 45m 5h U100")
+        verifyBlocking(profileFunction, never()) { createProfileSwitchWithNewInsulin(any(), any()) }
     }
 
     @Test

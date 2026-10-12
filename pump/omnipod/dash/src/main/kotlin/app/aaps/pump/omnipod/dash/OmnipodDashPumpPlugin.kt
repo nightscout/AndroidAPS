@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.dash
 
 import android.os.Handler
 import android.os.HandlerThread
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -75,9 +76,9 @@ import app.aaps.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguratio
 import app.aaps.pump.omnipod.common.util.mapProfileToBasalProgram
 import app.aaps.pump.omnipod.dash.driver.OmnipodDashManager
 import app.aaps.pump.omnipod.dash.history.DashHistory
-import app.aaps.pump.omnipod.dash.history.data.BasalValuesRecord
-import app.aaps.pump.omnipod.dash.history.data.BolusRecord
-import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
+import app.aaps.pump.omnipod.common.history.data.BasalValuesRecord
+import app.aaps.pump.omnipod.common.history.data.BolusRecord
+import app.aaps.pump.omnipod.common.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
 import app.aaps.pump.omnipod.dash.ui.compose.OmnipodDashComposeContent
 import app.aaps.pump.omnipod.dash.util.Constants
@@ -1361,7 +1362,8 @@ class OmnipodDashPumpPlugin(
         Completable.complete()
     }
 
-    private suspend fun handleCommandConfirmation(confirmation: CommandConfirmed) {
+    @VisibleForTesting
+    internal suspend fun handleCommandConfirmation(confirmation: CommandConfirmed) {
         val command = confirmation.command
         val historyEntry = history.getById(command.historyId)
         aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation ${historyEntry.commandType}")
@@ -1406,13 +1408,18 @@ class OmnipodDashPumpPlugin(
                 }
             }
 
-            OmnipodCommandType.SET_BASAL_PROFILE      -> {
+            // Setting the time is the same pod command as a profile change: suspend, then a new basal program.
+            // The suspend also starts a "pump suspended" temp basal and the pod's "delivery suspended" alert
+            // (20 min), so both must be ended here too. Without SET_TIME the pod beeped about 20 min after
+            // every time change while basal was running again (#2982).
+            OmnipodCommandType.SET_BASAL_PROFILE,
+            OmnipodCommandType.SET_TIME               -> {
                 if (confirmation.success) {
                     podStateManager.basalProgram = command.basalProgram
                     if (podStateManager.basalProgram == null) {
                         aapsLogger.warn(LTag.PUMP, "Saving null basal profile")
                     }
-                    if (!commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                    if (historyEntry.commandType == OmnipodCommandType.SET_BASAL_PROFILE && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                         // we are late-confirming this command. before that, we answered with success:false
                         rxBus.send(EventProfileChangeRequested())
                     }
@@ -1482,7 +1489,7 @@ class OmnipodDashPumpPlugin(
                     record as BolusRecord
 
                     podStateManager.createLastBolus(
-                        record.amout,
+                        record.amount,
                         command.historyId,
                         record.bolusType
                     )

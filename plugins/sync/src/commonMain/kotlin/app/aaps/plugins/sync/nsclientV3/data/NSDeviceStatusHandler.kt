@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.data
 
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -186,7 +187,12 @@ class NSDeviceStatusHandler(
                     }
                     processedDeviceStatusData.openAPSData.clockSuggested = clock
                     processedDeviceStatusData.getAPSResult()?.let { apsResult ->
-                        appScope.launch { persistenceLayer.insertOrUpdateApsResult(apsResult) }
+                        // A result that does not say which algorithm made it cannot be stored: `toDb` throws,
+                        // and in this scope that would end the app. It is still shown from the data above.
+                        if (apsResult.algorithm == APSResult.Algorithm.UNKNOWN)
+                            aapsLogger.debug(LTag.NSCLIENT, "APS result without algorithm from ${nsDeviceStatus.device}, not stored")
+                        else
+                            appScope.launch { persistenceLayer.insertOrUpdateApsResult(apsResult) }
                     }
                 }
             }

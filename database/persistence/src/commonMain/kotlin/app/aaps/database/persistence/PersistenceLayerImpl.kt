@@ -30,11 +30,13 @@ import app.aaps.core.interfaces.concurrent.aapsIoDispatcher
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.DatabaseMaintenanceInfo
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.VacuumResult
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.AppRepository
+import app.aaps.database.VacuumOutcome
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.CalibrationEntry
@@ -170,8 +172,12 @@ class PersistenceLayerImpl(
         repository.cleanupDatabase(olderThan, deleteTrackedChanges)
     }
 
-    override suspend fun vacuumDatabase() = withContext(aapsIoDispatcher) {
-        repository.vacuumDatabase()
+    override suspend fun vacuumDatabase(): VacuumResult = withContext(aapsIoDispatcher) {
+        when (repository.vacuumDatabase()) {
+            VacuumOutcome.DONE            -> VacuumResult.DONE
+            VacuumOutcome.DONE_AFTER_TRIM -> VacuumResult.DONE_AFTER_TRIM
+            VacuumOutcome.OUT_OF_MEMORY   -> VacuumResult.OUT_OF_MEMORY
+        }
     }
 
     override suspend fun databaseMaintenanceInfo(retentionDays: Long): DatabaseMaintenanceInfo = withContext(aapsIoDispatcher) {

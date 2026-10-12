@@ -21,6 +21,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.ExternalOptions
+import app.aaps.core.interfaces.db.VacuumResult
 import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.LTag
@@ -314,13 +315,26 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             // Commit the marker synchronously BEFORE running: a plain put() uses apply() and may not
             // reach disk before an early native abort (e.g. during the wal_checkpoint VACUUM starts with).
             sp.edit(commit = true) { putBoolean(BooleanNonKey.VacuumInProgress.key, true) }
-            persistenceLayer.vacuumDatabase()
-            // Only advance the timestamp on success, so a transient failure (e.g. DB busy because a
-            // persisted worker is running) is retried on a future launch instead of suppressed for a month.
+            val result = persistenceLayer.vacuumDatabase()
+            // Advance the timestamp on every result here, and only here: a thrown failure (e.g. DB busy
+            // because a persisted worker is running) is retried on a future launch instead of suppressed
+            // for a month. OUT_OF_MEMORY is not one of those: the next launch would fail the same way, so
+            // it waits a month too.
             preferences.put(LongNonKey.LastVacuumRun, dateUtil.now())
-            aapsLogger.debug(LTag.CORE, "Startup VACUUM done")
-            // Fleet overview of DB size / cleanup backlog / change-row volume across users.
-            fabricPrivacy.logCustom("db_vacuum_ok", mapOf("db_mb" to dbMb, "deletable" to info.deletableRows, "changes" to info.changeRows))
+            when (result) {
+                VacuumResult.DONE, VacuumResult.DONE_AFTER_TRIM -> {
+                    aapsLogger.debug(LTag.CORE, "Startup VACUUM done: $result")
+                    // Fleet overview of DB size / cleanup backlog / change-row volume across users.
+                    fabricPrivacy.logCustom("db_vacuum_ok", mapOf("db_mb" to dbMb, "deletable" to info.deletableRows, "changes" to info.changeRows))
+                    // How many databases only fit after the old APS results and device statuses were deleted.
+                    if (result == VacuumResult.DONE_AFTER_TRIM) fabricPrivacy.logCustom("db_vacuum_trimmed", mapOf("db_mb" to dbMb))
+                }
+
+                VacuumResult.OUT_OF_MEMORY                      -> {
+                    aapsLogger.error(LTag.CORE, "Startup VACUUM ran out of memory, even after trimming. Next try in 30 days.")
+                    fabricPrivacy.logCustom("db_vacuum_out_of_memory", mapOf("db_mb" to dbMb))
+                }
+            }
         } catch (e: Throwable) {
             // Throwable, not just Exception: a JVM OutOfMemoryError here must not abort app init.
             aapsLogger.error(LTag.CORE, "Startup VACUUM failed", e)
@@ -723,7 +737,10 @@ class MainApp : Application(), MetroMemberInjector, MetroViewModelFactoryOwner, 
             }
         }
 
-        if (!localInsulinManager.insulinAlreadyExists(runningICfg))
+        // Runs at every start, so it must match by curve, not by label. The running profile keeps the label it
+        // was made with, and the list rebuilds every label at start. A label match failed every time for a
+        // profile with an older label, and added one more copy of the same insulin at each start.
+        if (!localInsulinManager.insulinWithSameCurveExists(runningICfg))
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)
 
         // The DIA these keys carry is now in the insulin list, so the old copies can go. This is the

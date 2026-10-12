@@ -85,21 +85,17 @@ class TddCalculatorImpl(
         calculate(dateUtil.now(), days, allowMissingDays)
 
     override suspend fun calculate(timestamp: Long, days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? {
-        var startTime = MidnightTime.calcDaysBack(timestamp, days)
+        val firstDay = MidnightTime.calcDaysBack(timestamp, days)
+        var startTime = firstDay
         val endTime = addDaysInLocalZone(startTime, days)
-
-        aapsLogger.debug(LTag.APS, "Calculating TotalDailyDose from ${dateUtil.dateString(startTime)} to ${dateUtil.dateString(endTime)}")
 
         val result = LongSparseArray<TDD>()
         // Try to load cached values
         while (startTime < endTime) {
-            aapsLogger.debug(LTag.APS, "Looking for cached TotalDailyDose for ${dateUtil.dateString(startTime)}")
-            persistenceLayer.getCalculatedTotalDailyDose(startTime)?.let {
-                result.put(startTime, it)
-                aapsLogger.debug(LTag.APS, "Loaded cached TotalDailyDose for ${dateUtil.dateString(it.timestamp)} $it")
-            } ?: break
+            persistenceLayer.getCalculatedTotalDailyDose(startTime)?.let { result.put(startTime, it) } ?: break
             startTime = MidnightTime.calc(startTime + T.hours(27).msecs()) // be sure we find correct midnight during DST change
         }
+        val cachedDays = result.size()
 
         if (endTime > startTime) {
             var midnight = startTime
@@ -110,6 +106,9 @@ class TddCalculatorImpl(
                 midnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight
             }
         }
+        // One line per call. The loop asks for 1 and 7 days on every run, and a line per cached day
+        // (with the whole row) was about 25 lines per BG.
+        aapsLogger.debug(LTag.APS, "TotalDailyDose from ${dateUtil.dateString(firstDay)} to ${dateUtil.dateString(endTime)}: $cachedDays of $days days cached, ${result.size() - cachedDays} calculated")
         // Decide whether the result is usable *before* writing any of it. This used to cache first and
         // judge afterwards, so a run that found 3 of 7 days stored all 3 and then returned null - the
         // caller correctly threw the answer away and the database kept it.
@@ -130,8 +129,6 @@ class TddCalculatorImpl(
             if (tdd.ids.pumpType != PumpType.CACHE) {
                 tdd.ids.pumpType = PumpType.CACHE
                 persistenceLayer.insertOrUpdateCachedTotalDailyDose(tdd)
-            } else {
-                aapsLogger.debug(LTag.APS, "Skipping storing TotalDailyDose for ${dateUtil.dateString(tdd.timestamp)}")
             }
         }
         return result

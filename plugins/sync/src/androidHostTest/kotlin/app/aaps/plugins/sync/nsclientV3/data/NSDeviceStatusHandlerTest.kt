@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.data
 
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -13,13 +14,17 @@ import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 
 internal class NSDeviceStatusHandlerTest {
@@ -98,5 +103,46 @@ internal class NSDeviceStatusHandlerTest {
     fun doesNotBumpWhenNoTimestamp() {
         sut.handleNewData(arrayOf(NSDeviceStatus(createdAt = null, date = null)), live = true)
         verify(nsClientV3Plugin, never()).bumpDevicestatusHeartbeat(any())
+    }
+
+    /** `toDb` throws for a result without an algorithm, and an error in the app scope ends the app. */
+    @Test
+    fun doesNotStoreApsResultWithoutAlgorithm() {
+        givenNewSuggested(APSResult.Algorithm.UNKNOWN)
+
+        sut.handleNewData(arrayOf(deviceStatusWithSuggested()))
+
+        verifyBlocking(persistenceLayer, never()) { insertOrUpdateApsResult(any()) }
+    }
+
+    @Test
+    fun storesApsResultWithAlgorithm() {
+        val apsResult = givenNewSuggested(APSResult.Algorithm.SMB)
+
+        sut.handleNewData(arrayOf(deviceStatusWithSuggested()))
+
+        verifyBlocking(persistenceLayer) { insertOrUpdateApsResult(apsResult) }
+    }
+
+    private fun givenNewSuggested(algorithm: APSResult.Algorithm): APSResult {
+        val apsResult = mock<APSResult>()
+        whenever(apsResult.algorithm).thenReturn(algorithm)
+        whenever(processedDeviceStatusData.openAPSData).thenReturn(ProcessedDeviceStatusData.OpenAPSData())
+        whenever(processedDeviceStatusData.getAPSResult()).thenReturn(apsResult)
+        whenever(dateUtil.fromISODateString(SUGGESTED_TIME)).thenReturn(5_000L)
+        return apsResult
+    }
+
+    private fun deviceStatusWithSuggested() = NSDeviceStatus(
+        device = "openaps://test",
+        openaps = NSDeviceStatus.OpenAps(suggested = buildJsonObject {
+            put("timestamp", SUGGESTED_TIME)
+            put("runningDynamicIsf", false)
+        })
+    )
+
+    private companion object {
+
+        const val SUGGESTED_TIME = "2026-10-12T16:35:00Z"
     }
 }

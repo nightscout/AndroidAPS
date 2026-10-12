@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import app.aaps.core.data.format.NumberFormat
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.labelOfInsulin
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ui.ConfirmationLine
 import app.aaps.core.data.ui.ConfirmationRole
@@ -150,7 +151,7 @@ class FillDialogViewModel(
             )
         }
         viewModelScope.launch {
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeLabel = availableInsulins.labelOfInsulin(profileFunction.getProfile()?.iCfg)
             val currentInsulin = availableInsulins.find { it.insulinLabel == activeLabel } ?: availableInsulins.firstOrNull()
             _uiState.update {
                 it.copy(
