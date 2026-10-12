@@ -4,12 +4,15 @@
     <string name="confirmation">Potwierdzenie</string>
     <!--    Events-->
     <string name="bolus_delivering">Dostarczam %1$.2fU</string>
+    <string name="bolus_delivered_so_far">podano %1$.2fU / %2$.2fU</string>
     <string name="bolus_delivered_successfully">Bolus %1$.2fU dostarczony prawidłowo</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Zmieniono ster. pompy.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d\' temu</string>
     <string name="secago">%1$ds temu</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d minut temu</string>
     <string name="hoursago">%1$.1fh temu</string>
     <string name="days_ago">%1$.1f dni temu</string>
@@ -50,6 +53,8 @@
     <string name="unit_weeks">tygodni</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">pozostało %1$dh %2$dm</string>
+    <string name="time_remaining_m">pozostało %1$d m</string>
     <string name="later_today">Dzisiaj, później</string>
     <string name="tomorrow">Jutro</string>
     <string name="today">Dziś</string>
@@ -88,6 +93,11 @@
     <string name="pref_show_week_number">Pokaż numer tygodnia</string>
     <string name="pref_show_date">Pokaż Datę</string>
     <string name="pref_show_seconds">Pokazuj Sekundy</string>
+    <string name="pref_show_complication1">Pokaż komplikację 1</string>
+    <string name="pref_show_complication2">Pokaż komplikację 2</string>
+    <string name="pref_show_complication3">Pokaż komplikację 3</string>
+    <string name="pref_show_complication4">Pokaż komplikację 4</string>
+    <string name="pref_show_complication5">Pokaż komplikację 5</string>
     <string name="default_custom_watchface_comment">Domyślna tarcza, możesz kliknąć na EXPORTUJ TARCZĘ aby wygenerować szablon</string>
     <string name="default_custom_watchface_external_comment">Domyślna tarcza zegarka, w tym zewnętrzne podglądy dla obserwujących. Możesz kliknąć na przycisk EKSPORT TARCZY aby wygenerować szablon</string>
     <string name="wear_default_watchface">Domyślna Tarcza</string>
@@ -97,26 +107,46 @@
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Na zawsze</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Aplikacja wymaga uprawnień Bluetooth do komunikowania się z pompą</string>
     <!-- Insulin -->
+    <string name="unknown">Nieznana</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="free_peak_oref">Swobodny-Pik Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Czas piku [min]</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u20">U20</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
+    <string name="profile_isf_units_mgdl">mg/dL/U</string>
+    <string name="profile_isf_units_mmol">mmol/L/U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
+    <string name="confirmation_line" comment="Confirmation-summary line, joins a label and an already-formatted value. %1$s = label, %2$s = value with its unit. Example: Bolus: 1.50 U">%1$s: %2$s</string>
     <string name="carbs">Węglowodany</string>
     <string name="alarminxmin">Uruchom alarm za %1$d min</string>
     <string name="pumpsuspended">Pompa wstrzymana</string>
     <string name="loopsuspended">Pętla wstrzymana</string>
     <string name="pump_disconnected">Pompa odłączona</string>
+    <string name="basalprofilenotaligned">Wartości bazy nie są ustawione w pełnych godzinach: %1$s</string>
     <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %1$s</string>
     <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %1$s</string>
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
+    <string name="mins">%1$d min</string>
     <string name="record">Wpis</string>
     <string name="bolus">Bolus</string>
     <string name="uel_extended_carbs">PRZEDŁUŻONE WĘGLOWODANY</string>
+    <string name="profile_low_target">Dolny cel profilu</string>
     <string name="profile_high_target">Górna granica celu profilu</string>
     <string name="profile_dia">Wartość DIA profilu</string>
     <string name="profile_sensitivity_value">Wartość wrażliwości profilu</string>
@@ -124,8 +154,12 @@
     <string name="value_out_of_hard_limits">Wartość »%1$s« %2$.2f jest poza dopuszczalną granicą</string>
     <string name="basal_value">Wartość bazy</string>
     <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Wykryto powolne wchłanianie węglowodanów: %1$d%% czasu. Sprawdź obliczenia dwa razy! COB może być przeszacowane, przez co może podać się za dużo insuliny !!!!!</string>
     <string name="bolus_constraint_applied_warn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">eCarbs %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Wtyczka %1$s miała problemy przy uruchomieniu i może nie działać. Uruchom ponownie AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Wystąpił błąd wtyczki %1$s i jej część została zatrzymana. Uruchom ponownie AAPS.</string>
 </resources>
