@@ -287,6 +287,7 @@
     <!--    Insulin / Concentration-->
     <string name="ins_concentration_confirmed">Koncentrácia inzulínu %1$s potvrdená</string>
     <string name="current_insulin">Práve aktívny</string>
+    <string name="insulin_will_be_activated" comment="Small caption above the name of an insulin the user picked that is not active yet. It becomes active when the user goes on.">Bude aktivovaný</string>
     <string name="change_insulin">Vymeň inzulín</string>
     <string name="select_insulin_description">Zvoľ inzulín, ktorým plníš pumpu. Po aktivácii/plnení bude vykonané prepnutie profilu.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
@@ -325,6 +326,7 @@
     <string name="careportal_note_message">Poznámka : %1$s</string>
     <string name="careportal_question_message">Otázka: %1$s</string>
     <string name="careportal_exercise_message">Cvičenie : %1$s</string>
+    <string name="careportal_pump_site_change_message" comment="Automation action that records a pump site change. %1$s = the note the user entered, may be empty. Example: Pump Site Change : new reservoir">Zmena miesta aplikácie: %1$s</string>
     <string name="careportal_pump_site_change">Výmena setu</string>
     <string name="cgm_sensor_insert">Zavedenie senzora</string>
     <string name="careportal_pump_site_management">Miesto aplikovania setu</string>
