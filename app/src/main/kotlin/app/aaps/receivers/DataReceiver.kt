@@ -7,7 +7,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.ListenableWorker
-import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -20,6 +19,7 @@ import app.aaps.core.utils.extensions.copyLong
 import app.aaps.core.utils.extensions.copyString
 import app.aaps.core.utils.receivers.BundleLogger
 import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.core.utils.receivers.incomingDataWorkRequest
 import app.aaps.implementation.receivers.KeepAliveWorker
 import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomInbox
@@ -167,7 +167,7 @@ open class DataReceiver : MetroBroadcastReceiver() {
         workManager.enqueueUniqueWork(
             INLINE_WORK_NAME,
             ExistingWorkPolicy.APPEND_OR_REPLACE,
-            OneTimeWorkRequest.Builder(worker).setInputData(data).build()
+            incomingDataWorkRequest(worker, data)
         )
     }
 

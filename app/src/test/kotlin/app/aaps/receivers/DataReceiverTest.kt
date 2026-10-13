@@ -77,6 +77,8 @@ class DataReceiverTest : TestBase() {
         val captor = argumentCaptor<OneTimeWorkRequest>()
         verify(workManager).enqueueUniqueWork(eq("data"), eq(ExistingWorkPolicy.APPEND_OR_REPLACE), captor.capture())
         assertThat(captor.firstValue.workSpec.workerClassName).isEqualTo(workerClass.name)
+        // Expedited, so a plain job quota that other work used up cannot keep a new BG waiting.
+        assertThat(captor.firstValue.workSpec.expedited).isTrue()
     }
 
     // ---- Inbox routing ----
