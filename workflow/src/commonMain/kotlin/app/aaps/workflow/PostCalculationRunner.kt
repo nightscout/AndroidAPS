@@ -18,6 +18,7 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.WorkOutcome
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -74,14 +75,28 @@ class PostCalculationRunner(
      * replaced by a chain started by another database change before it reaches this runner, and the
      * replacement must not lose the pending BG trigger (issue #5066).
      *
-     * [app.aaps.core.interfaces.aps.Loop.lastBgTriggeredRun] is written before the call and never
-     * reset, so each BG timestamp can drive at most one automatic loop run.
+     * [app.aaps.core.interfaces.aps.Loop.lastBgTriggeredRun] is written before the call, so each BG
+     * timestamp can drive at most one automatic loop run.
+     *
+     * One exception gives the BG back: a run that is cancelled before it stored a decision. That
+     * happens when this chain is replaced or stopped while the loop runs, for example by a profile
+     * switch. Such a run did nothing for this BG, so the chain that replaced this one runs the loop for
+     * it. Before, that BG got no loop run at all. Once a decision is stored the BG stays used: the
+     * enactment after it cannot be cancelled and may have reached the pump, and a second automatic run
+     * for the same BG must not follow.
      */
     private suspend fun invokeLoop() {
         val glucoseValue = iobCobCalculator.ads.actualBg() ?: return
         if (glucoseValue.timestamp <= loop.lastBgTriggeredRun) return
+        val previousTrigger = loop.lastBgTriggeredRun
+        val decisionBefore = loop.lastRun?.lastAPSRun
         loop.lastBgTriggeredRun = glucoseValue.timestamp
-        loop.invoke("Calculation for $glucoseValue", true)
+        try {
+            loop.invoke("Calculation for $glucoseValue", true)
+        } catch (e: CancellationException) {
+            if (loop.lastRun?.lastAPSRun == decisionBefore) loop.lastBgTriggeredRun = previousTrigger
+            throw e
+        }
     }
 
     private fun preparePredictions(data: PostCalculationData) {

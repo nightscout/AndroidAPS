@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
@@ -17,10 +18,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 
 class PostCalculationRunnerTest : TestBaseWithProfile() {
@@ -129,6 +132,57 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
         Assertions.assertEquals(WorkOutcome.Success, result)
         verify(loop, never()).invoke(any(), any(), any())
         verify(widgetUpdater).update("WorkFlow")
+    }
+
+    /**
+     * The chain was replaced while the loop ran, and the loop had not stored a decision yet. It did
+     * nothing for this BG, so the BG must be given back, or the replacing chain skips it and this BG
+     * gets no loop run at all.
+     */
+    @Test
+    fun `a loop run cancelled before its decision gives the bg back`() = runTest {
+        val ads = mock<AutosensDataStore>()
+        val bg = mock<InMemoryGlucoseValue>()
+        whenever(bg.timestamp).thenReturn(5000L)
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(bg)
+        whenever(loop.lastBgTriggeredRun).thenReturn(4000L)
+        whenever(loop.lastRun).thenReturn(Loop.LastRun().apply { lastAPSRun = 1000L })
+        whenever(loop.invoke(any(), any(), any())).doSuspendableAnswer { throw CancellationException("replaced") }
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
+
+        assertFailsWith<CancellationException> { run() }
+
+        verify(loop).lastBgTriggeredRun = 5000L
+        verify(loop).lastBgTriggeredRun = 4000L
+    }
+
+    /**
+     * Once the loop stored a decision, the enactment after it cannot be cancelled and may have reached
+     * the pump. The BG stays used, so no second automatic run follows for it.
+     */
+    @Test
+    fun `a loop run cancelled after its decision keeps the bg used`() = runTest {
+        val ads = mock<AutosensDataStore>()
+        val bg = mock<InMemoryGlucoseValue>()
+        whenever(bg.timestamp).thenReturn(5000L)
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(bg)
+        whenever(loop.lastBgTriggeredRun).thenReturn(4000L)
+        val lastRun = Loop.LastRun().apply { lastAPSRun = 1000L }
+        whenever(loop.lastRun).thenReturn(lastRun)
+        whenever(loop.invoke(any(), any(), any())).doSuspendableAnswer {
+            lastRun.lastAPSRun = 6000L // the decision is stored
+            throw CancellationException("replaced")
+        }
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
+
+        assertFailsWith<CancellationException> { run() }
+
+        verify(loop).lastBgTriggeredRun = 5000L
+        verify(loop, never()).lastBgTriggeredRun = 4000L
     }
 
     @Test
