@@ -39,6 +39,7 @@
     <string name="patch_connect_new_desc">ה-Patch החדש מבצע צימוד.\nשמרו על המרחק קרוב ככל האפשר בין ה-Patch למכשיר החכם</string>
     <string name="patch_remove_needle_cap">מתכונן לחיבור ה-Patch</string>
     <string name="patch_remove_needle_cap_desc_1">הורידו את כיסוי הדבק ולאחר מכן הקישו \'הבא\'.</string>
+    <string name="patch_remove_needle_cap_desc_2">אם מחט בולטת, לחצו על \'הסר\'.</string>
     <string name="patch_remove_needle_cap_desc_3">אם המדבקה רטובה או מלוכלכת, או שהדבק שלו מקופל, לחצו על \'הסר\'.</string>
     <string name="patch_remove_protection_tape">מצמיד את ה-Patch</string>
     <string name="patch_safety_check_desc_1">זה לוקח כ-30 שניות.</string>
