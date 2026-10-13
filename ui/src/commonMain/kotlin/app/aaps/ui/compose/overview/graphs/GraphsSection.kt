@@ -103,10 +103,7 @@ private val SIMPLE_MODE_CONFIG = GraphConfig(
  */
 private const val RECENT_VALUES_SPOKEN = 5
 
-/**
- * Moves the BG graph pop-up up over the treatment belt, so it covers less of the BG graph. The belt
- * is 48 dp high and the BG graph already starts 16 dp under it.
- */
+/** Moves the pill up over the treatment belt (48 dp, of which 16 dp overlap the BG graph). */
 private val INSPECT_PILL_OFFSET = (-32).dp
 
 /** Series types available as BG graph overlays */
@@ -364,7 +361,7 @@ fun GraphsSection(
     }
 
 
-    // Shared by all graphs: the BG graph sets it on press and hold, every graph draws the line from it
+    // Set by the BG graph, read by every graph
     val inspect = remember { GraphInspectState() }
 
     Column(
@@ -447,7 +444,7 @@ fun GraphsSection(
                         .padding(end = 4.dp, top = 2.dp)
                 )
             }
-            // Press and hold: the pill, in its own composable so a finger move does not recompose this section
+            // Own composable, so a finger move does not recompose this section
             GraphInspectOverlay(
                 inspect = inspect,
                 graphViewModel = graphViewModel,

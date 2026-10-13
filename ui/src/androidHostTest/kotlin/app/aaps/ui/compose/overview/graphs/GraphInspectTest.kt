@@ -36,7 +36,7 @@ class GraphInspectTest {
         assertThat(data.timestamp).isEqualTo(t0 + 5 * minute)
         assertThat(data.bg?.value).isEqualTo(5.5)
         assertThat(data.iob).isEqualTo(1.2)
-        // COB 0 is a value, not missing: the switch decides whether it is shown
+        // 0 is a value, not missing data
         assertThat(data.cob).isEqualTo(0.0)
         // Basal is the last change before the reading
         assertThat(data.basal).isEqualTo(1.5)
@@ -99,7 +99,7 @@ class GraphInspectTest {
         state.fingerDown = true
         state.pointerDown = true
 
-        // Vico hides the marker when the finger is past the readings, e.g. over the axis labels
+        // Finger past the readings, e.g. over the axis labels
         state.visibilityListener.onHidden(marker)
         assertThat(state.fingerDown).isTrue()
 

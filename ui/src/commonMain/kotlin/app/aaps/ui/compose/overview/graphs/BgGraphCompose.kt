@@ -578,7 +578,7 @@ fun BgGraphCompose(
     }
 
     val inspectMarker = remember(inspect) { inspect?.let { GraphInspectMarker(it) } }
-    // Always remembered, so the composable calls stay the same whether or not inspect is given
+    // Always called, so the composable calls do not depend on inspect
     val defaultMarkerController = CartesianMarkerController.rememberShowOnPress()
     val inspectLine = rememberInspectLine(inspect)
 
