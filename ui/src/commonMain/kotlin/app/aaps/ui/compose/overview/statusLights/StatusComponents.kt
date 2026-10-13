@@ -49,16 +49,17 @@ internal fun StatusSectionContent(
     onBatteryChangeClick: (() -> Unit)? = null
 ) {
     val addLabel = stringResource(CoreUiStrings.add)
-    val fillLabel = stringResource(CoreUiStrings.prime_fill)
+    val cannulaChangeLabel = stringResource(CoreUiStrings.btn_status_cannula_change)
+    val insulinFillLabel = stringResource(CoreUiStrings.btn_status_insulin_fill)
 
     cannulaStatus?.let {
-        StatusRow(item = it, actionLabel = fillLabel, onActionClick = onFillClick)
+        StatusRow(item = it, actionLabel = cannulaChangeLabel, onActionClick = onFillClick)
     }
     if (cannulaStatus != null && insulinStatus != null) {
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
     }
     insulinStatus?.let {
-        StatusRow(item = it, actionLabel = fillLabel, onActionClick = onInsulinChangeClick)
+        StatusRow(item = it, actionLabel = insulinFillLabel, onActionClick = onInsulinChangeClick)
     }
     if (insulinStatus != null && sensorStatus != null) {
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -161,14 +162,14 @@ private fun StatusRow(
             }
         }
 
-        // Action button. Name it with the row it belongs to, because the same verb appears on more
-        // than one row - "Prime/Fill" sits on both Cannula and Insulin, and "Add" on both Sensor and
-        // Battery - while the row's own name is a sibling Text outside the button. A screen reader
-        // therefore heard "Prime/Fill, button" twice with no way to tell which one primes the pump.
+        // Action button. Name it with the row it belongs to, because the same verb can appear on more
+        // than one row - "Add" sits on both Sensor and Battery - while the row's own name is a
+        // sibling Text outside the button. Without it a screen reader would hear "Add, button" twice
+        // with no way to tell which row it belongs to.
         //
         // Only the row name goes here, not the verb: a Button merges its children and a
         // contentDescription is inserted BEFORE them rather than replacing them, so this reads
-        // "Insulin, Prime/Fill" and the visible Text still supplies the verb.
+        // "Insulin, Fill" and the visible Text still supplies the verb.
         if (actionLabel != null && onActionClick != null) {
             FilledTonalButton(
                 onClick = onActionClick,
