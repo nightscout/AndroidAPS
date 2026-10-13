@@ -1,7 +1,5 @@
 package app.aaps.workflow
 
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -32,7 +29,6 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var widgetUpdater: WidgetUpdater
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
-    @Mock lateinit var workerParameters: WorkerParameters
 
     private fun runner() =
         PostCalculationRunner(
@@ -56,13 +52,12 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        whenever(workerParameters.inputData).thenReturn(workDataOf())
         whenever(config.APS).thenReturn(false)
     }
 
     @Test
     fun `missing or stale data returns failure`() = runTest {
-        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(null)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(null)
 
         assertIs<WorkOutcome.Failure>(run())
     }
@@ -70,7 +65,7 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
     @Test
     fun `predictions only phase returns success without loop or widget`() = runTest {
         val data = dataWith(runLoopAndWidgetPhase = false)
-        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
 
         val result = run()
 
@@ -88,7 +83,7 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
         whenever(ads.actualBg()).thenReturn(bg)
         whenever(loop.lastBgTriggeredRun).thenReturn(0L)
         val data = dataWith(runLoopAndWidgetPhase = true)
-        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
 
         val result = run()
 
@@ -110,7 +105,7 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
         // A loop run happened for an older BG, the newest one was never used
         whenever(loop.lastBgTriggeredRun).thenReturn(4000L)
         val data = dataWith(runLoopAndWidgetPhase = true)
-        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
 
         val result = run()
 
@@ -127,7 +122,7 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
         whenever(ads.actualBg()).thenReturn(bg)
         whenever(loop.lastBgTriggeredRun).thenReturn(5000L)
         val data = dataWith(runLoopAndWidgetPhase = true)
-        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
 
         val result = run()
 
@@ -142,7 +137,7 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
         whenever(iobCobCalculator.ads).thenReturn(ads)
         whenever(ads.actualBg()).thenReturn(null)
         val data = dataWith(runLoopAndWidgetPhase = true)
-        whenever(workflowChainData.postFor(anyOrNull(), any())).thenReturn(data)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
 
         val result = run()
 

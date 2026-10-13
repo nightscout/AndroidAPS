@@ -66,8 +66,8 @@ import kotlin.time.Instant
  * IOB/COB autosens (oref1 or oref), and the IOB/autosens graph data pass.
  *
  * [bgDataReload] controls the optional initial DB load+smooth pass.
- * [emitFinalProgress] is set when this worker is the last in the chain (HISTORY);
- * otherwise [PostCalculationWorker] emits the final signal.
+ * [emitFinalProgress] is set when this phase is the last in the chain (HISTORY);
+ * otherwise [PostCalculationRunner] emits the final signal.
  */
 @Inject
 class PrepareGraphDataRunner(
@@ -91,10 +91,10 @@ class PrepareGraphDataRunner(
     /**
      * Runs one prepare phase.
      *
-     * [isStopped] is asked between phases so a replaced chain gives up promptly. On Android that is
-     * the worker's own flag; the maths does not need to know what stopped it.
+     * [isStopped] is asked between phases so a replaced chain gives up promptly. It is the executor's
+     * flag for this run; the maths does not need to know what stopped it.
      */
-    suspend fun run(job: String?, generation: Long, isStopped: () -> Boolean): WorkOutcome {
+    suspend fun run(job: String, generation: Long, isStopped: () -> Boolean): WorkOutcome {
         val data = workflowChainData.prepareFor(job, generation)
             ?: return WorkOutcome.StaleInput
 
@@ -684,12 +684,13 @@ class PrepareGraphDataRunner(
      * Puts the locally computed store back into the live calculator, but only while this run still
      * owns the chain.
      *
-     * The run works on a clone taken at the start of the phase. `stopCalculation()` returns as soon as
-     * WorkManager marks the work as no longer RUNNING, which happens before the running coroutine sees
-     * its own stop flag - the next check sits at the top of the bucket loop, up to one bucket away.
-     * The caller then invalidates the live store and starts a new chain while this run is still alive.
-     * Without the check below this run would write its clone, taken before that invalidation, over the
-     * state the new chain has already prepared: a lost update (issue #5066).
+     * The run works on a clone taken at the start of the phase, and it can outlive the moment it was
+     * replaced. Stopping is cooperative: the run sees its stop flag at its next check, at the top of
+     * the bucket loop, up to one bucket away. `stopCalculation()` waits for that only a few seconds,
+     * and a start that replaces the run does not wait at all. The caller then invalidates the live
+     * store and starts a new chain while this run may still be alive. Without the check below this
+     * run would write its clone, taken before that invalidation, over the state the new chain has
+     * already prepared: a lost update (issue #5066).
      *
      * The check makes the window small but cannot close it completely, because the caller invalidates
      * the store before it registers the new generation.

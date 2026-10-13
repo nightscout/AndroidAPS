@@ -21,8 +21,8 @@ import kotlin.time.Duration
 /**
  * Decides what each calculation run contains; [CalculationExecutor] decides how it is run.
  *
- * Everything here is plain Kotlin, so the chain is the same on every platform - only the executor
- * behind it differs.
+ * Everything here is plain Kotlin, and so is the executor, so the chain is the same on every
+ * platform. Only the way the device is kept awake during a run differs, see [CalculationWakeLock].
  */
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -43,7 +43,8 @@ class CalculationWorkflowImpl(
     // Held across slot-write + start so both agree on which call won. Without it, two concurrent
     // runCalculation/runOnReceivedPredictions callers can interleave so the slot ends up with
     // generation N while the executor runs the phases tagged N-1 (replace honours call order, not
-    // generation order). The phase's generation check then fails and the calculation is silently
+    // generation order - and the executor registers a run before start() returns, so the order is
+    // the one taken here). The phase's generation check then fails and the calculation is silently
     // dropped. A coroutine Mutex rather than a lock: `synchronized` is JVM only, and it is held for
     // microseconds.
     private val startMutex = Mutex()

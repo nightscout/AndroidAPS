@@ -49,7 +49,7 @@ class PostCalculationRunner(
 ) {
 
     /** Runs the phase that follows the prepare pass. [isStopped] is asked between steps. */
-    suspend fun run(job: String?, generation: Long, isStopped: () -> Boolean): WorkOutcome {
+    suspend fun run(job: String, generation: Long, isStopped: () -> Boolean): WorkOutcome {
         val data = workflowChainData.postFor(job, generation) ?: return WorkOutcome.StaleInput
 
         if (data.runLoopAndWidgetPhase) {

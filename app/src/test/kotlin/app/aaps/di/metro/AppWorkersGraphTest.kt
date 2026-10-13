@@ -15,8 +15,6 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
-import app.aaps.workflow.PostCalculationWorker
-import app.aaps.workflow.PrepareGraphDataWorker
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -38,9 +36,6 @@ class AppWorkersGraphTest {
             SceneExpiryWorker::class,
             ImportExportPrefsImpl.CsvExportWorker::class,
             ImportExportPrefsImpl.ApsResultExportWorker::class,
-            // :workflow - recalculate and redraw the overview graph.
-            PostCalculationWorker::class,
-            PrepareGraphDataWorker::class,
             // :plugins:sync - the nine nsclientV3 loaders, plus xdrip and SMS.
             DataSyncWorker::class,
             LoadBgWorker::class,

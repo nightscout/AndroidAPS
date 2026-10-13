@@ -25,7 +25,7 @@ kotlin {
     }
 
     // The calculation chain is the point of this module and it is plain Kotlin, so it belongs in
-    // commonMain. Only the WorkManager wrappers stay on Android - see the workers below.
+    // commonMain. Only the Android executor binding with its wake lock stays in androidMain.
     iosArm64()
     iosSimulatorArm64()
 
