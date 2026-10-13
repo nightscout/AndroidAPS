@@ -7,11 +7,13 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.scenes.SceneExpiryCheck
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.UnitDoubleKey
@@ -46,7 +48,8 @@ class PostCalculationRunner(
     private val config: Config,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val profileUtil: ProfileUtil,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val sceneExpiryCheck: SceneExpiryCheck
 ) {
 
     /** Runs the phase that follows the prepare pass. [isStopped] is asked between steps. */
@@ -54,6 +57,7 @@ class PostCalculationRunner(
         val data = workflowChainData.postFor(job, generation) ?: return WorkOutcome.StaleInput
 
         if (data.runLoopAndWidgetPhase) {
+            endOverdueScene()
             invokeLoop()
             if (isStopped()) return WorkOutcome.Stopped
             widgetUpdater.update("WorkFlow")
@@ -65,6 +69,23 @@ class PostCalculationRunner(
 
         data.signals.emitProgress(CalculationWorkflow.ProgressData.DRAW_FINAL, 100)
         return WorkOutcome.Success
+    }
+
+    /**
+     * Ends a scene whose time is over before the loop decides, see [SceneExpiryCheck].
+     *
+     * Only where the loop runs: the master owns the scene, and a client receives its end. A failure
+     * here is logged and the loop runs anyway - missing one loop run is worse than ending a scene late.
+     */
+    private suspend fun endOverdueScene() {
+        if (!config.APS) return
+        try {
+            sceneExpiryCheck.endIfOverdue()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.WORKER, "Ending an overdue scene failed", e)
+        }
     }
 
     /*

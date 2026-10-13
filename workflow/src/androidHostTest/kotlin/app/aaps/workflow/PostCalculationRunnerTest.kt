@@ -6,10 +6,12 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.scenes.SceneExpiryCheck
 import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.objects.workflow.WorkOutcome
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -22,6 +24,7 @@ import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
 import org.mockito.kotlin.whenever
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
@@ -32,11 +35,12 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var widgetUpdater: WidgetUpdater
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
+    @Mock lateinit var sceneExpiryCheck: SceneExpiryCheck
 
     private fun runner() =
         PostCalculationRunner(
             aapsLogger, workflowChainData, iobCobCalculator, loop,
-            widgetUpdater, config, processedDeviceStatusData, profileUtil, preferences
+            widgetUpdater, config, processedDeviceStatusData, profileUtil, preferences, sceneExpiryCheck
         )
 
     // Nothing in these tests stops a run part way.
@@ -183,6 +187,64 @@ class PostCalculationRunnerTest : TestBaseWithProfile() {
 
         verify(loop).lastBgTriggeredRun = 5000L
         verify(loop, never()).lastBgTriggeredRun = 4000L
+    }
+
+    /**
+     * The scheduled end of a scene can wait for job quota while the loop goes on. Where the loop runs,
+     * an overdue scene is ended first, so the loop does not dose with that scene's SMB setting.
+     */
+    @Test
+    fun `on a master an overdue scene is ended before the loop runs`() = runTest {
+        whenever(config.APS).thenReturn(true)
+        val ads = mock<AutosensDataStore>()
+        val bg = mock<InMemoryGlucoseValue>()
+        whenever(bg.timestamp).thenReturn(5000L)
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(bg)
+        whenever(loop.lastBgTriggeredRun).thenReturn(0L)
+        val calls = mutableListOf<String>()
+        whenever(sceneExpiryCheck.endIfOverdue()).doSuspendableAnswer { calls += "scene" }
+        whenever(loop.invoke(any(), any(), any())).doSuspendableAnswer { calls += "loop" }
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
+
+        run()
+
+        assertThat(calls).containsExactly("scene", "loop").inOrder()
+    }
+
+    /** A client receives the end of a scene from the master; it does not end scenes itself. */
+    @Test
+    fun `a client does not end scenes`() = runTest {
+        val ads = mock<AutosensDataStore>()
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(null)
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
+
+        run()
+
+        verifyBlocking(sceneExpiryCheck, never()) { endIfOverdue() }
+    }
+
+    /** Missing a loop run is worse than ending a scene late. */
+    @Test
+    fun `a failing scene check does not stop the loop`() = runTest {
+        whenever(config.APS).thenReturn(true)
+        whenever(sceneExpiryCheck.endIfOverdue()).doSuspendableAnswer { throw IllegalStateException("broken scene") }
+        val ads = mock<AutosensDataStore>()
+        val bg = mock<InMemoryGlucoseValue>()
+        whenever(bg.timestamp).thenReturn(5000L)
+        whenever(iobCobCalculator.ads).thenReturn(ads)
+        whenever(ads.actualBg()).thenReturn(bg)
+        whenever(loop.lastBgTriggeredRun).thenReturn(0L)
+        val data = dataWith(runLoopAndWidgetPhase = true)
+        whenever(workflowChainData.postFor(any(), any())).thenReturn(data)
+
+        val result = run()
+
+        Assertions.assertEquals(WorkOutcome.Success, result)
+        verify(loop).invoke(any(), any(), any())
     }
 
     @Test
