@@ -199,10 +199,6 @@ class RileyLinkMedtronicService : RileyLinkService() {
                 encodingChanged = true
             }
             medtronicPumpStatus.batteryType = BatteryType.getByKey(preferences.get(MedtronicStringPreferenceKey.BatteryType))
-
-            //String bolusDebugEnabled = sp.getStringOrNull(MedtronicConst.Prefs.BolusDebugEnabled, null);
-            //boolean bolusDebug = bolusDebugEnabled != null && bolusDebugEnabled.equals(rh.gs(R.string.common_on));
-            //MedtronicHistoryData.doubleBolusDebug = bolusDebug;
             rileyLinkServiceData.showBatteryLevel = preferences.get(RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel)
             reconfigureService(forceRileyLinkAddressRenewal)
             true
