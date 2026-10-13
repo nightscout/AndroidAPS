@@ -163,6 +163,8 @@ class GraphInspectMarker(
     private val dotCenter = ShapeComponent(fill = Fill(Color.White), shape = CircleShape)
 
     override fun drawOverLayers(context: CartesianDrawingContext, targets: List<CartesianMarker.Target>) {
+        // Only while the finger is down, like the line
+        if (!state.fingerDown) return
         val target = targets.firstOrNull() ?: return
         val x = state.shownX ?: return
         with(context) {
@@ -228,14 +230,18 @@ fun rememberInspectLine(state: GraphInspectState?): InspectLine? {
  * only the marker follows the finger. Vico still gets the moves for the marker: its interaction
  * handler does not skip consumed events, the scrolling does.
  * Also tracks whether a finger is down, so only lifting it ends inspecting (see onHidden).
+ * Inspecting is ended in the Final pass, after Vico: Vico only hides the marker on the lift when it
+ * still sees inspecting as on. Ending it earlier left the marker dot on the graph.
  */
 fun Modifier.graphInspectTouch(state: GraphInspectState): Modifier = pointerInput(state) {
     awaitPointerEventScope {
         while (true) {
             val event = awaitPointerEvent(PointerEventPass.Initial)
             state.pointerDown = event.changes.any { it.pressed }
-            if (!state.pointerDown) state.fingerDown = false
             if (state.fingerDown && event.type == PointerEventType.Move) event.changes.forEach { it.consume() }
+            // The same event again, after Vico had it. A safety net when Vico did not get the lift.
+            awaitPointerEvent(PointerEventPass.Final)
+            if (!state.pointerDown) state.fingerDown = false
         }
     }
 }
