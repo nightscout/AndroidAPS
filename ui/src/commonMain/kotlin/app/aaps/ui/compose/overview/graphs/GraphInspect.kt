@@ -95,6 +95,9 @@ class GraphInspectState {
     /** True from the long press until the finger is lifted. */
     var fingerDown by mutableStateOf(false)
 
+    /** A finger is on the BG graph, from the touch layer. Plain field: only read in callbacks. */
+    var pointerDown = false
+
     /** The graph x (minutes from the start of the graph) under the finger, from Vico. */
     var targetX by mutableStateOf<Double?>(null)
 
@@ -133,8 +136,10 @@ class GraphInspectState {
             targetX = targets.firstOrNull()?.x
         }
 
+        // Vico also hides the marker when the finger leaves the plotted area (no reading there), with
+        // the finger still down. Keep inspecting then: the pill stays, and the line follows again on return.
         override fun onHidden(marker: CartesianMarker) {
-            fingerDown = false
+            if (!pointerDown) fingerDown = false
         }
     }
 }
@@ -215,11 +220,14 @@ fun rememberInspectLine(state: GraphInspectState?): InspectLine? {
  * While inspecting, eats finger moves before the graph sees them, so the graph does not scroll and
  * only the marker follows the finger. Vico still gets the moves for the marker: its interaction
  * handler does not skip consumed events, the scrolling does.
+ * Also tracks whether a finger is down, so only lifting it ends inspecting (see onHidden).
  */
 fun Modifier.graphInspectTouch(state: GraphInspectState): Modifier = pointerInput(state) {
     awaitPointerEventScope {
         while (true) {
             val event = awaitPointerEvent(PointerEventPass.Initial)
+            state.pointerDown = event.changes.any { it.pressed }
+            if (!state.pointerDown) state.fingerDown = false
             if (state.fingerDown && event.type == PointerEventType.Move) event.changes.forEach { it.consume() }
         }
     }

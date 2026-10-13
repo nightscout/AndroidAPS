@@ -91,4 +91,20 @@ class GraphInspectTest {
         assertThat(shownCob(0.6)).isEqualTo(1)
         assertThat(shownCob(23.7)).isEqualTo(24)
     }
+
+    @Test
+    fun `leaving the plotted area with the finger down keeps inspecting, lifting it ends`() {
+        val state = GraphInspectState()
+        val marker = GraphInspectMarker(state)
+        state.fingerDown = true
+        state.pointerDown = true
+
+        // Vico hides the marker when the finger is past the readings, e.g. over the axis labels
+        state.visibilityListener.onHidden(marker)
+        assertThat(state.fingerDown).isTrue()
+
+        state.pointerDown = false
+        state.visibilityListener.onHidden(marker)
+        assertThat(state.fingerDown).isFalse()
+    }
 }
