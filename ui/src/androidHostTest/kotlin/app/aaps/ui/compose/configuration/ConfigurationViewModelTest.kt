@@ -139,6 +139,17 @@ internal class ConfigurationViewModelTest {
     }
 
     @Test
+    fun `BG sources are listed in alphabetical order ignoring case`() {
+        val sources = plugins("xDrip+", "Dexcom", "Random BG", "eversense", "Glimp")
+        whenever(activePlugin.getSpecificPluginsVisibleInList(any())).thenReturn(ArrayList<PluginBase>())
+        whenever(activePlugin.getSpecificPluginsVisibleInList(PluginType.BGSOURCE)).thenReturn(sources)
+
+        sut.dismissHardwarePumpDialog()
+
+        assertThat(namesIn(PluginType.BGSOURCE)).containsExactly("Dexcom", "eversense", "Glimp", "Random BG", "xDrip+").inOrder()
+    }
+
+    @Test
     fun `other categories keep the order of the plugins`() {
         val general = plugins("Wear", "Automation", "Food")
         whenever(activePlugin.getSpecificPluginsVisibleInList(any())).thenReturn(ArrayList<PluginBase>())
