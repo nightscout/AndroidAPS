@@ -90,6 +90,11 @@
     <string name="pref_show_week_number">Afișați numărul săptămânii</string>
     <string name="pref_show_date">Afișați data</string>
     <string name="pref_show_seconds">Afișați secunde</string>
+    <string name="pref_show_complication1">Afișați complicația 1</string>
+    <string name="pref_show_complication2">Afișați complicația 2</string>
+    <string name="pref_show_complication3">Afișați complicația 3</string>
+    <string name="pref_show_complication4">Afișați complicația 4</string>
+    <string name="pref_show_complication5">Afișați complicația 5</string>
     <string name="default_custom_watchface_comment">Fațetă implicită. Poți apăsa pe butonul EXPORT pentru a genera un șablon</string>
     <string name="default_custom_watchface_external_comment">Cadran de ceas implicit, inclusiv vizualizări externe pentru urmăritori, puteți apăsa pe butonul EXPORTARE CADRAN pentru a genera un șablon</string>
     <string name="wear_default_watchface">Fațetă implicită</string>
@@ -112,6 +117,7 @@
     <string name="insulin_peak_time">Timp de vârf [min]</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
+    <string name="u20">U20</string>
     <string name="u40">U40</string>
     <string name="u50">U50</string>
     <string name="u100">U100</string>
@@ -147,5 +153,8 @@
     <string name="bolus_constraint_applied_warn">Este aplicată limitarea bolusului %1$.2f U la %2$.2f U</string>
     <string name="bolus_recorded_only">Bolusul doar va fi înregistrat (nu va fi administrat de pompă)</string>
     <string name="advisoralarm">Executați alarma când este timpul să mâncați</string>
+    <string name="wizard_ecarbs" comment="Extended carbs of a wizard bolus. %1$d=grams, %2$d=hours they are spread over, %3$d=minutes until they start. Example: eCarbs 4 g / 2 h (+60 min)">carbohidrați extinși %1$d g / %2$d h (+%3$d min)</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="plugin_start_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when a plugin threw while starting. It stays switched on, but it may not work.">Modulul %1$s nu a putut porni și s-ar putea să nu funcționeze. Vă rugăm să reporniți AAPS.</string>
+    <string name="plugin_work_failed" comment="%1$s=plugin name, for example &quot;Dana-i/RS&quot;. Shown when background work the plugin started ended with an error. The plugin is still switched on, but part of it has stopped.">Modulul %1$s a întâmpinat o eroare și o parte din el s-a oprit. Vă rugăm să reporniți AAPS.</string>
 </resources>
