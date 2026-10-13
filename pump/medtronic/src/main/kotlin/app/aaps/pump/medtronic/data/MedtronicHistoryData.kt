@@ -1004,6 +1004,61 @@ class MedtronicHistoryData(
     }
 
     /**
+     * Ends the temp basal that AAPS has running, after the pump confirmed a cancel at [now].
+     *
+     * The cancel used to end [MedtronicPumpStatus.runningTBR], the last temp basal read from history.
+     * When AAPS had set a newer one since, the older one was made longer than it ran, and the one that
+     * really ran stayed open in AAPS until the next history read.
+     *
+     * @return true when a temp basal was ended
+     */
+    suspend fun endRunningTbr(now: Long): Boolean {
+        val fromHistory = medtronicPumpStatus.runningTBR
+        // Nothing runs on the pump after a cancel.
+        medtronicPumpStatus.runningTBR = null
+
+        val running = pumpSync.expectedPumpState().temporaryBasal ?: return false
+
+        // Set by AAPS and not yet found in pump history, so it has only a temporary id. Its entry stays in
+        // storage: the next history read still gives it the pump id and the end time from the pump.
+        val pending = pumpSyncStorage.getTBRs().firstOrNull { it.date == running.timestamp }
+        if (pending != null) {
+            val result = pumpSync.syncTemporaryBasalWithTempId(
+                timestamp = pending.date,
+                rate = PumpRate(pending.rate),
+                duration = now - pending.date,
+                isAbsolute = pending.isAbsolute,
+                temporaryId = pending.temporaryId,
+                type = pending.tbrType,
+                pumpId = null,
+                pumpType = pending.pumpType,
+                pumpSerial = pending.serialNumber
+            )
+            aapsLogger.debug(LTag.PUMP, "endRunningTbr: syncTemporaryBasalWithTempId [date=${pending.date}, temporaryId=${pending.temporaryId}, duration=${now - pending.date} ms] - Result: $result")
+            return result
+        }
+
+        // Already read from pump history, so it has a pump id.
+        val pumpId = fromHistory?.pumpId
+        if (fromHistory == null || pumpId == null || pumpId != running.pumpId) {
+            aapsLogger.info(LTag.PUMP, "endRunningTbr: the temp basal from ${running.timestamp} is not known to the driver. The next history read ends it.")
+            return false
+        }
+        val result = pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = fromHistory.date,
+            rate = PumpRate(fromHistory.rate),
+            duration = now - fromHistory.date,
+            isAbsolute = fromHistory.isAbsolute,
+            type = fromHistory.tbrType,
+            pumpId = pumpId,
+            pumpType = fromHistory.pumpType,
+            pumpSerial = fromHistory.serialNumber
+        )
+        aapsLogger.debug(LTag.PUMP, "endRunningTbr: syncTemporaryBasalWithPumpId [date=${fromHistory.date}, pumpId=$pumpId, duration=${now - fromHistory.date} ms] - Result: $result")
+        return result
+    }
+
+    /**
      * findDbEntry - finds Db entries in database, while theoretically this should have same dateTime they
      * don't. Entry on pump is few seconds before treatment in AAPS, and on manual boluses on pump there
      * is no treatment at all. For now we look fro treatment that was from 0s - 1m59s within pump entry.
