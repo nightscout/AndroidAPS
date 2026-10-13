@@ -23,6 +23,7 @@ import app.aaps.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurati
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.omnipod.eros.driver.definition.ActivationProgress
+import app.aaps.pump.omnipod.eros.driver.definition.FirmwareVersion
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import app.aaps.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
@@ -35,12 +36,15 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import app.aaps.pump.omnipod.common.R as CommonR
@@ -141,5 +145,45 @@ internal class ErosOverviewViewModelTest {
         // buildPodStatusLevel(): !isPodActivationCompleted -> CRITICAL
         val podStatusRow = state.infoRows.filterIsInstance<PumpInfoRow>().first { it.label == "Pod status" }
         assertThat(podStatusRow.level).isEqualTo(StatusLevel.CRITICAL)
+    }
+
+    /**
+     * A pod that faults part way through activation (after pairing) can only be removed with "Deactivate":
+     * when deactivation fails, the wizard offers "Discard". "Discard" itself is not shown for a paired pod,
+     * so without "Deactivate" the pod could not be removed at all (#1217).
+     */
+    @Test
+    fun pairedPodPartWayThroughActivation_offersDeactivate() {
+        whenever(rileyLinkServiceData.rileyLinkServiceState).thenReturn(RileyLinkServiceState.PumpConnectorReady)
+        whenever(podStateManager.hasPodState()).thenReturn(true)
+        whenever(podStateManager.isPodInitialized).thenReturn(true)
+        whenever(podStateManager.activationProgress).thenReturn(ActivationProgress.PRIMING_COMPLETED)
+        // Pairing sets these, and the info rows of a paired pod show them.
+        whenever(podStateManager.lot).thenReturn(123)
+        whenever(podStateManager.tid).thenReturn(456)
+        whenever(podStateManager.pmVersion).thenReturn(FirmwareVersion(2, 7, 0))
+        whenever(podStateManager.piVersion).thenReturn(FirmwareVersion(2, 7, 0))
+        whenever(podStateManager.timeZone).thenReturn(DateTimeZone.getDefault())
+        whenever(podStateManager.time).thenReturn(DateTime.now())
+        whenever(dateUtil.dateAndTimeString(any())).thenReturn("12.10.2026 10:00")
+        whenever(rh.gs(any<Int>(), anyVararg<Any>())).thenReturn("value")
+        whenever(ch.insulinAmountString(any())).thenReturn("50 U")
+        whenever(rh.gs(CommonR.string.omnipod_common_pod_management_button_deactivate_pod)).thenReturn("Deactivate pod")
+
+        val state = createViewModel().uiState.value
+
+        val deactivate = state.managementActions.first { it.label == "Deactivate pod" }
+        assertThat(deactivate.visible).isTrue()
+        assertThat(deactivate.enabled).isTrue()
+    }
+
+    @Test
+    fun noPodState_hidesDeactivate() {
+        whenever(rh.gs(CommonR.string.omnipod_common_pod_management_button_deactivate_pod)).thenReturn("Deactivate pod")
+
+        val state = createViewModel().uiState.value
+
+        val deactivate = state.managementActions.first { it.label == "Deactivate pod" }
+        assertThat(deactivate.visible).isFalse()
     }
 }

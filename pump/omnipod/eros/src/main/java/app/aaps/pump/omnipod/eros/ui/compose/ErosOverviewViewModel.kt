@@ -345,8 +345,10 @@ class ErosOverviewViewModel(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_deactivate_pod),
                 icon = Icons.Filled.Pause,
                 category = ActionCategory.MANAGEMENT,
-                visible = podStateManager.isPodActivationCompleted,
-                enabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED) && rlReady,
+                // As soon as a pod is paired, not only after activation. A pod that faults part way through
+                // activation can only be removed here: when deactivation fails, the wizard offers "Discard" (#1217).
+                visible = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED),
+                enabled = rlReady,
                 onClick = { _events.tryEmit(OmnipodOverviewEvent.StartDeactivation) }
             ),
             PumpAction(

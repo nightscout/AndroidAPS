@@ -27,5 +27,8 @@ abstract class AapsInstrumentedTest {
         // wants a particular plugin set configures it first, and this runs after that.
         pluginStore.plugins = pluginList
         configBuilder.initialize()
+        // And how it ends. ProfileFunction hands out no profile until the app is initialized, so
+        // without this every test that needs a profile waits for one in vain (LoopTest did).
+        testGraphs.config.initCompleted()
     }
 }
